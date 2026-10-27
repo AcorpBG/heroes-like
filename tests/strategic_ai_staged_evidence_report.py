@@ -152,7 +152,7 @@ def _compact(text: str, limit: int) -> str:
 
 
 def build_report(root: Path) -> dict[str, Any]:
-    progress_path = root / "ops" / "progress.json"
+    progress_path = root / "ops" / "progress-archive" / "progress-2026-10-27.json"
     progress = _load_json(progress_path)
     slices = _collect_slices(progress)
     strict_covered = _covered_ordinals(slices, "strict_56_turn_shard")

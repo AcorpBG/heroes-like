@@ -1,0 +1,1731 @@
+{
+ "project": "heroes-like",
+ "taskId": "10236",
+ "status": "in_progress",
+ "currentPhase": "phase-6-production-alpha-layer",
+ "currentSliceId": "tooling-project-files-cleanup-20261027",
+ "currentSliceTitle": "Project files cleanup",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-27T19:00:00Z",
+ "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
+ "archives": {
+  "plan": "docs/plan-history/",
+  "progress": "ops/progress-archive/",
+  "until20261027": [
+   "docs/plan-history/PLAN-2026-10-27.md",
+   "ops/progress-archive/progress-2026-10-27.json"
+  ]
+ },
+ "plannedSlices": [
+  {
+   "id": "ai-army-concentration-20261009",
+   "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+   "status": "in_progress",
+   "goal": "field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Left on 2026-10-09: large and extra large games where the leader keeps its strength in garrisons against a lone rival hero (ai-match-724865121, ai-match-1103018058). Not rechecked since the later AI work.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-09",
+   "phase": "phase-6-production-alpha-layer"
+  },
+  {
+   "id": "content-validator-findings-20261004",
+   "title": "Fix the real defects the updated tests report",
+   "status": "in_progress",
+   "goal": "real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05).",
+   "docs": [
+    "docs/source-material-storage-map.md"
+   ],
+   "updatedAt": "2026-10-04"
+  },
+  {
+   "id": "tooling-native-smoke-list-refresh-20261004",
+   "title": "Replace the stale native smoke list in the Windows build helper",
+   "status": "pending",
+   "goal": "the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions.",
+   "docs": [
+    "src/gdextension/README.md"
+   ],
+   "updatedAt": "2026-10-04"
+  },
+  {
+   "id": "native-rules-phase7-14-campaign-20261023",
+   "title": "Phase 7.14: the campaign runtime",
+   "status": "pending",
+   "goal": "port the campaign runtime to C++, together with the campaign rework (D-f).",
+   "docs": [
+    "docs/native-rules-engine-transition.md"
+   ],
+   "updatedAt": "2026-10-23"
+  },
+  {
+   "id": "content-authored-scenarios-obsolete-20261005",
+   "title": "Authored maps, scenarios and campaigns are obsolete pending a full rework",
+   "status": "paused",
+   "goal": "hold on all authored maps, scenarios and campaigns until the owner selects their rework.",
+   "docs": [
+    "docs/authored-scenarios-obsolete.md"
+   ],
+   "updatedAt": "2026-10-05",
+   "phase": "phase-6-production-alpha-layer"
+  },
+  {
+   "id": "playable-alpha-scenario-set-10184",
+   "title": "Alpha Scenario Set",
+   "status": "paused",
+   "goal": "Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.",
+   "docs": [],
+   "updatedAt": "",
+   "phase": "phase-5-playable-alpha-baseline"
+  },
+  {
+   "id": "playable-alpha-ux-onboarding-10184",
+   "title": "Alpha UX And Onboarding Pass",
+   "status": "paused",
+   "goal": "Phase 5 umbrella: main menu, overworld, town, battle, outcome, save/load and help, scenery-first, no panel-heavy dashboards.",
+   "docs": [
+    "docs/screen-wireframes.md"
+   ],
+   "updatedAt": "",
+   "phase": "phase-5-playable-alpha-baseline"
+  },
+  {
+   "id": "production-alpha-content-expansion-10184",
+   "title": "Production Alpha Content Expansion",
+   "status": "paused",
+   "goal": "Phase 6 umbrella: more factions and content through the established systems, campaign and skirmish breadth, difficulty and AI stability.",
+   "docs": [],
+   "updatedAt": "",
+   "phase": "phase-6-production-alpha-layer"
+  },
+  {
+   "id": "production-alpha-packaging-settings-performance-10184",
+   "title": "Packaging, Settings, Accessibility, And Performance Baseline",
+   "status": "paused",
+   "goal": "Phase 6 umbrella: packaging, settings and accessibility baseline, performance budgets. Low priority until a release (2026-10-20).",
+   "docs": [],
+   "updatedAt": "",
+   "phase": "phase-6-production-alpha-layer"
+  },
+  {
+   "id": "tooling-project-files-cleanup-20261027",
+   "status": "completed",
+   "completedAt": "2026-10-27",
+   "summary": "AGENTS.md rewritten to about half its size; PLAN.md and progress.json restarted within budgets, the old ones archived; `tools/progress.py` replaces the server skill; the core suite checks the budgets."
+  },
+  {
+   "id": "world-services-tavern-prison-intelligence-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Implement field Tavern, Prison rescue and kingdom intelligence."
+  },
+  {
+   "id": "world-services-field-economy-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Implement Hill Fort, Black Market and Freelancer Guild field services."
+  },
+  {
+   "id": "tooling-battle-ai-arena-native-setup-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Battle AI arena without Godot: native content snapshot and setup."
+  },
+  {
+   "id": "reference-hero-support-transit-h3-mapping-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Illustrated HoMM3 to Aurelion hero-support and transit reference."
+  },
+  {
+   "id": "native-rmg-river-post-pass-vector-walk-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "River post-pass object walk follows H3MapEd's 0x4ac4ae index loop (XL 8P seed 72136 crash)."
+  },
+  {
+   "id": "evaluation-xl6p-water-strong-fresh120-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Fresh120 six-player XL two-level normal-water strong-guard evaluation."
+  },
+  {
+   "id": "evaluation-sunvault-arena-ablations-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Sunvault arena traces and isolated mechanic ablations."
+  },
+  {
+   "id": "evaluation-small2p-land-normal-strong1200-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "1200 Small2P games across normal and strong guards."
+  },
+  {
+   "id": "evaluation-medium2p-land-strong1200-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "1200 Medium2P land strong-guard games."
+  },
+  {
+   "id": "evaluation-large6p-choir-init-paired720-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Paired 720 six-player Large two-level strong-guard choir rerun."
+  },
+  {
+   "id": "balance-veilmourn-effective-hp-arena-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Effective Veilmourn HP and exact recorded battle arena check."
+  },
+  {
+   "id": "balance-sunvault-choir-initiative-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Sunvault choir-line base initiative reduction."
+  },
+  {
+   "id": "balance-scouting-landmark-vision-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Increase scouting and faction-site vision."
+  },
+  {
+   "id": "art-unit-icon-style-consistency-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Consistent clean creature icons for older base units."
+  },
+  {
+   "id": "art-faction-unit-backgrounds-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "Shared faction scenery behind unit portraits and UI icons."
+  },
+  {
+   "id": "ai-hero-hiring-entry-defense-20261026",
+   "status": "completed",
+   "completedAt": "2026-10-26",
+   "summary": "AI hero hiring by gold and exploration; town entry defenders fight with the garrison."
+  },
+  {
+   "id": "evaluation-mireclaw-ranged-only-hp-720-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Frozen 720-game rerun after removing Mireclaw melee HP buff."
+  },
+  {
+   "id": "evaluation-mireclaw-embercourt-hp-paired-720-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Paired 720-game HP buff comparison against controlled baseline."
+  },
+  {
+   "id": "evaluation-large6p-land-strong-fresh720-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Fresh-map Large 6P two-level land strong-guard balance batch."
+  },
+  {
+   "id": "evaluation-large6p-hp-growth-paired720-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Paired 720-map six-player rerun with HP and dwelling growth/gold changes."
+  },
+  {
+   "id": "evaluation-half-hp-buffs-sun-thorn-720-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "720-game reduced-buff and Sunvault/Thornwake nerf comparison."
+  },
+  {
+   "id": "diagnosis-veilmourn-sunvault-records-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Actual-record diagnosis of Veilmourn and Sunvault balance."
+  },
+  {
+   "id": "balance-veilmourn-brasshollow-hp-2pct-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Veilmourn and Brasshollow nominal 2% unit HP buff."
+  },
+  {
+   "id": "balance-mireclaw-ranged-cover-round10-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Balance round 10: Reed Cover for Mireclaw's two ranged lines."
+  },
+  {
+   "id": "balance-mireclaw-melee-hp-revert-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Restore Mireclaw melee HP to pre-buff values."
+  },
+  {
+   "id": "balance-mireclaw-embercourt-hp-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Mireclaw ranged/melee and Embercourt HP buffs."
+  },
+  {
+   "id": "balance-half-hp-buffs-sunvault-thornwake-nerf-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Halve Mireclaw/Embercourt HP buffs and reduce Sunvault/Thornwake HP."
+  },
+  {
+   "id": "balance-dwelling-pair-growth-gold-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "Even five same-role dwelling pairs with growth and gold."
+  },
+  {
+   "id": "ai-match-all-arrangements-fixed-rolls-20261025",
+   "status": "completed",
+   "completedAt": "2026-10-25",
+   "summary": "AI batch full faction arrangements and fixed hero/army rolls."
+  },
+  {
+   "id": "native-rules-phase8-ai-speed-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Phase 8: AI turn speed on large and extra large maps."
+  },
+  {
+   "id": "native-rules-phase8-12-buffers-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Phase 8.12: State node buffers freed on reset."
+  },
+  {
+   "id": "native-rules-phase8-11-spatial-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Phase 8.11: cheaper spatial index rebuilds."
+  },
+  {
+   "id": "native-rules-phase8-10-keyindex-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Phase 8.10: the key index for Int and Vector2i keys."
+  },
+  {
+   "id": "native-rules-phase8-09-fold-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Phase 8.9: one copy of the package code."
+  },
+  {
+   "id": "balance-sunvault-round-8-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Balance round 8: Sunvault's Aurora Relay and Harrier harries removed."
+  },
+  {
+   "id": "balance-mireclaw-snare-t3-sunvault-cost-round9-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Balance round 9: Mireclaw snare payoff and viable T3 choices; Sunvault ranged prices."
+  },
+  {
+   "id": "ai-match-native-process-pool-20261024",
+   "status": "completed",
+   "completedAt": "2026-10-24",
+   "summary": "Native AI batch process pool with desktop preset and worker recycling."
+  },
+  {
+   "id": "native-rules-phase8-runner-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Native rules Phase 8: a match runner without Godot."
+  },
+  {
+   "id": "native-rules-phase8-08-generation-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.8: generation in the runner."
+  },
+  {
+   "id": "native-rules-phase8-07-packages-setup-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.7: packages and setup without Godot."
+  },
+  {
+   "id": "native-rules-phase8-06-batch-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.6: ai_match_batch.py on the runner."
+  },
+  {
+   "id": "native-rules-phase8-05-proof-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.5: the runner's proof on the six seeds."
+  },
+  {
+   "id": "native-rules-phase8-04-runner-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.4: match_sim_cli from Godot-prepared sessions."
+  },
+  {
+   "id": "native-rules-phase8-03-statics-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.3: statics as native state in the runner."
+  },
+  {
+   "id": "native-rules-phase8-02-math-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.2: D4 option B, one pow/exp/log."
+  },
+  {
+   "id": "native-rules-phase8-01-elimination-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 8.1: the AI-match elimination day native."
+  },
+  {
+   "id": "native-rules-phase7-one-copy-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Native rules Phase 7: every rule native, one copy."
+  },
+  {
+   "id": "native-rules-phase7-15-one-copy-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.15: one copy."
+  },
+  {
+   "id": "native-rules-phase7-13-map-editor-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.13: the map editor's rules."
+  },
+  {
+   "id": "native-rules-phase7-12-saves-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.12: saves."
+  },
+  {
+   "id": "native-rules-phase7-11-setup-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.11: game setup."
+  },
+  {
+   "id": "native-rules-phase7-10-content-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.10: content loading."
+  },
+  {
+   "id": "native-rules-phase7-09-battle-screen-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.9: the battle screen."
+  },
+  {
+   "id": "native-rules-phase7-08-panels-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.8: overworld, town and hero panels."
+  },
+  {
+   "id": "native-rules-phase7-07-day-human-outcome-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.7: the day's human paths and the outcome screen."
+  },
+  {
+   "id": "native-rules-phase7-06-town-actions-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.6: town actions."
+  },
+  {
+   "id": "native-rules-phase7-05-heroes-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.5: hero transfers, rendezvous, garrison, tavern, artifacts."
+  },
+  {
+   "id": "native-rules-phase7-04-overworld-spells-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.4: overworld spells."
+  },
+  {
+   "id": "native-rules-phase7-03-context-actions-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.3: context and site actions."
+  },
+  {
+   "id": "native-rules-phase7-02-move-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.2: the move and its arrival."
+  },
+  {
+   "id": "native-rules-phase7-01-routes-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 7.1: the human route search native."
+  },
+  {
+   "id": "native-rules-phase6-random-opponents-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6: random skirmish opponents."
+  },
+  {
+   "id": "native-rules-phase6-p5-variant-digest-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6 P6-5: the per-day digest as the Variant hash."
+  },
+  {
+   "id": "native-rules-phase6-p4-session-handle-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6 P6-4: the native session across days."
+  },
+  {
+   "id": "native-rules-phase6-p3-day-call-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6 P6-3: end_turn as one native call."
+  },
+  {
+   "id": "native-rules-phase6-p2-map-corpus-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6 P6-2: a map corpus."
+  },
+  {
+   "id": "native-rules-phase6-p1-matches-per-process-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6 P6-1: several matches per Godot process."
+  },
+  {
+   "id": "native-rules-phase6-match-throughput-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6: Variant day digest, the day as one native call, a kept session handle, several matches per process, a map corpus. Closed on 2026-10-27, after its slices."
+  },
+  {
+   "id": "native-rules-phase6-faction-setup-20261023",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 6: the generator's faction setup and rotated maps."
+  },
+  {
+   "id": "native-rules-phase2-battle-tool-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-23",
+   "summary": "Phase 2: one payload builder, the AI preview as one native call, `battle_sim_cli` behind the arena and tuner, battles native only; G2 met. Closed on 2026-10-27, after its four slices."
+  },
+  {
+   "id": "native-rules-phase5-10-day-validate-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native day processing 10: the day switch's validating shadow check."
+  },
+  {
+   "id": "native-rules-phase5-09-finalize-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native day processing 09: _finalize_* for human battles."
+  },
+  {
+   "id": "native-rules-phase4-faction-turn-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native overworld AI faction turn (Phase 4)."
+  },
+  {
+   "id": "native-rules-phase4-04-exit-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Phase 4: exit and merge."
+  },
+  {
+   "id": "native-rules-phase4-03-battles-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Phase 4: battles inside the turn native."
+  },
+  {
+   "id": "native-rules-phase4-02-rare-paths-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Phase 4: the paths the six seeds do not run."
+  },
+  {
+   "id": "native-rules-phase4-01-day-call-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Phase 4: the computer players' day in one native call."
+  },
+  {
+   "id": "native-rules-phase4-00-runtime-fill-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Phase 4 runtime: backed containers filled on repeated reads."
+  },
+  {
+   "id": "native-rules-phase2-d-exit-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native rules Phase 2d: the GDScript battle copies deleted."
+  },
+  {
+   "id": "native-rules-phase2-c-battle-tool-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native rules Phase 2c: the battle tool for the tuner."
+  },
+  {
+   "id": "native-rules-phase2-b-payload-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native rules Phase 2b: the payload builder for every caller."
+  },
+  {
+   "id": "native-rules-phase2-a-preview-20261022",
+   "status": "completed",
+   "completedAt": "2026-10-22",
+   "summary": "Native rules Phase 2a: the AI's battle preview as one native call."
+  },
+  {
+   "id": "native-rules-shared-runtime-main-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Shared C++ rules runtime on main."
+  },
+  {
+   "id": "native-rules-phase5-day-processing-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing (Phase 5)."
+  },
+  {
+   "id": "native-rules-phase5-08-exit-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 08: exit and the single merge."
+  },
+  {
+   "id": "native-rules-phase5-07-day-boundary-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 07: one native call each side of the AI turn."
+  },
+  {
+   "id": "native-rules-phase5-06-normalize-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 06: overworld normalize."
+  },
+  {
+   "id": "native-rules-phase5-05-scenario-elimination-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 05: scenario evaluation and elimination."
+  },
+  {
+   "id": "native-rules-phase5-04-enemy-states-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 04: enemy states and commander rosters."
+  },
+  {
+   "id": "native-rules-phase5-03-hero-commit-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 03: hero commit."
+  },
+  {
+   "id": "native-rules-phase5-02-economy-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 02: town and site economy."
+  },
+  {
+   "id": "native-rules-phase5-01-boundary-fog-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native day processing 01: day engine boundary and fog."
+  },
+  {
+   "id": "native-rules-phase3-search-kernel-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native AiHeroRules._search kernel (Phase 3)."
+  },
+  {
+   "id": "native-rules-phase3-ai-targets-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native AiHeroRules._best_candidate and _gate_candidate (Phase 3)."
+  },
+  {
+   "id": "native-rules-phase1-04c-native-board-cache-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native battle engine 04c: a native board-read cache, then G1 on standard with Phases 3 and 5 paused."
+  },
+  {
+   "id": "native-rules-phase1-04b-memos-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native battle engine 04b: the GDScript memos layers 1-4 rely on, then G1 on standard."
+  },
+  {
+   "id": "native-rules-phase1-01b-g1-projection-20261021",
+   "status": "completed",
+   "completedAt": "2026-10-21",
+   "summary": "Native battle engine 01b: G1 projected on layer 1, value-layer speed-up if needed."
+  },
+  {
+   "id": "tooling-ai-match-speed-round2-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Faster AI match turns, round 2: the remaining identical fixes."
+  },
+  {
+   "id": "native-rules-phaseA-ai-weights-data-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native rules engine, Phase A: overworld AI numbers into data."
+  },
+  {
+   "id": "native-rules-phaseA-ai-helper-weights-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native rules engine, Phase A follow-up: the AI's helper numbers into data."
+  },
+  {
+   "id": "native-rules-phase1-battle-engine-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native rules engine, Phase 1: native battle engine."
+  },
+  {
+   "id": "native-rules-phase1-11-exit-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 11: exit and the single merge."
+  },
+  {
+   "id": "native-rules-phase1-10-autoplay-events-api-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 10: autoplay, structured events, player-battle API and UI queries."
+  },
+  {
+   "id": "native-rules-phase1-09-ai-decisions-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 09: battle AI decisions and enemy turns."
+  },
+  {
+   "id": "native-rules-phase1-08-ai-estimates-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 08: battle AI estimates."
+  },
+  {
+   "id": "native-rules-phase1-07-spells-commanders-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 07: in-battle spells and commander payloads."
+  },
+  {
+   "id": "native-rules-phase1-06-cohesion-town-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 06: cohesion, momentum, field objectives, town defences."
+  },
+  {
+   "id": "native-rules-phase1-05-attacks-abilities-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 05: attacks and the abilities."
+  },
+  {
+   "id": "native-rules-phase1-04-turn-order-effects-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 04: turn order and effects, then checkpoint G1."
+  },
+  {
+   "id": "native-rules-phase1-03-movement-targeting-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 03: movement and targeting."
+  },
+  {
+   "id": "native-rules-phase1-02-damage-chain-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 02: damage chain and stat totals."
+  },
+  {
+   "id": "native-rules-phase1-01-foundation-hex-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native battle engine 01: engine-exact helpers, native battle state, BattleEngine boundary, hex layer."
+  },
+  {
+   "id": "native-rules-phase0-toolchain-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native rules engine, Phase 0: aurelion_rules toolchain and the battle hex search spike."
+  },
+  {
+   "id": "native-rules-phase0-measure-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Native rules engine, Phase 0: parity check, release template, profile and baselines."
+  },
+  {
+   "id": "balance-sunvault-round-7-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Balance round 7: Sunvault's shooter lines trimmed."
+  },
+  {
+   "id": "ai-townless-rival-held-off-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "Computer players hold their towns against a rival that has none."
+  },
+  {
+   "id": "ai-far-ahead-hunts-rival-towns-20261020",
+   "status": "completed",
+   "completedAt": "2026-10-20",
+   "summary": "A computer player far ahead hunts its rival's unseen towns."
+  },
+  {
+   "id": "tooling-ai-match-speed-20261019",
+   "status": "completed",
+   "completedAt": "2026-10-19",
+   "summary": "Faster AI match turns without changing decisions."
+  },
+  {
+   "id": "balance-phase-round-5-20261019",
+   "status": "completed",
+   "completedAt": "2026-10-19",
+   "summary": "Balance round 5: Veilmourn fights in its own fog, Mireclaw's veterans keep lower."
+  },
+  {
+   "id": "balance-mireclaw-round-6-20261019",
+   "status": "completed",
+   "completedAt": "2026-10-19",
+   "summary": "Balance round 6: Mireclaw's base forms keep lower too."
+  },
+  {
+   "id": "ai-gate-recross-remaining-20261019",
+   "status": "completed",
+   "completedAt": "2026-10-19",
+   "summary": "AI heroes stop the remaining gate recrossings."
+  },
+  {
+   "id": "ai-gate-recross-loop-20261019",
+   "status": "completed",
+   "completedAt": "2026-10-19",
+   "summary": "AI heroes stop crossing a gate pair back and forth."
+  },
+  {
+   "id": "native-rmg-split-template-repick-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Template selection re-picks templates whose player-filtered links leave zones unjoined."
+  },
+  {
+   "id": "native-rmg-repair-monolith-partner-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Cut-off repair pass places the monolith end H3MapEd cannot place."
+  },
+  {
+   "id": "native-rmg-repair-guarded-passages-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Cut-off repair pass keeps guarded link passages free of decoration."
+  },
+  {
+   "id": "balance-phase-round-4-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Balance round 4: Embercourt and Sunvault trimmed, Veilmourn's T6 and Mireclaw's approach helped."
+  },
+  {
+   "id": "balance-phase-round-2-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Balance round 2: Veilmourn, Thornwake and Sunvault eased back."
+  },
+  {
+   "id": "balance-mireclaw-melee-round-3-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "Balance round 3: Mireclaw's melee survives the approach."
+  },
+  {
+   "id": "ai-values-spell-scrolls-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "AI heroes value spell scrolls they have not read."
+  },
+  {
+   "id": "ai-shut-in-opens-way-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "AI opens the way past sites and guards when shut in."
+  },
+  {
+   "id": "ai-routes-through-gates-20261018",
+   "status": "completed",
+   "completedAt": "2026-10-18",
+   "summary": "AI armies route through several gates."
+  },
+  {
+   "id": "rmg-launch-keeps-guard-strength-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Generated-map launch keeps the chosen guard strength on every template selection mode."
+  },
+  {
+   "id": "rmg-h3maped-sealed-start-zone-m003-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Trace the sealed Small start zone on map seed 1727041229 (H3MapEd's own behaviour)."
+  },
+  {
+   "id": "rmg-h3m-prison-body-parse-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "RMG H3M parser: size hero-shaped records (Prison) so two-level references compare fully."
+  },
+  {
+   "id": "native-rmg-seer-hut-bit26-reject-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Quest-hut projections reject existing bit-26 cells like H3MapEd 0x4aa603."
+  },
+  {
+   "id": "native-rmg-second-town-placement-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Native RMG: extra-town placement in 0x4a901a/0x4a8db2 matches H3MapEd (split large maps)."
+  },
+  {
+   "id": "native-rmg-route-join-mine-shape-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Cut-off repair route joins treat the game's mine shape as occupied."
+  },
+  {
+   "id": "native-rmg-repair-mine-placement-game-shape-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Cut-off repair pass places mines by the game's three-by-two shape."
+  },
+  {
+   "id": "native-rmg-repair-link-passages-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Cut-off repair pass keeps link passages free of mines, gates and reward objects."
+  },
+  {
+   "id": "native-rmg-ready-or-not-seed10-anchor-removal-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Remove the seed-10 Ready or Not 0x4a93a2 anchor override."
+  },
+  {
+   "id": "native-rmg-extra-town-type-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Native RMG: 0x4a901a builds the town from the type it resolves (XL Monk's Retreat town subtypes)."
+  },
+  {
+   "id": "native-rmg-cut-off-town-repair-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Regenerate a map whose H3MapEd result leaves a town cut off, with zone route joins on."
+  },
+  {
+   "id": "native-rmg-cut-off-check-mine-shape-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Cut-off town check blocks the game's three-by-two mine shape."
+  },
+  {
+   "id": "balance-phase-round-1-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Balance round 1: every faction closer in each phase of the game."
+  },
+  {
+   "id": "balance-mireclaw-muster-embercourt-gold-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Mireclaw grows more creatures at tiers 1-4; Embercourt's gold building pays 300."
+  },
+  {
+   "id": "balance-embercourt-late-mireclaw-base-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "Embercourt's head start moves into its late game; Mireclaw's base creatures harden."
+  },
+  {
+   "id": "ai-water-travel-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI heroes sail and go home across levels."
+  },
+  {
+   "id": "ai-town-seen-anchor-or-door-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI players attack rival towns they have seen by anchor or doorway."
+  },
+  {
+   "id": "ai-subterranean-gates-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI heroes cross subterranean gates."
+  },
+  {
+   "id": "ai-looted-site-crossed-by-all-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI heroes cross looted one-time sites whoever looted them."
+  },
+  {
+   "id": "ai-cross-level-monoliths-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI heroes cross monoliths whose exit is on the other level."
+  },
+  {
+   "id": "ai-build-upgrade-counted-once-20261017",
+   "status": "completed",
+   "completedAt": "2026-10-17",
+   "summary": "AI town planner counts a dwelling upgrade's gain once."
+  },
+  {
+   "id": "battle-ai-contested-lookahead-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Battle AI arena tunes on contested battles; look-ahead and outshot weights tried."
+  },
+  {
+   "id": "ai-guard-passage-horizon-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "AI guard passage value ignores ground past the search horizon."
+  },
+  {
+   "id": "ai-free-guard-fights-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "AI heroes fight weak guards they beat without losses at once."
+  },
+  {
+   "id": "ai-army-power-refit-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Strength estimate refitted to battle outcomes."
+  },
+  {
+   "id": "ai-army-power-ranged-calibration-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Strength estimate counts shooters at their battle performance."
+  },
+  {
+   "id": "ux-overworld-road-diagonal-steps-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated roads stay joined across diagonal steps."
+  },
+  {
+   "id": "tooling-battle-ai-arena-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI arena: head-to-head evaluation of BattleAiRules variants."
+  },
+  {
+   "id": "debug-placement-overlay-impassable-terrain-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "F4 placement overlay marks impassable terrain as blocked."
+  },
+  {
+   "id": "battle-neutral-guards-fight-on-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Neutral guards never retreat or surrender."
+  },
+  {
+   "id": "battle-ai-weights-cma-tuning-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI weights in data, tuned with CMA-ES in the arena."
+  },
+  {
+   "id": "battle-ai-threat-weighted-kills-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI: AI logic moved into BattleAiRules; kills weighed by threat."
+  },
+  {
+   "id": "battle-ai-hold-the-line-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI: melee holds its ground while its side outshoots the other."
+  },
+  {
+   "id": "battle-ai-arena-realistic-battles-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI arena plays realistic battles; weights retuned on them."
+  },
+  {
+   "id": "art-overworld-road-types-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated roads show the generator's road type."
+  },
+  {
+   "id": "art-overworld-rivers-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated rivers are drawn on the overworld."
+  },
+  {
+   "id": "art-overworld-river-bridges-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Roads cross rivers on timber bridges."
+  },
+  {
+   "id": "art-overworld-impassable-rock-void-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Impassable rock reads as a walled void on the overworld."
+  },
+  {
+   "id": "tooling-source-material-archive-incremental-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Archive the H3 video sources in incremental snapshots."
+  },
+  {
+   "id": "art-overworld-soft-fog-shadows-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Soft fog of war and object shadows on the overworld."
+  },
+  {
+   "id": "art-h3-kilnelk-facing-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Make the Ashcrown Kilnelk face its opponent in every clip."
+  },
+  {
+   "id": "art-h3-green-plate-edge-spill-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Remove the green tint on thin and blurred edges of gold units keyed on a green plate."
+  },
+  {
+   "id": "tooling-source-material-archive-incremental-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Archive new art sources in an incremental snapshot."
+  },
+  {
+   "id": "tests-fluid-render-check-stale-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Bring the fluid animation render check up to date."
+  },
+  {
+   "id": "art-idle-rife-integration-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "RIFE idle loops in the game."
+  },
+  {
+   "id": "art-idle-rife-inbetween-tool-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "RIFE in-between tool for smoother creature idle loops."
+  },
+  {
+   "id": "art-h3-painted-units-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Convert the painted creature clips to H3 video."
+  },
+  {
+   "id": "art-h3-painted-unit-pilot-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Profile one painted unit converted to H3 video."
+  },
+  {
+   "id": "art-blue-plate-edge-rematte-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Clean purple edges on blue-backdrop creature clips."
+  },
+  {
+   "id": "tests-validation-budget-20261010",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Validation budget, core suite, authored-scenario test deletion."
+  },
+  {
+   "id": "bugfix-start-hero-growth-seed-20261010",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "A new game's start hero takes its growth seed from the session."
+  },
+  {
+   "id": "bugfix-battle-walk-pace-20261010",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Every unit crosses a battle hex at the same pace."
+  },
+  {
+   "id": "bugfix-battle-fallen-stack-effect-expiry-20261010",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "A fallen stack's status ends without standing it up again."
+  },
+  {
+   "id": "battle-rework-plates-details-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Stack plates with role, shots and strike-back pips; right-button details cards."
+  },
+  {
+   "id": "battle-rework-cursor-forecast-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Sword and arrow cursors with kill, damage and strike-back forecasts; pointing picks the approach hex."
+  },
+  {
+   "id": "battle-rework-battlefield-art-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Painted battlefields and obstacle props per terrain; grid and speed options."
+  },
+  {
+   "id": "battle-rework-ai-balance-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-10",
+   "summary": "Battle AI and balance for the reworked flow."
+  },
+  {
+   "id": "ux-town-command-block-tavern-intel-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Town command block: Tavern and Intelligence Report squares, Close in the bottom right corner."
+  },
+  {
+   "id": "ux-overworld-hero-sheet-orders-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Retire the overworld Command/Frontier drawers; hero orders on the hero sheet; one overworld spell per day; built/cast-today badges."
+  },
+  {
+   "id": "ux-overworld-gain-floaters-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Floating gain text over the map."
+  },
+  {
+   "id": "ux-generated-skirmish-fronts-monster-strength-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Generated maps in Skirmish Fronts; Map Forge monster strength."
+  },
+  {
+   "id": "rmg-h3maped-parity-basis-windows-wine-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "H3MapEd parity basis: Windows vs Wine, seeds 137 and 211."
+  },
+  {
+   "id": "rmg-h3maped-desktop-input-divergence-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Recover the input that changes desktop-controlled H3MapEd reward selection."
+  },
+  {
+   "id": "native-rmg-owner-success-and-entry-occupant-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check."
+  },
+  {
+   "id": "heroes-guard-adjacent-tiles-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Heroes guard their adjacent tiles: stepping next to a hostile hero starts the battle."
+  },
+  {
+   "id": "content-homm3-guarded-objects-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Every HoMM3 guarded object keeps its levels and reward: creature banks, Dragon Utopia, Pyramid, Crypt, Shipwreck, Derelict Ship, Pandora's Box and Warrior's Tomb."
+  },
+  {
+   "id": "content-generated-guard-companies-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Budget-sized generated guards and 790 guard companies."
+  },
+  {
+   "id": "content-creature-bank-levels-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "HoMM3 creature banks keep their levels: the Crypt becomes a levelled Glassbound Eyrie with gold, a random artifact and a Crypt-strength guard."
+  },
+  {
+   "id": "bugfix-spell-rules-battle-stack-count-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Spell rules and battle screen count living creatures from battle stack health."
+  },
+  {
+   "id": "bugfix-rooted-tactical-order-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Tactical scoring never orders a rooted stack to advance."
+  },
+  {
+   "id": "bugfix-quick-resolve-spell-check-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Quick Resolve checks a scored spell against the hero's real spellbook."
+  },
+  {
+   "id": "bugfix-quick-resolve-focus-target-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Quick Resolve fallback orders target the weakest living enemy."
+  },
+  {
+   "id": "bugfix-battle-stack-health-normalize-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle normalization keeps Hardened Ranks creature health."
+  },
+  {
+   "id": "battle-spell-effect-identity-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "One job per battle spell family; real status rules; effects counted in turns."
+  },
+  {
+   "id": "battle-rework-wait-turn-order-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Wait command and a live turn order across this round, waiting stacks and the next round."
+  },
+  {
+   "id": "battle-rework-melee-approach-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Player-chosen melee approach hex."
+  },
+  {
+   "id": "battle-rework-hero-casting-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "The hero casts battle spells as a free action once per round; the stack keeps its turn."
+  },
+  {
+   "id": "battle-rework-fullscreen-screen-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Full-screen battle screen with heroes on the field, top ribbon and bottom command bar."
+  },
+  {
+   "id": "battle-rework-design-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle screen and battle flow rework: plan and iterated mockup."
+  },
+  {
+   "id": "battle-rework-board-obstacles-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle board: 11x9 hexes, edge deployment, blocking obstacles, no distance bands."
+  },
+  {
+   "id": "balance-town-growth-fortifications-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Town creature growth rebalance and fortification growth."
+  },
+  {
+   "id": "ai-long-range-portals-elimination-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI long-range planning, random portal travel, townless elimination, starting hero loss not fatal, always-on match tracing."
+  },
+  {
+   "id": "ai-garrison-room-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI towns make room in a full garrison to recruit."
+  },
+  {
+   "id": "ai-field-armies-town-value-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI field armies, defences, town and elimination value, portal routes."
+  },
+  {
+   "id": "ux-town-garrison-rows-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "HoMM-style town garrison and visiting rows, resource bar and town list."
+  },
+  {
+   "id": "ux-town-construction-close-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Construction board: drop the header resource strip, Close replaces View in town."
+  },
+  {
+   "id": "ux-scenery-pickup-readability-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Blocked scenery always shows art; pickups larger, never hidden, with a glint."
+  },
+  {
+   "id": "ux-resource-bar-daily-income-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Resource bar shows each resource's daily income."
+  },
+  {
+   "id": "ux-overworld-road-junctions-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Road junctions draw as a T or a cross, not ladders and loops."
+  },
+  {
+   "id": "ux-hero-level-up-roll-display-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Level-up popup shows the rolled command stat."
+  },
+  {
+   "id": "ux-generated-site-footprint-dressing-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Dress bare blocked site tiles; keep claimed sites that remain after their visit."
+  },
+  {
+   "id": "ux-generated-object-sprite-footprint-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Generated site sprites stand on their real footprint."
+  },
+  {
+   "id": "ux-generated-object-placement-scan-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Scan every generated object's placement; centre site art on its entrance."
+  },
+  {
+   "id": "perf-battle-refresh-read-scope-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Battle refresh reads each board state once; hidden battle surfaces build when shown."
+  },
+  {
+   "id": "gameplay-site-recruit-overflow-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Full-army site claims: claim, keep what fits, dismiss a stack or leave the rest."
+  },
+  {
+   "id": "feature-portal-networks-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Readable portal networks with HoMM3 random exits."
+  },
+  {
+   "id": "content-hero-specialty-catalog-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "35 hero specialties with four ranks, six per hero."
+  },
+  {
+   "id": "content-authored-scenarios-archived-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Archive the authored scenarios and campaigns."
+  },
+  {
+   "id": "battle-stat-scaling-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Battle stat scaling: uncapped attack/defense, spell power that grows and matters, cohesion loss by share."
+  },
+  {
+   "id": "art-overworld-terrain-decals-v4-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Rework ground decals: one set per ground, scattered by the ground shader."
+  },
+  {
+   "id": "art-overworld-organic-ground-borders-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Organic ground borders: bent, height-and-priority blended biome edges."
+  },
+  {
+   "id": "ai-versus-ai-match-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI against AI matches; computer players start like the human; doubled market limits; market-priced town planning."
+  },
+  {
+   "id": "ai-town-defense-recapture-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI town defense and recapture."
+  },
+  {
+   "id": "ai-strength-battle-scaling-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI strength estimate for the battle stat scaling."
+  },
+  {
+   "id": "ai-match-series-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI match series on ten random maps, reproducible AI level-ups."
+  },
+  {
+   "id": "ai-market-parking-fight-rewards-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards."
+  },
+  {
+   "id": "ai-even-musters-danger-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Even faction starting musters; AI heroes avoid much stronger hostile heroes."
+  },
+  {
+   "id": "ux-town-popouts-no-scroll-tavern-rotation-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Town popouts without scrolling and weekly tavern heroes."
+  },
+  {
+   "id": "ux-town-market-popout-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Market and magic guild live only in their building popouts; resource conversion; gold-only market."
+  },
+  {
+   "id": "ux-overworld-movement-feedback-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Portrait bar movement refresh and walked attack orders."
+  },
+  {
+   "id": "ux-muster-hall-recruit-cards-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Muster Hall uses dwelling recruit cards."
+  },
+  {
+   "id": "ux-hero-exchange-screen-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "HoMM-style hero meeting screen replaces the rendezvous drop-down."
+  },
+  {
+   "id": "tests-rmg-retirement-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Retire random-map tests written for the pre-rewrite generator."
+  },
+  {
+   "id": "perf-town-recruit-responsiveness-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Town recruit clicks are fast (Muster Hall, popouts, orders)."
+  },
+  {
+   "id": "perf-battle-entry-transition-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "No gray frame on scene changes; battles open about 4x faster."
+  },
+  {
+   "id": "feature-water-travel-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Water travel (boats, shipyards, whirlpools) and pay-to-open random-map gates."
+  },
+  {
+   "id": "feature-hero-hire-army-level-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Hired heroes come with a starting army and a weekly level."
+  },
+  {
+   "id": "content-rare-resources-fully-tradeable-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Rare resources fully tradeable at every town market."
+  },
+  {
+   "id": "balance-embercourt-convoy-rate-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Embercourt supply convoy beats the market sell rate."
+  },
+  {
+   "id": "ai-raid-director-removal-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Remove the unused raid director and rewrite its harness cases for AI heroes."
+  },
+  {
+   "id": "ai-plays-by-player-rules-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Computer players act through real heroes and towns under the human's rules."
+  },
+  {
+   "id": "ai-hero-expansion-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "AI heroes clear guards and leave their starting zone."
+  },
+  {
+   "id": "ux-town-building-popouts-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Town building popouts."
+  },
+  {
+   "id": "content-visit-buildings-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM-style visit buildings (Phases 1 and 2)."
+  },
+  {
+   "id": "content-homm-pickups-income-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM-style pickups and income sites."
+  },
+  {
+   "id": "content-gold-only-unit-costs-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Gold-only unit recruitment costs."
+  },
+  {
+   "id": "content-creature-dwellings-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM3-style creature dwellings (all phases)."
+  },
+  {
+   "id": "balance-dwelling-pairs-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Dwelling pair balance."
+  },
+  {
+   "id": "ux-town-construction-board-20261005",
+   "status": "completed",
+   "completedAt": "2026-10-05",
+   "summary": "Full-screen Town construction board."
+  },
+  {
+   "id": "tooling-validate-repo-archived-sources-20261004",
+   "status": "completed",
+   "completedAt": "2026-10-04",
+   "summary": "Make the repository validator usable with archived sources."
+  },
+  {
+   "id": "tooling-repo-hygiene-20261004",
+   "status": "completed",
+   "completedAt": "2026-10-04",
+   "summary": "Repair post-cleanup working tree, native binaries and source-test workflow."
+  },
+  {
+   "id": "tooling-source-material-map-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Map source material storage and archive eligibility."
+  },
+  {
+   "id": "tooling-source-material-local-cleanup-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Reclaim local space from verified archived source media."
+  },
+  {
+   "id": "tooling-source-material-history-migration-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Remove archived production media from Git history while preserving development history."
+  },
+  {
+   "id": "tooling-source-material-archive-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Archive mapped art sources on N drive with full payload verification."
+  },
+  {
+   "id": "tooling-rmg-evidence-restore-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Restore ignored RMG reverse-engineering evidence from the Linux server."
+  },
+  {
+   "id": "tooling-rmg-evidence-consolidation-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Consolidate RMG evidence and remove disposable restore/export outputs."
+  },
+  {
+   "id": "tooling-audio-ci-disable-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Disable the retired audio workflow across historical GitHub refs."
+  }
+ ]
+}

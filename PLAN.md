@@ -1,0 +1,322 @@
+# heroes-like Tactical Plan
+
+The executable plan derived from `project.md`: the owner's decisions in force, the questions waiting on the owner, the open slices and the last 30 days of completed ones. The status of the same slices is in `ops/progress.json`; `python tools/progress.py` reads and updates both. How to write this file: `AGENTS.md`, "Project files". History until 2026-10-27: `docs/plan-history/PLAN-2026-10-27.md` (the old plan, 2.8 MB) and `ops/progress-archive/progress-2026-10-27.json` (the old tracker, 10 MB); later months move to `docs/plan-history/<yyyy-mm>.md` and `ops/progress-archive/<yyyy-mm>.json`.
+
+## Owner decisions in force
+
+- 2026-09-09: Release packages have no size budget; don't add another numeric ceiling.
+- 2026-09-17: Remove task-owned non-RMG evidence and temporary outputs once the work is reported (`AGENTS.md`, "Cleanup before the handoff").
+- 2026-10-05 to 10-10: Authored maps, scenarios and campaigns are obsolete and archived until the owner selects their rework (`AGENTS.md`; `docs/authored-scenarios-obsolete.md`).
+- 2026-10-06: Tier 5+ adventure-map dwellings are guarded by three weeks of their creature, and every side must beat that guard once (`docs/creature-dwellings.md`).
+- 2026-10-07: Every town market trades every stockpile resource for any other, rares at twice the wood/ore value; the weekly caps stay.
+- 2026-10-09: The battle screen and flow follow the signed-off rework (`docs/battle-rework.md`).
+- 2026-10-09: On generated maps a player with no town for seven days is out; losing the starting hero does not end the game.
+- 2026-10-10: The validation budget, and `.import`/`.uid` sidecars tracked in Git (`AGENTS.md`).
+- 2026-10-11: Idle loops use RIFE in-betweens; flagged pairs hold their paintings (`--flagged hold`); the network's weights stay out of Git (`docs/idle-inbetweens.md`).
+- 2026-10-17: Water and two-level games are ordinary games for the computer players; a capped one is a failure to explain.
+- 2026-10-17 and 10-18: Generated maps repair towns that H3MapEd's finished map leaves cut off, the one deliberate departure from H3MapEd (`docs/rmg-cut-off-town-repair.md`).
+- 2026-10-18: AI batches pair map size and players: small 2, medium 2-3, large 3-4, extra large 5-6; never large maps with 2 players.
+- 2026-10-19: Balance batches are read by place points with their one-sd band; wins alone swing too much between batches.
+- 2026-10-19: No test file or core case per change (`AGENTS.md`, "Validation budget").
+- 2026-10-20: Nothing ships yet: release packaging and installers are low priority until the owner prepares a release.
+- 2026-10-20: The editor binary stays the AI batch default; `tools/ai_match_batch.py --release` is opt-in.
+- 2026-10-20 to 10-24: Every rule moves to C++, one copy (D1 to D12, D-a to D-h: `docs/native-rules-engine-transition.md`, section 8; summary in `AGENTS.md`).
+- 2026-10-21: Linux is paused until the owner calls a Linux pass. The binaries were rebuilt and checked on Linux on 2026-10-26; the owner kept the pause on 2026-10-27.
+- 2026-10-22 (D7): Battle and match simulators run outside Godot (`battle_sim_cli`, `match_sim_cli`).
+- 2026-10-23: Skirmish opponents' factions are drawn at random from the map seed; the human keeps their pick or Random.
+- 2026-10-23 (D-f): The campaign runtime is ported with the campaign rework.
+- 2026-10-27: The project files are edited in place and kept within their budgets (`AGENTS.md`, "Project files").
+
+## Questions for the owner
+
+- Generated maps, Keymaster's Tents: keep the current behaviour (no tents, native as is), or model H3MapEd's Ctrl+N path? That needs the unported tent projection branch `0x540b00`/`0x49c019`/`0x4adb72`/`0x4adef7` and its writeout (`docs/h3maped-parity-basis-windows-wine.md`).
+- Generated maps, m010 (Dragons, seed 386602547): tree obstacles cover two links' passages and split the map, as in H3MapEd. Change it (`docs/rmg-second-town-placement-parity.md`)?
+- Generated maps, sealed start zones (m003, seed 1727041229): H3MapEd covers a weakly guarded zone's only passage with trees. Keep such passages open, departing from H3MapEd (`docs/rmg-second-town-placement-parity.md`)?
+- Generated maps, nine mine-sealed maps: `0x4a9d6a` puts a mine two rows below the town door. Keep the mine off the door's exits in the repair pass, or change the mine's shape (`docs/rmg-cut-off-town-repair.md`)?
+- Generated maps, the six-town split maps (Newcomers islands): repair them or leave them (`docs/rmg-cut-off-town-repair.md`)?
+- AI: remove or reuse the inert Border Warden pillage resistance and the `DifficultyRules` enemy pressure and raid knobs (`docs/ai-plays-by-player-rules.md`)?
+
+## Open work
+
+- `ai-army-concentration-20261009` (in progress): field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Left on 2026-10-09: large and extra large games where the leader keeps its strength in garrisons against a lone rival hero (ai-match-724865121, ai-match-1103018058). Not rechecked since the later AI work. See `docs/ai-plays-by-player-rules.md`.
+- `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
+- `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
+- `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
+- `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
+- `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
+- `playable-alpha-ux-onboarding-10184` (paused): Phase 5 umbrella: main menu, overworld, town, battle, outcome, save/load and help, scenery-first, no panel-heavy dashboards. See `docs/screen-wireframes.md`.
+- `production-alpha-content-expansion-10184` (paused): Phase 6 umbrella: more factions and content through the established systems, campaign and skirmish breadth, difficulty and AI stability.
+- `production-alpha-packaging-settings-performance-10184` (paused): Phase 6 umbrella: packaging, settings and accessibility baseline, performance budgets. Low priority until a release (2026-10-20).
+
+## Recently completed
+
+- 2026-10-27 `tooling-project-files-cleanup-20261027`: AGENTS.md rewritten to about half its size; PLAN.md and progress.json restarted within budgets, the old ones archived; `tools/progress.py` replaces the server skill; the core suite checks the budgets.
+- 2026-10-26 `world-services-tavern-prison-intelligence-20261026`: Implement field Tavern, Prison rescue and kingdom intelligence.
+- 2026-10-26 `world-services-field-economy-20261026`: Implement Hill Fort, Black Market and Freelancer Guild field services.
+- 2026-10-26 `tooling-battle-ai-arena-native-setup-20261026`: Battle AI arena without Godot: native content snapshot and setup.
+- 2026-10-26 `reference-hero-support-transit-h3-mapping-20261026`: Illustrated HoMM3 to Aurelion hero-support and transit reference.
+- 2026-10-26 `native-rmg-river-post-pass-vector-walk-20261026`: River post-pass object walk follows H3MapEd's 0x4ac4ae index loop (XL 8P seed 72136 crash).
+- 2026-10-26 `evaluation-xl6p-water-strong-fresh120-20261026`: Fresh120 six-player XL two-level normal-water strong-guard evaluation.
+- 2026-10-26 `evaluation-sunvault-arena-ablations-20261026`: Sunvault arena traces and isolated mechanic ablations.
+- 2026-10-26 `evaluation-small2p-land-normal-strong1200-20261026`: 1200 Small2P games across normal and strong guards.
+- 2026-10-26 `evaluation-medium2p-land-strong1200-20261026`: 1200 Medium2P land strong-guard games.
+- 2026-10-26 `evaluation-large6p-choir-init-paired720-20261026`: Paired 720 six-player Large two-level strong-guard choir rerun.
+- 2026-10-26 `balance-veilmourn-effective-hp-arena-20261026`: Effective Veilmourn HP and exact recorded battle arena check.
+- 2026-10-26 `balance-sunvault-choir-initiative-20261026`: Sunvault choir-line base initiative reduction.
+- 2026-10-26 `balance-scouting-landmark-vision-20261026`: Increase scouting and faction-site vision.
+- 2026-10-26 `art-unit-icon-style-consistency-20261026`: Consistent clean creature icons for older base units.
+- 2026-10-26 `art-faction-unit-backgrounds-20261026`: Shared faction scenery behind unit portraits and UI icons.
+- 2026-10-26 `ai-hero-hiring-entry-defense-20261026`: AI hero hiring by gold and exploration; town entry defenders fight with the garrison.
+- 2026-10-25 `evaluation-mireclaw-ranged-only-hp-720-20261025`: Frozen 720-game rerun after removing Mireclaw melee HP buff.
+- 2026-10-25 `evaluation-mireclaw-embercourt-hp-paired-720-20261025`: Paired 720-game HP buff comparison against controlled baseline.
+- 2026-10-25 `evaluation-large6p-land-strong-fresh720-20261025`: Fresh-map Large 6P two-level land strong-guard balance batch.
+- 2026-10-25 `evaluation-large6p-hp-growth-paired720-20261025`: Paired 720-map six-player rerun with HP and dwelling growth/gold changes.
+- 2026-10-25 `evaluation-half-hp-buffs-sun-thorn-720-20261025`: 720-game reduced-buff and Sunvault/Thornwake nerf comparison.
+- 2026-10-25 `diagnosis-veilmourn-sunvault-records-20261025`: Actual-record diagnosis of Veilmourn and Sunvault balance.
+- 2026-10-25 `balance-veilmourn-brasshollow-hp-2pct-20261025`: Veilmourn and Brasshollow nominal 2% unit HP buff.
+- 2026-10-25 `balance-mireclaw-ranged-cover-round10-20261025`: Balance round 10: Reed Cover for Mireclaw's two ranged lines.
+- 2026-10-25 `balance-mireclaw-melee-hp-revert-20261025`: Restore Mireclaw melee HP to pre-buff values.
+- 2026-10-25 `balance-mireclaw-embercourt-hp-20261025`: Mireclaw ranged/melee and Embercourt HP buffs.
+- 2026-10-25 `balance-half-hp-buffs-sunvault-thornwake-nerf-20261025`: Halve Mireclaw/Embercourt HP buffs and reduce Sunvault/Thornwake HP.
+- 2026-10-25 `balance-dwelling-pair-growth-gold-20261025`: Even five same-role dwelling pairs with growth and gold.
+- 2026-10-25 `ai-match-all-arrangements-fixed-rolls-20261025`: AI batch full faction arrangements and fixed hero/army rolls.
+- 2026-10-24 `native-rules-phase8-ai-speed-20261024`: Phase 8: AI turn speed on large and extra large maps.
+- 2026-10-24 `native-rules-phase8-12-buffers-20261024`: Phase 8.12: State node buffers freed on reset.
+- 2026-10-24 `native-rules-phase8-11-spatial-20261024`: Phase 8.11: cheaper spatial index rebuilds.
+- 2026-10-24 `native-rules-phase8-10-keyindex-20261024`: Phase 8.10: the key index for Int and Vector2i keys.
+- 2026-10-24 `native-rules-phase8-09-fold-20261024`: Phase 8.9: one copy of the package code.
+- 2026-10-24 `balance-sunvault-round-8-20261024`: Balance round 8: Sunvault's Aurora Relay and Harrier harries removed.
+- 2026-10-24 `balance-mireclaw-snare-t3-sunvault-cost-round9-20261024`: Balance round 9: Mireclaw snare payoff and viable T3 choices; Sunvault ranged prices.
+- 2026-10-24 `ai-match-native-process-pool-20261024`: Native AI batch process pool with desktop preset and worker recycling.
+- 2026-10-23 `native-rules-phase8-runner-20261023`: Native rules Phase 8: a match runner without Godot.
+- 2026-10-23 `native-rules-phase8-08-generation-20261023`: Phase 8.8: generation in the runner.
+- 2026-10-23 `native-rules-phase8-07-packages-setup-20261023`: Phase 8.7: packages and setup without Godot.
+- 2026-10-23 `native-rules-phase8-06-batch-20261023`: Phase 8.6: ai_match_batch.py on the runner.
+- 2026-10-23 `native-rules-phase8-05-proof-20261023`: Phase 8.5: the runner's proof on the six seeds.
+- 2026-10-23 `native-rules-phase8-04-runner-20261023`: Phase 8.4: match_sim_cli from Godot-prepared sessions.
+- 2026-10-23 `native-rules-phase8-03-statics-20261023`: Phase 8.3: statics as native state in the runner.
+- 2026-10-23 `native-rules-phase8-02-math-20261023`: Phase 8.2: D4 option B, one pow/exp/log.
+- 2026-10-23 `native-rules-phase8-01-elimination-20261023`: Phase 8.1: the AI-match elimination day native.
+- 2026-10-23 `native-rules-phase7-one-copy-20261023`: Native rules Phase 7: every rule native, one copy.
+- 2026-10-23 `native-rules-phase7-15-one-copy-20261023`: Phase 7.15: one copy.
+- 2026-10-23 `native-rules-phase7-13-map-editor-20261023`: Phase 7.13: the map editor's rules.
+- 2026-10-23 `native-rules-phase7-12-saves-20261023`: Phase 7.12: saves.
+- 2026-10-23 `native-rules-phase7-11-setup-20261023`: Phase 7.11: game setup.
+- 2026-10-23 `native-rules-phase7-10-content-20261023`: Phase 7.10: content loading.
+- 2026-10-23 `native-rules-phase7-09-battle-screen-20261023`: Phase 7.9: the battle screen.
+- 2026-10-23 `native-rules-phase7-08-panels-20261023`: Phase 7.8: overworld, town and hero panels.
+- 2026-10-23 `native-rules-phase7-07-day-human-outcome-20261023`: Phase 7.7: the day's human paths and the outcome screen.
+- 2026-10-23 `native-rules-phase7-06-town-actions-20261023`: Phase 7.6: town actions.
+- 2026-10-23 `native-rules-phase7-05-heroes-20261023`: Phase 7.5: hero transfers, rendezvous, garrison, tavern, artifacts.
+- 2026-10-23 `native-rules-phase7-04-overworld-spells-20261023`: Phase 7.4: overworld spells.
+- 2026-10-23 `native-rules-phase7-03-context-actions-20261023`: Phase 7.3: context and site actions.
+- 2026-10-23 `native-rules-phase7-02-move-20261023`: Phase 7.2: the move and its arrival.
+- 2026-10-23 `native-rules-phase7-01-routes-20261023`: Phase 7.1: the human route search native.
+- 2026-10-23 `native-rules-phase6-random-opponents-20261023`: Phase 6: random skirmish opponents.
+- 2026-10-23 `native-rules-phase6-p5-variant-digest-20261023`: Phase 6 P6-5: the per-day digest as the Variant hash.
+- 2026-10-23 `native-rules-phase6-p4-session-handle-20261023`: Phase 6 P6-4: the native session across days.
+- 2026-10-23 `native-rules-phase6-p3-day-call-20261023`: Phase 6 P6-3: end_turn as one native call.
+- 2026-10-23 `native-rules-phase6-p2-map-corpus-20261023`: Phase 6 P6-2: a map corpus.
+- 2026-10-23 `native-rules-phase6-p1-matches-per-process-20261023`: Phase 6 P6-1: several matches per Godot process.
+- 2026-10-23 `native-rules-phase6-match-throughput-20261023`: Phase 6: Variant day digest, the day as one native call, a kept session handle, several matches per process, a map corpus. Closed on 2026-10-27, after its slices.
+- 2026-10-23 `native-rules-phase6-faction-setup-20261023`: Phase 6: the generator's faction setup and rotated maps.
+- 2026-10-23 `native-rules-phase2-battle-tool-20261022`: Phase 2: one payload builder, the AI preview as one native call, `battle_sim_cli` behind the arena and tuner, battles native only; G2 met. Closed on 2026-10-27, after its four slices.
+- 2026-10-22 `native-rules-phase5-10-day-validate-20261022`: Native day processing 10: the day switch's validating shadow check.
+- 2026-10-22 `native-rules-phase5-09-finalize-20261022`: Native day processing 09: _finalize_* for human battles.
+- 2026-10-22 `native-rules-phase4-faction-turn-20261022`: Native overworld AI faction turn (Phase 4).
+- 2026-10-22 `native-rules-phase4-04-exit-20261022`: Phase 4: exit and merge.
+- 2026-10-22 `native-rules-phase4-03-battles-20261022`: Phase 4: battles inside the turn native.
+- 2026-10-22 `native-rules-phase4-02-rare-paths-20261022`: Phase 4: the paths the six seeds do not run.
+- 2026-10-22 `native-rules-phase4-01-day-call-20261022`: Phase 4: the computer players' day in one native call.
+- 2026-10-22 `native-rules-phase4-00-runtime-fill-20261022`: Phase 4 runtime: backed containers filled on repeated reads.
+- 2026-10-22 `native-rules-phase2-d-exit-20261022`: Native rules Phase 2d: the GDScript battle copies deleted.
+- 2026-10-22 `native-rules-phase2-c-battle-tool-20261022`: Native rules Phase 2c: the battle tool for the tuner.
+- 2026-10-22 `native-rules-phase2-b-payload-20261022`: Native rules Phase 2b: the payload builder for every caller.
+- 2026-10-22 `native-rules-phase2-a-preview-20261022`: Native rules Phase 2a: the AI's battle preview as one native call.
+- 2026-10-21 `native-rules-shared-runtime-main-20261021`: Shared C++ rules runtime on main.
+- 2026-10-21 `native-rules-phase5-day-processing-20261021`: Native day processing (Phase 5).
+- 2026-10-21 `native-rules-phase5-08-exit-20261021`: Native day processing 08: exit and the single merge.
+- 2026-10-21 `native-rules-phase5-07-day-boundary-20261021`: Native day processing 07: one native call each side of the AI turn.
+- 2026-10-21 `native-rules-phase5-06-normalize-20261021`: Native day processing 06: overworld normalize.
+- 2026-10-21 `native-rules-phase5-05-scenario-elimination-20261021`: Native day processing 05: scenario evaluation and elimination.
+- 2026-10-21 `native-rules-phase5-04-enemy-states-20261021`: Native day processing 04: enemy states and commander rosters.
+- 2026-10-21 `native-rules-phase5-03-hero-commit-20261021`: Native day processing 03: hero commit.
+- 2026-10-21 `native-rules-phase5-02-economy-20261021`: Native day processing 02: town and site economy.
+- 2026-10-21 `native-rules-phase5-01-boundary-fog-20261021`: Native day processing 01: day engine boundary and fog.
+- 2026-10-21 `native-rules-phase3-search-kernel-20261021`: Native AiHeroRules._search kernel (Phase 3).
+- 2026-10-21 `native-rules-phase3-ai-targets-20261021`: Native AiHeroRules._best_candidate and _gate_candidate (Phase 3).
+- 2026-10-21 `native-rules-phase1-04c-native-board-cache-20261021`: Native battle engine 04c: a native board-read cache, then G1 on standard with Phases 3 and 5 paused.
+- 2026-10-21 `native-rules-phase1-04b-memos-20261021`: Native battle engine 04b: the GDScript memos layers 1-4 rely on, then G1 on standard.
+- 2026-10-21 `native-rules-phase1-01b-g1-projection-20261021`: Native battle engine 01b: G1 projected on layer 1, value-layer speed-up if needed.
+- 2026-10-20 `tooling-ai-match-speed-round2-20261020`: Faster AI match turns, round 2: the remaining identical fixes.
+- 2026-10-20 `native-rules-phaseA-ai-weights-data-20261020`: Native rules engine, Phase A: overworld AI numbers into data.
+- 2026-10-20 `native-rules-phaseA-ai-helper-weights-20261020`: Native rules engine, Phase A follow-up: the AI's helper numbers into data.
+- 2026-10-20 `native-rules-phase1-battle-engine-20261020`: Native rules engine, Phase 1: native battle engine.
+- 2026-10-20 `native-rules-phase1-11-exit-20261020`: Native battle engine 11: exit and the single merge.
+- 2026-10-20 `native-rules-phase1-10-autoplay-events-api-20261020`: Native battle engine 10: autoplay, structured events, player-battle API and UI queries.
+- 2026-10-20 `native-rules-phase1-09-ai-decisions-20261020`: Native battle engine 09: battle AI decisions and enemy turns.
+- 2026-10-20 `native-rules-phase1-08-ai-estimates-20261020`: Native battle engine 08: battle AI estimates.
+- 2026-10-20 `native-rules-phase1-07-spells-commanders-20261020`: Native battle engine 07: in-battle spells and commander payloads.
+- 2026-10-20 `native-rules-phase1-06-cohesion-town-20261020`: Native battle engine 06: cohesion, momentum, field objectives, town defences.
+- 2026-10-20 `native-rules-phase1-05-attacks-abilities-20261020`: Native battle engine 05: attacks and the abilities.
+- 2026-10-20 `native-rules-phase1-04-turn-order-effects-20261020`: Native battle engine 04: turn order and effects, then checkpoint G1.
+- 2026-10-20 `native-rules-phase1-03-movement-targeting-20261020`: Native battle engine 03: movement and targeting.
+- 2026-10-20 `native-rules-phase1-02-damage-chain-20261020`: Native battle engine 02: damage chain and stat totals.
+- 2026-10-20 `native-rules-phase1-01-foundation-hex-20261020`: Native battle engine 01: engine-exact helpers, native battle state, BattleEngine boundary, hex layer.
+- 2026-10-20 `native-rules-phase0-toolchain-20261020`: Native rules engine, Phase 0: aurelion_rules toolchain and the battle hex search spike.
+- 2026-10-20 `native-rules-phase0-measure-20261020`: Native rules engine, Phase 0: parity check, release template, profile and baselines.
+- 2026-10-20 `balance-sunvault-round-7-20261020`: Balance round 7: Sunvault's shooter lines trimmed.
+- 2026-10-20 `ai-townless-rival-held-off-20261020`: Computer players hold their towns against a rival that has none.
+- 2026-10-20 `ai-far-ahead-hunts-rival-towns-20261020`: A computer player far ahead hunts its rival's unseen towns.
+- 2026-10-19 `tooling-ai-match-speed-20261019`: Faster AI match turns without changing decisions.
+- 2026-10-19 `balance-phase-round-5-20261019`: Balance round 5: Veilmourn fights in its own fog, Mireclaw's veterans keep lower.
+- 2026-10-19 `balance-mireclaw-round-6-20261019`: Balance round 6: Mireclaw's base forms keep lower too.
+- 2026-10-19 `ai-gate-recross-remaining-20261019`: AI heroes stop the remaining gate recrossings.
+- 2026-10-19 `ai-gate-recross-loop-20261019`: AI heroes stop crossing a gate pair back and forth.
+- 2026-10-18 `native-rmg-split-template-repick-20261018`: Template selection re-picks templates whose player-filtered links leave zones unjoined.
+- 2026-10-18 `native-rmg-repair-monolith-partner-20261018`: Cut-off repair pass places the monolith end H3MapEd cannot place.
+- 2026-10-18 `native-rmg-repair-guarded-passages-20261018`: Cut-off repair pass keeps guarded link passages free of decoration.
+- 2026-10-18 `balance-phase-round-4-20261018`: Balance round 4: Embercourt and Sunvault trimmed, Veilmourn's T6 and Mireclaw's approach helped.
+- 2026-10-18 `balance-phase-round-2-20261018`: Balance round 2: Veilmourn, Thornwake and Sunvault eased back.
+- 2026-10-18 `balance-mireclaw-melee-round-3-20261018`: Balance round 3: Mireclaw's melee survives the approach.
+- 2026-10-18 `ai-values-spell-scrolls-20261018`: AI heroes value spell scrolls they have not read.
+- 2026-10-18 `ai-shut-in-opens-way-20261018`: AI opens the way past sites and guards when shut in.
+- 2026-10-18 `ai-routes-through-gates-20261018`: AI armies route through several gates.
+- 2026-10-17 `rmg-launch-keeps-guard-strength-20261017`: Generated-map launch keeps the chosen guard strength on every template selection mode.
+- 2026-10-17 `rmg-h3maped-sealed-start-zone-m003-20261017`: Trace the sealed Small start zone on map seed 1727041229 (H3MapEd's own behaviour).
+- 2026-10-17 `rmg-h3m-prison-body-parse-20261017`: RMG H3M parser: size hero-shaped records (Prison) so two-level references compare fully.
+- 2026-10-17 `native-rmg-seer-hut-bit26-reject-20261017`: Quest-hut projections reject existing bit-26 cells like H3MapEd 0x4aa603.
+- 2026-10-17 `native-rmg-second-town-placement-20261017`: Native RMG: extra-town placement in 0x4a901a/0x4a8db2 matches H3MapEd (split large maps).
+- 2026-10-17 `native-rmg-route-join-mine-shape-20261017`: Cut-off repair route joins treat the game's mine shape as occupied.
+- 2026-10-17 `native-rmg-repair-mine-placement-game-shape-20261017`: Cut-off repair pass places mines by the game's three-by-two shape.
+- 2026-10-17 `native-rmg-repair-link-passages-20261017`: Cut-off repair pass keeps link passages free of mines, gates and reward objects.
+- 2026-10-17 `native-rmg-ready-or-not-seed10-anchor-removal-20261017`: Remove the seed-10 Ready or Not 0x4a93a2 anchor override.
+- 2026-10-17 `native-rmg-extra-town-type-20261017`: Native RMG: 0x4a901a builds the town from the type it resolves (XL Monk's Retreat town subtypes).
+- 2026-10-17 `native-rmg-cut-off-town-repair-20261017`: Regenerate a map whose H3MapEd result leaves a town cut off, with zone route joins on.
+- 2026-10-17 `native-rmg-cut-off-check-mine-shape-20261017`: Cut-off town check blocks the game's three-by-two mine shape.
+- 2026-10-17 `balance-phase-round-1-20261017`: Balance round 1: every faction closer in each phase of the game.
+- 2026-10-17 `balance-mireclaw-muster-embercourt-gold-20261017`: Mireclaw grows more creatures at tiers 1-4; Embercourt's gold building pays 300.
+- 2026-10-17 `balance-embercourt-late-mireclaw-base-20261017`: Embercourt's head start moves into its late game; Mireclaw's base creatures harden.
+- 2026-10-17 `ai-water-travel-20261017`: AI heroes sail and go home across levels.
+- 2026-10-17 `ai-town-seen-anchor-or-door-20261017`: AI players attack rival towns they have seen by anchor or doorway.
+- 2026-10-17 `ai-subterranean-gates-20261017`: AI heroes cross subterranean gates.
+- 2026-10-17 `ai-looted-site-crossed-by-all-20261017`: AI heroes cross looted one-time sites whoever looted them.
+- 2026-10-17 `ai-cross-level-monoliths-20261017`: AI heroes cross monoliths whose exit is on the other level.
+- 2026-10-17 `ai-build-upgrade-counted-once-20261017`: AI town planner counts a dwelling upgrade's gain once.
+- 2026-10-16 `battle-ai-contested-lookahead-20261016`: Battle AI arena tunes on contested battles; look-ahead and outshot weights tried.
+- 2026-10-16 `ai-guard-passage-horizon-20261016`: AI guard passage value ignores ground past the search horizon.
+- 2026-10-16 `ai-free-guard-fights-20261016`: AI heroes fight weak guards they beat without losses at once.
+- 2026-10-16 `ai-army-power-refit-20261016`: Strength estimate refitted to battle outcomes.
+- 2026-10-16 `ai-army-power-ranged-calibration-20261016`: Strength estimate counts shooters at their battle performance.
+- 2026-10-15 `ux-overworld-road-diagonal-steps-20261015`: Generated roads stay joined across diagonal steps.
+- 2026-10-15 `tooling-battle-ai-arena-20261015`: Battle AI arena: head-to-head evaluation of BattleAiRules variants.
+- 2026-10-15 `debug-placement-overlay-impassable-terrain-20261015`: F4 placement overlay marks impassable terrain as blocked.
+- 2026-10-15 `battle-neutral-guards-fight-on-20261015`: Neutral guards never retreat or surrender.
+- 2026-10-15 `battle-ai-weights-cma-tuning-20261015`: Battle AI weights in data, tuned with CMA-ES in the arena.
+- 2026-10-15 `battle-ai-threat-weighted-kills-20261015`: Battle AI: AI logic moved into BattleAiRules; kills weighed by threat.
+- 2026-10-15 `battle-ai-hold-the-line-20261015`: Battle AI: melee holds its ground while its side outshoots the other.
+- 2026-10-15 `battle-ai-arena-realistic-battles-20261015`: Battle AI arena plays realistic battles; weights retuned on them.
+- 2026-10-15 `art-overworld-road-types-20261015`: Generated roads show the generator's road type.
+- 2026-10-15 `art-overworld-rivers-20261015`: Generated rivers are drawn on the overworld.
+- 2026-10-15 `art-overworld-river-bridges-20261015`: Roads cross rivers on timber bridges.
+- 2026-10-15 `art-overworld-impassable-rock-void-20261015`: Impassable rock reads as a walled void on the overworld.
+- 2026-10-14 `tooling-source-material-archive-incremental-20261014`: Archive the H3 video sources in incremental snapshots.
+- 2026-10-14 `art-overworld-soft-fog-shadows-20261014`: Soft fog of war and object shadows on the overworld.
+- 2026-10-14 `art-h3-kilnelk-facing-20261014`: Make the Ashcrown Kilnelk face its opponent in every clip.
+- 2026-10-14 `art-h3-green-plate-edge-spill-20261014`: Remove the green tint on thin and blurred edges of gold units keyed on a green plate.
+- 2026-10-11 `tooling-source-material-archive-incremental-20261011`: Archive new art sources in an incremental snapshot.
+- 2026-10-11 `tests-fluid-render-check-stale-20261011`: Bring the fluid animation render check up to date.
+- 2026-10-11 `art-idle-rife-integration-20261011`: RIFE idle loops in the game.
+- 2026-10-11 `art-idle-rife-inbetween-tool-20261011`: RIFE in-between tool for smoother creature idle loops.
+- 2026-10-11 `art-h3-painted-units-20261011`: Convert the painted creature clips to H3 video.
+- 2026-10-11 `art-h3-painted-unit-pilot-20261011`: Profile one painted unit converted to H3 video.
+- 2026-10-11 `art-blue-plate-edge-rematte-20261011`: Clean purple edges on blue-backdrop creature clips.
+- 2026-10-10 `tests-validation-budget-20261010`: Validation budget, core suite, authored-scenario test deletion.
+- 2026-10-10 `bugfix-start-hero-growth-seed-20261010`: A new game's start hero takes its growth seed from the session.
+- 2026-10-10 `bugfix-battle-walk-pace-20261010`: Every unit crosses a battle hex at the same pace.
+- 2026-10-10 `bugfix-battle-fallen-stack-effect-expiry-20261010`: A fallen stack's status ends without standing it up again.
+- 2026-10-10 `battle-rework-plates-details-20261009`: Stack plates with role, shots and strike-back pips; right-button details cards.
+- 2026-10-10 `battle-rework-cursor-forecast-20261009`: Sword and arrow cursors with kill, damage and strike-back forecasts; pointing picks the approach hex.
+- 2026-10-10 `battle-rework-battlefield-art-20261009`: Painted battlefields and obstacle props per terrain; grid and speed options.
+- 2026-10-10 `battle-rework-ai-balance-20261009`: Battle AI and balance for the reworked flow.
+- 2026-10-09 `ux-town-command-block-tavern-intel-20261009`: Town command block: Tavern and Intelligence Report squares, Close in the bottom right corner.
+- 2026-10-09 `ux-overworld-hero-sheet-orders-20261009`: Retire the overworld Command/Frontier drawers; hero orders on the hero sheet; one overworld spell per day; built/cast-today badges.
+- 2026-10-09 `ux-overworld-gain-floaters-20261009`: Floating gain text over the map.
+- 2026-10-09 `ux-generated-skirmish-fronts-monster-strength-20261009`: Generated maps in Skirmish Fronts; Map Forge monster strength.
+- 2026-10-09 `rmg-h3maped-parity-basis-windows-wine-20261009`: H3MapEd parity basis: Windows vs Wine, seeds 137 and 211.
+- 2026-10-09 `rmg-h3maped-desktop-input-divergence-20261009`: Recover the input that changes desktop-controlled H3MapEd reward selection.
+- 2026-10-09 `native-rmg-owner-success-and-entry-occupant-20261009`: Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check.
+- 2026-10-09 `heroes-guard-adjacent-tiles-20261009`: Heroes guard their adjacent tiles: stepping next to a hostile hero starts the battle.
+- 2026-10-09 `content-homm3-guarded-objects-20261009`: Every HoMM3 guarded object keeps its levels and reward: creature banks, Dragon Utopia, Pyramid, Crypt, Shipwreck, Derelict Ship, Pandora's Box and Warrior's Tomb.
+- 2026-10-09 `content-generated-guard-companies-20261009`: Budget-sized generated guards and 790 guard companies.
+- 2026-10-09 `content-creature-bank-levels-20261009`: HoMM3 creature banks keep their levels: the Crypt becomes a levelled Glassbound Eyrie with gold, a random artifact and a Crypt-strength guard.
+- 2026-10-09 `bugfix-spell-rules-battle-stack-count-20261009`: Spell rules and battle screen count living creatures from battle stack health.
+- 2026-10-09 `bugfix-rooted-tactical-order-20261009`: Tactical scoring never orders a rooted stack to advance.
+- 2026-10-09 `bugfix-quick-resolve-spell-check-20261009`: Quick Resolve checks a scored spell against the hero's real spellbook.
+- 2026-10-09 `bugfix-quick-resolve-focus-target-20261009`: Quick Resolve fallback orders target the weakest living enemy.
+- 2026-10-09 `bugfix-battle-stack-health-normalize-20261009`: Battle normalization keeps Hardened Ranks creature health.
+- 2026-10-09 `battle-spell-effect-identity-20261009`: One job per battle spell family; real status rules; effects counted in turns.
+- 2026-10-09 `battle-rework-wait-turn-order-20261009`: Wait command and a live turn order across this round, waiting stacks and the next round.
+- 2026-10-09 `battle-rework-melee-approach-20261009`: Player-chosen melee approach hex.
+- 2026-10-09 `battle-rework-hero-casting-20261009`: The hero casts battle spells as a free action once per round; the stack keeps its turn.
+- 2026-10-09 `battle-rework-fullscreen-screen-20261009`: Full-screen battle screen with heroes on the field, top ribbon and bottom command bar.
+- 2026-10-09 `battle-rework-design-20261009`: Battle screen and battle flow rework: plan and iterated mockup.
+- 2026-10-09 `battle-rework-board-obstacles-20261009`: Battle board: 11x9 hexes, edge deployment, blocking obstacles, no distance bands.
+- 2026-10-09 `balance-town-growth-fortifications-20261009`: Town creature growth rebalance and fortification growth.
+- 2026-10-09 `ai-long-range-portals-elimination-20261009`: AI long-range planning, random portal travel, townless elimination, starting hero loss not fatal, always-on match tracing.
+- 2026-10-09 `ai-garrison-room-20261009`: AI towns make room in a full garrison to recruit.
+- 2026-10-09 `ai-field-armies-town-value-20261009`: AI field armies, defences, town and elimination value, portal routes.
+- 2026-10-08 `ux-town-garrison-rows-20261008`: HoMM-style town garrison and visiting rows, resource bar and town list.
+- 2026-10-08 `ux-town-construction-close-20261008`: Construction board: drop the header resource strip, Close replaces View in town.
+- 2026-10-08 `ux-scenery-pickup-readability-20261008`: Blocked scenery always shows art; pickups larger, never hidden, with a glint.
+- 2026-10-08 `ux-resource-bar-daily-income-20261008`: Resource bar shows each resource's daily income.
+- 2026-10-08 `ux-overworld-road-junctions-20261008`: Road junctions draw as a T or a cross, not ladders and loops.
+- 2026-10-08 `ux-hero-level-up-roll-display-20261008`: Level-up popup shows the rolled command stat.
+- 2026-10-08 `ux-generated-site-footprint-dressing-20261008`: Dress bare blocked site tiles; keep claimed sites that remain after their visit.
+- 2026-10-08 `ux-generated-object-sprite-footprint-20261008`: Generated site sprites stand on their real footprint.
+- 2026-10-08 `ux-generated-object-placement-scan-20261008`: Scan every generated object's placement; centre site art on its entrance.
+- 2026-10-08 `perf-battle-refresh-read-scope-20261008`: Battle refresh reads each board state once; hidden battle surfaces build when shown.
+- 2026-10-08 `gameplay-site-recruit-overflow-20261008`: Full-army site claims: claim, keep what fits, dismiss a stack or leave the rest.
+- 2026-10-08 `feature-portal-networks-20261008`: Readable portal networks with HoMM3 random exits.
+- 2026-10-08 `content-hero-specialty-catalog-20261008`: 35 hero specialties with four ranks, six per hero.
+- 2026-10-08 `content-authored-scenarios-archived-20261008`: Archive the authored scenarios and campaigns.
+- 2026-10-08 `battle-stat-scaling-20261008`: Battle stat scaling: uncapped attack/defense, spell power that grows and matters, cohesion loss by share.
+- 2026-10-08 `art-overworld-terrain-decals-v4-20261008`: Rework ground decals: one set per ground, scattered by the ground shader.
+- 2026-10-08 `art-overworld-organic-ground-borders-20261008`: Organic ground borders: bent, height-and-priority blended biome edges.
+- 2026-10-08 `ai-versus-ai-match-20261008`: AI against AI matches; computer players start like the human; doubled market limits; market-priced town planning.
+- 2026-10-08 `ai-town-defense-recapture-20261008`: AI town defense and recapture.
+- 2026-10-08 `ai-strength-battle-scaling-20261008`: AI strength estimate for the battle stat scaling.
+- 2026-10-08 `ai-match-series-20261008`: AI match series on ten random maps, reproducible AI level-ups.
+- 2026-10-08 `ai-market-parking-fight-rewards-20261008`: Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards.
+- 2026-10-08 `ai-even-musters-danger-20261008`: Even faction starting musters; AI heroes avoid much stronger hostile heroes.
+- 2026-10-07 `ux-town-popouts-no-scroll-tavern-rotation-20261007`: Town popouts without scrolling and weekly tavern heroes.
+- 2026-10-07 `ux-town-market-popout-20261007`: Market and magic guild live only in their building popouts; resource conversion; gold-only market.
+- 2026-10-07 `ux-overworld-movement-feedback-20261007`: Portrait bar movement refresh and walked attack orders.
+- 2026-10-07 `ux-muster-hall-recruit-cards-20261007`: Muster Hall uses dwelling recruit cards.
+- 2026-10-07 `ux-hero-exchange-screen-20261007`: HoMM-style hero meeting screen replaces the rendezvous drop-down.
+- 2026-10-07 `tests-rmg-retirement-20261007`: Retire random-map tests written for the pre-rewrite generator.
+- 2026-10-07 `perf-town-recruit-responsiveness-20261007`: Town recruit clicks are fast (Muster Hall, popouts, orders).
+- 2026-10-07 `perf-battle-entry-transition-20261007`: No gray frame on scene changes; battles open about 4x faster.
+- 2026-10-07 `feature-water-travel-20261007`: Water travel (boats, shipyards, whirlpools) and pay-to-open random-map gates.
+- 2026-10-07 `feature-hero-hire-army-level-20261007`: Hired heroes come with a starting army and a weekly level.
+- 2026-10-07 `content-rare-resources-fully-tradeable-20261007`: Rare resources fully tradeable at every town market.
+- 2026-10-07 `balance-embercourt-convoy-rate-20261007`: Embercourt supply convoy beats the market sell rate.
+- 2026-10-07 `ai-raid-director-removal-20261007`: Remove the unused raid director and rewrite its harness cases for AI heroes.
+- 2026-10-07 `ai-plays-by-player-rules-20261007`: Computer players act through real heroes and towns under the human's rules.
+- 2026-10-07 `ai-hero-expansion-20261007`: AI heroes clear guards and leave their starting zone.
+- 2026-10-06 `ux-town-building-popouts-20261006`: Town building popouts.
+- 2026-10-06 `content-visit-buildings-20261006`: HoMM-style visit buildings (Phases 1 and 2).
+- 2026-10-06 `content-homm-pickups-income-20261006`: HoMM-style pickups and income sites.
+- 2026-10-06 `content-gold-only-unit-costs-20261006`: Gold-only unit recruitment costs.
+- 2026-10-06 `content-creature-dwellings-20261006`: HoMM3-style creature dwellings (all phases).
+- 2026-10-06 `balance-dwelling-pairs-20261006`: Dwelling pair balance.
+- 2026-10-05 `ux-town-construction-board-20261005`: Full-screen Town construction board.
+- 2026-10-04 `tooling-validate-repo-archived-sources-20261004`: Make the repository validator usable with archived sources.
+- 2026-10-04 `tooling-repo-hygiene-20261004`: Repair post-cleanup working tree, native binaries and source-test workflow.
+- 2026-10-03 `tooling-source-material-map-20261003`: Map source material storage and archive eligibility.
+- 2026-10-03 `tooling-source-material-local-cleanup-20261003`: Reclaim local space from verified archived source media.
+- 2026-10-03 `tooling-source-material-history-migration-20261003`: Remove archived production media from Git history while preserving development history.
+- 2026-10-03 `tooling-source-material-archive-20261003`: Archive mapped art sources on N drive with full payload verification.
+- 2026-10-03 `tooling-rmg-evidence-restore-20261003`: Restore ignored RMG reverse-engineering evidence from the Linux server.
+- 2026-10-03 `tooling-rmg-evidence-consolidation-20261003`: Consolidate RMG evidence and remove disposable restore/export outputs.
+- 2026-10-03 `tooling-audio-ci-disable-20261003`: Disable the retired audio workflow across historical GitHub refs.

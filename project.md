@@ -14,20 +14,17 @@ This project must be legally and creatively its own game. Use classic Heroes gam
 
 ## Current Reality
 
-The repository is a prototype / pre-alpha foundation with many real systems started. It is not release-ready, not HoMM2/HoMM3 parity, and not a complete playable product.
-
-River Pass has served as proof that a basic manual-play loop can work, but that does not prove production depth. Existing content breadth, validators, reports, UI screens, and smoke tests are evidence surfaces, not product-completion claims.
-
-The current strategic need is to turn the foundation into a coherent strategy game through planned implementation slices, not by accumulating disconnected docs, reports, or UI cue polish.
+Pre-alpha. The core loops are in place and played on generated maps: the native H3MapEd-parity generator (Small to Extra Large, land, water and islands, one or two levels), six factions with towns, upgrades and adventure-map dwellings, hero and guard battles on the reworked battle screen, overworld services, computer players that play by the player rules on every map type, saves and a map editor. Every rule runs as native C++, one copy, with the screens in GDScript; battle and match simulators run outside Godot. Authored maps, scenarios and campaigns are archived until their rework, so the game offers skirmish on generated maps only. It is not release-ready and not HoMM2/HoMM3 parity, and nothing ships until the owner prepares a release.
 
 Random map generation is not complete for alpha purposes until it reaches full HoMM3-style random-map-generation functional parity translated into this original game: template breadth, zone graph semantics, object density, guards, rewards, roads, validation, runtime adoption, and replay boundaries must all work through original content and systems.
 
 ## Document Model
 
 - `project.md` is this strategic charter. It defines the product, phases, architecture rules, and durable constraints.
-- `PLAN.md` is the tactical execution plan derived from this document. It breaks phases into implementation slices and references detailed requirement docs.
-- `docs/*.md` files hold detailed requirements, research, design foundations, reports, and gate reviews.
-- `ops/progress.json` tracks operational implementation state for PLAN slices.
+- `PLAN.md` is the tactical plan derived from this document: the owner's decisions in force, the questions waiting on the owner, the open slices and the last 30 days of completed ones, one line each.
+- `ops/progress.json` tracks the status of the same slices. `tools/progress.py` reads and updates both and checks their size budgets.
+- `docs/*.md` files hold detailed requirements, research, design foundations, reports, and gate reviews. `docs/plan-history/` and `ops/progress-archive/` hold the plan's and the tracker's history.
+- `AGENTS.md` ("Project files") sets how these files are written and their budgets.
 
 Documentation is not implementation unless a slice is explicitly documentation-only. Implementation progress is complete only when code/content/tooling changes satisfy the referenced requirements and validation gates.
 
@@ -46,7 +43,7 @@ Documentation is not implementation unless a slice is explicitly documentation-o
 Locked stack for the current production foundation:
 
 - Engine: Godot 4 stable series.
-- Gameplay language: GDScript for in-game runtime behavior, with the rules moving to C++ subsystem by subsystem (owner decision, 2026-10-20; `docs/native-rules-engine-transition.md`). A ported subsystem's rules live in the `aurelion_rules` GDExtension; where a phase keeps a GDScript copy beside the port (AGENTS.md: the functions day processing, the AI and the battle payload share with the UI and the rest of GDScript), a change goes into every copy in the same commit. Battles keep no GDScript copy since Phase 2d (2026-10-23). Every rule moves to C++, including game setup, the save format, the campaign runtime, the map editor's rules and all panel text; only the screens stay GDScript (scenes, layout, input, animation, drawing and audio, reading native results), and saves keep the session Dictionary format (owner decision, 2026-10-23; transition doc, Phase 7). Battle and match simulators run outside Godot as command-line tools built from the same C++ core (owner decision, 2026-10-22: `battle_sim_cli` for battle tuning, a match runner later).
+- Gameplay language: every rule is native C++ in the `aurelion_rules` GDExtension (`src/gdextension/rules/core/`), one copy, moved there subsystem by subsystem (owner decisions, 2026-10-20 to 2026-10-24; `docs/native-rules-engine-transition.md`). GDScript keeps the screens (scenes, layout, input, animation, drawing, audio, reading native results) and thin wrappers over the native engines; the campaign runtime stays GDScript until the campaign rework. Saves keep the session Dictionary format. Battle and match simulators run outside Godot as command-line tools built from the same core (`battle_sim_cli`, `match_sim_cli`).
 - Tooling language: Python for tests, reports, audits, and export/validation helpers.
 - Rendering: 2D-first scenes and UI.
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.
@@ -54,7 +51,7 @@ Locked stack for the current production foundation:
 - Manual save UX is named-file based, not limited to numbered slots. Keep legacy slot files loadable, autosave separate, Linux/Windows filename identity consistent, and replacements transactionally verified with explicit overwrite consent.
 - Validation: a short core regression suite (`tools/core_suite.py`, durable checks on generated maps) before every push, plus focused tests for the change. Evaluation runs (AI-vs-AI batches, full-match quality, profiles) are owner-requested, not gates. See AGENTS.md "Validation budget" (owner decision, 2026-10-10).
 - Release packages have no fixed content-size budget. Report their measured sizes without rejecting legitimate content for exceeding an arbitrary ceiling. Preserve asset completeness, source-art exclusion, corruption checks and bounded parsing of untrusted inputs.
-- Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
+- Map packages: the `aurelion_map_persistence` GDExtension. Package loads, writes and their checks, and the H3MapEd generator core, are the rules core's (`map_packages.cpp`, `map_generation.cpp`), which `match_sim_cli` runs too.
 
 Native extensions, external asset pipelines, or new storage layers may be added only through concrete tactical slices with rollback, compatibility, and validation gates.
 
@@ -88,24 +85,14 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 
 Expected ownership boundaries:
 
-- Scenario bootstrap and setup: `ScenarioFactory.gd`, scenario content JSON, and future scenario/map document adapters.
-- Map/scenario persistence: content loading in the native content tables (`src/gdextension/rules/core/content_store.cpp`, reached through `ContentService.gd`); save plumbing in `SaveService.gd` and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
-- Overworld state, movement, sites, economy ticks, fog, towns, and strategic summaries: `OverworldRules.gd`.
+- Rules: the native rules core under `src/gdextension/rules/core/` owns every rule. Its registries: battles, spells in battle and the battle AI (`port/registry.cpp`; the AI tuned through `content/battle_ai_weights.json`), the computer players' day (`turn_registry.cpp`, `ai_registry.cpp`), day processing (`day_registry.cpp`), and the human player's actions, setup, saves, content loading, panels and the map editor (`human_registry.cpp`). Content tables: `core/content_store.cpp`, with the start-up checks in `core/content_validate.cpp`.
+- GDScript rule files (`OverworldRules.gd`, `TownRules.gd`, `HeroCommandRules.gd`, `BattleRules.gd`, `BattleAiRules.gd`, `EnemyTurnRules.gd`, `SaveService.gd`, `ContentService.gd` and the rest) are thin wrappers over `HumanEngine`, `BattleEngine`, `TurnEngine`/`AiEngine` and `DayEngine`. `BattleRules.gd` also builds the battle screen's text and presentation payloads.
+- Still GDScript: the campaign runtime (`CampaignRules.gd`, `CampaignProgression.gd`) until the campaign rework, and `AiSeatRules`.
+- Map packages and the generator core: the rules core (`map_packages.cpp`, `map_generation.cpp`); `MapPackageService` is thin wrappers over it. The `MapDocument` and `ScenarioDocument` accessors keep a Godot copy (`src/gdextension/src/map_document.cpp`, `scenario_document.cpp`).
 - Overworld ground presentation: `OverworldGroundSurface.gd` blends manifest-backed original raster materials in world space. Its cached terrain/exploration lookup is derived presentation data, never terrain, collision or save authority; unknown neighboring ground must not leak through biome blending.
 - Overworld scenery may compose compatible neighboring blocked bodies into shared visual patches, independent of source-record boundaries. Patch bases must use existing blocked cells; overlapping art stays in the presentation/fog layer and must not modify native placements, paths, collision, simulation RNG or saves.
-- Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: the native battle port (`src/gdextension/rules/core/port/battle_*.cpp` and `spell_*.cpp`, registry `registry.cpp`). `BattleRules.gd` holds the thin calls into it and the battle screen's text and presentation payloads, which stay GDScript.
 - Battle body geometry is shared by rules, AI and presentation through `BattleFootprint.gd`. Explicit content profiles supply new stacks' one/two-cell footprints and visual scale; these fields persist in battle saves, while legacy battles without them retain one-cell occupancy. Raster pose clips and dead poses remain presentation metadata, not simulation state.
 - Creature atlas storage may use legacy grids or explicit packed rectangles with original anatomical anchors. Storage layout must preserve source pixels, scale, timing, mirrored grounding and corpse position; it must not enter simulation or save state.
-- Tactical enemy decisions: the native battle AI (`src/gdextension/rules/core/port/battle_ai_*.cpp`), tuned through `content/battle_ai_weights.json`. `BattleAiRules.gd` holds the thin calls and the memos the port reads.
-- Town construction, recruitment, study, garrison, market, defense, and town summaries: `TownRules.gd`.
-- Heroes, command, roster, transfer, town-defender eligibility/force assembly, recruitment, progression, and carryover-safe hero state: `HeroCommandRules.gd`, `HeroProgressionRules.gd`.
-- Artifacts: `ArtifactRules.gd`.
-- Spells: `SpellRules.gd`.
-- Objectives, scripts, outcome shaping: `ScenarioRules.gd`, `ScenarioScriptRules.gd`.
-- Campaign progression: `CampaignRules.gd`, `CampaignProgression.gd`.
-- Strategic AI and enemy turns: `EnemyTurnRules.gd`, `EnemyAdventureRules.gd`.
-- Difficulty: `DifficultyRules.gd`.
-- Save/load plumbing: `SessionStateStore.gd`, `SaveService.gd`.
 - Contextual UI help: `ContextualHelp.gd` owns viewport-local, non-interactive hover cards and explicit modal inspection; scene controls retain description generation. Hover and inspection never commit gameplay orders.
 
 If a slice changes ownership boundaries, update this document only when the decision is strategic and durable.
@@ -226,9 +213,7 @@ Exit criteria:
 
 Current execution phase: Phase 6 — Production Alpha Layer, while closing the remaining Phase 5 playable-alpha quality requirements.
 
-The strategic focus is now to turn the validated systems foundation into a coherent playable alpha that can be played repeatedly without developer interpretation. Economy/town development, save/load, generated-art loading, strict Small generated package adoption, active scenario source routes, battle presentation foundations, and strategic AI foundations all have meaningful evidence, but they are not product-completion claims.
-
-Near-term work should prioritize coherent complete matches: reliable exploration, development, battles and outcomes; responsive full actions; clear scenery-first UI; save/resume; and platform validation. Additional breadth is subordinate to demonstrated end-to-end play quality. Each selected slice needs live behavior and progression proof rather than a content-count or tracker-completion claim.
+The focus is complete games on generated maps that play well, for the human and for the computer players: faction balance, measured by owner-requested AI batches and the battle arena; AI strength and match speed; the overworld economy and services; and consistent art and animation. The rules port to C++ is done apart from the campaign runtime, which moves with the campaign rework. Each slice needs live behavior proof, not a content count or a tracker claim.
 
 Authored maps, scenarios and campaigns are obsolete (owner decision, 2026-10-05) and will be redone completely in a later rework. Until the owner selects it, no effort goes into the existing authored roster or its checks; match work uses generated maps. Shared content definitions and the scenario/campaign runtime stay live. See `docs/authored-scenarios-obsolete.md`.
 

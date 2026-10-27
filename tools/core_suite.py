@@ -12,6 +12,8 @@ or the owner's Windows install. Every test gets a throwaway user profile (APPDAT
 Windows, XDG_DATA_HOME on Linux), so the real saves and settings are never touched.
 
 The content check (tests/validate_repo.py, a few seconds) runs first and needs no Godot.
+The project files check (tools/progress.py check) fails when AGENTS.md, PLAN.md or
+ops/progress.json is over its size budget or an entry is too long (AGENTS.md "Project files").
 The native check runs bin/rules_selftest (the native rules core's golden vectors, no Godot)
 and fails when this checkout has not registered every src/gdextension/*.gdextension: run
 `godot --headless --path . --import` once after a pull that brings a new one.
@@ -63,6 +65,7 @@ CORE_TESTS: list[tuple[str, int, str]] = [
 
 CONTENT_CHECK = "validate_repo"
 NATIVE_CHECK = "rules_selftest"
+PROJECT_FILES_CHECK = "project_files"
 
 FAILURE_TEXT = re.compile(r"^(SCRIPT ERROR|Parse Error|ERROR: Failed to load script)", re.M)
 
@@ -93,6 +96,13 @@ def run_content_check() -> tuple[str, bool, float, str]:
     cmd = [sys.executable, str(ROOT / "tests" / "validate_repo.py")]
     proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
     return CONTENT_CHECK, proc.returncode == 0, time.monotonic() - started, proc.stdout + proc.stderr
+
+
+def run_project_files_check() -> tuple[str, bool, float, str]:
+    started = time.monotonic()
+    cmd = [sys.executable, str(ROOT / "tools" / "progress.py"), "check"]
+    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
+    return PROJECT_FILES_CHECK, proc.returncode == 0, time.monotonic() - started, proc.stdout + proc.stderr
 
 
 def run_native_check() -> tuple[str, bool, float, str]:
@@ -142,19 +152,22 @@ def main() -> int:
     if args.list:
         print(f"{CONTENT_CHECK:55s} content parses, ids and references resolve, runtime files exist")
         print(f"{NATIVE_CHECK:55s} native rules core matches its golden vectors; extensions are registered")
+        print(f"{PROJECT_FILES_CHECK:55s} AGENTS.md, PLAN.md and ops/progress.json within their budgets")
         for name, timeout, why in CORE_TESTS:
             print(f"{name:55s} {why}")
         return 0
     tests = CORE_TESTS
     content_check = True
     native_check = True
+    project_files_check = True
     if args.only:
-        unknown = set(args.only) - {t[0] for t in CORE_TESTS} - {CONTENT_CHECK, NATIVE_CHECK}
+        unknown = set(args.only) - {t[0] for t in CORE_TESTS} - {CONTENT_CHECK, NATIVE_CHECK, PROJECT_FILES_CHECK}
         if unknown:
             sys.exit(f"Not core tests: {', '.join(sorted(unknown))}")
         tests = [t for t in CORE_TESTS if t[0] in args.only]
         content_check = CONTENT_CHECK in args.only
         native_check = NATIVE_CHECK in args.only
+        project_files_check = PROJECT_FILES_CHECK in args.only
 
     known = load_known_failures()
     started = time.monotonic()
@@ -163,6 +176,8 @@ def main() -> int:
         failed += report(*run_content_check(), known)
     if native_check:
         failed += report(*run_native_check(), known)
+    if project_files_check:
+        failed += report(*run_project_files_check(), known)
     note = ""
     if tests:
         godot = find_godot(args.godot)
@@ -173,7 +188,7 @@ def main() -> int:
         finally:
             removed = remove_new_maps(maps_before, run_started_at)
         note = f"; removed {removed} generated map files the tests wrote" if removed else ""
-    total = len(tests) + (1 if content_check else 0) + (1 if native_check else 0)
+    total = len(tests) + sum(1 for check in (content_check, native_check, project_files_check) if check)
     print(f"\n{total - len(failed)}/{total} core tests passed in {time.monotonic() - started:.0f}s{note}")
     return 1 if failed else 0
 

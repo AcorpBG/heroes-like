@@ -3,113 +3,91 @@
 This repository is for a full-production, release-bound fantasy strategy game inspired by the feel of Heroes of Might and Magic II.
 
 ## Read first
-- `project.md`
-- `PLAN.md`
-- `docs/lessons-learned.md`
+- `project.md`, then `PLAN.md`.
+- `docs/lessons-learned.md` ("Native RMG Recovery Discipline") before any native RMG or parity work: code, tools, validators, reports or progress claims. Name an unrecovered H3MapEd function or data structure as the blocker; never paper over it with heuristics, density scalars, gates, brute-force retries or final-map delta tuning.
+- `python tools/progress.py status` for the current state of `ops/progress.json`; don't load the file whole.
 
-`docs/lessons-learned.md`, especially "Native RMG Recovery Discipline", is mandatory context before touching native RMG/parity work. It records the owner-called-out source-parity mistakes that must not be repeated, including treating disassembly or partial decompile as complete source, patching from final-map deltas, translating HoMM3 semantics too early, accepting report/gate progress as implementation progress, and iterating experiments instead of naming unrecovered functions or data structures.
-
-For native RMG work, read that file before editing code, tools, validators, reports, or progress claims. Unrecovered H3MapEd functions/data structures must be named as blockers instead of being papered over with heuristics, density scalars, gates, brute-force retries, or final-map delta tuning.
-
-Do not load all of `ops/progress.json` by default. It is an operations tracker, not onboarding context. Use the heroes-progress workflow/helper to query the current implementation status and selected next slice when needed. If available, run: `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like`.
+## Project files
+- `project.md`: the game, its phases, engine, script and content rules, architecture principles and durable constraints. Short and stable, no progress notes. Record major architectural choices here.
+- `PLAN.md`: the owner's decisions in force, the open slices with the docs they reference, and "Recently completed".
+- `ops/progress.json`: the status of the same slices, entered before work begins: `pending`, `in_progress`, `blocked`, or `completed` once the implementation and its validation meet the referenced docs.
+- `docs/`: specifications and evidence. A doc completes only a documentation slice.
+- Edit in place, don't append. An open slice has one entry in each file, at most 600 characters: goal, files, owner decision.
+- A completed slice becomes one line under "Recently completed", at most 300 characters: id, commit, what changed. Its `progress.json` entry keeps id, status, date, commit and that line.
+- Numbers, check counts, logs and evidence go in the commit message or a `docs/` file.
+- An owner decision is one dated line under "Owner decisions in force", removed when superseded or done.
+- Entries older than 30 days move to the month's file in `docs/plan-history/` and `ops/progress-archive/`. Don't edit the archives; grep them.
+- `python tools/progress.py add` and `set-status` write both files in this format; `archive` moves the old entries.
+- Budgets: `AGENTS.md` 14 KB, `PLAN.md` 60 KB, `ops/progress.json` 300 KB. `tools/core_suite.py` fails above them (`python tools/progress.py check`); then archive the oldest completed entries. Only the owner raises a budget.
+- Several agents work at once: commit only your own hunks of `PLAN.md` and `progress.json`.
 
 ## Authored maps, scenarios and campaigns are archived
-- Owner decision, 2026-10-05: every authored map, scenario and campaign is obsolete and will be redone completely. Until the owner selects that rework, put no effort into them: do not add, fix, retune, rebalance or re-validate them, and do not select them as a slice.
-- Owner decision, 2026-10-08: they are archived in `archive/authored-scenarios-2026-10-08/` (`scenarios.json`, `campaigns.json`, `terrain_layers.json`, `tools/author_*.py`; see its README). The game offers none of them (archived `domain_status`; the main menu shows Campaign as "Coming soon"), but `ContentService` still loads them by id, so tests keep using them as hidden setups. Do not make them playable again before the rework.
-- Owner decision, 2026-10-10: the tests and `tests/validate_repo.py` checks about authored scenarios and campaigns are deleted (see `docs/authored-scenarios-obsolete.md`). The other tests that load an authored scenario only as a harness are quarantined: do not run them, fix them or use them to verify new work. Use generated maps.
-- Generated maps, shared content definitions and the scenario/campaign runtime code are not covered and stay live. Plan ids: `content-authored-scenarios-obsolete-20261005`, `content-authored-scenarios-archived-20261008`.
+- Owner decisions, 2026-10-05 to 2026-10-10: every authored map, scenario and campaign is obsolete and will be redone. Until the owner selects that rework, don't add, fix, retune, rebalance, re-validate or select them, and don't make them playable. They are in `archive/authored-scenarios-2026-10-08/` (see its README); `ContentService` still loads them by id as hidden test setups.
+- Their tests are deleted (`docs/authored-scenarios-obsolete.md`). Tests that load one only as a harness are quarantined: don't run, fix or use them. Use generated maps.
+- Generated maps, shared content definitions and the scenario and campaign runtime code stay live.
 
-## Planning document roles
-- `project.md` is the strategic project document. It defines the game, phases, engine/script/content rules, architecture principles, and durable implementation constraints. Keep it concise and stable. Do not use it as a progress log, implementation diary, or place for near-term note piles.
-- `PLAN.md` is the tactical execution plan derived from `project.md`. It breaks phases into concrete implementation slices and references the relevant requirement docs under `docs/`. Keep it executable and compact enough for coding-agent context. Do not append verbose history, worker logs, or progress-tracker prose.
-- `ops/progress.json` is the operational implementation tracker for `PLAN.md`. Planned slices should exist there before work begins. Status must represent implementation reality: `pending` before work, `in_progress` while active, `blocked` when blocked, and `completed` only after the implementation and validation satisfy the referenced requirements/docs.
-- Requirement/design documents under `docs/` are evidence and specifications. Producing a doc is not the same as completing the implementation slice unless the slice is explicitly documentation-only.
-- Do not mark gameplay/system/content slices complete just because a plan, report, or foundation document was produced. Track documentation readiness separately from implementation completion.
-
-## Product rule
-- This is not a toy prototype and not a fake MVP. Build toward a shippable product from day one.
-- Still work in staged slices. Each slice should strengthen the final architecture, not create throwaway code.
-
-## Implementation progress discipline
-- Real implementation progress means one of these changed in the repo: live game behavior, native/runtime behavior, shipped content, production tooling required by the selected slice, or a source-backed recovery artifact that directly unblocks a named implementation step.
-- Contracts, diagnostics, reports, gates, audits, metadata surfaces, verifier wiring, snapshots, comparison tables, and progress-file edits are not implementation progress by themselves. They are support work only.
-- Do not spend a turn creating new evidence surfaces when the selected work needs runtime/native implementation, unless the user explicitly asks for an audit/report or the evidence is required to validate a same-slice behavior change.
-- Do not mark a gameplay, AI, balance, native RMG, save/load, UI, content, or packaging slice complete unless the implemented behavior is present and the relevant validation has passed (as defined in "Validation budget" below). If only a diagnostic changed, the slice is still pending or blocked.
-- If implementation is blocked, state the exact missing function, data structure, runtime behavior, source file, or recovered-state proof. Do not describe being "closer", "green", "wired", or "done" when the actual behavior still does not exist.
-- For native RMG specifically, checkpoint progress requires native generated state or final map payload behavior to match the recovered H3MapEd private-state/final-writeout comparison for the selected phase. New checkers, exporters, contracts, snapshots, and reports do not count as checkpoint progress unless they accompany that behavior change.
+## What counts as progress
+- Not a toy prototype or a fake MVP: build toward a shippable product in staged slices that strengthen the final architecture, with no throwaway code.
+- Progress means a change in live game behavior, native or runtime behavior, shipped content, production tooling the slice needs, or a source-backed recovery artifact that unblocks a named implementation step.
+- Contracts, diagnostics, reports, gates, audits, metadata, verifier wiring, snapshots, comparison tables and progress-file edits are support work, not progress. Add them only to validate a behavior change in the same slice, for a documentation or tooling slice, or when the owner asks.
+- A gameplay, AI, balance, native RMG, save/load, UI, content or packaging slice is complete only when the behavior is in and its validation passed.
+- When blocked, name the missing function, data structure, runtime behavior, source file or recovered-state proof. Don't call it "closer", "green", "wired" or "done".
+- Native RMG checkpoint progress needs native generated state or the final map payload to match the recovered H3MapEd private-state and final-writeout comparison for the phase.
 
 ## Validation budget
-Owner decision, 2026-10-10. Testing had grown to about half of all agent time, mostly re-running stale tests, and agents wrote more test and probe code than game code. Test the durable behavior, verify your own change, and stop.
-- **While working:** run only the one or two tests that cover what you changed. Re-run a test only after changing code it covers.
-- **Before pushing to main:** run `python tools/core_suite.py` (Windows, a few minutes). It must pass, apart from entries in `tests/known_failures.txt`. The core suite plus your focused tests is the whole validation for a normal change.
-- **A failure your change did not cause:** do not fix it, bisect it, or compare against older commits. If it is a core test, add one line to `tests/known_failures.txt` (`test_name  # what fails, date`). Mention it in the handoff and move on.
-- **Linux: paused, Windows only** (owner decision, 2026-10-21). Until the owner calls a Linux pass, do no Linux builds, runs, tests, parity checks or server work, also for native, file-path, save-format, RNG, build or packaging changes. Native changes rebuild only the Windows libraries; the Linux libraries in `bin/` may fall behind the source. Say so in one line of the handoff. Keep writing portable code (no Windows-only APIs or paths); the Linux pass checks it later. When that pass ends, the old rule returns: `tools/core_suite.py` once on Linux for native, file-path, save-format, RNG, build or packaging changes.
-- **AI-vs-AI matches, full-match quality runs, performance profiles and balance sweeps:** only when the owner asks. They are evaluation tools, not regression tests.
-- **`tests/validate_repo.py`:** the content check, the first step of `tools/core_suite.py` (a few seconds, no Godot). It checks that content JSON parses, ids are unique, `<domain>_id` references resolve, art manifests cover every unit, hero, spell, building and faction, runtime `res://` files exist, and scenes are wired. It must pass. Keep it generic: do not add checks for one slice, source text, UI strings, file sizes or tuned numbers.
-- **New tests:** do not add a test file or a core-test case for every change (owner decision, 2026-10-19). Verify a bug fix with a focused check in the scratchpad (a probe, a replay of the failing seed) and delete it afterwards. A case goes into a core test only for durable behavior that breaks the game when wrong and that no core test covers yet, never for the mechanism of one fix: no seed pinned to one bug, no internal function of one fix, no replay of one past failure. If such behavior has no core test, add one and list it in `CORE_TESTS` in `tools/core_suite.py`. Do not write "add a core test case" into briefs for other sessions. Check feature and UI work by running the game once (with a screenshot for visual work), not with a permanent report scene.
-- **What a test may assert:** behavior that rarely changes and breaks the game when wrong. Examples are scripts compiling, boot, deterministic generation and battles, a generated game launching, save/load, elimination and victory, economy and town rules, and content schemas. Never assert exact UI strings, layout coordinates, balance numbers designers tune, or the source text of other files.
-- **Probes and match runners:** write them only to debug a specific failure. Keep them in the scratchpad and delete them at the end.
-- **Unchanged:** native RMG parity checks per `docs/lessons-learned.md`, and full export/packaging validation on both platforms for release candidates.
-- **Native rules port checks** (owner decisions, 2026-10-20 and 2026-10-21; fewer checks). For each slice of `docs/native-rules-engine-transition.md`, on Windows:
-  - while working, run shadow mode on the six seeds;
-  - before pushing, run one six-seed check of native mode against main, plus the core suite.
-  - The arena suites, the holdout suite, edge probes, the payload corpus and timing runs are only for the formal G1 and before a phase merges.
-  - Write no review or fact-check workflows for slice docs or reports. A slice's doc entry says what changed and gives its check counts, and nothing more.
-  - Never run parity checks, timing runs or native builds on this machine while an owner AI batch is running.
+Owner decisions, 2026-10-10 and 2026-10-19: test the durable behavior, verify your own change, and stop.
+- While working, run the one or two tests that cover your change, again only after changing code they cover.
+- Before pushing to main: `python tools/core_suite.py` (Windows, a few minutes) passes, apart from `tests/known_failures.txt`. That plus your focused tests is the whole validation.
+- A failure your change did not cause: don't fix, bisect or compare it. If it is a core test, add `test_name  # what fails, date` to `tests/known_failures.txt` and mention it in the handoff.
+- Linux is paused (owner, 2026-10-21) until the owner calls a Linux pass: no Linux builds, runs, tests or server work. Native changes rebuild the Windows libraries only; say in the handoff that the Linux ones fall behind. Keep the code portable. After the pass, the core suite runs once on Linux for native, file-path, save-format, RNG, build or packaging changes.
+- AI-vs-AI matches, full-match quality runs, performance profiles and balance sweeps run only when the owner asks.
+- `tests/validate_repo.py`, the core suite's content check, must pass. Keep it generic: no checks for one slice, source text, UI strings, file sizes or tuned numbers.
+- Verify a fix with a scratchpad check (a probe, a replay of the failing seed) and delete it. Add a core case (`CORE_TESTS` in `tools/core_suite.py`) only for durable game-breaking behavior no core test covers, never for one fix's mechanism; don't brief other sessions to add one. Check feature and UI work by running the game once, with a screenshot for visual work, not with a report scene.
+- Tests assert behavior that rarely changes and breaks the game when wrong (compiling, boot, deterministic generation and battles, launching a generated game, save/load, victory, economy and town rules, content schemas), never UI strings, layout coordinates, tuned numbers or other files' source text.
+- Unchanged: native RMG parity checks per `docs/lessons-learned.md`, and export and packaging validation on both platforms for release candidates.
+
+## Native rules engine
+Owner decisions D5, D8, D10 and D11 (2026-10-20 to 10-23), `docs/native-rules-engine-transition.md`.
+- Every rule is native, one copy, under `src/gdextension/rules/core/`. Registries: `port/registry.cpp` (battles), `turn_registry.cpp` and `ai_registry.cpp` (the AI's day), `day_registry.cpp` (day processing), `human_registry.cpp` (the human player, screens, setup, saves, content, editor). The GDScript functions others call are thin wrappers over `BattleEngine`, `TurnEngine`/`AiEngine`, `DayEngine` and `HumanEngine`. A path the port leaves out is a SCRIPT ERROR and a real bug.
+- A rule change goes into the C++ only; a battle or day change also needs one six-seed native check against main (`tools/rules_parity.py check`). After a battle change, rebuild `battle_sim_cli`, which the battle AI arena and tuner run (variants are weight sets in `content/battle_ai_weights.json`).
+- GDScript-only rules remain in the campaign runtime, `AiSeatRules` and the few the transition doc names.
+- Map packages and the H3MapEd generator core are one copy in the rules core (`map_packages.cpp`, `map_generation.cpp`); a change needs one six-seed `rules_parity.py check . . --runner-b`. The `MapDocument` and `ScenarioDocument` accessors also have a Godot copy (`src/gdextension/src/map_document.cpp`, `scenario_document.cpp`): change both in one commit.
+- A port slice freezes the functions it moves (its `PLAN.md` entry names them) until its merge; urgent fixes land in GDScript on main for the branch to port. On the branch, `HEROES_NATIVE_HUMAN=shadow` checks them on the six seeds, and the merge makes them NATIVE entries (`tools/native_battle_switch.py`); before pushing, one six-seed native check against main plus the core suite. Arena, holdout, edge-probe, payload-corpus and timing runs are only for the formal G1 and phase merges. No review workflows for slice docs.
+- Never run parity checks, timing runs or native builds while an owner AI batch is running.
 
 ## Engineering rules
-- Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
-- Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front. Code must work on both; running tests on both is required only for the change types listed under "Validation budget", and Linux checks are paused until the owner's Linux pass.
-- For native/GDExtension work, keep Linux and Windows build outputs, `.gdextension` library entries, helper scripts, docs, and validation expectations in sync. Do not land Linux-only native changes unless the slice explicitly records a temporary Windows blocker and follow-up. Until the Linux pass, Windows-only native builds are allowed: the Linux libraries in `bin/` stay as they are and are rebuilt in that pass.
-- Godot's `.import` and `.uid` sidecars are tracked (owner decision, 2026-10-10): they hold each asset's import settings and stable id. Commit new art, audio and scripts together with their sidecars; if Godot has not written them yet, run a headless import (`godot --headless --path . --import`) first. Sidecars of archived source media under `art/*/source/` stay ignored with the media. Only the `.godot/` cache stays out of Git.
-- Prefer data-driven content for factions, heroes, units, spells, map objects, resources, towns, and campaign metadata.
-- Keep core systems modular: overworld, combat, AI, economy, save/load, UI, content pipeline.
-- Avoid direct cloning of copyrighted names, assets, maps, factions, unit art, music, or text.
-- Use original placeholder content where needed.
-- No temporary git worktrees. Work directly in this repo.
-- **Native rules port** (owner decisions D5, D8, D10, 2026-10-20; `docs/native-rules-engine-transition.md`):
-  - Battles run native, with no switch and no GDScript battle (Phase 1 merged 2026-10-22, Phase 2d 2026-10-23; owner decision 2026-10-22). The 725 functions of the battle registry (`src/gdextension/rules/core/port/registry.cpp`: `BattleRules`, `BattleAiRules`, the in-battle parts of `SpellRules`, `BattleAutoResolveRules`, `BattleFootprint`, `TownBattleRules` and the helpers they reach) exist only as their C++ port: the ones GDScript still calls are thin wrappers over `BattleEngine.native` (`scripts/core/BattleEngine.gd`), and a path the port leaves out is a native failure (a SCRIPT ERROR). A battle change goes into the C++ port only, plus one six-seed check of native mode against main. The battle AI arena and its tuner run `battle_sim_cli`, the native port outside Godot with a native router: rebuild it with the rules library after a battle change. Their variants are weight sets (`content/battle_ai_weights.json`), and `--backend godot` plays only `--plain` games. Tests that called the deleted private battle functions are retired (`docs/battle-test-retirement.md`, D6).
-  - Outside battles too, the functions a port slice moves take no behaviour changes from the start of that slice until its port merges to main (owner decision 2026-10-21); the slice's `PLAN.md` entry names them, and an urgent fix lands in GDScript on main for the port branch to port.
-  - The computer players' day runs native in every game (Phase 3's AI targets merged 2026-10-21, Phase 4 merged 2026-10-23): `EnemyTurnRules.run_enemy_turn` runs every faction turn and the battles in it as one native call (`src/gdextension/rules/core/port/`: `*_turn*.cpp`, `turn_*.cpp`, `*_shared.cpp` and Phase 3's `ai_hero_rules_*.cpp`; registries `turn_registry.cpp` and `ai_registry.cpp`). There is no switch and no GDScript turn: a path the port leaves out is a native failure (a SCRIPT ERROR). The AI scripts' functions that GDScript outside the turn still calls are thin wrappers over their native port (`TurnEngine.gd`, `AiEngine.gd`). `content/ai_hero_weights.json` stays open.
-  - Phase 7 makes every rule native, one copy (owner decisions D11, 2026-10-23; transition doc, Phase 7). Merged (merge 1a 2026-10-23, merges 1b, 2, 3 and 4 2026-10-24): the human route search and its route queries (7.1) run only as their C++ port, NATIVE entries of `src/gdextension/rules/core/port/human_registry.cpp` that GDScript reaches through thin wrappers over `HumanEngine.native`; content loading (7.10) is native: `ContentService` hands out the native content tables' read-only rows (`core/content_store.cpp`), and its start-up checks of the live files are `core/content_validate.cpp`; game setup (7.11) is native from the menu's options to the session, and the GDScript generator is deleted (D-g); saves (7.12) are native, `SaveService.gd` being thin wrappers over its port (`save_service_*.cpp`); the move and its arrival (7.2) are native (`overworld_rules_move.hpp`), with the action frame `_finalize_action_result`; so are the context and site actions, overworld spells, hero commands, town actions and the outcome screen (7.3 to 7.7: `overworld_rules_context.hpp`, `overworld_rules_spells.hpp`, `overworld_rules_heroes.hpp`, `town_rules_actions.hpp`, `scenario_outcome.hpp`), the panels (7.8, `overworld_rules_panels.hpp`), the battle screen (7.9, `battle_screen.hpp`) and the map editor's rules (7.13, `map_editor.hpp`). Every rule ported so far has one copy, its C++ port (7.15): the GDScript functions that the screens, the router, the tools and the core tests call are thin wrappers over `HumanEngine.native`, and a change goes into the C++ only. GDScript-only rules are left in the campaign runtime (D-f), `AiSeatRules` (beside `match_sim_cli`'s own seats) and the few the transition doc names (Phase 7, "Merge 4"). On a slice's branch, `HEROES_NATIVE_HUMAN=shadow` checks the slice's switched functions; the merge turns them into NATIVE entries (`tools/native_battle_switch.py`).
-  - Day processing runs native (Phase 5, merged 2026-10-22), with no switch and no GDScript day since Phase 7's merge 3 (2026-10-24, D-d): the day registry's entries (`core/port/day_registry.cpp`) are thin wrappers over `DayEngine.native`, and a path the port leaves out is a native failure (a SCRIPT ERROR). A day change goes into the C++ port only, plus one six-seed check of native mode against main.
-  - Map packages are one copy (Phase 8, merged 2026-10-24): the package loads, the projection, the package writes and their checks are the rules core's (`src/gdextension/rules/core/map_packages.cpp` and `map_generation.cpp`), which the AI match runner outside Godot (`match_sim_cli`) runs, and the map library's `MapPackageService` (`src/gdextension/src/map_package_service.cpp`) is thin wrappers over them; the H3MapEd generator core is one copy too. A change to them goes into the core only, plus one six-seed `rules_parity.py check . . --runner-b`. The `MapDocument` and `ScenarioDocument` accessors keep a Godot copy (`src/gdextension/src/map_document.cpp`, `scenario_document.cpp`) beside the core's (`map_packages.cpp`): a behaviour change to one of them goes into both copies in the same commit.
-- Local commits are fine when they are coherent. Always push completed validated work to GitHub and merge it into the default branch when there are no conflicts, unless AcOrP explicitly says otherwise for that slice. If working directly on the default branch, push it without creating an unnecessary merge. If conflicts occur, report them rather than forcing the merge or overwriting remote changes.
-- The owner plays and tests from the main checkout (`D:\Games\godot\heroes-like` on Windows), not from agent worktrees. After pushing to the default branch from a worktree or another clone, bring that checkout up to date in the same run, so GitHub is never ahead of the build the owner plays:
-  - It must be on the default branch with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).
-  - Incoming files must not overlap the owner's uncommitted changes in `git status --short`. Never stash, reset, checkout or discard the owner's local edits or deletions.
-  - Update with `git merge --ff-only origin/main`. If it cannot fast-forward, stop and report it instead of forcing.
-  - If the update brought a new `src/gdextension/*.gdextension` file, run `godot --headless --path . --import` there once, with a throwaway user profile. Without it Godot does not load the new native library.
-  - Do not replace native libraries in `bin/` while a Godot started from that checkout has them loaded.
-  - Tell the owner to restart Godot or the running game.
-
-## Screen composition hard rules
-- Do not cover the dominant screen surface with large text panels, stacked report boxes, or generic geometry just to expose existing data.
-- If information does not fit in compact edge rails, a command spine, a footer pocket, tabs, or contextual popouts, hide it, collapse it, or move it off the main surface instead of laying more panels over the art.
-- Scenic screens, especially the main menu, must stay scenery-first. The art or play surface is primary. Text is secondary.
-- If a screen starts reading like a text dashboard, panel farm, or placeholder geometry mockup, stop and redesign the composition instead of polishing the same mistake.
-- Preserve negative space. Do not spend the whole screen budget on labels, boxes, and explanatory text.
-- Main-menu top-level buttons should open secondary menus or overlays for detailed options and selection flows. Do not dump all campaign, skirmish, save, guide, and settings detail directly onto the main menu surface.
-- Keep the first-view main menu clean: a few obvious top-level commands on the main screen, deeper selection and configuration only after entering the relevant submenu.
-
-## Process rules
-- Update `PLAN.md` when scope, sequencing, or decisions change.
-- Update `ops/progress.json` whenever a step starts, completes, or is blocked.
-- If you make a major architectural choice, record it clearly in `project.md`.
+- Godot 4, unless `project.md` records otherwise.
+- The game ships on Windows and Linux. Code, native builds, `.gdextension` entries, helper scripts and docs work on both and stay in sync; no Linux-only native change without a recorded Windows blocker and follow-up.
+- `.import` and `.uid` sidecars are tracked: commit them with new art, audio and scripts (run `godot --headless --path . --import` if missing). Those of archived media under `art/*/source/` stay ignored; only `.godot/` stays out of Git.
+- Content is data-driven. Keep overworld, combat, AI, economy, save/load, UI and the content pipeline modular.
+- Don't clone copyrighted names, assets, maps, factions, unit art, music or text; use original placeholders.
 - Prefer clear folder structure and production-minded tooling over clever hacks.
-- Do not treat contracts, diagnostics, reports, gates, audits, metadata surfaces, verifier wiring, snapshots, or comparison tables as implementation progress by themselves. They are allowed only when they directly support or validate a source-backed behavior change in the same slice, or when the slice is explicitly documentation/tooling-only.
-- Do not land metadata-only or report-only changes as a substitute for real game/runtime/native behavior. If a diagnostic exposes missing implementation, name the missing function/data structure/behavior as the blocker instead of presenting the diagnostic as progress.
-- For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
+- Work in the main checkout or your session's own worktree (a Claude app worktree, `heroes-like-pi`); create no other worktrees or clones.
 
-## Mandatory completion cleanup
+## Git and the owner's checkout
+- Commit as `AcorpBG <10956556+AcorpBG@users.noreply.github.com>`; GitHub rejects the private global address.
+- Push completed, validated work to main when there are no conflicts, unless AcOrP says otherwise; on main, without a merge commit. Report conflicts; never force.
+- The owner plays from `D:\Games\godot\heroes-like`. After pushing to main from anywhere else, update it in the same run:
+  - It is on main with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).
+  - Incoming files don't overlap the owner's uncommitted changes (`git status --short`). Never stash, reset, checkout or discard them.
+  - `git merge --ff-only origin/main`; if it cannot fast-forward, stop and report.
+  - A new `src/gdextension/*.gdextension` file needs one `godot --headless --path . --import` there, with a throwaway user profile.
+  - Don't replace libraries in `bin/` while a Godot from that checkout has them loaded.
+  - Tell the owner to restart Godot or the game.
 
-- Always perform a cleanup pass after completing work, before the final handoff. Inspect task-created files in the project, `.artifacts`, and temporary locations such as `/tmp`; remove temporary probes, obsolete intermediate exports, disposable test profiles/prefixes, and other task-owned files that are no longer needed.
-- Verify exact paths, ownership, and that no active process is using the targets before deleting anything. Never sweep an entire workspace, `.artifacts`, or `/tmp`, and never assume an untracked file is disposable.
-- When deleting, always use literal absolute paths. No globs under variables, no `$(...)` targets, no `cd && rm`.
-- Preserve caches unless the owner explicitly requests cache cleanup. Preserve source, original/generated art and provenance, saves, backups, and all native RMG reverse-engineering material, including disassembly, private-state traces, reference data, and recovery tooling wherever they are stored. Do not modify unrelated pre-existing files.
-- Owner retention direction (2026-09-17): do not retain non-RMG generated evidence or temporary artifacts after work is complete. Remove task-owned reports, logs, screenshots, contact sheets, probes, temporary profiles, and test exports/packages, including final validation copies, after reporting the results. Recent timestamps, old KEEP markers, and historical evidence links are not reasons to keep these outputs indefinitely. Keep an actual delivery package only when the owner explicitly requests it; preserve the source and tooling needed to rebuild it. This does not authorize deleting tracked source/design documents, original art/provenance, caches, saves, backups, active-process files, or unrelated data. Keep RMG reverse-engineering evidence intact.
-- Measure material cleanup and briefly report what was removed, how much space was recovered, and whether it is rebuildable. If nothing is safely removable, say so; if ownership or retention is unclear, retain the files and ask before deleting them.
-- Finish with `git status --short` and confirm cleanup did not remove required deliverables or include unrelated files in the commit.
+## Screen composition
+- The art or play surface dominates; text is secondary. No large text panels, stacked report boxes or generic geometry over it.
+- What doesn't fit edge rails, a command spine, a footer pocket, tabs or popouts is hidden, collapsed or moved off the main surface.
+- Scenic screens, the main menu above all, stay scenery-first, with negative space.
+- A screen that reads like a text dashboard, panel farm or geometry mockup gets redesigned, not polished.
+- The main menu shows a few top-level commands, each opening a secondary menu or overlay.
+
+## Cleanup before the handoff
+- Remove the task's own temporary files in the project, `.artifacts` and temp folders: probes, exports, throwaway profiles, reports, logs, screenshots, test packages, final validation copies included; old KEEP markers or evidence links are no reason to keep them. Keep a delivery package only when the owner asks.
+- Check paths, ownership and running processes first. Never sweep a whole workspace, `.artifacts` or `/tmp`, and never assume an untracked file is disposable: maps under `maps/` can be the owner's saves.
+- Delete with literal absolute paths: no globs under variables, no `$(...)` targets, no `cd && rm`.
+- Keep caches, source, art and provenance, saves, backups, files in use, unrelated files and all native RMG reverse-engineering material.
+- Report what you removed, the space recovered and whether it is rebuildable; if ownership is unclear, ask. Finish with `git status --short` and check that the commit holds only your files.
 
 ## Codex execution-host lifecycle
 - If a `functions.exec` call returns `Script running with cell ID ...`, do not start another `functions.exec` call. Drain that exact cell with the top-level `functions.wait` tool until it completes, or terminate it explicitly.
