@@ -25,7 +25,7 @@ Native already matched H3MapEd for m010: equal tile bytes and all 2,855 objects.
 map splits into areas of 2,158, 1,357 and 517 tiles in H3MapEd too. The links 14-15
 (guard 0) and 16-21 (guard 2000, budget 0) pick passage cells whose neighbours are
 later covered by tree obstacles (type 199). Changing this is a product decision, not
-a parity fix.
+a parity fix. Decided 2026-10-17: the cut-off-town repair (`docs/rmg-cut-off-town-repair.md`).
 
 ## m019: three native deviations in extra-town placement
 
@@ -274,3 +274,5 @@ H3MapEd function is missing. This is how it happens (native private state):
 No other link reaches zone 0, so the zone is closed. Keeping it open would mean
 departing from H3MapEd, for example by protecting a zero-guard link's passage from
 step 3 or 4. That is an owner decision. A connectivity retry or gate is excluded.
+Decided 2026-10-17: the cut-off-town repair keeps such passages free when a town is cut off
+(`docs/rmg-cut-off-town-repair.md`).

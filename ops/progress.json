@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "tooling-project-files-cleanup-20261027",
- "currentSliceTitle": "Project files cleanup",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-27T19:00:00Z",
+ "currentSliceId": "ai-inert-raid-leftovers-20261027",
+ "currentSliceTitle": "Remove the inert raid leftovers",
+ "currentSliceStatus": "pending",
+ "updatedAt": "2026-10-27T19:40:10Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-inert-raid-leftovers-20261027",
+   "title": "Remove the inert raid leftovers",
+   "status": "pending",
+   "goal": "Owner decision 2026-10-27. Remove Border Warden's raid_pillage_resistance and its rank texts (content/hero_specialties.json), HeroProgressionRules.scale_raid_pillage, the DifficultyRules knobs enemy_pressure_bonus, raid_threshold_offset and raid_pillage_multiplier with their adjust/scale functions, and the two forecasts that read them (OverworldRules._public_enemy_pressure_gain, EnemyTurnRules._raid_threshold_for_strategy), in the C++ port and its wrappers. Expected: games identical apart from forecast texts; check six seeds against main.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-27"
+  },
   {
    "id": "ai-army-concentration-20261009",
    "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",

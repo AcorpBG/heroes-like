@@ -55,7 +55,9 @@ actually placed, stops at `0x4ad1e3_ordered_payload_final_zero_sentinel_missing`
 The tent's projection branch (`0x540b00` -> `0x49c019` -> `0x4adb72`/`0x4adef7`)
 and its writeout are not ported.
 
-Owner decision:
+Owner decision, 2026-10-27: keep. The Ctrl+N variant is not modelled.
+
+The two options were:
 - Keep: the Wine/menu/toolbar behaviour (no Keymaster's Tents, current native,
   60/72 references exact).
 - Model Ctrl+N: `+0xf5c` = 0, so colour-0 tents can appear. This needs the

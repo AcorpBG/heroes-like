@@ -26,18 +26,16 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-23: Skirmish opponents' factions are drawn at random from the map seed; the human keeps their pick or Random.
 - 2026-10-23 (D-f): The campaign runtime is ported with the campaign rework.
 - 2026-10-27: The project files are edited in place and kept within their budgets (`AGENTS.md`, "Project files").
+- 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
+- 2026-10-27: Border Warden gives only its scouting radius, and the inert difficulty pressure and raid settings are removed with the two forecasts that read them (`ai-inert-raid-leftovers-20261027`).
 
 ## Questions for the owner
 
-- Generated maps, Keymaster's Tents: keep the current behaviour (no tents, native as is), or model H3MapEd's Ctrl+N path? That needs the unported tent projection branch `0x540b00`/`0x49c019`/`0x4adb72`/`0x4adef7` and its writeout (`docs/h3maped-parity-basis-windows-wine.md`).
-- Generated maps, m010 (Dragons, seed 386602547): tree obstacles cover two links' passages and split the map, as in H3MapEd. Change it (`docs/rmg-second-town-placement-parity.md`)?
-- Generated maps, sealed start zones (m003, seed 1727041229): H3MapEd covers a weakly guarded zone's only passage with trees. Keep such passages open, departing from H3MapEd (`docs/rmg-second-town-placement-parity.md`)?
-- Generated maps, nine mine-sealed maps: `0x4a9d6a` puts a mine two rows below the town door. Keep the mine off the door's exits in the repair pass, or change the mine's shape (`docs/rmg-cut-off-town-repair.md`)?
-- Generated maps, the six-town split maps (Newcomers islands): repair them or leave them (`docs/rmg-cut-off-town-repair.md`)?
-- AI: remove or reuse the inert Border Warden pillage resistance and the `DifficultyRules` enemy pressure and raid knobs (`docs/ai-plays-by-player-rules.md`)?
+None open.
 
 ## Open work
 
+- `ai-inert-raid-leftovers-20261027` (pending): Owner decision 2026-10-27. Remove Border Warden's raid_pillage_resistance and its rank texts (content/hero_specialties.json), HeroProgressionRules.scale_raid_pillage, the DifficultyRules knobs enemy_pressure_bonus, raid_threshold_offset and raid_pillage_multiplier with their adjust/scale functions, and the two forecasts that read them (OverworldRules._public_enemy_pressure_gain, EnemyTurnRules._raid_threshold_for_strategy), in the C++ port and its wrappers. Expected: games identical apart from forecast texts; check six seeds against main. See `docs/ai-plays-by-player-rules.md`.
 - `ai-army-concentration-20261009` (in progress): field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Left on 2026-10-09: large and extra large games where the leader keeps its strength in garrisons against a lone rival hero (ai-match-724865121, ai-match-1103018058). Not rechecked since the later AI work. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
