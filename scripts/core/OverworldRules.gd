@@ -8,7 +8,6 @@ const PlayerEliminationRulesScript = preload("res://scripts/core/PlayerEliminati
 const Mines = preload("res://scripts/core/MineRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
-const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
@@ -677,10 +676,6 @@ static func town_recruit_cost(session: SessionStateStoreScript.SessionData, town
 
 static func get_context_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	return HumanEngine.native_writing(&"OverworldRules.get_context_actions", [session])
-
-static func get_rendezvous_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state_for_runtime(session)
-	return HeroCommandRulesScript.get_field_transfer_actions(session)
 
 static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules.perform_rendezvous_transfer_action", [session, action_id])

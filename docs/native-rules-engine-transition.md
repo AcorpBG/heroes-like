@@ -3154,10 +3154,15 @@ Checks:
   `ProfileLog` (18); the overworld's getters, fog read scope and small accessors (`OverworldRules`, 20); the spell and
   artifact reports with `describe_battle_spellbook` and `describe_loadout`; `AiSeatRules`, the field transfers
   (`HeroCommandRules`) and the engines' view helpers.
-  Follow-up (owner request 2026-10-27, pending slice `native-rules-gdscript-only-rules-20261027`): the game rules
-  among them move to C++: the skirmish browser and setup, `ScenarioFactory.create_session` and its helpers, the
-  field transfers and `AiSeatRules`. The texts, reports, boards, cue payloads, `AnimationCueCatalog`, `ProfileLog`,
-  the getters and the view helpers stay GDScript.
+  Follow-up (owner request 2026-10-27, narrowed the same day; slice `native-rules-gdscript-only-rules-20261027`):
+  `AiSeatRules` moves to C++ as one copy with `match_sim_cli`'s seats, and the field transfers' action list, which
+  only one test reached, is deleted. `ScenarioFactory.create_session` with its helpers and `ScenarioSelectRules`'
+  authored skirmish browser and setup wait for the authored-scenario rework: only the archived scenarios and the
+  campaign reach them, and for generated maps the browser and setup already call their native ports. The texts,
+  reports, boards, cue payloads, `AnimationCueCatalog`, `ProfileLog`, the getters and the view helpers stay
+  GDScript. Merged 2026-10-27: `core/port/ai_seat_rules.cpp`, three NATIVE entries. Shadow on the six seeds
+  checked 6 handovers, 470 `standing_players` and 468 `match_over` calls with no mismatch; the six seeds against
+  main and through the match runner (`--runner-b`) identical, 474 daily digests each; core suite 18/18.
 - Checks of the merged code against main 6ef5ae55c:
   - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
   - the `--editor` check on its three seeds: the state identical at every step main runs, and the panels too once

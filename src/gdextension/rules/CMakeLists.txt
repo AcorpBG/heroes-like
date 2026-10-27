@@ -149,6 +149,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_hero_rules_surface.cpp
 	core/port/ai_hero_rules_turn.cpp
 	core/port/ai_hero_rules_turn_day.cpp
+	core/port/ai_seat_rules.cpp
 	core/port/ai_hero_rules_turn_fights.cpp
 	core/port/ai_hero_rules_turn_moves.cpp
 	core/port/ai_hero_rules_turn_towns.cpp

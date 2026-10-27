@@ -44,7 +44,6 @@ SCENES = [
     "town_screen_layout_and_dialog_controls_report",
     "town_building_skyline_progression_report",
     "army_stack_management_bar_runtime_report",
-    "hero_field_rendezvous_army_transfer_report",
     "town_army_transfer_completion_feedback_report",
     "town_recruitment_ui_surface_report",
     "town_recruitment_cue_playback_report",

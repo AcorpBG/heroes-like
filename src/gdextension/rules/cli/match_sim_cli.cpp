@@ -85,6 +85,7 @@
 #include "aurelion_rules/disk_files.hpp"
 #include "aurelion_rules/map_generation.hpp"
 #include "aurelion_rules/map_packages.hpp"
+#include "aurelion_rules/port/ai_seat_rules.hpp"
 #include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/gd.hpp"
@@ -1769,57 +1770,12 @@ private:
 		setup_ = gd::dict_value(record);
 	}
 
-	// AiSeatRules.hand_human_seat_to_ai(session): the human seat's player, its
-	// towns and its treasury become the computer's; the seat, or "" when there
-	// is no human seat. Its GDScript calls the native normalize; here all of it
-	// runs on one view.
+	// AiSeatRules.hand_human_seat_to_ai(session): the rules core's, on one
+	// view; the seat, or "" when there is no human seat.
 	uint32_t hand_human_seat_to_ai() {
 		const gd::DictRef view = make_view();
 		state_.drop_memo();
-		const auto overworld_of = [&] { return gd::as_dict(state_.get(view, gd::str(names_.overworld), Value())); };
-		const auto value_of = [&](const char *name, const Value &fallback) { return state_.get(overworld_of(), state_.string(name), fallback); };
-		uint32_t seat = key::empty;
-		if (players::has_human_seat(state_, view)) {
-			seat = string_of(value_of("active_player_id", state_.string("")));
-			const Value records = value_of("players", gd::array_value(state_.new_array()));
-			bool found = false;
-			for (const Value &record : gd::items(state_, records)) {
-				if (record.kind == Kind::Dict && string_of(get(record, names_.player_id, state_.string(""))) == seat) {
-					state_.set(record.ref, state_.string("human"), gd::bool_value(false));
-					state_.set(record.ref, state_.string("computer"), gd::bool_value(true));
-					state_.set(record.ref, gd::str(names_.owner), gd::str(names_.enemy));
-					found = true;
-				}
-			}
-			if (!found) {
-				seat = key::empty;
-			}
-		}
-		if (seat != key::empty) {
-			const gd::ArrayRef towns = gd::duplicate_array(state_, gd::as_array(value_of("towns", gd::array_value(state_.new_array()))));
-			for (const Value &town : gd::items(state_, gd::array_value(towns))) {
-				if (town.kind == Kind::Dict && state_.text(string_of(get(town, names_.owner, state_.string("")))) == "player") {
-					port::overworld_rules::transition_town_control(state_, view, string_of(get(town, names_.placement_id, state_.string(""))), names_.enemy, seat,
-							state_.intern("ai_seat"));
-				}
-			}
-			const Value treasury = gd::dict_value(gd::deep_duplicate_dict(state_, gd::as_dict(value_of("resources", gd::dict_value(state_.new_dict())))));
-			const uint32_t emptied = state_.new_dict();
-			for (const char *name : { "gold", "wood", "ore" }) {
-				state_.set(emptied, state_.string(name), gd::int_value(0));
-			}
-			state_.set(overworld_of(), state_.string("resources"), gd::dict_value(emptied));
-			state_.set(overworld_of(), state_.string("player_heroes"), gd::array_value(state_.new_array()));
-			state_.set(overworld_of(), state_.string("active_hero_id"), state_.string(""));
-			state_.set(view, gd::str(names_.fields[3]), state_.string(""));
-			port::overworld_rules::normalize_overworld_state(state_, view);
-			for (const Value &entry : gd::items(state_, value_of("enemy_states", gd::array_value(state_.new_array())))) {
-				if (entry.kind == Kind::Dict && players::controller_id(state_, entry.ref, key::empty) == seat) {
-					state_.set(entry.ref, gd::str(names_.treasury), treasury);
-				}
-			}
-			port::overworld_rules::invalidate_spatial_lookup(state_, view);
-		}
+		const uint32_t seat = port::ai_seat_rules::hand_human_seat_to_ai(state_, view);
 		take_view(view);
 		return seat;
 	}
@@ -2418,30 +2374,18 @@ private:
 		return gd::dict_value(row);
 	}
 
-	// AiSeatRules.standing_players: the players holding a town or a hero.
+	// AiSeatRules.standing_players: the players holding a town or a hero (the
+	// rules core's).
 	std::vector<uint32_t> standing_players() {
 		std::vector<uint32_t> result;
-		for (const Value &record : gd::items(state_, overworld_list(names_.players))) {
-			if (record.kind != Kind::Dict) {
-				continue;
-			}
-			const uint32_t player_id = string_of(get(record, names_.player_id, state_.string("")));
-			if (state_.array_size(port::enemy_turn_rules::_owned_town_entries(state_, make_view(), player_id)) != 0 ||
-					!active_hero_entries(player_id).empty()) {
-				result.push_back(player_id);
-			}
+		for (const Value &player_id : gd::items(state_, gd::array_value(port::ai_seat_rules::standing_players(state_, make_view())))) {
+			result.push_back(string_of(player_id));
 		}
 		return result;
 	}
 	// AiSeatRules.match_over: every standing player allied with the first.
 	bool match_over() {
-		const std::vector<uint32_t> standing = standing_players();
-		for (const uint32_t player_id : standing) {
-			if (!players::allied(state_, gd::dict_value(make_view()), standing.front(), player_id)) {
-				return false;
-			}
-		}
-		return true;
+		return port::ai_seat_rules::match_over(state_, make_view());
 	}
 
 	// ------------------------------------- the battle AI arena's setup (2)

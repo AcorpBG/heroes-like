@@ -160,22 +160,6 @@ static func manage_army_slots(session: SessionStateStoreScript.SessionData, town
 static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
 	return HumanEngine.native_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
 
-static func get_field_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_session(session)
-	var actions := []
-	if session == null:
-		return actions
-	var active := active_hero(session)
-	if active.is_empty():
-		return actions
-	for reserve_value in field_rendezvous_heroes(session):
-		if not (reserve_value is Dictionary):
-			continue
-		var reserve: Dictionary = reserve_value
-		_append_field_transfer_actions(actions, active, reserve)
-		_append_field_transfer_actions(actions, reserve, active)
-	return actions
-
 static func transfer_field_stack(session: SessionStateStoreScript.SessionData, source_hero_id: String, target_hero_id: String, unit_id: String, amount_token: String) -> Dictionary:
 	return HumanEngine.native_writing(&"HeroCommandRules.transfer_field_stack", [session, source_hero_id, target_hero_id, unit_id, amount_token])
 
@@ -270,52 +254,6 @@ static func _stack_summary_from_array(stacks: Variant) -> String:
 
 static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	return HumanEngine.native_writing(&"HeroCommandRules._stationed_holder_ids", [session, town])
-
-static func _append_field_transfer_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:
-	var source_id := String(source.get("id", ""))
-	var target_id := String(target.get("id", ""))
-	if source_id == "" or target_id == "":
-		return
-	var source_name := String(source.get("name", source_id))
-	var target_name := String(target.get("name", target_id))
-	for stack_value in source.get("army", {}).get("stacks", []):
-		if not (stack_value is Dictionary):
-			continue
-		var stack: Dictionary = stack_value
-		var unit_id := String(stack.get("unit_id", ""))
-		var count := int(stack.get("count", 0))
-		if unit_id == "" or count <= 0:
-			continue
-		var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-		var seen_transfer_counts := {}
-		var admission := army_addition_plan(target.get("army", {}).get("stacks", []), {unit_id: 1})
-		for amount_token_value in _transfer_amount_tokens(count):
-			var amount_token := String(amount_token_value)
-			var transfer_count := _resolve_transfer_amount(amount_token, count)
-			if seen_transfer_counts.has(transfer_count):
-				continue
-			seen_transfer_counts[transfer_count] = true
-			var blocker := "" if bool(admission.get("ok", false)) else String(admission.get("message", ""))
-			if blocker == "" and _transfer_empties_hero_army(source_id, source.get("army", {}).get("stacks", []), transfer_count, count):
-				blocker = "%s must keep at least one troop stack." % source_name
-			actions.append({
-				"id": "field_transfer:%s:%s:%s:%s" % [source_id, target_id, unit_id, amount_token],
-				"label": "%s -> %s | %d %s" % [source_name, target_name, transfer_count, unit_name],
-				"summary": "Move %s of %d %s from %s to %s; both commanders remain on this tile." % [
-					_transfer_amount_label(amount_token, count),
-					count,
-					unit_name,
-					source_name,
-					target_name,
-				],
-				"source_hero_id": source_id,
-				"target_hero_id": target_id,
-				"unit_id": unit_id,
-				"amount_token": amount_token,
-				"transfer_count": transfer_count,
-				"disabled": blocker != "",
-				"disabled_reason": blocker,
-			})
 
 static func _transfer_empties_hero_army(holder_id: String, stacks: Variant, transfer_count: int, available: int, stack_leaves: bool = true) -> bool:
 	return HumanEngine.native_writing(&"HeroCommandRules._transfer_empties_hero_army", [holder_id, stacks, transfer_count, available, stack_leaves])

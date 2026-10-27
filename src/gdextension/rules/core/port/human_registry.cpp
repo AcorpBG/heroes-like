@@ -1,6 +1,8 @@
 #include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
+#include "aurelion_rules/port/ai_seat_rules.hpp"
+
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
@@ -2131,8 +2133,19 @@ const Function kFunctions[] = {
 			return gd::bool_value(overworld::is_runtime_session_normalized(s, D(a, 0)))),
 	NATIVE(TownDevelopmentRules, faction_id, 1, false,
 			return gd::str(town_development::faction_id(s, D(a, 0)))),
+	// The seats the computer plays in place of the human (slice
+	// native-rules-gdscript-only-rules-20261027): one copy with match_sim_cli's.
+	NATIVE(AiSeatRules, hand_human_seat_to_ai, 1, true,
+			if (nil(a, 0)) return gd::str(state::key::empty);
+			return gd::str(ai_seat_rules::hand_human_seat_to_ai(s, D(a, 0)))),
+	NATIVE(AiSeatRules, standing_players, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(ai_seat_rules::standing_players(s, D(a, 0)))),
+	NATIVE(AiSeatRules, match_over, 1, true,
+			if (nil(a, 0)) return gd::bool_value(true);
+			return gd::bool_value(ai_seat_rules::match_over(s, D(a, 0)))),
 	// 7.15, one copy: what the core tests and the AI match runner call, directly
-	// or through AiSeatRules (GDScript, beside match_sim_cli's own seats).
+	// or through AiSeatRules.
 	NATIVE(AiHeroRules, active_hero_count, 2, true,
 			return gd::int_value(ai_hero_rules::active_hero_count(s, D(a, 0), S(a, 1)))),
 	NATIVE(AiHeroRules, is_ai_hero, 1, false,
