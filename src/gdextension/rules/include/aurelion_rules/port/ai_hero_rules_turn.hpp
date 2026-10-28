@@ -59,6 +59,7 @@ void _add_pool(State &state, DictRef pool, const Value &delta);
 DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 DictRef _auto_resolve(State &state, DictRef session, DictRef context, int64_t index, DictRef defender);
 void _avoid_target(State &state, DictRef session, Atom placement_id, Atom target_id, int64_t until_day);
+void _note_vetoed_need(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, bool looks_good);
 Atom _battle_key(State &state, DictRef entry, DictRef defender, int64_t battle_number);
 DictRef _claim_resource(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 void _clear_static_body(State &state, DictRef session, DictRef context, DictRef node);

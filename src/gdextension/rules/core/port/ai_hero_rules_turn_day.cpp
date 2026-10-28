@@ -619,7 +619,12 @@ DictRef _vetted_candidate(State &state, DictRef session, DictRef context, DictRe
 	DictRef best = _best_candidate(state, session, context, entry, search, movement_max);
 	const int64_t vetoes = tunable_int(state, key::MAX_FIGHT_VETOES);
 	for (int64_t veto = 0; veto < vetoes; ++veto) {
-		if (gd::is_empty(state, best) || _fight_looks_good(state, session, context, entry, best)) {
+		if (gd::is_empty(state, best)) {
+			return best;
+		}
+		const bool looks_good = _fight_looks_good(state, session, context, entry, best);
+		_note_vetoed_need(state, session, context, entry, best, looks_good);
+		if (looks_good) {
 			return best;
 		}
 		const Atom placement_id = ai::string_or_empty(state, entry, key::placement_id);
@@ -627,7 +632,12 @@ DictRef _vetted_candidate(State &state, DictRef session, DictRef context, DictRe
 		_avoid_target(state, session, placement_id, target_id, gd::add(ai::session_int(state, session, key::day), tunable_int(state, key::AVOID_DAYS)));
 		best = _best_candidate(state, session, context, entry, search, movement_max);
 	}
-	if (gd::is_empty(state, best) || _fight_looks_good(state, session, context, entry, best)) {
+	if (gd::is_empty(state, best)) {
+		return best;
+	}
+	const bool looks_good = _fight_looks_good(state, session, context, entry, best);
+	_note_vetoed_need(state, session, context, entry, best, looks_good);
+	if (looks_good) {
 		return best;
 	}
 	return state.new_dict();

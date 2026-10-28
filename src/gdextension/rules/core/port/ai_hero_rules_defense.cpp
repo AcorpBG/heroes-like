@@ -201,9 +201,18 @@ double _main_shortfall(State &state, DictRef session, DictRef context, DictRef m
 	if (!state.has(cache, str(key::hostile))) {
 		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, controller)));
 	}
+	Value ai_hero;
+	const bool has_block = state.lookup(main, str(key::ai_hero), ai_hero);
+	// A rival hero the main army's preview lost to needs what the preview found,
+	// however beatable the estimate rates it (_note_vetoed_need).
+	Value vetoed;
+	const bool has_vetoed = has_block && gd::is_dict(ai_hero) && state.lookup(ai_hero.ref, str(key::vetoed_needs), vetoed) && gd::is_dict(vetoed);
 	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
 		const double threat_power = gd::to_float(ai::vmember(state, threat, key::power));
-		const double required = threat_power * tunable_float(state, key::HERO_ATTACK_RATIO);
+		double required = threat_power * tunable_float(state, key::HERO_ATTACK_RATIO);
+		if (has_vetoed) {
+			required = compat::engine_max(required, gd::to_float(state.get(vetoed.ref, ai::vmember(state, threat, key::id), float_value(0.0))));
+		}
 		if (required > power) {
 			need = compat::engine_min(need, required);
 		}
@@ -232,8 +241,7 @@ double _main_shortfall(State &state, DictRef session, DictRef context, DictRef m
 	}
 	// A guard the main army found in its way to a rival town and could not beat.
 	double blocked = 0.0;
-	Value ai_hero;
-	if (state.lookup(main, str(key::ai_hero), ai_hero)) {
+	if (has_block) {
 		blocked = gd::to_float(ai::vget(state, ai_hero, key::blocked_need, float_value(0.0)));
 	}
 	if (blocked > power) {

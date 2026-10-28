@@ -30,6 +30,7 @@
 #include <initializer_list>
 #include <limits>
 #include <string>
+#include <unordered_set>
 
 namespace aurelion::rules::port {
 
@@ -531,6 +532,57 @@ void _avoid_target(State &state, DictRef session, Atom placement_id, Atom target
 	state.set(block, str(key::goal), dict_value(state.new_dict()));
 	state.set(entry, str(key::ai_hero), dict_value(block));
 	_store_entry(state, session, index, entry);
+}
+
+// The main army's preview against a rival hero sets what that hero needs: lost
+// or too dear, the main army's power and the power the rival keeps, times
+// HERO_ATTACK_RATIO; looking good, nothing. _main_shortfall then calls the field
+// armies, which the strength estimate alone would not (ai-match-3142897504: a
+// main army of 37,800 lost three previews to a raider of 25,200 that the
+// estimate rated beatable, while that raider beat 16 field heroes one by one).
+void _note_vetoed_need(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, bool looks_good) {
+	if (ai::string_or_empty(state, plan, key::kind) != key::ai_hero || !placement_is_main(state, session, context, entry)) {
+		return;
+	}
+	const Atom target_id = ai::string_or_empty(state, plan, key::id);
+	const int64_t index = _entry_index(state, session, ai::string_or_empty(state, entry, key::placement_id));
+	if (index < 0 || target_id == key::empty) {
+		return;
+	}
+	const DictRef live = encounter_at(state, session, index);
+	const DictRef block = dict_field(state, live, key::ai_hero);
+	const DictRef needs = dict_field_if(state, block, key::vetoed_needs);
+	if (looks_good && !state.has(needs, str(target_id))) {
+		return;
+	}
+	// Only rivals still in sight keep a need.
+	std::unordered_set<Atom> hostile;
+	for (const Value &threat : gd::items(state, array_value(_hostile_heroes(state, session, context_controller(state, context))))) {
+		hostile.insert(gd::stringify(state, ai::vmember(state, threat, key::id)));
+	}
+	const ArrayRef need_keys = gd::keys(state, needs);
+	const int64_t key_count = state.array_size(need_keys);
+	for (int64_t at = 0; at < key_count; ++at) {
+		const Value need_key = state.at(need_keys, at);
+		if (hostile.count(gd::stringify(state, need_key)) == 0) {
+			state.erase(needs, need_key);
+		}
+	}
+	if (looks_good) {
+		state.erase(needs, str(target_id));
+	} else {
+		const DictRef outcome = dict_field_if(state, dict_field_if(state, context, key::fight_preview), key::outcome);
+		const DictRef defender = encounter_at(state, session, gd::int_field(state, plan, key::index, -1));
+		const double kept = army_power(state, list_field(state, outcome, key::enemy_survivors), map_field(state, defender, key::enemy_commander_state));
+		state.set(needs, str(target_id), float_value((hero_power(state, live) + kept) * tunable(state, key::HERO_ATTACK_RATIO)));
+	}
+	if (gd::is_empty(state, needs)) {
+		state.erase(block, str(key::vetoed_needs));
+	} else {
+		state.set(block, str(key::vetoed_needs), dict_value(needs));
+	}
+	state.set(live, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, live);
 }
 
 int64_t _creature_total(State &state, const Value &stacks) {

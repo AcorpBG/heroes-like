@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "native-rmg-repair-rare-mine-game-shape-20261028",
- "currentSliceTitle": "Repair check, step 0 and joins give every mine the game's 3x2 shape again (c7d831eae's rare-mine rule reverted). 1,200 maps: 158 flagged, all repair to none; m231 is won on day 82 instead of the 320-day cap.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-28T19:11:34Z",
+ "currentSliceId": "ai-vetoed-hero-fight-calls-field-armies-20261028",
+ "currentSliceTitle": "A main army that loses its preview against a rival hero calls the field armies",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-28T21:43:10Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-vetoed-hero-fight-calls-field-armies-20261028",
+   "title": "A main army that loses its preview against a rival hero calls the field armies",
+   "status": "in_progress",
+   "goal": "When the battle preview calls off the main army's fight with a rival hero that the strength estimate rates beatable, _main_shortfall counts that hero's need (main power plus the defender's kept share, x HERO_ATTACK_RATIO), so field armies join instead of being picked off. Files: ai_hero_rules_defense.cpp, ai_hero_rules_turn_day.cpp. From m566 of the 10-28 batch (owner, 2026-10-28).",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-28"
+  },
   {
    "id": "native-rmg-repair-rare-mine-game-shape-20261028",
    "status": "completed",
