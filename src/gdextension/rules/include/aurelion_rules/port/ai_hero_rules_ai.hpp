@@ -50,7 +50,6 @@ DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef t
 double _unit_power(State &state, DictRef stack);
 double _town_defense_need(State &state, DictRef session, DictRef context, DictRef town);
 double _townless_raider(State &state, DictRef session, DictRef context);
-bool _rival_town_within(State &state, DictRef session, DictRef context, DictRef town, int64_t radius);
 double _town_worth(State &state, DictRef session, DictRef context, DictRef town);
 double _threatened_town_share(State &state, DictRef session, DictRef context, DictRef other);
 Atom _decision_main_id(State &state, DictRef session, DictRef context);

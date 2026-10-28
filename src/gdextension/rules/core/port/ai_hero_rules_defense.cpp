@@ -98,14 +98,45 @@ int64_t tile_distance(int64_t ax, int64_t bx, int64_t ay, int64_t by) {
 	return compat::engine_max<int64_t>(compat::absi(gd::sub(ax, bx)), compat::absi(gd::sub(ay, by)));
 }
 
-// The distance from a hostile hero of _hostile_heroes (threat.x, threat.y) to a
-// town's doorway.
-int64_t threat_distance(State &state, const Value &threat, DictRef entrance) {
+// Tiles from (x, y) on `level` to a town's doorway: the straight distance on one
+// level; across levels the shortest way through a gate or monolith of that level
+// whose exit lies on the doorway's level, one tile for the crossing. -1 when no
+// gate leads there. A hostile hero threatens towns on either level.
+int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x, int64_t y, int64_t level, DictRef entrance) {
+	const int64_t door_x = gd::int_field(state, entrance, key::x, 0);
+	const int64_t door_y = gd::int_field(state, entrance, key::y, 0);
+	const int64_t door_level = level_rules::level_of(state, dict_value(entrance));
+	if (level == door_level) {
+		return tile_distance(x, door_x, y, door_y);
+	}
+	const int64_t width = context_map_size(state, context).x;
+	const Value gates = state.get(ai_hero_rules::_level_surface(state, session, context, level), str(key::gates), dict_value(state.new_dict()));
+	if (width <= 0 || !gd::is_dict(gates)) {
+		return -1;
+	}
+	int64_t best = -1;
+	for (const Value &gate_tile : gd::items(state, gates)) {
+		const int64_t tile = gd::to_int(state, gate_tile);
+		const Value exit = ai::vmember(state, gd::index(state, gates.ref, gate_tile), key::exit);
+		if (!gd::is_vector3i(exit) || exit.vz() != door_level) {
+			continue;
+		}
+		const int64_t to_gate = tile_distance(x, compat::int_mod(tile, width), y, tile / width);
+		const int64_t steps = gd::add(gd::add(to_gate, 1), tile_distance(exit.vx(), door_x, exit.vy(), door_y));
+		if (best < 0 || steps < best) {
+			best = steps;
+		}
+	}
+	return best;
+}
+
+// The way from a hostile hero of _hostile_heroes (threat.x, threat.y,
+// threat.level) to a town's doorway, -1 when there is none.
+int64_t threat_distance(State &state, DictRef session, DictRef context, const Value &threat, DictRef entrance) {
 	const int64_t threat_x = gd::to_int(state, ai::vmember(state, threat, key::x));
-	const int64_t entrance_x = gd::int_field(state, entrance, key::x, 0);
 	const int64_t threat_y = gd::to_int(state, ai::vmember(state, threat, key::y));
-	const int64_t entrance_y = gd::int_field(state, entrance, key::y, 0);
-	return tile_distance(threat_x, entrance_x, threat_y, entrance_y);
+	const int64_t threat_level = gd::to_int(state, ai::vget(state, threat, key::level, int_value(0)));
+	return steps_to_door(state, session, context, threat_x, threat_y, threat_level, entrance);
 }
 
 } // namespace
@@ -369,13 +400,9 @@ bool _town_threatened(State &state, DictRef session, DictRef context, DictRef to
 	bool threatened = false;
 	double strongest = 0.0;
 	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
-		const int64_t threat_level = gd::to_int(state, ai::vget(state, threat, key::level, int_value(0)));
-		if (threat_level != level_rules::level_of(state, dict_value(entrance))) {
-			continue;
-		}
-		const int64_t distance = threat_distance(state, threat, entrance);
+		const int64_t distance = threat_distance(state, session, context, threat, entrance);
 		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
-		if (distance <= gd::add(reach, tunable_int(state, key::THREAT_REACH_MARGIN)) && gd::to_float(ai::vmember(state, threat, key::power)) > defense * tunable_float(state, key::THREAT_RATIO)) {
+		if (distance >= 0 && distance <= gd::add(reach, tunable_int(state, key::THREAT_REACH_MARGIN)) &&gd::to_float(ai::vmember(state, threat, key::power)) > defense * tunable_float(state, key::THREAT_RATIO)) {
 			threatened = true;
 			const double threat_power = gd::to_float(ai::vmember(state, threat, key::power));
 			if (threat_power > strongest) {
@@ -520,27 +547,20 @@ double _town_defense_need(State &state, DictRef session, DictRef context, DictRe
 		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
 		state.set(context, str(key::decision), dict_value(cache));
 	}
+	// Only a hostile hero that is seen or remembered calls for troops left
+	// behind, on either level; a town no one threatens is held by the heroes,
+	// which carry its troops where they are used.
 	const DictRef entrance = level_rules::town_entrance(state, town);
-	const int64_t level = level_rules::level_of(state, dict_value(town));
 	double strongest = 0.0;
 	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
-		if (gd::to_int(state, ai::vget(state, threat, key::level, int_value(0))) != level) {
-			continue;
-		}
-		const int64_t distance = threat_distance(state, threat, entrance);
+		const int64_t distance = threat_distance(state, session, context, threat, entrance);
 		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
-		if (distance <= gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), 1)) {
+		if (distance >= 0 && distance <= gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), 1)) {
 			strongest = compat::engine_max(strongest, gd::to_float(ai::vmember(state, threat, key::power)));
 		}
 	}
-	double need = 0.0;
-	if (strongest > 0.0) {
-		need = strongest * tunable_float(state, key::DEFENSE_MARGIN);
-		need = need / tunable_float(state, key::TOWN_ATTACK_RATIO);
-	} else if (_rival_town_within(state, session, context, town, gd::mul(tunable_int(state, key::RIVAL_TOWN_TILES_PER_DAY), tunable_int(state, key::DEFENSE_HORIZON_DAYS)))) {
-		const double weeks = compat::godot_ceil(static_cast<double>(ai::session_int(state, session, key::day)) / 7.0);
-		need = tunable_float(state, key::DEFENSE_BASELINE_PER_WEEK) * weeks;
-	}
+	double need = strongest * tunable_float(state, key::DEFENSE_MARGIN);
+	need = need / tunable_float(state, key::TOWN_ATTACK_RATIO);
 	const double raider = _townless_raider(state, session, context);
 	double raider_need = raider * tunable_float(state, key::DEFENSE_MARGIN);
 	raider_need = raider_need / tunable_float(state, key::TOWN_ATTACK_RATIO);
@@ -593,39 +613,6 @@ double _townless_raider(State &state, DictRef session, DictRef context) {
 	return strongest;
 }
 
-bool _rival_town_within(State &state, DictRef session, DictRef context, DictRef town, int64_t radius) {
-	const Atom controller = context_controller(state, context);
-	const Vector2i size = context_map_size(state, context);
-	for (const Value &other : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
-		if (!gd::is_dict(other)) {
-			continue;
-		}
-		const int64_t other_level = level_rules::level_of(state, other);
-		if (other_level != level_rules::level_of(state, dict_value(town))) {
-			continue;
-		}
-		const Atom owner = string_or(state, other.ref, key::owner, key::neutral);
-		if (owner == key::neutral) {
-			continue;
-		}
-		const Atom rival = owner == key::player ? key::player : player_rules::town_controller_id(state, other.ref);
-		if (rival == controller || player_rules::allied(state, dict_value(session), controller, rival)) {
-			continue;
-		}
-		const int64_t other_x = gd::int_field(state, other.ref, key::x, 0);
-		const int64_t town_x = gd::int_field(state, town, key::x, 0);
-		const int64_t other_y = gd::int_field(state, other.ref, key::y, 0);
-		const int64_t town_y = gd::int_field(state, town, key::y, 0);
-		if (tile_distance(other_x, town_x, other_y, town_y) > radius) {
-			continue;
-		}
-		if (_town_seen(state, _explored(state, session, context, level_rules::level_of(state, other)), other.ref, size)) {
-			return true;
-		}
-	}
-	return false;
-}
-
 double _town_worth(State &state, DictRef session, DictRef context, DictRef town) {
 	const DictRef cache = dict_or_new(state, context, key::town_worth);
 	const Atom id = ai::string_or_empty(state, town, key::placement_id);
@@ -643,10 +630,18 @@ double _town_worth(State &state, DictRef session, DictRef context, DictRef town)
 	return worth;
 }
 
+// What killing a hostile hero saves: a share of every town of ours it could take
+// within the defence horizon, on either level. A game is won by taking a
+// player's towns and killing its heroes, and a raider loose among our towns
+// costs all of them, not only the best one.
 double _threatened_town_share(State &state, DictRef session, DictRef context, DictRef other) {
-	double best = 0.0;
+	double total = 0.0;
 	const double power = hero_power(state, other);
 	const int64_t reach = compat::engine_max<int64_t>(tunable_int(state, key::THREAT_MIN_REACH), _movement_max(state, other));
+	const int64_t horizon = gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), tunable_int(state, key::THREAT_REACH_MARGIN));
+	const int64_t other_x = gd::int_field(state, other, key::x, 0);
+	const int64_t other_y = gd::int_field(state, other, key::y, 0);
+	const int64_t other_level = level_rules::level_of(state, dict_value(other));
 	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
 		if (!gd::is_dict(town) || ai::string_or_empty(state, town.ref, key::owner) != key::enemy) {
 			continue;
@@ -656,19 +651,12 @@ double _threatened_town_share(State &state, DictRef session, DictRef context, Di
 			continue;
 		}
 		const DictRef entrance = level_rules::town_entrance(state, town.ref);
-		if (!level_rules::same_level(state, dict_value(entrance), dict_value(other))) {
-			continue;
-		}
-		const int64_t other_x = gd::int_field(state, other, key::x, 0);
-		const int64_t entrance_x = gd::int_field(state, entrance, key::x, 0);
-		const int64_t other_y = gd::int_field(state, other, key::y, 0);
-		const int64_t entrance_y = gd::int_field(state, entrance, key::y, 0);
-		const int64_t distance = tile_distance(other_x, entrance_x, other_y, entrance_y);
-		if (distance <= gd::add(reach, tunable_int(state, key::THREAT_REACH_MARGIN)) && power > power_of(state, field_or_new_array(state, town.ref, key::garrison)) * tunable_float(state, key::THREAT_RATIO)) {
-			best = compat::engine_max(best, _town_worth(state, session, context, town.ref) * tunable_float(state, key::THREAT_KILL_SHARE));
+		const int64_t distance = steps_to_door(state, session, context, other_x, other_y, other_level, entrance);
+		if (distance >= 0 && distance <= horizon && power > power_of(state, field_or_new_array(state, town.ref, key::garrison)) * tunable_float(state, key::THREAT_RATIO)) {
+			total += _town_worth(state, session, context, town.ref) * tunable_float(state, key::THREAT_KILL_SHARE);
 		}
 	}
-	return best;
+	return total;
 }
 
 Atom _decision_main_id(State &state, DictRef session, DictRef context) {

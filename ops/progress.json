@@ -6,7 +6,7 @@
  "currentSliceId": "ai-army-concentration-20261009",
  "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-28T07:08:33Z",
+ "updatedAt": "2026-10-28T10:41:40Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -35,7 +35,7 @@
    "id": "ai-army-concentration-20261009",
    "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
    "status": "in_progress",
-   "goal": "field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Rechecked 2026-10-28 (36 large 4P and XL 6P games): every game ends, none at the cap. Left: a player far ahead finishes slowly (median 60 days on large and 96 on XL maps after holding half the towns), with a third or more of its strength in garrisons and its field strength split over 5 to 7 heroes; it does not merge them against the last rival (ai-match-1733907118).",
+   "goal": "Owner 2026-10-28: play to eliminate. In: heroes scale with towns (no hero_count_max) and a player short of heroes keeps the hire's gold from town spending; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall (no FIELD_SHARE_MAX); scouting grows with the day. Six capped seeds of the 600-game XL batch now end on days 210-278. Left: no player leads more than its faction's 11 heroes (content/heroes.json), the owner's call.",
    "docs": [
     "docs/ai-plays-by-player-rules.md"
    ],

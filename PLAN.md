@@ -28,6 +28,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-27: The project files are edited in place and kept within their budgets (`AGENTS.md`, "Project files").
 - 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
 - 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
+- 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
 
 ## Questions for the owner
 
@@ -35,7 +36,7 @@ None open.
 
 ## Open work
 
-- `ai-army-concentration-20261009` (in progress): field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Rechecked 2026-10-28 (36 large 4P and XL 6P games): every game ends, none at the cap. Left: a player far ahead finishes slowly (median 60 days on large and 96 on XL maps after holding half the towns), with a third or more of its strength in garrisons and its field strength split over 5 to 7 heroes; it does not merge them against the last rival (ai-match-1733907118). See `docs/ai-plays-by-player-rules.md`.
+- `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns (no hero_count_max) and a player short of heroes keeps the hire's gold from town spending; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall (no FIELD_SHARE_MAX); scouting grows with the day. Six capped seeds of the 600-game XL batch now end on days 210-278. Left: no player leads more than its faction's 11 heroes (content/heroes.json), the owner's call. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.

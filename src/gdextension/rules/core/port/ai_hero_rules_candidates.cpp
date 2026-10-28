@@ -592,14 +592,12 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	}
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
 	if (gd::array_has(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)))) {
-		// A field army joins the main army when something it has to beat is
-		// beyond the main army alone: the main hero takes the stronger stacks.
+		// A field army joins the main army only when something it has to beat
+		// is beyond the main army alone: the main hero takes the stronger
+		// stacks. Otherwise it keeps its army and works on its own; seven stacks
+		// are what limit an army, not its share of the main army's strength.
 		if (_main_shortfall(state, session, context, other) <= 0.0) {
-			const double own_power = hero_power(state, entry);
-			const double main_power = hero_power(state, other);
-			if (own_power <= main_power * tunable(state, key::FIELD_SHARE_MAX)) {
-				return state.new_dict();
-			}
+			return state.new_dict();
 		}
 		Value found;
 		const ArrayRef main_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();

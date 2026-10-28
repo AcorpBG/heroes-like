@@ -224,10 +224,12 @@ DictRef _govern_towns(State &state, DictRef session, DictRef context) {
 		const DictRef surface = _level_surface(state, session, context, 0);
 		held = _hold_back(state, treasury, gd::as_dict(field_or_new_dict(state, surface, key::boat_cost)));
 	}
-	// Town heroes first, then explorers while unexplored land remains; every hire
-	// leaves a gold reserve, a larger one for explorers.
+	// Town heroes first, then explorers while unexplored land remains, at most one
+	// per town held: the count grows with the towns, with no cap of its own. Every
+	// hire leaves a gold reserve, a larger one for explorers.
 	const int64_t town_heroes = _desired_hero_count(state, session, controller);
-	const int64_t wanted = compat::engine_min<int64_t>(ai::static_int(state, kScript, key::HERO_COUNT_MAX), gd::add(town_heroes, _wanted_explorers(state, session, context)));
+	const int64_t explorers = compat::engine_min<int64_t>(state.array_size(town_entries), _wanted_explorers(state, session, context));
+	const int64_t wanted = gd::add(town_heroes, explorers);
 	const int64_t heroes = active_hero_count(state, session, controller);
 	if (heroes < wanted && !_faction_has_tavern(state, town_entries)) {
 		const DictRef tavern_result = _build_tavern(state, session, context, town_entries);
@@ -239,6 +241,27 @@ DictRef _govern_towns(State &state, DictRef session, DictRef context) {
 		const DictRef hire_result = _hire_hero(state, session, context, reserve);
 		_append_all(state, events, gd::field(state, hire_result, key::events));
 		_append_all(state, messages, gd::field(state, hire_result, key::messages));
+	}
+	// A player still short of town heroes keeps the next hire's gold and its
+	// reserve back from what the towns spend today; otherwise they spend it every
+	// day and the hire never comes (ai-match-3232670313: 7 to 13 towns and 2 to 4
+	// heroes from day 42 to day 140, its garrisons grown to 110,000 against 6,000
+	// in the field).
+	if (active_hero_count(state, session, controller) < town_heroes && _faction_has_tavern(state, town_entries)) {
+		double cheapest = -1.0;
+		for (const Value &hero_id : gd::items(state, array_value(ai_tavern_offer_ids(state, session, context_state(state, context), controller)))) {
+			const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, gd::stringify(state, hero_id)));
+			const double gold = gd::float_field(state, cost, key::gold, 0.0);
+			if (cheapest < 0.0 || gold < cheapest) {
+				cheapest = gold;
+			}
+		}
+		if (cheapest >= 0.0) {
+			const DictRef amounts = state.new_dict();
+			const double keep = cheapest + _hire_reserve(state, session, controller, key::HIRE_RESERVE_DAYS);
+			state.set(amounts, str(key::gold), int_value(compat::float_to_int(compat::godot_ceil(keep))));
+			_add_pool(state, held, dict_value(_hold_back(state, context_treasury(state, context), amounts)));
+		}
 	}
 	_profile_add(state, context, key::hire_ms, started);
 	// Troops first (they only appear with weekly growth and new dwellings), then

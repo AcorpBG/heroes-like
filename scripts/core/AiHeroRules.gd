@@ -112,10 +112,11 @@ static var ELIMINATION_VALUE: float
 ## what they can beat instead of handing their troops to the main hero; captured
 ## towns of other factions muster creatures the main army has no slot for.
 ## Leaving a defender (`_leave_defense`). A hero leaving one of its towns keeps
-## enough troops there to stop the hostile heroes that could reach it within
-## DEFENSE_HORIZON_DAYS (they need TOWN_ATTACK_RATIO over the garrison), or,
-## with none in sight but a rival town near, the raider a rival musters by this
-## week (DEFENSE_BASELINE_PER_WEEK a week). Every town is also held against
+## enough troops there to stop the hostile heroes, on either level, that could
+## reach it within DEFENSE_HORIZON_DAYS (they need TOWN_ATTACK_RATIO over the
+## garrison); a town no hero threatens keeps nothing, its troops travel with
+## the heroes (owner, 2026-10-28; until then it kept 40 strength a week of the
+## game when a rival town lay near). Every town is also held against
 ## the strongest remembered hero of a rival that holds no town, however far
 ## (`_townless_raider`): such a rival musters nothing and is out after
 ## PlayerEliminationRules.TOWNLESS_DAYS unless it takes a town back. It does so
@@ -132,19 +133,14 @@ static var ELIMINATION_VALUE: float
 ## empty, and kept it in the game until day 276.
 static var DEFENSE_HORIZON_DAYS: int
 static var DEFENSE_MARGIN: float
-static var DEFENSE_BASELINE_PER_WEEK: float
 static var DEFENSE_SHARE_MAX: float
 static var DEFENSE_SHARE_MAX_MAIN: float
 ## What a field army joining the main army is worth on top of the troops,
 ## when the main army alone cannot beat a hostile hero or town (`_main_shortfall`).
+## It joins only then: seven stacks limit an army, not a share of the main
+## army's strength (owner, 2026-10-28; until then a field army above 35% of the
+## main army joined it).
 static var JOIN_BASE_VALUE: float
-## A field army keeps at most this share of the main army's strength; above
-## it, it goes and joins the main army, which takes the stronger stacks. One
-## army wins the war; field armies hold ground behind it. On large maps every
-## player's strength sat in three or four armies of 5,000 to 30,000, none of
-## them able to clear the strong guards on the way to a rival, and the last
-## three of eight players never attacked each other in the final 40 days.
-static var FIELD_SHARE_MAX: float
 ## The main hero remembers the strength it lacked to clear the guard standing
 ## first in its way to a known rival town (`_strategic_candidate`), so field
 ## armies come to join it (`_main_shortfall`).
@@ -231,7 +227,8 @@ static var MEET_VALUE_CAP: float
 static var GOAL_CONTINUITY_BONUS: float
 const TOWN_SIGHT_RADIUS := 8
 ## Scouting the nearest unexplored ground. Raised from 220 on 2026-10-18 at
-## the owner's request that computer players explore more.
+## the owner's request that computer players explore more; from HUNT_FULL_DAY
+## it grows with the day, toward the endgame (owner, 2026-10-28).
 static var EXPLORE_VALUE: float
 ## While a rival still holds a town this player has never seen, the unexplored
 ## frontier is worth up to this much more, rising from HUNT_START_DAY to
@@ -308,11 +305,13 @@ const WEIGHT_SET_KEY := "ai_weight_set"
 const DEFAULT_WEIGHT_SET := "default"
 ## Wanted heroes (`_desired_hero_count`, `_govern_towns`): a main hero, one per
 ## town and one more from day EXTRA_HERO_DAY, then one explorer per
-## TILES_PER_EXPLORER unexplored land tiles, HERO_COUNT_MAX in all. A hire must
-## leave HIRE_RESERVE_DAYS of gold income in the treasury, an explorer's
-## EXPLORER_RESERVE_DAYS.
+## TILES_PER_EXPLORER unexplored land tiles, at most one per town: the count
+## grows with the towns held, with no cap of its own (owner, 2026-10-28; 8 in
+## all from 2026-10-26). A hire must leave HIRE_RESERVE_DAYS of gold income in
+## the treasury, an explorer's EXPLORER_RESERVE_DAYS; a player short of town
+## heroes keeps the next hire's gold and that reserve back from its towns'
+## spending. Only the faction's own heroes are hired, 11 per faction.
 static var EXTRA_HERO_DAY: int
-static var HERO_COUNT_MAX: int
 static var TILES_PER_EXPLORER: int
 static var HIRE_RESERVE_DAYS: int
 static var EXPLORER_RESERVE_DAYS: int
@@ -329,12 +328,13 @@ static var OPENS_BUILDING_VALUE: float
 static var UPGRADE_VALUE_WEEKS: float
 static var UPGRADE_BASE_VALUE: float
 ## Threats to a town: a hostile hero reaches at least THREAT_MIN_REACH tiles a
-## day and threatens a town THREAT_REACH_MARGIN tiles beyond that; a rival town
-## within RIVAL_TOWN_TILES_PER_DAY tiles per defense day calls for the baseline
-## garrison (`_town_defense_need`).
+## day and threatens a town THREAT_REACH_MARGIN tiles beyond that, on either
+## level: across levels the way runs through the nearest gate. Killing it is
+## worth THREAT_KILL_SHARE of every town of ours it could take within
+## DEFENSE_HORIZON_DAYS (`_threatened_town_share`; until 2026-10-28 only the
+## best one on its own level).
 static var THREAT_MIN_REACH: int
 static var THREAT_REACH_MARGIN: int
-static var RIVAL_TOWN_TILES_PER_DAY: int
 ## A target given up on is left alone for AVOID_DAYS days (`_avoid_target`).
 static var AVOID_DAYS: int
 ## A doorway out of reach past a gate counts its straight distance this many

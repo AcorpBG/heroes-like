@@ -115,10 +115,14 @@ double _explore_value(State &state, DictRef session, DictRef context) {
 	const double since = static_cast<double>(gd::sub(day, start));
 	const double span = static_cast<double>(gd::sub(full, start));
 	const double ramp = compat::engine_clamp(since / span, 0.0, 1.0);
+	// Unseen ground is worth more as the game goes on: late in a game it is
+	// where the last rivals' heroes and towns are. From HUNT_FULL_DAY it grows
+	// with the day (twice as much at twice that day).
+	const double late = full > 0 ? compat::engine_max(1.0, static_cast<double>(day) / static_cast<double>(full)) : 1.0;
+	const double explore = tunable(state, key::EXPLORE_VALUE) * late;
 	if (ramp <= 0.0 || !_rival_towns_unknown(state, session, context)) {
-		return tunable(state, key::EXPLORE_VALUE);
+		return explore;
 	}
-	const double explore = tunable(state, key::EXPLORE_VALUE);
 	const double hunt = _hunt_value(state, session, context);
 	return explore + hunt * ramp;
 }
