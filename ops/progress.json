@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "native-rules-gdscript-only-rules-20261027",
- "currentSliceTitle": "AiSeatRules is native (ai_seat_rules.cpp), one copy with match_sim_cli; the unused field-transfer list and its test are deleted; create_session and the authored browser wait for the scenario rework. Six seeds identical to main.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-27T20:50:05Z",
+ "currentSliceId": "ai-army-concentration-20261009",
+ "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-28T07:08:33Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -35,11 +35,11 @@
    "id": "ai-army-concentration-20261009",
    "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
    "status": "in_progress",
-   "goal": "field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Left on 2026-10-09: large and extra large games where the leader keeps its strength in garrisons against a lone rival hero (ai-match-724865121, ai-match-1103018058). Not rechecked since the later AI work.",
+   "goal": "field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Rechecked 2026-10-28 (36 large 4P and XL 6P games): every game ends, none at the cap. Left: a player far ahead finishes slowly (median 60 days on large and 96 on XL maps after holding half the towns), with a third or more of its strength in garrisons and its field strength split over 5 to 7 heroes; it does not merge them against the last rival (ai-match-1733907118).",
    "docs": [
     "docs/ai-plays-by-player-rules.md"
    ],
-   "updatedAt": "2026-10-09",
+   "updatedAt": "2026-10-28",
    "phase": "phase-6-production-alpha-layer"
   },
   {
