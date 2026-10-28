@@ -24641,6 +24641,9 @@ static bool river_path_writeback_0x4ab6ac(
 	queue.push_back(RiverSearchNode4ab6ac { seed, 0 });
 	bool terminal_found = false;
 	RoadCoordinateRecord14b0 terminal;
+	// The record EBX holds: the seed's (0x4ab732), each popped node's (0x4ab7cd) and
+	// each in-bounds neighbor's (0x4ab847).
+	int64_t last_loaded_flat = seed_flat;
 	while (!queue.empty() && !terminal_found) {
 		const RiverSearchNode4ab6ac node = queue.back();
 		queue.pop_back();
@@ -24653,6 +24656,7 @@ static bool river_path_writeback_0x4ab6ac(
 		if (current_flat < 0 || current_flat >= int64_t(state.generated_cell_buffer.records.size())) {
 			continue;
 		}
+		last_loaded_flat = current_flat;
 		const GeneratedCellRecord0x30 &current_record = state.generated_cell_buffer.records[size_t(current_flat)];
 		if (!current_record.word_0x1c_known) {
 			result.blocked_reason = "0x4ab6ac_current_word_0x1c_unknown";
@@ -24675,6 +24679,7 @@ static bool river_path_writeback_0x4ab6ac(
 			if (next_flat < 0 || next_flat >= int64_t(state.generated_cell_buffer.records.size())) {
 				continue;
 			}
+			last_loaded_flat = next_flat;
 			GeneratedCellRecord0x30 &next_record = state.generated_cell_buffer.records[size_t(next_flat)];
 			if (!next_record.word_0x24_known || !next_record.word_0x28_known || !next_record.word_0x1c_known) {
 				result.blocked_reason = "0x4ab6ac_neighbor_generated_cell_word_unknown";
@@ -24712,9 +24717,16 @@ static bool river_path_writeback_0x4ab6ac(
 			}
 		}
 	}
+	// 0x4ab8f5: with the queue empty, H3MapEd tests bit29 on the record EBX holds.
+	// Clear, it jumps to the 0x4ab9dc cleanup and returns with no river written, and
+	// 0x4ac4ae goes on to 0x4abd5f.
 	if (!terminal_found) {
-		result.blocked_reason = "0x4ab6ac_no_bit29_terminal_reached";
-		return false;
+		const GeneratedCellRecord0x30 &last_loaded = state.generated_cell_buffer.records[size_t(last_loaded_flat)];
+		if (last_loaded.word_0x28_known && (last_loaded.word_0x28 & CELL_RIVER_TERMINAL_BIT_29_0X49B1BC) != 0U) {
+			result.blocked_reason = "0x4ab6ac_queue_exhausted_on_bit29_record_write_unrecovered";
+			return false;
+		}
+		return true;
 	}
 	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
@@ -36107,12 +36119,20 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_support_foll
 	return result;
 }
 
+// The game turns mine subtypes 0, 2 and 6 into wood, ore and gold mines and gives
+// them its own shape (common_resource in rules/core/port/generated_reward_rules.cpp,
+// common_mine_rules.cpp). The rare subtypes become resource sites that keep the H3 body.
+static bool game_common_mine_subtype(int32_t subtype) {
+	return subtype == 0 || subtype == 2 || subtype == 6;
+}
+
 // Departure from H3MapEd (docs/rmg-cut-off-town-repair.md), repair pass only. The
-// game blocks every mine as three by two tiles with the visit tile at the bottom
-// middle, in place of the H3 body (scripts/core/CommonMineRules.gd). This copy of a
-// mine's record also marks that shape as blocked, so the 0x49a6f9 footprint and 0x49a09c
-// contour tests judge the cells the game blocks: a mine whose top row would close a
-// town door or split a passage is rejected the way H3MapEd rejects its own bodies.
+// game blocks a wood, ore or gold mine as three by two tiles with the visit tile at
+// the bottom middle, in place of the H3 body (scripts/core/CommonMineRules.gd). This
+// copy of such a mine's record also marks that shape as blocked, so the 0x49a6f9
+// footprint and 0x49a09c contour tests judge the cells the game blocks: a mine whose top
+// row would close a town door or split a passage is rejected the way H3MapEd rejects its
+// own bodies.
 static SourceObjectRecord0x4c game_mine_shape_placement_record(const SourceObjectRecord0x4c &source) {
 	int32_t visit_col = -1;
 	int32_t visit_row = -1;
@@ -36219,8 +36239,10 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 		const int32_t scan_start_x =
 				owner.scan_bound_low_x_0x20 + selected.source_record_copy.descriptor_width_0x34 - 1;
 		std::map<std::string, int32_t> debug_eligibility_reject_reasons;
-		const bool game_shape_placement =
+		const bool repair_mine_placement =
 				state.route_join_departure_enabled && selected.descriptor_type_0x1c == 53;
+		const bool game_shape_placement =
+				repair_mine_placement && game_common_mine_subtype(selected.descriptor_source_field_0x20);
 		const SourceObjectRecord0x4c placement_record = game_shape_placement
 				? game_mine_shape_placement_record(selected.source_record_copy)
 				: selected.source_record_copy;
@@ -36308,7 +36330,7 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 					result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
 					continue;
 				}
-				if (game_shape_placement
+				if (repair_mine_placement
 						&& object_record_covers_link_passage(state, placement_record, x, y, level)) {
 					result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
 					continue;
@@ -41764,12 +41786,16 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 			protected_cell[size_t(flat)] = 1;
 		}
 	}
-	// The game blocks every mine as three by two tiles with its visit tile, one left
-	// of the anchor, at the bottom middle (scripts/core/CommonMineRules.gd). Joins
-	// treat that shape as occupied, so they do not lean on the row above the H3 body.
+	// The game blocks a wood, ore or gold mine as three by two tiles with its visit
+	// tile, one left of the anchor, at the bottom middle (scripts/core/CommonMineRules.gd).
+	// Joins treat that shape as occupied, so they do not lean on the row above the H3
+	// body. Rare mines keep their H3 body.
 	std::vector<char> game_mine_cell(size_t(cell_count), 0);
 	for (const ObjectRecordReference4a54a7 &object : state.object_records_0xec4_ecc) {
-		if (object.descriptor_type_0x1c != 53) {
+		const int32_t subtype = object.copied_source_record_carried
+				? object.source_record_copy.subtype_0x20
+				: object.object_record_selected_index_0x20;
+		if (object.descriptor_type_0x1c != 53 || !game_common_mine_subtype(subtype)) {
 			continue;
 		}
 		for (int32_t dy = -1; dy <= 0; ++dy) {
@@ -42030,8 +42056,8 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 
 // Towns outside the walkable area that holds the most towns. Rock and object
 // bodies block; water blocks unless a boat can be had on it. Action tiles stay
-// enterable, and monoliths and subterranean gates join their peers. Mines block
-// the game's three-by-two shape, not their H3 body.
+// enterable, and monoliths and subterranean gates join their peers. Wood, ore and
+// gold mines block the game's three-by-two shape, not their H3 body.
 static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
 	const int32_t width = projection.width;
 	const int32_t height = projection.height;
@@ -42130,10 +42156,12 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 		}
 	}
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
-		// The game draws every mine as three by two tiles with the visit tile at
-		// the bottom middle (scripts/core/CommonMineRules.gd) and blocks that shape
-		// in place of the H3 body, so it also blocks the row above (m095, 2026-10-17).
-		if (object.type_id == 53 && !object.action_tiles.empty()) {
+		// The game draws a wood, ore or gold mine as three by two tiles with the
+		// visit tile at the bottom middle (scripts/core/CommonMineRules.gd) and blocks
+		// that shape in place of the H3 body, so it also blocks the row above. Rare
+		// mines keep their H3 body below.
+		if (object.type_id == 53 && game_common_mine_subtype(object.subtype)
+				&& !object.action_tiles.empty()) {
 			for (int32_t dy = -1; dy <= 0; ++dy) {
 				for (int32_t dx = -1; dx <= 1; ++dx) {
 					RuntimeMapTilePoint tile = object.action_tiles.front();

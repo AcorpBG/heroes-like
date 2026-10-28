@@ -6,6 +6,8 @@ Slice: `art-overworld-rivers-20261015` (owner request, 2026-10-15: "let's implem
 
 The native generator's river pass writes a river type per tile (`river_path_writeback_0x4ab6ac` / `0x4abd5f`, final art `river_final_write_0x458a2f`), and the map package carries it as the `river_type` / `river_art` terrain layers. The game loaded them but drew nothing. Generated medium maps carry tens of river tiles on the surface (48 and 90 in two samples); small maps and the underground had none in the samples. Types: 1 clear, 2 icy (the generator picks it where the river starts on snow), 3 muddy, 4 lava.
 
+Each water wheel (type 109) starts a river in `0x4ac4ae`. When `0x4ab6ac`'s search from it reaches no bit29 cell, H3MapEd writes no river for that wheel and goes on to `0x4abd5f`: with the queue empty it tests bit29 on the last cell record it loaded, and if that is clear jumps from `0x4ab8f5` to the `0x4ab9dc` cleanup (Ghidra dump `.artifacts/rmg_recovery/ghidra_4aae2f_path_reset_20260710/caller_004ab6ac_FUN_004ab6ac.txt`). Until 2026-10-28 the port stopped the map there. The case where that last record does carry bit29 is not recovered and still stops the map.
+
 ## Model
 
 - `OverworldMapView._river_masks_for_level` builds a mask per river tile. A tile joins the river tiles of its type beside it (north, east, south, west), as the generator's own art choice does (`river_neighbor_flags_0x4587f7_0x4bf3f4`).

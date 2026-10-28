@@ -9232,9 +9232,10 @@ int main() {
 			}
 		}
 	}
-	// The cut-off check uses the game's three-by-two mine shape: in AI match m095
-	// (medium, 3 players, two levels, normal water, strong guards) the row above two
-	// mines seals a start town that the H3 mine bodies leave open.
+	// The cut-off check gives the game's three-by-two shape only to wood, ore and gold
+	// mines: in AI match m095 (medium, 3 players, two levels, normal water, strong guards)
+	// the crystal cavern visited at (63,12) keeps its H3 body, which leaves player 3's
+	// start town an exit, so H3MapEd's map is kept.
 	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
 		H3MapedRmgWorkflowConfig m095_config;
 		m095_config.size_class = "medium";
@@ -9265,16 +9266,15 @@ int main() {
 				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 		const H3MapedRmgWorkflowResult m095_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m095_config);
-		if (!require(m095_workflow.cut_off_town_repair_applied
-					&& m095_workflow.cut_off_towns_before_repair == 1
-					&& m095_workflow.cut_off_towns_after_repair == 0,
-				"Medium three-player m095 map did not repair the town its mines seal")) {
+		if (!require(!m095_workflow.cut_off_town_repair_applied
+					&& m095_workflow.cut_off_towns_before_repair == 0,
+				"Medium three-player m095 map gave its crystal cavern the common mine shape")) {
 			return 1;
 		}
 	}
-	// In the repair pass a mine is placed by H3MapEd's footprint and contour tests on
-	// the game's three-by-two shape: in AI match m139 (small, land, strong guards) the
-	// H3MapEd crystal cavern below the start town's door closes its only exits.
+	// A rare mine below a town door blocks only its H3 body: in AI match m139 (small,
+	// land, strong guards) the crystal cavern visited at (20,11) leaves the three cells
+	// under the door at (20,9) free, so H3MapEd's map is kept.
 	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
 		H3MapedRmgWorkflowConfig m139_config;
 		m139_config.size_class = "small";
@@ -9305,16 +9305,15 @@ int main() {
 				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 		const H3MapedRmgWorkflowResult m139_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m139_config);
-		if (!require(m139_workflow.cut_off_town_repair_applied
-					&& m139_workflow.cut_off_towns_before_repair == 1
-					&& m139_workflow.cut_off_towns_after_repair == 0,
-				"Small m139 map did not repair the town door its mine closes")) {
+		if (!require(!m139_workflow.cut_off_town_repair_applied
+					&& m139_workflow.cut_off_towns_before_repair == 0,
+				"Small m139 map gave the crystal cavern below its town door the common mine shape")) {
 			return 1;
 		}
 	}
-	// In the repair pass a link passage includes both endpoint cells, and no mine or
-	// gate may cover it: in AI match m014 (small, land, weak guards) the alchemist's lab
-	// and decoration close the unguarded 4-1 link at its zone-4 endpoint.
+	// A rare mine on a link endpoint blocks only its H3 body: in AI match m014 (small,
+	// land, weak guards) the alchemist's lab visited at (15,13) leaves the unguarded 4-1
+	// link open, so H3MapEd's map is kept.
 	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
 		H3MapedRmgWorkflowConfig m014_config;
 		m014_config.size_class = "small";
@@ -9345,10 +9344,9 @@ int main() {
 				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 		const H3MapedRmgWorkflowResult m014_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m014_config);
-		if (!require(m014_workflow.cut_off_town_repair_applied
-					&& m014_workflow.cut_off_towns_before_repair == 1
-					&& m014_workflow.cut_off_towns_after_repair == 0,
-				"Small m014 map did not repair the link passage its mine closes")) {
+		if (!require(!m014_workflow.cut_off_town_repair_applied
+					&& m014_workflow.cut_off_towns_before_repair == 0,
+				"Small m014 map gave the alchemist's lab on its link the common mine shape")) {
 			return 1;
 		}
 	}

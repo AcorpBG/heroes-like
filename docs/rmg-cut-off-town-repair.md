@@ -81,9 +81,13 @@ RNG and no retries, so the repaired map is deterministic per seed. The later pha
 unchanged, but the protected cells change which candidates they see, so a repaired map
 differs from H3MapEd beyond the carved cells.
 
-0. **Place mines by the game's shape.** In `0x4a9641`, a mine (type 53) is tested by
-   the same `0x49a6f9` footprint and `0x49a09c` contour tests, on a copy of its record.
-   The copy blocks the H3 body plus the game's three-by-two shape around the visit tile.
+0. **Place mines by the game's shape.** In `0x4a9641`, a wood, ore or gold mine (type
+   53, subtypes 0, 2 and 6) is tested by the same `0x49a6f9` footprint and `0x49a09c`
+   contour tests, on a copy of its record. The copy blocks the H3 body plus the game's
+   three-by-two shape around the visit tile.
+   - The game gives that shape only to those three (`common_resource` in
+     `rules/core/port/generated_reward_rules.cpp`). The other subtypes become
+     rare-resource sites that block their H3 body, so they keep H3MapEd's own tests.
    - The contour test rejects a ring that touches another object's action cell (mines
      may not), or that splits into two runs of bad cells.
    - So a mine whose game top row would close a town door, or cut a passage, is
@@ -104,7 +108,8 @@ differs from H3MapEd beyond the carved cells.
      outside the zone of control is left to H3MapEd's decoration, so keeping the
      passage free never opens a step around the monster.
    - **Every link:** no later object may cover a passage cell with a blocked cell. A
-     mine is tested with the game's shape (step 0), a two-level gate pair (`0x4a6cf2`)
+     wood, ore or gold mine is tested with the game's shape (step 0), a rare mine with
+     its H3 body, a two-level gate pair (`0x4a6cf2`)
      with its H3 body on both levels, and reward objects with their H3 bodies: single
      objects (`0x4a93a2`, `0x4a901a`) and every member of a reward cluster (`0x4aa603`).
      A rejected cell is skipped like any other ineligible candidate.
@@ -128,10 +133,11 @@ differs from H3MapEd beyond the carved cells.
      whose monolith and passage lie apart stays split (XL m566, large m085).
    - **Components:** points are grouped over cells that are guaranteed walkable: a
      point, or a cell with no object, not water or rock, with bit27 set.
-   - **Mines:** every mine (type 53, from `object_records_0xec4_ecc`) blocks the game's
-     three-by-two shape (`scripts/core/CommonMineRules.gd`), minus its visit tile. The
-     joins treat those cells as occupied, so a join never runs through the row above a
-     mine's H3 body.
+   - **Mines:** every wood, ore or gold mine (type 53, subtypes 0, 2 and 6, from
+     `object_records_0xec4_ecc`) blocks the game's three-by-two shape
+     (`scripts/core/CommonMineRules.gd`), minus its visit tile. The joins treat those
+     cells as occupied, so a join never runs through the row above such a mine's H3
+     body. Rare mines keep their H3 body.
    - **Join:** each other component is joined to the one holding the most points by
      the cheapest path. Cells already walkable cost 0, free cells of the zone cost 1.
      If no path exists inside the zone, a second pass may cross other zones' free
@@ -148,10 +154,11 @@ their peers. Water is walkable only where a hero can get a boat on it: a body of
 (8-connected water tiles) with a boat (type 8) on it, or with a shipyard's (type 87)
 dock. The dock is the nearest water tile around the shipyard's visit tile and body, in
 the order the game picks it (`water_travel_rules_ai.cpp`, `dock_tile`). The game has no
-other way onto water, so other water blocks (XL m475). A mine (type 53) blocks the
-game's three-by-two shape around its visit tile (`scripts/core/CommonMineRules.gd`) in
-place of its H3 body. It returns the number of towns outside the area that holds the
-most towns.
+other way onto water, so other water blocks (XL m475). A wood, ore or gold mine (type
+53, subtypes 0, 2 and 6) blocks the game's three-by-two shape around its visit tile
+(`scripts/core/CommonMineRules.gd`) in place of its H3 body; the other mines block their
+H3 body, as the game's rare-resource sites do. It returns the number of towns outside
+the area that holds the most towns.
 
 **Reported state:** `H3MapedRmgWorkflowResult` carries `cut_off_town_repair_applied`,
 `cut_off_towns_before_repair` and `cut_off_towns_after_repair`, and its
@@ -246,16 +253,31 @@ most towns.
     After, none.
   - The repair now runs on 158 maps, one more than before (m475). No map ends with
     more towns cut off.
-  - m231's H3MapEd map is walkable in the game; the check flags it only for the mine
-    shape (see Known limits).
+  - m231's H3MapEd map is walkable in the game; the check flagged it only for a rare
+    mine's shape (fixed by the next entry).
+- **Rare mines keep their H3 body** (`native-rmg-repair-rare-mine-body-20261028`), on
+  the same 1,200 maps, before and after:
+  - Before, the check flagged and repaired 158 maps, and none ended with towns cut off.
+  - After, it flags 146; 12 keep H3MapEd's map, flagged before only for a rare mine's
+    shape: m036, m231, m293, m321, m405, m412, m417, m488, m647, m792, m914 and m1082.
+  - All 146 still repair to no town cut off. Four count fewer towns on H3MapEd's map
+    (m026 2 to 1, m223 3 to 1, m1034 4 to 3, m1160 5 to 4). No map ends with towns cut
+    off, and no repair pass fails.
+  - The first version left two maps cut off. On XL m1034 (3 towns, 2 left) step 0 no
+    longer kept rare mines off link passages; every mine keeps that test, a rare one
+    with its H3 body. On small m1017 the repair pass stopped in `0x4ab6ac` when a water
+    wheel's river search reached no bit29 cell. The recovered code writes no river there
+    and goes on (`0x4ab8f5` to the `0x4ab9dc` cleanup; see `docs/overworld-rivers.md`),
+    and m1017 now repairs (1 to 0).
+  - The 72-reference sweep stays 64/72 with the repair on, the same rows.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
   Added cases require XL seed 76 to re-pick 8XM12 and end with no town cut off, and
-  the repair to join a cut-off town on m095, on m139, where it needs the mine
-  placement step, on m014, where it needs the link endpoint cells, on r23 m003,
-  where it needs the monolith partner, and on r4 m030, where it needs the guarded
-  passage kept free.
+  the repair to join a cut-off town on r23 m003, where it needs the monolith partner,
+  and on r4 m030, where it needs the guarded passage kept free. m095, m139 and m014 must
+  keep H3MapEd's map: a crystal cavern (m095, m139) or an alchemist's lab (m014) was
+  their only flag, and the game blocks those with their H3 body.
 - **Core test:** every map `random_map_small_2p_launch_report` generates must end with no
   town cut off. The seeds that need the repair are covered by the native selftest above,
   not by a core test (owner decision, 2026-10-19: core tests carry no fix-specific cases).
@@ -293,22 +315,24 @@ H3MapEd's map, which equals the strict native map (3692 objects).
   and where it touches no other zone (step 1). m030 now repairs from 7 to 0, and the
   12-14 monster still stands between the two halves.
 
-## m095: mines seal a start town
+## m095: mine shapes around a start town
 
 AI match m095 (2026-10-17 medium 3-player batch; map seed `4228448339-p3`, native seed
 684022622; medium, two levels, normal water, strong guards) reported no town cut off,
 yet player 3's start town at (60,24,0) could not be left on foot.
 
-- **Cause:** the game draws every mine as three by two tiles with the visit tile at the
-  bottom middle and blocks that shape in place of the H3 body. So it also blocks the
-  row above the H3 body, and leaves open any H3 body cell outside the shape (the
-  sawmill's fourth column). Two mines matter here: the crystal cavern at (64,12)
-  blocks (62,11) and (63,11), and the sawmill at (70,20) blocks (68,19). Those were the
+- **Cause:** the game then drew every mine as three by two tiles with the visit tile at
+  the bottom middle and blocked that shape in place of the H3 body. So it also blocked
+  the row above the H3 body, and left open any H3 body cell outside the shape (the
+  sawmill's fourth column). Two mines mattered: the crystal cavern at (64,12) blocked
+  (62,11) and (63,11), and the sawmill at (70,20) blocked (68,19). Those were the
   pocket's only exits towards the subterranean gate at (69,2,0). The check used the H3
   bodies, so it walked through them.
-- **Fix:** the check blocks the same three-by-two shape in place of the H3 body. m095
-  now reports one town cut off, and the repair joins it (`towns_cut_off_before` 1,
-  `towns_cut_off_after` 0). The repaired map keeps the eight towns where they were.
+- **Fix then:** the check blocked the same shape, and the repair joined the town (1 to 0).
+- **Now:** the game gives that shape only to wood, ore and gold mines. The crystal
+  cavern (visit tile (63,12)) is a rare-resource site that blocks its H3 body, so
+  (62,11) and (63,11) are open and the pocket leads out. The check counts no town cut
+  off, and m095 keeps H3MapEd's map.
 
 ## m566 and m085: a monolith end is no route point
 
@@ -349,15 +373,6 @@ guards) kept H3MapEd's map, yet players 2 and 4 could never be reached.
 
 ## Known limits
 
-- **Rare mines get the common mine shape.** The town check, step 0 and the joins give
-  every mine (type 53) the game's three-by-two shape. The game gives that shape only to
-  wood, ore and gold mines (subtypes 0, 2 and 6; `common_resource` in
-  `generated_reward_rules.cpp`). The other subtypes become rare-resource sites that
-  block their H3 body. So the check can flag a map the game can walk:
-  - 12 of the 158 maps repaired in the 2026-10-28 sweep, m231 among them.
-  - On m231, H3MapEd's map joins all 24 towns through the 25-27 monolith pair.
-  - The m095 and m139 cases above count crystal caverns (subtype 4) with that shape;
-    the game now blocks their H3 body.
 - **Guard bypass on m043** (seed 2851495868, strong). Zone 4's anchor fragment can only
   be reached through zone 2. The cross-zone join therefore opens a walk around the
   strong 2-4 connection guard (9250).
@@ -379,8 +394,9 @@ guards) kept H3MapEd's map, yet players 2 and 4 could never be reached.
   - a mine sits two rows below, so the game's top row of the mine covers the three
     tiles under the door.
   - In H3 those tiles are free, because the H3 body is only the mine's bottom row.
-  - Example: m139, crystal cavern at (21,11) below the door at (20,9).
-  - The repair pass now places those mines elsewhere, and all 8 repair.
+  - The repair pass now places such mines elsewhere, and all 8 repaired.
+  - Only wood, ore and gold mines get that top row. m139's mine, a crystal cavern at
+    (21,11) below the door at (20,9), keeps its H3 body, and m139 keeps H3MapEd's map.
 - **Six-town split maps (Newcomers, fixed by the template re-pick).** medium2p/m117
   (seed 154192373) and medium3p/m066 left whole islands of zones whose links never join
   the rest. They now take 5SB0a and Ring and have no town cut off.
