@@ -120,6 +120,12 @@ differs from H3MapEd beyond the carved cells.
      kept if they are free or action cells and not water or rock; plus every town's
      door (the first action cell left of the town object on its row), as a point of
      the zone that owns that cell.
+   - **Object link ends:** a `0x404` cell on an object's body stands for that object's
+     action cells. A monolith end is such a record: `0x4a7605` appends the cell
+     `0x4a7312` placed the monolith on. The action cells are the cells of the object's
+     eight-by-six footprint that carry its key and bit22 (`0x49abd6` stamps the key on
+     body and action cells alike). Without them a monolith is no route point, and a zone
+     whose monolith and passage lie apart stays split (XL m566, large m085).
    - **Components:** points are grouped over cells that are guaranteed walkable: a
      point, or a cell with no object, not water or rock, with bit27 set.
    - **Mines:** every mine (type 53, from `object_records_0xec4_ecc`) blocks the game's
@@ -137,10 +143,15 @@ differs from H3MapEd beyond the carved cells.
 The map then goes through the normal remaining phases and writeout.
 
 **Town check** (`cut_off_town_count_departure`), on the runtime projection: rock and
-object bodies block, water is walkable, action cells are open, and monoliths and
-two-level gates link their peers. A mine (type 53) blocks the game's three-by-two shape
-around its visit tile (`scripts/core/CommonMineRules.gd`) in place of its H3 body. It
-returns the number of towns outside the area that holds the most towns.
+object bodies block, action cells are open, and monoliths and two-level gates link
+their peers. Water is walkable only where a hero can get a boat on it: a body of water
+(8-connected water tiles) with a boat (type 8) on it, or with a shipyard's (type 87)
+dock. The dock is the nearest water tile around the shipyard's visit tile and body, in
+the order the game picks it (`water_travel_rules_ai.cpp`, `dock_tile`). The game has no
+other way onto water, so other water blocks (XL m475). A mine (type 53) blocks the
+game's three-by-two shape around its visit tile (`scripts/core/CommonMineRules.gd`) in
+place of its H3 body. It returns the number of towns outside the area that holds the
+most towns.
 
 **Reported state:** `H3MapedRmgWorkflowResult` carries `cut_off_town_repair_applied`,
 `cut_off_towns_before_repair` and `cut_off_towns_after_repair`, and its
@@ -227,6 +238,16 @@ returns the number of towns outside the area that holds the most towns.
   border. medium3p/m035 gains one beside its 4-11 guard, at (38,52) on level 1, where
   the reshuffled decoration left a cell open that the earlier repair had covered (see
   Known limits). The sweep stays 64/72 with and without the repair, same rows.
+- **Monolith ends and water without boats** (`native-rmg-repair-monolith-doors-boatless-water-20261028`):
+  - Checked on all 1,200 maps of the 2026-10-28 mixed batch: every size, one and two
+    levels, land and normal water, normal and strong guards. Each map was generated
+    and played for one day, before and after the change.
+  - Before, 4 maps ended with towns cut off (15 towns): m085, m231, m475 and m566.
+    After, none.
+  - The repair now runs on 158 maps, one more than before (m475). No map ends with
+    more towns cut off.
+  - m231's H3MapEd map is walkable in the game; the check flags it only for the mine
+    shape (see Known limits).
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
@@ -289,8 +310,54 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   now reports one town cut off, and the repair joins it (`towns_cut_off_before` 1,
   `towns_cut_off_after` 0). The repaired map keeps the eight towns where they were.
 
+## m566 and m085: a monolith end is no route point
+
+Two capped games of the 2026-10-28 mixed batch (1,200 games) walled a player off on a
+repaired map:
+
+- XL m566 (map seed 2165370044-p6, native seed 2129850540; one level, land, normal guards).
+- Large m085 (map seed 1099990833-p4, native seed 101529017; one level, land, normal
+  guards).
+
+H3MapEd's maps cut off 6 towns each. The repair kept its maps with 3 and 5 still cut off.
+
+- **m566:** Sunvault's start and two neutral towns sit in zones 30-32, a 750-tile area.
+  Its only way out is through zone 29: the unguarded 29-30 passage enters zone 29, and
+  zone 29's only other link is the 27-29 monolith pair. The passage cells and the
+  monolith end at (56,1) lie in two parts of zone 29, two blocked tiles apart.
+- **m085:** zones 21-32 hold 5 towns. Their only way out is the unguarded 16-21 passage
+  into zone 21. Zone 21's monolith end of the 21-23 pair lies in another part of zone 21.
+- **Cause:** `0x4a7605` records a monolith end in its zone's `0x404` vector at the cell
+  `0x4a7312` placed the object on, which is a body cell. The join step dropped it, so a
+  zone with a passage and a monolith joined only the passage to its anchor.
+- **Fix:** such a record stands for the object's action cells (step 2, object link
+  ends). Both maps now end with no town cut off (6 to 0).
+
+## m475: a lake with no boat
+
+XL m475 (map seed 3749470550-p6, native seed 1103082712; two levels, land, normal
+guards) kept H3MapEd's map, yet players 2 and 4 could never be reached.
+
+- **Cause:** their zones 1, 3, 9 and 15 join the rest only through zone 19, whose
+  monolith ends H3MapEd could not place. The surface between them is a 402-tile lake.
+  It touches the main area at one tile and holds no boat, and no shipyard docks on it.
+  The town check walked across the water, so it counted no town cut off and the repair
+  never ran.
+- **Fix:** the check lets a hero onto water only where a boat or a shipyard dock is.
+  m475 now counts 3 towns cut off; the repair pass places the missing monolith ends and
+  ends with none.
+
 ## Known limits
 
+- **Rare mines get the common mine shape.** The town check, step 0 and the joins give
+  every mine (type 53) the game's three-by-two shape. The game gives that shape only to
+  wood, ore and gold mines (subtypes 0, 2 and 6; `common_resource` in
+  `generated_reward_rules.cpp`). The other subtypes become rare-resource sites that
+  block their H3 body. So the check can flag a map the game can walk:
+  - 12 of the 158 maps repaired in the 2026-10-28 sweep, m231 among them.
+  - On m231, H3MapEd's map joins all 24 towns through the 25-27 monolith pair.
+  - The m095 and m139 cases above count crystal caverns (subtype 4) with that shape;
+    the game now blocks their H3 body.
 - **Guard bypass on m043** (seed 2851495868, strong). Zone 4's anchor fragment can only
   be reached through zone 2. The cross-zone join therefore opens a walk around the
   strong 2-4 connection guard (9250).

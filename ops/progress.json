@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "tavern-any-faction-heroes-20261028",
- "currentSliceTitle": "Every town tavern and Wayfarer Lodge draws its own weekly pair from every faction's free heroes (own faction 20:1); human and AI hire from them; the lodge's four-hero limit is gone. Six capped XL seeds decided, leaders up to 43 heroes.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-28T11:25:34Z",
+ "currentSliceId": "native-rmg-repair-monolith-doors-boatless-water-20261028",
+ "currentSliceTitle": "Cut-off repair: monolith ends are route points; boatless water blocks the town check",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-28T15:41:42Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "native-rmg-repair-monolith-doors-boatless-water-20261028",
+   "title": "Cut-off repair: monolith ends are route points; boatless water blocks the town check",
+   "status": "in_progress",
+   "goal": "Three capped games of the 2026-10-28 mixed batch sat on maps that wall players off (XL m566, large m085, XL m475). Repair pass: a 0x404 record on an object body (a 0x4a7605 monolith end) stands for that object's action cells. Town check: water blocks unless a boat or a shipyard dock is on it. Files: src/gdextension/src/h3maped_rmg_core.cpp. Owner 2026-10-17: the repair is the one departure from H3MapEd.",
+   "docs": [
+    "docs/rmg-cut-off-town-repair.md"
+   ],
+   "updatedAt": "2026-10-28"
+  },
   {
    "id": "tavern-any-faction-heroes-20261028",
    "status": "completed",

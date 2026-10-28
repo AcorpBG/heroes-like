@@ -41807,6 +41807,36 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 			points.push_back(flat);
 		}
 	};
+	std::map<uint32_t, const ObjectRecordReference4a54a7 *> object_by_key;
+	for (const ObjectRecordReference4a54a7 &object : state.object_records_0xec4_ecc) {
+		object_by_key[object.object_record_key] = &object;
+	}
+	// A link end that is an object, a monolith from 0x4a7605, has its 0x404 record
+	// on the cell 0x4a7312 placed it on, a body cell. Its points are that object's
+	// action cells, which carry its key like the body (0x49abd6). Without them the
+	// monolith is no route point, and a zone whose passage and monolith lie apart
+	// stays split (XL m566, seed 2165370044: zone 29's 27-29 monolith and 29-30 passage).
+	auto push_object_doors = [&](int32_t zone, int64_t flat) {
+		for (const uint32_t key : record_at(flat).object_references_0x04_0x08) {
+			const auto found = object_by_key.find(key);
+			if (found == object_by_key.end()) {
+				continue;
+			}
+			const ObjectRecordReference4a54a7 &object = *found->second;
+			for (int32_t row = 0; row < 6; ++row) {
+				for (int32_t column = 0; column < 8; ++column) {
+					const int64_t door = cell_index(width, height, object.x - column, object.y - row, object.level);
+					if (door < 0 || door >= cell_count || !is_action(door) || water_or_rock(door)) {
+						continue;
+					}
+					const std::vector<uint32_t> &keys = record_at(door).object_references_0x04_0x08;
+					if (std::find(keys.begin(), keys.end(), key) != keys.end()) {
+						push_point(zone, door);
+					}
+				}
+			}
+		}
+	};
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		if (!relation_owner_slot_materialized_10e4(owner) || !owner.coordinate_triple_0x10_0x18_known) {
 			continue;
@@ -41815,16 +41845,22 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 		if (zone < 0) {
 			continue;
 		}
-		auto add_point = [&](int32_t x, int32_t y) {
+		auto add_point = [&](int32_t x, int32_t y, bool object_doors) {
 			const int64_t flat = cell_index(width, height, x, y, owner.coordinate_level_0x18);
-			if (flat < 0 || flat >= cell_count || (has_object(flat) && !is_action(flat)) || water_or_rock(flat)) {
+			if (flat < 0 || flat >= cell_count || water_or_rock(flat)) {
+				return;
+			}
+			if (has_object(flat) && !is_action(flat)) {
+				if (object_doors) {
+					push_object_doors(zone, flat);
+				}
 				return;
 			}
 			push_point(zone, flat);
 		};
-		add_point(owner.coordinate_x_0x10, owner.coordinate_y_0x14);
+		add_point(owner.coordinate_x_0x10, owner.coordinate_y_0x14, false);
 		for (const RelationOwnerLocalVectorRecord0x404 &record : owner.owner_local_vector_records_0x404) {
-			add_point(record.x, record.y);
+			add_point(record.x, record.y, true);
 		}
 	}
 	// 0x4a4c8e reopens a town door that sits on a zone border; join the door back.
@@ -41993,9 +42029,9 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 }
 
 // Towns outside the walkable area that holds the most towns. Rock and object
-// bodies block; water does not (boats), action tiles stay enterable, and
-// monoliths and subterranean gates join their peers. Mines block the game's
-// three-by-two shape, not their H3 body.
+// bodies block; water blocks unless a boat can be had on it. Action tiles stay
+// enterable, and monoliths and subterranean gates join their peers. Mines block
+// the game's three-by-two shape, not their H3 body.
 static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
 	const int32_t width = projection.width;
 	const int32_t height = projection.height;
@@ -42014,6 +42050,84 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 	std::vector<char> blocked(size_t(cell_count), 0);
 	for (int64_t flat = 0; flat < cell_count; ++flat) {
 		blocked[size_t(flat)] = projection.terrain_type_codes[size_t(flat)] == 9 ? 1 : 0;
+	}
+	// A hero reaches water only from a boat (type 8) or a shipyard's dock (type 87):
+	// the nearest water tile around its visit tile and body, in the order the game
+	// picks it (water_travel_rules_ai.cpp dock_tile). Water with neither blocks, so a
+	// town joined to the rest only across such a lake is cut off (XL m475, seed
+	// 3749470550: a 402-tile lake with no boat touches the main area at one tile).
+	std::vector<int32_t> water_body(size_t(cell_count), -1);
+	std::vector<char> water_body_sailable;
+	for (int64_t start = 0; start < cell_count; ++start) {
+		if (projection.terrain_type_codes[size_t(start)] != 8 || water_body[size_t(start)] >= 0) {
+			continue;
+		}
+		const int32_t body = int32_t(water_body_sailable.size());
+		water_body_sailable.push_back(0);
+		std::vector<int64_t> stack { start };
+		water_body[size_t(start)] = body;
+		while (!stack.empty()) {
+			const int64_t cell = stack.back();
+			stack.pop_back();
+			const int32_t level = int32_t(cell / plane);
+			const int32_t x = int32_t(cell % plane) % width;
+			const int32_t y = int32_t(cell % plane) / width;
+			for (int32_t dy = -1; dy <= 1; ++dy) {
+				for (int32_t dx = -1; dx <= 1; ++dx) {
+					if ((dx == 0 && dy == 0) || x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) {
+						continue;
+					}
+					const int64_t next = int64_t(level) * plane + int64_t(y + dy) * width + (x + dx);
+					if (projection.terrain_type_codes[size_t(next)] == 8 && water_body[size_t(next)] < 0) {
+						water_body[size_t(next)] = body;
+						stack.push_back(next);
+					}
+				}
+			}
+		}
+	}
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		if (object.type_id != 8 && object.type_id != 87) {
+			continue;
+		}
+		const RuntimeMapTilePoint origin = object.action_tiles.empty()
+				? RuntimeMapTilePoint { object.x, object.y, object.level }
+				: object.action_tiles.front();
+		if (object.type_id == 8) {
+			const int64_t flat = flat_of(origin);
+			if (flat >= 0 && water_body[size_t(flat)] >= 0) {
+				water_body_sailable[size_t(water_body[size_t(flat)])] = 1;
+			}
+			continue;
+		}
+		static constexpr int32_t DOCK_DX[8] = { 0, -1, 1, 0, -1, 1, -1, 1 };
+		static constexpr int32_t DOCK_DY[8] = { 1, 0, 0, -1, 1, 1, -1, -1 };
+		std::vector<RuntimeMapTilePoint> sources { origin };
+		sources.insert(sources.end(), object.body_tiles.begin(), object.body_tiles.end());
+		int64_t dock = -1;
+		int64_t dock_distance = int64_t(1) << 30;
+		for (const RuntimeMapTilePoint &source : sources) {
+			for (int32_t direction = 0; direction < 8; ++direction) {
+				const RuntimeMapTilePoint tile { source.x + DOCK_DX[direction], source.y + DOCK_DY[direction], origin.level };
+				const int64_t flat = flat_of(tile);
+				if (flat < 0 || projection.terrain_type_codes[size_t(flat)] != 8) {
+					continue;
+				}
+				const int64_t distance = int64_t(tile.x - origin.x) * (tile.x - origin.x) + int64_t(tile.y - origin.y) * (tile.y - origin.y);
+				if (distance < dock_distance) {
+					dock_distance = distance;
+					dock = flat;
+				}
+			}
+		}
+		if (dock >= 0) {
+			water_body_sailable[size_t(water_body[size_t(dock)])] = 1;
+		}
+	}
+	for (int64_t flat = 0; flat < cell_count; ++flat) {
+		if (water_body[size_t(flat)] >= 0 && !water_body_sailable[size_t(water_body[size_t(flat)])]) {
+			blocked[size_t(flat)] = 1;
+		}
 	}
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
 		// The game draws every mine as three by two tiles with the visit tile at
