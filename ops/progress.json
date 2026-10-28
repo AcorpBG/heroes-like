@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "native-rmg-repair-rare-mine-game-shape-20261028",
- "currentSliceTitle": "Cut-off repair: rare mines take the game's mine shape again",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-28T19:03:02Z",
+ "currentSliceTitle": "Repair check, step 0 and joins give every mine the game's 3x2 shape again (c7d831eae's rare-mine rule reverted). 1,200 maps: 158 flagged, all repair to none; m231 is won on day 82 instead of the 320-day cap.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-28T19:11:34Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "native-rmg-repair-rare-mine-game-shape-20261028",
-   "title": "Cut-off repair: rare mines take the game's mine shape again",
-   "status": "in_progress",
-   "goal": "The game blocks every mine, rare ones included, with its 3x2 shape (overworld_rules::_build_blocked_tile_index, mine_rules::resource counts rare_mine_resource). Revert c7d831eae's rare-mine rule in the repair check, step 0 and joins (h3maped_rmg_core.cpp), keep its 0x4ab6ac exit; m231 stalled on a salt pan wall. Owner 2026-10-28: fix m231 here.",
-   "docs": [
-    "docs/rmg-cut-off-town-repair.md"
-   ],
-   "updatedAt": "2026-10-28"
+   "status": "completed",
+   "completedAt": "2026-10-28",
+   "summary": "Repair check, step 0 and joins give every mine the game's 3x2 shape again (c7d831eae's rare-mine rule reverted). 1,200 maps: 158 flagged, all repair to none; m231 is won on day 82 instead of the 320-day cap.",
+   "commit": "2ff51cd1c"
   },
   {
    "id": "ai-unseen-hero-blocks-known-town-20261028",
@@ -38,7 +35,7 @@
    "id": "native-rmg-repair-rare-mine-body-20261028",
    "status": "completed",
    "completedAt": "2026-10-28",
-   "summary": "Repair check, step 0 and joins give the 3x2 mine shape only to wood, ore and gold mines; the 0x4ab6ac river search may end empty as in H3MapEd. 1,200 maps: 158 repaired -> 146, none cut off.",
+   "summary": "The 0x4ab6ac river search may end empty as in H3MapEd. Its rule giving rare mines their H3 body in the repair was wrong (the game blocks every mine 3x2) and is reverted by native-rmg-repair-rare-mine-game-shape-20261028.",
    "commit": "c7d831eae"
   },
   {
