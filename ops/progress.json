@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "native-rmg-repair-rare-mine-body-20261028",
- "currentSliceTitle": "Repair check, step 0 and joins give the 3x2 mine shape only to wood, ore and gold mines; the 0x4ab6ac river search may end empty as in H3MapEd. 1,200 maps: 158 repaired -> 146, none cut off.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-28T16:48:06Z",
+ "currentSliceId": "ai-unseen-hero-blocks-known-town-20261028",
+ "currentSliceTitle": "Out-of-sight heroes in the way of a known town are targets",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-28T18:37:33Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-unseen-hero-blocks-known-town-20261028",
+   "title": "Out-of-sight heroes in the way of a known town are targets",
+   "status": "in_progress",
+   "goal": "AI: a rival hero out of sight whose zone stands first on the way to a known town it can take is a target (_candidate, _war_paths), so heroes before a doorway no longer hide the town (m215 of the 2026-10-28 batch ran to the cap). Files: ai_hero_rules_candidates.cpp, docs/ai-plays-by-player-rules.md. Owner: fix it here, 2026-10-28.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-28"
+  },
   {
    "id": "native-rmg-repair-rare-mine-body-20261028",
    "status": "completed",

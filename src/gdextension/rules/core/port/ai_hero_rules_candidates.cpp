@@ -492,9 +492,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 		case kStopHero: {
 			const ArrayRef heroes = indexed_array(state, session_view::overworld(state, session), key::player_heroes);
 			const DictRef hero = gd::as_dict(state.at(heroes, ref_index()));
-			if (!_player_hero_seen(state, session, context, hero)) {
-				return state.new_dict();
-			}
+			const bool in_sight = _player_hero_seen(state, session, context, hero);
 			// On its own town's entry it fights with the garrison: the town's candidate
 			// weighs both.
 			if (_entry_town_index(state, session, key::hero, ref_index()) >= 0) {
@@ -507,6 +505,12 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			if (strength < hero_power_value * tunable(state, key::HERO_ATTACK_RATIO)) {
 				return state.new_dict();
 			}
+			// Out of sight, a hero is fought only where its zone stands first on the
+			// way to a town this player knows (`_war_paths`).
+			const double war_value = _hero_war_value(state, session, context, entry, search, needs, key::hero, ref_index());
+			if (!in_sight && war_value <= 0.0) {
+				return state.new_dict();
+			}
 			const Atom id = ai::string_or_empty(state, hero, key::id);
 			const int64_t index = ref_index();
 			const double kill_value = tunable(state, key::PLAYER_HERO_KILL_VALUE);
@@ -514,7 +518,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			const double troop_share = tunable(state, key::HERO_KILL_TROOP_SHARE);
 			double value = kill_value + hero_power_value * troop_value * troop_share;
 			value = value + _last_stand_share(state, session, key::player, key::player);
-			value = value + _hero_war_value(state, session, context, entry, search, needs, key::hero, ref_index());
+			value = value + war_value;
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::hero));
 			state.set(result, str(key::id), str(id));
@@ -533,9 +537,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 				return state.new_dict();
 			}
 			const DictRef position = level_rules::position(state, other);
-			if (!_position_seen(state, session, context, position)) {
-				return state.new_dict();
-			}
+			const bool in_sight = _position_seen(state, session, context, position);
 			if (_entry_town_index(state, session, key::ai_hero, ref_index()) >= 0) {
 				return state.new_dict();
 			}
@@ -549,6 +551,10 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			if (strength < other_power * tunable(state, key::HERO_ATTACK_RATIO)) {
 				return state.new_dict();
 			}
+			const double war_value = _hero_war_value(state, session, context, entry, search, needs, key::ai_hero, ref_index());
+			if (!in_sight && war_value <= 0.0) {
+				return state.new_dict();
+			}
 			const Atom other_controller = player_rules::raid_controller_id(state, other);
 			const Atom id = ai::string_or_empty(state, other, key::placement_id);
 			const int64_t index = ref_index();
@@ -558,7 +564,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			double value = kill_value + other_power * troop_value * troop_share;
 			value = value + _threatened_town_share(state, session, context, other);
 			value = value + _last_stand_share(state, session, key::enemy, other_controller);
-			value = value + _hero_war_value(state, session, context, entry, search, needs, key::ai_hero, ref_index());
+			value = value + war_value;
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::ai_hero));
 			state.set(result, str(key::id), str(id));
