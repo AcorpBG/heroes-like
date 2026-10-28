@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-army-concentration-20261009",
- "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-28T11:24:57Z",
+ "currentSliceId": "tavern-any-faction-heroes-20261028",
+ "currentSliceTitle": "Every town tavern and Wayfarer Lodge draws its own weekly pair from every faction's free heroes (own faction 20:1); human and AI hire from them; the lodge's four-hero limit is gone. Six capped XL seeds decided, leaders up to 43 heroes.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-28T11:25:34Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,14 +19,10 @@
  "plannedSlices": [
   {
    "id": "tavern-any-faction-heroes-20261028",
-   "title": "Taverns offer heroes of every faction, a pool per town and week",
-   "status": "in_progress",
-   "goal": "Owner 2026-10-28: every town's tavern (and every Wayfarer Lodge) draws its own weekly pair from the free heroes of every faction, its own faction's far more often; the human and the computer players alike, so no player is held to its faction's 11 heroes. The field taverns' leftover four-hero limit goes. Files: hero_command_rules_tavern.cpp, hero_command_rules_town.cpp, adventure_services.cpp, ai_hero_rules_turn_towns.cpp, town_building_panel.cpp.",
-   "docs": [
-    "docs/hero-hire-army-level.md",
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-10-28"
+   "status": "completed",
+   "completedAt": "2026-10-28",
+   "summary": "Every town tavern and Wayfarer Lodge draws its own weekly pair from every faction's free heroes (own faction 20:1); human and AI hire from them; the lodge's four-hero limit is gone. Six capped XL seeds decided, leaders up to 43 heroes.",
+   "commit": "b809bf378"
   },
   {
    "id": "native-rules-gdscript-only-rules-20261027",

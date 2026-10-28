@@ -29,7 +29,6 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
 - 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
 - 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
-- 2026-10-28: Every town's tavern has its own pool, rotating weekly: heroes of every faction, its own faction's most likely and the others' a small chance.
 
 ## Questions for the owner
 
@@ -37,7 +36,6 @@ None open.
 
 ## Open work
 
-- `tavern-any-faction-heroes-20261028` (in progress): Owner 2026-10-28: every town's tavern (and every Wayfarer Lodge) draws its own weekly pair from the free heroes of every faction, its own faction's far more often; the human and the computer players alike, so no player is held to its faction's 11 heroes. The field taverns' leftover four-hero limit goes. Files: hero_command_rules_tavern.cpp, hero_command_rules_town.cpp, adventure_services.cpp, ai_hero_rules_turn_towns.cpp, town_building_panel.cpp. See `docs/hero-hire-army-level.md`, `docs/ai-plays-by-player-rules.md`.
 - `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns (no hero_count_max) and a player short of heroes keeps the hire's gold from town spending; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall (no FIELD_SHARE_MAX); scouting grows with the day; taverns of every faction. Six capped seeds of the 600-game XL batch end on days 207-320, leaders with up to 43 heroes. Left: a leader still finishes slowly; raiders take emptied towns (1,004 of 2,462 captures in those six). See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
@@ -50,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-28 `tavern-any-faction-heroes-20261028` (b809bf378): Every town tavern and Wayfarer Lodge draws its own weekly pair from every faction's free heroes (own faction 20:1); human and AI hire from them; the lodge's four-hero limit is gone. Six capped XL seeds decided, leaders up to 43 heroes.
 - 2026-10-27 `native-rules-gdscript-only-rules-20261027` (48a58abda): AiSeatRules is native (ai_seat_rules.cpp), one copy with match_sim_cli; the unused field-transfer list and its test are deleted; create_session and the authored browser wait for the scenario rework. Six seeds identical to main.
 - 2026-10-27 `ai-inert-raid-leftovers-20261027` (7ecff2279): Border Warden gives only scouting radius; the knobs enemy_pressure_bonus, raid_threshold_offset and raid_pillage_multiplier, scale_raid_pillage, the raid threshold forecast and the posture risk items are gone. Six seeds identical to main.
 - 2026-10-27 `tooling-project-files-cleanup-20261027`: AGENTS.md rewritten to about half its size; PLAN.md and progress.json restarted within budgets, the old ones archived; `tools/progress.py` replaces the server skill; the core suite checks the budgets.
