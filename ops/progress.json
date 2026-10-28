@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "native-rmg-repair-rare-mine-body-20261028",
- "currentSliceTitle": "Rare mines keep their H3 body in the cut-off repair",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-28T16:24:59Z",
+ "currentSliceTitle": "Repair check, step 0 and joins give the 3x2 mine shape only to wood, ore and gold mines; the 0x4ab6ac river search may end empty as in H3MapEd. 1,200 maps: 158 repaired -> 146, none cut off.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-28T16:48:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "native-rmg-repair-rare-mine-body-20261028",
-   "title": "Rare mines keep their H3 body in the cut-off repair",
-   "status": "in_progress",
-   "goal": "The cut-off repair's town check, step 0 mine placement and zone joins (h3maped_rmg_core.cpp) give the game's three-by-two shape only to wood, ore and gold mines (subtypes 0, 2, 6), as common_resource does in the game; rare mines keep their H3 body, so maps the game can walk keep H3MapEd's map.",
-   "docs": [
-    "docs/rmg-cut-off-town-repair.md"
-   ],
-   "updatedAt": "2026-10-28"
+   "status": "completed",
+   "completedAt": "2026-10-28",
+   "summary": "Repair check, step 0 and joins give the 3x2 mine shape only to wood, ore and gold mines; the 0x4ab6ac river search may end empty as in H3MapEd. 1,200 maps: 158 repaired -> 146, none cut off.",
+   "commit": "c7d831eae"
   },
   {
    "id": "native-rmg-repair-monolith-doors-boatless-water-20261028",

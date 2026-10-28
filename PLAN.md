@@ -36,7 +36,6 @@ None open.
 
 ## Open work
 
-- `native-rmg-repair-rare-mine-body-20261028` (in progress): The cut-off repair's town check, step 0 mine placement and zone joins (h3maped_rmg_core.cpp) give the game's three-by-two shape only to wood, ore and gold mines (subtypes 0, 2, 6), as common_resource does in the game; rare mines keep their H3 body, so maps the game can walk keep H3MapEd's map. See `docs/rmg-cut-off-town-repair.md`.
 - `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns (no hero_count_max) and a player short of heroes keeps the hire's gold from town spending; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall (no FIELD_SHARE_MAX); scouting grows with the day; taverns of every faction. Six capped seeds of the 600-game XL batch end on days 207-320, leaders with up to 43 heroes. Left: a leader still finishes slowly; raiders take emptied towns (1,004 of 2,462 captures in those six). See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-28 `native-rmg-repair-rare-mine-body-20261028` (c7d831eae): Repair check, step 0 and joins give the 3x2 mine shape only to wood, ore and gold mines; the 0x4ab6ac river search may end empty as in H3MapEd. 1,200 maps: 158 repaired -> 146, none cut off.
 - 2026-10-28 `native-rmg-repair-monolith-doors-boatless-water-20261028` (a07384b67): Cut-off repair joins monolith ends to their zone; the town check blocks water with no boat or shipyard dock. 1,200 batch maps: 15 towns cut off on 4 maps, now 0; 72-reference sweep unchanged.
 - 2026-10-28 `tavern-any-faction-heroes-20261028` (b809bf378): Every town tavern and Wayfarer Lodge draws its own weekly pair from every faction's free heroes (own faction 20:1); human and AI hire from them; the lodge's four-hero limit is gone. Six capped XL seeds decided, leaders up to 43 heroes.
 - 2026-10-27 `native-rules-gdscript-only-rules-20261027` (48a58abda): AiSeatRules is native (ai_seat_rules.cpp), one copy with match_sim_cli; the unused field-transfer list and its test are deleted; create_session and the authored browser wait for the scenario rework. Six seeds identical to main.
