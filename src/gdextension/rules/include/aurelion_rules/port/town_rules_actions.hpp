@@ -226,10 +226,24 @@ using state::Value;
 
 // hero_command_rules_tavern.cpp.
 int64_t player_hero_count(State &state, DictRef session);
-ArrayRef tavern_offer_ids(State &state, DictRef session);
+// Heroes some player leads or will lead again: no tavern offers them.
+DictRef heroes_in_play(State &state, DictRef session);
+// The week's draw of the tavern `site_id`: the first free heroes of the whole
+// roster drawn by weight, `faction_id`'s heroes weighing more and every other
+// faction's `other_weight` (0 draws only that faction).
+ArrayRef tavern_draw(State &state, DictRef session, Atom site_id, Atom faction_id, int64_t other_weight);
+// The week's offer of the tavern at `site_id` (a town or a Wayfarer Lodge),
+// `faction_id`'s heroes most likely; what a hire there left this week.
+ArrayRef site_tavern_offer_ids(State &state, DictRef session, Atom site_id, Atom faction_id);
+// A town's offer: its own pool, the town's faction most likely.
+ArrayRef tavern_offer_ids(State &state, DictRef session, DictRef town);
+// A hire at `site_id`: the hired hero's place stays empty until the next week.
+void take_tavern_offer(State &state, DictRef session, Atom site_id, ArrayRef offer, Atom hero_id);
 int64_t days_until_tavern_rotation(State &state, DictRef session);
 DictRef tavern_offer_preview(State &state, DictRef session, Atom hero_id);
+// Every free hero a tavern could offer, of every faction.
 ArrayRef recruitable_hero_ids(State &state, DictRef session);
+ArrayRef _tavern_roster(State &state, DictRef session);
 ArrayRef _tavern_candidate_ids(State &state, DictRef session);
 bool _hero_recruitable_for_scenario(State &state, Atom hero_id, DictRef scenario);
 int64_t hero_count_from_overworld(State &state, const Value &overworld_state);

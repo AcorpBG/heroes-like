@@ -510,7 +510,7 @@ DictRef _tavern(State &state, const Value &session, DictRef resources) {
 		state.set(actions, str(string_of(state, ai::vget(state, action, key::id, str(key::empty)))), action);
 	}
 	const ArrayRef heroes = state.new_array();
-	for (const Value &hero_id_value : gd::items(state, array_value(hero_command_rules::tavern_offer_ids(state, view)))) {
+	for (const Value &hero_id_value : gd::items(state, array_value(hero_command_rules::tavern_offer_ids(state, view, town_rules::get_active_town(state, view))))) {
 		const Atom hero_id = string_of(state, hero_id_value);
 		const DictRef card = hero_card(state, hero_id);
 		if (gd::is_empty(state, card)) {

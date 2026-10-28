@@ -1160,9 +1160,9 @@ const Function kFunctions[] = {
 	NATIVE(HeroCommandRules, set_town_garrison_hero, 3, true,
 			no_null(a, 0);
 			return gd::dict_value(hero_command::set_town_garrison_hero(s, D(a, 0), D(a, 1), S(a, 2)))),
-	NATIVE(HeroCommandRules, tavern_offer_ids, 1, true,
-			if (nil(a, 0)) return gd::array_value(s.new_array());
-			return gd::array_value(hero_command::tavern_offer_ids(s, D(a, 0)))),
+	NATIVE(HeroCommandRules, tavern_offer_ids, 2, true,
+			if (nil(a, 0) || nil(a, 1)) return gd::array_value(s.new_array());
+			return gd::array_value(hero_command::tavern_offer_ids(s, D(a, 0), D(a, 1)))),
 	NATIVE(TownRules, building_id_for_action, 1, false,
 			return gd::str(towns::building_id_for_action(s, S(a, 0)))),
 	NATIVE(TownRules, building_category_icon_path, 1, false,

@@ -15,10 +15,13 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
+#include "aurelion_rules/port/town_rules_actions.hpp"
 #include "aurelion_rules/port/turn_port.hpp"
 
 #include <algorithm>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -50,7 +53,6 @@ namespace key = state::key;
 
 constexpr Atom kScript = key::ai_hero_rules_script;
 // HeroCommandRules.TAVERN_OFFER_SIZE.
-constexpr int64_t kTavernOfferSize = 2;
 
 // d.get(k, {}) / d.get(k, []) whose result is kept: a new container when the
 // key is missing.
@@ -182,7 +184,9 @@ DictRef _ensure_starting_hero(State &state, DictRef session, DictRef context) {
 	if (!_town_entrance_free(state, session, town, controller)) {
 		return state.new_dict();
 	}
-	const ArrayRef offer = ai_tavern_offer_ids(state, session, state_, controller);
+	// The start hero is one of the faction's own, drawn as a tavern draws but from
+	// that faction alone, the same for the faction in every seat.
+	const ArrayRef offer = hero_command_rules::tavern_draw(state, session, state.intern("ai_start"), player_identity_rules::faction_id(state, session, controller), 0);
 	if (state.array_size(offer) == 0) {
 		return state.new_dict();
 	}
@@ -249,11 +253,17 @@ DictRef _govern_towns(State &state, DictRef session, DictRef context) {
 	// in the field).
 	if (active_hero_count(state, session, controller) < town_heroes && _faction_has_tavern(state, town_entries)) {
 		double cheapest = -1.0;
-		for (const Value &hero_id : gd::items(state, array_value(ai_tavern_offer_ids(state, session, context_state(state, context), controller)))) {
-			const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, gd::stringify(state, hero_id)));
-			const double gold = gd::float_field(state, cost, key::gold, 0.0);
-			if (cheapest < 0.0 || gold < cheapest) {
-				cheapest = gold;
+		for (const Value &entry : gd::items(state, array_value(town_entries))) {
+			const DictRef town = gd::as_dict(vget_or_new_dict(state, entry, key::town));
+			if (!hero_command_rules::town_has_hall(state, town)) {
+				continue;
+			}
+			for (const Value &hero_id : gd::items(state, array_value(hero_command_rules::tavern_offer_ids(state, session, town)))) {
+				const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, gd::stringify(state, hero_id)));
+				const double gold = gd::float_field(state, cost, key::gold, 0.0);
+				if (cheapest < 0.0 || gold < cheapest) {
+					cheapest = gold;
+				}
 			}
 		}
 		if (cheapest >= 0.0) {
@@ -611,112 +621,13 @@ DictRef build_in_town(State &state, DictRef session, DictRef context, int64_t to
 	return result;
 }
 
-ArrayRef ai_tavern_offer_ids(State &state, DictRef session, DictRef state_, Atom controller) {
-	const int64_t week = hero_command_rules::tavern_week(state, session);
-	const ArrayRef pool = _tavern_pool(state, session, state_, controller);
-	// stored = state.get("ai_tavern", {}): a missing one is an empty Dictionary.
-	Value stored;
-	const bool has_stored = state.lookup(state_, str(key::ai_tavern), stored);
-	bool keep = false;
-	if (!has_stored) {
-		keep = week == -1;
-	} else if (gd::is_dict(stored) && gd::int_field(state, stored.ref, key::week, -1) == week) {
-		Value ids;
-		keep = !state.lookup(stored.ref, str(key::hero_ids), ids) || gd::is_array(ids);
-	}
-	if (keep) {
-		const ArrayRef kept = state.new_array();
-		if (has_stored) {
-			for (const Value &hero_id : gd::field_items(state, stored.ref, str(key::hero_ids))) {
-				if (gd::array_has(state, pool, str(gd::stringify(state, hero_id)))) {
-					state.append(kept, str(gd::stringify(state, hero_id)));
-				}
-			}
-		}
-		return kept;
-	}
-	const Atom fixed_seed = hero_command_rules::fixed_match_roll_seed(state, session);
-	const ArrayRef candidates = fixed_seed != key::empty ? state.new_array() : gd::duplicate_array(state, pool);
-	if (fixed_seed != key::empty) {
-		// Roll the full roster first, then filter availability. A fallen/hired hero
-		// must not reshuffle every other hero's underlying weekly roll.
-		const DictRef faction = gd::content_row(state, ContentTable::Faction, player_identity_rules::faction_id(state, session, controller));
-		for (const Value &id : gd::field_items(state, faction, str(key::hero_ids))) {
-			state.append(candidates, id);
-		}
-		gd::sort_custom(state, candidates, [&state](const Value &a, const Value &b) { return gd::text(state, a) < gd::text(state, b); });
-	}
-	const Atom session_id = fixed_seed != key::empty ? fixed_seed : gd::stringify(state, gd::index(state, session, str(key::session_id)));
-	const Atom roll_owner = fixed_seed != key::empty ? player_identity_rules::faction_id(state, session, controller) : controller;
-	const Atom seed_text = gd::format(state, key::s_s_ai_tavern_d, { str(session_id), str(roll_owner), int_value(week) });
-	const Value rng = turn::seeded_rng(state, gd::hash(state, str(seed_text)));
-	for (int64_t index = state.array_size(candidates) - 1; index > 0; --index) {
-		const int64_t swap = gd::rng_randi_range(state, rng, 0, index);
-		const Value held = state.at(candidates, index);
-		state.set_at(candidates, index, state.at(candidates, swap));
-		state.set_at(candidates, swap, held);
-	}
-	const ArrayRef available = state.new_array();
-	for (const Value &id : gd::items(state, array_value(candidates))) {
-		if (gd::array_has(state, pool, id)) {
-			state.append(available, id);
-		}
-	}
-	const ArrayRef offer = gd::slice(state, available, 0, compat::engine_min<int64_t>(kTavernOfferSize, state.array_size(available)));
-	const DictRef tavern = state.new_dict();
-	state.set(tavern, str(key::week), int_value(week));
-	state.set(tavern, str(key::hero_ids), array_value(gd::duplicate_array(state, offer)));
-	state.set(state_, str(key::ai_tavern), dict_value(tavern));
-	return offer;
-}
-
-ArrayRef _tavern_pool(State &state, DictRef session, DictRef state_, Atom controller) {
-	const DictRef taken = state.new_dict();
-	for (const Value &hero : gd::field_items(state, session_view::overworld(state, session), str(key::player_heroes))) {
-		if (gd::is_dict(hero)) {
-			state.set(taken, str(ai::string_or_empty(state, hero.ref, key::id)), bool_value(true));
-		}
-	}
-	const DictRef resolved = _resolved_lookup(state, session);
-	for (const Value &entry : gd::field_items(state, session_view::overworld(state, session), str(key::encounters))) {
-		if (gd::is_dict(entry) && !state.has(resolved, str(ai::string_or_empty(state, entry.ref, key::placement_id)))) {
-			Value commander;
-			if (!state.lookup(entry.ref, str(key::enemy_commander_state), commander)) {
-				// {}.get("roster_hero_id", "")
-				state.set(taken, str(key::empty), bool_value(true));
-			} else if (gd::is_dict(commander)) {
-				state.set(taken, str(ai::string_or_empty(state, commander.ref, key::roster_hero_id)), bool_value(true));
-			}
-		}
-	}
-	for (const Value &roster_entry : gd::field_items(state, state_, str(key::commander_roster))) {
-		if (gd::is_dict(roster_entry) && ai::string_or_empty(state, roster_entry.ref, key::status) == key::recovering && gd::int_field(state, roster_entry.ref, key::recovery_day, 0) > ai::session_int(state, session, key::day)) {
-			state.set(taken, str(ai::string_or_empty(state, roster_entry.ref, key::roster_hero_id)), bool_value(true));
-		}
-	}
-	const ArrayRef pool = state.new_array();
-	const DictRef faction = gd::content_row(state, ContentTable::Faction, player_identity_rules::faction_id(state, session, controller));
-	for (const Value &hero_id : gd::field_items(state, faction, str(key::hero_ids))) {
-		const Atom id = gd::stringify(state, hero_id);
-		if (id != key::empty && !state.has(taken, str(id)) && !gd::is_empty(state, gd::content_row(state, ContentTable::Hero, id))) {
-			state.append(pool, str(id));
-		}
-	}
-	// pool.sort() of Strings: code point order, which is UTF-8 byte order.
-	gd::sort_custom(state, pool, [&state](const Value &a, const Value &b) { return gd::text(state, a) < gd::text(state, b); });
-	return pool;
-}
-
 DictRef _hire_hero(State &state, DictRef session, DictRef context, double reserve) {
 	const DictRef state_ = context_state(state, context);
 	const Atom controller = context_controller(state, context);
 	const DictRef treasury = gd::as_dict(gd::index(state, state_, str(key::treasury)));
-	const ArrayRef offer = ai_tavern_offer_ids(state, session, state_, controller);
-	if (state.array_size(offer) == 0) {
-		return state.new_dict();
-	}
-	DictRef best_town = state.new_dict();
-	double best_power = -1.0;
+	// Every town with a Wayfarer's Hall offers its own pair. The town with the
+	// strongest garrison is tried first, so the new hero can take its troops along.
+	std::vector<std::pair<double, DictRef>> halls;
 	const ArrayRef entries = enemy_turn_rules::_owned_town_entries(state, session, controller);
 	for (int64_t at = 0; at < state.array_size(entries); ++at) {
 		const DictRef town = gd::as_dict(vget_or_new_dict(state, state.at(entries, at), key::town));
@@ -727,22 +638,26 @@ DictRef _hire_hero(State &state, DictRef session, DictRef context, double reserv
 			continue;
 		}
 		const Value garrison = field_or_new_array(state, town, key::garrison);
-		const double power = army_power(state, garrison, dict_value(state.new_dict()));
-		if (power > best_power) {
-			best_power = power;
-			best_town = town;
-		}
+		halls.emplace_back(army_power(state, garrison, dict_value(state.new_dict())), town);
 	}
-	if (gd::is_empty(state, best_town)) {
-		return state.new_dict();
-	}
+	std::stable_sort(halls.begin(), halls.end(), [](const std::pair<double, DictRef> &a, const std::pair<double, DictRef> &b) { return a.first > b.first; });
+	DictRef best_town = 0;
+	ArrayRef best_offer = 0;
 	Atom choice = key::empty;
-	for (int64_t at = 0; at < state.array_size(offer); ++at) {
-		const Value hero_id = state.at(offer, at);
-		const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, gd::stringify(state, hero_id)));
-		const double gold_left = gd::float_field(state, treasury, key::gold, 0.0) - gd::float_field(state, cost, key::gold, 0.0);
-		if (_can_afford(state, treasury, cost) && gold_left >= reserve) {
-			choice = gd::stringify(state, hero_id);
+	for (const std::pair<double, DictRef> &hall : halls) {
+		const ArrayRef offer = hero_command_rules::tavern_offer_ids(state, session, hall.second);
+		for (int64_t at = 0; at < state.array_size(offer); ++at) {
+			const Atom hero_id = gd::stringify(state, state.at(offer, at));
+			const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, hero_id));
+			const double gold_left = gd::float_field(state, treasury, key::gold, 0.0) - gd::float_field(state, cost, key::gold, 0.0);
+			if (_can_afford(state, treasury, cost) && gold_left >= reserve) {
+				choice = hero_id;
+				break;
+			}
+		}
+		if (choice != key::empty) {
+			best_town = hall.second;
+			best_offer = offer;
 			break;
 		}
 	}
@@ -756,13 +671,7 @@ DictRef _hire_hero(State &state, DictRef session, DictRef context, double reserv
 	}
 	enemy_turn_rules::_spend_from_pool(state, treasury, dict_value(cost));
 	_economy_add(state, session, context_controller(state, context), key::hire_gold, gd::float_field(state, cost, key::gold, 0.0));
-	Value tavern_value;
-	const DictRef tavern = state.lookup(state_, str(key::ai_tavern), tavern_value) ? gd::as_dict(tavern_value) : state.new_dict();
-	Value ids;
-	const ArrayRef remaining = state.lookup(tavern, str(key::hero_ids), ids) && gd::is_array(ids) ? gd::duplicate_array(state, ids.ref) : state.new_array();
-	ai::array_erase(state, remaining, str(choice));
-	state.set(tavern, str(key::hero_ids), array_value(remaining));
-	state.set(state_, str(key::ai_tavern), dict_value(tavern));
+	hero_command_rules::take_tavern_offer(state, session, ai::string_or_empty(state, best_town, key::placement_id), best_offer, choice);
 	const ArrayRef towns = overworld_towns(state, session);
 	const int64_t town_index = gd::int_field(state, _find_town(state, session, ai::string_or_empty(state, best_town, key::placement_id)), key::index, -1);
 	if (town_index >= 0) {

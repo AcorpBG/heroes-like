@@ -14,7 +14,6 @@ static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyR
 const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
 const TAVERN_OFFER_SIZE := 2
-const TAVERN_ROTATION_KEY := "tavern_rotation"
 const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
 const TOWN_GARRISON_HERO_KEY := "garrison_hero_id"
@@ -200,11 +199,12 @@ const PRIMARY_FALLEN_FLAG := "primary_hero_fallen"
 static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
 	return HumanEngine.native_writing(&"HeroCommandRules.hero_recruit_cost", [hero_template])
 
-## The two heroes every player tavern offers this week. A new pair is drawn
-## at the start of each week from the faction's hireable heroes; a hired
-## hero's place stays empty until then. Reading never changes the session.
-static func tavern_offer_ids(session: SessionStateStoreScript.SessionData) -> Array:
-	return HumanEngine.native_writing(&"HeroCommandRules.tavern_offer_ids", [session])
+## The two heroes a town's tavern offers this week. Every tavern draws its own
+## pair at the start of each week from the free heroes of every faction, the
+## town's faction most often; a hired hero's place stays empty until then.
+## Reading never changes the session.
+static func tavern_offer_ids(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
+	return HumanEngine.native_writing(&"HeroCommandRules.tavern_offer_ids", [session, town])
 
 static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
 	return HumanEngine.native_writing(&"HeroCommandRules.recruitable_hero_ids", [session])

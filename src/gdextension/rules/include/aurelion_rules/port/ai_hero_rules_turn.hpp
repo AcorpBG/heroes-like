@@ -144,9 +144,7 @@ int64_t _opens_count(State &state, DictRef town, Atom building_id, ArrayRef tria
 DictRef _pool_delta(State &state, DictRef after, DictRef before);
 DictRef _recruit_in_towns(State &state, DictRef session, DictRef context, DictRef reserve);
 DictRef _roster_progression_seed(State &state, DictRef state_, Atom hero_id);
-ArrayRef _tavern_pool(State &state, DictRef session, DictRef state_, Atom controller);
 DictRef _trial_income(State &state, DictRef town);
-ArrayRef ai_tavern_offer_ids(State &state, DictRef session, DictRef state_, Atom controller);
 DictRef build_in_town(State &state, DictRef session, DictRef context, int64_t town_index, Atom building_id, Atom reason = state::key::heroes);
 
 // Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).

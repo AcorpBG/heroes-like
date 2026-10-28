@@ -159,7 +159,6 @@ constexpr Atom kTrackedResources[] = {
 constexpr Atom kAiPlayerStateKeys[] = {
 	key::ai_start_hero_granted,
 	key::ai_opening_granted,
-	key::ai_tavern,
 	key::ai_hero_counter,
 	key::ai_explored,
 	key::ai_boat_wanted_day,

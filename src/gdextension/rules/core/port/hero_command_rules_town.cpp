@@ -278,7 +278,7 @@ ArrayRef get_tavern_actions(State &state, DictRef session, DictRef town) {
 	if (gd::is_empty(state, town) || !town_has_hall(state, town)) {
 		return actions;
 	}
-	const ArrayRef offer_ids = tavern_offer_ids(state, session);
+	const ArrayRef offer_ids = tavern_offer_ids(state, session, town);
 	for (const Value &hero_id_value : gd::items(state, array_value(offer_ids))) {
 		const Atom hero_id = gd::to_string(hero_id_value);
 		const DictRef template_row = gd::content_row(state, ContentTable::Hero, hero_id);
@@ -317,7 +317,7 @@ DictRef recruit_hero_at_town(State &state, DictRef session, DictRef town, Atom h
 	if (!town_has_hall(state, town)) {
 		return refusal(state, key::a_wayfarers_hall_is_required_before);
 	}
-	const ArrayRef offer = tavern_offer_ids(state, session);
+	const ArrayRef offer = tavern_offer_ids(state, session, town);
 	if (!gd::array_has(state, offer, str(hero_id))) {
 		return refusal(state, key::that_commander_is_not_in_this);
 	}
@@ -345,11 +345,7 @@ DictRef recruit_hero_at_town(State &state, DictRef session, DictRef town, Atom h
 	state.append(heroes.ref, dict_value(hero));
 	state.set(overworld, str(key::player_heroes), heroes);
 	// The hired hero's tavern place stays empty until the next weekly draw.
-	ai::array_erase(state, offer, str(hero_id));
-	const DictRef rotation = state.new_dict();
-	state.set(rotation, str(key::week), int_value(tavern_week(state, session)));
-	state.set(rotation, str(key::hero_ids), array_value(offer));
-	state.set(overworld, str(key::tavern_rotation), dict_value(rotation));
+	take_tavern_offer(state, session, text_or(state, town, key::placement_id, key::empty), offer, hero_id);
 	normalize(state, session);
 	const DictRef town_row = gd::content_row(state, ContentTable::Town, text_or(state, town, key::town_id, key::empty));
 	const Value town_fallback = state.get(town, str(key::town_id), str(key::the_town_2));

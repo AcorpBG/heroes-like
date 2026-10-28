@@ -9,7 +9,7 @@ Owner feedback, 2026-10-07: new heroes came without units and were always level 
   - 75% of the time a second company: a tier-2 creature (70%) or the other tier-1 dwelling line (30%), sized 0.5–1× its growth;
   - creatures come from the faction's town development roster (`content/town_development.json` `rosters`), falling back to the faction unit ladder;
   - a hero template may author its own `starting_army` rows (`{unit_id, min, max}`); none do yet.
-- **Tavern offer** (`HeroCommandRules.tavern_offer`). Each weekly offer is `{hero_id, week, level, army}`:
+- **Tavern offer** (`HeroCommandRules.tavern_offer`). Each town tavern and Wayfarer Lodge draws its own two heroes a week from every faction, its own faction about four times in five (`docs/town-building-popouts.md`). A hero leads creatures of its own faction, wherever it is hired. Each weekly offer is `{hero_id, week, level, army}`:
   - level 1 most weeks, level 2 in about 10% of offers, level 3 in about 3%;
   - level and army are rolled from the session id, scenario, tavern week and hero id, so repeated reads, save/load, popout refreshes and a hire in the other tavern place never reroll an offer. Seeding by hero rather than slot index keeps the remaining hero's offer when the first place is hired.
 - **One creation path** (`HeroCommandRules.build_recruited_hero`). Every hire builds its hero here; AI recruitment should call it too, with `tavern_offer` (or its own seed key) for the level and army:

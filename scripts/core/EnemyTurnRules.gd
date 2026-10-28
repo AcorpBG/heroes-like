@@ -14,7 +14,7 @@ const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 # Computer-player state AiHeroRules keeps between days.
-const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
+const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 

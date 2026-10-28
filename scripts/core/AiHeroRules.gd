@@ -10,7 +10,6 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
-const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
@@ -510,22 +509,6 @@ static func _town_rules() -> Variant:
 ## between, can share a `market_memo` dictionary that keeps its market state.
 static func _market_cover(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, cost: Dictionary, apply: bool, market_memo: Variant = null) -> bool:
 	return AiEngine.native_writing(&"AiHeroRules._market_cover", [session, town, pool, cost, apply, market_memo])
-
-## Two faction heroes per week, drawn like the human's tavern. Heroes already
-## on the map, in the human's command or recovering from defeat are skipped.
-static func ai_tavern_offer_ids(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
-	return TurnEngine.native_writing(&"AiHeroRules.ai_tavern_offer_ids", [session, state, controller])
-
-static func _tavern_pool(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
-	return TurnEngine.native_writing(&"AiHeroRules._tavern_pool", [session, state, controller])
-
-static func _cheapest_offer_cost(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Dictionary:
-	var best := {}
-	for hero_id in ai_tavern_offer_ids(session, state, controller):
-		var cost := HeroCommandRulesScript.hero_recruit_cost(ContentService.get_hero(String(hero_id)))
-		if best.is_empty() or int(cost.get("gold", 0)) < int(best.get("gold", 0)):
-			best = cost
-	return best
 
 static func _roster_progression_seed(state: Dictionary, hero_id: String) -> Dictionary:
 	return TurnEngine.native_writing(&"AiHeroRules._roster_progression_seed", [state, hero_id])

@@ -33,11 +33,11 @@ The Muster Hall (Muster command) lists every creature the town can muster with t
 
 ## Tavern rotation
 
-- Every player tavern offers the same two heroes each week, drawn on days 1, 8, 15 and so on from the player faction's hireable heroes (`HeroCommandRules.tavern_offer_ids`).
-- The draw shuffles the faction's whole hireable roster with a seed from the session, scenario and week, then takes the first two heroes not already in command. The same save always sees the same pair.
-- Hiring a hero leaves that place empty until the next week; the popout shows the empty place and the day the next pair arrives. Only offered heroes can be hired.
+- Every town's tavern offers its own two heroes each week, drawn on days 1, 8, 15 and so on (`HeroCommandRules.tavern_offer_ids`; owner, 2026-10-28). Until then every tavern of a player offered the same pair from the player's own faction.
+- The draw covers every faction's hireable heroes: one of the town's faction weighs 20, one of another faction 1, so about four offers in five come from the town's faction. It draws in that weighted order with a seed from the session, the town and the week, then takes the first two heroes no player commands, no encounter leads and no player is waiting for to recover. The same save always sees the same pair.
+- Hiring a hero leaves that place empty in that town until the next week; the popout shows the empty place and the day the next pair arrives. Only offered heroes can be hired.
 - Each offer also fixes the hero's level and starting army for the week (`HeroCommandRules.tavern_offer`; see `docs/hero-hire-army-level.md`). The hired hero arrives exactly as the card shows.
-- The pair is computed on read and stored only when a hire changes it (`overworld.tavern_rotation`), so looking at the tavern never changes the session.
+- The pair is computed on read and stored only when a hire changes it (`overworld.tavern_offers`, by town for the week), so looking at the tavern never changes the session. Computer players hire from the same pairs, through the same store.
 
 ## Rules and ownership
 

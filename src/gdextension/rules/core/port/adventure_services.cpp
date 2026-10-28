@@ -83,21 +83,22 @@ std::set<std::string> taken(State &s, DictRef session) {
             result.insert(s.text(text(s,r.ref,key::roster_hero_id)));
     return result;
 }
+// A Wayfarer Lodge's week: its own pair from every faction's free heroes, the
+// visitor's faction most likely, the same for every visitor.
+ArrayRef lodge_offer(State &s, DictRef session, DictRef node, Atom owner) {
+    return hc::site_tavern_offer_ids(s,session,text(s,node,key::placement_id),id::faction_id(s,session,owner));
+}
 ArrayRef candidates(State &s, DictRef session, DictRef node, DictRef site, Atom owner) {
     auto out=s.new_array();
     const bool prison=kind(s,site)==atom(s,"prison");
     if(prison && bool_field(s,node,atom(s,"prison_released"),false)) return out;
-    int64_t count=owner==key::player ? hc::player_hero_count(s,session) : ai_hero_rules::active_hero_count(s,session,owner);
-    // The same four-command limit as town recruitment, for paid and free hires.
-    if(count>=4) return out;
     ArrayRef pool;
     if(prison) {
         auto faction=gd::content_row(s,ContentTable::Faction,id::faction_id(s,session,owner));
         pool=list(s,faction,key::hero_ids);
         // Legacy human alias is normalized through the scenario's faction.
         if(owner==key::player && s.array_size(pool)==0) pool=hc::_tavern_candidate_ids(s,session);
-    } else pool=owner==key::player ? hc::tavern_offer_ids(s,session)
-                    : ai_hero_rules::ai_tavern_offer_ids(s,session,empire_for(s,session,owner),owner);
+    } else pool=lodge_offer(s,session,node,owner);
     auto used=taken(s,session);
     std::vector<Atom> eligible;
     for(auto v:items(s,array_value(pool))) {
@@ -139,19 +140,10 @@ DictRef spawn_position(State &s, DictRef session, DictRef node) {
     }
     return s.new_dict();
 }
-void consume_offer(State &s, DictRef session, Atom owner, Atom hero, ArrayRef offered) {
-    auto holder=owner==key::player?session_view::overworld(s,session):empire_for(s,session,owner);
-    auto field=owner==key::player?key::tavern_rotation:key::ai_tavern;
-    auto rotation=gd::deep_duplicate_dict(s,sub(s,holder,field));
-    auto ids=gd::duplicate_array(s,offered);
-    ai::array_erase(s,ids,str(hero));s.set(rotation,str(key::hero_ids),array_value(ids));
-    s.set(rotation,str(key::week),int_value(hc::tavern_week(s,session)));
-    s.set(holder,str(field),dict_value(rotation));
-}
 DictRef recruit(State &s, DictRef session, DictRef node, DictRef site, Atom owner, Atom hero) {
     auto pool=candidates(s,session,node,site,owner);
-    if(!gd::array_has(s,pool,str(hero))) return outcome(s,false,"That commander is no longer available, or your four-command limit is reached.");
-    auto weekly=gd::duplicate_array(s,owner==key::player?hc::tavern_offer_ids(s,session):ai_hero_rules::ai_tavern_offer_ids(s,session,empire_for(s,session,owner),owner));
+    if(!gd::array_has(s,pool,str(hero))) return outcome(s,false,"That commander is no longer available.");
+    auto weekly=gd::duplicate_array(s,lodge_offer(s,session,node,owner));
     auto position=spawn_position(s,session,node);
     if(is_empty(s,position)) return outcome(s,false,"Clear a safe adjacent land tile before recruiting a commander.");
     bool prison=kind(s,site)==atom(s,"prison");
@@ -195,7 +187,7 @@ DictRef recruit(State &s, DictRef session, DictRef node, DictRef site, Atom owne
         s.set(empire,str(key::ai_hero_counter),int_value(counter));
     }
     for(auto k:items(s,dict_value(price))) s.set(funds,k,int_value(to_int(s,s.get(funds,k,int_value(0)))-to_int(s,s.get(price,k,int_value(0)))));
-    consume_offer(s,session,owner,hero,weekly);
+    if(!prison) hc::take_tavern_offer(s,session,text(s,node,key::placement_id),weekly,hero);
     if(prison) {s.set(node,str(atom(s,"prison_released")),bool_value(true));s.set(node,str(atom(s,"released_hero_id")),str(hero));}
     ow::invalidate_spatial_lookup(s,session);
     auto r=outcome(s,true,s.text(text(s,hired,key::name,hero))+(prison?" is rescued and joins your command.":" joins your command beside the lodge."));
@@ -340,7 +332,7 @@ DictRef visit(State &s,DictRef session,DictRef node_result,DictRef site,bool ref
     }
     auto options=candidates(s,session,node,site,key::player);
     if(choice==key::empty) {
-        if(s.array_size(options)==0)return outcome(s,false,service==atom(s,"prison")&&bool_field(s,node,atom(s,"prison_released"),false)?"This stockade is empty; its prisoner has already been freed.":"No commander can join your roster. Check the four-command limit and available heroes.");
+        if(s.array_size(options)==0)return outcome(s,false,service==atom(s,"prison")&&bool_field(s,node,atom(s,"prison_released"),false)?"This stockade is empty; its prisoner has already been freed.":"No commander is available here this week.");
         auto choices=s.new_array();for(auto v:items(s,array_value(options))) {
             auto hero=gd::stringify(s,v);auto row=gd::content_row(s,ContentTable::Hero,hero);auto c=s.new_dict();
             bool prison=service==atom(s,"prison");auto price=prison?s.new_dict():hc::hero_recruit_cost(s,row);auto offer=hc::tavern_offer(s,session,hero,prison?0:-1);

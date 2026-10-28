@@ -84,8 +84,6 @@ const Function kFunctions[] = {
 	CHECK(AiHeroRules, _ensure_starting_hero, 2, true, return gd::dict_value(ai_hero_rules::_ensure_starting_hero(s, D(a, 0), D(a, 1)))),
 	CHECK(AiHeroRules, _govern_towns, 2, true, return gd::dict_value(ai_hero_rules::_govern_towns(s, D(a, 0), D(a, 1)))),
 	CHECK(AiHeroRules, _roster_progression_seed, 2, true, return gd::dict_value(ai_hero_rules::_roster_progression_seed(s, D(a, 0), S(a, 1)))),
-	CHECK(AiHeroRules, _tavern_pool, 3, true, return gd::array_value(ai_hero_rules::_tavern_pool(s, D(a, 0), D(a, 1), S(a, 2)))),
-	CHECK(AiHeroRules, ai_tavern_offer_ids, 3, true, return gd::array_value(ai_hero_rules::ai_tavern_offer_ids(s, D(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(AiHeroRules, _convert_legacy_host, 3, true, return gd::dict_value(ai_hero_rules::_convert_legacy_host(s, D(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(AiHeroRules, _nearest_hero_index, 5, true, return gd::int_value(ai_hero_rules::_nearest_hero_index(s, A(a, 0), D(a, 1), S(a, 2), D(a, 3), I(a, 4)))),
 	CHECK(AiHeroRules, _return_troops_to_nearest_town, 3, true, ai_hero_rules::_return_troops_to_nearest_town(s, D(a, 0), D(a, 1), S(a, 2)); return nil()),

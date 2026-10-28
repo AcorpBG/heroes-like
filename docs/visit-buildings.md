@@ -100,9 +100,10 @@ adventure actions. These three source types now have dedicated mappings, outside
 of the generic fallback pool. The generator's placements and masks are unchanged.
 Previously saved fallback placements keep their original site identities.
 
-- **Wayfarer Lodge (Tavern 95):** hires from the same weekly roster as town
-  taverns at the same content-defined price and starting level/army. No town hall
-  is required. Hiring spends that roster slot until the next weekly draw.
+- **Wayfarer Lodge (Tavern 95):** each lodge offers its own weekly pair, drawn
+  like a town tavern's from every faction's free heroes, the visitor's faction
+  most likely, at the same content-defined price and starting level/army. No town
+  hall is required. Hiring spends that place until the next weekly draw.
 - **Captive Stockade (Prison 62):** one successful rescue for the entire
   placement, free. It grants one currently available commander of the visiting
   faction, at level one with a starting army. Selection is deterministic against
@@ -115,8 +116,7 @@ Previously saved fallback placements keep their original site identities.
   map knowledge and refresh at most weekly. Public reports show ranks, not raw
   internal army-power scores.
 
-Both paid and free recruitment enforce the existing four-command cap, globally
-unique live roster heroes, current funds and safe adjacent land spawning on the
+Both paid and free recruitment enforce globally unique live roster heroes, current funds and safe adjacent land spawning on the
 site's level. Human heroes and AI commanders use their existing native creation
 and progression builders. Visiting never changes ownership of these buildings.
 Node rescue/visit/report state and AI intelligence locations use the ordinary
