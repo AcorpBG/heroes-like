@@ -36,7 +36,6 @@ None open.
 
 ## Open work
 
-- `ai-reinforce-any-army-20261029` (in progress): Couriers hand troops to the main or a field army by pooled seven-slot gain; heroes on a hand-over or pickup take worthwhile sites, artifacts and guards on the way; pickups weigh the towns and heroes they let an army beat; every hero routes through several gates to own towns holding troops. ai_hero_rules_candidates/sight/routes/turn_day/turn_fights.cpp. Owner 2026-10-29: as proposed, slots not faction. See `docs/ai-plays-by-player-rules.md`.
 - `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns (no hero_count_max) and a player short of heroes keeps the hire's gold from town spending; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall (no FIELD_SHARE_MAX); scouting grows with the day; taverns of every faction. Six capped seeds of the 600-game XL batch end on days 207-320, leaders with up to 43 heroes. Left: a leader still finishes slowly; raiders take emptied towns (1,004 of 2,462 captures in those six). See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-29 `ai-reinforce-any-army-20261029` (9baf97ec9): Couriers hand troops to the main or a field army by pooled seven-slot gain; errands take pickups on the way; own-town troops worth what they let an army beat; multi-gate routes to own towns for every hero. 8 XL replays all end, days 140-314.
 - 2026-10-29 `ai-rear-garrisons-reach-heroes-20261029` (2f61d5050): Own towns holding troops and the main army count however far, past gates too; couriers search 12 days for them; pickups and hand-overs uncapped; field roles kept a week. 8 XL replays all end (3 capped on main), days 118-254.
 - 2026-10-29 `ai-vetoed-hero-fight-calls-field-armies-20261028` (30a4147a3): A rival hero the main army's preview loses to needs the main army's power plus what the rival keeps, x1.3, so field armies join. m566 (10-28 batch) is won on day 317, not capped; six capped XL seeds unchanged.
 - 2026-10-28 `native-rmg-repair-rare-mine-game-shape-20261028` (2ff51cd1c): Repair check, step 0 and joins give every mine the game's 3x2 shape again (c7d831eae's rare-mine rule reverted). 1,200 maps: 158 flagged, all repair to none; m231 is won on day 82 instead of the 320-day cap.

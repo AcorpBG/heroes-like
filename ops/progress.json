@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-reinforce-any-army-20261029",
- "currentSliceTitle": "AI: troops reach the army that gains most",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-29T10:24:51Z",
+ "currentSliceTitle": "Couriers hand troops to the main or a field army by pooled seven-slot gain; errands take pickups on the way; own-town troops worth what they let an army beat; multi-gate routes to own towns for every hero. 8 XL replays all end, days 140-314.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-29T10:51:35Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-reinforce-any-army-20261029",
-   "title": "AI: troops reach the army that gains most",
-   "status": "in_progress",
-   "goal": "Couriers hand troops to the main or a field army by pooled seven-slot gain; heroes on a hand-over or pickup take worthwhile sites, artifacts and guards on the way; pickups weigh the towns and heroes they let an army beat; every hero routes through several gates to own towns holding troops. ai_hero_rules_candidates/sight/routes/turn_day/turn_fights.cpp. Owner 2026-10-29: as proposed, slots not faction.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-10-29"
+   "status": "completed",
+   "completedAt": "2026-10-29",
+   "summary": "Couriers hand troops to the main or a field army by pooled seven-slot gain; errands take pickups on the way; own-town troops worth what they let an army beat; multi-gate routes to own towns for every hero. 8 XL replays all end, days 140-314.",
+   "commit": "9baf97ec9"
   },
   {
    "id": "ai-rear-garrisons-reach-heroes-20261029",
