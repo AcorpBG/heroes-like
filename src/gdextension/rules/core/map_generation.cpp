@@ -1290,8 +1290,29 @@ Value runtime_layer(State &state, const std::vector<uint8_t> &codes, int32_t wid
 	return result;
 }
 
-const h3::FinalHeaderPlayerSlot4ac857 *runtime_slot_for_town(const h3::RuntimeMapObjectProjection &object, const h3::RuntimeMapPayloadProjection &projection) {
-	for (const auto &slot : projection.player_slots) {
+// The game's seats: the map's player slots, of which every active one was
+// generated as human or computer. The first human_count in colour order are
+// the game's human seats, as the setup's slot records number them; the others
+// are computer seats.
+std::vector<h3::FinalHeaderPlayerSlot4ac857> runtime_seats(const h3::RuntimeMapPayloadProjection &projection, int32_t human_count) {
+	std::vector<h3::FinalHeaderPlayerSlot4ac857> seats = projection.player_slots;
+	int32_t humans = 0;
+	for (auto &seat : seats) {
+		if (!seat.active || !seat.human) {
+			continue;
+		}
+		if (humans < human_count) {
+			humans += 1;
+		} else {
+			seat.human = false;
+			seat.computer = true;
+		}
+	}
+	return seats;
+}
+
+const h3::FinalHeaderPlayerSlot4ac857 *runtime_slot_for_town(const h3::RuntimeMapObjectProjection &object, const std::vector<h3::FinalHeaderPlayerSlot4ac857> &seats) {
+	for (const auto &slot : seats) {
 		if (!slot.active || !slot.has_main_town) {
 			continue;
 		}
@@ -1323,7 +1344,7 @@ const char *const kTownTypeFactionIds[kTownTypeCount] = {
 
 // Player factions come from the setup; a neutral town of a player's town type
 // takes that player's faction unless players of different factions share it.
-std::vector<std::string> runtime_town_type_faction_ids(State &state, const h3::RuntimeMapPayloadProjection &projection, const Value &normalized_config) {
+std::vector<std::string> runtime_town_type_faction_ids(State &state, const h3::RuntimeMapPayloadProjection &projection, const std::vector<h3::FinalHeaderPlayerSlot4ac857> &seats, const Value &normalized_config) {
 	std::vector<std::string> result(kTownTypeCount);
 	std::vector<std::string> player_factions(kTownTypeCount);
 	std::vector<bool> shared_by_factions(kTownTypeCount, false);
@@ -1331,7 +1352,7 @@ std::vector<std::string> runtime_town_type_faction_ids(State &state, const h3::R
 		if (object.type_id != 98 || object.subtype < 0 || object.subtype >= kTownTypeCount) {
 			continue;
 		}
-		const auto *slot = runtime_slot_for_town(object, projection);
+		const auto *slot = runtime_slot_for_town(object, seats);
 		if (slot == nullptr) {
 			continue;
 		}
@@ -1416,7 +1437,7 @@ Value first_tile_point(State &state, const std::vector<h3::RuntimeMapTilePoint> 
 }
 
 Value runtime_objects(State &state, content::Files &files, const std::string &map_id, const h3::RuntimeMapPayloadProjection &projection,
-		const Value &normalized_config) {
+		const std::vector<h3::FinalHeaderPlayerSlot4ac857> &seats, const Value &normalized_config) {
 	const Value result = new_array(state);
 	const Value failures = new_array(state);
 	const std::vector<ProxyEntry> live_proxy_catalog = runtime_live_proxy_catalog_entries(state, files);
@@ -1425,7 +1446,7 @@ Value runtime_objects(State &state, content::Files &files, const std::string &ma
 	const Value source_type_pools = dict_or_new(state, get(state, eligibility, "source_type_pools"));
 	const Value source_kind_passthrough = dict_or_new(state, get(state, eligibility, "source_kind_passthrough"));
 	const Value source_type_exclusions = dict_or_new(state, get(state, eligibility, "source_type_exclusions"));
-	const std::vector<std::string> town_type_faction_ids = runtime_town_type_faction_ids(state, projection, normalized_config);
+	const std::vector<std::string> town_type_faction_ids = runtime_town_type_faction_ids(state, projection, seats, normalized_config);
 	const Value resolution_counts = new_dict(state);
 	for (const auto &source : projection.objects) {
 		const Value object = new_dict(state);
@@ -1614,7 +1635,7 @@ Value runtime_objects(State &state, content::Files &files, const std::string &ma
 			append(state, failures, failure);
 		}
 		if (kind == "town") {
-			const auto *slot = runtime_slot_for_town(source, projection);
+			const auto *slot = runtime_slot_for_town(source, seats);
 			if (slot != nullptr && projection.team_count > 0 && (slot->color < 0 || size_t(slot->color) >= projection.player_team_assignments.size())) {
 				const Value failure = failure_record(state, "native_town_owner_color_out_of_range", source.serialized_index);
 				put(state, failure, "color", integer(slot->color));
@@ -2223,18 +2244,22 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	workflow_config.width = int32_field(state, normalized, "width", 0);
 	workflow_config.height = int32_field(state, normalized, "height", 0);
 	workflow_config.level_count = int32_field(state, normalized, "level_count", 1);
-	workflow_config.human_count = int32_field(state, players, "human_count", 1);
+	// Every seat is generated as H3MapEd's "human or computer", each on its own
+	// team (owner decision, 2026-10-29): with one human, the template pick also
+	// offers single-human challenge templates such as Gauntlet. runtime_seats
+	// picks the game's human seats afterwards.
 	workflow_config.player_count = int32_field(state, players, "player_count", 2);
+	workflow_config.human_count = workflow_config.player_count;
 	const std::string seed_text = string_field(state, normalized, "normalized_seed", "0");
 	workflow_config.seed = uint32_t(uint64_t(compat::to_int(seed_text)) & 0xffffffffULL);
 	workflow_config.setup_object_0x34_known = true;
 	workflow_config.setup_object_0x34 = workflow_config.human_count;
 	workflow_config.setup_object_0x38_known = true;
-	workflow_config.setup_object_0x38 = int32_field(state, players, "human_team_count", workflow_config.human_count);
+	workflow_config.setup_object_0x38 = workflow_config.human_count;
 	workflow_config.setup_object_0x3c_known = true;
-	workflow_config.setup_object_0x3c = int32_field(state, players, "computer_count", workflow_config.player_count - workflow_config.human_count);
+	workflow_config.setup_object_0x3c = 0;
 	workflow_config.setup_object_0x40_known = true;
-	workflow_config.setup_object_0x40 = int32_field(state, players, "computer_team_count", 0);
+	workflow_config.setup_object_0x40 = 0;
 	workflow_config.setup_object_0x44_known = true;
 	workflow_config.setup_object_0x44 = h3::water_mode_code(water_mode);
 	workflow_config.setup_object_raw_0x48_known = true;
@@ -2388,7 +2413,8 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, route_graph, "edges", new_array(state));
 	put(state, map_state, "route_graph", route_graph);
 	const auto objects_started_at = SteadyClock::now();
-	const Value object_projection = runtime_objects(state, files, placement_seed_id, projection, normalized);
+	const std::vector<h3::FinalHeaderPlayerSlot4ac857> seats = runtime_seats(projection, int32_field(state, players, "human_count", 1));
+	const Value object_projection = runtime_objects(state, files, placement_seed_id, projection, seats, normalized);
 	record_bucket("object_variant_projection", objects_started_at);
 	if (!bool_field(state, object_projection, "ok", false)) {
 		const Value result = blocked(state, "native_rmg_authored_object_pool_resolution_failed",
@@ -2415,7 +2441,7 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	const Value enemy_factions = new_array(state);
 	const Value player_starts = new_array(state);
 	const Value player_start_towns = new_array(state);
-	for (const auto &slot : projection.player_slots) {
+	for (const auto &slot : seats) {
 		if (!slot.active) {
 			continue;
 		}

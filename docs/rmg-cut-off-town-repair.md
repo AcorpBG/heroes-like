@@ -48,13 +48,45 @@ Some templates cannot be joined by any repair. `0x4a218c` builds the runtime zon
 links and drops every link whose player filter (min/max humans, min/max players) fails.
 H3MapEd does not check that the remaining links still join every zone. It does not
 reject the template or roll again: the trace shows a single `0x4ac552` selection.
-With one human, the catalog has 13 such template and player-count combinations:
+The game generates every seat as human or computer (see Player setup below). The
+catalog then has five such template and player-count combinations:
 
-- Newcomers, 2-4 players: zones 3, 4, 6 and 10-13 lose all their links (islands that
+- Newcomers, 2-3 players: zones 3, 4, 6 and 10-13 lose all their links (islands that
   hold towns but no start).
 - 8XM12, 2 players: zone 2 (a start zone) and zones 28-32; 3 players: zones 28-32;
   4 players: zones 29, 31 and 32.
-- 8XM8, 2-8 players: start zone 8 has no link in the template at all.
+
+8XM8 was split for every player count too: start zone 8 had no link. Its links are
+now corrected instead (8XM8 link zones, below).
+
+## 8XM8 link zones
+
+In `Rmg.txt` (in `H3bitmap.lod`), six 8XM8 links have the first zones 5.9, 6.3, 6.7,
+7.1, 7.5 and 7.9, what looks like a spreadsheet fill of 6, 6, 7, 7, 8, 8: the pairs
+every other start zone has. H3MapEd reads them as integers, 5, 6, 6, 7, 7, 7, and so does the recovered
+catalog. Start zone 8 gets no link, and zones 5 and 7 get three each. Owner decision,
+2026-10-29: use the intended zones. `correct_template_link_zones`
+(`h3maped_rmg_template_catalog.cpp`) sets links 10, 12, 14 and 15 of 8XM8 to 6-37,
+7-41, 8-47 and 8-48. It runs with the re-pick, so `AURELION_RMG_H3MAPED_STRICT` keeps
+H3MapEd's links. The corrected template joins every zone for every player count, so
+it is never re-picked.
+
+## Player setup: every seat human or computer
+
+Owner decision, 2026-10-29. `generate_random_map` (`map_generation.cpp`) gives
+H3MapEd every seat as "human or computer", each on its own team (setup `+0x34` and
+`+0x38` = the player count, `+0x3c` and `+0x40` = 0), the dialog's "Human or
+Computer: N, Computer only: 0". This is an H3MapEd setting, not a departure. With one
+human and the rest computer only, the template pick also offered Gauntlet, the
+one-human challenge template, whose 18 zones outside the starts hold no town: 45 of
+the 400 XL games of the 2026-10-29 AI batch had 6 towns on it. It also offered
+Dragons, which allows at most two humans. Neither is offered now.
+2SM4d(3) still is on single-level XL (6 human starts, no other town).
+
+H3MapEd marks every such seat as able to be human. `runtime_seats` picks the game's
+own human seats after projection: the first `human_count` active seats in colour
+order, as the setup's slot records number them. The others are computer seats, with
+the flags a computer-only seat had.
 
 So `template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b`
 (`h3maped_rmg_template_catalog.cpp`) checks the runtime links after the roll. If they

@@ -42395,7 +42395,8 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 					config.human_count,
 					config.player_count,
 					0xffU,
-					// Departure: re-pick a template whose filtered links split its zones.
+					// Departures: the 8XM8 link zones Rmg.txt meant, and a re-pick of
+					// a template whose filtered links split its zones.
 					config.repair_cut_off_towns && rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr);
 	result.executed = true;
 	if (result.template_selection_0x4ac552.blocked

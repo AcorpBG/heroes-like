@@ -1845,6 +1845,37 @@ bool template_player_owner_counts_allow_49ba1b(
 			&& human_owner_count + computer_owner_count >= player_count;
 }
 
+// Departure from H3MapEd: Rmg.txt gives six 8XM8 links the first zones 5.9, 6.3,
+// 6.7, 7.1, 7.5 and 7.9, apparently a spreadsheet fill of 6, 6, 7, 7, 8, 8. H3MapEd reads
+// them as 5, 6, 6, 7, 7, 7, so start zone 8 has no link and zones 5 and 7 have
+// three. The intended zones replace the read ones (owner decision, 2026-10-29).
+struct TemplateLinkZoneCorrection {
+	int32_t source_catalog_index;
+	int32_t link_offset;
+	int32_t read_zone_a;
+	int32_t zone_b;
+	int32_t intended_zone_a;
+};
+
+static const TemplateLinkZoneCorrection TEMPLATE_LINK_ZONE_CORRECTIONS[] = {
+	{ 43, 10, 5, 37, 6 },
+	{ 43, 12, 6, 41, 7 },
+	{ 43, 14, 7, 47, 8 },
+	{ 43, 15, 7, 48, 8 },
+};
+
+static void correct_template_link_zones(const CatalogTemplateRecord4ac552 &template_record, std::vector<TemplateLinkRecord4a1f3b> &links) {
+	for (const TemplateLinkZoneCorrection &correction : TEMPLATE_LINK_ZONE_CORRECTIONS) {
+		if (correction.source_catalog_index != template_record.source_catalog_index || correction.link_offset >= int32_t(links.size())) {
+			continue;
+		}
+		TemplateLinkRecord4a1f3b &link = links[size_t(correction.link_offset)];
+		if (link.source_zone_a == correction.read_zone_a && link.source_zone_b == correction.zone_b) {
+			link.source_zone_a = correction.intended_zone_a;
+		}
+	}
+}
+
 // True when the runtime links leave the runtime zones in more than one group.
 static bool runtime_link_graph_split(const RuntimeSeedBuildResult4a218c &runtime_seed) {
 	const size_t zone_count = runtime_seed.runtime_zone_seeds.size();
@@ -1880,7 +1911,7 @@ static bool runtime_link_graph_split(const RuntimeSeedBuildResult4a218c &runtime
 } // namespace
 
 
-TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask, bool repick_split_link_graph) {
+TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask, bool h3maped_departures) {
 	TemplateSelectionRuntimeResult4ac552 result;
 	result.size_score = size_score;
 	result.human_count = std::max<int32_t>(0, human_count);
@@ -1940,11 +1971,14 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 		for (int32_t offset = 0; offset < selected_template.link_count; ++offset) {
 			links.push_back(CATALOG_LINKS_4A1F3B[selected_template.link_begin + offset]);
 		}
+		if (h3maped_departures) {
+			correct_template_link_zones(selected_template, links);
+		}
 		result.runtime_seed = runtime_seed_inputs_from_template_records_4a218c_4a1f3b(zones, links, result.player_assignment, result.human_count, result.player_count);
 		result.blocked = !result.player_assignment.complete || result.runtime_seed.blocked || result.runtime_seed.runtime_zone_seeds.empty();
 	};
 	build_selected(result.selected_vector_index);
-	if (repick_split_link_graph && !result.blocked && runtime_link_graph_split(result.runtime_seed)) {
+	if (h3maped_departures && !result.blocked && runtime_link_graph_split(result.runtime_seed)) {
 		// Departure from H3MapEd: 0x4a218c drops every link whose player filter fails, and
 		// nothing checks that the zones stay joined (8XM12 with 2 players leaves the
 		// second player's zone with no link). The same roll picks among the candidates
