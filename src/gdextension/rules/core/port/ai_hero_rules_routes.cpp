@@ -35,6 +35,8 @@ namespace key = state::key;
 namespace level_rules = overworld_level_rules;
 
 constexpr int64_t kStopEncounter = 4; // STOP_ENCOUNTER
+// Days after crossing a gate a hero takes another only toward its errand.
+constexpr int64_t kGateCommitDays = 3;
 constexpr double kInf = std::numeric_limits<double>::infinity();
 
 // A Dictionary local whose `{}` fallback GDScript only reads: not present
@@ -142,7 +144,7 @@ bool _plans_far(State &state, DictRef session, DictRef context, DictRef entry) {
 	return placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
 }
 
-DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, int64_t beyond_radius) {
+DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, int64_t beyond_radius, bool any_errand) {
 	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	const Dict gates = typed_dict(state, _level_surface(state, session, context, level), str(key::gates));
 	if (gates.empty(state) || !state.has(search, str(key::dist))) {
@@ -154,6 +156,13 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const ArrayRef dangers = _dangers(state, session, context, entry);
 	const Vector2i size = map_size(state, context);
 	const Dict stops = typed_dict(state, search, str(key::stops));
+	// For a few days after crossing a gate a hero takes another only toward the
+	// errand it crossed for: what lies beyond changes faster than it walks there
+	// (a garrison another hero empties, a rival hero that moves off, a threat
+	// that passes), and re-weighing every day it crossed back and forth.
+	const Atom errand_id = goal.present ? ai::string_or_empty(state, goal.ref, key::id) : key::empty;
+	const int64_t crossed_day = block.present ? gd::int_field(state, block.ref, key::crossed_day, -1) : -1;
+	const bool committed = !any_errand && crossed_day >= 0 && errand_id != key::empty && ai::session_int(state, session, key::day) < gd::add(crossed_day, kGateCommitDays);
 	const PackedRef dist = gd::as_ints(gd::index(state, search, str(key::dist)));
 	const DictRef overworld = session_view::overworld(state, session);
 	const ArrayRef nodes = typed_array(state, overworld, key::resource_nodes);
@@ -279,6 +288,20 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 		if (!beyond_empty && avoided_until(state, avoid, gd::stringify(state, gd::index(state, beyond, str(key::id)))) >= day) {
 			beyond_empty = true;
 		}
+		// A hostile hero beyond is there only for a hero that reaches it the day
+		// it crosses: by the next day it has moved on, often away from the army
+		// that came through, which would then cross back and forth after it.
+		if (!beyond_empty) {
+			const Atom beyond_kind = ai::string_or_empty(state, beyond, key::kind);
+			if (beyond_kind == key::ai_hero || beyond_kind == key::hero) {
+				const Dict movement = dict_if_dict(state, block, key::movement);
+				const int64_t moves_left = movement.present ? gd::int_field(state, movement.ref, key::current, 0) : 0;
+				const int64_t way = gd::add(gd::add(gd::to_int(state, ai::vmember(state, option, key::distance)), 1), gd::int_field(state, beyond, key::distance, 0));
+				if (way > moves_left) {
+					beyond_empty = true;
+				}
+			}
+		}
 		const int64_t option_tile = gd::to_int(state, ai::vmember(state, option, key::tile));
 		Dict route;
 		if (routes.present) {
@@ -313,6 +336,9 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 			}
 		}
 		if (value <= 0.0) {
+			continue;
+		}
+		if (committed && target_id != errand_id && gd::stringify(state, ai::vmember(state, option, key::id)) != errand_id) {
 			continue;
 		}
 		double score = value / (1.0 + static_cast<double>(distance) / static_cast<double>(movement_max));
@@ -434,6 +460,8 @@ double _route_loss_limit(State &state, double value) {
 }
 
 void _route_through(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, DictRef map, double power, double limit, ArrayRef towns, bool explore, DictRef result) {
+	const Dict goal = dict_if_dict(state, typed_dict(state, entry, str(key::ai_hero)), key::goal);
+	const Atom goal_id = goal.present ? ai::string_or_empty(state, goal.ref, key::id) : key::empty;
 	const Vector2i size = map_size(state, context);
 	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	const int64_t start_tile = _tile_index_of(state, entry, size);
@@ -513,7 +541,12 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		const DictRef start_gate = gd::as_dict(state.at(gates, first[here]));
 		for (const Value &target : gd::field_items(state, targets, str(exit_key))) {
 			const double total = arrived + (gd::to_int(state, ai::vmember(state, target, key::tile)) >= 0 ? _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, target, key::tile)), size) * detour : 0.0);
-			const double score = gd::to_float(ai::vmember(state, target, key::value)) / (1.0 + total / static_cast<double>(movement_max));
+			double score = gd::to_float(ai::vmember(state, target, key::value)) / (1.0 + total / static_cast<double>(movement_max));
+			// The hero's errand keeps its way through a gate against a slightly
+			// better one there, as it does everywhere else.
+			if (goal_id != key::empty && gd::stringify(state, ai::vmember(state, target, key::id)) == goal_id) {
+				score *= ai::static_float(state, key::ai_hero_rules_script, key::GOAL_CONTINUITY_BONUS);
+			}
 			const int64_t start_gate_tile = gd::to_int(state, gd::index(state, start_gate, str(key::tile)));
 			bool better = true;
 			Value known;

@@ -389,7 +389,7 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 	if (gd::is_empty(state, best)) {
 		// Nothing left on this level: the other one, through a gate.
 		started = gd::ticks_usec();
-		best = _gate_candidate(state, session, context, entry, search, movement_max, gd::mul(movement_max, tunable_int(state, key::FAR_SEARCH_DAYS)));
+		best = _gate_candidate(state, session, context, entry, search, movement_max, gd::mul(movement_max, tunable_int(state, key::FAR_SEARCH_DAYS)), true);
 		if (!gd::is_empty(state, best) && !_gate_fight_looks_good(state, session, context, entry, best)) {
 			best = state.new_dict();
 		}
@@ -726,10 +726,18 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 	const ArrayRef path = has_path ? ai::typed_array(path_value, "AiHeroRules._follow_plan") : 0;
 	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	// The goal stays private to the AI (no raid-style target fields that the
-	// human's threat forecasts would read).
+	// human's threat forecasts would read). On the way to a gate it is what lies
+	// beyond, as once the hero has crossed (`_cross_gate`): the errand is the
+	// destination, whichever gate leads there.
 	const DictRef goal = state.new_dict();
-	state.set(goal, str(key::kind), str(ai::string_or_empty(state, plan, key::kind)));
-	state.set(goal, str(key::id), str(ai::string_or_empty(state, plan, key::id)));
+	Value beyond;
+	if (state.lookup(plan, str(key::beyond), beyond) && gd::is_dict(beyond) && ai::string_or_empty(state, beyond.ref, key::id) != key::empty) {
+		state.set(goal, str(key::kind), str(ai::string_or_empty(state, beyond.ref, key::kind)));
+		state.set(goal, str(key::id), str(ai::string_or_empty(state, beyond.ref, key::id)));
+	} else {
+		state.set(goal, str(key::kind), str(ai::string_or_empty(state, plan, key::kind)));
+		state.set(goal, str(key::id), str(ai::string_or_empty(state, plan, key::id)));
+	}
 	state.set(block, str(key::goal), dict_value(goal));
 	const int64_t path_size = has_path ? state.array_size(path) : 0;
 	if (path_size == 0) {

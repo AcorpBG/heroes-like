@@ -113,7 +113,9 @@ DictRef _own_town_doors(State &state, DictRef session, Atom controller, int64_t 
 
 // Gates and the routes past them (ai_hero_rules_routes.cpp).
 bool _plans_far(State &state, DictRef session, DictRef context, DictRef entry);
-DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, int64_t beyond_radius);
+// any_errand: the last way out when nothing on the level is worth doing, open
+// also in the days after a crossing.
+DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, int64_t beyond_radius, bool any_errand = false);
 DictRef _gate_routes(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max);
 double _route_loss_limit(State &state, double value);
 void _route_through(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, DictRef map, double power, double limit, ArrayRef towns, bool explore, DictRef result);

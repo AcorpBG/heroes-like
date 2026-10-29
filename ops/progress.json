@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-reinforce-any-army-20261029",
- "currentSliceTitle": "Couriers hand troops to the main or a field army by pooled seven-slot gain; errands take pickups on the way; own-town troops worth what they let an army beat; multi-gate routes to own towns for every hero. 8 XL replays all end, days 140-314.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-29T10:51:35Z",
+ "currentSliceId": "ai-level-shuttle-20261029",
+ "currentSliceTitle": "AI: heroes stop shuttling between levels",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-29T12:20:20Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-level-shuttle-20261029",
+   "title": "AI: heroes stop shuttling between levels",
+   "status": "in_progress",
+   "goal": "Heroes crossed gates back and forth for errands gone by arrival (half of all crossings went back within 3 days). For 3 days after crossing a hero takes another gate only toward its errand; walking to a gate its goal is the destination; routes keep the goal; a hostile hero beyond a gate counts only if reached that day. ai_hero_rules_routes/turn_day/turn_moves.cpp. Owner 2026-10-29: fix the shuttle, then freeze for a batch.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-29"
+  },
   {
    "id": "ai-reinforce-any-army-20261029",
    "status": "completed",

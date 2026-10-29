@@ -1210,6 +1210,7 @@ DictRef _cross_gate(State &state, DictRef session, DictRef context, int64_t inde
 	Value beyond;
 	const DictRef goal = state.lookup(plan, str(key::beyond), beyond) ? gd::duplicate_dict(state, gd::as_dict(beyond)) : state.new_dict();
 	state.set(block, str(key::goal), dict_value(goal));
+	state.set(block, str(key::crossed_day), int_value(ai::session_int(state, session, key::day)));
 	state.set(entry, str(key::ai_hero), dict_value(block));
 	overworld_turn_playback::move(state, dict_value(session), entry, before);
 	_store_entry(state, session, index, entry);
