@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-level-shuttle-20261029",
- "currentSliceTitle": "Three days after crossing a gate a hero takes another only toward its errand; walking to a gate its goal is the destination; hostile heroes beyond count only if reached that day. Crossings back within 3 days 50% -> 27% on 8 XL replays.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-29T12:25:36Z",
+ "currentSliceId": "tooling-batch-cost-scheduling-20261029",
+ "currentSliceTitle": "AI match runner: worker lists sized by cost",
+ "currentSliceStatus": "pending",
+ "updatedAt": "2026-10-29T14:50:15Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,17 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "tooling-batch-cost-scheduling-20261029",
+   "title": "AI match runner: worker lists sized by cost",
+   "status": "pending",
+   "goal": "Native batch workers get lists sized by game count (up to 32), heaviest games first, so a mixed-size batch ends on a few workers still playing 32 two-level XL games each while the rest sit idle. In `tools/ai_match_batch.py` `play_prepared`, size each list by estimated cost instead (map tiles x levels x players): a budget of the remaining cost over slots x 4, up to 32 games, whole seed groups, heaviest first; the games played stay the same. Update the skill and runner docs to match. Owner 2026-10-29: after the large 4P + XL 6P batch, not during it.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md",
+    ".claude/skills/ai-match-batch/SKILL.md"
+   ],
+   "updatedAt": "2026-10-29"
+  },
   {
    "id": "ai-level-shuttle-20261029",
    "status": "completed",
