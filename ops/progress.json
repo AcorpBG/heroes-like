@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "native-rmg-all-seats-human-8xm8-links-20261029",
- "currentSliceTitle": "Random maps: every seat human or computer; 8XM8 links as meant",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-29T18:52:50Z",
+ "currentSliceTitle": "Random maps give H3MapEd every seat as human-or-computer, so the one-human Gauntlet (45 of 400 XL batch maps, 6 towns) is gone; the game picks its human seat after projection. 8XM8 uses Rmg.txt's intended links.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-29T18:55:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "native-rmg-all-seats-human-8xm8-links-20261029",
-   "title": "Random maps: every seat human or computer; 8XM8 links as meant",
-   "status": "in_progress",
-   "goal": "Generate random maps with every seat H3MapEd's human-or-computer, so the one-human Gauntlet (6-town XL maps) is no longer offered; the game picks its own human seat after projection (runtime_seats). 8XM8 uses the link zones Rmg.txt meant: its 5.9-7.9 fill is read as 5,6,6,7,7,7 and leaves start zone 8 unlinked; strict mode keeps H3MapEd's. Files: map_generation.cpp, h3maped_rmg_template_catalog.cpp. Owner decision 2026-10-29.",
-   "docs": [
-    "docs/rmg-cut-off-town-repair.md"
-   ],
-   "updatedAt": "2026-10-29"
+   "status": "completed",
+   "completedAt": "2026-10-29",
+   "summary": "Random maps give H3MapEd every seat as human-or-computer, so the one-human Gauntlet (45 of 400 XL batch maps, 6 towns) is gone; the game picks its human seat after projection. 8XM8 uses Rmg.txt's intended links.",
+   "commit": "fe8b88e66"
   },
   {
    "id": "ai-random-waygates-20261029",
