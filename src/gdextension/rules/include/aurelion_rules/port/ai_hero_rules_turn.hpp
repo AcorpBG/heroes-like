@@ -50,7 +50,7 @@ void _log_decision(State &state, DictRef session, DictRef context, DictRef entry
 void _note_route_visit(State &state, DictRef session, DictRef context, DictRef entry);
 void _open_decision_memos(State &state, DictRef context);
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id);
-DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide);
+DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide, bool troops_only = false);
 DictRef _vetted_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max);
 bool placement_is_main(State &state, DictRef session, DictRef context, DictRef entry);
 

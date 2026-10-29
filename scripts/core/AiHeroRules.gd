@@ -107,7 +107,9 @@ static var TOWN_HORIZON_WEEKS: float
 ## twenty times its own while the winner cleared guards and mines.
 static var ELIMINATION_VALUE: float
 ## Lesser heroes that keep an army of their own (`_field_hero_ids`): one per
-## town held beyond the first. They take garrisons along, defend towns and take
+## town held beyond the first, given out at the start of the player's day
+## (`_assign_field_heroes`); a hero keeps the role a week after the towns that
+## called for it are lost. They take garrisons along, defend towns and take
 ## what they can beat instead of handing their troops to the main hero; captured
 ## towns of other factions muster creatures the main army has no slot for.
 ## Leaving a defender (`_leave_defense`). A hero leaving one of its towns keeps
@@ -221,8 +223,6 @@ static var MAX_IDLE_PREVIEWS: int
 static var IDLE_FIGHT_MIN_KEPT: float
 ## How close to its town's doorway an idle hero waits.
 static var HOME_WAIT_RADIUS: int
-## A hand-over of troops is worth at most what a modest site is worth.
-static var MEET_VALUE_CAP: float
 static var GOAL_CONTINUITY_BONUS: float
 const TOWN_SIGHT_RADIUS := 8
 ## Scouting the nearest unexplored ground. Raised from 220 on 2026-10-18 at

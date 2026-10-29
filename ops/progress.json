@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-vetoed-hero-fight-calls-field-armies-20261028",
- "currentSliceTitle": "A rival hero the main army's preview loses to needs the main army's power plus what the rival keeps, x1.3, so field armies join. m566 (10-28 batch) is won on day 317, not capped; six capped XL seeds unchanged.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-28T22:02:39Z",
+ "currentSliceId": "ai-rear-garrisons-reach-heroes-20261029",
+ "currentSliceTitle": "Rear-town troops reach heroes",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-29T07:56:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-rear-garrisons-reach-heroes-20261029",
+   "title": "Rear-town troops reach heroes",
+   "status": "in_progress",
+   "goal": "Troops recruited in towns no hero passes reach heroes: the main and field armies' 12-day search weighs own towns holding troops and the main army; couriers search 12 days for troops to carry and the main army; ferry and hand-over valued by the troops, no 600 cap. Native rules (ai_hero_rules_turn_day, _sight, _candidates). Owner 2026-10-29: implement, not prototype; 2026-10-28: troops travel with heroes.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-29"
+  },
   {
    "id": "ai-vetoed-hero-fight-calls-field-armies-20261028",
    "status": "completed",

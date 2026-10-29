@@ -287,8 +287,14 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 				if (reach >= 0 && distance > reach) {
 					bool far_kind = false;
 					if (far_kinds) {
+						// Troops count however far: an own town holding them, the
+						// main army to hand them to. Main and field armies also go
+						// for towns and heroes.
 						const Atom candidate_kind = ai::string_or_empty(state, candidate, key::kind);
-						far_kind = candidate_kind == key::town_hostile || candidate_kind == key::town_neutral || candidate_kind == key::hero || candidate_kind == key::ai_hero;
+						far_kind = candidate_kind == key::town_own || candidate_kind == key::meet;
+						if (!far_kind && _plans_far(state, session, context, entry)) {
+							far_kind = candidate_kind == key::town_hostile || candidate_kind == key::town_neutral || candidate_kind == key::hero || candidate_kind == key::ai_hero;
+						}
 					}
 					if (!far_kind) {
 						continue;
@@ -630,12 +636,11 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	}
 	const Value destination = nested_list(state, other, key::enemy_army, key::stacks);
 	const DictRef fits = _merge_stacks_into(state, destination, gd::index(state, split, str(key::give)));
-	// Moving troops creates nothing by itself: a lesser hero finishes its own
-	// errands first and brings its troops over when nothing else is worth more.
+	// A hand-over is worth the troops the main army gains, however many: a
+	// courier with a rear town's garrison brings it before small errands.
 	const double given = army_power(state, gd::index(state, split, str(key::give)), dict_value(state.new_dict()));
 	const double left = army_power(state, gd::index(state, fits, str(key::left)), dict_value(state.new_dict()));
-	const double troops = (given - left) * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
-	const double value = compat::engine_min(troops, tunable(state, key::MEET_VALUE_CAP));
+	const double value = (given - left) * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
 	if (value <= tunable(state, key::MIN_TROOP_ERRAND_VALUE)) {
 		return state.new_dict();
 	}

@@ -105,7 +105,6 @@ constexpr Weight kWeights[] = {
 	{key::MAX_IDLE_PREVIEWS, key::max_idle_previews, true},
 	{key::IDLE_FIGHT_MIN_KEPT, key::idle_fight_min_kept, false},
 	{key::HOME_WAIT_RADIUS, key::home_wait_radius, true},
-	{key::MEET_VALUE_CAP, key::meet_value_cap, false},
 	{key::GOAL_CONTINUITY_BONUS, key::goal_continuity_bonus, false},
 	{key::EXPLORE_VALUE, key::explore_value, false},
 	{key::HUNT_EXPLORE_VALUE, key::hunt_explore_value, false},
@@ -318,6 +317,7 @@ DictRef run_faction_turn(State &state, DictRef session, DictRef config, DictRef 
 		state.set(session_view::overworld(state, session), str(key::towns), array_value(towns));
 	}
 	_start_heroes_day(state, session, controller);
+	_assign_field_heroes(state, session, controller);
 	state.set(phases, str(key::economy_ms), int_value(_elapsed_ms(state, phase)));
 
 	phase = gd::ticks_usec();

@@ -502,11 +502,11 @@ DictRef _beyond_gate(State &state, DictRef session, DictRef context, DictRef ent
 	state.set(context, str(key::gate_far), dict_value(far_dists));
 	const int64_t min_radius = ai::static_int(state, key::ai_hero_rules_script, key::MIN_SEARCH_RADIUS);
 	const int64_t near_radius = compat::engine_max(min_radius, gd::mul(movement_max, ai::static_int(state, key::ai_hero_rules_script, key::SEARCH_DAYS)));
-	const bool far_kinds = _plans_far(state, session, context, entry);
-	DictRef far = _best_candidate(state, session, context, traveller, far_search, movement_max, near_radius, far_kinds);
+	// Farther than that only what is worth the walk (`_best_candidate`).
+	DictRef far = _best_candidate(state, session, context, traveller, far_search, movement_max, near_radius, true);
 	if (gd::is_empty(state, far)) {
 		const int64_t far_radius = compat::engine_max(near_radius, gd::mul(movement_max, ai::static_int(state, key::ai_hero_rules_script, key::FAR_SEARCH_DAYS)));
-		far = _best_candidate(state, session, context, traveller, far_search, movement_max, far_radius, far_kinds);
+		far = _best_candidate(state, session, context, traveller, far_search, movement_max, far_radius, true);
 	}
 	if (logged.kind != Kind::Nil) {
 		state.set(context, str(key::decision_alternatives), logged);

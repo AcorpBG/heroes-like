@@ -35,6 +35,8 @@ DictRef _split_for_handover(State &state, const Value &stacks);
 
 // The main army, defense and threats (ai_hero_rules_defense.cpp).
 ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller);
+// Gives the field roles out for the day, before the heroes move.
+void _assign_field_heroes(State &state, DictRef session, Atom controller);
 ArrayRef _decision_field_ids(State &state, DictRef session, DictRef context);
 double _main_shortfall(State &state, DictRef session, DictRef context, DictRef main);
 int64_t _towns_held_by(State &state, DictRef session, Atom owner, Atom controller);

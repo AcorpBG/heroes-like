@@ -139,19 +139,23 @@ int64_t threat_distance(State &state, DictRef session, DictRef context, const Va
 	return steps_to_door(state, session, context, threat_x, threat_y, threat_level, entrance);
 }
 
-} // namespace
+// A hero keeps the field role this long after the towns that called for it
+// are lost: towns change hands often, and a role changed every day sent heroes
+// back and forth between a field army's errands and a courier's.
+constexpr int64_t kFieldRoleDays = 7;
 
-namespace ai_hero_rules {
+// The day a hero's field role lapses (`_assign_field_heroes`), -1 when it has none.
+int64_t field_until(State &state, const Value &hero) {
+	const Value block = ai::vget(state, hero, key::ai_hero, dict_value(state.new_dict()));
+	return gd::to_int(state, ai::vget(state, block, key::field_until, int_value(-1)));
+}
 
-ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller) {
-	const int64_t towns = state.array_size(enemy_turn_rules::_owned_town_entries(state, session, controller));
-	const int64_t slots = gd::sub(towns, 1);
-	if (slots <= 0) {
-		return state.new_array();
-	}
-	const Atom main_id = _main_hero_id(state, session, controller);
+// The heroes other than the main hero in the order the field roles go out:
+// the most experienced first, then the strongest.
+ArrayRef ranked_lesser_heroes(State &state, DictRef session, Atom controller) {
+	const Atom main_id = ai_hero_rules::_main_hero_id(state, session, controller);
 	const ArrayRef others = state.new_array();
-	for (const Value &hero : gd::items(state, array_value(active_hero_entries(state, session, controller)))) {
+	for (const Value &hero : gd::items(state, array_value(ai_hero_rules::active_hero_entries(state, session, controller)))) {
 		if (gd::stringify(state, ai::vget(state, hero, key::placement_id, str(key::empty))) != main_id) {
 			state.append(others, hero);
 		}
@@ -164,8 +168,8 @@ ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller) {
 		if (xp_a != xp_b) {
 			return xp_a > xp_b;
 		}
-		const double power_a = hero_power(state, a);
-		const double power_b = hero_power(state, b);
+		const double power_a = ai_hero_rules::hero_power(state, a);
+		const double power_b = ai_hero_rules::hero_power(state, b);
 		if (!gd::is_equal_approx(power_a, power_b)) {
 			return power_a > power_b;
 		}
@@ -173,11 +177,47 @@ ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller) {
 		const Atom id_b = ai::string_or_empty(state, b, key::placement_id);
 		return state.text(id_a) < state.text(id_b);
 	});
+	return others;
+}
+
+} // namespace
+
+namespace ai_hero_rules {
+
+ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller) {
+	const int64_t day = ai::session_int(state, session, key::day);
 	const ArrayRef ids = state.new_array();
-	for (const Value &hero : gd::items(state, array_value(gd::slice(state, others, 0, slots)))) {
-		state.append(ids, str(gd::stringify(state, ai::vget(state, hero, key::placement_id, str(key::empty)))));
+	for (const Value &hero : gd::items(state, array_value(ranked_lesser_heroes(state, session, controller)))) {
+		if (field_until(state, hero) >= day) {
+			state.append(ids, str(gd::stringify(state, ai::vget(state, hero, key::placement_id, str(key::empty)))));
+		}
 	}
 	return ids;
+}
+
+void _assign_field_heroes(State &state, DictRef session, Atom controller) {
+	const int64_t towns = state.array_size(enemy_turn_rules::_owned_town_entries(state, session, controller));
+	const int64_t slots = gd::sub(towns, 1);
+	const int64_t day = ai::session_int(state, session, key::day);
+	// The field armies keep their places; the most experienced of the others
+	// take the places left.
+	const ArrayRef ranked = ranked_lesser_heroes(state, session, controller);
+	const ArrayRef ordered = state.new_array();
+	for (const Value &hero : gd::items(state, array_value(ranked))) {
+		if (field_until(state, hero) >= day) {
+			state.append(ordered, hero);
+		}
+	}
+	for (const Value &hero : gd::items(state, array_value(ranked))) {
+		if (field_until(state, hero) < day) {
+			state.append(ordered, hero);
+		}
+	}
+	const int64_t count = compat::engine_min<int64_t>(slots, state.array_size(ordered));
+	for (int64_t at = 0; at < count; ++at) {
+		const DictRef block = dict_or_new(state, state.at(ordered, at).ref, key::ai_hero);
+		state.set(block, str(key::field_until), int_value(gd::add(day, kFieldRoleDays)));
+	}
 }
 
 ArrayRef _decision_field_ids(State &state, DictRef session, DictRef context) {

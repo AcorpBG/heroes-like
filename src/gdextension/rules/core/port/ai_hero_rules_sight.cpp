@@ -239,10 +239,10 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 			const double share = tunable(state, key::GARRISON_PICKUP_SHARE);
 			value = gain * per_power * share;
 		} else if (_ferries_from(state, session, context, town, main_id)) {
+			// A courier carries the troops to the main army: worth what they are.
 			const double per_power = tunable(state, key::TROOP_VALUE_PER_POWER);
 			const double share = tunable(state, key::COURIER_TROOP_SHARE);
-			const double cap = tunable(state, key::MEET_VALUE_CAP);
-			value = compat::engine_min(gain * per_power * share, cap);
+			value = gain * per_power * share;
 		} else {
 			const ArrayRef stacks = gd::as_array(army_stacks(state, entry));
 			if (state.array_size(stacks) > 1) {

@@ -342,6 +342,30 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 		if (!gd::is_empty(state, far) && gd::float_field(state, far, key::score, 0.0) > near_score) {
 			return far;
 		}
+	} else {
+		// A courier looks as far for troops to carry: an own town holding them,
+		// or the main army to hand them to.
+		started = gd::ticks_usec();
+		const DictRef wide = _search(state, session, context, entry, gd::mul(movement_max, tunable_int(state, key::STRATEGIC_DAYS)));
+		const DictRef far = _strategic_candidate(state, session, context, entry, movement_max, radius, wide, true);
+		_profile_add(state, context, key::strategic_ms, started);
+		// Or past a gate, on the other level.
+		started = gd::ticks_usec();
+		const DictRef gate = _gate_candidate(state, session, context, entry, wide, movement_max, gd::mul(movement_max, tunable_int(state, key::STRATEGIC_DAYS)));
+		_profile_add(state, context, key::gate_ms, started);
+		const double near_score = gd::float_field(state, best, key::score, 0.0);
+		const double far_score = gd::float_field(state, far, key::score, 0.0);
+		if (!gd::is_empty(state, gate)) {
+			const Atom target = ai::string_or_empty(state, dict_or_new(state, gate, key::beyond), key::kind);
+			const bool troops = target == key::town_own || target == key::meet;
+			if (troops && gd::float_field(state, gate, key::score, 0.0) > compat::engine_max(near_score, far_score) && _gate_fight_looks_good(state, session, context, entry, gate)) {
+				_close_decision_memos(state, context);
+				return _gate_walk(state, session, context, entry, gate, wide);
+			}
+		}
+		if (!gd::is_empty(state, far) && far_score > near_score) {
+			return far;
+		}
 	}
 	if (gd::is_empty(state, best)) {
 		// Nothing worth doing nearby: look a week out before standing still.
@@ -394,7 +418,7 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 	return best;
 }
 
-DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide) {
+DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide, bool troops_only) {
 	const DictRef search = !gd::is_empty(state, wide) ? wide : _search(state, session, context, entry, gd::mul(movement_max, tunable_int(state, key::STRATEGIC_DAYS)));
 	const PackedRef known = _explored(state, session, context, level_rules::level_of(state, dict_value(entry)));
 	const double power = hero_power(state, entry);
@@ -405,10 +429,10 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 	const DictRef avoid = has_avoid ? found.ref : 0;
 	const bool has_goal = dict_field(state, block, key::goal, found);
 	const DictRef goal = has_goal ? found.ref : 0;
-	const DictRef war = _war_paths(state, session, context, entry, search, needs);
+	const DictRef war = troops_only ? state.new_dict() : _war_paths(state, session, context, entry, search, needs);
 	// While a rival's towns are unseen, a guard whose fight opens unexplored
 	// ground is the way to them (`_passage_value`), however far.
-	const bool hunting = _rival_towns_unknown(state, session, context) && ai::session_int(state, session, key::day) >= tunable_int(state, key::HUNT_START_DAY);
+	const bool hunting = !troops_only && _rival_towns_unknown(state, session, context) && ai::session_int(state, session, key::day) >= tunable_int(state, key::HUNT_START_DAY);
 	const DictRef guard_candidates = state.new_dict();
 	Value stops;
 	const bool has_stops = state.lookup(search, str(key::stops), stops);
@@ -434,6 +458,10 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 				DictRef candidate = 0;
 				bool filled = false;
 				const int64_t kind = gd::to_int(state, ai::vmember(state, ref, key::kind));
+				// A courier looks only for troops: its own towns and the main army.
+				if (troops_only && kind != kStopTown && kind != kStopAiHero) {
+					continue;
+				}
 				if (kind == kStopTown) {
 					const int64_t town_index = gd::to_int(state, ai::vmember(state, ref, key::index));
 					if (!_town_seen(state, known, overworld_dict(state, session, key::towns, town_index), context_size(state, context))) {
@@ -491,8 +519,10 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 				if (gd::is_empty(state, candidate)) {
 					continue;
 				}
+				// An own town holding troops and the main army count however far:
+				// troops recruited where no hero passes stayed there for months.
 				const Atom candidate_kind = ai::string_or_empty(state, candidate, key::kind);
-				if (candidate_kind == key::town_own || candidate_kind == key::meet) {
+				if (troops_only && candidate_kind != key::town_own && candidate_kind != key::meet) {
 					continue;
 				}
 				const Atom candidate_id = ai::string_or_empty(state, candidate, key::id);
@@ -525,7 +555,7 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 			}
 		}
 	}
-	if (_rival_towns_unknown(state, session, context)) {
+	if (!troops_only && _rival_towns_unknown(state, session, context)) {
 		const DictRef explore = _exploration_candidate(state, session, context, entry, search);
 		if (!gd::is_empty(state, explore) && gd::to_int(state, gd::index(state, explore, str(key::distance))) > local_radius) {
 			const double explore_value = gd::to_float(gd::index(state, explore, str(key::value)));
