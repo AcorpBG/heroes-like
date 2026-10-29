@@ -340,7 +340,7 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 			}
 		}
 		if (!gd::is_empty(state, far) && gd::float_field(state, far, key::score, 0.0) > near_score) {
-			return far;
+			return _by_the_way(state, session, context, entry, search, far, wide, movement_max);
 		}
 	} else {
 		// A courier looks as far for troops to carry: an own town holding them,
@@ -364,7 +364,7 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 			}
 		}
 		if (!gd::is_empty(state, far) && far_score > near_score) {
-			return far;
+			return _by_the_way(state, session, context, entry, search, far, wide, movement_max);
 		}
 	}
 	if (gd::is_empty(state, best)) {
@@ -415,7 +415,51 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 		return state.new_dict();
 	}
 	set_path(state, best, search);
-	return best;
+	return _by_the_way(state, session, context, entry, search, best, search, movement_max);
+}
+
+DictRef _by_the_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef plan, DictRef plan_search, int64_t movement_max) {
+	const DictRef detour = _on_the_way(state, session, context, entry, search, plan, plan_search, movement_max);
+	if (gd::is_empty(state, detour)) {
+		return plan;
+	}
+	set_path(state, detour, search);
+	return detour;
+}
+
+DictRef _on_the_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef plan, DictRef plan_search, int64_t movement_max) {
+	const Atom kind = ai::string_or_empty(state, plan, key::kind);
+	const int64_t distance = gd::int_field(state, plan, key::distance, 0);
+	if ((kind != key::meet && kind != key::town_own) || distance <= 0 || !state.has(plan, str(key::tile_index))) {
+		return state.new_dict();
+	}
+	// The way there: each tile and how far along it lies.
+	const ArrayRef path = _path_to(state, plan_search, gd::to_int(state, gd::index(state, plan, str(key::tile_index))));
+	if (state.array_size(path) == 0) {
+		return state.new_dict();
+	}
+	const int64_t width = context_size(state, context).x;
+	const ArrayRef way = state.new_array();
+	for (const Value &step : gd::items(state, array_value(path))) {
+		const Vector2i tile = as_vector2i(step);
+		state.append(way, int_value(tile.x));
+		state.append(way, int_value(tile.y));
+		state.append(way, int_value(search_distance(state, plan_search, gd::add(gd::mul(tile.y, width), tile.x))));
+	}
+	const DictRef errand = state.new_dict();
+	state.set(errand, str(key::value), float_value(gd::float_field(state, plan, key::value, 0.0)));
+	state.set(errand, str(key::distance), int_value(distance));
+	state.set(errand, str(key::way), array_value(way));
+	// The detours are not this decision's alternatives.
+	const Value logged = state.get(context, str(key::decision_alternatives), Value());
+	state.erase(context, str(key::decision_alternatives));
+	state.set(context, str(key::on_the_way), dict_value(errand));
+	const DictRef detour = _vetted_candidate(state, session, context, entry, search, movement_max);
+	state.erase(context, str(key::on_the_way));
+	if (logged.kind != state::Kind::Nil) {
+		state.set(context, str(key::decision_alternatives), logged);
+	}
+	return detour;
 }
 
 DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide, bool troops_only) {

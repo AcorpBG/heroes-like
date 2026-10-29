@@ -1128,41 +1128,40 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	}
 	const DictRef army = dict_field_if(state, entry, key::enemy_army);
 	const DictRef other_army = dict_field_if(state, other, key::enemy_army);
-	DictRef merged = 0;
-	ArrayRef kept = 0;
-	if (gd::bool_field(state, plan, key::swap, false)) {
-		// The armies are pooled: the main hero ends with the strongest seven
-		// stacks of both, the field hero with the rest (at least one creature).
-		const ArrayRef theirs = gd::as_array(gd::duplicate_value(state, list_field(state, other_army, key::stacks), true));
-		const ArrayRef ours = gd::as_array(gd::duplicate_value(state, list_field(state, army, key::stacks), true));
-		const DictRef swap = _garrison_pickup(state, theirs, ours);
-		if (gd::to_float(gd::index(state, swap, str(key::gain))) <= 0.0) {
-			return arrived_result(state);
-		}
-		merged = state.new_dict();
-		state.set(merged, str(key::stacks), gd::index(state, swap, str(key::stacks)));
-		kept = gd::as_array(gd::index(state, swap, str(key::left)));
-		if (state.array_size(kept) == 0) {
-			const int64_t weakest = _weakest_stack_index(state, gd::as_array(gd::index(state, merged, str(key::stacks))));
-			const DictRef stack = gd::as_dict(ai::vindex(state, gd::index(state, merged, str(key::stacks)), int_value(weakest)));
-			if (gd::int_field(state, stack, key::count, 0) > 1) {
-				state.set(stack, str(key::count), int_value(gd::sub(gd::to_int(state, gd::index(state, stack, str(key::count))), 1)));
-				kept = state.new_array();
-				const DictRef one = state.new_dict();
-				state.set(one, str(key::unit_id), str(ai::string_or_empty(state, stack, key::unit_id)));
-				state.set(one, str(key::count), int_value(1));
-				state.append(kept, dict_value(one));
+	// The armies are pooled: the hero met ends with the strongest seven stacks
+	// of both, the one that came with the rest (at least one creature).
+	const ArrayRef theirs = gd::as_array(gd::duplicate_value(state, list_field(state, other_army, key::stacks), true));
+	const ArrayRef ours = gd::as_array(gd::duplicate_value(state, list_field(state, army, key::stacks), true));
+	const DictRef swap = _garrison_pickup(state, theirs, ours);
+	if (gd::to_float(gd::index(state, swap, str(key::gain))) <= 0.0) {
+		return arrived_result(state);
+	}
+	const DictRef merged = state.new_dict();
+	state.set(merged, str(key::stacks), gd::index(state, swap, str(key::stacks)));
+	ArrayRef kept = gd::as_array(gd::index(state, swap, str(key::left)));
+	if (state.array_size(kept) == 0) {
+		// One creature of the weakest stack that has more than one; with only
+		// single creatures left, the weakest of them.
+		const ArrayRef stacks = gd::as_array(gd::index(state, merged, str(key::stacks)));
+		const ArrayRef several = state.new_array();
+		for (const Value &stack : gd::items(state, array_value(stacks))) {
+			if (gd::int_field(state, stack.ref, key::count, 0) > 1) {
+				state.append(several, stack);
 			}
 		}
-	} else {
-		const DictRef split = _split_for_handover(state, list_field(state, army, key::stacks));
-		const Value destination = list_field(state, other_army, key::stacks);
-		merged = _merge_stacks_into(state, destination, gd::index(state, split, str(key::give)));
-		if (gd::equal(state, gd::index(state, merged, str(key::stacks)), list_field(state, other_army, key::stacks))) {
-			return arrived_result(state);
+		kept = state.new_array();
+		if (state.array_size(several) != 0) {
+			const DictRef stack = gd::as_dict(state.at(several, _weakest_stack_index(state, several)));
+			state.set(stack, str(key::count), int_value(gd::sub(gd::to_int(state, gd::index(state, stack, str(key::count))), 1)));
+			const DictRef one = state.new_dict();
+			state.set(one, str(key::unit_id), str(ai::string_or_empty(state, stack, key::unit_id)));
+			state.set(one, str(key::count), int_value(1));
+			state.append(kept, dict_value(one));
+		} else if (state.array_size(stacks) > 1) {
+			const int64_t weakest = _weakest_stack_index(state, stacks);
+			state.append(kept, state.at(stacks, weakest));
+			gd::remove_at(state, stacks, weakest);
 		}
-		kept = gd::as_array(gd::index(state, split, str(key::keep)));
-		ai::append_array(state, kept, gd::as_array(gd::index(state, merged, str(key::left))));
 	}
 	state.set(army, str(key::stacks), array_value(kept));
 	state.set(entry, str(key::enemy_army), dict_value(army));

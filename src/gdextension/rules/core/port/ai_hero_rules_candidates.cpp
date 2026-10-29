@@ -182,14 +182,6 @@ DictRef explore_stop(State &state, DictRef search, int64_t tile_index, double va
 	return result;
 }
 
-// {"give": give, "keep": keep}
-DictRef split_result(State &state, ArrayRef give, ArrayRef keep) {
-	const DictRef result = state.new_dict();
-	state.set(result, str(key::give), array_value(give));
-	state.set(result, str(key::keep), array_value(keep));
-	return result;
-}
-
 } // namespace
 
 namespace ai_hero_rules {
@@ -222,6 +214,13 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 		avoid = found.ref;
 		has_avoid = true;
 	}
+	// On the way to hand troops over or pick them up (`_on_the_way`): only
+	// what doing first adds to the errand's value per day of travel counts.
+	const Value errand = state.get(context, str(key::on_the_way), Value());
+	const bool on_the_way = gd::is_dict(errand);
+	const double errand_value = on_the_way ? gd::float_field(state, errand.ref, key::value, 0.0) : 0.0;
+	const int64_t errand_distance = on_the_way ? gd::int_field(state, errand.ref, key::distance, 0) : 0;
+	const ArrayRef way = on_the_way ? gd::as_array(gd::index(state, errand.ref, str(key::way))) : 0;
 	const DictRef seen = state.new_dict();
 	DictRef best = state.new_dict();
 	double best_score = 0.0;
@@ -316,7 +315,28 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					continue;
 				}
 				double score = value / (1.0 + static_cast<double>(distance) / static_cast<double>(movement_max));
-				if (has_goal && ai::string_or_empty(state, goal, key::id) != key::empty) {
+				if (on_the_way) {
+					const Atom candidate_kind = ai::string_or_empty(state, candidate, key::kind);
+					if ((candidate_kind != key::resource && candidate_kind != key::artifact && candidate_kind != key::encounter) || distance >= errand_distance) {
+						continue;
+					}
+					// The detour: there, then to the nearest tile of the way, then
+					// on along the way.
+					int64_t extra = std::numeric_limits<int64_t>::max();
+					const int64_t x = checked_mod(tile_index, size.x);
+					const int64_t y = checked_div(tile_index, size.x);
+					const int64_t way_size = state.array_size(way);
+					for (int64_t at = 0; at + 2 < way_size; at += 3) {
+						const int64_t step = compat::engine_max<int64_t>(compat::absi(gd::sub(x, gd::to_int(state, state.at(way, at)))), compat::absi(gd::sub(y, gd::to_int(state, state.at(way, at + 1)))));
+						extra = compat::engine_min<int64_t>(extra, gd::sub(gd::add(distance, step), gd::to_int(state, state.at(way, at + 2))));
+					}
+					const int64_t total = gd::add(errand_distance, compat::engine_max<int64_t>(0, extra));
+					const double moves = static_cast<double>(movement_max);
+					score = (value + errand_value) / (1.0 + static_cast<double>(total) / moves) - errand_value / (1.0 + static_cast<double>(errand_distance) / moves);
+					if (score <= 0.0) {
+						continue;
+					}
+				} else if (has_goal && ai::string_or_empty(state, goal, key::id) != key::empty) {
 					const Atom goal_id = ai::string_or_empty(state, goal, key::id);
 					if (goal_id == ai::string_or_empty(state, candidate, key::id)) {
 						score *= tunable(state, key::GOAL_CONTINUITY_BONUS);
@@ -334,6 +354,9 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 				}
 			}
 		}
+	}
+	if (on_the_way) {
+		return best;
 	}
 	const DictRef explore = _exploration_candidate(state, session, context, entry, search);
 	bool has_explore = !gd::is_empty(state, explore);
@@ -599,11 +622,15 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const ArrayRef encounters = indexed_array(state, session_view::overworld(state, session), key::encounters);
 	const DictRef other = gd::as_dict(state.at(encounters, other_index));
 	const Atom main_id = _decision_main_id(state, session, context);
-	if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id) || main_id != ai::string_or_empty(state, other, key::placement_id)) {
+	const Atom other_id = ai::string_or_empty(state, other, key::placement_id);
+	if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id)) {
 		return state.new_dict();
 	}
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
 	if (gd::array_has(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)))) {
+		if (main_id != other_id) {
+			return state.new_dict();
+		}
 		// A field army joins the main army only when something it has to beat
 		// is beyond the main army alone: the main hero takes the stronger
 		// stacks. Otherwise it keeps its army and works on its own; seven stacks
@@ -627,77 +654,35 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 		state.set(result, str(key::id), str(id));
 		state.set(result, str(key::index), int_value(other_index));
 		state.set(result, str(key::value), float_value(value));
-		state.set(result, str(key::swap), bool_value(true));
 		return result;
 	}
-	const DictRef split = _split_for_handover(state, nested_list(state, entry, key::enemy_army, key::stacks));
-	if (ai::vempty(state, gd::index(state, split, str(key::give)))) {
+	// A courier hands its troops to the main army or to a field army, the one
+	// that gains most: the armies are pooled and the receiver keeps the
+	// strongest seven stacks, so troops go where their kind already stands or a
+	// slot is free, and a full army of another faction takes them only in place
+	// of weaker stacks. A hand-over is worth what the receiver gains, however
+	// much: a courier with a rear town's garrison brings it before small errands.
+	if (other_id != main_id && !gd::array_has(state, field_ids, str(other_id))) {
 		return state.new_dict();
 	}
-	const Value destination = nested_list(state, other, key::enemy_army, key::stacks);
-	const DictRef fits = _merge_stacks_into(state, destination, gd::index(state, split, str(key::give)));
-	// A hand-over is worth the troops the main army gains, however many: a
-	// courier with a rear town's garrison brings it before small errands.
-	const double given = army_power(state, gd::index(state, split, str(key::give)), dict_value(state.new_dict()));
-	const double left = army_power(state, gd::index(state, fits, str(key::left)), dict_value(state.new_dict()));
-	const double value = (given - left) * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+	Value found;
+	const ArrayRef their_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
+	const ArrayRef own_stacks = nested_lookup(state, entry, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
+	if (state.array_size(own_stacks) == 0) {
+		return state.new_dict();
+	}
+	const DictRef pooled = _garrison_pickup(state, their_stacks, own_stacks);
+	const double gain = gd::to_float(gd::index(state, pooled, str(key::gain)));
+	const double value = gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
 	if (value <= tunable(state, key::MIN_TROOP_ERRAND_VALUE)) {
 		return state.new_dict();
 	}
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::kind), str(key::meet));
-	state.set(result, str(key::id), str(ai::string_or_empty(state, other, key::placement_id)));
+	state.set(result, str(key::id), str(other_id));
 	state.set(result, str(key::index), int_value(other_index));
 	state.set(result, str(key::value), float_value(value));
 	return result;
-}
-
-DictRef _split_for_handover(State &state, const Value &stacks) {
-	const ArrayRef give = state.new_array();
-	const ArrayRef keep = state.new_array();
-	if (!gd::is_array(stacks)) {
-		return split_result(state, give, keep);
-	}
-	int64_t weakest = -1;
-	double weakest_power = std::numeric_limits<double>::infinity();
-	const int64_t count = state.array_size(stacks.ref);
-	for (int64_t index = 0; index < count; ++index) {
-		const Value stack = state.at(stacks.ref, index);
-		if (!gd::is_dict(stack) || gd::int_field(state, stack.ref, key::count, 0) <= 0) {
-			continue;
-		}
-		const DictRef one = gd::deep_duplicate_dict(state, stack.ref);
-		state.set(one, str(key::count), int_value(1));
-		const ArrayRef single = state.new_array();
-		state.append(single, dict_value(one));
-		const double power = army_power(state, array_value(single), dict_value(state.new_dict()));
-		if (power < weakest_power) {
-			weakest_power = power;
-			weakest = index;
-		}
-	}
-	if (weakest < 0) {
-		return split_result(state, give, keep);
-	}
-	for (int64_t index = 0; index < count; ++index) {
-		const Value stack = state.at(stacks.ref, index);
-		if (!gd::is_dict(stack) || gd::int_field(state, stack.ref, key::count, 0) <= 0) {
-			continue;
-		}
-		if (index != weakest) {
-			state.append(give, dict_value(gd::deep_duplicate_dict(state, stack.ref)));
-			continue;
-		}
-		const DictRef kept = gd::deep_duplicate_dict(state, stack.ref);
-		state.set(kept, str(key::count), int_value(1));
-		state.append(keep, dict_value(kept));
-		if (gd::int_field(state, stack.ref, key::count, 0) > 1) {
-			const DictRef rest = gd::deep_duplicate_dict(state, stack.ref);
-			state.set(rest, str(key::count), int_value(gd::sub(gd::int_field(state, stack.ref, key::count, 0), 1)));
-			state.append(give, dict_value(rest));
-		}
-	}
-	return split_result(state, give, keep);
 }
 
 } // namespace ai_hero_rules

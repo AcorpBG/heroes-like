@@ -31,7 +31,6 @@ DictRef _exploration_candidate(State &state, DictRef session, DictRef context, D
 DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef ref, double power, DictRef needs, DictRef search, int64_t tile_index = -1);
 double _hero_war_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef needs, Atom ref_kind, int64_t index);
 DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index);
-DictRef _split_for_handover(State &state, const Value &stacks);
 
 // The main army, defense and threats (ai_hero_rules_defense.cpp).
 ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller);
@@ -139,6 +138,12 @@ double _explore_value(State &state, DictRef session, DictRef context);
 double _hunt_value(State &state, DictRef session, DictRef context);
 bool _rival_towns_unknown(State &state, DictRef session, DictRef context);
 DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power);
+// What a hero beats with `after` strength and not with `before`: the best rival
+// or neutral town it knows, or rival hero in sight, on the level of `place`
+// within twelve days of it, less the expected losses, per day of travel from
+// there. A garrison that turns a small army into one that takes towns is worth
+// what it lets the army take.
+double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, double before, double after);
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position);
 DictRef _sight_context(State &state, Atom controller);
 ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller);

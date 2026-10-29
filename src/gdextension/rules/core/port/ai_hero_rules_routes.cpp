@@ -194,12 +194,11 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 		return gd::to_int(state, ai::vmember(state, a, key::distance)) < gd::to_int(state, ai::vmember(state, b, key::distance));
 	});
 	// The gates that start a longer way to a town or to unseen ground are
-	// weighed too, however far they lie.
+	// weighed too, however far they lie: for every hero to its own towns
+	// holding troops, for the main and field armies to the rest as well.
 	Dict routes;
-	if (_plans_far(state, session, context, entry)) {
-		routes.ref = _gate_routes(state, session, context, entry, search, movement_max);
-		routes.present = true;
-	}
+	routes.ref = _gate_routes(state, session, context, entry, search, movement_max);
+	routes.present = true;
 	const int64_t max_gates = ai::static_int(state, key::ai_hero_rules_script, key::MAX_GATES_WEIGHED);
 	const ArrayRef options = gd::slice(state, reachable, 0, max_gates);
 	// A gate past the player's own heroes is weighed at the walk with them
@@ -413,7 +412,7 @@ DictRef _gate_routes(State &state, DictRef session, DictRef context, DictRef ent
 		state.append(gd::as_array(gd::index(state, by_limit, limit)), town);
 	}
 	double explore_limit = -1.0;
-	if (_rival_towns_unknown(state, session, context)) {
+	if (_plans_far(state, session, context, entry) && _rival_towns_unknown(state, session, context)) {
 		explore_limit = _route_loss_limit(state, _explore_value(state, session, context));
 		if (!state.has(by_limit, float_value(explore_limit))) {
 			state.set(by_limit, float_value(explore_limit), array_value(state.new_array()));
@@ -661,10 +660,14 @@ ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef en
 	const Dict avoid = dict_if_dict(state, block, key::avoid);
 	const ArrayRef dangers = _dangers(state, session, context, entry);
 	const Vector2i size = map_size(state, context);
+	// Every hero goes to its own towns holding troops; only the main and
+	// field armies go for the rest.
+	const bool plans_far = _plans_far(state, session, context, entry);
 	for (const Value &town_ref : gd::items(state, gd::index(state, map, str(key::towns)))) {
 		const DictRef candidate = _town_candidate(state, session, context, entry, gd::to_int(state, ai::vmember(state, town_ref, key::index)), power);
 		const Atom kind = ai::string_or_empty(state, candidate, key::kind);
-		if ((kind != key::town_hostile && kind != key::town_neutral) || gd::float_field(state, candidate, key::value, 0.0) <= 0.0) {
+		const bool target = kind == key::town_own || (plans_far && (kind == key::town_hostile || kind == key::town_neutral));
+		if (!target || gd::float_field(state, candidate, key::value, 0.0) <= 0.0) {
 			continue;
 		}
 		if (avoided_until(state, avoid, gd::stringify(state, gd::index(state, candidate, str(key::id)))) >= ai::session_int(state, session, key::day)) {

@@ -347,7 +347,7 @@ static var FIGHT_MIN_KEPT: float
 ## Target values: a loose artifact, an artifact behind a guard or in a bank,
 ## beating a human or a computer hero (plus HERO_KILL_TROOP_SHARE of its
 ## troops' value), troops handed over, picked up from a garrison or carried to
-## the main army, and below MIN_TROOP_ERRAND_VALUE no errand at all; a
+## the main or a field army, and below MIN_TROOP_ERRAND_VALUE no errand at all; a
 ## dwelling's base and share of its week, a visit building's base, a controlled
 ## site's income over SITE_INCOME_DAYS days plus its control, more when a rival
 ## holds it; a guard fight's base; what a guard holds counts GUARDED_VALUE_SHARE,

@@ -42,12 +42,18 @@ DictRef run_faction_turn(State &state, DictRef session, DictRef config, DictRef 
 // Ported in ai_hero_rules_turn_day.cpp.
 DictRef _choose_plan(State &state, DictRef session, DictRef context, DictRef entry);
 void _close_decision_memos(State &state, DictRef context);
+DictRef _by_the_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef plan, DictRef plan_search, int64_t movement_max);
 DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef entry);
 DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 void _forget_beyond(State &state, DictRef context, Atom target_id);
 DictRef _interact(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 void _log_decision(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan);
 void _note_route_visit(State &state, DictRef session, DictRef context, DictRef entry);
+// A hero on its way to hand troops over or to pick a garrison up first takes
+// what lies just off the way: a site, an artifact or a guard its battle preview
+// beats, when doing that first is worth more per day of travel than going
+// straight (`_best_candidate` with `on_the_way`).
+DictRef _on_the_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef plan, DictRef plan_search, int64_t movement_max);
 void _open_decision_memos(State &state, DictRef context);
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id);
 DictRef _strategic_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t movement_max, int64_t local_radius, DictRef wide, bool troops_only = false);
