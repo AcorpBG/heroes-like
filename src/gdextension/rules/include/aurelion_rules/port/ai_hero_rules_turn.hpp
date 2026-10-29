@@ -125,6 +125,7 @@ Atom _parked_hero_id(State &state, DictRef session, Atom controller, Atom town_i
 DictRef _pending_make_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 DictRef _portal_step(State &state, DictRef session, DictRef context, DictRef entry, Vector2i tile, int64_t level);
 void _reveal(State &state, DictRef session, DictRef context, DictRef point, int64_t radius);
+void _reveal_level(State &state, DictRef session, DictRef context, int64_t level);
 int64_t _sight_radius(State &state, DictRef entry);
 bool _tile_blocked_for_standing(State &state, DictRef session, DictRef context, Vector2i tile, int64_t level, Atom actor_id);
 DictRef _visit_own_town_if_inside(State &state, DictRef session, DictRef context, int64_t index);

@@ -10,6 +10,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
+#include <algorithm>
 #include <string>
 
 namespace aurelion::rules::port {
@@ -226,6 +227,23 @@ double _explore_value(State &state, DictRef session, DictRef context) {
 	}
 	const double hunt = _hunt_value(state, session, context);
 	return explore + hunt * ramp;
+}
+
+double _chart_value(State &state, DictRef session, DictRef context, int64_t level) {
+	const PackedRef blocked = gd::as_bytes(gd::index(state, _level_surface(state, session, context, level), str(key::blocked)));
+	const PackedRef known = _explored(state, session, context, level);
+	const int64_t count = std::min(gd::packed_size(state, blocked), gd::packed_size(state, known));
+	const uint8_t *blocked_at = gd::packed_bytes(state, blocked);
+	const uint8_t *known_at = gd::packed_bytes(state, known);
+	int64_t open = 0;
+	int64_t unseen = 0;
+	for (int64_t tile = 0; tile < count; ++tile) {
+		if (blocked_at[tile] == 0) {
+			open += 1;
+			unseen += known_at[tile] == 0 ? 1 : 0;
+		}
+	}
+	return open > 0 ? _explore_value(state, session, context) * static_cast<double>(unseen) / static_cast<double>(open) : 0.0;
 }
 
 double _hunt_value(State &state, DictRef session, DictRef context) {

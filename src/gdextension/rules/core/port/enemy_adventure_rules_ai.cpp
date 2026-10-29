@@ -133,7 +133,8 @@ bool _resource_node_contestable_by_faction(State &state, DictRef node, DictRef s
 	if (visit_building_rules::is_visit_building(state, site)) {
 		return session.kind != Kind::Nil
 				&& visit_building_rules::cadence(state, site) != key::always
-				&& visit_building_rules::ai_value(state, site) > 0
+				// A chart is worth what it shows (`AiHeroRules._chart_value`).
+				&& (visit_building_rules::ai_value(state, site) > 0 || visit_building_rules::reveals_level(state, site))
 				&& gd::bool_field(state, visit_building_rules::readiness(state, node, site, _visit_key(state, faction_id), ai::session_int(state, gd::as_dict(session), key::day)), key::ok, false);
 	}
 	if (creature_dwelling_rules::is_dwelling(state, site) && session.kind != Kind::Nil && player_identity_rules::resource_controller_id(state, node) == faction_id) {

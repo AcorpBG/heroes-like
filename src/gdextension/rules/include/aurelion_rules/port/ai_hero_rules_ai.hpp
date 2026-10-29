@@ -138,6 +138,9 @@ ArrayRef _path_to(State &state, DictRef search, int64_t tile_index);
 // Exploring, hunting, rival towns and sight (ai_hero_rules_sight.cpp).
 double _explore_value(State &state, DictRef session, DictRef context);
 double _hunt_value(State &state, DictRef session, DictRef context);
+// What a chart of a whole level is worth: unseen ground by the share of the
+// level's open ground still unseen.
+double _chart_value(State &state, DictRef session, DictRef context, int64_t level);
 bool _rival_towns_unknown(State &state, DictRef session, DictRef context);
 DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power);
 // What a hero beats with `after` strength and not with `before`: the best rival
@@ -159,12 +162,12 @@ ArrayRef _hero_zone_tiles(State &state, DictRef session, DictRef context, Vector
 DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t level);
 ArrayRef _open_guard_zones(State &state, DictRef surface);
 PackedRef _portal_exits(State &state, DictRef portal, PackedRef seen_map);
-bool _portal_leads_unseen(State &state, DictRef portal, PackedRef seen_map);
+bool _portal_leads_unseen(State &state, DictRef session, DictRef context, DictRef portal, PackedRef seen_map);
 bool _site_stop_passable(State &state, DictRef session, Atom controller, DictRef ref, ArrayRef nodes, ArrayRef artifacts, DictRef allies);
 PackedRef _decision_site_pass(State &state, DictRef context, int64_t level, ArrayRef sites);
 
 // What sites, guards and doors are worth (ai_hero_rules_values.cpp).
-DictRef _resource_candidate(State &state, DictRef session, Atom controller, DictRef entry, int64_t index, double power, DictRef needs, DictRef treasury, double opens = 0.0);
+DictRef _resource_candidate(State &state, DictRef session, DictRef context, Atom controller, DictRef entry, int64_t index, double power, DictRef needs, DictRef treasury, double opens = 0.0);
 bool _can_hire_any(State &state, DictRef session, DictRef node, DictRef site, DictRef treasury);
 DictRef _encounter_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, DictRef needs, DictRef search);
 double _guard_fight_value(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, DictRef needs, DictRef search);

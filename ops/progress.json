@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-army-concentration-20261009",
- "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+ "currentSliceId": "ai-random-waygates-20261029",
+ "currentSliceTitle": "AI uses random waygates across levels and Chartmakers",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-29T15:27:40Z",
+ "updatedAt": "2026-10-29T17:05:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-random-waygates-20261029",
+   "title": "AI uses random waygates across levels and Chartmakers",
+   "status": "in_progress",
+   "goal": "A leader never found the last rival (m283 of the 2026-10-29 batch, XL 6P two-level): its half opened only through random waygates with one exit on each level, and the AI's map dropped the other-level exit. Portals keep every exit; a random one with exits on another level is a gate the routes take at a day per likely miss; heroes roll the exit as the human does; a Chartmaker is worth the unseen share of its level and reveals it. ai_hero_rules_surface/routes/turn_moves/turn_day/values/sight.cpp. Owner 2026-10-29: fix all four parts.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-29"
+  },
   {
    "id": "tooling-batch-cost-scheduling-20261029",
    "title": "AI match runner: worker lists sized by cost",
@@ -109,7 +119,7 @@
    "id": "ai-army-concentration-20261009",
    "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
    "status": "in_progress",
-   "goal": "Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction. Left, from the 9 caps of the 2026-10-29 batch: the leader's strength stays split, so no army takes the last defended town or hero; raiders retake emptied towns; a far target loses to nearby errands and own heroes block the main army's path; a leader that never sees the survivor's towns stops exploring.",
+   "goal": "Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction. Left, from the 9 caps of the 2026-10-29 batch: the leader's strength stays split, so no army takes the last defended town or hero; raiders retake emptied towns; a far target loses to nearby errands and own heroes block the main army's path.",
    "docs": [
     "docs/ai-plays-by-player-rules.md"
    ],

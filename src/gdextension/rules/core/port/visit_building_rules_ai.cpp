@@ -141,7 +141,11 @@ DictRef readiness(State &state, DictRef node, DictRef site, Atom visitor_key, in
 	return ready;
 }
 
-int64_t ai_value(State &state, DictRef site) {
+bool reveals_level(State &state, DictRef site) {
+	return ai::string_or_empty(state, effects(state, site, key::empty), key::reveal) == key::level;
+}
+
+int64_t ai_value(State &state, DictRef site, double effect_value) {
 	if (adventure_services::handles(state, site)) {
 		auto service = gd::stringify(state, gd::field(state, site, state.intern("adventure_service")));
 		if (service == state.intern("intelligence")) return 350;
@@ -180,7 +184,8 @@ int64_t ai_value(State &state, DictRef site) {
 	const int64_t tier_value = ai::static_int(state, key::visit_building_rules_script, key::AI_SPELL_TIER_VALUE);
 	const int64_t spell_tier = gd::int_field(state, effect, key::spell_tier, 0);
 	value = gd::add(value, gd::mul(tier_value, spell_tier > 0 ? spell_tier : 0));
-	const double gold = static_cast<double>(gd::int_field(state, cost(state, site, key::empty), key::gold, 0));
+	value = gd::add(value, compat::float_to_int(effect_value));
+	const double gold =static_cast<double>(gd::int_field(state, cost(state, site, key::empty), key::gold, 0));
 	value = gd::sub(value, compat::float_to_int(gold * ai::static_float(state, key::visit_building_rules_script, key::AI_COST_SHARE)));
 	return value > 0 ? value : 0;
 }

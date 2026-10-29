@@ -24,6 +24,7 @@
 #include "aurelion_rules/port/resource_node_payload_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules_turn.hpp"
+#include "aurelion_rules/port/visit_building_rules_ai.hpp"
 
 #include <cmath>
 #include <cstdint>
@@ -935,6 +936,10 @@ DictRef _claim_resource(State &state, DictRef session, DictRef context, int64_t 
 	state.set(entry, str(key::enemy_army), state.lookup(updated, str(key::enemy_army), found) ? found : map_field(state, entry, key::enemy_army));
 	DictRef commander = gd::as_dict(state.lookup(updated, str(key::enemy_commander_state), found) ? found : map_field(state, entry, key::enemy_commander_state));
 	const DictRef claimed = resource_node_at(state, session, node_index);
+	// A chart the side paid for shows it the whole level.
+	if (visit_building_rules::is_visit_building(state, site) && visit_building_rules::reveals_level(state, site) && !gd::equal(state, dict_value(claimed), dict_value(node_before))) {
+		_reveal_level(state, session, context, level_rules::level_of(state, dict_value(claimed)));
+	}
 	const int64_t experience = gd::int_field(state, enemy_adventure_rules::_resource_site_claim_rewards(state, site), key::experience, 0);
 	if (experience > 0 && !gd::equal(state, dict_value(claimed), dict_value(node_before))) {
 		const DictRef added = hero_progression_rules::add_experience(state, commander, experience);

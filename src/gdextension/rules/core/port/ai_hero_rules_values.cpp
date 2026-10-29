@@ -9,6 +9,7 @@
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_ai.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
+#include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
@@ -80,7 +81,7 @@ Atom encounter_id_of(State &state, gd::DictRef guard) {
 
 namespace ai_hero_rules {
 
-DictRef _resource_candidate(State &state, DictRef session, Atom controller, DictRef entry, int64_t index, double power, DictRef needs, DictRef treasury, double opens) {
+DictRef _resource_candidate(State &state, DictRef session, DictRef context, Atom controller, DictRef entry, int64_t index, double power, DictRef needs, DictRef treasury, double opens) {
 	const ArrayRef nodes = array_or_new(state, session_view::overworld(state, session), key::resource_nodes);
 	const DictRef node = gd::as_dict(state.at(nodes, index));
 	if (native_transit_rules::is_native(state, node)) {
@@ -127,7 +128,16 @@ DictRef _resource_candidate(State &state, DictRef session, Atom controller, Dict
 		if (!_can_afford(state, treasury, visit_building_rules::cost(state, site))) {
 			return state.new_dict();
 		}
-		value = tunable(state, key::VISIT_BUILDING_BASE_VALUE) + static_cast<double>(visit_building_rules::ai_value(state, site));
+		if (visit_building_rules::reveals_level(state, site)) {
+			// A chart is bought when what it shows outweighs its price.
+			const int64_t chart = visit_building_rules::ai_value(state, site, _chart_value(state, session, context, overworld_level_rules::level_of(state, dict_value(node))));
+			if (chart <= 0) {
+				return state.new_dict();
+			}
+			value = tunable(state, key::VISIT_BUILDING_BASE_VALUE) + static_cast<double>(chart);
+		} else {
+			value = tunable(state, key::VISIT_BUILDING_BASE_VALUE) + static_cast<double>(visit_building_rules::ai_value(state, site));
+		}
 	} else {
 		value = _payload_value(state, dict_value(enemy_adventure_rules::_resource_site_claim_rewards(state, site)), needs);
 		const double recruits = _recruit_set_value(state, _recruit_dict(state, get_or_new_dict(state, site, key::claim_recruits)));

@@ -427,7 +427,7 @@ DictRef _exploration_candidate(State &state, DictRef session, DictRef context, D
 			const int64_t portal_index = gd::to_int(state, portal_tile);
 			const Value dist_value = gd::index(state, search, str(key::dist));
 			const int64_t portal_distance = portal_index < ai::vsize(state, dist_value) ? gd::to_int(state, ai::vindex(state, dist_value, int_value(portal_index))) : -1;
-			if (portal_distance > 0 && !_in_hero_zone(state, search, portal_index) && _portal_leads_unseen(state, gd::as_dict(gd::index(state, portals.ref, portal_tile)), known)
+			if (portal_distance > 0 && !_in_hero_zone(state, search, portal_index) && _portal_leads_unseen(state, session, context, gd::as_dict(gd::index(state, portals.ref, portal_tile)), known)
 					&& (portal_frontier < 0 || portal_distance < search_distance(state, search, portal_frontier))
 					&& _boat_price(state, session, context, search, portal_index) < explore_value) {
 				portal_frontier = portal_index;
@@ -492,7 +492,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			const double opens = !gd::is_empty(state, search) ? _site_door_value(state, session, context, entry, search, tile_index, needs) : 0.0;
 			const int64_t index = ref_index();
 			const DictRef treasury = gd::as_dict(ai::vmember(state, gd::index(state, context, str(key::state)), key::treasury));
-			return _resource_candidate(state, session, controller, entry, index, power, needs, treasury, opens);
+			return _resource_candidate(state, session, context, controller, entry, index, power, needs, treasury, opens);
 		}
 		case kStopArtifact: {
 			const ArrayRef nodes = indexed_array(state, session_view::overworld(state, session), key::artifact_nodes);

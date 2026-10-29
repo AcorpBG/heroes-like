@@ -282,7 +282,10 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 			}
 		}
 		const Value option_gate = ai::vmember(state, option, key::gate);
-		const DictRef beyond = _beyond_gate(state, session, context, entry, gd::as_dict(option_gate), movement_max, beyond_radius);
+		// Past a portal with several exits nothing is sure: only the routes count
+		// it (`_route_through`).
+		const bool random = gd::int_field(state, gd::as_dict(option_gate), key::random, 0) > 1;
+		const DictRef beyond = random ? state.new_dict() : _beyond_gate(state, session, context, entry, gd::as_dict(option_gate), movement_max, beyond_radius);
 		// What lies beyond is kept for the turn; the hero may have given it up since.
 		bool beyond_empty = gd::is_empty(state, beyond);
 		if (!beyond_empty && avoided_until(state, avoid, gd::stringify(state, gd::index(state, beyond, str(key::id)))) >= day) {
@@ -359,7 +362,7 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 		// beyond = {"far_guard": ..., "far_fight_power": ...} when nothing lies beyond.
 		int64_t far_guard = -1;
 		double far_fight_power = 0.0;
-		if (beyond_empty) {
+		if (beyond_empty && !random) {
 			const Value exit = as_vector3i(ai::vmember(state, option_gate, key::exit));
 			const DictRef engagement = overworld_rules::_find_guard_engagement_at_tile(state, session, exit.vx(), exit.vy(), exit.vz(), false);
 			far_guard = gd::int_field(state, engagement, key::index, -1);
@@ -537,7 +540,11 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 			continue;
 		}
 		const DictRef gate = gd::as_dict(state.at(gates, current));
-		const double arrived = cost[here] + 1.0;
+		// A portal with several exits comes out here one try in `random`; each
+		// miss costs about a day's walk back to it.
+		const int64_t random = gd::int_field(state, gate, key::random, 0);
+		const double retries = random > 1 ? static_cast<double>(random - 1) * static_cast<double>(movement_max) : 0.0;
+		const double arrived = cost[here] + 1.0 + retries;
 		const DictRef start_gate = gd::as_dict(state.at(gates, first[here]));
 		for (const Value &target : gd::field_items(state, targets, str(exit_key))) {
 			const double total = arrived + (gd::to_int(state, ai::vmember(state, target, key::tile)) >= 0 ? _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, target, key::tile)), size) * detour : 0.0);
@@ -613,27 +620,41 @@ DictRef _route_map(State &state, DictRef session, DictRef context) {
 			continue;
 		}
 		for (const Value &gate_tile : gd::items(state, dict_value(level_gates.ref))) {
-			const Value exit = as_vector3i(ai::vmember(state, gd::index(state, level_gates.ref, gate_tile), key::exit));
-			if (exit.vz() < 0 || exit.vz() >= levels) {
-				continue;
+			// A portal with several exits leads to each of those on another level,
+			// one try in `random`.
+			const DictRef level_gate = gd::as_dict(gd::index(state, level_gates.ref, gate_tile));
+			const int64_t random = gd::int_field(state, level_gate, key::random, 0);
+			Value far_exits;
+			if (!state.lookup(level_gate, str(key::far_exits), far_exits)) {
+				const ArrayRef only = state.new_array();
+				state.append(only, as_vector3i(gd::index(state, level_gate, str(key::exit))));
+				far_exits = array_value(only);
 			}
-			const int64_t exit_tile = gd::add(gd::mul(exit.vy(), size.x), exit.vx());
-			double guard_power = 0.0;
-			const int64_t tile = gd::to_int(state, gate_tile);
-			const Value spots[2] = {gd::vector3i(static_cast<int32_t>(tile_x(tile, size.x)), static_cast<int32_t>(tile_y(tile, size.x)), static_cast<int32_t>(gate_level)), exit};
-			for (const Value &spot : spots) {
-				const DictRef guard = overworld_rules::_find_guard_engagement_at_tile(state, session, spot.vx(), spot.vy(), spot.vz(), false);
-				if (gd::int_field(state, guard, key::index, -1) >= 0) {
-					guard_power = compat::engine_max(guard_power, _guard_power(state, gd::as_dict(gd::index(state, guard, str(key::encounter)))));
+			for (const Value &exit : gd::items(state, far_exits)) {
+				if (exit.vz() < 0 || exit.vz() >= levels) {
+					continue;
 				}
+				const int64_t exit_tile = gd::add(gd::mul(exit.vy(), size.x), exit.vx());
+				double guard_power = 0.0;
+				const int64_t tile = gd::to_int(state, gate_tile);
+				const Value spots[2] = {gd::vector3i(static_cast<int32_t>(tile_x(tile, size.x)), static_cast<int32_t>(tile_y(tile, size.x)), static_cast<int32_t>(gate_level)), exit};
+				for (const Value &spot : spots) {
+					const DictRef guard = overworld_rules::_find_guard_engagement_at_tile(state, session, spot.vx(), spot.vy(), spot.vz(), false);
+					if (gd::int_field(state, guard, key::index, -1) >= 0) {
+						guard_power = compat::engine_max(guard_power, _guard_power(state, gd::as_dict(gd::index(state, guard, str(key::encounter)))));
+					}
+				}
+				const DictRef gate = state.new_dict();
+				state.set(gate, str(key::tile), int_value(tile));
+				state.set(gate, str(key::level), int_value(gate_level));
+				state.set(gate, str(key::exit_tile), int_value(exit_tile));
+				state.set(gate, str(key::exit_level), int_value(exit.vz()));
+				state.set(gate, str(key::guard_power), float_value(guard_power));
+				if (random > 1) {
+					state.set(gate, str(key::random), int_value(random));
+				}
+				state.append(map_gates, dict_value(gate));
 			}
-			const DictRef gate = state.new_dict();
-			state.set(gate, str(key::tile), int_value(tile));
-			state.set(gate, str(key::level), int_value(gate_level));
-			state.set(gate, str(key::exit_tile), int_value(exit_tile));
-			state.set(gate, str(key::exit_level), int_value(exit.vz()));
-			state.set(gate, str(key::guard_power), float_value(guard_power));
-			state.append(map_gates, dict_value(gate));
 		}
 	}
 	Value towns_value;

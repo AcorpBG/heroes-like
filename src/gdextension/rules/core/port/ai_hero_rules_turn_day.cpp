@@ -775,23 +775,28 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 			state.set(plan, str(key::retreat_tile), Value::of_vector2i(retreat.x, retreat.y));
 		}
 		Vector2i landed = tile;
+		int64_t landed_level = level;
 		if (!shore) {
 			const DictRef through = _portal_step(state, session, context, entry, tile, level);
 			landed = as_vector2i(state.get(through, str(key::exit), Value::of_vector2i(tile.x, tile.y)));
+			landed_level = gd::int_field(state, through, key::level, level);
 		}
 		state.set(entry, str(key::x), int_value(landed.x));
 		state.set(entry, str(key::y), int_value(landed.y));
+		if (landed_level != level) {
+			state.set(entry, str(key::level), int_value(landed_level));
+		}
 		if (water_travel_rules::hero_boat_id(state, dict_value(entry)) != key::empty) {
 			const Atom boat_id = water_travel_rules::hero_boat_id(state, dict_value(entry));
 			const Atom hero_id = ai::string_or_empty(state, entry, key::placement_id);
-			water_travel_rules::place_boat(state, dict_value(session), boat_id, hero_id, landed, level);
+			water_travel_rules::place_boat(state, dict_value(session), boat_id, hero_id, landed, landed_level);
 		}
 		overworld_turn_playback::move(state, dict_value(session), entry, before);
 		const DictRef point = level_rules::position(state, entry);
 		_reveal(state, session, context, point, _sight_radius(state, entry));
 		// Next to a hostile hero the walk ends in a fight with it, whatever the
 		// hero set out to do (a portal can put it there unplanned).
-		const DictRef beside = _hostile_hero_beside(state, session, context, landed, level);
+		const DictRef beside = _hostile_hero_beside(state, session, context, landed, landed_level);
 		if (!gd::is_empty(state, beside)) {
 			const Atom beside_kind = gd::stringify(state, gd::index(state, beside, str(key::kind)));
 			if (beside_kind != ai::string_or_empty(state, plan, key::kind) || gd::to_int(state, gd::index(state, beside, str(key::index))) != gd::int_field(state, plan, key::index, -1)) {
@@ -806,7 +811,7 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 			arrived = step_index == last;
 			break;
 		}
-		if (!(landed == tile)) {
+		if (!(landed == tile) || landed_level != level) {
 			// A random portal sent the hero elsewhere: it plans again from there.
 			rerouted = true;
 			break;
@@ -823,12 +828,16 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 			state.set(movement, str(key::current), int_value(gd::sub(gd::int_field(state, movement, key::current, 0), 1)));
 			state.set(entry, str(key::x), ai::vmember(state, gd::index(state, scouted, str(key::exit)), key::x));
 			state.set(entry, str(key::y), ai::vmember(state, gd::index(state, scouted, str(key::exit)), key::y));
+			const int64_t scouted_level = gd::int_field(state, scouted, key::level, level);
+			if (scouted_level != level) {
+				state.set(entry, str(key::level), int_value(scouted_level));
+			}
 			overworld_turn_playback::move(state, dict_value(session), entry, before);
 			const DictRef point = level_rules::position(state, entry);
 			_reveal(state, session, context, point, _sight_radius(state, entry));
 			rerouted = true;
 			arrived = false;
-			const DictRef ambushed = _hostile_hero_beside(state, session, context, as_vector2i(gd::index(state, scouted, str(key::exit))), level);
+			const DictRef ambushed = _hostile_hero_beside(state, session, context, as_vector2i(gd::index(state, scouted, str(key::exit))), scouted_level);
 			if (!gd::is_empty(state, ambushed)) {
 				plan = ambushed;
 				rerouted = false;

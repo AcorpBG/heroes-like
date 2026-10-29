@@ -390,7 +390,9 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 		state.append(neutrals, dict_value(record));
 	}
 	// Portals on this level, by entrance tile: their exits on this level and the
-	// portal node.
+	// portal node. One that sends travellers to one of several exits at random
+	// keeps their number (`random`) and its exits on another level (`far_exits`):
+	// a hero stepping in may come out there.
 	const DictRef portals = state.new_dict();
 	for (int64_t index = 0; index < resource_count; ++index) {
 		const Value node = state.at(resources, index);
@@ -401,14 +403,23 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 		if (kind != key::two_way_portal && kind != key::one_way_entrance) {
 			continue;
 		}
+		const ArrayRef options = native_transit_rules::destinations(state, node.ref);
+		const int64_t option_count = state.array_size(options);
 		const PackedRef exits = gd::new_ints(state);
-		for (const Value &option : gd::items(state, array_value(native_transit_rules::destinations(state, node.ref)))) {
+		const ArrayRef far_exits = state.new_array();
+		for (const Value &option : gd::items(state, array_value(options))) {
 			const Value exit = native_transit_rules::point(state, get_or_new_dict(state, option, key::exit));
-			if (exit.vz() == level && exit.vx() >= 0 && exit.vy() >= 0 && exit.vx() < size.x && exit.vy() < size.y) {
+			if (exit.vz() < 0 || exit.vx() < 0 || exit.vy() < 0 || exit.vx() >= size.x || exit.vy() >= size.y) {
+				continue;
+			}
+			if (exit.vz() == level) {
 				gd::packed_append(state, exits, static_cast<int64_t>(exit.vy()) * size.x + exit.vx());
+			} else {
+				state.append(far_exits, exit);
 			}
 		}
-		if (gd::packed_size(state, exits) == 0) {
+		// A portal whose one exit is on the other level is a gate (below).
+		if (gd::packed_size(state, exits) == 0 && (option_count < 2 || state.array_size(far_exits) == 0)) {
 			continue;
 		}
 		const DictRef map_object = overworld_rules::_map_object_for_resource_node(state, node.ref);
@@ -417,13 +428,21 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 				const DictRef portal = state.new_dict();
 				state.set(portal, str(key::exits), gd::ints_value(exits));
 				state.set(portal, str(key::node), int_value(index));
+				if (option_count > 1) {
+					state.set(portal, str(key::random), int_value(option_count));
+				}
+				if (state.array_size(far_exits) != 0) {
+					state.set(portal, str(key::far_exits), array_value(far_exits));
+				}
 				state.set(portals, int_value(tile_index_of(tile, size)), dict_value(portal));
 			}
 		}
 	}
 	// Subterranean gates on this level, by entrance tile, with the tile on the
 	// other level a hero comes out on. A portal whose one exit is on the other
-	// level is such a gate too.
+	// level is such a gate too, and so is one that sends travellers at random to
+	// one of several exits, some on another level: it keeps their number
+	// (`random`) and those exits (`far_exits`), the first of them as its exit.
 	const DictRef gates = state.new_dict();
 	for (int64_t index = 0; index < resource_count; ++index) {
 		const Value node = state.at(resources, index);
@@ -432,21 +451,41 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 		}
 		const DictRef link = native_transit_rules::link_of(state, node.ref);
 		const ArrayRef options = native_transit_rules::destinations(state, node.ref);
+		const int64_t option_count = state.array_size(options);
+		bool random = false;
 		if (ai::string_or_empty(state, link, key::kind) != key::paired_cave) {
 			const Atom kind = native_transit_rules::portal_kind(state, node.ref);
-			if (!((kind == key::two_way_portal || kind == key::one_way_entrance) && state.array_size(options) == 1)) {
+			if (!((kind == key::two_way_portal || kind == key::one_way_entrance) && option_count >= 1)) {
 				continue;
 			}
+			random = option_count > 1;
 		}
 		const Value entrance = native_transit_rules::point(state, get_or_new_dict(state, dict_value(link), key::entry));
-		const Value exit = native_transit_rules::point(state, state.array_size(options) != 0 ? get_or_new_dict(state, state.at(options, 0), key::exit) : get_or_new_dict(state, dict_value(link), key::exit));
-		if (entrance.vz() != level || exit.vz() == level || exit.vz() < 0 || exit.vx() < 0 || exit.vy() < 0 || exit.vx() >= size.x || exit.vy() >= size.y) {
+		const ArrayRef far_exits = state.new_array();
+		if (random) {
+			for (const Value &option : gd::items(state, array_value(options))) {
+				const Value exit = native_transit_rules::point(state, get_or_new_dict(state, option, key::exit));
+				if (exit.vz() != level && exit.vz() >= 0 && exit.vx() >= 0 && exit.vy() >= 0 && exit.vx() < size.x && exit.vy() < size.y) {
+					state.append(far_exits, exit);
+				}
+			}
+		} else {
+			const Value exit = native_transit_rules::point(state, option_count != 0 ? get_or_new_dict(state, state.at(options, 0), key::exit) : get_or_new_dict(state, dict_value(link), key::exit));
+			if (exit.vz() != level && exit.vz() >= 0 && exit.vx() >= 0 && exit.vy() >= 0 && exit.vx() < size.x && exit.vy() < size.y) {
+				state.append(far_exits, exit);
+			}
+		}
+		if (entrance.vz() != level || state.array_size(far_exits) == 0) {
 			continue;
 		}
 		if (entrance.vx() >= 0 && entrance.vy() >= 0 && entrance.vx() < size.x && entrance.vy() < size.y) {
 			const DictRef gate = state.new_dict();
 			state.set(gate, str(key::node), int_value(index));
-			state.set(gate, str(key::exit), exit);
+			state.set(gate, str(key::exit), state.at(far_exits, 0));
+			if (random) {
+				state.set(gate, str(key::random), int_value(option_count));
+				state.set(gate, str(key::far_exits), array_value(far_exits));
+			}
 			state.set(gates, int_value(static_cast<int64_t>(entrance.vy()) * size.x + entrance.vx()), dict_value(gate));
 		}
 	}
@@ -538,13 +577,25 @@ PackedRef _portal_exits(State &state, DictRef portal, PackedRef seen_map) {
 	return known;
 }
 
-bool _portal_leads_unseen(State &state, DictRef portal, PackedRef seen_map) {
+bool _portal_leads_unseen(State &state, DictRef session, DictRef context, DictRef portal, PackedRef seen_map) {
 	for (const Value &exit : gd::items(state, gd::index(state, portal, str(key::exits)))) {
 		if (exit.kind != Kind::Int) {
 			throw state::NotPorted("AiHeroRules._portal_leads_unseen: an exit that is not an int");
 		}
 		if (exit.i >= gd::packed_size(state, seen_map) || gd::packed_int(state, seen_map, exit.i) == 0) {
 			return true;
+		}
+	}
+	// An exit on another level, where a random portal may send the hero.
+	Value far_exits;
+	if (state.lookup(portal, str(key::far_exits), far_exits)) {
+		const int64_t width = gd::index(state, context, str(key::map_size)).vx();
+		for (const Value &exit : gd::items(state, far_exits)) {
+			const PackedRef far_seen = _explored(state, session, context, exit.vz());
+			const int64_t tile = static_cast<int64_t>(exit.vy()) * width + exit.vx();
+			if (tile >= gd::packed_size(state, far_seen) || gd::packed_int(state, far_seen, tile) == 0) {
+				return true;
+			}
 		}
 	}
 	return false;

@@ -450,6 +450,10 @@ DictRef _gate_home(State &state, DictRef session, DictRef context, DictRef entry
 		if (gate_exit.vz() != level_rules::level_of(state, dict_value(door)) || tile >= gd::packed_size(state, dist) || gd::packed_int(state, dist, tile) < 0 || _in_hero_zone(state, search, tile)) {
 			continue;
 		}
+		// The way home takes a gate that surely leads there.
+		if (gd::to_int(state, ai::vget(state, gd::index(state, gates, gate_tile), key::random, int_value(0))) > 1) {
+			continue;
+		}
 		const DictRef option = state.new_dict();
 		state.set(option, str(key::tile), int_value(tile));
 		state.set(option, str(key::distance), int_value(gd::packed_int(state, dist, tile)));
@@ -970,6 +974,17 @@ void _reveal(State &state, DictRef session, DictRef context, DictRef point, int6
 	state.set(gd::as_dict(gd::index(state, context, str(key::explored))), int_value(level), gd::bytes_value(tiles));
 }
 
+// A chart of a whole level (a Chartmaker's): the side knows every tile of it, as
+// a player's visit shows them.
+void _reveal_level(State &state, DictRef session, DictRef context, int64_t level) {
+	const PackedRef tiles = _explored(state, session, context, level);
+	const int64_t count = gd::packed_size(state, tiles);
+	for (int64_t index = 0; index < count; ++index) {
+		gd::packed_set(state, tiles, index, 1);
+	}
+	state.set(gd::as_dict(gd::index(state, context, str(key::explored))), int_value(level), gd::bytes_value(tiles));
+}
+
 int64_t _sight_radius(State &state, DictRef entry) {
 	return hero_command_rules::scouting_radius_for_hero(state, dict_or_new(state, entry, key::enemy_commander_state));
 }
@@ -1086,7 +1101,7 @@ DictRef _portal_step(State &state, DictRef session, DictRef context, DictRef ent
 	if (gd::is_empty(state, portal)) {
 		return state.new_dict();
 	}
-	if (gd::packed_size(state, gd::as_ints(gd::index(state, portal, str(key::exits)))) < 2) {
+	if (gd::packed_size(state, gd::as_ints(gd::index(state, portal, str(key::exits)))) < 2 && gd::int_field(state, portal, key::random, 0) < 2) {
 		// A fixed portal leads where the route says; scouting one, it leads to
 		// its single exit.
 		if (tile.x < 0) {
@@ -1110,6 +1125,8 @@ DictRef _portal_step(State &state, DictRef session, DictRef context, DictRef ent
 	const Value exit = as_vector3i(state.get(check, str(key::exit), gd::vector3i(tile.x, tile.y, static_cast<int32_t>(level))));
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::exit), Value::of_vector2i(exit.vx(), exit.vy()));
+	// The roll may send it to another level.
+	state.set(result, str(key::level), int_value(exit.vz()));
 	return result;
 }
 
@@ -1185,21 +1202,35 @@ DictRef _cross_gate(State &state, DictRef session, DictRef context, int64_t inde
 	if (gd::is_empty(state, gate) || gd::to_int(state, gd::index(state, gate, str(key::node))) != node_index) {
 		return not_acted(state);
 	}
-	const Value far = as_vector3i(gd::index(state, gate, str(key::exit)));
-	const DictRef guard = overworld_rules::_find_guard_engagement_at_tile(state, session, far.vx(), far.vy(), far.vz(), false);
-	const int64_t guard_index = gd::int_field(state, guard, key::index, -1);
-	if (guard_index >= 0) {
-		const double power = hero_power(state, entry);
-		const double guard_power = _guard_power(state, gd::as_dict(gd::index(state, guard, str(key::encounter))));
-		if (power < guard_power * tunable_float(state, key::GUARD_WIN_RATIO)) {
-			return not_acted(state);
-		}
-	}
 	const DictRef gate_node = gd::as_dict(state.at(nodes, node_index));
 	const Value actor_position = native_transit_rules::point(state, dict_value(entry));
-	const DictRef check = overworld_rules::native_passage_travel_check(state, session, gate_node, actor_position, ai::string_or_empty(state, entry, key::placement_id), key::empty, guard_index >= 0);
-	if (!gd::bool_field(state, check, key::ok, false)) {
-		return not_acted(state);
+	const Atom actor_id = ai::string_or_empty(state, entry, key::placement_id);
+	int64_t guard_index = -1;
+	DictRef check = 0;
+	if (gd::int_field(state, gate, key::random, 0) > 1) {
+		// A portal with several exits sends the hero where the roll says, as it
+		// does a player's hero: maybe back onto this level. The roll passes over
+		// exits that are guarded or taken.
+		check = overworld_rules::native_random_exit_check(state, session, gate_node, actor_position, actor_id);
+		if (!gd::bool_field(state, check, key::ok, false)) {
+			return not_acted(state);
+		}
+		overworld_rules::note_native_trip(state, session, actor_id);
+	} else {
+		const Value far = as_vector3i(gd::index(state, gate, str(key::exit)));
+		const DictRef guard = overworld_rules::_find_guard_engagement_at_tile(state, session, far.vx(), far.vy(), far.vz(), false);
+		guard_index = gd::int_field(state, guard, key::index, -1);
+		if (guard_index >= 0) {
+			const double power = hero_power(state, entry);
+			const double guard_power = _guard_power(state, gd::as_dict(gd::index(state, guard, str(key::encounter))));
+			if (power < guard_power * tunable_float(state, key::GUARD_WIN_RATIO)) {
+				return not_acted(state);
+			}
+		}
+		check = overworld_rules::native_passage_travel_check(state, session, gate_node, actor_position, actor_id, key::empty, guard_index >= 0);
+		if (!gd::bool_field(state, check, key::ok, false)) {
+			return not_acted(state);
+		}
 	}
 	const Value exit = as_vector3i(gd::index(state, check, str(key::exit)));
 	const DictRef before = level_rules::position(state, entry);

@@ -117,14 +117,22 @@ int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x,
 	int64_t best = -1;
 	for (const Value &gate_tile : gd::items(state, gates)) {
 		const int64_t tile = gd::to_int(state, gate_tile);
-		const Value exit = ai::vmember(state, gd::index(state, gates.ref, gate_tile), key::exit);
-		if (!gd::is_vector3i(exit) || exit.vz() != door_level) {
-			continue;
+		const Value gate = gd::index(state, gates.ref, gate_tile);
+		// A portal with several exits may let it out at any of them.
+		const Value far_exits = ai::vget(state, gate, key::far_exits, Value());
+		const ArrayRef exits = gd::is_array(far_exits) ? far_exits.ref : state.new_array();
+		if (!gd::is_array(far_exits)) {
+			state.append(exits, ai::vmember(state, gate, key::exit));
 		}
-		const int64_t to_gate = tile_distance(x, compat::int_mod(tile, width), y, tile / width);
-		const int64_t steps = gd::add(gd::add(to_gate, 1), tile_distance(exit.vx(), door_x, exit.vy(), door_y));
-		if (best < 0 || steps < best) {
-			best = steps;
+		for (const Value &exit : gd::items(state, array_value(exits))) {
+			if (!gd::is_vector3i(exit) || exit.vz() != door_level) {
+				continue;
+			}
+			const int64_t to_gate = tile_distance(x, compat::int_mod(tile, width), y, tile / width);
+			const int64_t steps = gd::add(gd::add(to_gate, 1), tile_distance(exit.vx(), door_x, exit.vy(), door_y));
+			if (best < 0 || steps < best) {
+				best = steps;
+			}
 		}
 	}
 	return best;
