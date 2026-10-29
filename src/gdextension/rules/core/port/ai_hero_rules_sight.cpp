@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <string>
+#include <unordered_set>
 
 namespace aurelion::rules::port {
 
@@ -45,6 +46,13 @@ int64_t tunable_int(State &state, Atom name) {
 Atom context_controller(State &state, DictRef context) {
 	return gd::stringify(state, gd::index(state, context, str(key::controller)));
 }
+
+// A sighting counts as where a hostile hero still is for this many days, its
+// own day included (`_recent_hostiles`). In ai-match-928755747 (m665 of the
+// 2026-10-29 batch) a 45,000 raider took a 6P XL town on days 305 and 306
+// and left its owner's sight each time; the owner's 25,000 and 8,500 heroes
+// walked back in, and the raider killed them one by one on the following days.
+constexpr int64_t kRecentSightingDays = 3;
 
 // var size: Vector2i = context.map_size
 Vector2i context_map_size(State &state, DictRef context) {
@@ -516,23 +524,11 @@ ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller) {
 		const DictRef position = gd::as_dict(get_or_new_dict(state, hero, key::position));
 		Value found;
 		const DictRef movement = state.lookup(hero.ref, str(key::movement), found) && gd::is_dict(found) ? found.ref : state.new_dict();
-		const Atom id = ai::string_or_empty(state, hero.ref, key::id);
+		const Value stacks = get_or_new_array(state, get_or_new_dict(state, hero, key::army), key::stacks);
 		const int64_t x = gd::int_field(state, position, key::x, 0);
 		const int64_t y = gd::int_field(state, position, key::y, 0);
 		const int64_t level = level_rules::level_of(state, dict_value(position));
-		const Value stacks = get_or_new_array(state, get_or_new_dict(state, hero, key::army), key::stacks);
-		const double power = army_power(state, stacks, hero);
-		const int64_t min_reach = tunable_int(state, key::THREAT_MIN_REACH);
-		const int64_t reach = compat::engine_max(min_reach, gd::int_field(state, movement, key::max, 10));
-		const DictRef hostile = state.new_dict();
-		state.set(hostile, str(key::id), str(id));
-		state.set(hostile, str(key::owner), str(key::player));
-		state.set(hostile, str(key::x), int_value(x));
-		state.set(hostile, str(key::y), int_value(y));
-		state.set(hostile, str(key::level), int_value(level));
-		state.set(hostile, str(key::power), float_value(power));
-		state.set(hostile, str(key::reach), int_value(reach));
-		state.append(result, dict_value(hostile));
+		state.append(result, dict_value(hostile_record(state, ai::string_or_empty(state, hero.ref, key::id), key::player, x, y, level, army_power(state, stacks, hero), gd::int_field(state, movement, key::max, 10))));
 	}
 	// Other computer players' heroes threaten towns just as the human's do.
 	for (const Value &entry_value : gd::items(state, array_value(active_hero_entries(state, session, key::empty)))) {
@@ -544,24 +540,110 @@ ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller) {
 		if (!_position_seen(state, session, context, level_rules::position(state, entry))) {
 			continue;
 		}
-		const Atom id = ai::string_or_empty(state, entry, key::placement_id);
 		const int64_t x = gd::int_field(state, entry, key::x, 0);
 		const int64_t y = gd::int_field(state, entry, key::y, 0);
 		const int64_t level = level_rules::level_of(state, entry_value);
-		const double power = hero_power(state, entry);
-		const int64_t min_reach = tunable_int(state, key::THREAT_MIN_REACH);
-		const int64_t reach = compat::engine_max(min_reach, _movement_max(state, entry));
-		const DictRef hostile = state.new_dict();
-		state.set(hostile, str(key::id), str(id));
-		state.set(hostile, str(key::owner), str(other));
-		state.set(hostile, str(key::x), int_value(x));
-		state.set(hostile, str(key::y), int_value(y));
-		state.set(hostile, str(key::level), int_value(level));
-		state.set(hostile, str(key::power), float_value(power));
-		state.set(hostile, str(key::reach), int_value(reach));
-		state.append(result, dict_value(hostile));
+		state.append(result, dict_value(hostile_record(state, ai::string_or_empty(state, entry, key::placement_id), other, x, y, level, hero_power(state, entry), _movement_max(state, entry))));
 	}
 	return result;
+}
+
+DictRef hostile_record(State &state, Atom id, Atom owner, int64_t x, int64_t y, int64_t level, double power, int64_t movement_max) {
+	const DictRef hostile = state.new_dict();
+	state.set(hostile, str(key::id), str(id));
+	state.set(hostile, str(key::owner), str(owner));
+	state.set(hostile, str(key::x), int_value(x));
+	state.set(hostile, str(key::y), int_value(y));
+	state.set(hostile, str(key::level), int_value(level));
+	state.set(hostile, str(key::power), float_value(power));
+	state.set(hostile, str(key::reach), int_value(compat::engine_max(tunable_int(state, key::THREAT_MIN_REACH), movement_max)));
+	return hostile;
+}
+
+ArrayRef _recent_hostiles(State &state, DictRef session, DictRef context) {
+	const DictRef cache = decision_cache(state, context);
+	Value cached;
+	if (state.lookup(cache, str(key::recent), cached)) {
+		return gd::as_array(cached);
+	}
+	if (!state.has(cache, str(key::hostile))) {
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
+	}
+	std::unordered_set<Atom> in_sight;
+	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
+		in_sight.insert(gd::stringify(state, ai::vmember(state, threat, key::id)));
+	}
+	// Only heroes still on the map: one beaten since is no longer about.
+	std::unordered_set<Atom> alive;
+	for (const Value &hero : gd::field_items(state, session_view::overworld(state, session), str(key::player_heroes))) {
+		if (gd::is_dict(hero)) {
+			alive.insert(ai::string_or_empty(state, hero.ref, key::id));
+		}
+	}
+	for (const Value &entry : gd::items(state, array_value(active_hero_entries(state, session, key::empty)))) {
+		alive.insert(ai::string_or_empty(state, gd::as_dict(entry), key::placement_id));
+	}
+	const int64_t day = ai::session_int(state, session, key::day);
+	const ArrayRef result = state.new_array();
+	// A missing memory remembers no one.
+	const Value memory = ai::vget(state, gd::index(state, context, str(key::state)), key::ai_sightings, Value());
+	if (gd::is_dict(memory)) {
+		for (const Value &id_value : gd::items(state, memory)) {
+			const Value seen = gd::index(state, memory.ref, id_value);
+			const Atom id = gd::stringify(state, id_value);
+			// A sighting from before places were kept has none to keep away from.
+			if (!gd::is_dict(seen) || !state.has(seen.ref, str(key::x)) || in_sight.count(id) != 0 || alive.count(id) == 0) {
+				continue;
+			}
+			if (gd::add(gd::int_field(state, seen.ref, key::day, 0), kRecentSightingDays) <= day) {
+				continue;
+			}
+			const DictRef hostile = state.new_dict();
+			state.set(hostile, str(key::id), str(id));
+			state.set(hostile, str(key::owner), str(ai::string_or_empty(state, seen.ref, key::owner)));
+			state.set(hostile, str(key::x), int_value(gd::int_field(state, seen.ref, key::x, 0)));
+			state.set(hostile, str(key::y), int_value(gd::int_field(state, seen.ref, key::y, 0)));
+			state.set(hostile, str(key::level), int_value(gd::int_field(state, seen.ref, key::level, 0)));
+			state.set(hostile, str(key::power), float_value(gd::float_field(state, seen.ref, key::power, 0.0)));
+			state.set(hostile, str(key::reach), int_value(gd::int_field(state, seen.ref, key::reach, tunable_int(state, key::THREAT_MIN_REACH))));
+			state.append(result, dict_value(hostile));
+		}
+	}
+	state.set(cache, str(key::recent), array_value(result));
+	state.set(context, str(key::decision), dict_value(cache));
+	return result;
+}
+
+bool _recently_seen(State &state, DictRef session, DictRef context, Atom id) {
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context)))) {
+		if (gd::stringify(state, ai::vmember(state, threat, key::id)) == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile) {
+	if (victim == key::empty || victim == key::player || victim == key::neutral) {
+		return;
+	}
+	for (const Value &enemy_state : gd::field_items(state, session_view::overworld(state, session), str(key::enemy_states))) {
+		if (!gd::is_dict(enemy_state) || player_rules::controller_id(state, enemy_state.ref, key::empty) != victim) {
+			continue;
+		}
+		Value found;
+		const DictRef memory = state.lookup(enemy_state.ref, str(key::ai_sightings), found) && gd::is_dict(found) ? found.ref : state.new_dict();
+		const DictRef record = state.new_dict();
+		state.set(record, str(key::owner), gd::index(state, hostile, str(key::owner)));
+		state.set(record, str(key::power), float_value(compat::snappedf(gd::float_field(state, hostile, key::power, 0.0), 0.1)));
+		state.set(record, str(key::day), int_value(ai::session_int(state, session, key::day)));
+		for (const Atom field : {key::x, key::y, key::level, key::reach}) {
+			state.set(record, str(field), gd::index(state, hostile, str(field)));
+		}
+		state.set(memory, gd::index(state, hostile, str(key::id)), dict_value(record));
+		state.set(enemy_state.ref, str(key::ai_sightings), dict_value(memory));
+		return;
+	}
 }
 
 bool _far_ahead(State &state, DictRef session, DictRef context) {

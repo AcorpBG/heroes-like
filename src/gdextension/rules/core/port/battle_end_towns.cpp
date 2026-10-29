@@ -4,9 +4,11 @@
 
 #include "aurelion_rules/port/battle_ends.hpp"
 
+#include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
+#include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -510,8 +512,21 @@ Atom _claim_town(State &state, DictRef session, DictRef town_result) {
 		return key::empty;
 	}
 	const Atom placement_id = gd::stringify(state, ai::vget(state, town, key::placement_id, str(key::empty)));
+	const Atom previous_controller = gd::stringify(state, ai::vget(state, town, key::owner, str(key::neutral))) == key::enemy ? player_identity_rules::town_controller_id(state, gd::as_dict(town)) : key::empty;
 	const DictRef transition = transition_town_control(state, session, placement_id, key::player, key::empty, key::captured_town);
 	town = state.get(transition, str(key::town), town);
+	// The computer player that held it remembers the hero that took it there.
+	const DictRef overworld = session_view::overworld(state, session);
+	const Atom hero_id = gd::stringify(state, state.get(overworld, str(key::active_hero_id), str(key::empty)));
+	if (previous_controller != key::empty && hero_id != key::empty) {
+		const Value army = state.get(overworld, str(key::army), dict_value(state.new_dict()));
+		const Value stacks = gd::is_dict(army) ? state.get(army.ref, str(key::stacks), array_value(state.new_array())) : array_value(state.new_array());
+		const Value movement = state.get(overworld, str(key::movement), dict_value(state.new_dict()));
+		const int64_t movement_max = gd::is_dict(movement) ? gd::int_field(state, movement.ref, key::max, 10) : 10;
+		const Value hero = state.get(overworld, str(key::hero), dict_value(state.new_dict()));
+		const DictRef door = overworld_level_rules::town_entrance(state, gd::as_dict(town));
+		ai_hero_rules::note_town_taken(state, session, previous_controller, ai_hero_rules::hostile_record(state, hero_id, key::player, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), overworld_level_rules::level_of(state, dict_value(door)), ai_hero_rules::army_power(state, stacks, hero), movement_max));
+	}
 	const DictRef town_dict = gd::as_dict(town);
 	state.set(town_dict, str(key::recovery), dict_value(_normalize_town_recovery_state(state, field_or_new(state, town_dict, key::recovery))));
 	state.set(town_dict, str(key::occupation), dict_value(_normalize_town_occupation_state(state, field_or_new(state, town_dict, key::occupation))));

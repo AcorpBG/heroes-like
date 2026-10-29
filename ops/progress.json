@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "native-rmg-all-seats-human-8xm8-links-20261029",
- "currentSliceTitle": "Random maps give H3MapEd every seat as human-or-computer, so the one-human Gauntlet (45 of 400 XL batch maps, 6 towns) is gone; the game picks its human seat after projection. 8XM8 uses Rmg.txt's intended links.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-29T18:55:06Z",
+ "currentSliceId": "ai-split-strength-raider-20261029",
+ "currentSliceTitle": "AI: a raider that beats each army alone",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-29T20:37:32Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-split-strength-raider-20261029",
+   "title": "AI: a raider that beats each army alone",
+   "status": "in_progress",
+   "goal": "From m665 of the 2026-10-29 batch: a 45k raider killed the leader's 8k-25k heroes one by one while its 60k main army chased towns. In the AiHeroRules native port: sightings keep place and reach, a town's loss notes its taker; for 3 days lone heroes keep away, field armies join against a raider the main army can't beat and the main army keeps after one it can. Owner 2026-10-29: implement it.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-29"
+  },
   {
    "id": "native-rmg-all-seats-human-8xm8-links-20261029",
    "status": "completed",

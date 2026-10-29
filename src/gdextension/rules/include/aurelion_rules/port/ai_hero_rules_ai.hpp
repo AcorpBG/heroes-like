@@ -152,6 +152,20 @@ double _newly_beatable_value(State &state, DictRef session, DictRef context, Dic
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position);
 DictRef _sight_context(State &state, Atom controller);
 ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller);
+// A hostile hero as _hostile_heroes lists it: id, owner, x, y, level, power and
+// reach (its movement, at least THREAT_MIN_REACH).
+DictRef hostile_record(State &state, Atom id, Atom owner, int64_t x, int64_t y, int64_t level, double power, int64_t movement_max);
+// Hostile heroes out of sight now that this player saw, or that took one of its
+// towns (note_town_taken), in the last few days: where and as strong as last
+// seen, in _hostile_heroes' records, while they are still on the map. Lone
+// heroes keep away from them (_dangers), the main army calls the field armies
+// against one it cannot beat alone (_main_shortfall) and keeps after one it
+// can (_recently_seen), as a human follows a raider's fresh tracks.
+ArrayRef _recent_hostiles(State &state, DictRef session, DictRef context);
+bool _recently_seen(State &state, DictRef session, DictRef context, Atom id);
+// The computer player `victim` lost a town to `hostile` (a hostile_record at the
+// town's doorway): it remembers that hero there today, as if it had seen it.
+void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile);
 bool _far_ahead(State &state, DictRef session, DictRef context);
 bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size);
 

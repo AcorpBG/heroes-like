@@ -575,16 +575,20 @@ ArrayRef _dangers(State &state, DictRef session, DictRef context, DictRef entry)
 		const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
 		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, controller)));
 	}
+	state.set(context, str(key::decision), dict_value(cache));
 	const double power = hero_power(state, entry);
 	const ArrayRef result = state.new_array();
-	const state::ValueList hostile = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	// In sight, or seen out there in the last few days.
+	state::ValueList hostile = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
+		hostile.push_back(threat);
+	}
 	for (const Value &threat : hostile) {
 		if (gd::to_float(ai::vmember(state, threat, key::power)) >= power * ai::static_float(state, key::ai_hero_rules_script, key::DANGER_RATIO)) {
 			state.append(result, threat);
 		}
 	}
 	state.set(cache, str(dangers_key), array_value(result));
-	state.set(context, str(key::decision), dict_value(cache));
 	return result;
 }
 

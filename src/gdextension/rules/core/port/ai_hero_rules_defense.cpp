@@ -249,13 +249,19 @@ double _main_shortfall(State &state, DictRef session, DictRef context, DictRef m
 	if (!state.has(cache, str(key::hostile))) {
 		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, controller)));
 	}
+	state.set(context, str(key::decision), dict_value(cache));
 	Value ai_hero;
 	const bool has_block = state.lookup(main, str(key::ai_hero), ai_hero);
 	// A rival hero the main army's preview lost to needs what the preview found,
 	// however beatable the estimate rates it (_note_vetoed_need).
 	Value vetoed;
 	const bool has_vetoed = has_block && gd::is_dict(ai_hero) && state.lookup(ai_hero.ref, str(key::vetoed_needs), vetoed) && gd::is_dict(vetoed);
-	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
+	// In sight, or seen out there in the last few days.
+	state::ValueList threats = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
+		threats.push_back(threat);
+	}
+	for (const Value &threat : threats) {
 		const double threat_power = gd::to_float(ai::vmember(state, threat, key::power));
 		double required = threat_power * tunable_float(state, key::HERO_ATTACK_RATIO);
 		if (has_vetoed) {

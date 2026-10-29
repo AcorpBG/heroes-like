@@ -556,9 +556,12 @@ void _note_vetoed_need(State &state, DictRef session, DictRef context, DictRef e
 	if (looks_good && !state.has(needs, str(target_id))) {
 		return;
 	}
-	// Only rivals still in sight keep a need.
+	// Only rivals in sight or seen in the last few days keep a need.
 	std::unordered_set<Atom> hostile;
 	for (const Value &threat : gd::items(state, array_value(_hostile_heroes(state, session, context_controller(state, context))))) {
+		hostile.insert(gd::stringify(state, ai::vmember(state, threat, key::id)));
+	}
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context)))) {
 		hostile.insert(gd::stringify(state, ai::vmember(state, threat, key::id)));
 	}
 	const ArrayRef need_keys = gd::keys(state, needs);
@@ -1325,6 +1328,10 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	// passing hero cannot simply walk back in.
 	ai::append_array(state, events, _recruit_town(state, session, context, town_index, state.new_dict()));
 	const DictRef entry = encounter_at(state, session, index);
+	if (previous_owner == key::enemy) {
+		const DictRef door = level_rules::town_entrance(state, town);
+		note_town_taken(state, session, previous_controller, hostile_record(state, ai::string_or_empty(state, entry, key::placement_id), controller, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), level_rules::level_of(state, dict_value(door)), hero_power(state, entry), _movement_max(state, entry)));
+	}
 	const DictRef flags = session_flags(state, session);
 	if (gd::bool_field(state, flags, key::ai_battle_log_enabled, false)) {
 		const ArrayRef captures = array_field(state, flags, key::ai_capture_log);

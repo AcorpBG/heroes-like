@@ -521,7 +521,8 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 		case kStopHero: {
 			const ArrayRef heroes = indexed_array(state, session_view::overworld(state, session), key::player_heroes);
 			const DictRef hero = gd::as_dict(state.at(heroes, ref_index()));
-			const bool in_sight = _player_hero_seen(state, session, context, hero);
+			// Seen in the last few days, it is followed as if in sight.
+			const bool in_sight = _player_hero_seen(state, session, context, hero) || _recently_seen(state, session, context, ai::string_or_empty(state, hero, key::id));
 			// On its own town's entry it fights with the garrison: the town's candidate
 			// weighs both.
 			if (_entry_town_index(state, session, key::hero, ref_index()) >= 0) {
@@ -566,7 +567,8 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 				return state.new_dict();
 			}
 			const DictRef position = level_rules::position(state, other);
-			const bool in_sight = _position_seen(state, session, context, position);
+			// Seen in the last few days, it is followed as if in sight.
+			const bool in_sight = _position_seen(state, session, context, position) || _recently_seen(state, session, context, ai::string_or_empty(state, other, key::placement_id));
 			if (_entry_town_index(state, session, key::ai_hero, ref_index()) >= 0) {
 				return state.new_dict();
 			}

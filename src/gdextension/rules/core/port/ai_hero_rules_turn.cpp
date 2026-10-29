@@ -577,6 +577,10 @@ void _note_sightings(State &state, DictRef session, DictRef context) {
 		state.set(record, str(key::owner), str(owner));
 		state.set(record, str(key::power), float_value(power));
 		state.set(record, str(key::day), int_value(day));
+		// Where it stood and how far it goes in a turn (_recent_hostiles).
+		for (const Atom field : {key::x, key::y, key::level, key::reach}) {
+			state.set(record, str(field), ai::vmember(state, hostile, field));
+		}
 		state.set(kept, str(id), dict_value(record));
 	}
 	state.set(gd::as_dict(gd::index(state, context, str(key::state))), str(key::ai_sightings), dict_value(kept));
