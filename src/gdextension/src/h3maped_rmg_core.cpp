@@ -21004,8 +21004,10 @@ static FinalHeaderWriteoutResult4ac857 final_header_player_metadata_writeout_0x4
 	if (human_team_count == 0) {
 		human_team_count = human_player_count;
 	}
+	// 0x4ace1c..0x4ace37: with no computer players, at least two human teams
+	// (CMP with 2, JL takes the 2), so one team never holds every player.
 	if (computer_player_count == 0) {
-		human_team_count = std::min<int32_t>(human_team_count, 2);
+		human_team_count = std::max<int32_t>(human_team_count, 2);
 	}
 	const bool explicit_teams = human_team_count < human_player_count
 			|| computer_team_count < computer_player_count;

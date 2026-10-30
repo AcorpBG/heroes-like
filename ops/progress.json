@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "tooling-batch-cost-scheduling-20261029",
- "currentSliceTitle": "Native batch workers take whole seed groups, heaviest first, up to 32 games and the queued cost (tiles x levels x players) over 4 lists per slot. The 800-game batch's game times: 150 -> 96 min.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T07:11:51Z",
+ "currentSliceId": "native-rmg-all-human-team-clamp-20261030",
+ "currentSliceTitle": "Random maps: no two-team split when every seat is human or computer",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-30T08:44:36Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "native-rmg-all-human-team-clamp-20261030",
+   "title": "Random maps: no two-team split when every seat is human or computer",
+   "status": "in_progress",
+   "goal": "Since fe8b88e66 every 3-8 player random map had two teams: the port read 0x4ace1c..0x4ace37 as min(human teams, 2) where H3MapEd takes max. Fix in h3maped_rmg_core.cpp; Windows map and runner libraries rebuilt. Owner decision 2026-10-29: each seat its own team.",
+   "docs": [
+    "docs/rmg-cut-off-town-repair.md"
+   ],
+   "updatedAt": "2026-10-30"
+  },
   {
    "id": "ai-split-strength-raider-20261029",
    "status": "completed",

@@ -88,6 +88,13 @@ own human seats after projection: the first `human_count` active seats in colour
 order, as the setup's slot records number them. The others are computer seats, with
 the flags a computer-only seat had.
 
+Each seat is its own team only with the team step as H3MapEd runs it. At
+`0x4ace1c..0x4ace37` (`FUN_004ac857`), with no computer players, H3MapEd raises the
+human team count to at least 2 (`CMP` with 2, `JL` takes the 2). The port had a
+minimum of 2 instead, a path no map took while every game had computer-only seats.
+From fe8b88e66 every 3-to-8-player map had two teams, and the 2026-10-30 AI batch
+ended 721 of 800 games with allies standing. The port now has the maximum.
+
 So `template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b`
 (`h3maped_rmg_template_catalog.cpp`) checks the runtime links after the roll. If they
 leave the runtime zones in more than one group, it lists the other accepted
