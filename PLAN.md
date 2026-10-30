@@ -36,7 +36,6 @@ None open.
 
 ## Open work
 
-- `native-rmg-all-human-team-clamp-20261030` (in progress): Since fe8b88e66 every 3-8 player random map had two teams: the port read 0x4ace1c..0x4ace37 as min(human teams, 2) where H3MapEd takes max. Fix in h3maped_rmg_core.cpp; Windows map and runner libraries rebuilt. Owner decision 2026-10-29: each seat its own team. See `docs/rmg-cut-off-town-repair.md`.
 - `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a raider seen in the last 3 days still counts. Left, from the 9 caps of the 2026-10-29 batch (all end in replays since 74a821d50): split strength against a strong last garrison; raiders retake emptied towns; a far target loses to nearby errands and own heroes block the main army's path. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-30 `native-rmg-all-human-team-clamp-20261030` (11ea258e7): H3MapEd's team step takes max(human teams, 2) with no computer players; the port had min, so since fe8b88e66 every 3-8 player random map had two teams and 721 of 800 batch games ended with allies standing.
 - 2026-10-30 `tooling-batch-cost-scheduling-20261029` (d2b65b308): Native batch workers take whole seed groups, heaviest first, up to 32 games and the queued cost (tiles x levels x players) over 4 lists per slot. The 800-game batch's game times: 150 -> 96 min.
 - 2026-10-29 `ai-split-strength-raider-20261029` (74a821d50): Sightings keep place and reach; a lost town notes its taker. For 3 days lone heroes avoid a raider, field armies join against one the main army can't beat, and it keeps after one it can. The batch's 9 capped seeds all end.
 - 2026-10-29 `native-rmg-all-seats-human-8xm8-links-20261029` (fe8b88e66): Random maps give H3MapEd every seat as human-or-computer, so the one-human Gauntlet (45 of 400 XL batch maps, 6 towns) is gone; the game picks its human seat after projection. 8XM8 uses Rmg.txt's intended links.
