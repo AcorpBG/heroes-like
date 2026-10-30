@@ -49,6 +49,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-30 `ai-walk-clear-of-stronger-20261030` (b4ce7bcf5): Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.
 - 2026-10-30 `ai-town-attack-preview-20261030` (22f9cbad6): Attacks on a garrison below a 3x margin are previewed; a predicted loss calls them off, a predicted win goes ahead. 40 games: lost town attacks 89 -> 13, strength lost in lost fights 67,088 -> 39,153; days within noise.
 - 2026-10-30 `ai-scouting-spells-20261030` (d79db8173): A hero that did not spend the day's cast on walking casts its scouting spell; what it shows counts as seen today and stays in the sightings. 40 games: 71 of 2,137 casts found a new hero; results within noise.
 - 2026-10-30 `ai-artifact-wearing-20261030` (8172352e5): Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.

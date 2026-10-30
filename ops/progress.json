@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-town-attack-preview-20261030",
- "currentSliceTitle": "Attacks on a garrison below a 3x margin are previewed; a predicted loss calls them off, a predicted win goes ahead. 40 games: lost town attacks 89 -> 13, strength lost in lost fights 67,088 -> 39,153; days within noise.",
+ "currentSliceId": "ai-walk-clear-of-stronger-20261030",
+ "currentSliceTitle": "Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T17:21:04Z",
+ "updatedAt": "2026-10-30T18:53:01Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-walk-clear-of-stronger-20261030",
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.",
+   "commit": "b4ce7bcf5"
+  },
   {
    "id": "ai-town-attack-preview-20261030",
    "status": "completed",
