@@ -1414,8 +1414,8 @@ bool _fight_looks_good(State &state, DictRef session, DictRef context, DictRef e
 	DictRef defender = 0;
 	const int64_t defender_index = gd::int_field(state, plan, key::index, -1);
 	if (town_fight) {
-		// A garrison alone: a human's town is a real battle, a hero at the gate
-		// fights first with the garrison beside it.
+		// A human's town is a real battle. A hero at the gate fights first, with the
+		// garrison beside it when every stack fits; else it is the hero alone first.
 		const ArrayRef towns = array_field(state, session_view::overworld(state, session), key::towns);
 		if (defender_index < 0 || defender_index >= state.array_size(towns)) {
 			return true;
@@ -1423,10 +1423,23 @@ bool _fight_looks_good(State &state, DictRef session, DictRef context, DictRef e
 		const DictRef town = gd::as_dict(state.at(towns, defender_index));
 		const Atom owner = gd::stringify(state, state.get(town, str(key::owner), str(key::neutral)));
 		const ArrayRef garrison = array_field_if(state, town, key::garrison);
-		if (owner == key::player || _town_hero_defender_index(state, session, town, context_controller(state, context)) >= 0 || empty_commander_power(state, array_value(garrison)) <= 0.0) {
+		if (owner == key::player) {
 			return true;
 		}
-		defender = _garrison_defender(state, town, owner, array_value(garrison));
+		const int64_t gate_hero = _town_hero_defender_index(state, session, town, context_controller(state, context));
+		if (gate_hero >= 0) {
+			defender = gd::deep_duplicate_dict(state, encounter_at(state, session, gate_hero));
+			const DictRef army = dict_field(state, defender, key::enemy_army);
+			const DictRef together = hero_command_rules::entry_defense_plan(state, list_field(state, army, key::stacks), array_value(garrison));
+			if (gd::bool_field(state, together, key::fits, false) && empty_commander_power(state, array_value(garrison)) > 0.0) {
+				state.set(army, str(key::stacks), gd::index(state, together, str(key::stacks)));
+				state.set(defender, str(key::enemy_army), dict_value(army));
+			}
+		} else if (empty_commander_power(state, array_value(garrison)) > 0.0) {
+			defender = _garrison_defender(state, town, owner, array_value(garrison));
+		} else {
+			return true;
+		}
 	} else {
 		const ArrayRef encounters = array_field(state, session_view::overworld(state, session), key::encounters);
 		if (defender_index < 0 || defender_index >= state.array_size(encounters)) {

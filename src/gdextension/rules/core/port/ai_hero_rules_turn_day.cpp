@@ -822,6 +822,33 @@ DictRef _vetted_candidate(State &state, DictRef session, DictRef context, DictRe
 	return state.new_dict();
 }
 
+static bool _steps_beside_stronger(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, Vector2i tile, int64_t level) {
+	const DictRef beside = _hostile_hero_beside(state, session, context, tile, level);
+	if (gd::is_empty(state, beside)) {
+		return false;
+	}
+	const Atom kind = gd::stringify(state, gd::index(state, beside, str(key::kind)));
+	const int64_t other_index = gd::to_int(state, gd::index(state, beside, str(key::index)));
+	if (kind == ai::string_or_empty(state, plan, key::kind) && other_index == gd::int_field(state, plan, key::index, -1)) {
+		return false;
+	}
+	double other_power = 0.0;
+	if (kind == key::ai_hero) {
+		const DictRef other = overworld_dict(state, session, key::encounters, other_index);
+		if (!_position_seen(state, session, context, level_rules::position(state, other))) {
+			return false;
+		}
+		other_power = hero_power(state, other);
+	} else {
+		const DictRef other = gd::as_dict(state.at(gd::as_array(gd::field(state, session_view::overworld(state, session), key::player_heroes)), other_index));
+		if (!_player_hero_seen(state, session, context, other)) {
+			return false;
+		}
+		other_power = army_power(state, gd::field(state, gd::as_dict(gd::field(state, other, key::army)), key::stacks), dict_value(other));
+	}
+	return other_power * tunable_float(state, key::HERO_ATTACK_RATIO) > hero_power(state, entry);
+}
+
 DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t index, DictRef plan) {
 	const DictRef entry = overworld_dict(state, session, key::encounters, index);
 	const DictRef block = dict_or_new(state, entry, key::ai_hero);
@@ -861,6 +888,12 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 			break;
 		}
 		const Vector2i tile = as_vector2i(state.at(path, step_index));
+		// A hostile hero it cannot beat has come into sight beside the next step:
+		// it plans again instead of walking into that fight.
+		if (_steps_beside_stronger(state, session, context, entry, plan, tile, level)) {
+			rerouted = step_index > 0;
+			break;
+		}
 		state.set(movement, str(key::current), int_value(gd::sub(gd::int_field(state, movement, key::current, 0), 1)));
 		if (step_index == last && _tile_blocked_for_standing(state, session, context, tile, level, ai::string_or_empty(state, entry, key::placement_id))) {
 			arrived = true;
