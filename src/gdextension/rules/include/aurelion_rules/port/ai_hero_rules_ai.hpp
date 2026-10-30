@@ -164,8 +164,13 @@ DictRef hostile_record(State &state, Atom id, Atom owner, int64_t x, int64_t y, 
 ArrayRef _recent_hostiles(State &state, DictRef session, DictRef context);
 bool _recently_seen(State &state, DictRef session, DictRef context, Atom id);
 // The computer player `victim` lost a town to `hostile` (a hostile_record at the
-// town's doorway): it remembers that hero there today, as if it had seen it.
-void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile);
+// town's doorway): it remembers that hero there today, as if it had seen it, and
+// which town it took.
+void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile, Atom town_id);
+// What the town hero `id` took from this player in the last few days is worth,
+// while that hero's side still holds it: killing the taker is how the town is
+// won back for good, or the taker walks into the next one (0 otherwise).
+double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id);
 bool _far_ahead(State &state, DictRef session, DictRef context);
 bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size);
 

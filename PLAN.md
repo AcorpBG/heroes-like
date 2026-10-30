@@ -29,6 +29,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
 - 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
 - 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
+- 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
 
 ## Questions for the owner
 
@@ -36,6 +37,7 @@ None open.
 
 ## Open work
 
+- `ai-hit-back-town-taker-20261030` (in progress): A hero that took a town from a computer player in the last three days is worth that town while its side holds it (_taken_town_worth). Owner decision 2026-10-30: kept for how the computer answers a human taking its towns, though AI batches show no measured gain. See `docs/ai-plays-by-player-rules.md`.
 - `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a hero seen in the last 3 days still counts, for towns too. Left, from the 2026-10-30 batch: empty towns taken by heroes never seen near; the strongest hero's army share is unchanged; a far target loses to nearby errands. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.

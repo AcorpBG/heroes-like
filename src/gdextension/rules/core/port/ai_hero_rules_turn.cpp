@@ -581,6 +581,13 @@ void _note_sightings(State &state, DictRef session, DictRef context) {
 		for (const Atom field : {key::x, key::y, key::level, key::reach}) {
 			state.set(record, str(field), ai::vmember(state, hostile, field));
 		}
+		// Seen again, it is still the hero that took the town.
+		Value earlier;
+		if (state.lookup(kept, str(id), earlier) && gd::is_dict(earlier) && state.has(earlier.ref, str(key::taken_day))) {
+			for (const Atom field : {key::town, key::taken_day}) {
+				state.set(record, str(field), gd::index(state, earlier.ref, str(field)));
+			}
+		}
 		state.set(kept, str(id), dict_value(record));
 	}
 	state.set(gd::as_dict(gd::index(state, context, str(key::state))), str(key::ai_sightings), dict_value(kept));

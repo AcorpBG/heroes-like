@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-army-concentration-20261009",
- "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+ "currentSliceId": "ai-hit-back-town-taker-20261030",
+ "currentSliceTitle": "AI: a hero that took a town is worth that town for three days",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-30T11:44:36Z",
+ "updatedAt": "2026-10-30T13:45:50Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-hit-back-town-taker-20261030",
+   "title": "AI: a hero that took a town is worth that town for three days",
+   "status": "in_progress",
+   "goal": "A hero that took a town from a computer player in the last three days is worth that town while its side holds it (_taken_town_worth). Owner decision 2026-10-30: kept for how the computer answers a human taking its towns, though AI batches show no measured gain.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-10-30"
+  },
   {
    "id": "ai-town-threat-recent-sighting-20261030",
    "status": "completed",

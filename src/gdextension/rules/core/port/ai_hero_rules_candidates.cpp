@@ -549,6 +549,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			double value = kill_value + hero_power_value * troop_value * troop_share;
 			value = value + _last_stand_share(state, session, key::player, key::player);
 			value = value + war_value;
+			value = value + _taken_town_worth(state, session, context, id);
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::hero));
 			state.set(result, str(key::id), str(id));
@@ -596,6 +597,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			value = value + _threatened_town_share(state, session, context, other);
 			value = value + _last_stand_share(state, session, key::enemy, other_controller);
 			value = value + war_value;
+			value = value + _taken_town_worth(state, session, context, id);
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::ai_hero));
 			state.set(result, str(key::id), str(id));

@@ -623,7 +623,33 @@ bool _recently_seen(State &state, DictRef session, DictRef context, Atom id) {
 	return false;
 }
 
-void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile) {
+double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id) {
+	const Value memory = ai::vget(state, gd::index(state, context, str(key::state)), key::ai_sightings, Value());
+	if (!gd::is_dict(memory)) {
+		return 0.0;
+	}
+	Value seen;
+	if (!state.lookup(memory.ref, str(id), seen) || !gd::is_dict(seen) || !state.has(seen.ref, str(key::taken_day))) {
+		return 0.0;
+	}
+	if (gd::add(gd::int_field(state, seen.ref, key::taken_day, 0), kRecentSightingDays) <= ai::session_int(state, session, key::day)) {
+		return 0.0;
+	}
+	const Atom town_id = ai::string_or_empty(state, seen.ref, key::town);
+	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
+		if (!gd::is_dict(town) || ai::string_or_empty(state, town.ref, key::placement_id) != town_id) {
+			continue;
+		}
+		// Already back in our hands: the hero is worth what any raider is.
+		if (player_rules::town_controller_id(state, town.ref) == context_controller(state, context)) {
+			return 0.0;
+		}
+		return _town_worth(state, session, context, town.ref);
+	}
+	return 0.0;
+}
+
+void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile, Atom town_id) {
 	if (victim == key::empty || victim == key::player || victim == key::neutral) {
 		return;
 	}
@@ -640,6 +666,8 @@ void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile
 		for (const Atom field : {key::x, key::y, key::level, key::reach}) {
 			state.set(record, str(field), gd::index(state, hostile, str(field)));
 		}
+		state.set(record, str(key::town), str(town_id));
+		state.set(record, str(key::taken_day), int_value(ai::session_int(state, session, key::day)));
 		state.set(memory, gd::index(state, hostile, str(key::id)), dict_value(record));
 		state.set(enemy_state.ref, str(key::ai_sightings), dict_value(memory));
 		return;

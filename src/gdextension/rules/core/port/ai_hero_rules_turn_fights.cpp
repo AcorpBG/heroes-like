@@ -1330,7 +1330,7 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	const DictRef entry = encounter_at(state, session, index);
 	if (previous_owner == key::enemy) {
 		const DictRef door = level_rules::town_entrance(state, town);
-		note_town_taken(state, session, previous_controller, hostile_record(state, ai::string_or_empty(state, entry, key::placement_id), controller, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), level_rules::level_of(state, dict_value(door)), hero_power(state, entry), _movement_max(state, entry)));
+		note_town_taken(state, session, previous_controller, hostile_record(state, ai::string_or_empty(state, entry, key::placement_id), controller, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), level_rules::level_of(state, dict_value(door)), hero_power(state, entry), _movement_max(state, entry)), ai::string_or_empty(state, town, key::placement_id));
 	}
 	const DictRef flags = session_flags(state, session);
 	if (gd::bool_field(state, flags, key::ai_battle_log_enabled, false)) {

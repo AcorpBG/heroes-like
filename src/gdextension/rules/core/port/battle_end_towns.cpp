@@ -525,7 +525,7 @@ Atom _claim_town(State &state, DictRef session, DictRef town_result) {
 		const int64_t movement_max = gd::is_dict(movement) ? gd::int_field(state, movement.ref, key::max, 10) : 10;
 		const Value hero = state.get(overworld, str(key::hero), dict_value(state.new_dict()));
 		const DictRef door = overworld_level_rules::town_entrance(state, gd::as_dict(town));
-		ai_hero_rules::note_town_taken(state, session, previous_controller, ai_hero_rules::hostile_record(state, hero_id, key::player, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), overworld_level_rules::level_of(state, dict_value(door)), ai_hero_rules::army_power(state, stacks, hero), movement_max));
+		ai_hero_rules::note_town_taken(state, session, previous_controller, ai_hero_rules::hostile_record(state, hero_id, key::player, gd::int_field(state, door, key::x, 0), gd::int_field(state, door, key::y, 0), overworld_level_rules::level_of(state, dict_value(door)), ai_hero_rules::army_power(state, stacks, hero), movement_max), gd::stringify(state, state.get(gd::as_dict(town), str(key::placement_id), str(key::empty))));
 	}
 	const DictRef town_dict = gd::as_dict(town);
 	state.set(town_dict, str(key::recovery), dict_value(_normalize_town_recovery_state(state, field_or_new(state, town_dict, key::recovery))));
