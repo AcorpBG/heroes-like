@@ -30,6 +30,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
 - 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
 - 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
+- 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
 
 ## Questions for the owner
 
@@ -48,6 +49,8 @@ None open.
 
 ## Recently completed
 
+- 2026-10-30 `ai-artifact-wearing-20261030` (8172352e5): Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.
+- 2026-10-30 `ai-movement-spells-20261030` (381c591e7): A hero out of steps casts its best movement spell, once a day. 40 replayed games: days 5,157 -> 3,750, fallen heroes 3,199 -> 2,706, empty captures 994 -> 1,202; thinking time unchanged.
 - 2026-10-30 `ai-army-concentration-20261009` (02d2f9e92): Field armies join only on a shortfall; a hero seen in the last 3 days counts, for towns too; a town-taker is worth its town. Leaders' errands measured, no rule change; concentrating further rejected by the owner.
 - 2026-10-30 `ai-hit-back-town-taker-20261030` (5384eca36): A hero that took a town is worth that town for three days. Chases of takers about 7% -> 20% in 40 replayed games, results within noise; kept for how the computer answers a human (owner).
 - 2026-10-30 `ai-town-threat-recent-sighting-20261030` (c25bbf0cd): A hostile hero seen in the last three days now threatens a town, as one in sight does. In 40 replayed batch games empty captures 1,309 -> 979, retakes within three days 842 -> 558; games 7.7 days longer (se 6.1).

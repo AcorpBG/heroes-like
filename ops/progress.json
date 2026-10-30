@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-army-concentration-20261009",
- "currentSliceTitle": "Field armies join only on a shortfall; a hero seen in the last 3 days counts, for towns too; a town-taker is worth its town. Leaders' errands measured, no rule change; concentrating further rejected by the owner.",
+ "currentSliceId": "ai-artifact-wearing-20261030",
+ "currentSliceTitle": "Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T14:10:14Z",
+ "updatedAt": "2026-10-30T15:18:03Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,20 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-artifact-wearing-20261030",
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.",
+   "commit": "8172352e5"
+  },
+  {
+   "id": "ai-movement-spells-20261030",
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "A hero out of steps casts its best movement spell, once a day. 40 replayed games: days 5,157 -> 3,750, fallen heroes 3,199 -> 2,706, empty captures 994 -> 1,202; thinking time unchanged.",
+   "commit": "381c591e7"
+  },
   {
    "id": "ai-hit-back-town-taker-20261030",
    "status": "completed",
