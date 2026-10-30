@@ -5,9 +5,11 @@
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_spells.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_turn.hpp"
 
 #include <cstdint>
@@ -190,6 +192,51 @@ Atom get_slice(State &state, Atom text, Atom splitter, int64_t slice) {
 
 namespace ai_hero_rules {
 
+// Out of steps, a hero casts the movement spell that gives it the most, once a
+// day as a human hero can: mana is full again in the morning. One holding a
+// town's gate tonight keeps its mana for the fight.
+static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	const DictRef home = _own_town_at(state, session, context_controller(state, context), entry);
+	if (!gd::is_empty(state, home)) {
+		const bool is_main = placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
+		if (_holds_gate(state, session, context, entry, home, is_main)) {
+			return false;
+		}
+	}
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	Atom best = key::empty;
+	int64_t best_restored = 0;
+	int64_t best_cost = 0;
+	for (const Value &spell : gd::items(state, array_value(spell_rules::known_spells(state, commander, key::overworld)))) {
+		if (!gd::bool_field(state, spell_rules::validate_overworld_spell(state, commander, movement, spell, day), key::ok, false)) {
+			continue;
+		}
+		const int64_t restored = gd::int_field(state, spell_rules::adventure_spell_consequence_preview(state, commander, movement, spell), key::movement_restored, 0);
+		const int64_t cost = spell_rules::adjusted_spell_mana_cost(state, commander, spell);
+		if (restored > best_restored || (restored > 0 && restored == best_restored && cost < best_cost)) {
+			best = ai::string_or_empty(state, gd::as_dict(spell), key::id);
+			best_restored = restored;
+			best_cost = cost;
+		}
+	}
+	if (best == key::empty) {
+		return false;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, best, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return false;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(block, str(key::movement), gd::index(state, cast, str(key::movement)));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+	return true;
+}
+
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id) {
 	const ArrayRef messages = state.new_array();
 	const ArrayRef events = state.new_array();
@@ -201,7 +248,11 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 		}
 		DictRef entry = overworld_dict(state, session, key::encounters, index);
 		if (movement_int(state, entry, key::current, 0) <= 0) {
-			break;
+			state.set(context, str(key::decision), dict_value(state.new_dict()));
+			if (!_cast_movement_spell(state, session, context, index, placement_id)) {
+				break;
+			}
+			entry = overworld_dict(state, session, key::encounters, index);
 		}
 		state.set(context, str(key::decision), dict_value(state.new_dict()));
 		const DictRef visit = _visit_own_town_if_inside(state, session, context, index);
@@ -254,6 +305,11 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 		}
 		if (!gd::bool_field(state, step, key::arrived, false)) {
 			if (gd::bool_field(state, step, key::rerouted, false)) {
+				continue;
+			}
+			// Out of steps on the way: the top of the loop casts or ends the day.
+			const int64_t walked = _entry_index(state, session, placement_id);
+			if (walked >= 0 && movement_int(state, overworld_dict(state, session, key::encounters, walked), key::current, 0) <= 0) {
 				continue;
 			}
 			break;
