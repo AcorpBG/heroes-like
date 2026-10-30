@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-scouting-spells-20261030",
- "currentSliceTitle": "A hero that did not spend the day's cast on walking casts its scouting spell; what it shows counts as seen today and stays in the sightings. 40 games: 71 of 2,137 casts found a new hero; results within noise.",
+ "currentSliceId": "ai-town-attack-preview-20261030",
+ "currentSliceTitle": "Attacks on a garrison below a 3x margin are previewed; a predicted loss calls them off, a predicted win goes ahead. 40 games: lost town attacks 89 -> 13, strength lost in lost fights 67,088 -> 39,153; days within noise.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T16:25:26Z",
+ "updatedAt": "2026-10-30T17:21:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-town-attack-preview-20261030",
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "Attacks on a garrison below a 3x margin are previewed; a predicted loss calls them off, a predicted win goes ahead. 40 games: lost town attacks 89 -> 13, strength lost in lost fights 67,088 -> 39,153; days within noise.",
+   "commit": "22f9cbad6"
+  },
   {
    "id": "ai-scouting-spells-20261030",
    "status": "completed",
