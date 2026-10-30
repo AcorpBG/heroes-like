@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "tooling-batch-cost-scheduling-20261029",
- "currentSliceTitle": "AI match runner: worker lists sized by cost",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-30T07:11:43Z",
+ "currentSliceTitle": "Native batch workers take whole seed groups, heaviest first, up to 32 games and the queued cost (tiles x levels x players) over 4 lists per slot. The 800-game batch's game times: 150 -> 96 min.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-30T07:11:51Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -40,14 +40,10 @@
   },
   {
    "id": "tooling-batch-cost-scheduling-20261029",
-   "title": "AI match runner: worker lists sized by cost",
-   "status": "in_progress",
-   "goal": "Native batch workers get lists sized by game count (up to 32), heaviest games first, so a mixed-size batch ends on a few workers still playing 32 two-level XL games each while the rest sit idle. In `tools/ai_match_batch.py` `play_prepared`, size each list by estimated cost instead (map tiles x levels x players): a budget of the remaining cost over slots x 4, up to 32 games, whole seed groups, heaviest first; the games played stay the same. Update the skill and runner docs to match. Owner 2026-10-29: after the large 4P + XL 6P batch, not during it.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md",
-    ".claude/skills/ai-match-batch/SKILL.md"
-   ],
-   "updatedAt": "2026-10-30"
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "Native batch workers take whole seed groups, heaviest first, up to 32 games and the queued cost (tiles x levels x players) over 4 lists per slot. The 800-game batch's game times: 150 -> 96 min.",
+   "commit": "d2b65b308"
   },
   {
    "id": "ai-level-shuttle-20261029",
