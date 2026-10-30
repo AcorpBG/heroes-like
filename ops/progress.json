@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-artifact-wearing-20261030",
- "currentSliceTitle": "Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.",
+ "currentSliceId": "ai-scouting-spells-20261030",
+ "currentSliceTitle": "A hero that did not spend the day's cast on walking casts its scouting spell; what it shows counts as seen today and stays in the sightings. 40 games: 71 of 2,137 casts found a new hero; results within noise.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T15:18:03Z",
+ "updatedAt": "2026-10-30T16:25:26Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-scouting-spells-20261030",
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "A hero that did not spend the day's cast on walking casts its scouting spell; what it shows counts as seen today and stays in the sightings. 40 games: 71 of 2,137 casts found a new hero; results within noise.",
+   "commit": "d79db8173"
+  },
   {
    "id": "ai-artifact-wearing-20261030",
    "status": "completed",

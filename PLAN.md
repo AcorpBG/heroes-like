@@ -49,6 +49,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-30 `ai-scouting-spells-20261030` (d79db8173): A hero that did not spend the day's cast on walking casts its scouting spell; what it shows counts as seen today and stays in the sightings. 40 games: 71 of 2,137 casts found a new hero; results within noise.
 - 2026-10-30 `ai-artifact-wearing-20261030` (8172352e5): Each morning a hero wears what it carries where that beats what it wears; a set piece counts once more per piece held. Faction regalia unchanged: affinity has no rules effect. 65 swaps in 40 games, within noise.
 - 2026-10-30 `ai-movement-spells-20261030` (381c591e7): A hero out of steps casts its best movement spell, once a day. 40 replayed games: days 5,157 -> 3,750, fallen heroes 3,199 -> 2,706, empty captures 994 -> 1,202; thinking time unchanged.
 - 2026-10-30 `ai-army-concentration-20261009` (02d2f9e92): Field armies join only on a shortfall; a hero seen in the last 3 days counts, for towns too; a town-taker is worth its town. Leaders' errands measured, no rule change; concentrating further rejected by the owner.
