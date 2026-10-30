@@ -57,8 +57,10 @@ Take these from the request; use the defaults for anything not given. Do not ask
     refilling pool of **16 `bin/match_sim_cli` processes, one thread each**, generates and plays
     the matches, biggest first. Use **`--desktop` for 8 processes**. Each process exits after a
     bounded list (up to 32 games by default), releasing its accumulated RAM; a replacement takes
-    more queued work. Lists are shorter near the end so more workers can stay busy. A map's
-    rotations run together in one process. Matches from a `--map-corpus` or with a `.json` weight
+    more queued work. A list is sized by expected cost (map tiles x levels x players): at most the
+    cost still queued over four lists per process slot, so a list of two-level extra large games
+    holds a few, small games fill one up to 32, and lists shrink near the end so more workers stay
+    busy. A map's rotations run together in one process. Matches from a `--map-corpus` or with a `.json` weight
     set are set up in Godot first, in batches of at most four games (whole rotation groups).
   - **Controls:** `--slots` counts processes, not threads. `--per-process` controls recycling,
     not concurrent games. Queueing more games keeps workers supplied. The execution settings

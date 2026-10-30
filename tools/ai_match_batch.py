@@ -15,7 +15,7 @@ wins against a fair share, with the noise band) and the per-match table.
 
 Matches run from one refilling queue, --slots processes at a time (default 16, --desktop 8;
 lowered when other games or simulation workers are running):
-two-level maps first, then larger maps, then more players. Each process plays up to --per-process
+the most expensive first (map tiles x levels x players). Each process plays up to --per-process
 matches in a row (native default 32, Godot 4, HEROES_AI_MATCH_LIST), fewer when the queue is short enough that more
 would leave slots idle at the end; a match plays as it would in a process of its own, and only the
 first one pays the process's start-up. Godot processes get a throwaway user profile (APPDATA on
@@ -63,7 +63,9 @@ setup and seat factions) starts from a copy of the session that match adopted.
 writes the content snapshot into OUT/snapshots (HEROES_AI_MATCH_CONTENT_SNAPSHOT), then a pool of
 bin/match_sim_cli processes generates and plays the matches, biggest first, one thread per process.
 Each worker exits after its bounded match list, releasing its RAM, and the pool refills while work
-remains. Whole rotation groups stay together, even when a group exceeds an explicit --per-process
+remains. A list holds whole seed groups, heaviest first, up to --per-process matches and an expected
+cost (map tiles x levels x players) of what is still queued over four lists per slot, so a list of
+two-level extra large games is short and lists shrink towards the end. Whole rotation groups stay together, even when a group exceeds an explicit --per-process
 limit. Rows are written as matches end; worker PIDs are kept in inflight.json for safe resume. A
 match with a --map-corpus or a .json weight set is set up in Godot instead (map, adoption, handover) and
 written as a snapshot there (HEROES_AI_MATCH_PREPARE), which a native worker plays and then deletes. The
@@ -113,6 +115,8 @@ SIZES = ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]
 # Player counts each size is played with (owner, 2026-10-18); never large maps with two.
 FITTING_PLAYERS = {"homm3_small": (2,), "homm3_medium": (2, 3), "homm3_large": (3, 4), "homm3_extra_large": (5, 6)}
 TIMEOUT_MIN = {"homm3_small": 30, "homm3_medium": 90, "homm3_large": 180, "homm3_extra_large": 360}
+# A level's side in tiles per size class (dimension_for_size_class in rules/core/map_generation.cpp).
+SIDE = {"homm3_small": 36, "homm3_medium": 72, "homm3_large": 108, "homm3_extra_large": 144}
 GUARDS = ("weak", "normal", "strong")
 WATER = ("land", "normal_water", "islands")
 SLOW_DAY_MS = 10000
@@ -674,8 +678,9 @@ def match_row(out: Path, m: dict, text: str, run: Running, timed_out: bool, star
 
 # ---------------------------------------------------------------- run
 
-def expected_cost(m: dict) -> tuple[int, int, int]:
-    return (m["levels"], SIZES.index(m["size"]), m["players"])
+def expected_cost(m: dict) -> int:
+    """What a match is expected to cost to play: its map's tiles on every level times its players."""
+    return SIDE[m["size"]] ** 2 * m["levels"] * m["players"]
 
 
 def match_text(m: dict) -> str:
@@ -979,17 +984,24 @@ def play_prepared(out: Path, plan: dict, godot: str, prepared: list[dict], slots
         while pending or workers:
             seeds = {p["m"]["seed"] for w in workers.values() for p in w.jobs}
             while pending and len(workers) < slots:
-                want = min(per_process, max(1, math.ceil(len(pending) / slots)))
+                # A worker takes whole seed groups, heaviest first, up to per_process matches and a
+                # budget of the expected cost still queued over four lists per slot, and always at
+                # least one group. Lists of a share of the queued count gave the first workers 32
+                # two-level extra large games each, and they played on alone long after the rest.
+                budget = sum(expected_cost(p["m"]) for p in pending) / (slots * 4)
                 by_seed: dict[str, list[dict]] = {}
                 for p in pending:
                     if p["m"]["seed"] not in seeds:
                         by_seed.setdefault(p["m"]["seed"], []).append(p)
                 chain: list[dict] = []
+                cost = 0
                 for group in by_seed.values():
-                    if chain and len(chain) + len(group) > want:
+                    group_cost = sum(expected_cost(p["m"]) for p in group)
+                    if chain and (len(chain) + len(group) > per_process or cost + group_cost > budget):
                         continue
                     chain += group
-                    if len(chain) >= want:
+                    cost += group_cost
+                    if len(chain) >= per_process or cost >= budget:
                         break
                 if not chain:
                     break
