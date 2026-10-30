@@ -470,6 +470,8 @@ bool _position_seen(State &state, DictRef session, DictRef context, DictRef posi
 		}
 		if (radius < 0) {
 			radius = hero_command_rules::scouting_radius_for_hero(state, gd::as_dict(get_or_new_dict(state, dict_value(entry), key::enemy_commander_state)));
+			// A scouting spell cast today shows that far too.
+			radius = compat::engine_max<int64_t>(radius, gd::to_int(state, ai::vget(state, get_or_new_dict(state, dict_value(entry), key::ai_hero), key::survey_radius, int_value(0))));
 			if (gd::is_dict(radii)) {
 				state.set(radii.ref, int_value(own_index), int_value(radius));
 			}

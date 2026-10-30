@@ -192,17 +192,22 @@ Atom get_slice(State &state, Atom text, Atom splitter, int64_t slice) {
 
 namespace ai_hero_rules {
 
+// One holding a town's gate tonight keeps its mana for the fight.
+static bool _holding_gate_tonight(State &state, DictRef session, DictRef context, DictRef entry, Atom placement_id) {
+	const DictRef home = _own_town_at(state, session, context_controller(state, context), entry);
+	if (gd::is_empty(state, home)) {
+		return false;
+	}
+	const bool is_main = placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
+	return _holds_gate(state, session, context, entry, home, is_main);
+}
+
 // Out of steps, a hero casts the movement spell that gives it the most, once a
-// day as a human hero can: mana is full again in the morning. One holding a
-// town's gate tonight keeps its mana for the fight.
+// day as a human hero can: mana is full again in the morning.
 static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
 	const DictRef entry = overworld_dict(state, session, key::encounters, index);
-	const DictRef home = _own_town_at(state, session, context_controller(state, context), entry);
-	if (!gd::is_empty(state, home)) {
-		const bool is_main = placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
-		if (_holds_gate(state, session, context, entry, home, is_main)) {
-			return false;
-		}
+	if (_holding_gate_tonight(state, session, context, entry, placement_id)) {
+		return false;
 	}
 	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
 	const DictRef block = dict_or_new(state, entry, key::ai_hero);
@@ -235,6 +240,49 @@ static bool _cast_movement_spell(State &state, DictRef session, DictRef context,
 	state.set(entry, str(key::ai_hero), dict_value(block));
 	_store_entry(state, session, index, entry);
 	return true;
+}
+
+// A hero that has not spent the day's cast on walking looks around with its
+// scouting spell, if that shows more than it sees. What the spell shows counts
+// as in sight today (`_position_seen`), so the sightings keep it for days.
+static void _cast_scouting_spell(State &state, DictRef session, DictRef context, Atom placement_id) {
+	const int64_t index = _entry_index(state, session, placement_id);
+	if (index < 0 || _is_resolved(state, session, placement_id)) {
+		return;
+	}
+	state.set(context, str(key::decision), dict_value(state.new_dict()));
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	if (_holding_gate_tonight(state, session, context, entry, placement_id)) {
+		return;
+	}
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	Atom best = key::empty;
+	int64_t best_radius = _sight_radius(state, entry);
+	for (const Value &spell : gd::items(state, array_value(spell_rules::known_spells(state, commander, key::overworld)))) {
+		if (!gd::bool_field(state, spell_rules::validate_overworld_spell(state, commander, movement, spell, day), key::ok, false)) {
+			continue;
+		}
+		const int64_t radius = gd::int_field(state, spell_rules::adventure_spell_consequence_preview(state, commander, movement, spell), key::reveal_radius, 0);
+		if (radius > best_radius) {
+			best = ai::string_or_empty(state, gd::as_dict(spell), key::id);
+			best_radius = radius;
+		}
+	}
+	if (best == key::empty) {
+		return;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, best, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(block, str(key::survey_radius), int_value(best_radius));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+	_reveal(state, session, context, level_rules::position(state, entry), best_radius);
 }
 
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id) {
@@ -328,6 +376,7 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			_avoid_target(state, session, placement_id, target_id, gd::add(ai::session_int(state, session, key::day), tunable_int(state, key::AVOID_DAYS)));
 		}
 	}
+	_cast_scouting_spell(state, session, context, placement_id);
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::messages), array_value(messages));
 	state.set(result, str(key::events), array_value(events));

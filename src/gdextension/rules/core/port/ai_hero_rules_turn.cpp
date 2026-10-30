@@ -489,6 +489,7 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 		state.set(movement, str(key::max), int_value(movement_max));
 		state.set(block, str(key::movement), dict_value(movement));
 		state.erase(block, str(key::visited_town_day));
+		state.erase(block, str(key::survey_radius));
 		// A town lost overnight, or a hero no longer in it, ends the wait there.
 		if (ai::string_or_empty(state, block, key::parked) != key::empty) {
 			const Atom parked_town = gd::stringify(state, gd::index(state, block, str(key::parked)));
