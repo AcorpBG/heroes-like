@@ -1201,6 +1201,21 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	return result;
 }
 
+// A town's garrison as the defender of an auto-resolved battle.
+static DictRef _garrison_defender(State &state, DictRef town, Atom owner, const Value &garrison) {
+	const DictRef defender = state.new_dict();
+	state.set(defender, str(key::placement_id), str(gd::format(state, key::town_garrison_s, {str(ai::string_or_empty(state, town, key::placement_id))})));
+	state.set(defender, str(key::encounter_id), str(key::encounter_mire_raid));
+	const DictRef garrison_army = state.new_dict();
+	state.set(garrison_army, str(key::id), str(key::town_garrison));
+	state.set(garrison_army, str(key::name), str(gd::format(state, key::s_garrison, {str(enemy_turn_rules::_town_name(state, town))})));
+	state.set(garrison_army, str(key::stacks), garrison);
+	state.set(defender, str(key::enemy_army), dict_value(garrison_army));
+	const Atom log_owner = owner == key::enemy ? player_rules::town_controller_id(state, town) : owner;
+	state.set(defender, str(key::battle_log_owner), str(log_owner));
+	return defender;
+}
+
 DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t index, DictRef plan) {
 	const Atom controller = context_controller(state, context);
 	ArrayRef towns = array_field(state, session_view::overworld(state, session), key::towns);
@@ -1295,16 +1310,7 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	}
 	const ArrayRef garrison = array_field_if(state, town, key::garrison);
 	if (empty_commander_power(state, array_value(garrison)) > 0.0) {
-		const DictRef defender = state.new_dict();
-		state.set(defender, str(key::placement_id), str(gd::format(state, key::town_garrison_s, {str(ai::string_or_empty(state, town, key::placement_id))})));
-		state.set(defender, str(key::encounter_id), str(key::encounter_mire_raid));
-		const DictRef garrison_army = state.new_dict();
-		state.set(garrison_army, str(key::id), str(key::town_garrison));
-		state.set(garrison_army, str(key::name), str(gd::format(state, key::s_garrison, {str(enemy_turn_rules::_town_name(state, town))})));
-		state.set(garrison_army, str(key::stacks), array_value(garrison));
-		state.set(defender, str(key::enemy_army), dict_value(garrison_army));
-		const Atom log_owner = owner == key::enemy ? player_rules::town_controller_id(state, town) : owner;
-		state.set(defender, str(key::battle_log_owner), str(log_owner));
+		const DictRef defender = _garrison_defender(state, town, owner, array_value(garrison));
 		const DictRef fight = _auto_resolve(state, session, context, index, defender);
 		ai::append_array(state, events, gd::as_array(list_field(state, fight, key::events)));
 		towns = array_field(state, session_view::overworld(state, session), key::towns);
@@ -1401,18 +1407,36 @@ void _record_hero_defeat(State &state, DictRef session, Atom controller, DictRef
 
 bool _fight_looks_good(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, bool idle) {
 	const Atom kind = gd::stringify(state, state.get(plan, str(key::kind), str(key::empty)));
-	if (kind != key::encounter && kind != key::ai_hero) {
+	const bool town_fight = kind == key::town_hostile || kind == key::town_neutral;
+	if (kind != key::encounter && kind != key::ai_hero && !town_fight) {
 		return true;
 	}
-	const ArrayRef encounters = array_field(state, session_view::overworld(state, session), key::encounters);
+	DictRef defender = 0;
 	const int64_t defender_index = gd::int_field(state, plan, key::index, -1);
-	if (defender_index < 0 || defender_index >= state.array_size(encounters)) {
-		return true;
+	if (town_fight) {
+		// A garrison alone: a human's town is a real battle, a hero at the gate
+		// fights first with the garrison beside it.
+		const ArrayRef towns = array_field(state, session_view::overworld(state, session), key::towns);
+		if (defender_index < 0 || defender_index >= state.array_size(towns)) {
+			return true;
+		}
+		const DictRef town = gd::as_dict(state.at(towns, defender_index));
+		const Atom owner = gd::stringify(state, state.get(town, str(key::owner), str(key::neutral)));
+		const ArrayRef garrison = array_field_if(state, town, key::garrison);
+		if (owner == key::player || _town_hero_defender_index(state, session, town, context_controller(state, context)) >= 0 || empty_commander_power(state, array_value(garrison)) <= 0.0) {
+			return true;
+		}
+		defender = _garrison_defender(state, town, owner, array_value(garrison));
+	} else {
+		const ArrayRef encounters = array_field(state, session_view::overworld(state, session), key::encounters);
+		if (defender_index < 0 || defender_index >= state.array_size(encounters)) {
+			return true;
+		}
+		defender = gd::as_dict(state.at(encounters, defender_index));
 	}
 	// An overwhelming margin needs no second look, unless the defender's hero
 	// can blast a big share of the army with one spell.
 	const double power = hero_power(state, entry);
-	const DictRef defender = gd::as_dict(state.at(encounters, defender_index));
 	double burst = 0.0;
 	if (is_ai_hero(state, dict_value(defender))) {
 		burst = _burst_share(state, entry, map_field(state, defender, key::enemy_commander_state));
@@ -1435,6 +1459,10 @@ bool _fight_looks_good(State &state, DictRef session, DictRef context, DictRef e
 	state.set(context, str(key::fight_preview), dict_value(preview));
 	if (!gd::bool_field(state, outcome, key::won, false)) {
 		return false;
+	}
+	// A town is worth a costly win.
+	if (town_fight) {
+		return true;
 	}
 	const double army_before = empty_commander_power(state, nested_list(state, entry, key::enemy_army, key::stacks));
 	const double army_after = empty_commander_power(state, list_field(state, outcome, key::hero_survivors));
