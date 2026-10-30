@@ -480,7 +480,7 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 			// VisitBuildings.WEEK_BONUSES.
 			state.erase(held_commander, str(key::week_bonuses));
 		}
-		const DictRef commander = spell_rules::refresh_daily_mana(state, held_commander);
+		const DictRef commander = _wear_best_artifacts(state, spell_rules::refresh_daily_mana(state, held_commander));
 		state.set(entry.ref, str(key::enemy_commander_state), dict_value(commander));
 		const DictRef block = dict_or_new(state, entry.ref, key::ai_hero);
 		const int64_t movement_max = _movement_max(state, entry.ref);
@@ -543,6 +543,19 @@ void clear_shared_surfaces(State &state) {
 	gd::set_static_var(state, key::ai_hero_rules_script, key::_surface_cache, dict_value(state.new_dict()));
 	gd::set_static_var(state, key::ai_hero_rules_script, key::_guard_cache, dict_value(state.new_dict()));
 	gd::set_static_var(state, key::ai_hero_rules_script, key::_guard_index, dict_value(state.new_dict()));
+}
+
+DictRef _wear_best_artifacts(State &state, DictRef commander) {
+	DictRef hero = commander;
+	const DictRef artifacts = artifact_rules::normalize_hero_artifacts(state, gd::field(state, hero, key::artifacts));
+	const Value carried = gd::duplicate_value(state, gd::index(state, artifacts, str(key::inventory)), false);
+	for (const Value &id : gd::items(state, carried)) {
+		const DictRef equipment = enemy_town_services::best_equipment(state, hero, gd::stringify(state, id));
+		if (gd::to_float(gd::index(state, equipment, str(key::gain))) > 0.0) {
+			hero = gd::as_dict(gd::index(state, equipment, str(key::hero)));
+		}
+	}
+	return hero;
 }
 
 void _note_sightings(State &state, DictRef session, DictRef context) {

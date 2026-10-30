@@ -5,6 +5,7 @@
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_rules_ai.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_ai.hpp"
@@ -219,7 +220,7 @@ double _guard_fight_value(State &state, DictRef session, DictRef context, DictRe
 	const Value commander = get_or_new_dict(state, encounter, key::enemy_commander);
 	const DictRef rewards = battle_rules::battle_rewards_for_strength(state, encounter, stacks, commander);
 	double value = _payload_value(state, dict_value(rewards), needs) + tunable(state, key::GUARD_FIGHT_BASE_VALUE);
-	value += _guarded_object_value(state, session, guard, needs, search, index, ai::string_or_empty(state, context, key::controller));
+	value += _guarded_object_value(state, session, guard, needs, search, index, ai::string_or_empty(state, context, key::controller), entry);
 	value += _passage_value(state, session, context, entry, search, index, needs);
 	return value - _expected_loss_value(state, power, guard_power);
 }
@@ -240,7 +241,21 @@ double _expected_loss_value(State &state, double power, double enemy_power) {
 	return power * share * tunable(state, key::TROOP_VALUE_PER_POWER);
 }
 
-double _guarded_object_value(State &state, DictRef session, DictRef guard, DictRef needs, DictRef search, int64_t guard_index, Atom controller) {
+double _artifact_worth(State &state, DictRef entry, Atom artifact_id, double base) {
+	const Atom set_id = ai::string_or_empty(state, gd::content_row(state, ContentTable::Artifact, artifact_id), key::set_id);
+	if (set_id == key::empty) {
+		return base;
+	}
+	int64_t held = 0;
+	for (const Value &owned : gd::items(state, array_value(artifact_rules::owned_artifact_ids(state, dict_or_new(state, entry, key::enemy_commander_state))))) {
+		if (ai::string_or_empty(state, gd::content_row(state, ContentTable::Artifact, gd::stringify(state, owned)), key::set_id) == set_id) {
+			held = gd::add(held, 1);
+		}
+	}
+	return base * static_cast<double>(gd::add(held, 1));
+}
+
+double _guarded_object_value(State &state, DictRef session, DictRef guard, DictRef needs, DictRef search, int64_t guard_index, Atom controller, DictRef entry) {
 	Atom target_id = ai::string_or_empty(state, guard, key::guarded_object_placement_id);
 	if (target_id == key::empty) {
 		const DictRef link = enemy_adventure_rules::_guard_link_for_encounter(state, guard);
@@ -259,7 +274,8 @@ double _guarded_object_value(State &state, DictRef session, DictRef guard, DictR
 		if (state.lookup(artifact_ref, str(key::node), found)) {
 			const DictRef artifact = gd::as_dict(found);
 			if (!gd::is_empty(state, artifact) && !gd::bool_field(state, artifact, key::collected, false)) {
-				return tunable(state, key::ARTIFACT_PRIZE_VALUE);
+				const double prize = tunable(state, key::ARTIFACT_PRIZE_VALUE);
+				return entry != 0 ? _artifact_worth(state, entry, ai::string_or_empty(state, artifact, key::artifact_id), prize) : prize;
 			}
 		}
 		return 0.0;

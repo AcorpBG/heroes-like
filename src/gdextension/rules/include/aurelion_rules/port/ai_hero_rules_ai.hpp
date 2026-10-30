@@ -192,7 +192,12 @@ DictRef _encounter_candidate(State &state, DictRef session, DictRef context, Dic
 double _guard_fight_value(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, DictRef needs, DictRef search);
 double _guard_power(State &state, DictRef guard);
 double _expected_loss_value(State &state, double power, double enemy_power);
-double _guarded_object_value(State &state, DictRef session, DictRef guard, DictRef needs, DictRef search, int64_t guard_index = -1, Atom controller = state::key::empty);
+double _guarded_object_value(State &state, DictRef session, DictRef guard, DictRef needs, DictRef search, int64_t guard_index = -1, Atom controller = state::key::empty, DictRef entry = 0);
+// An artifact on the map to this hero: a set piece counts once more for each
+// piece of that set it holds, the rest of the set's bonus being within reach.
+double _artifact_worth(State &state, DictRef entry, Atom artifact_id, double base);
+// What the hero carries goes on where it beats what the hero wears.
+DictRef _wear_best_artifacts(State &state, DictRef commander);
 double _guarded_node_value(State &state, DictRef session, DictRef node, DictRef needs, Atom controller);
 double _site_spell_value(State &state, DictRef site, DictRef entry);
 double _site_artifact_value(State &state, DictRef site);

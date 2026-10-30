@@ -506,7 +506,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			const double opens = !gd::is_empty(state, search) ? _site_door_value(state, session, context, entry, search, tile_index, needs) : 0.0;
 			const Atom id = ai::string_or_empty(state, node, key::placement_id);
 			const int64_t index = ref_index();
-			const double value = tunable(state, key::ARTIFACT_VALUE) + opens;
+			const double value = _artifact_worth(state, entry, ai::string_or_empty(state, node, key::artifact_id), tunable(state, key::ARTIFACT_VALUE)) + opens;
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::artifact));
 			state.set(result, str(key::id), str(id));
