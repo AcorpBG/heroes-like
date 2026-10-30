@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-hit-back-town-taker-20261030",
- "currentSliceTitle": "AI: a hero that took a town is worth that town for three days",
+ "currentSliceId": "ai-army-concentration-20261009",
+ "currentSliceTitle": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-30T13:45:50Z",
+ "updatedAt": "2026-10-30T13:45:51Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-hit-back-town-taker-20261030",
-   "title": "AI: a hero that took a town is worth that town for three days",
-   "status": "in_progress",
-   "goal": "A hero that took a town from a computer player in the last three days is worth that town while its side holds it (_taken_town_worth). Owner decision 2026-10-30: kept for how the computer answers a human taking its towns, though AI batches show no measured gain.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-10-30"
+   "status": "completed",
+   "completedAt": "2026-10-30",
+   "summary": "A hero that took a town is worth that town for three days. Chases of takers about 7% -> 20% in 40 replayed games, results within noise; kept for how the computer answers a human (owner).",
+   "commit": "5384eca36"
   },
   {
    "id": "ai-town-threat-recent-sighting-20261030",
@@ -150,7 +147,7 @@
    "id": "ai-army-concentration-20261009",
    "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
    "status": "in_progress",
-   "goal": "Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a hero seen in the last 3 days still counts, for towns too. Left, from the 2026-10-30 batch: empty towns taken by heroes never seen near; the strongest hero's army share is unchanged; a far target loses to nearby errands.",
+   "goal": "Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a hero seen in the last 3 days still counts, for towns too; a hero that took a town is worth it. Left, from the 2026-10-30 batch: a far target loses to nearby errands.",
    "docs": [
     "docs/ai-plays-by-player-rules.md"
    ],

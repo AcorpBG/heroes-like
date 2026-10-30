@@ -37,8 +37,7 @@ None open.
 
 ## Open work
 
-- `ai-hit-back-town-taker-20261030` (in progress): A hero that took a town from a computer player in the last three days is worth that town while its side holds it (_taken_town_worth). Owner decision 2026-10-30: kept for how the computer answers a human taking its towns, though AI batches show no measured gain. See `docs/ai-plays-by-player-rules.md`.
-- `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a hero seen in the last 3 days still counts, for towns too. Left, from the 2026-10-30 batch: empty towns taken by heroes never seen near; the strongest hero's army share is unchanged; a far target loses to nearby errands. See `docs/ai-plays-by-player-rules.md`.
+- `ai-army-concentration-20261009` (in progress): Owner 2026-10-28: play to eliminate. In: heroes scale with towns and a player short of heroes keeps the hire's gold; a hostile hero worth every town it threatens, on either level; no baseline garrison; field armies join only on a shortfall; scouting grows with the day; taverns of every faction; a hero seen in the last 3 days still counts, for towns too; a hero that took a town is worth it. Left, from the 2026-10-30 batch: a far target loses to nearby errands. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
@@ -50,6 +49,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-30 `ai-hit-back-town-taker-20261030` (5384eca36): A hero that took a town is worth that town for three days. Chases of takers about 7% -> 20% in 40 replayed games, results within noise; kept for how the computer answers a human (owner).
 - 2026-10-30 `ai-town-threat-recent-sighting-20261030` (c25bbf0cd): A hostile hero seen in the last three days now threatens a town, as one in sight does. In 40 replayed batch games empty captures 1,309 -> 979, retakes within three days 842 -> 558; games 7.7 days longer (se 6.1).
 - 2026-10-30 `native-rmg-all-human-team-clamp-20261030` (11ea258e7): H3MapEd's team step takes max(human teams, 2) with no computer players; the port had min, so since fe8b88e66 every 3-8 player random map had two teams and 721 of 800 batch games ended with allies standing.
 - 2026-10-30 `tooling-batch-cost-scheduling-20261029` (d2b65b308): Native batch workers take whole seed groups, heaviest first, up to 32 games and the queued cost (tiles x levels x players) over 4 lists per slot. The 800-game batch's game times: 150 -> 96 min.
