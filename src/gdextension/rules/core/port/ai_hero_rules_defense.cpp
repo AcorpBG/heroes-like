@@ -457,11 +457,17 @@ bool _town_threatened(State &state, DictRef session, DictRef context, DictRef to
 	if (!state.has(cache, str(key::hostile))) {
 		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
 	}
+	state.set(context, str(key::decision), dict_value(cache));
 	const double defense = power_of(state, field_or_new_array(state, town, key::garrison));
 	const DictRef entrance = level_rules::town_entrance(state, town);
 	bool threatened = false;
 	double strongest = 0.0;
-	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
+	// In sight, or seen out there in the last few days.
+	state::ValueList threats = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
+		threats.push_back(threat);
+	}
+	for (const Value &threat : threats) {
 		const int64_t distance = threat_distance(state, session, context, threat, entrance);
 		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
 		if (distance >= 0 && distance <= gd::add(reach, tunable_int(state, key::THREAT_REACH_MARGIN)) &&gd::to_float(ai::vmember(state, threat, key::power)) > defense * tunable_float(state, key::THREAT_RATIO)) {
@@ -614,7 +620,11 @@ double _town_defense_need(State &state, DictRef session, DictRef context, DictRe
 	// which carry its troops where they are used.
 	const DictRef entrance = level_rules::town_entrance(state, town);
 	double strongest = 0.0;
-	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {
+	state::ValueList threats = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
+		threats.push_back(threat);
+	}
+	for (const Value &threat : threats) {
 		const int64_t distance = threat_distance(state, session, context, threat, entrance);
 		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
 		if (distance >= 0 && distance <= gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), 1)) {
