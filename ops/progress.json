@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-brasshollow-behaviour-20261031",
- "currentSliceTitle": "Brasshollow's field armies go after any income site they know; wins 61 to 75 of 251, score 77.4% to 84.6%, games without it identical. Its slow start stays, cause unknown.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-31T19:48:42Z",
+ "currentSliceId": "balance-brasshollow-tier1-health-20261101",
+ "currentSliceTitle": "Brasshollow's tier 1 units get tougher",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-31T22:54:33Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,17 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "balance-brasshollow-tier1-health-20261101",
+   "title": "Brasshollow's tier 1 units get tougher",
+   "status": "in_progress",
+   "goal": "Costly but tough per its design: Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, prices unchanged. Files: content/units.json, its upgrade design, AI doc. Owner approved after the large map check, 2026-11-01.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md",
+    "docs/factions-content-bible.md"
+   ],
+   "updatedAt": "2026-11-01"
+  },
   {
    "id": "ai-brasshollow-behaviour-20261031",
    "status": "completed",
