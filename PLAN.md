@@ -38,7 +38,6 @@ None open.
 
 ## Open work
 
-- `ai-brasshollow-behaviour-20261031` (in progress): Brasshollow is the weakest faction (77%) and falls behind in week one. Find why, give it a behaviour from its design, default off, set faction_brasshollow. Files: rules core, content/ai_hero_weights.json, AI doc. Owner asked 2026-10-31. See `docs/ai-plays-by-player-rules.md`, `docs/factions-content-bible.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -48,6 +47,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-31 `ai-brasshollow-behaviour-20261031` (42b9f4d42): Brasshollow's field armies go after any income site they know; wins 61 to 75 of 251, score 77.4% to 84.6%, games without it identical. Its slow start stays, cause unknown.
 - 2026-10-31 `ai-embercourt-wardens-20261031` (e8c4504d6): Embercourt heroes leave a ward in each town they leave (60 strength a week, at most 15% of their army); empty town-weeks 21.8% to 9.5%, wins 115 to 94 of 251, games without it identical.
 - 2026-10-31 `ai-faction-sets-20261031` (5d2275995): A faction can have its own AI weight set. Mireclaw sends half its field armies raiding known rival sites anywhere in long-range reach; value changes alone showed no style.
 - 2026-10-31 `content-validator-findings-20261004` (d90092541): tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.
