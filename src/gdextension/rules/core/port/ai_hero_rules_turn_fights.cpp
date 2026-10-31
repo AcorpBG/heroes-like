@@ -469,12 +469,13 @@ DictRef _take_garrison(State &state, DictRef session, DictRef entry, DictRef tow
 			}
 		}
 	} else if (is_main || is_field || _ferries_from(state, session, context, live_town, main_id)) {
+		const double brought = empty_commander_power(state, array_value(stacks));
 		if (state.array_size(garrison) != 0 && !_town_threatened(state, session, context, live_town)) {
 			const DictRef pickup = _garrison_pickup(state, stacks, garrison);
 			stacks = gd::as_array(gd::index(state, pickup, str(key::stacks)));
 			garrison = gd::as_array(gd::index(state, pickup, str(key::left)));
 		}
-		const DictRef defended = _leave_defense(state, session, context, live_town, stacks, garrison, is_main);
+		const DictRef defended = _leave_defense(state, session, context, live_town, stacks, garrison, is_main, brought);
 		stacks = gd::as_array(gd::index(state, defended, str(key::stacks)));
 		garrison = gd::as_array(gd::index(state, defended, str(key::garrison)));
 	} else if (state.array_size(stacks) > 1) {

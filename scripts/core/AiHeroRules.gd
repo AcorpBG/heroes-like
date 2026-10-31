@@ -139,6 +139,11 @@ static var DEFENSE_SHARE_MAX_MAIN: float
 ## The share of a player's field armies that raid (`_is_raider`), the least
 ## experienced ones, rounded up. Zero in the default set.
 static var RAIDER_FIELD_SHARE: float
+## A hero leaving one of its towns leaves this much strength per week of the
+## game, whether or not a threat is known: first what the town held, then at
+## most TOWN_WARD_ARMY_SHARE of its own army. Zero in the default set.
+static var TOWN_WARD_PER_WEEK: float
+static var TOWN_WARD_ARMY_SHARE: float
 ## What a field army joining the main army is worth on top of the troops,
 ## when the main army alone cannot beat a hostile hero or town (`_main_shortfall`).
 ## It joins only then: seven stacks limit an army, not a share of the main

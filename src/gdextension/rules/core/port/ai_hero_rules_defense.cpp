@@ -544,13 +544,14 @@ bool _would_hold_gate(State &state, DictRef session, DictRef context, DictRef en
 	return threat_power < (hero + garrison) * tunable_float(state, key::TOWN_ATTACK_RATIO);
 }
 
-DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main) {
+DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main, double brought) {
 	const DictRef unchanged = state.new_dict();
 	state.set(unchanged, str(key::stacks), array_value(stacks));
 	state.set(unchanged, str(key::garrison), array_value(garrison));
 	const double need = _town_defense_need(state, session, context, town);
 	double missing = need - power_of(state, array_value(garrison));
-	if (missing <= 0.0) {
+	const double ward_per_week = tunable_float(state, key::TOWN_WARD_PER_WEEK);
+	if (missing <= 0.0 && ward_per_week <= 0.0) {
 		return unchanged;
 	}
 	const double total = power_of(state, array_value(stacks));
@@ -559,6 +560,17 @@ DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef t
 	const double budget = compat::engine_min(troops_share, worth / tunable_float(state, key::TROOP_VALUE_PER_POWER));
 	if (missing > budget) {
 		return unchanged;
+	}
+	// A ward stays whether or not a threat is known, growing with the weeks of
+	// the game: first what the town held, then a share of the hero's own army.
+	if (ward_per_week > 0.0) {
+		const double ward = ward_per_week * static_cast<double>(ai::session_int(state, session, key::day)) / 7.0;
+		const double from_army = compat::engine_max(0.0, brought) * tunable_float(state, key::TOWN_WARD_ARMY_SHARE);
+		const double from_town = compat::engine_max(0.0, total - brought);
+		missing = compat::engine_max(missing, compat::engine_min(ward, from_town + from_army) - power_of(state, array_value(garrison)));
+		if (missing <= 0.0) {
+			return unchanged;
+		}
 	}
 	const ArrayRef kept = gd::deep_duplicate_array(state, stacks);
 	ArrayRef left = gd::deep_duplicate_array(state, garrison);

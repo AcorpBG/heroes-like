@@ -48,7 +48,7 @@ int64_t _weakest_stack_index(State &state, ArrayRef stacks);
 bool _town_threatened(State &state, DictRef session, DictRef context, DictRef town);
 DictRef _strongest_threat(State &state, DictRef session, DictRef context, DictRef town);
 bool _would_hold_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef town, bool is_main);
-DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main);
+DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main, double brought);
 double _unit_power(State &state, DictRef stack);
 double _town_defense_need(State &state, DictRef session, DictRef context, DictRef town);
 double _townless_raider(State &state, DictRef session, DictRef context);

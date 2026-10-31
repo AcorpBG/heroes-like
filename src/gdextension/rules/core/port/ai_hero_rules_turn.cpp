@@ -86,6 +86,8 @@ constexpr Weight kWeights[] = {
 	{key::DEFENSE_SHARE_MAX, key::defense_share_max, false},
 	{key::DEFENSE_SHARE_MAX_MAIN, key::defense_share_max_main, false},
 	{key::RAIDER_FIELD_SHARE, key::raider_field_share, false},
+	{key::TOWN_WARD_PER_WEEK, key::town_ward_per_week, false},
+	{key::TOWN_WARD_ARMY_SHARE, key::town_ward_army_share, false},
 	{key::JOIN_BASE_VALUE, key::join_base_value, false},
 	{key::SPELL_BURST_PREVIEW_SHARE, key::spell_burst_preview_share, false},
 	{key::HOMELESS_TOWN_MULTIPLIER, key::homeless_town_multiplier, false},

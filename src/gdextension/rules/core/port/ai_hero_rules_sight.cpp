@@ -357,7 +357,7 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const Value kept_stacks = gd::index(state, pickup, str(key::stacks));
 		const Value left_stacks = gd::index(state, pickup, str(key::left));
 		const bool leave_as_main = main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id);
-		const DictRef after = _leave_defense(state, session, context, town, gd::as_array(kept_stacks), gd::as_array(left_stacks), leave_as_main);
+		const DictRef after = _leave_defense(state, session, context, town, gd::as_array(kept_stacks), gd::as_array(left_stacks), leave_as_main, army_power_of(state, array_value(own_stacks)));
 		const double after_power = army_power_of(state, gd::index(state, after, str(key::stacks)));
 		const double own_power = army_power_of(state, array_value(own_stacks));
 		const double gain = after_power - own_power;
