@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "content-validator-findings-20261004",
- "currentSliceTitle": "tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.",
+ "currentSliceId": "ai-faction-sets-20261031",
+ "currentSliceTitle": "A faction can have its own AI weight set. Mireclaw sends half its field armies raiding known rival sites anywhere in long-range reach; value changes alone showed no style.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-31T10:36:12Z",
+ "updatedAt": "2026-10-31T13:13:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-faction-sets-20261031",
+   "status": "completed",
+   "completedAt": "2026-10-31",
+   "summary": "A faction can have its own AI weight set. Mireclaw sends half its field armies raiding known rival sites anywhere in long-range reach; value changes alone showed no style.",
+   "commit": "5d2275995"
+  },
   {
    "id": "ai-walk-clear-of-stronger-20261030",
    "status": "completed",

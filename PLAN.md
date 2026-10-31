@@ -47,6 +47,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-31 `ai-faction-sets-20261031` (5d2275995): A faction can have its own AI weight set. Mireclaw sends half its field armies raiding known rival sites anywhere in long-range reach; value changes alone showed no style.
 - 2026-10-31 `content-validator-findings-20261004` (d90092541): tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.
 - 2026-10-31 `tooling-native-smoke-list-refresh-20261004` (35cfb7a28): The Windows build helper's Godot smokes now run the map package and same-seed generation checks; the deleted and stale scenes are gone, so --require-test can pass.
 - 2026-10-30 `ai-walk-clear-of-stronger-20261030` (b4ce7bcf5): Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.
