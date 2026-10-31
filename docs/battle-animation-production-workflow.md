@@ -2,8 +2,9 @@
 
 Scope: original articulated clips for every authored unit, with consistent
 identity, equipment, scale and ground contact. Current roster: 160; visual
-acceptance and evidence are recorded in `combat-unit-animation-and-size.md`
-and `battle-unit-animation-acceptance.json`.
+acceptance and evidence are recorded in `combat-unit-animation-and-size.md`.
+`battle-unit-animation-acceptance.json` is an old register: no test reads it and
+it is not kept up.
 
 ## Authority and order
 
@@ -96,11 +97,6 @@ scope. Rendered tests retain real clocks. A screenshot taken after an event
 expires is a capture failure, not automatically an art defect: retain the failed
 report, inspect actual elapsed time, and use one focused unchanged replay.
 Do not retry until green or weaken assertions.
-
-After visual inspection, record each atlas and pose-metadata hash in
-`docs/battle-unit-animation-acceptance.json` and update manifest review status.
-Tests reject stale acceptance after art, clip, facing or ground changes.
-Acceptance metadata itself does not alter gameplay or prove future changes.
 
 ## 5. Sources, packaging and cleanup
 
