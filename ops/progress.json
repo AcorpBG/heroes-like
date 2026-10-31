@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-walk-clear-of-stronger-20261030",
- "currentSliceTitle": "Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.",
+ "currentSliceId": "tooling-native-smoke-list-refresh-20261004",
+ "currentSliceTitle": "The Windows build helper's Godot smokes now run the map package and same-seed generation checks; the deleted and stale scenes are gone, so --require-test can pass.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-30T18:53:01Z",
+ "updatedAt": "2026-10-31T08:07:21Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -197,13 +197,10 @@
   },
   {
    "id": "tooling-native-smoke-list-refresh-20261004",
-   "title": "Replace the stale native smoke list in the Windows build helper",
-   "status": "pending",
-   "goal": "the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions.",
-   "docs": [
-    "src/gdextension/README.md"
-   ],
-   "updatedAt": "2026-10-04"
+   "status": "completed",
+   "completedAt": "2026-10-31",
+   "summary": "The Windows build helper's Godot smokes now run the map package and same-seed generation checks; the deleted and stale scenes are gone, so --require-test can pass.",
+   "commit": "35cfb7a28"
   },
   {
    "id": "native-rules-phase7-14-campaign-20261023",
