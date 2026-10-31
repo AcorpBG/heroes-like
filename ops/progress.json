@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "balance-brasshollow-tier1-health-20261101",
- "currentSliceTitle": "Brasshollow's tier 1 units get tougher",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-31T22:54:33Z",
+ "currentSliceTitle": "Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, same prices; score 84.6% to 92.1% in mixed games and 84.4% to 95.7% on large and extra large maps.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-31T22:55:18Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,14 +19,10 @@
  "plannedSlices": [
   {
    "id": "balance-brasshollow-tier1-health-20261101",
-   "title": "Brasshollow's tier 1 units get tougher",
-   "status": "in_progress",
-   "goal": "Costly but tough per its design: Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, prices unchanged. Files: content/units.json, its upgrade design, AI doc. Owner approved after the large map check, 2026-11-01.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md",
-    "docs/factions-content-bible.md"
-   ],
-   "updatedAt": "2026-11-01"
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, same prices; score 84.6% to 92.1% in mixed games and 84.4% to 95.7% on large and extra large maps.",
+   "commit": "e01eb19c7"
   },
   {
    "id": "ai-brasshollow-behaviour-20261031",
