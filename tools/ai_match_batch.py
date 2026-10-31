@@ -75,7 +75,8 @@ bin/match_sim_cli and no --release.
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
 set (only the values it changes). Each match record names its seats' sets (setup.seats[].weights);
-without --weights every seat plays the default set.
+without --weights every seat plays its faction's set, or the default one; "default" keeps a seat off
+its faction's set.
 """
 from __future__ import annotations
 

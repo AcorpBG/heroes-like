@@ -10,6 +10,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
+#include <cmath>
 #include <limits>
 #include <string>
 #include <unordered_map>
@@ -235,6 +236,26 @@ ArrayRef _decision_field_ids(State &state, DictRef session, DictRef context) {
 		state.set(context, str(key::decision), dict_value(cache));
 	}
 	return gd::as_array(gd::index(state, cache, str(key::field)));
+}
+
+// The least experienced RAIDER_FIELD_SHARE of the field armies, at least one
+// when the share is above zero, raid: they go after rivals' sites and do not
+// join the main army.
+bool _is_raider(State &state, DictRef session, DictRef context, DictRef entry) {
+	const double share = tunable_float(state, key::RAIDER_FIELD_SHARE);
+	if (share <= 0.0) {
+		return false;
+	}
+	const ArrayRef ids = _decision_field_ids(state, session, context);
+	const int64_t count = state.array_size(ids);
+	const int64_t raiders = static_cast<int64_t>(std::ceil(static_cast<double>(count) * share));
+	const Atom id = ai::string_or_empty(state, entry, key::placement_id);
+	for (int64_t at = count - raiders; at < count; ++at) {
+		if (gd::stringify(state, state.at(ids, at)) == id) {
+			return true;
+		}
+	}
+	return false;
 }
 
 double _main_shortfall(State &state, DictRef session, DictRef context, DictRef main) {

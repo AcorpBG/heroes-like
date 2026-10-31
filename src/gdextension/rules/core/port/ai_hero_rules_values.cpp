@@ -82,6 +82,17 @@ Atom encounter_id_of(State &state, gd::DictRef guard) {
 
 namespace ai_hero_rules {
 
+// A site another player holds and draws income or troops from.
+bool _rival_held_site(State &state, DictRef session, Atom controller, int64_t index) {
+	const ArrayRef nodes = array_or_new(state, session_view::overworld(state, session), key::resource_nodes);
+	const DictRef node = gd::as_dict(state.at(nodes, index));
+	const Atom owner = player_identity_rules::resource_controller_id(state, node);
+	if (owner == key::empty || owner == controller) {
+		return false;
+	}
+	return gd::bool_field(state, resource_node_payload_rules::site_for_node(state, node, state.new_dict()), key::persistent_control, false);
+}
+
 DictRef _resource_candidate(State &state, DictRef session, DictRef context, Atom controller, DictRef entry, int64_t index, double power, DictRef needs, DictRef treasury, double opens) {
 	const ArrayRef nodes = array_or_new(state, session_view::overworld(state, session), key::resource_nodes);
 	const DictRef node = gd::as_dict(state.at(nodes, index));

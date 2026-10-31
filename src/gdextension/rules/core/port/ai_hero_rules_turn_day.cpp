@@ -581,6 +581,7 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 	const DictRef war = troops_only ? state.new_dict() : _war_paths(state, session, context, entry, search, needs);
 	// While a rival's towns are unseen, a guard whose fight opens unexplored
 	// ground is the way to them (`_passage_value`), however far.
+	const bool raider = !troops_only && _is_raider(state, session, context, entry);
 	const bool hunting = !troops_only && _rival_towns_unknown(state, session, context) && ai::session_int(state, session, key::day) >= tunable_int(state, key::HUNT_START_DAY);
 	const DictRef guard_candidates = state.new_dict();
 	Value stops;
@@ -621,10 +622,13 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 					// A site in the way to a known town, or to unexplored ground
 					// while a rival's towns are unseen.
 					const int64_t door = _site_door_key(state, tile_index);
-					if (!state.has(_site_doors(state, search), int_value(tile_index)) || gd::packed_int(state, known, tile_index) == 0 || !(state.has(war, int_value(door)) || hunting)) {
+					// A raider goes for any site it knows a rival holds.
+					const bool raid = raider && kind == kStopResource && gd::packed_int(state, known, tile_index) != 0 &&
+							_rival_held_site(state, session, context_controller(state, context), gd::to_int(state, ai::vmember(state, ref, key::index)));
+					if (!raid && (!state.has(_site_doors(state, search), int_value(tile_index)) || gd::packed_int(state, known, tile_index) == 0 || !(state.has(war, int_value(door)) || hunting))) {
 						continue;
 					}
-					if (_site_door_value(state, session, context, entry, search, tile_index, needs) <= 0.0 || !(state.has(war, int_value(door)) || passage_unexplored(state, search, door) > 0)) {
+					if (!raid && (_site_door_value(state, session, context, entry, search, tile_index, needs) <= 0.0 || !(state.has(war, int_value(door)) || passage_unexplored(state, search, door) > 0))) {
 						continue;
 					}
 					candidate = _candidate(state, session, context, entry, gd::as_dict(ref), power, needs, search, tile_index);

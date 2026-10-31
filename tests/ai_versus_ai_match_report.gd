@@ -55,8 +55,10 @@ extends Node
 #                          the absolute path of a .json file holding one set
 #                          (only the values it changes, as a named set there),
 #                          added for this run only. Unset, every seat plays
-#                          the default set and the record is as before; set,
-#                          setup.seats[].weights records each seat's set.
+#                          its faction's set, or the default one, and the
+#                          record is as before; set, "default" keeps a seat off
+#                          its faction's set and setup.seats[].weights records
+#                          each seat's set.
 # HEROES_AI_MATCH_KEEP_SESSION 0 loads the whole session into the native day
 #                          every day, as the game does. By default the day's
 #                          native call keeps the session from one day to the
@@ -335,9 +337,7 @@ func _play() -> void:
 		return
 	session.flags[AiHeroRulesScript.BATTLE_LOG_FLAG] = true
 	for index in range(seat_weights.size()):
-		var weight_set := String(seat_weights[index].set)
-		if weight_set != AiHeroRulesScript.DEFAULT_WEIGHT_SET:
-			_state(session, String(seats[index]))[AiHeroRulesScript.WEIGHT_SET_KEY] = weight_set
+		_state(session, String(seats[index]))[AiHeroRulesScript.WEIGHT_SET_KEY] = String(seat_weights[index].set)
 
 	var handover := _check_handover(session, seats, seat_factions, start_treasury)
 	if _failed:

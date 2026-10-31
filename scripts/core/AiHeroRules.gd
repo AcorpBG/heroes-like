@@ -136,6 +136,9 @@ static var DEFENSE_HORIZON_DAYS: int
 static var DEFENSE_MARGIN: float
 static var DEFENSE_SHARE_MAX: float
 static var DEFENSE_SHARE_MAX_MAIN: float
+## The share of a player's field armies that raid (`_is_raider`), the least
+## experienced ones, rounded up. Zero in the default set.
+static var RAIDER_FIELD_SHARE: float
 ## What a field army joining the main army is worth on top of the troops,
 ## when the main army alone cannot beat a hostile hero or town (`_main_shortfall`).
 ## It joins only then: seven stacks limit an army, not a share of the main
@@ -293,7 +296,7 @@ static var RESOURCE_VALUES: Dictionary = {}
 ## because battle rewards and generated guards use army_power too; "sets" holds
 ## weight sets, "default" complete and every other set with only the values it
 ## changes. A computer player plays with the set its enemy state names under
-## WEIGHT_SET_KEY, the default when it names none; a match runner can add sets
+## WEIGHT_SET_KEY, else the set named after its faction, else the default; a match runner can add sets
 ## for one run through ContentService.set_content_override. Until 2026-10-20
 ## they were constants here (docs/native-rules-engine-transition.md, Phase A).
 ## The set also carries what the AI values at dwellings, visit buildings and

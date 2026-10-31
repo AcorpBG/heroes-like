@@ -37,6 +37,7 @@ ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller);
 // Gives the field roles out for the day, before the heroes move.
 void _assign_field_heroes(State &state, DictRef session, Atom controller);
 ArrayRef _decision_field_ids(State &state, DictRef session, DictRef context);
+bool _is_raider(State &state, DictRef session, DictRef context, DictRef entry);
 double _main_shortfall(State &state, DictRef session, DictRef context, DictRef main);
 int64_t _towns_held_by(State &state, DictRef session, Atom owner, Atom controller);
 double _last_stand_share(State &state, DictRef session, Atom owner, Atom controller);
@@ -199,6 +200,7 @@ double _artifact_worth(State &state, DictRef entry, Atom artifact_id, double bas
 // What the hero carries goes on where it beats what the hero wears.
 DictRef _wear_best_artifacts(State &state, DictRef commander);
 double _guarded_node_value(State &state, DictRef session, DictRef node, DictRef needs, Atom controller);
+bool _rival_held_site(State &state, DictRef session, Atom controller, int64_t index);
 double _site_spell_value(State &state, DictRef site, DictRef entry);
 double _site_artifact_value(State &state, DictRef site);
 double _passage_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t guard_index, DictRef needs);

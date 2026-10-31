@@ -1716,15 +1716,13 @@ private:
 		if (hand_human_seat_to_ai() != seats_.front()) {
 			throw MatchFailed{ "The human seat could not be handed to the computer." };
 		}
-		// AiHeroRules.BATTLE_LOG_FLAG, and each seat's WEIGHT_SET_KEY when it
-		// plays another set than DEFAULT_WEIGHT_SET.
+		// AiHeroRules.BATTLE_LOG_FLAG, and each seat's WEIGHT_SET_KEY when the
+		// match names its sets ("default" keeps a seat off its faction's set).
 		state_.set(gd::as_dict(field(kFlags)), state_.string("ai_battle_log_enabled"), gd::bool_value(true));
 		const int64_t weighted = seat_weights.kind == Kind::Array ? state_.array_size(seat_weights.ref) : 0;
 		for (int64_t index = 0; index < weighted; ++index) {
 			const uint32_t weight_set = string_of(get(state_.at(seat_weights.ref, index), state_.intern("set")));
-			if (state_.text(weight_set) != "default") {
-				state_.set(gd::as_dict(seat_state(seats_[static_cast<size_t>(index)])), state_.string("ai_weight_set"), gd::str(weight_set));
-			}
+			state_.set(gd::as_dict(seat_state(seats_[static_cast<size_t>(index)])), state_.string("ai_weight_set"), gd::str(weight_set));
 		}
 		handover_ = check_handover(seat_factions, start_treasury);
 

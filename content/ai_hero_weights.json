@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "about": "Overworld AI weights (scripts/core/AiHeroRules.gd, _apply_weights): searches, fight ratios, target and build values, and the values AI heroes put on dwellings, visit buildings and town services (apply_ai_weights in CreatureDwellingRules, VisitBuildingRules, EnemyAdventureRules, EnemyTownServices and FactionTownServices). army_power holds the strength estimate's terms, the same for every player because battle rewards and generated guards use it too (fitted with tools/battle_ai_arena/power_fit.py); specialty_pick holds how computer heroes choose specialties, the same for every player because they also level up in battles outside their own turn (EnemyAdventureRules._preferred_enemy_specialty_id). sets.default is what every computer player plays with; a named set lists only the values it changes (resource_values and loadout_values merge by key). A match assigns a set per computer player (enemy state ai_weight_set; HEROES_AI_MATCH_WEIGHTS in tests/ai_versus_ai_match_report.gd). Values written without a decimal point are whole numbers in the game.",
+  "about": "Overworld AI weights (scripts/core/AiHeroRules.gd, _apply_weights): searches, fight ratios, target and build values, and the values AI heroes put on dwellings, visit buildings and town services (apply_ai_weights in CreatureDwellingRules, VisitBuildingRules, EnemyAdventureRules, EnemyTownServices and FactionTownServices). army_power holds the strength estimate's terms, the same for every player because battle rewards and generated guards use it too (fitted with tools/battle_ai_arena/power_fit.py); specialty_pick holds how computer heroes choose specialties, the same for every player because they also level up in battles outside their own turn (EnemyAdventureRules._preferred_enemy_specialty_id). sets.default is what a computer player plays with unless a set is named after its faction (faction_mireclaw); a named set lists only the values it changes (resource_values and loadout_values merge by key). A match can assign a set per computer player, default included (enemy state ai_weight_set; HEROES_AI_MATCH_WEIGHTS in tests/ai_versus_ai_match_report.gd). Values written without a decimal point are whole numbers in the game.",
   "army_power": {
     "power_scale": 0.7,
     "power_health": 0.3,
@@ -43,6 +43,7 @@
       "defense_margin": 1.15,
       "defense_share_max": 0.5,
       "defense_share_max_main": 0.3,
+      "raider_field_share": 0.0,
       "join_base_value": 3000.0,
       "spell_burst_preview_share": 0.25,
       "homeless_town_multiplier": 2.0,
@@ -157,6 +158,10 @@
         "memory_salt": 200.0,
         "experience": 1.5
       }
+    },
+    "faction_mireclaw": {
+      "raider_field_share": 0.5,
+      "rival_site_multiplier": 2.0
     }
   }
 }

@@ -85,6 +85,7 @@ constexpr Weight kWeights[] = {
 	{key::DEFENSE_MARGIN, key::defense_margin, false},
 	{key::DEFENSE_SHARE_MAX, key::defense_share_max, false},
 	{key::DEFENSE_SHARE_MAX_MAIN, key::defense_share_max_main, false},
+	{key::RAIDER_FIELD_SHARE, key::raider_field_share, false},
 	{key::JOIN_BASE_VALUE, key::join_base_value, false},
 	{key::SPELL_BURST_PREVIEW_SHARE, key::spell_burst_preview_share, false},
 	{key::HOMELESS_TOWN_MULTIPLIER, key::homeless_town_multiplier, false},
@@ -222,7 +223,10 @@ namespace ai_hero_rules {
 void _use_weights(State &state, DictRef state_) {
 	Atom set_name = ai::string_or_empty(state, state_, key::ai_weight_set);
 	if (set_name == key::empty) {
-		set_name = key::default_set;
+		// A player plays its faction's set when there is one.
+		const Atom faction_id = ai::string_or_empty(state, state_, key::faction_id);
+		const DictRef sets = dict_or_new(state, gd::content_file(state, key::ai_hero_weights_path), key::sets);
+		set_name = faction_id != key::empty && gd::is_dict(gd::field(state, sets, faction_id)) ? faction_id : key::default_set;
 	}
 	const int64_t revision = gd::content_revision(state);
 	if (set_name == gd::to_string(gd::static_var(state, key::ai_hero_rules_script, key::_weight_set_name)) &&

@@ -632,7 +632,7 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	}
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
 	if (gd::array_has(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)))) {
-		if (main_id != other_id) {
+		if (main_id != other_id || _is_raider(state, session, context, entry)) {
 			return state.new_dict();
 		}
 		// A field army joins the main army only when something it has to beat
