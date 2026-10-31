@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-embercourt-wardens-20261031",
- "currentSliceTitle": "Embercourt heroes leave a ward in each town they leave (60 strength a week, at most 15% of their army); empty town-weeks 21.8% to 9.5%, wins 115 to 94 of 251, games without it identical.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-31T15:37:47Z",
+ "currentSliceId": "ai-brasshollow-behaviour-20261031",
+ "currentSliceTitle": "Brasshollow gets an AI behaviour of its own",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-31T18:55:01Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,17 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-brasshollow-behaviour-20261031",
+   "title": "Brasshollow gets an AI behaviour of its own",
+   "status": "in_progress",
+   "goal": "Brasshollow is the weakest faction (77%) and falls behind in week one. Find why, give it a behaviour from its design, default off, set faction_brasshollow. Files: rules core, content/ai_hero_weights.json, AI doc. Owner asked 2026-10-31.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md",
+    "docs/factions-content-bible.md"
+   ],
+   "updatedAt": "2026-10-31"
+  },
   {
    "id": "ai-embercourt-wardens-20261031",
    "status": "completed",

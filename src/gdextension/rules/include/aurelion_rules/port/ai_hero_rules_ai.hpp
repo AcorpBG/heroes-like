@@ -201,6 +201,7 @@ double _artifact_worth(State &state, DictRef entry, Atom artifact_id, double bas
 DictRef _wear_best_artifacts(State &state, DictRef commander);
 double _guarded_node_value(State &state, DictRef session, DictRef node, DictRef needs, Atom controller);
 bool _rival_held_site(State &state, DictRef session, Atom controller, int64_t index);
+bool _claimable_site(State &state, DictRef session, Atom controller, int64_t index);
 double _site_spell_value(State &state, DictRef site, DictRef entry);
 double _site_artifact_value(State &state, DictRef site);
 double _passage_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t guard_index, DictRef needs);

@@ -44,6 +44,7 @@
       "defense_share_max": 0.5,
       "defense_share_max_main": 0.3,
       "raider_field_share": 0.0,
+      "far_site_claims": 0.0,
       "town_ward_per_week": 0.0,
       "town_ward_army_share": 0.0,
       "join_base_value": 3000.0,
@@ -160,6 +161,9 @@
         "memory_salt": 200.0,
         "experience": 1.5
       }
+    },
+    "faction_brasshollow": {
+      "far_site_claims": 1.0
     },
     "faction_embercourt": {
       "town_ward_per_week": 60.0,

@@ -582,6 +582,8 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 	// While a rival's towns are unseen, a guard whose fight opens unexplored
 	// ground is the way to them (`_passage_value`), however far.
 	const bool raider = !troops_only && _is_raider(state, session, context, entry);
+	// A field army claims any site it knows that is not its own.
+	const bool claimer = !troops_only && tunable_float(state, key::FAR_SITE_CLAIMS) > 0.0 && _decision_main_id(state, session, context) != ai::string_or_empty(state, entry, key::placement_id);
 	const bool hunting = !troops_only && _rival_towns_unknown(state, session, context) && ai::session_int(state, session, key::day) >= tunable_int(state, key::HUNT_START_DAY);
 	const DictRef guard_candidates = state.new_dict();
 	Value stops;
@@ -623,8 +625,10 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 					// while a rival's towns are unseen.
 					const int64_t door = _site_door_key(state, tile_index);
 					// A raider goes for any site it knows a rival holds.
-					const bool raid = raider && kind == kStopResource && gd::packed_int(state, known, tile_index) != 0 &&
-							_rival_held_site(state, session, context_controller(state, context), gd::to_int(state, ai::vmember(state, ref, key::index)));
+					const int64_t site_index = gd::to_int(state, ai::vmember(state, ref, key::index));
+					const bool raid = kind == kStopResource && gd::packed_int(state, known, tile_index) != 0 &&
+							((raider && _rival_held_site(state, session, context_controller(state, context), site_index)) ||
+									(claimer && _claimable_site(state, session, context_controller(state, context), site_index)));
 					if (!raid && (!state.has(_site_doors(state, search), int_value(tile_index)) || gd::packed_int(state, known, tile_index) == 0 || !(state.has(war, int_value(door)) || hunting))) {
 						continue;
 					}

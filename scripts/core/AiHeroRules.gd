@@ -139,6 +139,10 @@ static var DEFENSE_SHARE_MAX_MAIN: float
 ## The share of a player's field armies that raid (`_is_raider`), the least
 ## experienced ones, rounded up. Zero in the default set.
 static var RAIDER_FIELD_SHARE: float
+## Above zero, field armies search far for any site they know
+## that holds income and is not its own (`_claimable_site`). Zero in the default
+## set.
+static var FAR_SITE_CLAIMS: float
 ## A hero leaving one of its towns leaves this much strength per week of the
 ## game, whether or not a threat is known: first what the town held, then at
 ## most TOWN_WARD_ARMY_SHARE of its own army. Zero in the default set.
