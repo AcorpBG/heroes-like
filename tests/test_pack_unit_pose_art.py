@@ -26,6 +26,23 @@ def resolved_clip(unit, name):
     return unit['pose_clips'][unit.get('pose_aliases', {}).get(name, name)]
 
 
+def frame_boxes(unit, clip):
+    # Match BattleUnitPose.region: a clip's own sheet, a compact atlas's rects or the grid.
+    own_sheet = 'sheet' in clip
+    size = clip['frame_size'] if own_sheet else unit['pose_frame_size']
+    columns = clip['columns'] if own_sheet else unit['pose_columns']
+    packed = [] if own_sheet else unit.get('pose_frame_rects', [])
+    boxes = []
+    for index in clip['indices']:
+        if packed:
+            x, y, width, height = packed[index]
+        else:
+            width, height = size['width'], size['height']
+            x, y = index % columns * width, index // columns * height
+        boxes.append((x, y, x + width, y + height))
+    return clip['sheet'] if own_sheet else unit['pose_sheet'], boxes
+
+
 def runtime_proof(provenance):
     # A new packing block supersedes historical continuity/candidate records.
     record = provenance.get('packing') or provenance.get('continuity_production') or provenance.get('runtime_candidate')
@@ -72,13 +89,16 @@ class PosePackingTests(unittest.TestCase):
         for unit in manifest["items"]:
             with self.subTest(unit=unit["unit_id"]):
                 self.assertTrue(unit.get('pose_sheet'), 'every authored unit needs original poses')
-                atlas = packer.Image.open(ROOT / unit["pose_sheet"].removeprefix("res://"))
+                sheets = {}
+                def sheet(path):
+                    if path not in sheets:
+                        sheets[path] = packer.Image.open(ROOT / path.removeprefix("res://")).convert("RGBA")
+                    return sheets[path]
                 width, height = (unit["pose_frame_size"][key] for key in ("width", "height"))
-                recipe = json.loads((ROOT / 'art/animation/source/poses' / unit['unit_id'] / 'packing.json').read_text())
                 self.assertTrue(0 <= unit['pose_ground_margin'] < height)
-                self.assertEqual(atlas.width, unit["pose_columns"] * width)
-                self.assertEqual(atlas.height % height, 0)
-                count = len(recipe['frames'])  # Padding cells are never authored poses.
+                if not unit.get("pose_frame_rects"):
+                    self.assertEqual(sheet(unit["pose_sheet"]).width, unit["pose_columns"] * width)
+                    self.assertEqual(sheet(unit["pose_sheet"]).height % height, 0)
                 for name in ("idle", "move", "attack", "defend", "death", "dead"):
                     self.assertIn(name, unit["pose_clips"])
                 if units[unit["unit_id"]].get("ranged", False):
@@ -89,10 +109,13 @@ class PosePackingTests(unittest.TestCase):
                     self.assertEqual(clip["frames"], len(clip["indices"]))
                     self.assertGreaterEqual(clip["frames"], 1 if name == "dead" else 2)
                     pixels = set()
-                    for index in clip["indices"]:
-                        self.assertTrue(0 <= index < count)
-                        x, y = index % unit["pose_columns"] * width, index // unit["pose_columns"] * height
-                        frame = atlas.crop((x, y, x + width, y + height))
+                    self.assertTrue(all(index >= 0 for index in clip["indices"]))
+                    path, boxes = frame_boxes(unit, clip)
+                    atlas = sheet(path)
+                    for box in boxes:
+                        self.assertTrue(0 <= box[0] < box[2] <= atlas.width and 0 <= box[1] < box[3] <= atlas.height)
+                        frame = atlas.crop(box)
+                        # Padding cells are never authored poses.
                         self.assertIsNotNone(frame.getchannel("A").getbbox())
                         pixels.add(hashlib.sha256(frame.tobytes()).digest())
                     self.assertGreaterEqual(len(pixels), 1 if name == 'dead' else 2,
