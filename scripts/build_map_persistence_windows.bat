@@ -190,8 +190,7 @@ if "%GODOT_FOUND%"=="0" (
 	echo Godot was not found on PATH.
 	echo Build succeeded. To run the focused smokes manually, add Godot %EXPECTED_GODOT_VERSION% to PATH or pass --godot PATH_TO_4_6_2_EXE, then run:
 	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/map_package_api_skeleton_report.tscn
-	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_homm3_re_object_table_proxy_report.tscn
-	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_rmg_end_to_end_runtime_boundary_report.tscn
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/random_map_seeded_generator_core_report.tscn
 	if "%REQUIRE_TEST%"=="1" (
 		echo Failing because --require-test was provided.
 		exit /b 1
@@ -208,9 +207,7 @@ set "APPDATA=%TEMP%\heroes-like-native-smoke-profile"
 if not exist "%APPDATA%" mkdir "%APPDATA%"
 call :run "%GODOT_EXE%" --headless --path . tests/map_package_api_skeleton_report.tscn
 if errorlevel 1 exit /b 1
-call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_homm3_re_object_table_proxy_report.tscn
-if errorlevel 1 exit /b 1
-call :run "%GODOT_EXE%" --headless --path . tests/native_rmg_end_to_end_runtime_boundary_report.tscn
+call :run "%GODOT_EXE%" --headless --path . tests/random_map_seeded_generator_core_report.tscn
 exit /b %ERRORLEVEL%
 
 :check_godot_version

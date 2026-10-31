@@ -33,7 +33,7 @@ The 32 remaining random-map scenes all pass on Windows: `native_rmg_end_to_end_r
 
 Three later tests were updated rather than retired: `random_map_live_overworld_render_move_report` (fixture counts for today's default launch; its move goes through `OverworldShell.validation_try_progress_action`, which now confirms the order), `random_map_post_open_tail_timing_report` (the runtime scenario record is saved once since `7689b1b0a`), and `random_map_town_mine_dwelling_placement_report` (the report-only fairness model may warn).
 
-`scripts/build_map_persistence_windows.bat` and `src/gdextension/README.md` now run `map_package_api_skeleton_report`, `native_random_map_homm3_re_object_table_proxy_report` and `native_rmg_end_to_end_runtime_boundary_report` after a native build, with an isolated profile on Windows.
+`scripts/build_map_persistence_windows.bat` and `src/gdextension/README.md` now run `map_package_api_skeleton_report` and `random_map_seeded_generator_core_report` after a native build, with an isolated profile on Windows.
 
 ## Known gap
 
