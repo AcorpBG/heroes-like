@@ -38,7 +38,7 @@ None open.
 
 ## Open work
 
-- `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
+- `content-validator-findings-20261004` (in progress): Fix the real defects the updated tests report. Left: `tests/test_pack_unit_pose_art.py` still fails for every unit on two checks older than the compact atlases (173 atlas width, 59 frame count from the retired recipes), and 106 units lack `pose_review_evidence`. Six units checked by eye: no ground-line defect; the stale margin check is gone (ba0321457). See `docs/source-material-storage-map.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

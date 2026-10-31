@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "tooling-native-smoke-list-refresh-20261004",
- "currentSliceTitle": "The Windows build helper's Godot smokes now run the map package and same-seed generation checks; the deleted and stale scenes are gone, so --require-test can pass.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-10-31T08:07:21Z",
+ "currentSliceId": "content-validator-findings-20261004",
+ "currentSliceTitle": "Fix the real defects the updated tests report",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-10-31T09:22:27Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -189,11 +189,11 @@
    "id": "content-validator-findings-20261004",
    "title": "Fix the real defects the updated tests report",
    "status": "in_progress",
-   "goal": "real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05).",
+   "goal": "Fix the real defects the updated tests report. Left: `tests/test_pack_unit_pose_art.py` still fails for every unit on two checks older than the compact atlases (173 atlas width, 59 frame count from the retired recipes), and 106 units lack `pose_review_evidence`. Six units checked by eye: no ground-line defect; the stale margin check is gone (ba0321457).",
    "docs": [
     "docs/source-material-storage-map.md"
    ],
-   "updatedAt": "2026-10-04"
+   "updatedAt": "2026-10-31"
   },
   {
    "id": "tooling-native-smoke-list-refresh-20261004",
