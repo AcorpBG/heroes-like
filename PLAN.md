@@ -38,7 +38,7 @@ None open.
 
 ## Open work
 
-- `content-validator-findings-20261004` (in progress): Fix the real defects the updated tests report. Left: `tests/test_pack_unit_pose_art.py` still fails for every unit on two checks older than the compact atlases (173 atlas width, 59 frame count from the retired recipes), and 106 units lack `pose_review_evidence`. Six units checked by eye: no ground-line defect; the stale margin check is gone (ba0321457). See `docs/source-material-storage-map.md`.
+- `content-validator-findings-20261004` (in progress): Fix the real defects the updated tests report. Left: `test_registered_art_matches_visual_acceptance` fails for 106 units: their atlas and pose metadata differ from `docs/battle-unit-animation-acceptance.json` and `pose_review_evidence` is gone, so they wait to be registered again; never auto-certify. The clip test passes for all 232 (20abc8cd2). See `docs/source-material-storage-map.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
