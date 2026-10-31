@@ -38,7 +38,6 @@ None open.
 
 ## Open work
 
-- `content-validator-findings-20261004` (in progress): Fix the real defects the updated tests report. Left: `test_registered_art_matches_visual_acceptance` fails for 106 units: their atlas and pose metadata differ from `docs/battle-unit-animation-acceptance.json` and `pose_review_evidence` is gone, so they wait to be registered again; never auto-certify. The clip test passes for all 232 (20abc8cd2). See `docs/source-material-storage-map.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -48,6 +47,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-31 `content-validator-findings-20261004` (d90092541): tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.
 - 2026-10-31 `tooling-native-smoke-list-refresh-20261004` (35cfb7a28): The Windows build helper's Godot smokes now run the map package and same-seed generation checks; the deleted and stale scenes are gone, so --require-test can pass.
 - 2026-10-30 `ai-walk-clear-of-stronger-20261030` (b4ce7bcf5): Town attacks against a hero at the gate are previewed; a walk stops before stepping beside a stronger hero in sight. 40 games: strength lost in lost fights 39,153 -> 24,386; days, captures within noise; thinking +0.7%.
 - 2026-10-30 `ai-town-attack-preview-20261030` (22f9cbad6): Attacks on a garrison below a 3x margin are previewed; a predicted loss calls them off, a predicted win goes ahead. 40 games: lost town attacks 89 -> 13, strength lost in lost fights 67,088 -> 39,153; days within noise.

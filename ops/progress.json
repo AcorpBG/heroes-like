@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "content-validator-findings-20261004",
- "currentSliceTitle": "Fix the real defects the updated tests report",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-10-31T09:27:35Z",
+ "currentSliceTitle": "tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-10-31T10:36:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -187,13 +187,10 @@
   },
   {
    "id": "content-validator-findings-20261004",
-   "title": "Fix the real defects the updated tests report",
-   "status": "in_progress",
-   "goal": "Fix the real defects the updated tests report. Left: `test_registered_art_matches_visual_acceptance` fails for 106 units: their atlas and pose metadata differ from `docs/battle-unit-animation-acceptance.json` and `pose_review_evidence` is gone, so they wait to be registered again; never auto-certify. The clip test passes for all 232 (20abc8cd2).",
-   "docs": [
-    "docs/source-material-storage-map.md"
-   ],
-   "updatedAt": "2026-10-31"
+   "status": "completed",
+   "completedAt": "2026-10-31",
+   "summary": "tests/test_pack_unit_pose_art.py passes: frames resolve as the game finds them, and the retired-recipe margin check and the acceptance register test are gone. Six units checked in battle: no ground-line defect.",
+   "commit": "d90092541"
   },
   {
    "id": "tooling-native-smoke-list-refresh-20261004",
