@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "muster-captain-computer",
- "currentSliceTitle": "Muster Captain works for computer heroes",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-01T19:34:47Z",
+ "currentSliceTitle": "Computer towns use the shared recruit price and hero growth; plan scoring values a Muster Captain hero at its town's door on the day before the week turns. No batch, balance unmeasured.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-01T19:55:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "muster-captain-computer",
-   "title": "Muster Captain works for computer heroes",
-   "status": "in_progress",
-   "goal": "Owner asked for both halves, no batch. Computer towns use the shared recruit price and hero growth; a hero's plan values being at a town's door when the week turns. overworld_rules_turn.cpp, ai_hero_rules_sight.cpp, ai_hero_rules_turn_fights.cpp.",
-   "docs": [],
-   "updatedAt": "2026-11-01"
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Computer towns use the shared recruit price and hero growth; plan scoring values a Muster Captain hero at its town's door on the day before the week turns. No batch, balance unmeasured.",
+   "commit": "9f4897e7e"
   },
   {
    "id": "town-support-artifact-fixes",
