@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-sight-player-rules-20261101",
- "currentSliceTitle": "Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.",
+ "currentSliceId": "ai-guard-as-option-20261101",
+ "currentSliceTitle": "Computer heroes weigh staying in a threatened town in the normal scoring instead of a check that ended their turn; one stays, the rest go on. 17 of 18 capped seeds finish; balance unmeasured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-01T11:05:06Z",
+ "updatedAt": "2026-11-01T15:47:28Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-guard-as-option-20261101",
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Computer heroes weigh staying in a threatened town in the normal scoring instead of a check that ended their turn; one stays, the rest go on. 17 of 18 capped seeds finish; balance unmeasured.",
+   "commit": "92ee10b2c"
+  },
   {
    "id": "ai-sight-player-rules-20261101",
    "status": "completed",
