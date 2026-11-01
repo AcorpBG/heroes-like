@@ -333,9 +333,7 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		if (state.lookup(entry, str(key::ai_hero), block)) {
 			visited_day = gd::int_field(state, gd::as_dict(block), key::visited_town_day, -1);
 		}
-		if (visited_day == ai::session_int(state, session, key::day)) {
-			return state.new_dict();
-		}
+		const bool visited_today = visited_day == ai::session_int(state, session, key::day);
 		const DictRef entrance = level_rules::town_entrance(state, town);
 		bool standing_here = false;
 		const int64_t door_x = gd::int_field(state, entrance, key::x, -1);
@@ -344,6 +342,9 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 			standing_here = door_y == gd::int_field(state, entry, key::y, -2);
 		}
 		if (!standing_here && !_town_entrance_free(state, session, town, controller)) {
+			return state.new_dict();
+		}
+		if (visited_today && !(standing_here && _town_threatened(state, session, context, town))) {
 			return state.new_dict();
 		}
 		double value = 0.0;
@@ -361,18 +362,26 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const double after_power = army_power_of(state, gd::index(state, after, str(key::stacks)));
 		const double own_power = army_power_of(state, array_value(own_stacks));
 		const double gain = after_power - own_power;
+		// A threatened town keeps its garrison (`_visit_own_town_if_inside`): no
+		// troops to take there, and none left for one that has just visited.
+		const bool town_threatened = _town_threatened(state, session, context, town);
+		const bool no_troops = town_threatened || visited_today;
 		if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id) || field_hero()) {
 			const double per_power = tunable(state, key::TROOP_VALUE_PER_POWER);
 			const double share = tunable(state, key::GARRISON_PICKUP_SHARE);
-			value = gain * per_power * share;
-			// And what the bigger army can then take that this one cannot.
-			value += _newly_beatable_value(state, session, context, entry, entrance, power, power + gain);
+			if (!no_troops) {
+				value = gain * per_power * share;
+				// And what the bigger army can then take that this one cannot.
+				value += _newly_beatable_value(state, session, context, entry, entrance, power, power + gain);
+			}
 		} else if (_ferries_from(state, session, context, town, main_id)) {
 			// A courier carries the troops to the main army: worth what they are.
 			const double per_power = tunable(state, key::TROOP_VALUE_PER_POWER);
 			const double share = tunable(state, key::COURIER_TROOP_SHARE);
-			value = gain * per_power * share;
-		} else {
+			if (!no_troops) {
+				value = gain * per_power * share;
+			}
+		} else if (!visited_today) {
 			const ArrayRef stacks = gd::as_array(army_stacks(state, entry));
 			if (state.array_size(stacks) > 1) {
 				const double all_power = army_power_of(state, array_value(stacks));
@@ -385,9 +394,8 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 				value = (all_power - weakest_power) * per_power * share;
 			}
 		}
-		if (_town_threatened(state, session, context, town)) {
-			const bool is_main = main_id == ai::string_or_empty(state, entry, key::placement_id) || field_hero();
-			if (_would_hold_gate(state, session, context, entry, town, is_main)) {
+		if (town_threatened) {
+			if (_keeps_town_safe(state, session, context, entry, town)) {
 				const double base = tunable(state, key::TOWN_BASE_VALUE);
 				const double worth = _town_worth(state, session, context, town);
 				const double kill_share = tunable(state, key::THREAT_KILL_SHARE);
@@ -435,6 +443,10 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const double elimination = tunable(state, key::ELIMINATION_VALUE);
 		const int64_t held = _towns_held_by(state, session, owner, town_controller);
 		value += elimination / static_cast<double>(compat::engine_max<int64_t>(1, held));
+	}
+	// A hero in the doorway falls with the town: what killing it protects counts.
+	if (defender_index >= 0) {
+		value += _threatened_town_share(state, session, context, encounter_at(state, session, defender_index));
 	}
 	const double loss = _expected_loss_value(state, power, defense);
 	const DictRef result = state.new_dict();

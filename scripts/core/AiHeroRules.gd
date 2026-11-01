@@ -189,8 +189,6 @@ static var RANGED_POWER: float
 ## damage spells raise the army by these powers of what they add.
 static var HERO_COMMAND_POWER: float
 static var HERO_SPELL_POWER: float
-## The most of its strength a main hero leaves behind to guard a town.
-static var GUARD_SHARE_MAX: float
 ## The main hero holds at least this share of the strongest hero's army.
 static var MAIN_ARMY_SHARE: float
 ## Rounds a battle lasts for the strength estimate of a hero's spells.

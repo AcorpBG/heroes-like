@@ -95,7 +95,6 @@ constexpr Weight kWeights[] = {
 	{key::HOMELESS_TOWN_MULTIPLIER, key::homeless_town_multiplier, false},
 	{key::THREAT_KILL_SHARE, key::threat_kill_share, false},
 	{key::DANGER_RATIO, key::danger_ratio, false},
-	{key::GUARD_SHARE_MAX, key::guard_share_max, false},
 	{key::MAIN_ARMY_SHARE, key::main_army_share, false},
 	{key::TROOP_VALUE_PER_POWER, key::troop_value_per_power, false},
 	{key::BUILD_HORIZON_WEEKS, key::build_horizon_weeks, false},

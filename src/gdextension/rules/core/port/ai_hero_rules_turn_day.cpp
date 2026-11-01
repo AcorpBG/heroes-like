@@ -192,21 +192,17 @@ Atom get_slice(State &state, Atom text, Atom splitter, int64_t slice) {
 
 namespace ai_hero_rules {
 
-// One holding a town's gate tonight keeps its mana for the fight.
-static bool _holding_gate_tonight(State &state, DictRef session, DictRef context, DictRef entry, Atom placement_id) {
+// One holding a town tonight keeps its mana for the fight.
+static bool _holding_town_tonight(State &state, DictRef session, DictRef context, DictRef entry) {
 	const DictRef home = _own_town_at(state, session, context_controller(state, context), entry);
-	if (gd::is_empty(state, home)) {
-		return false;
-	}
-	const bool is_main = placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
-	return _holds_gate(state, session, context, entry, home, is_main);
+	return !gd::is_empty(state, home) && _keeps_town_safe(state, session, context, entry, home);
 }
 
 // Out of steps, a hero casts the movement spell that gives it the most, once a
 // day as a human hero can: mana is full again in the morning.
 static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
 	const DictRef entry = overworld_dict(state, session, key::encounters, index);
-	if (_holding_gate_tonight(state, session, context, entry, placement_id)) {
+	if (_holding_town_tonight(state, session, context, entry)) {
 		return false;
 	}
 	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
@@ -252,7 +248,7 @@ static void _cast_scouting_spell(State &state, DictRef session, DictRef context,
 	}
 	state.set(context, str(key::decision), dict_value(state.new_dict()));
 	const DictRef entry = overworld_dict(state, session, key::encounters, index);
-	if (_holding_gate_tonight(state, session, context, entry, placement_id)) {
+	if (_holding_town_tonight(state, session, context, entry)) {
 		return;
 	}
 	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
@@ -306,23 +302,6 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 		_append_all(state, events, list_field(state, visit, key::events));
 		entry = overworld_dict(state, session, key::encounters, index);
 		state.set(context, str(key::decision), dict_value(state.new_dict()));
-		const DictRef home = _own_town_at(state, session, context_controller(state, context), entry);
-		if (!gd::is_empty(state, home)) {
-			const bool is_main = placement_id == _decision_main_id(state, session, context) || gd::array_has(state, _decision_field_ids(state, session, context), str(placement_id));
-			if (_holds_gate(state, session, context, entry, home, is_main)) {
-				// A hostile hero is a day away: the hero holds the gate, unless it
-				// can catch and beat that hero today. The goal says so.
-				entry = overworld_dict(state, session, key::encounters, index);
-				const DictRef holding = dict_or_new(state, entry, key::ai_hero);
-				const DictRef goal = state.new_dict();
-				state.set(goal, str(key::kind), str(key::hold));
-				state.set(goal, str(key::id), str(ai::string_or_empty(state, home, key::placement_id)));
-				state.set(holding, str(key::goal), dict_value(goal));
-				state.set(entry, str(key::ai_hero), dict_value(holding));
-				_store_entry(state, session, index, entry);
-				break;
-			}
-		}
 		const bool logging = gd::bool_field(state, session_flags(state, session), key::ai_battle_log_enabled, false);
 		if (logging) {
 			state.set(context, str(key::decision_alternatives), array_value(state.new_array()));
@@ -336,6 +315,18 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			_note_boat_need(state, session, context, entry);
 		}
 		if (gd::is_empty(state, plan)) {
+			break;
+		}
+		// Staying in its own town beat everything else today: the hero holds it.
+		if (ai::string_or_empty(state, plan, key::kind) == key::town_own && gd::int_field(state, plan, key::distance, -1) == 0) {
+			entry = overworld_dict(state, session, key::encounters, index);
+			const DictRef holding = dict_or_new(state, entry, key::ai_hero);
+			const DictRef goal = state.new_dict();
+			state.set(goal, str(key::kind), str(key::hold));
+			state.set(goal, str(key::id), str(ai::string_or_empty(state, plan, key::id)));
+			state.set(holding, str(key::goal), dict_value(goal));
+			state.set(entry, str(key::ai_hero), dict_value(holding));
+			_store_entry(state, session, index, entry);
 			break;
 		}
 		const int64_t act_started = gd::ticks_usec();

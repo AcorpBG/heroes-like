@@ -112,10 +112,8 @@ int64_t _danger_gap(State &state, ArrayRef dangers, int64_t x, int64_t y, int64_
 DictRef _evade(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 DictRef _gate_home(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef town);
 DictRef _gate_walk(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, DictRef search);
-bool _holds_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef town, bool is_main);
 DictRef _hostile_hero_beside(State &state, DictRef session, DictRef context, Vector2i tile, int64_t level);
 DictRef _launch_boat(State &state, DictRef session, DictRef context, DictRef entry, Vector2i tile, int64_t level);
-bool _leave_guard(State &state, DictRef session, DictRef context, DictRef entry, DictRef town, double needed);
 bool _make_way(State &state, DictRef session, DictRef context, Atom placement_id, DictRef keep_clear);
 DictRef _nearest_owned_town(State &state, DictRef session, Atom controller, Vector2i tile, int64_t level);
 bool _next_to_any(State &state, Vector2i tile, ArrayRef others);

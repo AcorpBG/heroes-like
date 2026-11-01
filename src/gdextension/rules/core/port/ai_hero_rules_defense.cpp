@@ -526,22 +526,27 @@ DictRef _strongest_threat(State &state, DictRef session, DictRef context, DictRe
 	return state.new_dict();
 }
 
-bool _would_hold_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef town, bool is_main) {
+// Whether this hero's being in the town is what keeps it safe: the strongest
+// threat could storm it without the hero and not with it. One hero defends with
+// the garrison, so another standing there may already cover it.
+bool _keeps_town_safe(State &state, DictRef session, DictRef context, DictRef entry, DictRef town) {
 	const DictRef threat = _strongest_threat(state, session, context, town);
 	if (gd::is_empty(state, threat)) {
-		return true;
-	}
-	const double required = gd::to_float(gd::index(state, threat, str(key::power))) * tunable_float(state, key::HERO_ATTACK_RATIO);
-	if (required <= hero_power(state, entry)) {
-		return true;
-	}
-	if (!is_main) {
 		return false;
 	}
 	const double threat_power = gd::to_float(gd::index(state, threat, str(key::power)));
-	const double hero = hero_power(state, entry);
 	const double garrison = power_of(state, field_or_new_array(state, town, key::garrison));
-	return threat_power < (hero + garrison) * tunable_float(state, key::TOWN_ATTACK_RATIO);
+	const double attack_ratio = tunable_float(state, key::TOWN_ATTACK_RATIO);
+	const DictRef entrance = level_rules::town_entrance(state, town);
+	const Atom own_id = ai::string_or_empty(state, entry, key::placement_id);
+	double others = 0.0;
+	for (const Value &other : gd::items(state, array_value(active_hero_entries(state, session, context_controller(state, context))))) {
+		const DictRef hero = gd::as_dict(other);
+		if (ai::string_or_empty(state, hero, key::placement_id) != own_id && level_rules::same_level(state, other, dict_value(town)) && gd::int_field(state, hero, key::x, -1) == gd::int_field(state, entrance, key::x, -2) && gd::int_field(state, hero, key::y, -1) == gd::int_field(state, entrance, key::y, -2)) {
+			others = compat::engine_max(others, hero_power(state, hero));
+		}
+	}
+	return threat_power >= (garrison + others) * attack_ratio && threat_power < (garrison + compat::engine_max(others, hero_power(state, entry))) * attack_ratio;
 }
 
 DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main, double brought) {
