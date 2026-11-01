@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-guard-as-option-20261101",
- "currentSliceTitle": "Computer heroes weigh staying in a threatened town in the normal scoring instead of a check that ended their turn; one stays, the rest go on. 17 of 18 capped seeds finish; balance unmeasured.",
+ "currentSliceId": "docs-faction-unit-choices-20261101",
+ "currentSliceTitle": "Faction design doc tables list all twelve unit choices with upgrades, from the town development rosters. Documentation only.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-01T15:47:28Z",
+ "updatedAt": "2026-11-01T16:16:18Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "docs-faction-unit-choices-20261101",
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Faction design doc tables list all twelve unit choices with upgrades, from the town development rosters. Documentation only.",
+   "commit": "e598f59be"
+  },
   {
    "id": "ai-guard-as-option-20261101",
    "status": "completed",

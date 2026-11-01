@@ -48,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-01 `docs-faction-unit-choices-20261101` (e598f59be): Faction design doc tables list all twelve unit choices with upgrades, from the town development rosters. Documentation only.
 - 2026-11-01 `ai-guard-as-option-20261101` (92ee10b2c): Computer heroes weigh staying in a threatened town in the normal scoring instead of a check that ended their turn; one stays, the rest go on. 17 of 18 capped seeds finish; balance unmeasured.
 - 2026-11-01 `ai-sight-player-rules-20261101` (ad872571b): Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.
 - 2026-11-01 `balance-brasshollow-tier1-health-20261101` (e01eb19c7): Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, same prices; score 84.6% to 92.1% in mixed games and 84.4% to 95.7% on large and extra large maps.
