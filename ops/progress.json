@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-support-artifact-fixes",
- "currentSliceTitle": "Town support gap and enemy-side artifact stats",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-01T19:16:08Z",
+ "currentSliceTitle": "Towns stop requiring outposts and shrines generated maps cannot place (+12-16% recruits); enemy-side heroes get worn artifact battle stats. Balance unmeasured.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-01T19:20:51Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-support-artifact-fixes",
-   "title": "Town support gap and enemy-side artifact stats",
-   "status": "in_progress",
-   "goal": "Owner asked for both audit fixes, no batch. content/towns.json: towns stop requiring outposts and shrines generated maps cannot place. commander_payload.cpp: enemy-side heroes get worn artifact battle stats.",
-   "docs": [],
-   "updatedAt": "2026-11-01"
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Towns stop requiring outposts and shrines generated maps cannot place (+12-16% recruits); enemy-side heroes get worn artifact battle stats. Balance unmeasured.",
+   "commit": "48cb7e345"
   },
   {
    "id": "docs-faction-unit-choices-20261101",

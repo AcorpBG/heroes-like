@@ -39,7 +39,6 @@ None open.
 
 ## Open work
 
-- `town-support-artifact-fixes` (in progress): Owner asked for both audit fixes, no batch. content/towns.json: towns stop requiring outposts and shrines generated maps cannot place. commander_payload.cpp: enemy-side heroes get worn artifact battle stats.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-01 `town-support-artifact-fixes` (48cb7e345): Towns stop requiring outposts and shrines generated maps cannot place (+12-16% recruits); enemy-side heroes get worn artifact battle stats. Balance unmeasured.
 - 2026-11-01 `docs-faction-unit-choices-20261101` (e598f59be): Faction design doc tables list all twelve unit choices with upgrades, from the town development rosters. Documentation only.
 - 2026-11-01 `ai-guard-as-option-20261101` (92ee10b2c): Computer heroes weigh staying in a threatened town in the normal scoring instead of a check that ended their turn; one stays, the rest go on. 17 of 18 capped seeds finish; balance unmeasured.
 - 2026-11-01 `ai-sight-player-rules-20261101` (ad872571b): Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.
