@@ -31,6 +31,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
 - 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
 - 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
+- 2026-11-01: A computer player may assume a rival not yet eliminated still holds towns or heroes it has not scouted (`_rival_towns_unknown`): common sense, not a fog leak.
 
 ## Questions for the owner
 
