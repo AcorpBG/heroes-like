@@ -17,6 +17,7 @@
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_context.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -338,7 +339,7 @@ ArrayRef _recruit_town(State &state, DictRef session, DictRef context, int64_t i
 	for (int64_t at = 0; at < unit_count; ++at) {
 		const Atom unit_id = state.at(unit_ids, at).ref;
 		const int64_t available = gd::to_int(state, nested_get(state, town, key::available_recruits, unit_id, int_value(0)));
-		const DictRef cost = enemy_turn_rules::_enemy_recruit_cost(state, town, unit_id);
+		const DictRef cost = overworld_rules::town_recruit_cost(state, session, town, unit_id);
 		const DictRef spendable = gd::duplicate_dict(state, treasury);
 		const ArrayRef reserve_keys = gd::keys(state, reserve);
 		for (const Value &reserve_key : gd::items(state, array_value(reserve_keys))) {

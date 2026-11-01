@@ -8,6 +8,7 @@
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
+#include "aurelion_rules/port/hero_progression_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
@@ -591,7 +592,7 @@ DictRef build_in_town(State &state, DictRef session, DictRef context, int64_t to
 	town_development_rules::migrate_town(state, town);
 	state.set(town, str(key::last_build_day), int_value(ai::session_int(state, session, key::day)));
 	const Value recruits = field_or_new_dict(state, town, key::available_recruits);
-	const DictRef growth = enemy_turn_rules::_building_growth_payload(state, building_id);
+	const DictRef growth = hero_progression_rules::scale_recruit_growth(state, overworld_rules::_town_scaling_hero(state, session, town), dict_value(enemy_turn_rules::_building_growth_payload(state, building_id)));
 	state.set(town, str(key::available_recruits), dict_value(enemy_turn_rules::_merge_recruits(state, recruits, dict_value(growth))));
 	state.set_at(towns, town_index, dict_value(town));
 	state.set(session_view::overworld(state, session), str(key::towns), array_value(towns));

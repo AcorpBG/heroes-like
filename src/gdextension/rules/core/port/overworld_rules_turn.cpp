@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 
+#include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
@@ -307,7 +308,8 @@ DictRef town_weekly_growth(State &state, DictRef town, const Value &session) {
 	if (_town_read_scope_cache_has(state, cache_key)) {
 		return gd::as_dict(_town_read_scope_cache_get(state, cache_key));
 	}
-	const DictRef result = has_session && gd::stringify(state, state.get(town, str(key::owner), str(key::neutral))) == key::player ? _effective_player_town_weekly_growth(state, gd::as_dict(session), town) : _town_weekly_growth(state, town, session, state.new_dict());
+	const Atom owner = gd::stringify(state, state.get(town, str(key::owner), str(key::neutral)));
+	const DictRef result = has_session && (owner == key::player || owner == key::enemy) ? _effective_town_weekly_growth(state, gd::as_dict(session), town) : _town_weekly_growth(state, town, session, state.new_dict());
 	_town_read_scope_cache_store(state, cache_key, dict_value(result));
 	return result;
 }
@@ -361,12 +363,31 @@ Atom apply_resource_site_disruption(State &state, DictRef session, DictRef node,
 	return apply_town_recovery_pressure(state, session, gd::stringify(state, state.get(town, str(key::placement_id), str(key::empty))), disruption_pressure, disruption_source);
 }
 
+DictRef _computer_hero_in_doorway(State &state, DictRef session, DictRef town) {
+	const DictRef entrance = level_rules::town_entrance(state, town);
+	const ArrayRef heroes = ai_hero_rules::active_hero_entries(state, session, player_identity_rules::town_controller_id(state, town));
+	for (const Value &entry : gd::items(state, array_value(heroes))) {
+		if (gd::is_dict(entry) && level_rules::same_level(state, entry, dict_value(entrance))
+				&& gd::int_field(state, entry.ref, key::x, -1) == gd::int_field(state, entrance, key::x, -2)
+				&& gd::int_field(state, entry.ref, key::y, -1) == gd::int_field(state, entrance, key::y, -2)) {
+			Value commander;
+			if (state.lookup(entry.ref, str(key::enemy_commander_state), commander) && gd::is_dict(commander)) {
+				return commander.ref;
+			}
+		}
+	}
+	return state.new_dict();
+}
+
 DictRef _town_scaling_hero(State &state, DictRef session, DictRef town) {
 	// Recruit prices and growth follow the commander stationed in this town, not
 	// whichever hero happens to be selected. No local hero means no hero bonus.
 	// session == null cannot happen: a session is its view.
 	if (gd::is_empty(state, town)) {
 		return state.new_dict();
+	}
+	if (gd::stringify(state, state.get(town, str(key::owner), str(key::neutral))) == key::enemy) {
+		return _computer_hero_in_doorway(state, session, town);
 	}
 	const DictRef hero = hero_command_rules::town_defending_hero(state, session, town);
 	const Atom hero_id = gd::stringify(state, state.get(hero, str(key::id), str(key::empty)));
@@ -382,7 +403,7 @@ DictRef _town_scaling_hero(State &state, DictRef session, DictRef town) {
 	return hero;
 }
 
-DictRef _effective_player_town_weekly_growth(State &state, DictRef session, DictRef town) {
+DictRef _effective_town_weekly_growth(State &state, DictRef session, DictRef town) {
 	const DictRef hero = _town_scaling_hero(state, session, town);
 	const DictRef growth = _town_weekly_growth(state, town, dict_value(session), state.new_dict());
 	return hero_progression_rules::scale_recruit_growth(state, hero, dict_value(growth));

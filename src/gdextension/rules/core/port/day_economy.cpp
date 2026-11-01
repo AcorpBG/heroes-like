@@ -194,7 +194,7 @@ namespace overworld_rules {
 
 // A player town's weekly growth, added to its recruits.
 DictRef _growth_tick_town(State &state, DictRef session, DictRef town) {
-	const DictRef weekly_growth = _effective_player_town_weekly_growth(state, session, town);
+	const DictRef weekly_growth = _effective_town_weekly_growth(state, session, town);
 	state.set(town, str(key::available_recruits), dict_value(_add_recruit_growth(state, state.get(town, str(key::available_recruits), dict_value(state.new_dict())), dict_value(weekly_growth))));
 	return weekly_growth;
 }

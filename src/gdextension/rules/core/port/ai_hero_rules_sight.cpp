@@ -6,6 +6,10 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
+#include "aurelion_rules/port/hero_progression_rules.hpp"
+#include "aurelion_rules/port/hero_progression_rules_turn.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
@@ -310,7 +314,33 @@ bool _rival_towns_unknown(State &state, DictRef session, DictRef context) {
 	return result;
 }
 
-DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power) {
+// The week's recruits arrive with the next day. A hero that ends today in the
+// doorway raises them by its growth bonus, as a human's stationed hero does.
+double _week_muster_value(State &state, DictRef session, DictRef entry, DictRef town, int64_t steps) {
+	if (steps < 0 || !overworld_rules::is_weekly_growth_day(state, gd::add(ai::session_int(state, session, key::day), 1))) {
+		return 0.0;
+	}
+	Value block;
+	Value movement;
+	Value commander;
+	if (!state.lookup(entry, str(key::ai_hero), block) || !gd::is_dict(block) || !state.lookup(block.ref, str(key::movement), movement)
+			|| steps > gd::int_field(state, gd::as_dict(movement), key::current, 0)
+			|| !state.lookup(entry, str(key::enemy_commander_state), commander) || !gd::is_dict(commander)) {
+		return 0.0;
+	}
+	if (gd::float_field(state, hero_progression_rules::aggregate_bonuses(state, commander.ref), key::recruit_growth_multiplier, 0.0) <= 0.0) {
+		return 0.0;
+	}
+	const Atom in_doorway = ai::string_or_empty(state, overworld_rules::_town_scaling_hero(state, session, town), key::id);
+	if (in_doorway != key::empty && in_doorway != ai::string_or_empty(state, commander.ref, key::id)) {
+		return 0.0;
+	}
+	const DictRef growth = overworld_rules::_town_weekly_growth(state, town, dict_value(session), state.new_dict());
+	const DictRef raised = hero_progression_rules::scale_recruit_growth(state, commander.ref, dict_value(growth));
+	return _recruit_set_value(state, raised) - _recruit_set_value(state, growth);
+}
+
+DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, int64_t steps) {
 	const Atom controller = context_controller(state, context);
 	Value found;
 	const DictRef overworld = session_view::overworld(state, session);
@@ -344,7 +374,8 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		if (!standing_here && !_town_entrance_free(state, session, town, controller)) {
 			return state.new_dict();
 		}
-		if (visited_today && !(standing_here && _town_threatened(state, session, context, town))) {
+		const double week_muster = _week_muster_value(state, session, entry, town, steps);
+		if (visited_today && !(standing_here && (week_muster > 0.0 || _town_threatened(state, session, context, town)))) {
 			return state.new_dict();
 		}
 		double value = 0.0;
@@ -402,6 +433,7 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 				value += compat::engine_max(base, worth * kill_share);
 			}
 		}
+		value += week_muster;
 		if (value <= tunable(state, key::MIN_TROOP_ERRAND_VALUE)) {
 			return state.new_dict();
 		}

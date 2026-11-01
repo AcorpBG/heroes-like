@@ -119,7 +119,6 @@ const Function kFunctions[] = {
 	// EnemyTownServices
 	CHECK(EnemyTownServices, visit, 5, true, return gd::dict_value(enemy_town_services::visit(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3), S(a, 4)))),
 	// EnemyTurnRules
-	CHECK(EnemyTurnRules, _enemy_recruit_cost, 2, true, return gd::dict_value(enemy_turn_rules::_enemy_recruit_cost(s, D(a, 0), S(a, 1)))),
 	CHECK(EnemyTurnRules, _latest_enemy_state, 3, true, return gd::dict_value(enemy_turn_rules::_latest_enemy_state(s, D(a, 0), S(a, 1), D(a, 2)))),
 	CHECK(EnemyTurnRules, _owned_town_count, 2, true, return gd::int_value(enemy_turn_rules::_owned_town_count(s, D(a, 0), S(a, 1)))),
 	CHECK(EnemyTurnRules, _town_name, 1, true, return gd::str(enemy_turn_rules::_town_name(s, D(a, 0)))),

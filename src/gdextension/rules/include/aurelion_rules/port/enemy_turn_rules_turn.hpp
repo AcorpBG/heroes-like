@@ -24,13 +24,10 @@ using state::Value;
 
 // Ported in enemy_turn_rules_turn.cpp.
 void _append_event_records(State &state, ArrayRef output, const Value &events_value);
-DictRef _apply_discount(State &state, const Value &cost, int64_t discount_percent);
 Atom _apply_weekly_musters(State &state, DictRef session, ArrayRef town_entries, ArrayRef towns, Atom faction_id, DictRef config);
 DictRef _building_growth_payload(State &state, Atom building_id);
 DictRef _consume_recruits(State &state, const Value &base, Atom unit_id, int64_t amount);
 Atom _describe_recruit_delta(State &state, const Value &delta);
-int64_t _discount_from_profile(State &state, const Value &profile, Atom unit_id);
-DictRef _enemy_recruit_cost(State &state, DictRef town, Atom unit_id);
 ArrayRef _enemy_town_accessible_spell_ids(State &state, DictRef town);
 bool _enemy_turn_profile_enabled(State &state);
 DictRef _enemy_turn_result(State &state, bool ok, Atom message, ArrayRef events, bool profile_enabled, DictRef profile);
@@ -41,7 +38,6 @@ ArrayRef _normalized_built_buildings(State &state, DictRef town);
 int64_t _owned_town_count(State &state, DictRef session, Atom faction_id);
 void _profile_add_ms(State &state, DictRef profile, Atom key, int64_t started_usec);
 int64_t _profile_timer(State &state, bool enabled);
-int64_t _recruitment_discount_percent(State &state, DictRef town, Atom unit_id);
 DictRef _scale_resource_pool(State &state, const Value &cost, int64_t multiplier);
 void _spend_from_pool(State &state, DictRef pool, const Value &cost);
 DictRef _town_actor(State &state, DictRef town);

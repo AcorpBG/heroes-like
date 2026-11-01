@@ -712,42 +712,6 @@ int64_t _owned_town_count(State &state, DictRef session, Atom faction_id) {
 	return state.array_size(_owned_town_entries(state, session, faction_id));
 }
 
-DictRef _enemy_recruit_cost(State &state, DictRef town, Atom unit_id) {
-	const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
-	const Value cost = gd::field(state, unit, key::cost);
-	const int64_t discount = _recruitment_discount_percent(state, town, unit_id);
-	return _apply_discount(state, cost, discount);
-}
-
-int64_t _recruitment_discount_percent(State &state, DictRef town, Atom unit_id) {
-	const DictRef town_template = gd::content_row(state, ContentTable::Town, text_field(state, town, key::town_id, key::empty));
-	int64_t total_discount = _discount_from_profile(state, gd::field(state, town_template, key::recruitment), unit_id);
-	const DictRef faction = gd::content_row(state, ContentTable::Faction, text_field(state, town_template, key::faction_id, key::empty));
-	total_discount = gd::add(total_discount, _discount_from_profile(state, gd::field(state, faction, key::recruitment), unit_id));
-	for (const Value &building_id : gd::items(state, array_value(_normalized_built_buildings(state, town)))) {
-		const DictRef building = gd::content_row(state, ContentTable::Building, gd::stringify(state, building_id));
-		const Value recruit_discount = gd::field(state, building, key::recruitment_discount_percent);
-		if (gd::is_dict(recruit_discount)) {
-			total_discount = gd::add(total_discount, gd::int_field(state, recruit_discount.ref, unit_id, 0));
-		}
-	}
-	return iclamp(total_discount, 0, 75);
-}
-
-int64_t _discount_from_profile(State &state, const Value &profile, Atom unit_id) {
-	if (!gd::is_dict(profile)) {
-		return 0;
-	}
-	Value discounts;
-	if (!state.lookup(profile.ref, str(key::cost_discount_percent), discounts)) {
-		return 0;
-	}
-	if (!gd::is_dict(discounts)) {
-		return 0;
-	}
-	return imax(0, gd::int_field(state, discounts.ref, unit_id, 0));
-}
-
 DictRef _building_growth_payload(State &state, Atom building_id) {
 	const DictRef payload = state.new_dict();
 	const DictRef building = gd::content_row(state, ContentTable::Building, building_id);
@@ -819,20 +783,6 @@ DictRef _scale_resource_pool(State &state, const Value &cost, int64_t multiplier
 		state.set(scaled, str(gd::stringify(state, resource)), int_value(gd::mul(imax(0, gd::to_int(state, gd::index(state, cost.ref, resource))), imax(0, multiplier))));
 	}
 	return scaled;
-}
-
-DictRef _apply_discount(State &state, const Value &cost, int64_t discount_percent) {
-	const DictRef discounted = state.new_dict();
-	const int64_t clamped_discount = iclamp(discount_percent, 0, 75);
-	if (gd::is_dict(cost)) {
-		for (const Value &resource : gd::items(state, cost)) {
-			const Atom resource_key = gd::stringify(state, resource);
-			const int64_t base_amount = imax(0, gd::to_int(state, gd::index(state, cost.ref, resource)));
-			const double scaled = static_cast<double>(gd::mul(base_amount, gd::sub(100, clamped_discount))) / 100.0;
-			state.set(discounted, str(resource_key), int_value(compat::float_to_int(compat::godot_ceil(scaled))));
-		}
-	}
-	return discounted;
 }
 
 ArrayRef _normalized_built_buildings(State &state, DictRef town) {

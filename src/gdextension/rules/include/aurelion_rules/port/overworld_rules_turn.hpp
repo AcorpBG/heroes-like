@@ -37,7 +37,8 @@ DictRef town_capital_project_state(State &state, DictRef town, const Value &sess
 int64_t town_logistics_support_radius(State &state, DictRef session, DictRef town);
 Atom apply_resource_site_disruption(State &state, DictRef session, DictRef node, DictRef site, Atom previous_controller, Atom attacker_controller);
 DictRef _town_scaling_hero(State &state, DictRef session, DictRef town);
-DictRef _effective_player_town_weekly_growth(State &state, DictRef session, DictRef town);
+DictRef _computer_hero_in_doorway(State &state, DictRef session, DictRef town);
+DictRef _effective_town_weekly_growth(State &state, DictRef session, DictRef town);
 
 // Ported in overworld_rules_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 ArrayRef _build_scenario_resource_states(State &state, const Value &placements);

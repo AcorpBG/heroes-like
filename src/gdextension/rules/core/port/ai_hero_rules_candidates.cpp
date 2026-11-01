@@ -515,7 +515,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			return result;
 		}
 		case kStopTown:
-			return _town_candidate(state, session, context, entry, ref_index(), power);
+			return _town_candidate(state, session, context, entry, ref_index(), power, gd::is_empty(state, search) ? -1 : search_distance(state, search, tile_index));
 		case kStopEncounter:
 			return _encounter_candidate(state, session, context, entry, ref_index(), power, needs, search);
 		case kStopHero: {

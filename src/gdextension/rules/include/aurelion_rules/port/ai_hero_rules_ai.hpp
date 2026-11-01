@@ -143,7 +143,7 @@ double _hunt_value(State &state, DictRef session, DictRef context);
 // level's open ground still unseen.
 double _chart_value(State &state, DictRef session, DictRef context, int64_t level);
 bool _rival_towns_unknown(State &state, DictRef session, DictRef context);
-DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power);
+DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, int64_t steps = -1);
 // What a hero beats with `after` strength and not with `before`: the best rival
 // or neutral town it knows, or rival hero in sight, on the level of `place`
 // within twelve days of it, less the expected losses, per day of travel from

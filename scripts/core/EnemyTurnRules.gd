@@ -103,9 +103,6 @@ static func _faction_capital_state(session: SessionStateStoreScript.SessionData,
 static func _max_active_raids_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, launch_policy_context: Dictionary = {}) -> int:
 	return TurnEngine.native_writing(&"EnemyTurnRules._max_active_raids_for_strategy", [session, config, faction_id, launch_policy_context])
 
-static func _enemy_recruit_cost(town: Dictionary, unit_id: String) -> Dictionary:
-	return TurnEngine.native_writing(&"EnemyTurnRules._enemy_recruit_cost", [town, unit_id])
-
 static func _blank_resource_pool() -> Dictionary:
 	return HumanEngine.native(&"EnemyTurnRules._blank_resource_pool", [])
 
