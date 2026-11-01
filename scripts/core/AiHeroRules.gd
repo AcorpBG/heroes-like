@@ -545,9 +545,8 @@ static func _decision_main_id(session: SessionStateStoreScript.SessionData, cont
 ## While the hero decides, nothing on the map changes until another hero is
 ## moved out of the way (`_clear_way`, `_gate_walk`): no site changes hands and
 ## no hero of the player is hired, beaten or given anything. The decision's
-## searches share each site's passability (SITE_PASS_DECISION_KEY) and its
-## sight questions each own hero's scouting radius (SCOUT_RADII_KEY); both are
-## dropped before any hero moves and when the decision ends.
+## searches share each site's passability (SITE_PASS_DECISION_KEY), dropped
+## before any hero moves and when the decision ends.
 static func _choose_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
 	return TurnEngine.native_writing(&"AiHeroRules._choose_plan", [session, context, entry])
 
@@ -607,11 +606,6 @@ static func _guarded_object_value(session: SessionStateStoreScript.SessionData, 
 ## Whether some rival still holds a town this player has never seen.
 static func _rival_towns_unknown(session: SessionStateStoreScript.SessionData, context: Dictionary) -> bool:
 	return AiEngine.native_writing(&"AiHeroRules._rival_towns_unknown", [session, context])
-
-## A context for a run of `_position_seen` questions during which no hero of
-## the player moves or changes: the player's active heroes are listed once and
-## each one's scouting radius is worked out once, by its place in that list.
-const SCOUT_RADII_KEY := "scout_radii"
 
 # --- Knowledge ----------------------------------------------------------------
 

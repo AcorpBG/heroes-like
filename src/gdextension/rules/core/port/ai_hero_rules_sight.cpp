@@ -446,76 +446,21 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	return result;
 }
 
+// A computer player sees heroes by the player's rule: any ground it has explored
+// stays in sight (docs/fog-of-war-homm-style-decision.md).
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position) {
-	const Value radii = state.get(context, str(key::scout_radii), Value());
-	ArrayRef own;
-	const Value listed = state.get(context, str(key::sight_heroes), Value());
-	if (gd::is_array(listed)) {
-		own = listed.ref;
-	} else {
-		own = active_hero_entries(state, session, context_controller(state, context));
-		if (state.has(context, str(key::sight_heroes))) {
-			state.set(context, str(key::sight_heroes), array_value(own));
-		}
+	const Vector2i size = context_map_size(state, context);
+	const int64_t x = gd::int_field(state, position, key::x, 0);
+	const int64_t y = gd::int_field(state, position, key::y, 0);
+	if (x < 0 || y < 0 || x >= size.x || y >= size.y) {
+		return false;
 	}
-	const int64_t own_count = state.array_size(own);
-	for (int64_t own_index = 0; own_index < own_count; ++own_index) {
-		const DictRef entry = gd::as_dict(state.at(own, own_index));
-		if (!level_rules::same_level(state, dict_value(entry), dict_value(position))) {
-			continue;
-		}
-		int64_t radius = -1;
-		if (gd::is_dict(radii)) {
-			radius = gd::to_int(state, state.get(radii.ref, int_value(own_index), int_value(-1)));
-		}
-		if (radius < 0) {
-			radius = hero_command_rules::scouting_radius_for_hero(state, gd::as_dict(get_or_new_dict(state, dict_value(entry), key::enemy_commander_state)));
-			// A scouting spell cast today shows that far too.
-			radius = compat::engine_max<int64_t>(radius, gd::to_int(state, ai::vget(state, get_or_new_dict(state, dict_value(entry), key::ai_hero), key::survey_radius, int_value(0))));
-			if (gd::is_dict(radii)) {
-				state.set(radii.ref, int_value(own_index), int_value(radius));
-			}
-		}
-		const int64_t position_x = gd::int_field(state, position, key::x, 0);
-		const int64_t entry_x = gd::int_field(state, entry, key::x, 0);
-		const int64_t position_y = gd::int_field(state, position, key::y, 0);
-		const int64_t entry_y = gd::int_field(state, entry, key::y, 0);
-		if (hero_command_rules::within_scout_radius(state, gd::sub(position_x, entry_x), gd::sub(position_y, entry_y), radius)) {
-			return true;
-		}
-	}
-	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
-		if (!gd::is_dict(town) || string_or(state, town.ref, key::owner, key::empty) != key::enemy) {
-			continue;
-		}
-		const Atom town_controller = player_rules::town_controller_id(state, town.ref);
-		if (town_controller != context_controller(state, context) || !level_rules::same_level(state, town, dict_value(position))) {
-			continue;
-		}
-		const int64_t position_x = gd::int_field(state, position, key::x, 0);
-		const int64_t town_x = gd::int_field(state, town.ref, key::x, 0);
-		const int64_t position_y = gd::int_field(state, position, key::y, 0);
-		const int64_t town_y = gd::int_field(state, town.ref, key::y, 0);
-		// TOWN_SIGHT_RADIUS
-		if (hero_command_rules::within_scout_radius(state, gd::sub(position_x, town_x), gd::sub(position_y, town_y), 8)) {
-			return true;
-		}
-	}
-	return false;
+	return gd::packed_int(state, _explored(state, session, context, level_rules::level_of(state, dict_value(position))), gd::add(gd::mul(y, size.x), x)) != 0;
 }
 
-DictRef _sight_context(State &state, Atom controller) {
-	const DictRef radii = state.new_dict();
-	const DictRef context = state.new_dict();
-	state.set(context, str(key::controller), str(controller));
-	state.set(context, str(key::scout_radii), dict_value(radii));
-	state.set(context, str(key::sight_heroes), Value());
-	return context;
-}
-
-ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller) {
+ArrayRef _hostile_heroes(State &state, DictRef session, DictRef context) {
+	const Atom controller = context_controller(state, context);
 	const ArrayRef result = state.new_array();
-	const DictRef context = _sight_context(state, controller);
 	for (const Value &hero : gd::field_items(state, session_view::overworld(state, session), str(key::player_heroes))) {
 		if (!gd::is_dict(hero) || player_rules::allied(state, dict_value(session), controller, key::player)) {
 			continue;
@@ -569,7 +514,7 @@ ArrayRef _recent_hostiles(State &state, DictRef session, DictRef context) {
 		return gd::as_array(cached);
 	}
 	if (!state.has(cache, str(key::hostile))) {
-		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context)));
 	}
 	std::unordered_set<Atom> in_sight;
 	for (const Value &threat : gd::items(state, gd::index(state, cache, str(key::hostile)))) {

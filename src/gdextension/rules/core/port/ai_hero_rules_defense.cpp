@@ -268,7 +268,7 @@ double _main_shortfall(State &state, DictRef session, DictRef context, DictRef m
 	const double power = hero_power(state, main);
 	double need = kInf;
 	if (!state.has(cache, str(key::hostile))) {
-		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, controller)));
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context)));
 	}
 	state.set(context, str(key::decision), dict_value(cache));
 	Value ai_hero;
@@ -476,7 +476,7 @@ bool _town_threatened(State &state, DictRef session, DictRef context, DictRef to
 		return gd::to_bool(cached);
 	}
 	if (!state.has(cache, str(key::hostile))) {
-		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context)));
 	}
 	state.set(context, str(key::decision), dict_value(cache));
 	const double defense = power_of(state, field_or_new_array(state, town, key::garrison));
@@ -645,7 +645,7 @@ double _unit_power(State &state, DictRef stack) {
 double _town_defense_need(State &state, DictRef session, DictRef context, DictRef town) {
 	const DictRef cache = dict_or_new(state, context, key::decision);
 	if (!state.has(cache, str(key::hostile))) {
-		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context_controller(state, context))));
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context)));
 		state.set(context, str(key::decision), dict_value(cache));
 	}
 	// Only a hostile hero that is seen or remembered calls for troops left

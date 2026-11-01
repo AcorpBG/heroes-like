@@ -559,7 +559,7 @@ void _note_vetoed_need(State &state, DictRef session, DictRef context, DictRef e
 	}
 	// Only rivals in sight or seen in the last few days keep a need.
 	std::unordered_set<Atom> hostile;
-	for (const Value &threat : gd::items(state, array_value(_hostile_heroes(state, session, context_controller(state, context))))) {
+	for (const Value &threat : gd::items(state, array_value(_hostile_heroes(state, session, context)))) {
 		hostile.insert(gd::stringify(state, ai::vmember(state, threat, key::id)));
 	}
 	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context)))) {
@@ -940,6 +940,11 @@ DictRef _claim_resource(State &state, DictRef session, DictRef context, int64_t 
 	state.set(entry, str(key::enemy_army), state.lookup(updated, str(key::enemy_army), found) ? found : map_field(state, entry, key::enemy_army));
 	DictRef commander = gd::as_dict(state.lookup(updated, str(key::enemy_commander_state), found) ? found : map_field(state, entry, key::enemy_commander_state));
 	const DictRef claimed = resource_node_at(state, session, node_index);
+	// Claiming a site shows the ground around it, as a player's claim does.
+	const int64_t claim_radius = gd::int_field(state, site, key::vision_radius, 0);
+	if (claim_radius > 0 && !visit_building_rules::is_visit_building(state, site) && !gd::equal(state, dict_value(claimed), dict_value(node_before))) {
+		_reveal(state, session, context, claimed, claim_radius);
+	}
 	// A chart the side paid for shows it the whole level.
 	if (visit_building_rules::is_visit_building(state, site) && visit_building_rules::reveals_level(state, site) && !gd::equal(state, dict_value(claimed), dict_value(node_before))) {
 		_reveal_level(state, session, context, level_rules::level_of(state, dict_value(claimed)));
@@ -1334,6 +1339,7 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	// A human buys a captured town's troops into its garrison at once, so a
 	// passing hero cannot simply walk back in.
 	ai::append_array(state, events, _recruit_town(state, session, context, town_index, state.new_dict()));
+	_reveal_town_sight(state, session, context, town);
 	const DictRef entry = encounter_at(state, session, index);
 	if (previous_owner == key::enemy) {
 		const DictRef door = level_rules::town_entrance(state, town);

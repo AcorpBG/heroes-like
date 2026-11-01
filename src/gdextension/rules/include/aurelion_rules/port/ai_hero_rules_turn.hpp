@@ -33,6 +33,7 @@ void _reveal_from_holdings(State &state, DictRef session, DictRef context);
 DictRef _shared_level_surfaces(State &state, DictRef session);
 void _start_heroes_day(State &state, DictRef session, Atom controller);
 void _store_explored(State &state, DictRef context);
+void _reveal_town_sight(State &state, DictRef session, DictRef context, DictRef town);
 DictRef _turn_result(State &state, DictRef state_, ArrayRef messages, ArrayRef events, bool profile_enabled, DictRef phases, int64_t started);
 void _use_weights(State &state, DictRef state_);
 void clear_shared_surfaces(State &state);

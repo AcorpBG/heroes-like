@@ -155,7 +155,6 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 	}
 	// Rival heroes stand still through this player's turn and end a route
 	// where they stand, as the search has it.
-	const DictRef sight = _sight_context(state, gd::stringify(state, gd::index(state, context, str(key::controller))));
 	const state::ValueList hero_guards = state.array(_hero_guards(state, session, context, level)).items;
 	for (const Value &hero_guard : hero_guards) {
 		if (!gd::to_bool(ai::vmember(state, hero_guard, key::hostile))) {
@@ -182,7 +181,7 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 			const double power = hero_power(state, other);
 			const Value commander = state.lookup(other, str(key::enemy_commander_state), found) ? found : dict_value(state.new_dict());
 			const DictRef position = overworld_level_rules::position(state, other);
-			const bool seen = _position_seen(state, session, sight, position);
+			const bool seen = _position_seen(state, session, context, position);
 			state.set(army, str(key::power), float_value(power));
 			state.set(army, str(key::commander), commander);
 			state.set(army, str(key::seen), bool_value(seen));
@@ -192,7 +191,7 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 			Value hero_army;
 			const Value stacks = state.lookup(hero, str(key::army), hero_army) ? get_or_new_array(state, hero_army, key::stacks) : array_value(state.new_array());
 			const double power = army_power(state, stacks, dict_value(hero));
-			const bool seen = _player_hero_seen(state, session, sight, hero);
+			const bool seen = _player_hero_seen(state, session, context, hero);
 			state.set(army, str(key::power), float_value(power));
 			state.set(army, str(key::commander), dict_value(hero));
 			state.set(army, str(key::seen), bool_value(seen));
@@ -573,7 +572,7 @@ ArrayRef _dangers(State &state, DictRef session, DictRef context, DictRef entry)
 	}
 	if (!state.has(cache, str(key::hostile))) {
 		const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
-		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, controller)));
+		state.set(cache, str(key::hostile), array_value(_hostile_heroes(state, session, context)));
 	}
 	state.set(context, str(key::decision), dict_value(cache));
 	const double power = hero_power(state, entry);

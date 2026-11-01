@@ -243,8 +243,8 @@ static bool _cast_movement_spell(State &state, DictRef session, DictRef context,
 }
 
 // A hero that has not spent the day's cast on walking looks around with its
-// scouting spell, if that shows more than it sees. What the spell shows counts
-// as in sight today (`_position_seen`), so the sightings keep it for days.
+// scouting spell, if that shows more than it sees. What the spell shows stays
+// explored, and so in sight (`_position_seen`).
 static void _cast_scouting_spell(State &state, DictRef session, DictRef context, Atom placement_id) {
 	const int64_t index = _entry_index(state, session, placement_id);
 	if (index < 0 || _is_resolved(state, session, placement_id)) {
@@ -279,7 +279,6 @@ static void _cast_scouting_spell(State &state, DictRef session, DictRef context,
 		return;
 	}
 	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
-	state.set(block, str(key::survey_radius), int_value(best_radius));
 	state.set(entry, str(key::ai_hero), dict_value(block));
 	_store_entry(state, session, index, entry);
 	_reveal(state, session, context, level_rules::position(state, entry), best_radius);
@@ -392,12 +391,10 @@ DictRef _choose_plan(State &state, DictRef session, DictRef context, DictRef ent
 
 void _open_decision_memos(State &state, DictRef context) {
 	state.set(context, str(key::decision_site_pass), dict_value(state.new_dict()));
-	state.set(context, str(key::scout_radii), dict_value(state.new_dict()));
 }
 
 void _close_decision_memos(State &state, DictRef context) {
 	state.erase(context, str(key::decision_site_pass));
-	state.erase(context, str(key::scout_radii));
 }
 
 DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef entry) {

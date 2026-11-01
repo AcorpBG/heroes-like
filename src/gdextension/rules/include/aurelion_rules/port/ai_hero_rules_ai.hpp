@@ -151,8 +151,7 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 // what it lets the army take.
 double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, double before, double after);
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position);
-DictRef _sight_context(State &state, Atom controller);
-ArrayRef _hostile_heroes(State &state, DictRef session, Atom controller);
+ArrayRef _hostile_heroes(State &state, DictRef session, DictRef context);
 // A hostile hero as _hostile_heroes lists it: id, owner, x, y, level, power and
 // reach (its movement, at least THREAT_MIN_REACH).
 DictRef hostile_record(State &state, Atom id, Atom owner, int64_t x, int64_t y, int64_t level, double power, int64_t movement_max);

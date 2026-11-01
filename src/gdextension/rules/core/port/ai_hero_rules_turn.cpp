@@ -17,6 +17,7 @@
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
+#include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/visit_building_rules_ai.hpp"
 #include "aurelion_rules/port/water_travel_rules.hpp"
@@ -496,7 +497,6 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 		state.set(movement, str(key::max), int_value(movement_max));
 		state.set(block, str(key::movement), dict_value(movement));
 		state.erase(block, str(key::visited_town_day));
-		state.erase(block, str(key::survey_radius));
 		// A town lost overnight, or a hero no longer in it, ends the wait there.
 		if (ai::string_or_empty(state, block, key::parked) != key::empty) {
 			const Atom parked_town = gd::stringify(state, gd::index(state, block, str(key::parked)));
@@ -586,7 +586,7 @@ void _note_sightings(State &state, DictRef session, DictRef context) {
 		}
 	}
 	const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
-	const ArrayRef hostiles = _hostile_heroes(state, session, controller);
+	const ArrayRef hostiles = _hostile_heroes(state, session, context);
 	for (const Value &hostile : gd::items(state, array_value(hostiles))) {
 		if (gd::stringify(state, ai::vmember(state, hostile, key::id)) == key::empty) {
 			continue;
@@ -649,11 +649,25 @@ void _store_explored(State &state, DictRef context) {
 	state.set(gd::as_dict(gd::index(state, context, str(key::state))), str(key::ai_explored), dict_value(stored));
 }
 
+void _reveal_town_sight(State &state, DictRef session, DictRef context, DictRef town) {
+	_reveal(state, session, context, overworld_level_rules::town_entrance(state, town), kTownSightRadius);
+}
+
 void _reveal_from_holdings(State &state, DictRef session, DictRef context) {
 	const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
 	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
 		if (gd::is_dict(town) && ai::string_or_empty(state, town.ref, key::owner) == key::enemy && player_identity_rules::town_controller_id(state, town.ref) == controller) {
-			_reveal(state, session, context, overworld_level_rules::town_entrance(state, town.ref), kTownSightRadius);
+			_reveal_town_sight(state, session, context, town.ref);
+		}
+	}
+	// A held site sees as far as a player's does.
+	for (const Value &node : gd::field_items(state, session_view::overworld(state, session), str(key::resource_nodes))) {
+		if (!gd::is_dict(node) || player_identity_rules::resource_controller_id(state, node.ref) != controller) {
+			continue;
+		}
+		const int64_t radius = overworld_rules::held_site_vision_radius(state, gd::content_row(state, state::ContentTable::ResourceSite, ai::string_or_empty(state, node.ref, key::site_id)));
+		if (radius > 0) {
+			_reveal(state, session, context, node.ref, radius);
 		}
 	}
 	const ArrayRef entries = active_hero_entries(state, session, controller);
