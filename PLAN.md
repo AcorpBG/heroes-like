@@ -47,6 +47,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-01 `ai-sight-player-rules-20261101` (ad872571b): Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.
 - 2026-11-01 `balance-brasshollow-tier1-health-20261101` (e01eb19c7): Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, same prices; score 84.6% to 92.1% in mixed games and 84.4% to 95.7% on large and extra large maps.
 - 2026-10-31 `ai-brasshollow-behaviour-20261031` (42b9f4d42): Brasshollow's field armies go after any income site they know; wins 61 to 75 of 251, score 77.4% to 84.6%, games without it identical. Its slow start stays, cause unknown.
 - 2026-10-31 `ai-embercourt-wardens-20261031` (e8c4504d6): Embercourt heroes leave a ward in each town they leave (60 strength a week, at most 15% of their army); empty town-weeks 21.8% to 9.5%, wins 115 to 94 of 251, games without it identical.

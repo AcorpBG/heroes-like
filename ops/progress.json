@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "balance-brasshollow-tier1-health-20261101",
- "currentSliceTitle": "Scrip Haulers 12 health, Tallyspring Throwers 9, Writwheel Reclaimers 10, same prices; score 84.6% to 92.1% in mixed games and 84.4% to 95.7% on large and extra large maps.",
+ "currentSliceId": "ai-sight-player-rules-20261101",
+ "currentSliceTitle": "Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-10-31T22:55:18Z",
+ "updatedAt": "2026-11-01T11:05:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-sight-player-rules-20261101",
+   "status": "completed",
+   "completedAt": "2026-11-01",
+   "summary": "Computer players get sight from held sites and claims, and see hostile heroes on any tile they have explored, as the human does.",
+   "commit": "ad872571b"
+  },
   {
    "id": "balance-brasshollow-tier1-health-20261101",
    "status": "completed",
