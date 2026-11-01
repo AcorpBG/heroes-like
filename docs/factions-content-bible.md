@@ -106,15 +106,22 @@ Hero seed IDs:
 
 Embercourt should not become a generic human castle. Its ladder is a prepared civic war machine: line holders, lane preparation, protected ranged crews, court authority, signal support, lock-bred shock, and a walking charter engine.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_embercourt_fordhook_cadets` | Fordhook Cadets | Cheap crossing holders with reach, bracing, and objective-adjacent retaliation. |
-| 2 | `unit_embercourt_lantern_sappers` | Lantern Sappers | Lane preparation, reveal utility, ember pots, and anti-ambush control. |
-| 3 | `unit_embercourt_bargebow_crews` | Bargebow Crews | Limited-shot heavy ranged pressure that needs protection and lanes. |
-| 4 | `unit_embercourt_ash_oath_bailiffs` | Ash-Oath Bailiffs | Bodyguard and morale-stable line enforcers that punish attacks into formation. |
-| 5 | `unit_embercourt_beacon_lectors` | Beacon Lectors | Support casters that refresh readiness, mark lanes, and steady compact formations. |
-| 6 | `unit_embercourt_sluicefire_lindworms` | Sluicefire Lindworms | Narrow-lane fire shock that hits hard when supported and collapses when isolated. |
-| 7 | `unit_embercourt_charter_colossus` | Charter Colossus | Zone anchor that raises retaliation value and forces full commitment or withdrawal. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_river_guard` | River Guard | Weirshield Sentinels | Reach line holders that brace against charges at fords and gates. |
+| 1 | 2 | `unit_embercourt_fordhook_cadets` | Fordhook Cadets | Chainford Marshals | Cheap crossing holders with reach, bracing, and objective-adjacent retaliation. |
+| 2 | 1 | `unit_ember_archer` | Ember Archer | Cinderwake Longbows | Ranged volleys with harrying shots that press a lane from distance. |
+| 2 | 2 | `unit_embercourt_lantern_sappers` | Lantern Sappers | Flarepot Engineers | Lane preparation, reveal utility, ember pots, and anti-ambush control. |
+| 3 | 1 | `unit_citadel_pikeward` | Citadel Pikeward | Gateward Phalanx | Reach infantry that guards its formation and makes a lane costly to enter. |
+| 3 | 2 | `unit_embercourt_bargebow_crews` | Bargebow Crews | Winchbow Arbalests | Limited-shot heavy ranged pressure that needs protection and lanes. |
+| 4 | 1 | `unit_embercourt_ash_oath_bailiffs` | Ash-Oath Bailiffs | Ashseal Justiciars | Bodyguard and morale-stable line enforcers that punish attacks into formation. |
+| 4 | 2 | `unit_embercourt_lockglass_writcasters` | Lockglass Writcasters | Prismwrit Adjudicators | Slow ranged volleys delivered as sealed writs from behind the line. |
+| 5 | 1 | `unit_embercourt_beacon_lectors` | Beacon Lectors | Dawnwrit Precentors | Support casters that refresh readiness, mark lanes, and steady compact formations. |
+| 5 | 2 | `unit_embercourt_beaconline_writguard` | Beaconline Writguard | Lanternwall Wardens | Braced formation guards that hold the beacon line in the open. |
+| 6 | 1 | `unit_embercourt_sluicefire_lindworms` | Sluicefire Lindworms | Floodpyre Lindworms | Narrow-lane fire shock that hits hard when supported and collapses when isolated. |
+| 7 | 1 | `unit_embercourt_charter_colossus` | Charter Colossus | Covenant Bastion | Zone anchor that raises retaliation value and forces full commitment or withdrawal. |
 
 ### Economy Preferences And Resources
 
@@ -208,15 +215,22 @@ Hero seed IDs:
 
 Mireclaw is not a green monster horde. Its ladder is predatory wetland logistics: snares, blinds, bog armor, pulls, rot chants, wounded-target finishers, and a marsh apex that turns fear into route control.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_mireclaw_reedsnare_kin` | Reedsnare Kin | Cheap snarers that slow and mark, weak alone and strong while surrounding. |
-| 2 | `unit_mireclaw_mudglass_slingers` | Mudglass Slingers | Ranged harriers that spread blindness and set up pack attacks. |
-| 3 | `unit_mireclaw_bogplate_maulers` | Bogplate Maulers | Slow bruisers with resistance and bonus damage against harried enemies. |
-| 4 | `unit_mireclaw_ferrychain_lashers` | Ferrychain Lashers | Pulls, pins, and movement punishment across lanes or objectives. |
-| 5 | `unit_mireclaw_sporewake_chanters` | Sporewake Chanters | Rot support, recovery denial, and wounded-prey amplifier. |
-| 6 | `unit_mireclaw_gorefen_rippers` | Gorefen Rippers | Fragile elite finishers for wounded or isolated targets. |
-| 7 | `unit_mireclaw_drowned_antler_sovereign` | Drowned Antler Sovereign | Apex pressure piece with fear, trample lanes, and wounded-stack dominance. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_blackbranch_cutthroat` | Blackbranch Cutthroat | Blackbranch Knifeshade | Quick shielded ambushers that backstab stacks already engaged. |
+| 1 | 2 | `unit_mireclaw_reedsnare_kin` | Reedsnare Kin | Knotroot Trappers | Cheap snarers that slow and mark, weak alone and strong while surrounding. |
+| 2 | 1 | `unit_bog_brute` | Bog Brute | Ironfen Bulwark | Slow shielded bruisers that soak the front of a swamp fight. |
+| 2 | 2 | `unit_mireclaw_mudglass_slingers` | Mudglass Slingers | Shattermire Slingers | Ranged harriers that spread blindness and set up pack attacks. |
+| 3 | 1 | `unit_gorefen_ripper` | Gorefen Ripper | Gorefen Redhook | Very fast predators with backstab and bloodrush that dive exposed stacks. |
+| 3 | 2 | `unit_mireclaw_bogplate_maulers` | Bogplate Maulers | Bogplate Gatebreakers | Slow bruisers with resistance and bonus damage against harried enemies. |
+| 4 | 1 | `unit_mireclaw_ferrychain_lashers` | Ferrychain Lashers | Blackwater Chainmasters | Pulls, pins, and movement punishment across lanes or objectives. |
+| 4 | 2 | `unit_mireclaw_mireglass_reedcasters` | Mireglass Reedcasters | Mireglass Dissonants | Slow ranged rot chants from behind shielding, wearing enemies down. |
+| 5 | 1 | `unit_mireclaw_sporewake_chanters` | Sporewake Chanters | Rotchoir Cantors | Rot support, recovery denial, and wounded-prey amplifier. |
+| 5 | 2 | `unit_mireclaw_fenbell_chainstalkers` | Fenbell Chainstalkers | Fenbell Tollreapers | Fast shielded hunters that harry and backstab isolated stacks. |
+| 6 | 1 | `unit_mireclaw_gorefen_rippers` | Gorefen Rippers | Gorefen Packlords | Fragile elite finishers for wounded or isolated targets. |
+| 7 | 1 | `unit_mireclaw_drowned_antler_sovereign` | Drowned Antler Sovereign | Crown of the Drowned Fen | Apex pressure piece with fear, trample lanes, and wounded-stack dominance. |
 
 ### Economy Preferences And Resources
 
@@ -308,15 +322,22 @@ Hero seed IDs:
 
 Sunvault is not a holy light faction. Its ladder is calibration warfare: shield line, marked-target ranged pressure, reposition duelists, resonance support, array constructs, heavy batteries, and a top-tier relay titan.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_sunvault_shard_wardens` | Shard Wardens | Durable shield line that protects arrays and reflects minor damage. |
-| 2 | `unit_sunvault_prism_adepts` | Prism Adepts | Accurate ranged pressure against marked or staggered targets. |
-| 3 | `unit_sunvault_mirror_duelists` | Mirror Duelists | Reposition melee that exploits broken timing and reflected lanes. |
-| 4 | `unit_sunvault_resonant_choristers` | Resonant Choristers | Support for spell cycling, cohesion, and focused marks. |
-| 5 | `unit_sunvault_solar_array_striders` | Solar Array Striders | Construct walkers that project small firing lanes and resist disruption. |
-| 6 | `unit_sunvault_aurora_ballistae` | Aurora Bastions | Heavy close-line prism defenders that hold relay fronts instead of adding another ranged battery. |
-| 7 | `unit_sunvault_daybreak_colossus` | Daybreak Colossus | Prepared-front amplifier and resonance capstone. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_shard_guard` | Shard Pavise Guard | Dawnwall Custodians | Braced, shielded pavise line covering the calibration teams behind it. |
+| 1 | 2 | `unit_sunvault_shard_wardens` | Shard Wardens | Mirrorback Wardens | Durable shield line that protects arrays and reflects minor damage. |
+| 2 | 1 | `unit_prism_adept` | Prism Harrier | Glarewing Harriers | Quick ranged volleys that press targets from distance. |
+| 2 | 2 | `unit_sunvault_prism_adepts` | Prism Adepts | Lattice Conjurers | Accurate ranged pressure against marked or staggered targets. |
+| 3 | 1 | `unit_aurora_ballista` | Aurora Ballista | Sunline Repeater | Slow ranged volleys from a fixed firing lane. |
+| 3 | 2 | `unit_sunvault_mirror_duelists` | Mirror Duelists | Parallax Blades | Reposition melee that exploits broken timing and reflected lanes. |
+| 4 | 1 | `unit_sunvault_resonant_choristers` | Resonant Choristers | Harmonic Precentors | Support for spell cycling, cohesion, and focused marks. |
+| 4 | 2 | `unit_sunvault_noonfacet_sentinels` | Noonfacet Sentinels | Meridian Lockguards | Braced, shielded blockers that hold the middle of the line. |
+| 5 | 1 | `unit_sunvault_solar_array_striders` | Solar Array Striders | Heliostat Pathfinders | Construct walkers that project small firing lanes and resist disruption. |
+| 5 | 2 | `unit_sunvault_zenith_lensbearers` | Zenith Lensbearers | Horizon Arbiters | Slow ranged volleys that focus fire from behind the shield line. |
+| 6 | 1 | `unit_sunvault_aurora_ballistae` | Aurora Bastions | Corona Bulwarks | Heavy close-line prism defenders that hold relay fronts instead of adding another ranged battery. |
+| 7 | 1 | `unit_sunvault_daybreak_colossus` | Daybreak Colossus | Firstlight Colossus | Prepared-front amplifier and resonance capstone. |
 
 ### Economy Preferences And Resources
 
@@ -408,15 +429,22 @@ Hero seed IDs:
 
 Thornwake is not elves, druids, or tree people. Its ladder is living infrastructure: bramble carriers, reach binders, menders, siege growth, mobility through rooted ground, regeneration leaders, and a battlefield-rooting bastion.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_thornwake_seedcutters` | Seedcutters | Low-tier carriers that plant brambles and improve on rooted ground. |
-| 2 | `unit_thornwake_thornwhip_carriers` | Thornwhip Carriers | Reach binders and disengage punishers. |
-| 3 | `unit_thornwake_sporeglass_menders` | Sporeglass Menders | Healing, cleanse, and rooted-status support. |
-| 4 | `unit_thornwake_barkmantle_rams` | Barkmantle Rams | Durable living siege and fortified-line breakers. |
-| 5 | `unit_thornwake_stagknot_runners` | Stag-Knot Runners | Mobile flankers through allied bramble lanes and anti-ranged pins. |
-| 6 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Ranged graft leaders that seed bramble pressure and give Thornwake a late backline threat. |
-| 7 | `unit_thornwake_worldroot_bastion` | Worldroot Bastion | Living fortress that roots battlefield zones and enables attrition walls. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_thornwake_seedcutters` | Seedcutters | Amberhook Reapers | Low-tier carriers that plant brambles and improve on rooted ground. |
+| 1 | 2 | `unit_thornwake_pollenhook_whistlers` | Pollenhook Whistlers | Bloomchime Whistlers | Ranged harriers that needle approaching stacks from the first turn. |
+| 2 | 1 | `unit_thornwake_thornwhip_carriers` | Thornwhip Carriers | Vinebraid Lashkeepers | Reach binders and disengage punishers. |
+| 2 | 2 | `unit_thornwake_bramblekite_needlers` | Bramblekite Needlers | Sunspine Kites | Ranged harriers that keep needling as the lines move. |
+| 3 | 1 | `unit_thornwake_sporeglass_menders` | Sporeglass Menders | Dewglass Restorers | Healing, cleanse, and rooted-status support. |
+| 3 | 2 | `unit_thornwake_seedshield_wardens` | Seedshield Wardens | Heartseed Wardens | Braced, shielded guardians of the living line. |
+| 4 | 1 | `unit_thornwake_barkmantle_rams` | Barkmantle Rams | Corkheart Ramparts | Durable living siege and fortified-line breakers. |
+| 4 | 2 | `unit_thornwake_dawnseed_bolters` | Dawnseed Bolters | Dawnburst Arbalists | Ranged volleys and harrying bolts from behind the grove. |
+| 5 | 1 | `unit_thornwake_stagknot_runners` | Stag-Knot Runners | Antlerloom Striders | Mobile flankers through allied bramble lanes and anti-ranged pins. |
+| 5 | 2 | `unit_thornwake_seedglass_cantors` | Seedglass Cantors | Blossomchoir Cantors | Ranged volleys and harrying chants from behind the living line. |
+| 6 | 1 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Orchardheart Matriarchs | Ranged graft leaders that seed bramble pressure and give Thornwake a late backline threat. |
+| 7 | 1 | `unit_thornwake_worldroot_bastion` | Worldroot Bastion | Evergraft Colossus | Living fortress that roots battlefield zones and enables attrition walls. |
 
 ### Economy Preferences And Resources
 
@@ -508,15 +536,22 @@ Hero seed IDs:
 
 Brasshollow is not dwarves, generic golems, or steampunk soldiers. Its ladder is contract industry: armored labor, machine skirmish, pavis protection, pressure artillery, debt engines, siege crawlers, and a furnace saint.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_brasshollow_scrip_haulers` | Scrip Haulers | Armored labor levy with bracing and minor repair utility. |
-| 2 | `unit_brasshollow_rivet_hounds` | Rivet Hounds | Fast machine skirmishers for anti-raider work and armor weakness reveal. |
-| 3 | `unit_brasshollow_furnace_pavis_teams` | Furnace Pavis Teams | Heavy shield teams that protect engines and punish frontal attacks. |
-| 4 | `unit_brasshollow_boiler_rivetcasters` | Boiler Rivetcasters | Short-range pressure artillery with heat buildup and splash risk. |
-| 5 | `unit_brasshollow_debt_engine_exactors` | Debt-Engine Exactors | Burst melee engines that overheat and then need protection. |
-| 6 | `unit_brasshollow_crucible_crawlers` | Crucible Crawlers | Setup siege engines that burn terrain and punish clustered enemies. |
-| 7 | `unit_brasshollow_foundry_saint` | Foundry Saint | Walking furnace idol that repairs machines, hardens allies, and projects heat. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_brasshollow_scrip_haulers` | Scrip Haulers | Ledgerwall Porters | Armored labor levy with bracing and minor repair utility. |
+| 1 | 2 | `unit_brasshollow_tallyspring_throwers` | Tallyspring Throwers | Writwheel Reclaimers | Ranged volleys of thrown tally-springs from the labor line. |
+| 2 | 1 | `unit_brasshollow_rivet_hounds` | Rivet Hounds | Seambreaker Hounds | Fast machine skirmishers for anti-raider work and armor weakness reveal. |
+| 2 | 2 | `unit_brasshollow_quenchspool_slingers` | Quenchspool Slingers | Arrestor Spoolers | Ranged volleys of quench spools from behind the armored line. |
+| 3 | 1 | `unit_brasshollow_furnace_pavis_teams` | Furnace Pavis Teams | Kilnwall Wardens | Heavy shield teams that protect engines and punish frontal attacks. |
+| 3 | 2 | `unit_brasshollow_gaugefire_arbalists` | Gaugefire Arbalists | Datumline Piercers | Measured ranged volleys with harrying shots against exposed stacks. |
+| 4 | 1 | `unit_brasshollow_boiler_rivetcasters` | Boiler Rivetcasters | Twinboiler Fusiliers | Short-range pressure artillery with heat buildup and splash risk. |
+| 4 | 2 | `unit_brasshollow_gaugeplate_bailiffs` | Gaugeplate Bailiffs | Warrant Anvils | Braced, shielded enforcers that hold ground and absorb charges. |
+| 5 | 1 | `unit_brasshollow_debt_engine_exactors` | Debt-Engine Exactors | Foreclosure Engines | Burst melee engines that overheat and then need protection. |
+| 5 | 2 | `unit_brasshollow_quenchbell_mortars` | Quenchbell Mortars | Staybell Bombardiers | Very slow ranged bombardment with volleys and harrying fire. |
+| 6 | 1 | `unit_brasshollow_crucible_crawlers` | Crucible Crawlers | Redline Crucible Crawlers | Setup siege engines that burn terrain and punish clustered enemies. |
+| 7 | 1 | `unit_brasshollow_foundry_saint` | Foundry Saint | Saint of the Last Furnace | Walking furnace idol that repairs machines, hardens allies, and projects heat. |
 
 ### Economy Preferences And Resources
 
@@ -608,15 +643,22 @@ Hero seed IDs:
 
 Veilmourn is not pirates, undead, or generic shadow assassins. Its ladder is fog-route warfare: evasive crews, lantern marks, maskglass skirmish, harpoon displacement, obituary debuffs, phase raiders, and a fog control leviathan.
 
-| Tier | Unit id | Unit name | Intent |
-| --- | --- | --- | --- |
-| 1 | `unit_veilmourn_bellwake_oars` | Bellwake Oars | Evasive screens and scouts that survive better while fogged. |
-| 2 | `unit_veilmourn_mourning_lanterns` | Mourning Lanterns | Reveal, blind, and isolation-mark support. |
-| 3 | `unit_veilmourn_maskglass_corsairs` | Maskglass Corsairs | Mobile skirmishers that punish blinded or isolated enemies. |
-| 4 | `unit_veilmourn_undertow_harpooners` | Undertow Harpooners | Ranged pulls, formation breaks, and kill-lane setup. |
-| 5 | `unit_veilmourn_obituary_scribes` | Obituary Scribes | Morale drain, retaliation weakening, and salvage storage. |
-| 6 | `unit_veilmourn_mirrorkeel_reavers` | Mirror-Keel Reavers | Phase raiders that strike backlines through fog lanes. |
-| 7 | `unit_veilmourn_fogbound_leviathan` | Fogbound Leviathan | Battlefield fog control and isolated-victim punishment. |
+Tiers 1-5 offer two dwellings, and building one permanently excludes the other in that town; tiers 6 and 7 have one. The game's list is `rosters` in `content/town_development.json`.
+
+| Tier | Choice | Unit id | Unit name | Upgrade | Intent |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 | `unit_veilmourn_bellwake_oars` | Bellwake Oars | Knellwake Wardens | Evasive screens and scouts that survive better while fogged. |
+| 1 | 2 | `unit_veilmourn_saltbell_casters` | Saltbell Casters | Echo-Salt Slingers | Ranged harriers casting salt-bell shot from the fog line. |
+| 2 | 1 | `unit_veilmourn_mourning_lanterns` | Mourning Lanterns | Lastlight Keepers | Reveal, blind, and isolation-mark support. |
+| 2 | 2 | `unit_veilmourn_tidehook_deckhands` | Tidehook Deckhands | Mooring Talons | Hookline crews under a fog screen that drag fights onto their terms. |
+| 3 | 1 | `unit_veilmourn_maskglass_corsairs` | Maskglass Corsairs | Shattermask Duelists | Mobile skirmishers that punish blinded or isolated enemies. |
+| 3 | 2 | `unit_veilmourn_wakechain_boarders` | Wakechain Boarders | Gravetide Anchors | Chain boarders that hookline targets into melee under a fog screen. |
+| 4 | 1 | `unit_veilmourn_undertow_harpooners` | Undertow Harpooners | Keelbreaker Lancers | Ranged pulls, formation breaks, and kill-lane setup. |
+| 4 | 2 | `unit_veilmourn_gloamkeel_bulwarks` | Gloamkeel Bulwarks | Mournhull Sentinels | Braced, fog-screened blockers that hold the front. |
+| 5 | 1 | `unit_veilmourn_obituary_scribes` | Obituary Scribes | Lastword Registrars | Morale drain, retaliation weakening, and salvage storage. |
+| 5 | 2 | `unit_veilmourn_wakeglass_navigators` | Wakeglass Navigators | Pale Meridian Pilots | Fog-screened harriers that press exposed stacks. |
+| 6 | 1 | `unit_veilmourn_mirrorkeel_reavers` | Mirror-Keel Reavers | Duskpass Revenants | Phase raiders that strike backlines through fog lanes. |
+| 7 | 1 | `unit_veilmourn_fogbound_leviathan` | Fogbound Leviathan | Mourningdeep Sovereign | Battlefield fog control and isolated-victim punishment. |
 
 ### Economy Preferences And Resources
 
