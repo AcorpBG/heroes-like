@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "docs-faction-unit-choices-20261101",
- "currentSliceTitle": "Faction design doc tables list all twelve unit choices with upgrades, from the town development rosters. Documentation only.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-01T16:16:18Z",
+ "currentSliceId": "town-support-artifact-fixes",
+ "currentSliceTitle": "Town support gap and enemy-side artifact stats",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-01T19:16:08Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-support-artifact-fixes",
+   "title": "Town support gap and enemy-side artifact stats",
+   "status": "in_progress",
+   "goal": "Owner asked for both audit fixes, no batch. content/towns.json: towns stop requiring outposts and shrines generated maps cannot place. commander_payload.cpp: enemy-side heroes get worn artifact battle stats.",
+   "docs": [],
+   "updatedAt": "2026-11-01"
+  },
   {
    "id": "docs-faction-unit-choices-20261101",
    "status": "completed",

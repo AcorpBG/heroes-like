@@ -1,6 +1,7 @@
 // Layer 2: the commander payload: a side's hero payload, its specialty bonuses and difficulty terms.
 
 #include "aurelion_rules/port/ai_route.hpp"
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
@@ -282,7 +283,7 @@ bool _has_battle_trait(State &state, const Value &traits, Atom trait_id) {
 }
 
 DictRef _enemy_hero_payload_from_state(State &state, DictRef hero_state, const Value &existing_payload, const Value &session) {
-	const DictRef payload = _hero_payload_from_state(state, hero_state, state.new_dict(), session, key::enemy);
+	const DictRef payload = _hero_payload_from_state(state, hero_state, artifact_rules::aggregate_bonuses(state, hero_state), session, key::enemy);
 	for (const Atom field : kCommanderIdentityKeys) {
 		const Atom value = stripped_string_field(state, hero_state, field);
 		if (value != key::empty) {

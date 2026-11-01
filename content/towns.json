@@ -10,11 +10,7 @@
       "strategic_summary": "Riverwatch anchors the western crossings; if it stands, Embercourt can still reset the road war around a disciplined river line.",
       "logistics_plan": {
         "support_radius": 6,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 1,
         "vulnerability_summary": "If Riverwatch loses its linked yard, signal post, or sanctum, the river line cannot cycle reserves cleanly."
       },
@@ -167,11 +163,7 @@
       "strategic_summary": "Duskfen is the oath-host's first mustering basin; if it holds, Mireclaw keeps feeding cutters into every nearby road.",
       "logistics_plan": {
         "support_radius": 6,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 1,
         "vulnerability_summary": "If Duskfen loses its kennel, drum post, or shrine lane, the marsh musters stop arriving in step."
       },
@@ -326,11 +318,7 @@
       "strategic_summary": "Prismhearth is the Compact's relay capital. If its daybreak matrix comes online, Sunvault can turn the front into a full-theater firing network.",
       "logistics_plan": {
         "support_radius": 7,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 2,
         "vulnerability_summary": "If Prismhearth loses its lens house, relay post, or sanctum circuit, the daybreak arrays cannot keep their batteries synchronized."
       },
@@ -498,11 +486,7 @@
       "strategic_summary": "A migratory orchard-fort of seed vaults, graft halls, and bramble toll roads.",
       "logistics_plan": {
         "support_radius": 6,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 1,
         "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
       },
@@ -666,11 +650,7 @@
       "strategic_summary": "A contract foundry town of ore lifts, pressure rails, furnace chapels, and brass gantries.",
       "logistics_plan": {
         "support_radius": 6,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 1,
         "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
       },
@@ -833,11 +813,7 @@
       "strategic_summary": "A fog harbor of bell docks, mirror slips, obituary vaults, and black-sail moorings.",
       "logistics_plan": {
         "support_radius": 6,
-        "support_requirements": {
-          "neutral_dwelling": 1,
-          "faction_outpost": 1,
-          "frontier_shrine": 1
-        },
+        "support_requirements": {},
         "recovery_relief": 1,
         "vulnerability_summary": "Bellwake depends on its wreck ledger, memory-salt pan, and fog-buoy approaches; losing those routes exposes the harbor's long build chain."
       },
