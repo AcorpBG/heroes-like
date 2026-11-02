@@ -39,7 +39,6 @@ None open.
 
 ## Open work
 
-- `ai-one-way-monoliths-20261102` (in progress): Owner asked for it. Level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. ai_hero_rules_surface.cpp, ai_hero_rules_regions.cpp, ai_hero_rules_routes.cpp. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-02 `ai-one-way-monoliths-20261102` (28416b778): The AI's level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. Six-seed check: only l2, which has such monoliths, differs; balance unmeasured.
 - 2026-11-02 `ai-threat-walk-20261102` (a65c00ad9): Computer players' town threat checks walk a hostile hero over ground it can reach, past guards it can beat and through gates and monoliths, instead of a straight line. m374 and 18 formerly capped seeds all finish; balance unmeasured.
 - 2026-11-01 `muster-captain-computer` (9f4897e7e): Computer towns use the shared recruit price and hero growth; plan scoring values a Muster Captain hero at its town's door on the day before the week turns. No batch, balance unmeasured.
 - 2026-11-01 `town-support-artifact-fixes` (48cb7e345): Towns stop requiring outposts and shrines generated maps cannot place (+12-16% recruits); enemy-side heroes get worn artifact battle stats. Balance unmeasured.

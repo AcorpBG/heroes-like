@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-one-way-monoliths-20261102",
- "currentSliceTitle": "One-way monoliths lead one way in the AI's map areas",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-02T13:08:28Z",
+ "currentSliceTitle": "The AI's level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. Six-seed check: only l2, which has such monoliths, differs; balance unmeasured.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-02T13:08:56Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-one-way-monoliths-20261102",
-   "title": "One-way monoliths lead one way in the AI's map areas",
-   "status": "in_progress",
-   "goal": "Owner asked for it. Level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. ai_hero_rules_surface.cpp, ai_hero_rules_regions.cpp, ai_hero_rules_routes.cpp.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-11-02"
+   "status": "completed",
+   "completedAt": "2026-11-02",
+   "summary": "The AI's level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. Six-seed check: only l2, which has such monoliths, differs; balance unmeasured.",
+   "commit": "28416b778"
   },
   {
    "id": "ai-threat-walk-20261102",
