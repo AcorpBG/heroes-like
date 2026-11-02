@@ -243,13 +243,18 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 			step_offset[direction] = gd::packed_int(state, offsets, direction);
 		}
 	}
-	// portals.has(tile) and portals[tile] for each tile.
+	// portals.has(tile) and portals[tile] for each tile. A one-way monolith joins
+	// nothing: the way through it runs one way, as a crossing (`_route_map`,
+	// the threat checks' `steps_to_door`).
 	std::vector<int32_t> portal_slot(tile_count, -1);
 	std::vector<Value> portal_values;
 	if (has_portals) {
 		const state::DictNode &node = state.dict(portals);
 		for (size_t slot = 0; slot < node.keys.size(); ++slot) {
 			const Value &tile = node.keys[slot];
+			if (gd::to_bool(ai::vget(state, node.values[slot], key::one_way, bool_value(false)))) {
+				continue;
+			}
 			if (tile.kind == Kind::Int && tile.i >= 0 && tile.i < count && portal_slot[static_cast<size_t>(tile.i)] < 0) {
 				portal_slot[static_cast<size_t>(tile.i)] = static_cast<int32_t>(portal_values.size());
 				portal_values.push_back(node.values[slot]);

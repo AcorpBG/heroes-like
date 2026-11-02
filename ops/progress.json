@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-threat-walk-20261102",
- "currentSliceTitle": "Computer players' town threat checks walk a hostile hero over ground it can reach, past guards it can beat and through gates and monoliths, instead of a straight line. m374 and 18 formerly capped seeds all finish; balance unmeasured.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-02T12:34:31Z",
+ "currentSliceId": "ai-one-way-monoliths-20261102",
+ "currentSliceTitle": "One-way monoliths lead one way in the AI's map areas",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-02T13:08:28Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-one-way-monoliths-20261102",
+   "title": "One-way monoliths lead one way in the AI's map areas",
+   "status": "in_progress",
+   "goal": "Owner asked for it. Level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. ai_hero_rules_surface.cpp, ai_hero_rules_regions.cpp, ai_hero_rules_routes.cpp.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-02"
+  },
   {
    "id": "ai-threat-walk-20261102",
    "status": "completed",

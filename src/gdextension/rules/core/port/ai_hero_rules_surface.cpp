@@ -392,7 +392,8 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 	// Portals on this level, by entrance tile: their exits on this level and the
 	// portal node. One that sends travellers to one of several exits at random
 	// keeps their number (`random`) and its exits on another level (`far_exits`):
-	// a hero stepping in may come out there.
+	// a hero stepping in may come out there. A one-way monolith is marked
+	// (`one_way`): nothing leads back through it.
 	const DictRef portals = state.new_dict();
 	for (int64_t index = 0; index < resource_count; ++index) {
 		const Value node = state.at(resources, index);
@@ -433,6 +434,9 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 				}
 				if (state.array_size(far_exits) != 0) {
 					state.set(portal, str(key::far_exits), array_value(far_exits));
+				}
+				if (kind == key::one_way_entrance) {
+					state.set(portal, str(key::one_way), bool_value(true));
 				}
 				state.set(portals, int_value(tile_index_of(tile, size)), dict_value(portal));
 			}

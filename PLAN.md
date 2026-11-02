@@ -39,6 +39,7 @@ None open.
 
 ## Open work
 
+- `ai-one-way-monoliths-20261102` (in progress): Owner asked for it. Level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. ai_hero_rules_surface.cpp, ai_hero_rules_regions.cpp, ai_hero_rules_routes.cpp. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
