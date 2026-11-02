@@ -39,7 +39,6 @@ None open.
 
 ## Open work
 
-- `ai-meet-in-town-20261102` (in progress): Couriers and field armies can hand troops to the main or a field army standing in an own town: the route search keeps that hero as a meeting point, and joining it counts as going into that town for the danger rule. Files: ai_hero_rules_search.cpp, ai_hero_rules_candidates.cpp, AI doc. Owner: troops travel with heroes, not idle in garrisons; scored options, not blockers. Checked on m305, m325, m130 of the 2 November batch. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-02 `ai-meet-in-town-20261102` (b6369de22): Couriers and field armies hand troops to an own army standing in an own town; joining it near danger counts as going into that town. m305, m325, m130 replays end days 98, 83, 151 (300, cap, 247); six-seed check all finish.
 - 2026-11-02 `ai-one-way-monoliths-20261102` (28416b778): The AI's level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. Six-seed check: only l2, which has such monoliths, differs; balance unmeasured.
 - 2026-11-02 `ai-threat-walk-20261102` (a65c00ad9): Computer players' town threat checks walk a hostile hero over ground it can reach, past guards it can beat and through gates and monoliths, instead of a straight line. m374 and 18 formerly capped seeds all finish; balance unmeasured.
 - 2026-11-01 `muster-captain-computer` (9f4897e7e): Computer towns use the shared recruit price and hero growth; plan scoring values a Muster Captain hero at its town's door on the day before the week turns. No batch, balance unmeasured.
