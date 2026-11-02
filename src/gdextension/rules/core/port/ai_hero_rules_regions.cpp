@@ -11,7 +11,9 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
+#include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -178,6 +180,7 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 		state.set(army, str(key::tiles), array_value(tiles));
 		if (gd::stringify(state, ai::vmember(state, hero_guard, key::ref_kind)) == key::ai_hero) {
 			const DictRef other = gd::as_dict(state.at(encounters, gd::to_int(state, ai::vmember(state, hero_guard, key::index))));
+			state.set(army, str(key::owner), str(player_identity_rules::raid_controller_id(state, other)));
 			const double power = hero_power(state, other);
 			const Value commander = state.lookup(other, str(key::enemy_commander_state), found) ? found : dict_value(state.new_dict());
 			const DictRef position = overworld_level_rules::position(state, other);
@@ -192,6 +195,7 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 			const Value stacks = state.lookup(hero, str(key::army), hero_army) ? get_or_new_array(state, hero_army, key::stacks) : array_value(state.new_array());
 			const double power = army_power(state, stacks, dict_value(hero));
 			const bool seen = _player_hero_seen(state, session, context, hero);
+			state.set(army, str(key::owner), str(key::player));
 			state.set(army, str(key::power), float_value(power));
 			state.set(army, str(key::commander), dict_value(hero));
 			state.set(army, str(key::seen), bool_value(seen));
@@ -368,6 +372,15 @@ PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64
 		first = false;
 		joined += gd::text(state, id);
 	}
+	// A rival hero walked by the threat checks (`threat_walker`) passes its own
+	// side's heroes and its allies', and the guards that fall during the turn.
+	const Atom walker_side = ai::string_or_empty(state, entry, key::walker_side);
+	if (walker_side != key::empty) {
+		Value resolved_list;
+		const bool listed = state.lookup(session_view::overworld(state, session), str(key::resolved_encounters), resolved_list) && gd::is_array(resolved_list);
+		joined += '#';
+		joined += std::to_string(listed ? state.array_size(resolved_list.ref) : 0);
+	}
 	const Atom stretch_key = gd::format(state, key::d_d_d_s_s, {int_value(level), int_value(compat::float_to_int(power)), int_value(compat::float_to_int(loss_limit)), str(ai::string_or_empty(state, entry, key::placement_id)), str(state.intern(joined))});
 	Value found;
 	const DictRef cache = state.lookup(context, str(key::level_stretches), found) ? gd::as_dict(found) : state.new_dict();
@@ -382,7 +395,10 @@ PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64
 	gd::packed_resize(state, beaten, state.array_size(guards));
 	for (int64_t guard_patch = 0; guard_patch < state.array_size(guards); ++guard_patch) {
 		const DictRef guard = gd::as_dict(state.at(guards, guard_patch));
+		const Atom guard_side = ai::string_or_empty(state, guard, key::owner);
 		if (state.has(resolved, str(gd::stringify(state, gd::index(state, guard, str(key::id)))))) {
+			gd::packed_set(state, beaten, guard_patch, 1);
+		} else if (walker_side != key::empty && guard_side != key::empty && (guard_side == walker_side || player_identity_rules::allied(state, dict_value(session), walker_side, guard_side))) {
 			gd::packed_set(state, beaten, guard_patch, 1);
 		} else if (state.has(avoided, str(gd::stringify(state, gd::index(state, guard, str(key::id))))) || _expected_loss_value(state, power, gd::to_float(gd::index(state, guard, str(key::power)))) > loss_limit) {
 			continue;
@@ -397,6 +413,9 @@ PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64
 			if (after_burst >= gd::to_float(gd::index(state, guard, str(key::power))) * ai::static_float(state, key::ai_hero_rules_script, key::HERO_ATTACK_RATIO)) {
 				gd::packed_set(state, beaten, guard_patch, 1);
 			}
+		} else if (walker_side != key::empty) {
+			// A rival hero this player has not seen is not in the walker's way.
+			gd::packed_set(state, beaten, guard_patch, 1);
 		}
 	}
 	const ArrayRef parent = state.new_array();
@@ -448,6 +467,78 @@ int64_t _patch_root(State &state, ArrayRef parent, int64_t patch) {
 		patch = gd::to_int(state, state.at(parent, patch));
 	}
 	return patch;
+}
+
+int64_t _tile_stretch(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, double power, double loss_limit, DictRef entry) {
+	const PackedRef patches = gd::as_ints(gd::index(state, _level_regions(state, session, context, level), str(key::patches)));
+	if (tile < 0 || tile >= gd::packed_size(state, patches) || gd::packed_int(state, patches, tile) < 0) {
+		return -1;
+	}
+	return gd::packed_int(state, _level_stretches(state, session, context, level, power, loss_limit, entry), gd::packed_int(state, patches, tile));
+}
+
+std::vector<int64_t> _home_stretches(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, Atom hero_id, double power, double loss_limit, DictRef entry) {
+	const DictRef regions = _level_regions(state, session, context, level);
+	const PackedRef patches = gd::as_ints(gd::index(state, regions, str(key::patches)));
+	const int64_t count = gd::packed_size(state, patches);
+	if (tile < 0 || tile >= count || gd::packed_int(state, patches, tile) < 0) {
+		return {};
+	}
+	const PackedRef stretches = _level_stretches(state, session, context, level, power, loss_limit, entry);
+	const int64_t home = gd::packed_int(state, patches, tile);
+	const ArrayRef guards = gd::as_array(gd::index(state, regions, str(key::guards)));
+	const int64_t guard_count = state.array_size(guards);
+	if (home >= guard_count || gd::stringify(state, gd::index(state, gd::as_dict(state.at(guards, home)), str(key::id))) == hero_id) {
+		return {gd::packed_int(state, stretches, home)};
+	}
+	// Another army's zone took its tile first. To this player it stands in what
+	// is left of its own zone around that tile; a hero remembered where it was
+	// seen, gone since, has none there.
+	const int64_t width = vector2i_of(gd::index(state, context, str(key::map_size))).x;
+	if (width <= 0) {
+		return {gd::packed_int(state, stretches, home)};
+	}
+	const int64_t tile_x = tile % width;
+	const int64_t tile_y = tile / width;
+	for (int64_t patch = 0; patch < guard_count; ++patch) {
+		const DictRef guard = gd::as_dict(state.at(guards, patch));
+		if (gd::stringify(state, gd::index(state, guard, str(key::id))) != hero_id) {
+			continue;
+		}
+		for (const Value &own : gd::items(state, gd::index(state, guard, str(key::tiles)))) {
+			const int64_t own_tile = gd::to_int(state, own);
+			if (std::abs(own_tile % width - tile_x) <= 1 && std::abs(own_tile / width - tile_y) <= 1) {
+				return {gd::packed_int(state, stretches, patch)};
+			}
+		}
+		break;
+	}
+	// With nothing of its own left, it may step out of that zone onto the
+	// ground beside it, as the search lets a hero leave the tile it stands on.
+	std::vector<int64_t> result = {gd::packed_int(state, stretches, home)};
+	const DictRef surface = _level_surface(state, session, context, level);
+	const uint8_t *blocked_at = gd::packed_bytes(state, gd::as_bytes(gd::index(state, surface, str(key::blocked))));
+	const bool native_corners = native_transit_rules::uses_native_adjacency(state, dict_value(session));
+	const int64_t height = count / width;
+	for (int64_t direction = 0; direction < 8; ++direction) {
+		const int64_t nx = tile_x + kNeighborDx[direction];
+		const int64_t ny = tile_y + kNeighborDy[direction];
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+			continue;
+		}
+		const int64_t next_patch = gd::packed_int(state, patches, ny * width + nx);
+		if (next_patch < 0 || next_patch == home) {
+			continue;
+		}
+		if (nx != tile_x && ny != tile_y && !native_corners && blocked_at[static_cast<size_t>(tile_y * width + nx)] != 0 && blocked_at[static_cast<size_t>(ny * width + tile_x)] != 0) {
+			continue;
+		}
+		const int64_t stretch = gd::packed_int(state, stretches, next_patch);
+		if (std::find(result.begin(), result.end(), stretch) == result.end()) {
+			result.push_back(stretch);
+		}
+	}
+	return result;
 }
 
 Atom _stretch_key(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, double power, double loss_limit, DictRef entry) {

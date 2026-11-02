@@ -10,6 +10,7 @@
 #include "aurelion_rules/port/overworld_rules.hpp"
 
 #include <cstdint>
+#include <vector>
 
 namespace aurelion::rules::port::ai_hero_rules {
 
@@ -102,6 +103,12 @@ bool _can_afford(State &state, DictRef pool, DictRef cost);
 DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t level);
 PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64_t level, double power, double loss_limit, DictRef entry);
 int64_t _patch_root(State &state, ArrayRef parent, int64_t patch);
+// The stretch (`_level_stretches`) a tile of `level` lies in, -1 on a tile no
+// patch takes (rock, water).
+int64_t _tile_stretch(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, double power, double loss_limit, DictRef entry);
+// The stretches a hero `hero_id` standing on `tile` walks from: its own zone's,
+// or where another army's zone took its tile, the ground beside it. None at sea.
+std::vector<int64_t> _home_stretches(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, Atom hero_id, double power, double loss_limit, DictRef entry);
 Atom _stretch_key(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, double power, double loss_limit, DictRef entry);
 DictRef _avoided_today(State &state, DictRef session, DictRef entry);
 DictRef _beyond_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef gate, int64_t movement_max, int64_t radius);

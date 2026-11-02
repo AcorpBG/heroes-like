@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "muster-captain-computer",
- "currentSliceTitle": "Computer towns use the shared recruit price and hero growth; plan scoring values a Muster Captain hero at its town's door on the day before the week turns. No batch, balance unmeasured.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-01T19:55:04Z",
+ "currentSliceId": "ai-threat-walk-20261102",
+ "currentSliceTitle": "Town threats count only ground the hero can walk",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-02T12:33:58Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-threat-walk-20261102",
+   "title": "Town threats count only ground the hero can walk",
+   "status": "in_progress",
+   "goal": "Owner asked to look into m374's standoff. A computer player's town threat checks walk the hostile hero over ground it can reach, past guards it can beat and through gates and monoliths, instead of a straight line. ai_hero_rules_defense.cpp, ai_hero_rules_regions.cpp.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-02"
+  },
   {
    "id": "muster-captain-computer",
    "status": "completed",

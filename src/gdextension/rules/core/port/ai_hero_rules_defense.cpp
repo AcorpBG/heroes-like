@@ -9,13 +9,16 @@
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -99,53 +102,210 @@ int64_t tile_distance(int64_t ax, int64_t bx, int64_t ay, int64_t by) {
 	return compat::engine_max<int64_t>(compat::absi(gd::sub(ax, bx)), compat::absi(gd::sub(ay, by)));
 }
 
-// Tiles from (x, y) on `level` to a town's doorway: the straight distance on one
-// level; across levels the shortest way through a gate or monolith of that level
-// whose exit lies on the doorway's level, one tile for the crossing. -1 when no
-// gate leads there. A hostile hero threatens towns on either level.
-int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x, int64_t y, int64_t level, DictRef entrance) {
+// A way off a tile of one level: a gate or monolith to another level, or a
+// portal to a tile of the same level.
+struct Crossing {
+	int64_t tile;
+	int64_t exit_x;
+	int64_t exit_y;
+	int64_t exit_level;
+};
+
+// A hostile hero as the threat checks walk it: the ground it gets to beating
+// any guard it can beat (`_level_stretches`, which lets it pass its own side's
+// heroes, its allies' and those this player has not seen), within the tiles the
+// caller counts. A caller looking two days ahead also lets it take to the water.
+struct Walker {
+	Atom id;
+	double power;
+	int64_t reach;
+	int64_t limit;
+	bool two_days;
+	DictRef entry;
+	// The crossings of each level, looked up once for all the towns it is
+	// walked to.
+	mutable std::unordered_map<int64_t, std::vector<Crossing>> crossings;
+};
+
+// A threat fights any guard it can beat on its way: the loss is its own choice.
+constexpr double kAnyLoss = 1.0e15;
+
+Walker threat_walker(State &state, Atom id, Atom side, double power, int64_t reach, int64_t limit, bool two_days) {
+	const DictRef entry = state.new_dict();
+	state.set(entry, str(key::placement_id), str(id));
+	state.set(entry, str(key::walker_side), str(side));
+	return Walker{id, power, reach, limit, two_days, entry, {}};
+}
+
+// Whether the walker could put to sea by tomorrow: it is aboard already, or a
+// free boat lies beside its ground or a shipyard on it within a day's walk.
+bool takes_ship(State &state, DictRef session, DictRef context, const Walker &walker, int64_t x, int64_t y, int64_t level, const std::vector<int64_t> &homes) {
+	if (homes.empty()) {
+		return true;
+	}
+	const Vector2i size = context_map_size(state, context);
+	const auto near_home = [&](int64_t tile_x, int64_t tile_y) {
+		return tile_distance(x, tile_x, y, tile_y) <= gd::add(walker.reach, 1);
+	};
+	const auto on_home = [&](int64_t tile_x, int64_t tile_y) {
+		if (tile_x < 0 || tile_y < 0 || tile_x >= size.x || tile_y >= size.y) {
+			return false;
+		}
+		const int64_t there = ai_hero_rules::_tile_stretch(state, session, context, level, gd::add(gd::mul(tile_y, size.x), tile_x), walker.power, kAnyLoss, walker.entry);
+		return std::find(homes.begin(), homes.end(), there) != homes.end();
+	};
+	for (const Value &boat : gd::items(state, array_value(water_travel_rules::boats(state, dict_value(session))))) {
+		if (!gd::is_dict(boat) || gd::int_field(state, boat.ref, key::level, 0) != level || ai::string_or_empty(state, boat.ref, key::hero_id) != key::empty) {
+			continue;
+		}
+		const int64_t boat_x = gd::int_field(state, boat.ref, key::x, -1);
+		const int64_t boat_y = gd::int_field(state, boat.ref, key::y, -1);
+		if (!near_home(boat_x, boat_y)) {
+			continue;
+		}
+		for (int64_t dx = -1; dx <= 1; ++dx) {
+			for (int64_t dy = -1; dy <= 1; ++dy) {
+				if ((dx != 0 || dy != 0) && on_home(boat_x + dx, boat_y + dy)) {
+					return true;
+				}
+			}
+		}
+	}
+	const Value shipyards = state.get(ai_hero_rules::_level_surface(state, session, context, level), str(key::shipyards), Value());
+	if (gd::is_dict(shipyards) && size.x > 0) {
+		for (const Value &visit : gd::items(state, shipyards)) {
+			const int64_t tile = gd::to_int(state, visit);
+			if (near_home(compat::int_mod(tile, size.x), tile / size.x) && on_home(compat::int_mod(tile, size.x), tile / size.x)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// The crossings that start on `level`. A portal with several exits may let a
+// hero out at any of them. The walker's map keeps its entries in place as it
+// grows.
+const std::vector<Crossing> &level_crossings(State &state, DictRef session, DictRef context, const Walker &walker, int64_t level, int64_t width) {
+	const auto cached = walker.crossings.find(level);
+	if (cached != walker.crossings.end()) {
+		return cached->second;
+	}
+	std::vector<Crossing> &crossings = walker.crossings[level];
+	const DictRef surface = ai_hero_rules::_level_surface(state, session, context, level);
+	const Value gates = state.get(surface, str(key::gates), Value());
+	if (gd::is_dict(gates)) {
+		for (const Value &gate_tile : gd::items(state, gates)) {
+			const Value gate = gd::index(state, gates.ref, gate_tile);
+			const Value far_exits = ai::vget(state, gate, key::far_exits, Value());
+			const ArrayRef exits = gd::is_array(far_exits) ? far_exits.ref : state.new_array();
+			if (!gd::is_array(far_exits)) {
+				state.append(exits, ai::vmember(state, gate, key::exit));
+			}
+			for (const Value &exit : gd::items(state, array_value(exits))) {
+				if (gd::is_vector3i(exit)) {
+					crossings.push_back(Crossing{gd::to_int(state, gate_tile), exit.vx(), exit.vy(), exit.vz()});
+				}
+			}
+		}
+	}
+	const Value portals = state.get(surface, str(key::portals), Value());
+	if (gd::is_dict(portals)) {
+		for (const Value &portal_tile : gd::items(state, portals)) {
+			for (const Value &exit : gd::items(state, ai::vmember(state, gd::index(state, portals.ref, portal_tile), key::exits))) {
+				const int64_t exit_tile = gd::to_int(state, exit);
+				crossings.push_back(Crossing{gd::to_int(state, portal_tile), compat::int_mod(exit_tile, width), exit_tile / width, level});
+			}
+		}
+	}
+	return crossings;
+}
+
+// Tiles from (x, y) on `level` to a town's doorway as a hostile hero walks there
+// (`Walker`): a straight line over the ground it gets to, or the shortest way
+// through one or two gates, portals or monoliths, one tile for each crossing and
+// each leg a straight line over the ground it gets to there. -1 when no such way
+// lies within the walker's limit. A hostile hero threatens towns on either
+// level, but behind a guard it cannot beat a doorway a few tiles off is out of
+// its reach. A doorway on its level beyond the limit, with no crossing within
+// the limit of the walker to shorten the way, is counted in a straight line.
+int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x, int64_t y, int64_t level, DictRef entrance, const Walker &walker) {
 	const int64_t door_x = gd::int_field(state, entrance, key::x, 0);
 	const int64_t door_y = gd::int_field(state, entrance, key::y, 0);
 	const int64_t door_level = level_rules::level_of(state, dict_value(entrance));
-	if (level == door_level) {
-		return tile_distance(x, door_x, y, door_y);
-	}
+	const int64_t straight = tile_distance(x, door_x, y, door_y);
 	const int64_t width = context_map_size(state, context).x;
-	const Value gates = state.get(ai_hero_rules::_level_surface(state, session, context, level), str(key::gates), dict_value(state.new_dict()));
-	if (width <= 0 || !gd::is_dict(gates)) {
-		return -1;
+	if (width <= 0) {
+		return level == door_level ? straight : -1;
+	}
+	const auto to_crossing = [&](const Crossing &crossing) {
+		return gd::add(tile_distance(x, compat::int_mod(crossing.tile, width), y, crossing.tile / width), 1);
+	};
+	const bool far = level == door_level && straight > walker.limit;
+	if (far) {
+		const std::vector<Crossing> &near = level_crossings(state, session, context, walker, level, width);
+		if (std::none_of(near.begin(), near.end(), [&](const Crossing &crossing) { return to_crossing(crossing) <= walker.limit; })) {
+			return straight;
+		}
+	}
+	// The ground the walker stands on. At sea, or once it can sail, it may land
+	// anywhere on its level; past a crossing it walks.
+	const std::vector<int64_t> homes = ai_hero_rules::_home_stretches(state, session, context, level, gd::add(gd::mul(y, width), x), walker.id, walker.power, kAnyLoss, walker.entry);
+	const bool afloat = walker.two_days ? takes_ship(state, session, context, walker, x, y, level, homes) : homes.empty();
+	const auto stretch = [&](int64_t on_level, int64_t tile) {
+		return ai_hero_rules::_tile_stretch(state, session, context, on_level, tile, walker.power, kAnyLoss, walker.entry);
+	};
+	const auto from_home = [&](int64_t tile) {
+		const int64_t there = stretch(level, tile);
+		return afloat || there < 0 || std::find(homes.begin(), homes.end(), there) != homes.end();
+	};
+	const auto same_ground = [&](int64_t on_level, int64_t from, int64_t to) {
+		const int64_t start = stretch(on_level, from);
+		const int64_t there = stretch(on_level, to);
+		return start < 0 || there < 0 || start == there;
+	};
+	const int64_t door_tile = gd::add(gd::mul(door_y, width), door_x);
+	if (level == door_level && !far && from_home(door_tile)) {
+		return straight;
 	}
 	int64_t best = -1;
-	for (const Value &gate_tile : gd::items(state, gates)) {
-		const int64_t tile = gd::to_int(state, gate_tile);
-		const Value gate = gd::index(state, gates.ref, gate_tile);
-		// A portal with several exits may let it out at any of them.
-		const Value far_exits = ai::vget(state, gate, key::far_exits, Value());
-		const ArrayRef exits = gd::is_array(far_exits) ? far_exits.ref : state.new_array();
-		if (!gd::is_array(far_exits)) {
-			state.append(exits, ai::vmember(state, gate, key::exit));
+	const auto shorter = [&](int64_t steps) {
+		return steps <= walker.limit && (best < 0 || steps < best);
+	};
+	for (const Crossing &first : level_crossings(state, session, context, walker, level, width)) {
+		const int64_t to_exit = to_crossing(first);
+		if (!shorter(to_exit) || !from_home(first.tile)) {
+			continue;
 		}
-		for (const Value &exit : gd::items(state, array_value(exits))) {
-			if (!gd::is_vector3i(exit) || exit.vz() != door_level) {
+		const int64_t exit_tile = gd::add(gd::mul(first.exit_y, width), first.exit_x);
+		if (first.exit_level == door_level) {
+			const int64_t steps = gd::add(to_exit, tile_distance(first.exit_x, door_x, first.exit_y, door_y));
+			if (shorter(steps) && same_ground(door_level, exit_tile, door_tile)) {
+				best = steps;
+			}
+		}
+		for (const Crossing &second : level_crossings(state, session, context, walker, first.exit_level, width)) {
+			if (second.exit_level != door_level) {
 				continue;
 			}
-			const int64_t to_gate = tile_distance(x, compat::int_mod(tile, width), y, tile / width);
-			const int64_t steps = gd::add(gd::add(to_gate, 1), tile_distance(exit.vx(), door_x, exit.vy(), door_y));
-			if (best < 0 || steps < best) {
+			const int64_t steps = gd::add(gd::add(gd::add(to_exit, tile_distance(first.exit_x, compat::int_mod(second.tile, width), first.exit_y, second.tile / width)), 1), tile_distance(second.exit_x, door_x, second.exit_y, door_y));
+			if (shorter(steps) && same_ground(first.exit_level, exit_tile, second.tile) && same_ground(door_level, gd::add(gd::mul(second.exit_y, width), second.exit_x), door_tile)) {
 				best = steps;
 			}
 		}
 	}
-	return best;
+	return best >= 0 || !far ? best : straight;
 }
 
 // The way from a hostile hero of _hostile_heroes (threat.x, threat.y,
-// threat.level) to a town's doorway, -1 when there is none.
-int64_t threat_distance(State &state, DictRef session, DictRef context, const Value &threat, DictRef entrance) {
+// threat.level) to a town's doorway within `limit` tiles, -1 when there is none.
+int64_t threat_distance(State &state, DictRef session, DictRef context, const Value &threat, DictRef town, int64_t limit, bool two_days) {
 	const int64_t threat_x = gd::to_int(state, ai::vmember(state, threat, key::x));
 	const int64_t threat_y = gd::to_int(state, ai::vmember(state, threat, key::y));
 	const int64_t threat_level = gd::to_int(state, ai::vget(state, threat, key::level, int_value(0)));
-	return steps_to_door(state, session, context, threat_x, threat_y, threat_level, entrance);
+	const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
+	const Walker walker = threat_walker(state, gd::stringify(state, ai::vmember(state, threat, key::id)), gd::stringify(state, ai::vget(state, threat, key::owner, str(key::empty))), gd::to_float(ai::vmember(state, threat, key::power)), reach, limit, two_days);
+	return steps_to_door(state, session, context, threat_x, threat_y, threat_level, level_rules::town_entrance(state, town), walker);
 }
 
 // A hero keeps the field role this long after the towns that called for it
@@ -480,7 +640,6 @@ bool _town_threatened(State &state, DictRef session, DictRef context, DictRef to
 	}
 	state.set(context, str(key::decision), dict_value(cache));
 	const double defense = power_of(state, field_or_new_array(state, town, key::garrison));
-	const DictRef entrance = level_rules::town_entrance(state, town);
 	bool threatened = false;
 	double strongest = 0.0;
 	// In sight, or seen out there in the last few days.
@@ -489,9 +648,12 @@ bool _town_threatened(State &state, DictRef session, DictRef context, DictRef to
 		threats.push_back(threat);
 	}
 	for (const Value &threat : threats) {
-		const int64_t distance = threat_distance(state, session, context, threat, entrance);
-		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
-		if (distance >= 0 && distance <= gd::add(reach, tunable_int(state, key::THREAT_REACH_MARGIN)) &&gd::to_float(ai::vmember(state, threat, key::power)) > defense * tunable_float(state, key::THREAT_RATIO)) {
+		if (gd::to_float(ai::vmember(state, threat, key::power)) <= defense * tunable_float(state, key::THREAT_RATIO)) {
+			continue;
+		}
+		const int64_t reach = gd::add(gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10))), tunable_int(state, key::THREAT_REACH_MARGIN));
+		const int64_t distance = threat_distance(state, session, context, threat, town, reach, false);
+		if (distance >= 0 && distance <= reach) {
 			threatened = true;
 			const double threat_power = gd::to_float(ai::vmember(state, threat, key::power));
 			if (threat_power > strongest) {
@@ -656,17 +818,20 @@ double _town_defense_need(State &state, DictRef session, DictRef context, DictRe
 	// Only a hostile hero that is seen or remembered calls for troops left
 	// behind, on either level; a town no one threatens is held by the heroes,
 	// which carry its troops where they are used.
-	const DictRef entrance = level_rules::town_entrance(state, town);
 	double strongest = 0.0;
 	state::ValueList threats = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
 	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
 		threats.push_back(threat);
 	}
 	for (const Value &threat : threats) {
-		const int64_t distance = threat_distance(state, session, context, threat, entrance);
-		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
-		if (distance >= 0 && distance <= gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), 1)) {
-			strongest = compat::engine_max(strongest, gd::to_float(ai::vmember(state, threat, key::power)));
+		const double power = gd::to_float(ai::vmember(state, threat, key::power));
+		if (power <= strongest) {
+			continue;
+		}
+		const int64_t reach = gd::add(gd::mul(gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10))), tunable_int(state, key::DEFENSE_HORIZON_DAYS)), 1);
+		const int64_t distance = threat_distance(state, session, context, threat, town, reach, true);
+		if (distance >= 0 && distance <= reach) {
+			strongest = power;
 		}
 	}
 	double need = strongest * tunable_float(state, key::DEFENSE_MARGIN);
@@ -752,6 +917,7 @@ double _threatened_town_share(State &state, DictRef session, DictRef context, Di
 	const int64_t other_x = gd::int_field(state, other, key::x, 0);
 	const int64_t other_y = gd::int_field(state, other, key::y, 0);
 	const int64_t other_level = level_rules::level_of(state, dict_value(other));
+	const Walker walker = threat_walker(state, ai::string_or_empty(state, other, key::placement_id), player_rules::raid_controller_id(state, other), power, reach, horizon, true);
 	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
 		if (!gd::is_dict(town) || ai::string_or_empty(state, town.ref, key::owner) != key::enemy) {
 			continue;
@@ -760,9 +926,11 @@ double _threatened_town_share(State &state, DictRef session, DictRef context, Di
 		if (town_controller != context_controller(state, context)) {
 			continue;
 		}
-		const DictRef entrance = level_rules::town_entrance(state, town.ref);
-		const int64_t distance = steps_to_door(state, session, context, other_x, other_y, other_level, entrance);
-		if (distance >= 0 && distance <= horizon && power > power_of(state, field_or_new_array(state, town.ref, key::garrison)) * tunable_float(state, key::THREAT_RATIO)) {
+		if (power <= power_of(state, field_or_new_array(state, town.ref, key::garrison)) * tunable_float(state, key::THREAT_RATIO)) {
+			continue;
+		}
+		const int64_t distance = steps_to_door(state, session, context, other_x, other_y, other_level, level_rules::town_entrance(state, town.ref), walker);
+		if (distance >= 0 && distance <= horizon) {
 			total += _town_worth(state, session, context, town.ref) * tunable_float(state, key::THREAT_KILL_SHARE);
 		}
 	}
