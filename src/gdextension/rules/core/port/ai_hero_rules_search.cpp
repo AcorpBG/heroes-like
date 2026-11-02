@@ -423,9 +423,13 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 			continue;
 		}
 		// Rival heroes can be attacked and this player's own heroes met; both
-		// end a route, neither can be walked through.
+		// end a route, neither can be walked through. An own hero in its own
+		// town's doorway is met in the town: others still walk in.
 		const bool meetable = other_controller == controller;
 		if (meetable && is_ai_hero(state, other) && (past_own_heroes || state.has(own_doors, int_value(tile_index)))) {
+			if (!past_own_heroes) {
+				_add_stop_index(state, dynamic_stops, tile_index, stop_ref(state, kStopAiHero, index));
+			}
 			continue;
 		}
 		if (!is_ai_hero(state, other) || (!meetable && player_identity_rules::allied(state, dict_value(session), controller, other_controller))) {

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-one-way-monoliths-20261102",
- "currentSliceTitle": "The AI's level regions stop joining the two sides of a one-way monolith; the route map and the threat walk take it as a one-way crossing on its level. Six-seed check: only l2, which has such monoliths, differs; balance unmeasured.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-02T13:08:56Z",
+ "currentSliceId": "ai-meet-in-town-20261102",
+ "currentSliceTitle": "Troops reach a hero standing in a town",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-02T20:22:29Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-meet-in-town-20261102",
+   "title": "Troops reach a hero standing in a town",
+   "status": "in_progress",
+   "goal": "Couriers and field armies can hand troops to the main or a field army standing in an own town: the route search keeps that hero as a meeting point, and joining it counts as going into that town for the danger rule. Files: ai_hero_rules_search.cpp, ai_hero_rules_candidates.cpp, AI doc. Owner: troops travel with heroes, not idle in garrisons; scored options, not blockers. Checked on m305, m325, m130 of the 2 November batch.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-02"
+  },
   {
    "id": "ai-one-way-monoliths-20261102",
    "status": "completed",

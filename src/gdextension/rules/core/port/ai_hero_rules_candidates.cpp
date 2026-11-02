@@ -271,7 +271,17 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					continue;
 				}
 				state.set(seen, seen_key, int_value(distance));
-				if (in_danger && kind != kStopTown) {
+				// Joining an own hero in its own town's doorway is going into that
+				// town.
+				int64_t meet_town = -1;
+				DictRef met = 0;
+				if (in_danger && kind == kStopAiHero) {
+					met = gd::as_dict(state.at(indexed_array(state, session_view::overworld(state, session), key::encounters), ref_index));
+					if (player_rules::raid_controller_id(state, met) == gd::stringify(state, gd::index(state, context, str(key::controller)))) {
+						meet_town = _entry_town_index(state, session, key::ai_hero, ref_index);
+					}
+				}
+				if (in_danger && kind != kStopTown && meet_town < 0) {
 					continue;
 				}
 				const DictRef candidate = _candidate(state, session, context, entry, gd::as_dict(ref), power, needs, search, tile_index);
@@ -300,10 +310,14 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					}
 				}
 				if (in_danger) {
-					bool keeps_away = ai::string_or_empty(state, candidate, key::kind) != key::town_own;
-					if (!keeps_away) {
+					const Atom danger_kind = ai::string_or_empty(state, candidate, key::kind);
+					bool keeps_away = true;
+					if (danger_kind == key::town_own) {
 						const int64_t town_index = gd::to_int(state, gd::index(state, candidate, str(key::index)));
 						keeps_away = !_deters(state, session, entry, overworld_town(state, session, town_index), dangers);
+					} else if (danger_kind == key::meet && meet_town >= 0) {
+						// The hero met holds the town with its garrison.
+						keeps_away = !_deters(state, session, met, overworld_town(state, session, meet_town), dangers);
 					}
 					if (keeps_away) {
 						continue;
