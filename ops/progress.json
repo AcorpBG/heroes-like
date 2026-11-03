@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-storm-kills-hero-inside-20261103",
- "currentSliceTitle": "A storm counts killing the hero inside",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-03T08:40:24Z",
+ "currentSliceTitle": "A storm counts killing the hero standing in the town as a fight in the open does, a human hero too; a town it took counts once. Six check seeds end on the same days; m305 replay lasts to day 263 (152).",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-03T08:49:33Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-storm-kills-hero-inside-20261103",
-   "title": "A storm counts killing the hero inside",
-   "status": "in_progress",
-   "goal": "Storming a town counts killing the hero standing in it as killing that hero in the open does (one kill value per kind of hero); a town it took counts once. Files: ai_hero_rules_candidates.cpp, ai_hero_rules_sight.cpp, AI doc. Owner: step 3 of the stand-off plan (2026-11-02); hit back over guard (2026-10-30).",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-11-03"
+   "status": "completed",
+   "completedAt": "2026-11-03",
+   "summary": "A storm counts killing the hero standing in the town as a fight in the open does, a human hero too; a town it took counts once. Six check seeds end on the same days; m305 replay lasts to day 263 (152).",
+   "commit": "d3c7508ff"
   },
   {
    "id": "ai-threatened-garrison-pickup-20261102",
