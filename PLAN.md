@@ -39,7 +39,6 @@ None open.
 
 ## Open work
 
-- `ai-far-choice-keeps-away-20261103` (in progress): Every plan source asks one danger question (_keeps_away): the far choice (_strategic_candidate) and gate ways to own armies (_route_armies) skip what lies within a much stronger hostile hero's reach, as the near choice (_best_candidate) does, except an own town, or an own army in one, that the hero and garrison hold. Files: ai_hero_rules_candidates.cpp, ai_hero_rules_turn_day.cpp, ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md. Owner, 2026-11-03: fix the m137 loop here. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-03 `ai-far-choice-keeps-away-20261103` (004416a48): The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; six seeds last 356 days vs 372.
 - 2026-11-03 `ai-gate-routes-armies-danger-20261103` (8e7872f86): Ways through several gates also lead to own armies to hand troops to, and close gates in a much stronger hostile hero's reach. 160 paired two-level games last 125.0 days vs 124.5 on main (95% -6.6 to +7.9), 2 caps each.
 - 2026-11-03 `ai-danger-walkable-ground-20261103` (8a7f88220): Danger is the ground a much stronger hostile hero walks in a day, as for town threats; waiting goes nowhere deeper in it. Replays m325, m130, m305 end on days 66, 151, 140 (91, 177, 263); flee-and-return hero-days 5, 38, 8 (21, 262, 45).
 - 2026-11-03 `ai-storm-kills-hero-inside-20261103` (d3c7508ff): A storm counts killing the hero standing in the town as a fight in the open does, a human hero too; a town it took counts once. Six check seeds end on the same days; m305 replay lasts to day 263 (152).

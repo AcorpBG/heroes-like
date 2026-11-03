@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-far-choice-keeps-away-20261103",
- "currentSliceTitle": "The far choice keeps away from danger",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-03T13:42:00Z",
+ "currentSliceTitle": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; six seeds last 356 days vs 372.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-03T13:44:41Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-far-choice-keeps-away-20261103",
-   "title": "The far choice keeps away from danger",
-   "status": "in_progress",
-   "goal": "Every plan source asks one danger question (_keeps_away): the far choice (_strategic_candidate) and gate ways to own armies (_route_armies) skip what lies within a much stronger hostile hero's reach, as the near choice (_best_candidate) does, except an own town, or an own army in one, that the hero and garrison hold. Files: ai_hero_rules_candidates.cpp, ai_hero_rules_turn_day.cpp, ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md. Owner, 2026-11-03: fix the m137 loop here.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-11-03"
+   "status": "completed",
+   "completedAt": "2026-11-03",
+   "summary": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; six seeds last 356 days vs 372.",
+   "commit": "004416a48"
   },
   {
    "id": "ai-gate-routes-armies-danger-20261103",
