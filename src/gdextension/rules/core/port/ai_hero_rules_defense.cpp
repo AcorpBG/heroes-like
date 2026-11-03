@@ -628,6 +628,109 @@ int64_t _weakest_stack_index(State &state, ArrayRef stacks) {
 	return best;
 }
 
+PackedRef _danger_zone(State &state, DictRef session, DictRef context, const Value &threat, int64_t level) {
+	const Atom id = gd::stringify(state, ai::vmember(state, threat, key::id));
+	const Atom side = gd::stringify(state, ai::vget(state, threat, key::owner, str(key::empty)));
+	const int64_t threat_x = gd::to_int(state, ai::vmember(state, threat, key::x));
+	const int64_t threat_y = gd::to_int(state, ai::vmember(state, threat, key::y));
+	const int64_t threat_level = gd::to_int(state, ai::vget(state, threat, key::level, int_value(0)));
+	const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
+	const double power = gd::to_float(ai::vmember(state, threat, key::power));
+	// Each guard beaten during the turn opens ground (`_level_stretches`).
+	Value resolved;
+	const bool listed = state.lookup(session_view::overworld(state, session), str(key::resolved_encounters), resolved) && gd::is_array(resolved);
+	std::string text = gd::text(state, str(id));
+	for (const int64_t part : {threat_x, threat_y, threat_level, level, reach, compat::float_to_int(power), listed ? state.array_size(resolved.ref) : int64_t(0)}) {
+		text += ' ';
+		text += std::to_string(part);
+	}
+	text += ' ';
+	text += gd::text(state, str(side));
+	const Atom zone_key = state.intern(text);
+	Value found;
+	const DictRef cache = state.lookup(context, str(key::danger_zones), found) ? gd::as_dict(found) : state.new_dict();
+	if (state.lookup(cache, str(zone_key), found)) {
+		return gd::as_bytes(found);
+	}
+	const Vector2i size = context_map_size(state, context);
+	const int64_t width = size.x;
+	const PackedRef zone = gd::new_bytes(state);
+	gd::packed_resize(state, zone, compat::engine_max<int64_t>(0, gd::mul(width, size.y)));
+	if (width > 0 && size.y > 0) {
+		const int64_t limit = gd::add(reach, 1);
+		const Walker walker = threat_walker(state, id, side, power, reach, limit, false);
+		// A level's ground as the walker gets to it: a tile's stretch, -1 on a
+		// tile no patch takes (`_tile_stretch`).
+		struct Ground {
+			PackedRef patches;
+			PackedRef stretches;
+			int64_t count;
+		};
+		const auto ground = [&](int64_t on_level) {
+			const PackedRef patches = gd::as_ints(gd::index(state, ai_hero_rules::_level_regions(state, session, context, on_level), str(key::patches)));
+			return Ground{patches, ai_hero_rules::_level_stretches(state, session, context, on_level, power, kAnyLoss, walker.entry), gd::packed_size(state, patches)};
+		};
+		const auto stretch = [&](const Ground &on, int64_t tile) -> int64_t {
+			if (tile < 0 || tile >= on.count) {
+				return -1;
+			}
+			const int64_t patch = gd::packed_int(state, on.patches, tile);
+			return patch < 0 ? -1 : gd::packed_int(state, on.stretches, patch);
+		};
+		const Ground start = ground(threat_level);
+		const std::vector<int64_t> homes = ai_hero_rules::_home_stretches(state, session, context, threat_level, gd::add(gd::mul(threat_y, width), threat_x), id, power, kAnyLoss, walker.entry);
+		const bool afloat = homes.empty();
+		const auto from_home = [&](int64_t tile) {
+			const int64_t there = stretch(start, tile);
+			return afloat || there < 0 || std::find(homes.begin(), homes.end(), there) != homes.end();
+		};
+		// The tiles `steps` or fewer from (x, y) on the walker's own ground, or
+		// past a crossing on the ground of the tile `from` there.
+		const auto spread = [&](const Ground &on, int64_t x, int64_t y, int64_t steps, int64_t from, bool home) {
+			const int64_t own = home ? -1 : stretch(on, from);
+			for (int64_t ty = compat::engine_max<int64_t>(0, gd::sub(y, steps)); ty <= compat::engine_min<int64_t>(size.y - 1, gd::add(y, steps)); ++ty) {
+				for (int64_t tx = compat::engine_max<int64_t>(0, gd::sub(x, steps)); tx <= compat::engine_min<int64_t>(width - 1, gd::add(x, steps)); ++tx) {
+					const int64_t tile = gd::add(gd::mul(ty, width), tx);
+					const int64_t there = home ? 0 : stretch(on, tile);
+					if (home ? from_home(tile) : (own < 0 || there < 0 || there == own)) {
+						gd::packed_set(state, zone, tile, 1);
+					}
+				}
+			}
+		};
+		if (threat_level == level) {
+			spread(start, threat_x, threat_y, limit, -1, true);
+		}
+		const Ground target = threat_level == level ? start : ground(level);
+		for (const Crossing &first : level_crossings(state, session, context, walker, threat_level, width)) {
+			const int64_t to_exit = gd::add(tile_distance(threat_x, compat::int_mod(first.tile, width), threat_y, first.tile / width), 1);
+			if (to_exit > limit || !from_home(first.tile)) {
+				continue;
+			}
+			const int64_t exit_tile = gd::add(gd::mul(first.exit_y, width), first.exit_x);
+			if (first.exit_level == level) {
+				spread(target, first.exit_x, first.exit_y, gd::sub(limit, to_exit), exit_tile, false);
+			}
+			const Ground between = ground(first.exit_level);
+			for (const Crossing &second : level_crossings(state, session, context, walker, first.exit_level, width)) {
+				if (second.exit_level != level) {
+					continue;
+				}
+				const int64_t steps = gd::add(gd::add(to_exit, tile_distance(first.exit_x, compat::int_mod(second.tile, width), first.exit_y, second.tile / width)), 1);
+				const int64_t landed = stretch(between, exit_tile);
+				const int64_t onward = stretch(between, second.tile);
+				if (steps > limit || !(landed < 0 || onward < 0 || landed == onward)) {
+					continue;
+				}
+				spread(target, second.exit_x, second.exit_y, gd::sub(limit, steps), gd::add(gd::mul(second.exit_y, width), second.exit_x), false);
+			}
+		}
+	}
+	state.set(cache, str(zone_key), gd::bytes_value(zone));
+	state.set(context, str(key::danger_zones), dict_value(cache));
+	return zone;
+}
+
 bool _town_threatened(State &state, DictRef session, DictRef context, DictRef town) {
 	const DictRef cache = dict_or_new(state, context, key::decision);
 	const Atom threat_key = gd::format(state, key::threat_s, {str(ai::string_or_empty(state, town, key::placement_id))});

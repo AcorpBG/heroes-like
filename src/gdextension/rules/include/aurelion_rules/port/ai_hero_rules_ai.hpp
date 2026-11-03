@@ -58,6 +58,10 @@ double _spell_burst(State &state, DictRef commander);
 Atom _main_hero_id(State &state, DictRef session, Atom controller);
 int64_t _weakest_stack_index(State &state, ArrayRef stacks);
 bool _town_threatened(State &state, DictRef session, DictRef context, DictRef town);
+// The tiles of `level` the hostile hero `threat` (`_hostile_heroes`) gets to by
+// the end of its next day, as the town threat checks walk it: 1 per tile of the
+// map. Kept for the turn while no guard falls.
+PackedRef _danger_zone(State &state, DictRef session, DictRef context, const Value &threat, int64_t level);
 DictRef _strongest_threat(State &state, DictRef session, DictRef context, DictRef town);
 bool _keeps_town_safe(State &state, DictRef session, DictRef context, DictRef entry, DictRef town);
 DictRef _leave_defense(State &state, DictRef session, DictRef context, DictRef town, ArrayRef stacks, ArrayRef garrison, bool is_main, double brought);
@@ -129,9 +133,14 @@ DictRef _avoided_today(State &state, DictRef session, DictRef entry);
 DictRef _beyond_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef gate, int64_t movement_max, int64_t radius);
 Atom _beyond_key(State &state, DictRef entry, DictRef gate, int64_t radius);
 PackedRef _gate_far_dist(State &state, DictRef context, DictRef entry, DictRef gate, int64_t radius);
+// The hostile heroes much stronger than `entry`, each with the tiles it gets
+// to in a day on each level (`zones`, `width`; `_danger_zone`).
 ArrayRef _dangers(State &state, DictRef session, DictRef context, DictRef entry);
 bool _deters(State &state, DictRef session, DictRef entry, DictRef town, ArrayRef dangers);
+// Whether one of `dangers` (`_dangers`) gets to (x, y) on `level` in a day.
 bool _in_danger(State &state, ArrayRef dangers, int64_t x, int64_t y, int64_t level);
+// Whether the one danger `threat` (`_dangers`) gets there.
+bool _danger_reaches(State &state, const Value &threat, int64_t x, int64_t y, int64_t level);
 DictRef _own_town_doors(State &state, DictRef session, Atom controller, int64_t level, Vector2i size);
 
 // Gates and the routes past them (ai_hero_rules_routes.cpp).

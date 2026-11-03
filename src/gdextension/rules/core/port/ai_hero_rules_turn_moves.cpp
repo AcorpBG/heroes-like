@@ -484,13 +484,20 @@ DictRef _evade(State &state, DictRef session, DictRef context, DictRef entry, Di
 int64_t _danger_gap(State &state, ArrayRef dangers, int64_t x, int64_t y, int64_t level) {
 	int64_t gap = int64_t(1) << 20;
 	for (const Value &threat : gd::items(state, array_value(dangers))) {
+		// Where it gets to in a day the gap is 0 or less, elsewhere 1 or more:
+		// a wall or a guard it cannot beat keeps a hero as safe as the distance.
+		const bool caught = _danger_reaches(state, threat, x, y, level);
 		if (gd::to_int(state, ai::vget(state, threat, key::level, int_value(0))) != level) {
+			if (caught) {
+				gap = compat::engine_min<int64_t>(gap, 0);
+			}
 			continue;
 		}
 		const int64_t dx = gd::sub(gd::to_int(state, ai::vmember(state, threat, key::x)), x);
 		const int64_t dy = gd::sub(gd::to_int(state, ai::vmember(state, threat, key::y)), y);
 		const int64_t reach = gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10)));
-		gap = compat::engine_min<int64_t>(gap, gd::sub(gd::sub(chebyshev(dx, dy), reach), 1));
+		const int64_t straight = gd::sub(gd::sub(chebyshev(dx, dy), reach), 1);
+		gap = compat::engine_min<int64_t>(gap, caught ? compat::engine_min<int64_t>(0, straight) : compat::engine_max<int64_t>(1, straight));
 	}
 	return gap;
 }
@@ -671,6 +678,29 @@ DictRef _wait_by_home(State &state, DictRef session, DictRef context, DictRef en
 	}
 	const Vector2i here = Vector2i::of(gd::int_field(state, entry, key::x, 0), gd::int_field(state, entry, key::y, 0));
 	const int64_t here_index = index_of(here.x, here.y, size);
+	// Waiting agrees with fleeing (`_evade`): a hero waits nowhere deeper in a
+	// much stronger hostile hero's reach than it stands, out of it nowhere that
+	// hero gets to in a day, and on the way to a farther spot it does not run out
+	// of steps there tonight either.
+	const ArrayRef dangers = _dangers(state, session, context, entry);
+	const bool threatened = state.array_size(dangers) != 0;
+	const int64_t here_gap = threatened ? _danger_gap(state, dangers, here.x, here.y, level) : 0;
+	const int64_t today = movement_int(state, entry, key::current, 0);
+	const auto worse = [&](int64_t tile_index) {
+		const int64_t gap = _danger_gap(state, dangers, checked_mod(tile_index, size.x), checked_div(tile_index, size.x), level);
+		return here_gap > 0 ? gap <= 0 : gap < here_gap;
+	};
+	const auto exposed = [&](int64_t tile_index) {
+		if (!threatened || worse(tile_index)) {
+			return threatened;
+		}
+		const PackedRef parent = gd::as_ints(gd::index(state, search, str(key::parent)));
+		int64_t night = tile_index;
+		while (night >= 0 && dist_at(state, search, night) > today) {
+			night = gd::packed_int(state, parent, night);
+		}
+		return night >= 0 && night != tile_index && worse(night);
+	};
 	Vector2i home = here;
 	const Atom home_town_id = gd::stringify(state, nested_get(state, dict_value(entry), {key::ai_hero}, key::home_town_id, str(key::empty)));
 	DictRef home_town = gd::as_dict(gd::index(state, _find_town(state, session, home_town_id), str(key::town)));
@@ -697,7 +727,7 @@ DictRef _wait_by_home(State &state, DictRef session, DictRef context, DictRef en
 				_park(state, session, placement_id, town_id);
 				return state.new_dict();
 			}
-			if (dist_at(state, search, door_index) >= 0 && !_in_hero_zone(state, search, door_index)) {
+			if (dist_at(state, search, door_index) >= 0 && !_in_hero_zone(state, search, door_index) && !exposed(door_index)) {
 				return tile_plan(state, key::park, town_id, door_index, dist_at(state, search, door_index));
 			}
 		}
@@ -726,7 +756,7 @@ DictRef _wait_by_home(State &state, DictRef session, DictRef context, DictRef en
 		}
 		const double span = static_cast<double>(chebyshev(gd::sub(tile.x, home.x), gd::sub(tile.y, home.y)));
 		const double tile_key_value = span * 1000.0 + gd::to_float(ai::vindex(state, gd::index(state, search, str(key::dist)), int_value(tile_index)));
-		if (tile_key_value < best_key && !_cuts_a_way(state, search, tile_index, size)) {
+		if (tile_key_value < best_key && !exposed(tile_index) && !_cuts_a_way(state, search, tile_index, size)) {
 			best_key = tile_key_value;
 			best_tile = tile_index;
 		}

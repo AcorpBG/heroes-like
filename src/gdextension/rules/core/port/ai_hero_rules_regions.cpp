@@ -678,9 +678,20 @@ ArrayRef _dangers(State &state, DictRef session, DictRef context, DictRef entry)
 	for (const Value &threat : gd::items(state, array_value(_recent_hostiles(state, session, context))).list()) {
 		hostile.push_back(threat);
 	}
+	// Each with the ground it walks in a day, as town threats are walked: a
+	// wall, the water or a guard it cannot beat keeps it off (`_danger_zone`).
+	const int64_t levels = overworld_level_rules::level_count(state, session);
+	const int64_t width = vector2i_of(gd::index(state, context, str(key::map_size))).x;
 	for (const Value &threat : hostile) {
 		if (gd::to_float(ai::vmember(state, threat, key::power)) >= power * ai::static_float(state, key::ai_hero_rules_script, key::DANGER_RATIO)) {
-			state.append(result, threat);
+			const DictRef danger = gd::duplicate_dict(state, threat.ref);
+			const ArrayRef zones = state.new_array();
+			for (int64_t level = 0; level < levels; ++level) {
+				state.append(zones, gd::bytes_value(_danger_zone(state, session, context, threat, level)));
+			}
+			state.set(danger, str(key::zones), array_value(zones));
+			state.set(danger, str(key::width), int_value(width));
+			state.append(result, dict_value(danger));
 		}
 	}
 	state.set(cache, str(dangers_key), array_value(result));
@@ -703,15 +714,21 @@ bool _deters(State &state, DictRef session, DictRef entry, DictRef town, ArrayRe
 	return strongest < (own_power + garrison_power) * ai::static_float(state, key::ai_hero_rules_script, key::TOWN_ATTACK_RATIO);
 }
 
+bool _danger_reaches(State &state, const Value &threat, int64_t x, int64_t y, int64_t level) {
+	const Value zones = ai::vmember(state, threat, key::zones);
+	const int64_t width = gd::to_int(state, ai::vmember(state, threat, key::width));
+	if (level < 0 || level >= ai::vsize(state, zones) || x < 0 || y < 0 || x >= width) {
+		return false;
+	}
+	const PackedRef zone = gd::as_bytes(ai::vindex(state, zones, int_value(level)));
+	const int64_t tile = gd::add(gd::mul(y, width), x);
+	return tile < gd::packed_size(state, zone) && gd::packed_int(state, zone, tile) != 0;
+}
+
 bool _in_danger(State &state, ArrayRef dangers, int64_t x, int64_t y, int64_t level) {
 	const state::ValueList threats = state.array(dangers).items;
 	for (const Value &threat : threats) {
-		if (gd::to_int(state, ai::vget(state, threat, key::level, int_value(0))) != level) {
-			continue;
-		}
-		const int64_t across = compat::absi(gd::sub(gd::to_int(state, ai::vmember(state, threat, key::x)), x));
-		const int64_t down = compat::absi(gd::sub(gd::to_int(state, ai::vmember(state, threat, key::y)), y));
-		if (compat::engine_max(across, down) <= gd::add(gd::to_int(state, ai::vget(state, threat, key::reach, int_value(10))), 1)) {
+		if (_danger_reaches(state, threat, x, y, level)) {
 			return true;
 		}
 	}
