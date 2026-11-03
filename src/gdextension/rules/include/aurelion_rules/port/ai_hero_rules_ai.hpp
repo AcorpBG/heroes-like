@@ -154,6 +154,9 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 bool _route_gate_open(State &state, DictRef gate, double power, double limit);
 DictRef _route_map(State &state, DictRef session, DictRef context);
 ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef entry, double power, DictRef map);
+// The player's own armies the hero would hand troops to, as route objectives
+// (kind meet, id, value, level, tile).
+ArrayRef _route_armies(State &state, DictRef session, DictRef context, DictRef entry);
 void _route_unseen(State &state, DictRef session, DictRef context, DictRef entry, DictRef map, double power, double limit, Atom home_key, DictRef targets);
 double _tile_span(State &state, int64_t from_tile, int64_t to_tile, Vector2i size);
 

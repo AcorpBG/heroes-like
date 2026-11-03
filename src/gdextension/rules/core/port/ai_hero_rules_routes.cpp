@@ -430,15 +430,17 @@ DictRef _gate_routes(State &state, DictRef session, DictRef context, DictRef ent
 		return result;
 	}
 	const double power = hero_power(state, entry);
-	// The objectives, by the losses a fight on the way to each may cost.
+	// The objectives, by the losses a fight on the way to each may cost: towns,
+	// and the player's own armies to hand troops to.
 	const DictRef by_limit = state.new_dict();
-	const ArrayRef towns = _route_towns(state, session, context, entry, power, map);
-	for (const Value &town : gd::items(state, array_value(towns))) {
-		const Value limit = float_value(_route_loss_limit(state, gd::to_float(ai::vmember(state, town, key::value))));
+	const ArrayRef objectives = _route_towns(state, session, context, entry, power, map);
+	ai::append_array(state, objectives, _route_armies(state, session, context, entry));
+	for (const Value &objective : gd::items(state, array_value(objectives))) {
+		const Value limit = float_value(_route_loss_limit(state, gd::to_float(ai::vmember(state, objective, key::value))));
 		if (!state.has(by_limit, limit)) {
 			state.set(by_limit, limit, array_value(state.new_array()));
 		}
-		state.append(gd::as_array(gd::index(state, by_limit, limit)), town);
+		state.append(gd::as_array(gd::index(state, by_limit, limit)), objective);
 	}
 	double explore_limit = -1.0;
 	if (_plans_far(state, session, context, entry) && _rival_towns_unknown(state, session, context)) {
@@ -504,6 +506,20 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		return;
 	}
 	// Shortest ways out through the gates whose guards it beats, cheapest first.
+	// A gate in a much stronger hostile hero's reach is closed too: the hero
+	// keeps away from it there as here (`_gate_candidate`), and a way through it
+	// was a trip given up on arrival.
+	const ArrayRef dangers = _dangers(state, session, context, entry);
+	const auto open = [&](const Value &gate) {
+		if (!_route_gate_open(state, gd::as_dict(gate), power, limit)) {
+			return false;
+		}
+		if (state.array_size(dangers) == 0) {
+			return true;
+		}
+		const int64_t tile = gd::to_int(state, ai::vmember(state, gate, key::tile));
+		return !_in_danger(state, dangers, tile_x(tile, size.x), tile_y(tile, size.x), gd::to_int(state, ai::vmember(state, gate, key::level)));
+	};
 	std::vector<double> cost(static_cast<size_t>(count), kInf);
 	std::vector<int64_t> first(static_cast<size_t>(count), -1);
 	std::vector<char> settled(static_cast<size_t>(count), 0);
@@ -514,7 +530,7 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		for (const int64_t gate_index : home_gates->second) {
 			const Value gate = state.at(gates, gate_index);
 			const int64_t tile = gd::to_int(state, ai::vmember(state, gate, key::tile));
-			if (!_route_gate_open(state, gd::as_dict(gate), power, limit)) {
+			if (!open(gate)) {
 				continue;
 			}
 			cost[static_cast<size_t>(gate_index)] = tile < gd::packed_size(state, dist) && gd::packed_int(state, dist, tile) >= 0 ? static_cast<double>(gd::packed_int(state, dist, tile)) : _tile_span(state, start_tile, tile, size) * detour;
@@ -579,7 +595,7 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		}
 		for (const int64_t next_index : next_gates->second) {
 			const size_t next = static_cast<size_t>(next_index);
-			if (settled[next] || !_route_gate_open(state, gd::as_dict(state.at(gates, next_index)), power, limit)) {
+			if (settled[next] || !open(state.at(gates, next_index))) {
 				continue;
 			}
 			const double through = arrived + _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, state.at(gates, next_index), key::tile)), size) * detour;
@@ -763,6 +779,54 @@ ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef en
 		state.append(towns, dict_value(town));
 	}
 	return towns;
+}
+
+ArrayRef _route_armies(State &state, DictRef session, DictRef context, DictRef entry) {
+	const ArrayRef armies = state.new_array();
+	const Dict block = typed_dict(state, entry, str(key::ai_hero));
+	const Dict avoid = dict_if_dict(state, block, key::avoid);
+	const ArrayRef dangers = _dangers(state, session, context, entry);
+	const Vector2i size = map_size(state, context);
+	const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
+	const Atom placement_id = ai::string_or_empty(state, entry, key::placement_id);
+	const int64_t day = ai::session_int(state, session, key::day);
+	// The main and field armies it hands troops to as it would nearby
+	// (`_meet_candidate`), where they stand.
+	for (const Value &other : gd::items(state, array_value(active_hero_entries(state, session, controller)))) {
+		const Atom other_id = gd::stringify(state, ai::vget(state, other, key::placement_id, str(key::empty)));
+		const int64_t index = other_id == placement_id ? -1 : _entry_index(state, session, other_id);
+		if (index < 0 || avoided_until(state, avoid, other_id) >= day) {
+			continue;
+		}
+		const DictRef candidate = _meet_candidate(state, session, context, entry, index);
+		const double value = gd::float_field(state, candidate, key::value, 0.0);
+		const int64_t x = gd::to_int(state, ai::vget(state, other, key::x, int_value(-1)));
+		const int64_t y = gd::to_int(state, ai::vget(state, other, key::y, int_value(-1)));
+		const int64_t level = level_rules::level_of(state, other);
+		if (value <= 0.0 || x < 0 || y < 0 || x >= size.x || y >= size.y) {
+			continue;
+		}
+		// Within a much stronger hostile hero's reach it is joined only in a town
+		// the two hold against that hero (`_best_candidate`).
+		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level)) {
+			const int64_t town_index = _entry_town_index(state, session, key::ai_hero, index);
+			if (town_index < 0) {
+				continue;
+			}
+			const DictRef town = gd::as_dict(ai::vindex(state, gd::index(state, session_view::overworld(state, session), str(key::towns)), int_value(town_index)));
+			if (!_deters(state, session, gd::as_dict(other), town, dangers)) {
+				continue;
+			}
+		}
+		const DictRef army = state.new_dict();
+		state.set(army, str(key::kind), str(key::meet));
+		state.set(army, str(key::id), str(other_id));
+		state.set(army, str(key::value), float_value(value));
+		state.set(army, str(key::level), int_value(level));
+		state.set(army, str(key::tile), int_value(gd::add(gd::mul(y, size.x), x)));
+		state.append(armies, dict_value(army));
+	}
+	return armies;
 }
 
 void _route_unseen(State &state, DictRef session, DictRef context, DictRef entry, DictRef map, double power, double limit, Atom home_key, DictRef targets) {

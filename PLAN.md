@@ -39,6 +39,7 @@ None open.
 
 ## Open work
 
+- `ai-gate-routes-armies-danger-20261103` (in progress): Step 5 of the owner's stand-off plan: ways through several gates (_gate_routes) also lead couriers and field armies to the main or a field army to hand troops to (_route_armies), and close gates in a much stronger hostile hero's reach (_route_through). Files: ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

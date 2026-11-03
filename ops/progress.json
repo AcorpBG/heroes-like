@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-danger-walkable-ground-20261103",
- "currentSliceTitle": "Danger is the ground a much stronger hostile hero walks in a day, as for town threats; waiting goes nowhere deeper in it. Replays m325, m130, m305 end on days 66, 151, 140 (91, 177, 263); flee-and-return hero-days 5, 38, 8 (21, 262, 45).",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-03T09:36:25Z",
+ "currentSliceId": "ai-gate-routes-armies-danger-20261103",
+ "currentSliceTitle": "Ways through several gates lead to own armies and keep out of danger",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-03T12:25:57Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-gate-routes-armies-danger-20261103",
+   "title": "Ways through several gates lead to own armies and keep out of danger",
+   "status": "in_progress",
+   "goal": "Step 5 of the owner's stand-off plan: ways through several gates (_gate_routes) also lead couriers and field armies to the main or a field army to hand troops to (_route_armies), and close gates in a much stronger hostile hero's reach (_route_through). Files: ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-03"
+  },
   {
    "id": "ai-danger-walkable-ground-20261103",
    "status": "completed",
