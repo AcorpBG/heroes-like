@@ -240,6 +240,26 @@ void _profile_add(State &state, DictRef context, Atom profile_key, int64_t start
 	state.set(context, str(key::profile), dict_value(profile));
 }
 
+bool _keeps_away(State &state, DictRef session, DictRef entry, DictRef candidate, ArrayRef dangers) {
+	const Atom kind = ai::string_or_empty(state, candidate, key::kind);
+	const int64_t index = gd::int_field(state, candidate, key::index, -1);
+	if (index < 0) {
+		return true;
+	}
+	if (kind == key::town_own) {
+		return !_deters(state, session, entry, overworld_town(state, session, index), dangers);
+	}
+	if (kind == key::meet) {
+		// The army met holds the town it stands in with the garrison.
+		const int64_t town_index = _entry_town_index(state, session, key::ai_hero, index);
+		if (town_index >= 0) {
+			const DictRef met = gd::as_dict(state.at(indexed_array(state, session_view::overworld(state, session), key::encounters), index));
+			return !_deters(state, session, met, overworld_town(state, session, town_index), dangers);
+		}
+	}
+	return true;
+}
+
 DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, int64_t reach, bool far_kinds) {
 	Value found;
 	Value ai_entry;
@@ -319,9 +339,8 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 				// Joining an own hero in its own town's doorway is going into that
 				// town.
 				int64_t meet_town = -1;
-				DictRef met = 0;
 				if (in_danger && kind == kStopAiHero) {
-					met = gd::as_dict(state.at(indexed_array(state, session_view::overworld(state, session), key::encounters), ref_index));
+					const DictRef met = gd::as_dict(state.at(indexed_array(state, session_view::overworld(state, session), key::encounters), ref_index));
 					if (player_rules::raid_controller_id(state, met) == gd::stringify(state, gd::index(state, context, str(key::controller)))) {
 						meet_town = _entry_town_index(state, session, key::ai_hero, ref_index);
 					}
@@ -354,19 +373,8 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 						continue;
 					}
 				}
-				if (in_danger) {
-					const Atom danger_kind = ai::string_or_empty(state, candidate, key::kind);
-					bool keeps_away = true;
-					if (danger_kind == key::town_own) {
-						const int64_t town_index = gd::to_int(state, gd::index(state, candidate, str(key::index)));
-						keeps_away = !_deters(state, session, entry, overworld_town(state, session, town_index), dangers);
-					} else if (danger_kind == key::meet && meet_town >= 0) {
-						// The hero met holds the town with its garrison.
-						keeps_away = !_deters(state, session, met, overworld_town(state, session, meet_town), dangers);
-					}
-					if (keeps_away) {
-						continue;
-					}
+				if (in_danger && _keeps_away(state, session, entry, candidate, dangers)) {
+					continue;
 				}
 				const double candidate_value = gd::float_field(state, candidate, key::value, 0.0);
 				const double value = candidate_value - _boat_price(state, session, context, search, tile_index);

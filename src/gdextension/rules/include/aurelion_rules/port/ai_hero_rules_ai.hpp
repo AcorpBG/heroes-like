@@ -137,6 +137,11 @@ PackedRef _gate_far_dist(State &state, DictRef context, DictRef entry, DictRef g
 // to in a day on each level (`zones`, `width`; `_danger_zone`).
 ArrayRef _dangers(State &state, DictRef session, DictRef context, DictRef entry);
 bool _deters(State &state, DictRef session, DictRef entry, DictRef town, ArrayRef dangers);
+// Whether the hero keeps away from `candidate`, which lies within one of
+// `dangers`: from everything but its own town, or an own army standing in its
+// town, that it and the garrison hold against them (`_deters`). Every plan
+// source asks it, so none sends the hero where it gives up on arrival.
+bool _keeps_away(State &state, DictRef session, DictRef entry, DictRef candidate, ArrayRef dangers);
 // Whether one of `dangers` (`_dangers`) gets to (x, y) on `level` in a day.
 bool _in_danger(State &state, ArrayRef dangers, int64_t x, int64_t y, int64_t level);
 // Whether the one danger `threat` (`_dangers`) gets there.

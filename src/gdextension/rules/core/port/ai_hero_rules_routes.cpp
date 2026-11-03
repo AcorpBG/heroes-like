@@ -807,16 +807,9 @@ ArrayRef _route_armies(State &state, DictRef session, DictRef context, DictRef e
 			continue;
 		}
 		// Within a much stronger hostile hero's reach it is joined only in a town
-		// the two hold against that hero (`_best_candidate`).
-		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level)) {
-			const int64_t town_index = _entry_town_index(state, session, key::ai_hero, index);
-			if (town_index < 0) {
-				continue;
-			}
-			const DictRef town = gd::as_dict(ai::vindex(state, gd::index(state, session_view::overworld(state, session), str(key::towns)), int_value(town_index)));
-			if (!_deters(state, session, gd::as_dict(other), town, dangers)) {
-				continue;
-			}
+		// the two hold against that hero (`_keeps_away`).
+		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level) && _keeps_away(state, session, entry, candidate, dangers)) {
+			continue;
 		}
 		const DictRef army = state.new_dict();
 		state.set(army, str(key::kind), str(key::meet));

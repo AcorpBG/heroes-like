@@ -39,6 +39,7 @@ None open.
 
 ## Open work
 
+- `ai-far-choice-keeps-away-20261103` (in progress): Every plan source asks one danger question (_keeps_away): the far choice (_strategic_candidate) and gate ways to own armies (_route_armies) skip what lies within a much stronger hostile hero's reach, as the near choice (_best_candidate) does, except an own town, or an own army in one, that the hero and garrison hold. Files: ai_hero_rules_candidates.cpp, ai_hero_rules_turn_day.cpp, ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md. Owner, 2026-11-03: fix the m137 loop here. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

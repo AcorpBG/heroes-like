@@ -574,6 +574,12 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 	const bool claimer = !troops_only && tunable_float(state, key::FAR_SITE_CLAIMS) > 0.0 && _decision_main_id(state, session, context) != ai::string_or_empty(state, entry, key::placement_id);
 	const bool hunting = !troops_only && _rival_towns_unknown(state, session, context) && ai::session_int(state, session, key::day) >= tunable_int(state, key::HUNT_START_DAY);
 	const DictRef guard_candidates = state.new_dict();
+	// What lies within a much stronger hostile hero's reach is weighed as the
+	// near choice weighs it (`_keeps_away`): a hero sent there gives it up on
+	// arrival and walks back to whatever this choice names next.
+	const ArrayRef dangers = _dangers(state, session, context, entry);
+	const Vector2i size = context_size(state, context);
+	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	Value stops;
 	const bool has_stops = state.lookup(search, str(key::stops), stops);
 	if (has_stops) {
@@ -589,6 +595,7 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 			if (distance <= local_radius) {
 				continue;
 			}
+			const bool in_danger = state.array_size(dangers) != 0 && _in_danger(state, dangers, tile_index % size.x, tile_index / size.x, level);
 			// A town beside a hostile hero is reached through that hero.
 			const bool hero_guarded = _in_hero_zone(state, search, tile_index);
 			for (const Value &ref : gd::items(state, gd::index(state, stops.ref, tile_key))) {
@@ -600,6 +607,9 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 				const int64_t kind = gd::to_int(state, ai::vmember(state, ref, key::kind));
 				// A courier looks only for troops: its own towns and the main army.
 				if (troops_only && kind != kStopTown && kind != kStopAiHero) {
+					continue;
+				}
+				if (in_danger && kind != kStopTown && kind != kStopAiHero) {
 					continue;
 				}
 				if (kind == kStopTown) {
@@ -668,6 +678,9 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 				// troops recruited where no hero passes stayed there for months.
 				const Atom candidate_kind = ai::string_or_empty(state, candidate, key::kind);
 				if (troops_only && candidate_kind != key::town_own && candidate_kind != key::meet) {
+					continue;
+				}
+				if (in_danger && _keeps_away(state, session, entry, candidate, dangers)) {
 					continue;
 				}
 				const Atom candidate_id = ai::string_or_empty(state, candidate, key::id);
