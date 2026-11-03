@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-far-choice-keeps-away-20261103",
- "currentSliceTitle": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; six seeds last 356 days vs 372.",
+ "currentSliceTitle": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; 160 paired games last 107.5 days vs 108.7, no cap vs 1.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-03T13:44:41Z",
+ "updatedAt": "2026-11-03T15:40:17Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -21,7 +21,7 @@
    "id": "ai-far-choice-keeps-away-20261103",
    "status": "completed",
    "completedAt": "2026-11-03",
-   "summary": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; six seeds last 356 days vs 372.",
+   "summary": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; 160 paired games last 107.5 days vs 108.7, no cap vs 1.",
    "commit": "004416a48"
   },
   {
