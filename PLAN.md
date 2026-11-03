@@ -39,7 +39,6 @@ None open.
 
 ## Open work
 
-- `ai-danger-walkable-ground-20261103` (in progress): A hero is in danger only where a stronger hostile hero can walk in a day, past guards it can beat and through gates, as town threats are judged; the waiting spot near home is not chosen in danger, so fleeing and waiting no longer undo each other. Files: ai_hero_rules_defense.cpp, ai_hero_rules_regions.cpp, ai_hero_rules_turn_moves.cpp, AI doc. Owner: step 4 of the stand-off plan (2026-11-02). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -49,6 +48,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-03 `ai-danger-walkable-ground-20261103` (8a7f88220): Danger is the ground a much stronger hostile hero walks in a day, as for town threats; waiting goes nowhere deeper in it. Replays m325, m130, m305 end on days 66, 151, 140 (91, 177, 263); flee-and-return hero-days 5, 38, 8 (21, 262, 45).
 - 2026-11-03 `ai-storm-kills-hero-inside-20261103` (d3c7508ff): A storm counts killing the hero standing in the town as a fight in the open does, a human hero too; a town it took counts once. Six check seeds end on the same days; m305 replay lasts to day 263 (152).
 - 2026-11-03 `ai-threatened-garrison-pickup-20261102` (b1ae0e3dd): Main and field armies take a threatened own town's garrison along; what troops let an army take counts spells and skips killed heroes, and for a hand-over only that day. Six check seeds 365 days vs 382 on main.
 - 2026-11-02 `ai-meet-in-town-20261102` (b6369de22): Couriers and field armies hand troops to an own army standing in an own town; joining it near danger counts as going into that town. m305, m325, m130 replays end days 98, 83, 151 (300, cap, 247); six-seed check all finish.
