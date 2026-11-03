@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-gate-routes-armies-danger-20261103",
- "currentSliceTitle": "Ways through several gates lead to own armies and keep out of danger",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-03T12:25:57Z",
+ "currentSliceTitle": "Ways through several gates also lead to own armies to hand troops to, and close gates in a much stronger hostile hero's reach. 160 paired two-level games last 125.0 days vs 124.5 on main (95% -6.6 to +7.9), 2 caps each.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-03T12:28:17Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-gate-routes-armies-danger-20261103",
-   "title": "Ways through several gates lead to own armies and keep out of danger",
-   "status": "in_progress",
-   "goal": "Step 5 of the owner's stand-off plan: ways through several gates (_gate_routes) also lead couriers and field armies to the main or a field army to hand troops to (_route_armies), and close gates in a much stronger hostile hero's reach (_route_through). Files: ai_hero_rules_routes.cpp, ai_hero_rules_ai.hpp, docs/ai-plays-by-player-rules.md.",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-11-03"
+   "status": "completed",
+   "completedAt": "2026-11-03",
+   "summary": "Ways through several gates also lead to own armies to hand troops to, and close gates in a much stronger hostile hero's reach. 160 paired two-level games last 125.0 days vs 124.5 on main (95% -6.6 to +7.9), 2 caps each.",
+   "commit": "8e7872f86"
   },
   {
    "id": "ai-danger-walkable-ground-20261103",
