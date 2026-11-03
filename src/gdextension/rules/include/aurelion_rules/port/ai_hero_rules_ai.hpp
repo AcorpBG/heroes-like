@@ -31,6 +31,15 @@ bool _in_hero_zone(State &state, DictRef search, int64_t tile_index);
 DictRef _exploration_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef ref, double power, DictRef needs, DictRef search, int64_t tile_index = -1);
 double _hero_war_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef needs, Atom ref_kind, int64_t index);
+// What killing the rival computer player's hero `other`, of strength `power`, is
+// worth, met in the open (`_candidate`, with `war_value`, what the way through
+// it to a town is worth) or in the town `town_id` it stands in, which falls with
+// it (`_town_candidate`): its kill value and half its army, a share of every
+// town of ours it could take, its side's last stand and a town it took lately.
+double _ai_hero_kill_value(State &state, DictRef session, DictRef context, DictRef other, double power, double war_value, Atom town_id);
+// The same for a hero of the human player, from `player_heroes`, less the share
+// of our towns it could take.
+double _player_hero_kill_value(State &state, DictRef session, DictRef context, DictRef hero, double power, double war_value, Atom town_id);
 // `steps`: the hero's way to the one it meets, in movement points; -1 unknown
 // or across a shore.
 DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index, int64_t steps = -1);
@@ -182,8 +191,9 @@ bool _recently_seen(State &state, DictRef session, DictRef context, Atom id);
 void note_town_taken(State &state, DictRef session, Atom victim, DictRef hostile, Atom town_id);
 // What the town hero `id` took from this player in the last few days is worth,
 // while that hero's side still holds it: killing the taker is how the town is
-// won back for good, or the taker walks into the next one (0 otherwise).
-double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id);
+// won back for good, or the taker walks into the next one (0 otherwise). The
+// town `stormed` counts as itself: a storm on it takes it back.
+double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id, Atom stormed);
 bool _far_ahead(State &state, DictRef session, DictRef context);
 bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size);
 

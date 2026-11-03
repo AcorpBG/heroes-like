@@ -602,13 +602,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			}
 			const Atom id = ai::string_or_empty(state, hero, key::id);
 			const int64_t index = ref_index();
-			const double kill_value = tunable(state, key::PLAYER_HERO_KILL_VALUE);
-			const double troop_value = tunable(state, key::TROOP_VALUE_PER_POWER);
-			const double troop_share = tunable(state, key::HERO_KILL_TROOP_SHARE);
-			double value = kill_value + hero_power_value * troop_value * troop_share;
-			value = value + _last_stand_share(state, session, key::player, key::player);
-			value = value + war_value;
-			value = value + _taken_town_worth(state, session, context, id);
+			const double value = _player_hero_kill_value(state, session, context, hero, hero_power_value, war_value, key::empty);
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::hero));
 			state.set(result, str(key::id), str(id));
@@ -646,17 +640,9 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			if (!in_sight && war_value <= 0.0) {
 				return state.new_dict();
 			}
-			const Atom other_controller = player_rules::raid_controller_id(state, other);
 			const Atom id = ai::string_or_empty(state, other, key::placement_id);
 			const int64_t index = ref_index();
-			const double kill_value = tunable(state, key::AI_HERO_KILL_VALUE);
-			const double troop_value = tunable(state, key::TROOP_VALUE_PER_POWER);
-			const double troop_share = tunable(state, key::HERO_KILL_TROOP_SHARE);
-			double value = kill_value + other_power * troop_value * troop_share;
-			value = value + _threatened_town_share(state, session, context, other);
-			value = value + _last_stand_share(state, session, key::enemy, other_controller);
-			value = value + war_value;
-			value = value + _taken_town_worth(state, session, context, id);
+			const double value = _ai_hero_kill_value(state, session, context, other, other_power, war_value, key::empty);
 			const DictRef result = state.new_dict();
 			state.set(result, str(key::kind), str(key::ai_hero));
 			state.set(result, str(key::id), str(id));
@@ -679,6 +665,23 @@ double _hero_war_value(State &state, DictRef session, DictRef context, DictRef e
 	const int64_t war_key = _hero_war_key(state, ref_kind, index);
 	const double share = gd::to_float(state.get(paths, int_value(war_key), float_value(0.0)));
 	return share * tunable(state, key::PASSAGE_KNOWN_SITE_SHARE);
+}
+
+double _ai_hero_kill_value(State &state, DictRef session, DictRef context, DictRef other, double power, double war_value, Atom town_id) {
+	double value = tunable(state, key::AI_HERO_KILL_VALUE) + power * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HERO_KILL_TROOP_SHARE);
+	value = value + _threatened_town_share(state, session, context, other);
+	value = value + _last_stand_share(state, session, key::enemy, player_rules::raid_controller_id(state, other));
+	value = value + war_value;
+	value = value + _taken_town_worth(state, session, context, ai::string_or_empty(state, other, key::placement_id), town_id);
+	return value;
+}
+
+double _player_hero_kill_value(State &state, DictRef session, DictRef context, DictRef hero, double power, double war_value, Atom town_id) {
+	double value = tunable(state, key::PLAYER_HERO_KILL_VALUE) + power * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HERO_KILL_TROOP_SHARE);
+	value = value + _last_stand_share(state, session, key::player, key::player);
+	value = value + war_value;
+	value = value + _taken_town_worth(state, session, context, ai::string_or_empty(state, hero, key::id), town_id);
+	return value;
 }
 
 DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index, int64_t steps) {

@@ -39,6 +39,7 @@ None open.
 
 ## Open work
 
+- `ai-storm-kills-hero-inside-20261103` (in progress): Storming a town counts killing the hero standing in it as killing that hero in the open does (one kill value per kind of hero); a town it took counts once. Files: ai_hero_rules_candidates.cpp, ai_hero_rules_sight.cpp, AI doc. Owner: step 3 of the stand-off plan (2026-11-02); hit back over guard (2026-10-30). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

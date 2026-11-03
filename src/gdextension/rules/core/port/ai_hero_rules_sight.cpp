@@ -459,9 +459,13 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	}
 	double defense = army_power_of(state, get_or_new_array(state, dict_value(town), key::garrison));
 	const int64_t defender_index = _town_hero_defender_index(state, session, town, controller);
+	double defender_power = 0.0;
 	if (defender_index >= 0) {
-		defense += hero_power(state, encounter_at(state, session, defender_index));
+		defender_power = hero_power(state, encounter_at(state, session, defender_index));
+		defense += defender_power;
 	}
+	// The human's hero in its town fights with the garrison (`town_defense_force`).
+	Value player_defender;
 	if (owner == key::player) {
 		const DictRef force = hero_command_rules::town_defense_force(state, session, town);
 		const double garrison_power = army_power_of(state, get_or_new_array(state, dict_value(town), key::garrison));
@@ -470,6 +474,8 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const Value hero = get_or_new_dict(state, dict_value(force), key::hero);
 		const double hero_power_value = army_power(state, hero_stacks, hero);
 		defense = garrison_power + hero_power_value;
+		player_defender = hero;
+		defender_power = hero_power_value;
 	}
 	if (defense > 0.0 && power < defense * tunable(state, key::TOWN_ATTACK_RATIO)) {
 		return state.new_dict();
@@ -486,9 +492,13 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const int64_t held = _towns_held_by(state, session, owner, town_controller);
 		value += elimination / static_cast<double>(compat::engine_max<int64_t>(1, held));
 	}
-	// A hero in the doorway falls with the town: what killing it protects counts.
-	if (defender_index >= 0) {
-		value += _threatened_town_share(state, session, context, encounter_at(state, session, defender_index));
+	// A hero standing in the town falls with it, worth what it is in the open.
+	if (owner == key::player) {
+		if (gd::is_dict(player_defender) && !gd::is_empty(state, player_defender.ref)) {
+			value += _player_hero_kill_value(state, session, context, player_defender.ref, defender_power, 0.0, id);
+		}
+	} else if (defender_index >= 0) {
+		value += _ai_hero_kill_value(state, session, context, encounter_at(state, session, defender_index), defender_power, 0.0, id);
 	}
 	const double loss = _expected_loss_value(state, power, defense);
 	const DictRef result = state.new_dict();
@@ -624,7 +634,7 @@ bool _recently_seen(State &state, DictRef session, DictRef context, Atom id) {
 	return false;
 }
 
-double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id) {
+double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id, Atom stormed) {
 	const Value memory = ai::vget(state, gd::index(state, context, str(key::state)), key::ai_sightings, Value());
 	if (!gd::is_dict(memory)) {
 		return 0.0;
@@ -637,6 +647,9 @@ double _taken_town_worth(State &state, DictRef session, DictRef context, Atom id
 		return 0.0;
 	}
 	const Atom town_id = ai::string_or_empty(state, seen.ref, key::town);
+	if (town_id == stormed) {
+		return 0.0;
+	}
 	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
 		if (!gd::is_dict(town) || ai::string_or_empty(state, town.ref, key::placement_id) != town_id) {
 			continue;
