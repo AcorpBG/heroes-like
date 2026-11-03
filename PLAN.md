@@ -28,7 +28,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-27: The project files are edited in place and kept within their budgets (`AGENTS.md`, "Project files").
 - 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
 - 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
-- 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in unthreatened garrisons; a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
+- 2026-10-28: Computer players play to eliminate (all towns and/or all heroes): heroes scale with the towns held, no flat cap; troops travel with heroes, not in garrisons, also in a threatened town a hero stands in (confirmed 2026-11-02); a hostile hero is worth every town it threatens, on either level; only the seven stacks limit an army, no strength-share merge; scouting is worth more toward the endgame.
 - 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
 - 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
 - 2026-11-01: A computer player may assume a rival not yet eliminated still holds towns or heroes it has not scouted (`_rival_towns_unknown`): common sense, not a fog leak.
@@ -39,6 +39,7 @@ None open.
 
 ## Open work
 
+- `ai-threatened-garrison-pickup-20261102` (in progress): The main and field armies take an own town's garrison also when the town is threatened, and a trip to collect it is worth its troops; couriers still never carry a threatened garrison off, and a hero leaving still leaves what holds the town against a known threat when affordable. Files: ai_hero_rules_turn_fights.cpp, ai_hero_rules_sight.cpp, AI doc. Owner: troops travel with heroes, not idle in garrisons, a threatened town included (confirmed 2026-11-02). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

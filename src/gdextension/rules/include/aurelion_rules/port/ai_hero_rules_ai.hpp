@@ -31,7 +31,9 @@ bool _in_hero_zone(State &state, DictRef search, int64_t tile_index);
 DictRef _exploration_candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry, DictRef ref, double power, DictRef needs, DictRef search, int64_t tile_index = -1);
 double _hero_war_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef needs, Atom ref_kind, int64_t index);
-DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index);
+// `steps`: the hero's way to the one it meets, in movement points; -1 unknown
+// or across a shore.
+DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index, int64_t steps = -1);
 
 // The main army, defense and threats (ai_hero_rules_defense.cpp).
 ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller);
@@ -78,6 +80,10 @@ int64_t _town_hero_defender_index(State &state, DictRef session, DictRef town, A
 int64_t _entry_town_index(State &state, DictRef session, Atom kind, int64_t hero_index);
 bool _town_entrance_free(State &state, DictRef session, DictRef town, Atom own_controller = state::key::empty);
 DictRef _garrison_pickup(State &state, ArrayRef stacks, ArrayRef garrison);
+// One hero's troops handed to another: pooled as a garrison is picked up, the
+// one that brought them keeping at least one creature. The gain is what the
+// receiver ends with over what it had.
+DictRef _handover(State &state, ArrayRef stacks, ArrayRef troops);
 bool _ferries_from(State &state, DictRef session, DictRef context, DictRef town, Atom main_id);
 
 // The explored tiles and the site-pass memo (ai_hero_rules_knowledge.cpp).
@@ -151,12 +157,12 @@ double _hunt_value(State &state, DictRef session, DictRef context);
 double _chart_value(State &state, DictRef session, DictRef context, int64_t level);
 bool _rival_towns_unknown(State &state, DictRef session, DictRef context);
 DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t index, double power, int64_t steps = -1);
-// What a hero beats with `after` strength and not with `before`: the best rival
-// or neutral town it knows, or rival hero in sight, on the level of `place`
-// within twelve days of it, less the expected losses, per day of travel from
-// there. A garrison that turns a small army into one that takes towns is worth
-// what it lets the army take.
-double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, double before, double after);
+// What the hero of `entry` beats leading the stacks `led` that none of `heroes`
+// beats with its own army: the best rival or neutral town it knows, or rival
+// hero in sight, on the level of `place` within twelve days of it, less the
+// expected losses, per day of travel from there. A garrison that turns a small
+// army into one that takes towns is worth what it lets the army take.
+double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led);
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position);
 ArrayRef _hostile_heroes(State &state, DictRef session, DictRef context);
 // A hostile hero as _hostile_heroes lists it: id, owner, x, y, level, power and

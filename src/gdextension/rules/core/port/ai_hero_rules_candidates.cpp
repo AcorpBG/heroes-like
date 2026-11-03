@@ -182,6 +182,51 @@ DictRef explore_stop(State &state, DictRef search, int64_t tile_index, double va
 	return result;
 }
 
+// What a hand-over lets the receiver take that neither hero can take alone, the
+// receiver leading the pooled troops (`_newly_beatable_value`). What the one
+// handing over could beat itself is weighed on its own attack.
+double pooled_beatable_value(State &state, DictRef session, DictRef context, DictRef giver, DictRef receiver, ArrayRef pooled) {
+	const ArrayRef heroes = state.new_array();
+	state.append(heroes, dict_value(receiver));
+	state.append(heroes, dict_value(giver));
+	return ai_hero_rules::_newly_beatable_value(state, session, context, receiver, receiver, heroes, pooled);
+}
+
+// The movement points a hero has left today.
+int64_t movement_left(State &state, DictRef entry) {
+	Value block;
+	Value movement;
+	if (!state.lookup(entry, str(key::ai_hero), block) || !gd::is_dict(block) || !state.lookup(block.ref, str(key::movement), movement) || !gd::is_dict(movement)) {
+		return 0;
+	}
+	return gd::int_field(state, movement.ref, key::current, 0);
+}
+
+// The steps to a tile whose way stays on one side of the shore, -1 for one
+// across it: boarding a boat or stepping ashore ends the day's movement
+// (`_follow_plan`).
+int64_t steps_without_shore(State &state, DictRef search, int64_t tile_index) {
+	if (gd::is_empty(state, search) || tile_index < 0) {
+		return -1;
+	}
+	Value found;
+	if (state.lookup(search, str(key::phase), found)) {
+		const PackedRef phase = gd::as_bytes(found);
+		const int64_t start = gd::int_field(state, search, key::start, -1);
+		const int64_t count = gd::packed_size(state, phase);
+		if (start >= 0 && start < count && tile_index < count && gd::packed_int(state, phase, tile_index) != gd::packed_int(state, phase, start)) {
+			return -1;
+		}
+	}
+	return search_distance(state, search, tile_index);
+}
+
+// Whether the hero's day has run this turn (`run_faction_turn`).
+bool day_over(State &state, DictRef context, Atom placement_id) {
+	Value done;
+	return state.lookup(context, str(key::days_done), done) && gd::is_dict(done) && state.has(done.ref, str(placement_id));
+}
+
 } // namespace
 
 namespace ai_hero_rules {
@@ -529,7 +574,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			return result;
 		}
 		case kStopTown:
-			return _town_candidate(state, session, context, entry, ref_index(), power, gd::is_empty(state, search) ? -1 : search_distance(state, search, tile_index));
+			return _town_candidate(state, session, context, entry, ref_index(), power, gd::is_empty(state, search) || tile_index < 0 ? -1 : search_distance(state, search, tile_index));
 		case kStopEncounter:
 			return _encounter_candidate(state, session, context, entry, ref_index(), power, needs, search);
 		case kStopHero: {
@@ -575,7 +620,7 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			const ArrayRef encounters = indexed_array(state, session_view::overworld(state, session), key::encounters);
 			const DictRef other = gd::as_dict(state.at(encounters, ref_index()));
 			if (player_rules::raid_controller_id(state, other) == controller) {
-				return _meet_candidate(state, session, context, entry, ref_index());
+				return _meet_candidate(state, session, context, entry, ref_index(), steps_without_shore(state, search, tile_index));
 			}
 			const Atom their_controller = player_rules::raid_controller_id(state, other);
 			if (player_rules::allied(state, dict_value(session), controller, their_controller)) {
@@ -636,7 +681,7 @@ double _hero_war_value(State &state, DictRef session, DictRef context, DictRef e
 	return share * tunable(state, key::PASSAGE_KNOWN_SITE_SHARE);
 }
 
-DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index) {
+DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef entry, int64_t other_index, int64_t steps) {
 	const ArrayRef encounters = indexed_array(state, session_view::overworld(state, session), key::encounters);
 	const DictRef other = gd::as_dict(state.at(encounters, other_index));
 	const Atom main_id = _decision_main_id(state, session, context);
@@ -644,6 +689,13 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id)) {
 		return state.new_dict();
 	}
+	// What the receiver can then take counts for a hand-over today, before its
+	// own day: it acts after the heroes bringing troops and uses them that day.
+	// Days away, what it lacks for a target changes before they arrive, with its
+	// own musters and the target's moves; the troops count for what they are.
+	// Past a gate the steps count from its exit (`_beyond_gate`), not from here.
+	const bool traveller = gd::to_bool(gd::field_or(state, entry, key::ai_traveller, bool_value(false)));
+	const bool today = !traveller && steps >= 0 && steps <= movement_left(state, entry) && !day_over(state, context, other_id);
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
 	if (gd::array_has(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)))) {
 		if (main_id != other_id || _is_raider(state, session, context, entry)) {
@@ -659,14 +711,19 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 		Value found;
 		const ArrayRef main_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
 		const ArrayRef own_stacks = nested_lookup(state, entry, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
-		const DictRef swap = _garrison_pickup(state, main_stacks, own_stacks);
-		if (gd::to_float(gd::index(state, swap, str(key::gain))) <= 0.0) {
+		const DictRef swap = _handover(state, main_stacks, own_stacks);
+		const double gain = gd::to_float(gd::index(state, swap, str(key::gain)));
+		if (gain <= 0.0) {
 			return state.new_dict();
 		}
 		const Atom id = ai::string_or_empty(state, other, key::placement_id);
 		const double base = tunable(state, key::JOIN_BASE_VALUE);
-		const double gain = gd::to_float(gd::index(state, swap, str(key::gain)));
-		const double value = base + gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+		double value = base + gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+		// And what the main army can then take that neither army can now, as a
+		// garrison taken along is worth (`_town_candidate`).
+		if (today) {
+			value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, swap, str(key::stacks))));
+		}
 		const DictRef result = state.new_dict();
 		state.set(result, str(key::kind), str(key::meet));
 		state.set(result, str(key::id), str(id));
@@ -679,7 +736,9 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	// strongest seven stacks, so troops go where their kind already stands or a
 	// slot is free, and a full army of another faction takes them only in place
 	// of weaker stacks. A hand-over is worth what the receiver gains, however
-	// much: a courier with a rear town's garrison brings it before small errands.
+	// much, and made today what it can then take: a courier with a rear town's
+	// garrison brings it before small errands. The courier keeps one creature
+	// (`_handover`), so one that has no more to give goes about its errands.
 	if (other_id != main_id && !gd::array_has(state, field_ids, str(other_id))) {
 		return state.new_dict();
 	}
@@ -689,9 +748,16 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	if (state.array_size(own_stacks) == 0) {
 		return state.new_dict();
 	}
-	const DictRef pooled = _garrison_pickup(state, their_stacks, own_stacks);
+	const DictRef pooled = _handover(state, their_stacks, own_stacks);
 	const double gain = gd::to_float(gd::index(state, pooled, str(key::gain)));
-	const double value = gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+	// Nothing changes hands where the receiver ends no stronger (`_meet_hero`).
+	if (gain <= 0.0) {
+		return state.new_dict();
+	}
+	double value = gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+	if (today) {
+		value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, pooled, str(key::stacks))));
+	}
 	if (value <= tunable(state, key::MIN_TROOP_ERRAND_VALUE)) {
 		return state.new_dict();
 	}

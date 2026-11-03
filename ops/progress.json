@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-meet-in-town-20261102",
- "currentSliceTitle": "Couriers and field armies hand troops to an own army standing in an own town; joining it near danger counts as going into that town. m305, m325, m130 replays end days 98, 83, 151 (300, cap, 247); six-seed check all finish.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-02T20:27:49Z",
+ "currentSliceId": "ai-threatened-garrison-pickup-20261102",
+ "currentSliceTitle": "A hero in a threatened town takes its garrison",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-02T20:33:57Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-threatened-garrison-pickup-20261102",
+   "title": "A hero in a threatened town takes its garrison",
+   "status": "in_progress",
+   "goal": "The main and field armies take an own town's garrison also when the town is threatened, and a trip to collect it is worth its troops; couriers still never carry a threatened garrison off, and a hero leaving still leaves what holds the town against a known threat when affordable. Files: ai_hero_rules_turn_fights.cpp, ai_hero_rules_sight.cpp, AI doc. Owner: troops travel with heroes, not idle in garrisons, a threatened town included (confirmed 2026-11-02).",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-02"
+  },
   {
    "id": "ai-meet-in-town-20261102",
    "status": "completed",

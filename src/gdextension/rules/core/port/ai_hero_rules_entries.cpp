@@ -545,6 +545,48 @@ DictRef _garrison_pickup(State &state, ArrayRef stacks, ArrayRef garrison) {
 	return result;
 }
 
+DictRef _handover(State &state, ArrayRef stacks, ArrayRef troops) {
+	const double before = power_of(state, array_value(stacks));
+	const DictRef pooled = _garrison_pickup(state, stacks, troops);
+	const ArrayRef taken = gd::as_array(gd::index(state, pooled, str(key::stacks)));
+	if (state.array_size(gd::as_array(gd::index(state, pooled, str(key::left)))) == 0) {
+		// The hero that brought them keeps one creature: the least of those in
+		// stacks of more than one; with only single creatures left, the weakest
+		// of them.
+		const ArrayRef several = state.new_array();
+		const ArrayRef ones = state.new_array();
+		for (const Value &stack : gd::items(state, array_value(taken))) {
+			if (gd::int_field(state, stack.ref, key::count, 0) > 1) {
+				state.append(several, stack);
+				const DictRef one = state.new_dict();
+				state.set(one, str(key::unit_id), str(ai::string_or_empty(state, stack.ref, key::unit_id)));
+				state.set(one, str(key::count), int_value(1));
+				state.append(ones, dict_value(one));
+			}
+		}
+		const ArrayRef kept = state.new_array();
+		if (state.array_size(several) != 0) {
+			const int64_t least = _weakest_stack_index(state, ones);
+			const DictRef stack = gd::as_dict(state.at(several, least));
+			state.set(stack, str(key::count), int_value(gd::sub(gd::to_int(state, gd::index(state, stack, str(key::count))), 1)));
+			state.append(kept, state.at(ones, least));
+		} else if (state.array_size(taken) > 1) {
+			const int64_t weakest = _weakest_stack_index(state, taken);
+			state.append(kept, state.at(taken, weakest));
+			gd::remove_at(state, taken, weakest);
+		}
+		state.set(pooled, str(key::left), array_value(kept));
+	}
+	// The same stacks summed in another order can differ in the last digits:
+	// that is no gain.
+	double gain = power_of(state, array_value(taken)) - before;
+	if (compat::engine_max(gain, -gain) <= before * 1.0e-9) {
+		gain = 0.0;
+	}
+	state.set(pooled, str(key::gain), float_value(gain));
+	return pooled;
+}
+
 bool _ferries_from(State &state, DictRef session, DictRef context, DictRef town, Atom main_id) {
 	if (main_id == key::empty || _town_threatened(state, session, context, town)) {
 		return false;

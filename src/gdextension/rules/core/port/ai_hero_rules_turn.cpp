@@ -376,6 +376,13 @@ DictRef run_faction_turn(State &state, DictRef session, DictRef config, DictRef 
 			break;
 		}
 		const DictRef hero_result = _run_hero_day(state, session, context, gd::stringify(state, placement_id));
+		// Troops handed to it from now on wait for its next day (`_meet_candidate`).
+		Value done;
+		if (!state.lookup(context, str(key::days_done), done)) {
+			done = dict_value(state.new_dict());
+			state.set(context, str(key::days_done), done);
+		}
+		state.set(gd::as_dict(done), placement_id, bool_value(true));
 		_append_all(state, messages, gd::field(state, hero_result, key::messages));
 		_append_all(state, events, gd::field(state, hero_result, key::events));
 		if (gd::bool_field(state, hero_result, key::battle_started, false)) {

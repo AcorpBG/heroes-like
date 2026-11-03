@@ -129,20 +129,22 @@ DictRef target_at(State &state, DictRef target, int64_t x, int64_t y, int64_t le
 	return target;
 }
 
-// What a hero of the player may beat with more troops, weighed once in its
-// turn: the rival and neutral towns it knows and the rival heroes in sight,
-// each with what it is worth and the strength an attack needs before a
-// one-shot spell takes its share (`_newly_beatable_value`). The values do not
-// depend on which hero weighs them.
-ArrayRef beatable_targets(State &state, DictRef session, DictRef context, DictRef entry) {
+// What a hero of the player may beat with more troops, weighed in its turn
+// and again after each fight (`_auto_resolve`): the rival and neutral towns it
+// knows and the rival heroes in sight, each with what it is worth and the
+// strength an attack needs before a one-shot spell takes its share. They are
+// weighed for no hero in particular: each hero reading them takes its own
+// spell share and reach (`_newly_beatable_value`).
+ArrayRef beatable_targets(State &state, DictRef session, DictRef context) {
 	Value found;
 	if (state.lookup(context, str(key::beatable), found)) {
 		return gd::as_array(found);
 	}
 	const ArrayRef targets = state.new_array();
 	state.set(context, str(key::beatable), array_value(targets));
-	// Weighed as if the hero could beat anything, then by what each needs.
+	// Weighed as if a hero could beat anything, then by what each needs.
 	const double unbounded = 1.0e15;
+	const DictRef nobody = state.new_dict();
 	const DictRef overworld = session_view::overworld(state, session);
 	const Vector2i size = context_map_size(state, context);
 	const Atom controller = context_controller(state, context);
@@ -153,7 +155,7 @@ ArrayRef beatable_targets(State &state, DictRef session, DictRef context, DictRe
 		if (string_or(state, town, key::owner, key::neutral) == key::enemy && player_rules::town_controller_id(state, town) == controller) {
 			continue;
 		}
-		const DictRef candidate = ai_hero_rules::_town_candidate(state, session, context, entry, index, unbounded);
+		const DictRef candidate = ai_hero_rules::_town_candidate(state, session, context, nobody, index, unbounded);
 		const Atom kind = ai::string_or_empty(state, candidate, key::kind);
 		if (kind != key::town_hostile && kind != key::town_neutral) {
 			continue;
@@ -177,7 +179,7 @@ ArrayRef beatable_targets(State &state, DictRef session, DictRef context, DictRe
 		const DictRef ref = state.new_dict();
 		state.set(ref, str(key::kind), int_value(stop_kind));
 		state.set(ref, str(key::index), int_value(index));
-		const DictRef candidate = ai_hero_rules::_candidate(state, session, context, entry, ref, unbounded, needs, no_search);
+		const DictRef candidate = ai_hero_rules::_candidate(state, session, context, nobody, ref, unbounded, needs, no_search);
 		if (gd::is_empty(state, candidate) || power <= 0.0) {
 			return;
 		}
@@ -188,11 +190,16 @@ ArrayRef beatable_targets(State &state, DictRef session, DictRef context, DictRe
 		state.set(target, str(key::fight_power), float_value(power));
 		state.append(targets, dict_value(target));
 	};
+	// A hero killed stays listed, as resolved (`_mark_resolved`): it is no target.
+	const DictRef resolved = ai_hero_rules::_resolved_lookup(state, session);
 	const ArrayRef encounters = gd::as_array(gd::index(state, overworld, str(key::encounters)));
 	const int64_t encounter_count = state.array_size(encounters);
 	for (int64_t index = 0; index < encounter_count; ++index) {
 		const Value other = state.at(encounters, index);
 		if (!ai_hero_rules::is_ai_hero(state, other) || player_rules::raid_controller_id(state, other.ref) == controller) {
+			continue;
+		}
+		if (state.has(resolved, str(ai::string_or_empty(state, other.ref, key::placement_id)))) {
 			continue;
 		}
 		const Value commander = state.get(other.ref, str(key::enemy_commander_state), dict_value(state.new_dict()));
@@ -393,17 +400,20 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		const double after_power = army_power_of(state, gd::index(state, after, str(key::stacks)));
 		const double own_power = army_power_of(state, array_value(own_stacks));
 		const double gain = after_power - own_power;
-		// A threatened town keeps its garrison (`_visit_own_town_if_inside`): no
-		// troops to take there, and none left for one that has just visited.
+		// None left for one that has just visited (`_visit_own_town_if_inside`).
+		// A threatened town's troops go to the main and field armies too, never
+		// to a courier (`_ferries_from`).
 		const bool town_threatened = _town_threatened(state, session, context, town);
-		const bool no_troops = town_threatened || visited_today;
+		const bool no_troops = visited_today;
 		if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id) || field_hero()) {
 			const double per_power = tunable(state, key::TROOP_VALUE_PER_POWER);
 			const double share = tunable(state, key::GARRISON_PICKUP_SHARE);
 			if (!no_troops) {
 				value = gain * per_power * share;
 				// And what the bigger army can then take that this one cannot.
-				value += _newly_beatable_value(state, session, context, entry, entrance, power, power + gain);
+				const ArrayRef alone = state.new_array();
+				state.append(alone, dict_value(entry));
+				value += _newly_beatable_value(state, session, context, entry, entrance, alone, gd::as_array(gd::index(state, after, str(key::stacks))));
 			}
 		} else if (_ferries_from(state, session, context, town, main_id)) {
 			// A courier carries the troops to the main army: worth what they are.
@@ -732,10 +742,21 @@ bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size) {
 	return false;
 }
 
-double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, double before, double after) {
+double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led) {
+	// The hero leads those troops as it leads its own.
+	const Value leader = state.get(entry, str(key::enemy_commander_state), dict_value(state.new_dict()));
+	const double after = army_power(state, array_value(led), leader);
+	double before = 0.0;
+	for (const Value &hero : gd::items(state, array_value(heroes))) {
+		before = compat::engine_max(before, hero_power(state, gd::as_dict(hero)));
+	}
 	if (after <= before) {
 		return 0.0;
 	}
+	const DictRef led_army = state.new_dict();
+	state.set(led_army, str(key::stacks), array_value(led));
+	const DictRef leading = state.new_dict();
+	state.set(leading, str(key::enemy_army), dict_value(led_army));
 	const int64_t level = level_rules::level_of(state, dict_value(place));
 	const int64_t x = gd::int_field(state, place, key::x, 0);
 	const int64_t y = gd::int_field(state, place, key::y, 0);
@@ -744,15 +765,23 @@ double _newly_beatable_value(State &state, DictRef session, DictRef context, Dic
 	const DictRef overworld = session_view::overworld(state, session);
 	const Atom controller = context_controller(state, context);
 	double best = 0.0;
-	for (const Value &target : gd::items(state, array_value(beatable_targets(state, session, context, entry)))) {
+	for (const Value &target : gd::items(state, array_value(beatable_targets(state, session, context)))) {
 		if (gd::int_field(state, target.ref, key::level, 0) != level) {
 			continue;
 		}
-		double need = gd::float_field(state, target.ref, key::need, 0.0);
+		const double need = gd::float_field(state, target.ref, key::need, 0.0);
+		double now = before;
+		double then = after;
 		Value commander;
 		if (state.lookup(target.ref, str(key::commander), commander)) {
-			// A big one-shot spell takes its share of the attacker first (`_candidate`).
-			need /= compat::engine_max(0.01, 1.0 - _burst_share(state, entry, commander));
+			// A big one-shot spell takes its share of each army first
+			// (`_candidate`): of each hero's own now, of the troops led then.
+			now = 0.0;
+			for (const Value &hero : gd::items(state, array_value(heroes))) {
+				const DictRef standing = gd::as_dict(hero);
+				now = compat::engine_max(now, hero_power(state, standing) * (1.0 - _burst_share(state, standing, commander)));
+			}
+			then = after * (1.0 - _burst_share(state, leading, commander));
 		} else {
 			// A town taken earlier in the turn is no longer a target.
 			const DictRef town = gd::as_dict(ai::vindex(state, gd::index(state, overworld, str(key::towns)), int_value(gd::int_field(state, target.ref, key::town_index, 0))));
@@ -760,7 +789,7 @@ double _newly_beatable_value(State &state, DictRef session, DictRef context, Dic
 				continue;
 			}
 		}
-		if (need <= before || need > after) {
+		if (need <= now || need > then) {
 			continue;
 		}
 		const int64_t dx = compat::absi(gd::sub(x, gd::int_field(state, target.ref, key::x, 0)));

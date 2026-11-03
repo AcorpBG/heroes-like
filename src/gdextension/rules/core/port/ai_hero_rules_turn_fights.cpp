@@ -471,7 +471,10 @@ DictRef _take_garrison(State &state, DictRef session, DictRef entry, DictRef tow
 		}
 	} else if (is_main || is_field || _ferries_from(state, session, context, live_town, main_id)) {
 		const double brought = empty_commander_power(state, array_value(stacks));
-		if (state.array_size(garrison) != 0 && !_town_threatened(state, session, context, live_town)) {
+		// Also in a threatened town: the hero defends it with those troops as the
+		// garrison would, and can take them to the threat. A courier does not
+		// carry a threatened garrison off (`_ferries_from`).
+		if (state.array_size(garrison) != 0) {
 			const DictRef pickup = _garrison_pickup(state, stacks, garrison);
 			stacks = gd::as_array(gd::index(state, pickup, str(key::stacks)));
 			garrison = gd::as_array(gd::index(state, pickup, str(key::left)));
@@ -1144,41 +1147,17 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	const DictRef army = dict_field_if(state, entry, key::enemy_army);
 	const DictRef other_army = dict_field_if(state, other, key::enemy_army);
 	// The armies are pooled: the hero met ends with the strongest seven stacks
-	// of both, the one that came with the rest (at least one creature).
+	// of both, the one that came with the rest (at least one creature). Nothing
+	// changes hands when that leaves the hero met no stronger.
 	const ArrayRef theirs = gd::as_array(gd::duplicate_value(state, list_field(state, other_army, key::stacks), true));
 	const ArrayRef ours = gd::as_array(gd::duplicate_value(state, list_field(state, army, key::stacks), true));
-	const DictRef swap = _garrison_pickup(state, theirs, ours);
+	const DictRef swap = _handover(state, theirs, ours);
 	if (gd::to_float(gd::index(state, swap, str(key::gain))) <= 0.0) {
 		return arrived_result(state);
 	}
 	const DictRef merged = state.new_dict();
 	state.set(merged, str(key::stacks), gd::index(state, swap, str(key::stacks)));
-	ArrayRef kept = gd::as_array(gd::index(state, swap, str(key::left)));
-	if (state.array_size(kept) == 0) {
-		// One creature of the weakest stack that has more than one; with only
-		// single creatures left, the weakest of them.
-		const ArrayRef stacks = gd::as_array(gd::index(state, merged, str(key::stacks)));
-		const ArrayRef several = state.new_array();
-		for (const Value &stack : gd::items(state, array_value(stacks))) {
-			if (gd::int_field(state, stack.ref, key::count, 0) > 1) {
-				state.append(several, stack);
-			}
-		}
-		kept = state.new_array();
-		if (state.array_size(several) != 0) {
-			const DictRef stack = gd::as_dict(state.at(several, _weakest_stack_index(state, several)));
-			state.set(stack, str(key::count), int_value(gd::sub(gd::to_int(state, gd::index(state, stack, str(key::count))), 1)));
-			const DictRef one = state.new_dict();
-			state.set(one, str(key::unit_id), str(ai::string_or_empty(state, stack, key::unit_id)));
-			state.set(one, str(key::count), int_value(1));
-			state.append(kept, dict_value(one));
-		} else if (state.array_size(stacks) > 1) {
-			const int64_t weakest = _weakest_stack_index(state, stacks);
-			state.append(kept, state.at(stacks, weakest));
-			gd::remove_at(state, stacks, weakest);
-		}
-	}
-	state.set(army, str(key::stacks), array_value(kept));
+	state.set(army, str(key::stacks), gd::index(state, swap, str(key::left)));
 	state.set(entry, str(key::enemy_army), dict_value(army));
 	{
 		const DictRef commander = dict_field(state, entry, key::enemy_commander_state);
@@ -1522,6 +1501,9 @@ DictRef _auto_resolve(State &state, DictRef session, DictRef context, int64_t in
 	DictRef entry = encounter_at(state, session, index);
 	const DictRef preview = dict_field(state, context, key::fight_preview);
 	state.erase(context, str(key::fight_preview));
+	// A fight kills a hero or shrinks an army: what the player's heroes may
+	// beat with more troops is weighed again (`beatable_targets`).
+	state.erase(context, str(key::beatable));
 	DictRef outcome = 0;
 	const Atom preview_key = ai::string_or_empty(state, preview, key::key);
 	if (preview_key == _battle_key(state, entry, defender, gd::to_int(state, gd::index(state, context, str(key::auto_battle_count))))) {
