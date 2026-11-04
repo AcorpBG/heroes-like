@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-start-heroes-at-game-start-20261104",
- "currentSliceTitle": "Computer start heroes stand at game start",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-04T19:58:07Z",
+ "currentSliceTitle": "Computer players' start heroes and start armies stand at their capitals before player 1 moves (run_enemy_turn before the first seat; AiSeatRules.place_start_heroes as a human's day 1 opens), not from their own first turns.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-04T20:11:54Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-start-heroes-at-game-start-20261104",
-   "title": "Computer start heroes stand at game start",
-   "status": "in_progress",
-   "goal": "Every computer player has its start hero and start army at its capital before player 1 moves, instead of from its own first turn (day-2 capital rushes). ai_hero_rules_turn_towns.cpp place_start_heroes, run_enemy_turn, AiSeatRules.place_start_heroes from OverworldShell on day 1. Owner 2026-11-04.",
-   "docs": [],
-   "updatedAt": "2026-11-04"
+   "status": "completed",
+   "completedAt": "2026-11-04",
+   "summary": "Computer players' start heroes and start armies stand at their capitals before player 1 moves (run_enemy_turn before the first seat; AiSeatRules.place_start_heroes as a human's day 1 opens), not from their own first turns.",
+   "commit": "8593c6e90"
   },
   {
    "id": "rmg-guard-free-route-seal-20261104",
