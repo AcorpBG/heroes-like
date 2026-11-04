@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rmg-link-guard-minimum-20261104",
- "currentSliceTitle": "Link guards keep H3MapEd's 0x4a65a5 budgets under 2,000 (not in strict mode; treasure and mine guards keep the minimum): Weak 3,000 and Ring's Normal 2,000 links get a guard, 191 on 18 Weak test maps. Guards rate budget x 0.10, was 0.06.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-04T10:43:49Z",
+ "currentSliceId": "rmg-guard-minimum-treasure-spacing-20261104",
+ "currentSliceTitle": "Every guard under the minimum; treasure one tile closer",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-04T11:58:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "rmg-guard-minimum-treasure-spacing-20261104",
+   "title": "Every guard under the minimum; treasure one tile closer",
+   "status": "in_progress",
+   "goal": "Owner decision 2026-11-04: treasure and mine guards also keep 0x4a65a5 budgets under H3MapEd's 2,000 minimum, like link guards, and a treasure pile needs one straight tile less from placed objects (0x4aab7e threshold - 2, the usual 4 tiles become 3). Both are departures, off in strict mode. Files: h3maped_rmg_core.cpp/.hpp, its selftest, the doc.",
+   "docs": [
+    "docs/generated-neutral-encounter-variety.md"
+   ],
+   "updatedAt": "2026-11-04"
+  },
   {
    "id": "rmg-link-guard-minimum-20261104",
    "status": "completed",

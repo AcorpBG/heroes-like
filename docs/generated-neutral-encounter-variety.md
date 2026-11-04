@@ -12,12 +12,23 @@ Slice `content-generated-guard-companies-20261009`, owner request. It replaces t
 - The rate is 0.10 (owner decision, 2026-11-04). It was 0.06 after the owner's Large Veilmourn playtest (Days 18–25), where guards were beaten at a median of 0.2x the hero's army.
 - At 0.06, on Medium seed 10, the same route guard rated about 200 on Weak, 250–335 on Normal and 530–590 on Strong. Before, all three were about the same. Small tier-1 guards came out about 40% below the old headcount rule; tier-3 and higher guards were stronger.
 
-## Link guards under H3MapEd's minimum (2026-11-04)
+## Guards under H3MapEd's minimum, treasure one tile closer (2026-11-04)
 
-Owner decision. H3MapEd's band formula (`0x4a65a5`) turns a link's guard value into a budget and drops any budget under 2,000. So Weak 3,000 links (368 of the 756 guarded links in the 53 templates) and Normal 2,000 links (the Ring template's 10) had no guard.
-- Generated maps keep a link guard's budget under that minimum. H3MapEd's creature choice (`0x4a5c07`) still places nothing when no creature fits the budget. The smallest fit is 525, so Weak 2,000 links (budget 375) stay open.
-- Treasure and mine guards keep the minimum.
-- This is a deliberate departure from H3MapEd, like the cut-off town repair (`docs/rmg-cut-off-town-repair.md`). A Weak map, or a Ring map on Normal, differs from H3MapEd's from its first such guard on. `AURELION_RMG_H3MAPED_STRICT=1` restores the minimum for parity work. The workflow config's `link_guards_under_minimum` switches it alone; the map selftest's repair cases recorded on Weak maps before this change turn it off.
+Owner decisions, made the same day. Both are deliberate departures from H3MapEd, like the cut-off town repair (`docs/rmg-cut-off-town-repair.md`): a map differs from H3MapEd's from its first such guard or pile on. `AURELION_RMG_H3MAPED_STRICT=1` turns both off for parity work. The workflow config switches each alone (`guards_under_minimum`, `treasure_spacing_one_tile_less`); the map selftest's repair cases, recorded under H3MapEd's rules, turn both off.
+
+**Every guard keeps a budget under the minimum.** H3MapEd's band formula (`0x4a65a5`) turns a guard value into a budget and drops any budget under 2,000.
+- Links: Weak 3,000 links (368 of the 756 guarded links in the 53 templates) and Normal 2,000 links (the Ring template's 10) had no guard. They get one now.
+- Treasure piles (`0x4a960a`, from the pile's value) and mines (`0x4a9911`'s fixed values) keep small budgets too. In a zone of normal strength a 3,000 pile gets about 110 battle power on a Weak map, a 2,000 pile about 100 on a Normal map and a 1,500 pile about 150 on a Strong map.
+- H3MapEd's creature choice (`0x4a5c07`) still places nothing when no creature fits. The smallest fit is 525, so Weak 2,000 links (budget 375) and the cheapest piles stay open.
+
+**Treasure keeps one tile less from placed objects.** Every visitable object H3MapEd places, guards included, lowers the cell scores around it (`0x4a54a7`: 2 per straight step, 3 per diagonal). A pile needs a cell scoring at least the square root of the score base (800, or 1,600 on water) over the zone's tier density (`0x4aab7e`). Generated maps take 2 off that threshold, one straight tile, so the usual 4 tiles become 3 (568 of the 646 catalog zones have threshold 7). A zone drops a tier when all six attempts of one pick fail, so the spacing caps how much treasure a zone holds.
+
+**Measured** on 63 maps (small 2P, medium 3P, large 4P and extra large 6P; Weak, Normal and Strong; land, one level; seeds 3001 on) against main at eba104c58:
+- Guards 8,664 to 12,130 (+40%), and those under 300 battle power 2,197 to 5,239. Link guards are unchanged; mine and pile guards add the rest.
+- Treasure piles 13,252 to 17,594 (+33%); the spacing change alone gives 21,374. The 500-3,000 tier nearly doubles (5,207 to 9,569), the 3,000-6,000 tier stays level (4,605 to 4,416; 6,647 with the spacing change alone), and 10,000 and up gain 9%.
+- A pile with a guard needs room for it and an open cell in front of it (`0x4aa603`), so mid-value piles that now carry a guard fit less often. On medium and large Strong maps, where most piles are guarded, the pile count barely moves (839 to 845, 1,884 to 1,916).
+- Mines are unchanged. The loose resources the mine step places beside them fall 2-8% (21% on small Strong maps), where the new mine guards stand.
+- A pile's value is H3MapEd's price list for map objects, about the gold a HoMM3 player gets; `generated_reward_rules.cpp` keeps HoMM3's amounts in our resources. The cheap tier is mostly one object: a gold or resource heap, a chest, a scroll, a tier-1 shrine or a visit building.
 
 **790 companies instead of 51.** `tools/build_generated_neutral_companies.py` builds `content/generated_neutral_companies.json` from the unit roster, using hand-written faction and neutral-theme vocabulary.
 - Every faction upgrade line has five companies: a levy of recruits, a seasoned company with a few upgraded veterans, an upgraded cadre with recruits, an elite of upgraded units only, and a combined-arms line with a same-faction unit of the other role. Lines of tier 3 and above also have a warband with lower-tier escorts.

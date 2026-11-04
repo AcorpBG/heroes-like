@@ -7856,13 +7856,12 @@ static int32_t reward_guard_attach_value_from_band_0x4a65a5(int32_t selected_val
 	return scaled_value < 0x7d0 ? 0 : scaled_value;
 }
 
-// Departure from H3MapEd (docs/generated-neutral-encounter-variety.md, owner decision
-// 2026-11-04): a link guard keeps a budget under 0x4a65a5's 0x7d0 minimum, so Weak
-// 3,000 and Normal 2,000 links get a guard. 0x4a5c07 still places none when no
-// creature fits the budget (the smallest fit is 525). Treasure and mine guards keep
-// the minimum; AURELION_RMG_H3MAPED_STRICT=1 restores it for links too.
-static int32_t link_guard_budget_0x4a65a5(const GeneratorObjectPrivateState &state, int32_t guard_value, int32_t effective_band) {
-	if (state.link_guard_minimum_departure_enabled) {
+// Departure from H3MapEd (docs/generated-neutral-encounter-variety.md, owner decisions
+// 2026-11-04): every guard, on a link, a treasure pile or a mine, keeps a budget under
+// 0x4a65a5's 0x7d0 minimum. 0x4a5c07 still places none when no creature fits the
+// budget (the smallest fit is 525). AURELION_RMG_H3MAPED_STRICT=1 restores it.
+static int32_t guard_budget_from_band_0x4a65a5(const GeneratorObjectPrivateState &state, int32_t guard_value, int32_t effective_band) {
+	if (state.guard_minimum_departure_enabled) {
 		return guard_value_scaled_by_band_0x4a65a5(guard_value, effective_band);
 	}
 	return reward_guard_attach_value_from_band_0x4a65a5(guard_value, effective_band);
@@ -7895,7 +7894,7 @@ static RewardGuardAttachValueGateResult4a960a reward_guard_attach_value_gate_0x4
 	result.effective_value_band_0x4a960a =
 			std::min<int32_t>(5, std::max<int32_t>(0, selector->source_pointer_value_0x90 + state.generator_value_band_0x10bc - 3));
 	result.scaled_attach_value_0x4a65a5 =
-			reward_guard_attach_value_from_band_0x4a65a5(selected_value, result.effective_value_band_0x4a960a);
+			guard_budget_from_band_0x4a65a5(state, selected_value, result.effective_value_band_0x4a960a);
 	result.applied = true;
 	return result;
 }
@@ -12121,6 +12120,13 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 	const int32_t score_base = source_object_kind_0x0c == 8 ? 0x640 : 0x320;
 	result.score_base_divided_by_total_source_count_0x4aac0e = score_base / result.total_source_count;
 	result.minimum_low_word_score_0x10 = int32_t(std::sqrt(double(result.score_base_divided_by_total_source_count_0x4aac0e)));
+	if (state.treasure_spacing_departure_enabled) {
+		// Departure from H3MapEd (docs/generated-neutral-encounter-variety.md, owner
+		// decision 2026-11-04): a pile needs a cell this far from every placed object
+		// (0x4a54a7 scores, 2 a straight step, 3 a diagonal). One straight tile less,
+		// so the usual 4 tiles become 3 and a zone holds more treasure.
+		result.minimum_low_word_score_0x10 = std::max<int32_t>(0, result.minimum_low_word_score_0x10 - 2);
+	}
 	for (RewardGuardSourceStreamLane4aab7e &lane : result.lanes) {
 		if (lane.active && lane.source_count_0xa8 > 0) {
 			lane.quota = 0;
@@ -18068,7 +18074,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 			result.blocked_reason = "0x4a7605_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		guard_budget = link_guard_budget_0x4a65a5(state,
+		guard_budget = guard_budget_from_band_0x4a65a5(state,
 				endpoint.guard_value,
 				state.generator_value_band_0x10bc);
 	}
@@ -18391,7 +18397,7 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 			return result;
 		}
 		result.guard_budget_0x4a65a5 =
-				link_guard_budget_0x4a65a5(state, source_endpoint.guard_value, state.generator_value_band_0x10bc);
+				guard_budget_from_band_0x4a65a5(state, source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	result.guard_budget_positive = result.guard_budget_0x4a65a5 > 0;
 
@@ -18958,7 +18964,7 @@ static ConnectionFallbackGateResult4a696b connection_fallback_gate_0x4a696b(
 			result.blocked_reason = "0x4a696b_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		guard_budget = link_guard_budget_0x4a65a5(state,
+		guard_budget = guard_budget_from_band_0x4a65a5(state,
 				source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	result.guard_budget_0x4a65a5 = guard_budget;
@@ -19273,7 +19279,7 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 			result.blocked_reason = "0x4a6cf2_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		result.guard_budget_0x4a65a5 = link_guard_budget_0x4a65a5(state,
+		result.guard_budget_0x4a65a5 = guard_budget_from_band_0x4a65a5(state,
 				source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	if (result.guard_budget_0x4a65a5 > 0) {
@@ -42534,10 +42540,12 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 			result.template_selection_0x4ac552,
 			result.coordinate_owner_grid_0x4a218c);
 	result.generator_object_private_state.route_join_departure_enabled = config.route_join_departure;
-	// Departure (docs/generated-neutral-encounter-variety.md): link guards under 0x4a65a5's minimum.
-	result.generator_object_private_state.link_guard_minimum_departure_enabled =
-			config.link_guards_under_minimum && config.repair_cut_off_towns
-			&& rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr;
+	// Departures (docs/generated-neutral-encounter-variety.md): guards under 0x4a65a5's
+	// minimum, and treasure one tile closer to placed objects.
+	const bool departures = config.repair_cut_off_towns && rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr;
+	result.generator_object_private_state.guard_minimum_departure_enabled = departures && config.guards_under_minimum;
+	result.generator_object_private_state.treasure_spacing_departure_enabled =
+			departures && config.treasure_spacing_one_tile_less;
 		if (!result.generator_object_private_state.generated_cell_buffer_owned) {
 			result.current_phase_id = "generator_object_private_state";
 			result.status = "blocked";

@@ -32,7 +32,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
 - 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
 - 2026-11-01: A computer player may assume a rival not yet eliminated still holds towns or heroes it has not scouted (`_rival_towns_unknown`): common sense, not a fog leak.
-- 2026-11-04: Generated-map link guards keep budgets under H3MapEd's 2,000 minimum, a deliberate departure; guard budgets become battle power at 0.10 (`docs/generated-neutral-encounter-variety.md`).
+- 2026-11-04: Every generated-map guard (links, treasure, mines) keeps budgets under H3MapEd's 2,000 minimum, and treasure keeps one tile less from placed objects, both deliberate departures; guard budgets become battle power at 0.10 (`docs/generated-neutral-encounter-variety.md`).
 
 ## Questions for the owner
 
@@ -40,6 +40,7 @@ None open.
 
 ## Open work
 
+- `rmg-guard-minimum-treasure-spacing-20261104` (in progress): Owner decision 2026-11-04: treasure and mine guards also keep 0x4a65a5 budgets under H3MapEd's 2,000 minimum, like link guards, and a treasure pile needs one straight tile less from placed objects (0x4aab7e threshold - 2, the usual 4 tiles become 3). Both are departures, off in strict mode. Files: h3maped_rmg_core.cpp/.hpp, its selftest, the doc. See `docs/generated-neutral-encounter-variety.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
