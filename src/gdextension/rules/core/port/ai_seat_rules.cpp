@@ -4,16 +4,29 @@
 // towns and its heroes leave the map, so on its first turn it starts as every
 // computer player does: a start hero with the faction's start army at its
 // capital. Nothing ends such a match by itself; standing_players() says who is
-// left.
+// left. place_start_heroes() puts every computer player's start hero on the
+// map before a human's first turn.
 
 #include "aurelion_rules/port/ai_seat_rules.hpp"
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
+#include "aurelion_rules/port/ai_hero_rules_turn.hpp"
+#include "aurelion_rules/port/difficulty_rules.hpp"
+#include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+
+namespace aurelion::rules::port {
+
+// Defined in enemy_states.cpp and declared only there.
+namespace enemy_turn_rules {
+gd::ArrayRef _enemy_faction_configs_for_session(state::State &state, gd::DictRef session);
+} // namespace enemy_turn_rules
+
+} // namespace aurelion::rules::port
 
 namespace aurelion::rules::port::ai_seat_rules {
 
@@ -108,6 +121,18 @@ bool match_over(State &state, DictRef session) {
 		}
 	}
 	return true;
+}
+
+void place_start_heroes(State &state, DictRef session) {
+	if (gd::to_int(state, gd::field(state, session, key::day)) != 1) {
+		return;
+	}
+	// What EnemyTurnRules.run_enemy_turn does before the computer players move.
+	ai_hero_rules::clear_shared_surfaces(state);
+	difficulty_rules::normalize_session(state, session);
+	enemy_turn_rules::normalize_enemy_states(state, session);
+	ai_hero_rules::place_start_heroes(state, session, enemy_turn_rules::_enemy_faction_configs_for_session(state, session));
+	ai_hero_rules::clear_shared_surfaces(state);
 }
 
 } // namespace aurelion::rules::port::ai_seat_rules

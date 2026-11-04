@@ -456,10 +456,13 @@ DictRef run_enemy_turn(State &state, DictRef session, bool settle_rosters) {
 	if (state.array_size(configs) == 0) {
 		return _enemy_turn_result(state, true, key::empty, state.new_array(), profile_enabled, profile);
 	}
+	// Every computer player has its start hero before the first one moves.
+	const ArrayRef opening_events = ai_hero_rules::place_start_heroes(state, session, configs);
 
 	Value states = get_or_new_array(state, session_view::overworld(state, session), key::enemy_states);
 	const ArrayRef messages = state.new_array();
 	const ArrayRef events = state.new_array();
+	_append_event_records(state, events, array_value(opening_events));
 	const bool should_apply_weekly_growth = overworld_rules::is_weekly_growth_day(state, ai::session_int(state, session, key::day));
 
 	// By index, reading every field again after a faction turn: its battles are

@@ -2144,6 +2144,9 @@ const Function kFunctions[] = {
 	NATIVE(AiSeatRules, match_over, 1, true,
 			if (nil(a, 0)) return gd::bool_value(true);
 			return gd::bool_value(ai_seat_rules::match_over(s, D(a, 0)))),
+	NATIVE(AiSeatRules, place_start_heroes, 1, true,
+			if (!nil(a, 0)) ai_seat_rules::place_start_heroes(s, D(a, 0));
+			return Value()),
 	// 7.15, one copy: what the core tests and the AI match runner call, directly
 	// or through AiSeatRules.
 	NATIVE(AiHeroRules, active_hero_count, 2, true,

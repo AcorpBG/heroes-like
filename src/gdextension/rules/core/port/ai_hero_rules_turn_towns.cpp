@@ -36,6 +36,10 @@ gd::DictRef build_roster_commander_state(state::State &state, gd::Atom roster_he
 gd::DictRef _normalize_enemy_progression(state::State &state, gd::DictRef commander_state);
 } // namespace enemy_adventure_rules
 
+namespace enemy_turn_rules {
+gd::DictRef _find_state(state::State &state, const state::Value &states, gd::Atom faction_id);
+} // namespace enemy_turn_rules
+
 namespace {
 
 using gd::array_value;
@@ -210,6 +214,34 @@ DictRef _ensure_starting_hero(State &state, DictRef session, DictRef context) {
 	}
 	state.set(state_, str(key::ai_start_hero_granted), bool_value(true));
 	return hired_result(state, hired);
+}
+
+// Every computer player stands with its start hero and the faction's start army
+// at its capital before the first player moves (owner decision, 2026-11-04),
+// not only from its own first turn: a rival's first hero met an empty town. In
+// seat order, each looks around from its holdings and hires the hero its first
+// turn would. A player with a hero already, or with no town, is left to its own
+// turn, which also marks it.
+ArrayRef place_start_heroes(State &state, DictRef session, ArrayRef configs) {
+	const ArrayRef events = state.new_array();
+	const Value states = state.get(session_view::overworld(state, session), str(key::enemy_states), array_value(state.new_array()));
+	for (int64_t index = 0; index < state.array_size(configs); ++index) {
+		const Value config = state.at(configs, index);
+		if (!gd::is_dict(config)) {
+			continue;
+		}
+		const Atom controller = player_identity_rules::controller_id(state, config.ref, key::empty);
+		const DictRef faction_state = enemy_turn_rules::_find_state(state, states, controller);
+		if (gd::is_empty(state, faction_state) || gd::bool_field(state, faction_state, key::ai_start_hero_granted, false) ||
+				active_hero_count(state, session, controller) > 0 || state.array_size(enemy_turn_rules::_owned_town_entries(state, session, controller)) == 0) {
+			continue;
+		}
+		const DictRef context = _new_context(state, session, config.ref, faction_state);
+		_reveal_from_holdings(state, session, context);
+		_note_sightings(state, session, context);
+		_append_all(state, events, gd::field(state, _ensure_starting_hero(state, session, context), key::events));
+	}
+	return events;
 }
 
 DictRef _govern_towns(State &state, DictRef session, DictRef context) {

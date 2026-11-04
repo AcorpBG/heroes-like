@@ -143,6 +143,9 @@ double _hire_reserve(State &state, DictRef session, Atom controller, Atom days_n
 DictRef _hold_back(State &state, DictRef treasury, DictRef amounts);
 void _ensure_opening_stockpile(State &state, DictRef session, DictRef context);
 DictRef _ensure_starting_hero(State &state, DictRef session, DictRef context);
+// Every computer player's start hero placed before the first player moves, in
+// seat order, as each one's first turn would hire it; the events it makes.
+ArrayRef place_start_heroes(State &state, DictRef session, ArrayRef configs);
 bool _faction_has_tavern(State &state, ArrayRef town_entries);
 DictRef _govern_towns(State &state, DictRef session, DictRef context);
 DictRef _hire_hero(State &state, DictRef session, DictRef context, double reserve);

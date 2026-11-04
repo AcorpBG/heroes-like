@@ -6,6 +6,7 @@ func _make_custom_tooltip(for_text: String) -> Object:
 	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
 
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
+const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const TurnPresenter = preload("res://scenes/overworld/OverworldTurnPresenter.gd")
 var _turn_presenter: Control
 var _turn_route_expiry_candidates: Array = []
@@ -508,6 +509,8 @@ func _ready() -> void:
 		return
 
 	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_start")
+	# Every computer player stands with its start hero before the human's first turn.
+	AiSeatRulesScript.place_start_heroes(_session)
 	OverworldRules.normalize_overworld_state_for_runtime(_session)
 	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_done")
 	if _session.scenario_status != "in_progress":

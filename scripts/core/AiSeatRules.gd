@@ -6,6 +6,8 @@ extends RefCounted
 # its heroes leave the map, so on its first turn it starts as every computer
 # player does: a start hero with the faction's start army at its capital.
 # Nothing ends such a match by itself; standing_players() says who is left.
+# place_start_heroes() puts every computer player's start hero on the map
+# before a human's first turn.
 # The rules are native, one copy with match_sim_cli's seats
 # (src/gdextension/rules/core/port/ai_seat_rules.cpp).
 
@@ -24,3 +26,8 @@ static func standing_players(session: SessionStateStoreScript.SessionData) -> Ar
 
 static func match_over(session: SessionStateStoreScript.SessionData) -> bool:
 	return HumanEngine.native_writing(&"AiSeatRules.match_over", [session])
+
+## Every computer player's start hero and start army at its capital before the
+## human's first turn. Only on the session's first day; a no-op later.
+static func place_start_heroes(session: SessionStateStoreScript.SessionData) -> void:
+	HumanEngine.native_writing(&"AiSeatRules.place_start_heroes", [session])

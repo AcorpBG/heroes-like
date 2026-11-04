@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rmg-guard-free-route-seal-20261104",
- "currentSliceTitle": "Generated maps close fight-free walks between zones with a guarded link (rocks in the narrowest gap, pickups moved aside, or a link guard moved into it); not in strict mode. 1,200 batch maps: no fight-free town pair between groups.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-04T18:47:31Z",
+ "currentSliceId": "ai-start-heroes-at-game-start-20261104",
+ "currentSliceTitle": "Computer start heroes stand at game start",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-04T19:58:07Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-start-heroes-at-game-start-20261104",
+   "title": "Computer start heroes stand at game start",
+   "status": "in_progress",
+   "goal": "Every computer player has its start hero and start army at its capital before player 1 moves, instead of from its own first turn (day-2 capital rushes). ai_hero_rules_turn_towns.cpp place_start_heroes, run_enemy_turn, AiSeatRules.place_start_heroes from OverworldShell on day 1. Owner 2026-11-04.",
+   "docs": [],
+   "updatedAt": "2026-11-04"
+  },
   {
    "id": "rmg-guard-free-route-seal-20261104",
    "status": "completed",

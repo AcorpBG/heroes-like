@@ -22,5 +22,9 @@ Atom hand_human_seat_to_ai(State &state, DictRef session);
 ArrayRef standing_players(State &state, DictRef session);
 // A match with no human seat is over once every standing player is on one team.
 bool match_over(State &state, DictRef session);
+// Every computer player's start hero and start army at its capital before the
+// human's first turn: on the session's first day, as the computer players' day
+// places them before any of them moves; a no-op on any other day.
+void place_start_heroes(State &state, DictRef session);
 
 } // namespace aurelion::rules::port::ai_seat_rules
