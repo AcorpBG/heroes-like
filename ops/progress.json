@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "rmg-guard-minimum-treasure-spacing-20261104",
- "currentSliceTitle": "Every guard under the minimum; treasure one tile closer",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-04T11:58:12Z",
+ "currentSliceTitle": "Treasure and mine guards also keep 0x4a65a5 budgets under 2,000, and treasure keeps one tile less from placed objects (0x4aab7e); not in strict mode. On 63 maps guards +40%, treasure piles +33%, nearly all in the 500-3,000 tier.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-04T12:37:01Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "rmg-guard-minimum-treasure-spacing-20261104",
-   "title": "Every guard under the minimum; treasure one tile closer",
-   "status": "in_progress",
-   "goal": "Owner decision 2026-11-04: treasure and mine guards also keep 0x4a65a5 budgets under H3MapEd's 2,000 minimum, like link guards, and a treasure pile needs one straight tile less from placed objects (0x4aab7e threshold - 2, the usual 4 tiles become 3). Both are departures, off in strict mode. Files: h3maped_rmg_core.cpp/.hpp, its selftest, the doc.",
-   "docs": [
-    "docs/generated-neutral-encounter-variety.md"
-   ],
-   "updatedAt": "2026-11-04"
+   "status": "completed",
+   "completedAt": "2026-11-04",
+   "summary": "Treasure and mine guards also keep 0x4a65a5 budgets under 2,000, and treasure keeps one tile less from placed objects (0x4aab7e); not in strict mode. On 63 maps guards +40%, treasure piles +33%, nearly all in the 500-3,000 tier.",
+   "commit": "75418897d"
   },
   {
    "id": "rmg-link-guard-minimum-20261104",
