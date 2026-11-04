@@ -40,7 +40,6 @@ None open.
 
 ## Open work
 
-- `rmg-link-guard-minimum-20261104` (in progress): Owner decision 2026-11-04: link guards keep 0x4a65a5 budgets under 2,000 (h3maped_rmg_core.cpp; strict mode keeps H3MapEd's minimum, treasure and mine guards keep it); guard budgets become battle power at 0.10 (build_generated_neutral_companies.py, content). See `docs/generated-neutral-encounter-variety.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -50,6 +49,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-04 `rmg-link-guard-minimum-20261104` (120bc3c54): Link guards keep H3MapEd's 0x4a65a5 budgets under 2,000 (not in strict mode; treasure and mine guards keep the minimum): Weak 3,000 and Ring's Normal 2,000 links get a guard, 191 on 18 Weak test maps. Guards rate budget x 0.10, was 0.06.
 - 2026-11-03 `ai-far-choice-keeps-away-20261103` (004416a48): The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; 160 paired games last 107.5 days vs 108.7, no cap vs 1.
 - 2026-11-03 `ai-gate-routes-armies-danger-20261103` (8e7872f86): Ways through several gates also lead to own armies to hand troops to, and close gates in a much stronger hostile hero's reach. 160 paired two-level games last 125.0 days vs 124.5 on main (95% -6.6 to +7.9), 2 caps each.
 - 2026-11-03 `ai-danger-walkable-ground-20261103` (8a7f88220): Danger is the ground a much stronger hostile hero walks in a day, as for town threats; waiting goes nowhere deeper in it. Replays m325, m130, m305 end on days 66, 151, 140 (91, 177, 263); flee-and-return hero-days 5, 38, 8 (21, 262, 45).
