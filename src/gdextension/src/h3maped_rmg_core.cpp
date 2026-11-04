@@ -14104,6 +14104,49 @@ static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelat
 	return -1;
 }
 
+static bool guard_descriptor_type_departure(int32_t type_id) {
+	return type_id == 54 || (type_id >= 71 && type_id <= 75) || (type_id >= 162 && type_id <= 164);
+}
+
+// Departure bookkeeping (docs/rmg-guard-free-route-seal.md): a link counts as
+// guarded when any of its dispatches committed a guard object. Objects appended
+// since object_count_before belong to this dispatch; both endpoint records of a
+// link carry its source_link_index.
+static void record_zone_link_guard_departure(
+		GeneratorObjectPrivateState &state,
+		const GeneratorSourceEndpointRecordState4a1f3b &record,
+		const GeneratorRelationOwnerState4a218c &owner,
+		const GeneratorRelationOwnerState4a218c &target_owner,
+		int32_t object_count_before) {
+	if (!state.route_seal_departure_enabled) {
+		return;
+	}
+	std::vector<uint32_t> guard_keys;
+	for (size_t index = size_t(std::max<int32_t>(0, object_count_before));
+			index < state.object_records_0xec4_ecc.size();
+			++index) {
+		if (guard_descriptor_type_departure(state.object_records_0xec4_ecc[index].descriptor_type_0x1c)) {
+			guard_keys.push_back(state.object_records_0xec4_ecc[index].object_record_key);
+		}
+	}
+	if (record.source_link_index >= 0) {
+		for (ZoneLinkGuardRecordDeparture &link : state.zone_link_guard_records_departure) {
+			if (link.source_link_index == record.source_link_index) {
+				link.guard_committed = link.guard_committed || !guard_keys.empty();
+				link.guard_object_keys.insert(link.guard_object_keys.end(), guard_keys.begin(), guard_keys.end());
+				return;
+			}
+		}
+	}
+	ZoneLinkGuardRecordDeparture link;
+	link.source_link_index = record.source_link_index;
+	link.zone_a = relation_owner_byte2_for_generated_cell_gate(owner);
+	link.zone_b = relation_owner_byte2_for_generated_cell_gate(target_owner);
+	link.guard_committed = !guard_keys.empty();
+	link.guard_object_keys = std::move(guard_keys);
+	state.zone_link_guard_records_departure.push_back(link);
+}
+
 static int32_t relation_scan_loop_owner_byte2_0x4a5767(int32_t relation_vector_loop_index) {
 	// Recovered 0x4a5767 compares generated-cell +0x20 byte2 with the
 	// relation-pointer vector loop index at [EBP-0x0c], not the final source
@@ -19949,6 +19992,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 						&& result.blocked_reason.empty()) {
 					result.blocked_reason = prefix.blocked_reason;
 				}
+				record_zone_link_guard_departure(state, record, owner, *target_owner, pair_object_count_before);
 				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					const int32_t pair_object_count_after =
 							int32_t(state.object_records_0xec4_ecc.size());
@@ -20043,6 +20087,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				result.blocked_reason = "0x4a79a3_second_dispatch_0x4a696b_supported_land_result_unrecovered";
 				return result;
 			}
+				const int32_t link_object_count_before = int32_t(state.object_records_0xec4_ecc.size());
 				const uint32_t fallback_rng_before = rng.state;
 				const ConnectionFallbackGateResult4a696b fallback_gate =
 						connection_fallback_gate_0x4a696b(state, owner, *target_owner, record, rng);
@@ -20059,6 +20104,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			}
 			if (fallback_gate.returned_true) {
 				source_endpoint_record_mark_processed_0x0a(record);
+				record_zone_link_guard_departure(state, record, owner, *target_owner, link_object_count_before);
 				continue;
 			}
 			if (target_owner->terrain_policy_0x0c == 8) {
@@ -20085,6 +20131,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			}
 			source_endpoint_record_mark_processed_0x0a(record);
 			source_endpoint_record_mark_processed_0x0a(*reciprocal_endpoint);
+			record_zone_link_guard_departure(state, record, owner, *target_owner, link_object_count_before);
 			result.pair_bookkeeping_processed_marker_known = true;
 			const int32_t descriptor_lane_count =
 					result.direct_endpoint_descriptor_lane_count_0x308
@@ -42066,105 +42113,128 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 	}
 }
 
-// Towns outside the walkable area that holds the most towns. Rock and object
-// bodies block; water blocks unless a boat can be had on it. Action tiles stay
-// enterable, and monoliths and subterranean gates join their peers. Mines block
-// the game's three-by-two shape, not their H3 body.
-static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
-	const int32_t width = projection.width;
-	const int32_t height = projection.height;
-	const int64_t plane = int64_t(width) * height;
-	const int64_t cell_count = plane * projection.level_count;
-	if (width <= 0 || height <= 0 || projection.level_count <= 0
-			|| int64_t(projection.terrain_type_codes.size()) < cell_count) {
-		return 0;
-	}
-	auto flat_of = [&](const RuntimeMapTilePoint &tile) -> int64_t {
-		if (tile.x < 0 || tile.y < 0 || tile.x >= width || tile.y >= height || tile.level < 0 || tile.level >= projection.level_count) {
+// The game's walking surface on a finished map. Rock and object bodies block;
+// water blocks too unless sail is set and a boat can be had on it. Action tiles
+// stay enterable, and monoliths and subterranean gates join their peers. Mines
+// block the game's three-by-two shape, not their H3 body.
+struct DepartureWalkSurface {
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int64_t plane = 0;
+	int64_t cell_count = 0;
+	std::vector<char> blocked;
+	std::map<int64_t, std::vector<int64_t>> links;
+
+	int64_t flat_of(const RuntimeMapTilePoint &tile) const {
+		if (tile.x < 0 || tile.y < 0 || tile.x >= width || tile.y >= height || tile.level < 0 || tile.level >= level_count) {
 			return -1;
 		}
 		return int64_t(tile.level) * plane + int64_t(tile.y) * width + tile.x;
-	};
-	std::vector<char> blocked(size_t(cell_count), 0);
-	for (int64_t flat = 0; flat < cell_count; ++flat) {
-		blocked[size_t(flat)] = projection.terrain_type_codes[size_t(flat)] == 9 ? 1 : 0;
 	}
-	// A hero reaches water only from a boat (type 8) or a shipyard's dock (type 87):
-	// the nearest water tile around its visit tile and body, in the order the game
-	// picks it (water_travel_rules_ai.cpp dock_tile). Water with neither blocks, so a
-	// town joined to the rest only across such a lake is cut off (XL m475, seed
-	// 3749470550: a 402-tile lake with no boat touches the main area at one tile).
-	std::vector<int32_t> water_body(size_t(cell_count), -1);
-	std::vector<char> water_body_sailable;
-	for (int64_t start = 0; start < cell_count; ++start) {
-		if (projection.terrain_type_codes[size_t(start)] != 8 || water_body[size_t(start)] >= 0) {
-			continue;
+};
+
+static bool departure_walk_surface(const RuntimeMapPayloadProjection &projection, bool sail, DepartureWalkSurface &surface) {
+	surface.width = projection.width;
+	surface.height = projection.height;
+	surface.level_count = projection.level_count;
+	surface.plane = int64_t(surface.width) * surface.height;
+	surface.cell_count = surface.plane * surface.level_count;
+	const int32_t width = surface.width;
+	const int32_t height = surface.height;
+	const int64_t plane = surface.plane;
+	const int64_t cell_count = surface.cell_count;
+	if (width <= 0 || height <= 0 || surface.level_count <= 0
+			|| int64_t(projection.terrain_type_codes.size()) < cell_count) {
+		return false;
+	}
+	auto flat_of = [&](const RuntimeMapTilePoint &tile) -> int64_t {
+		return surface.flat_of(tile);
+	};
+	std::vector<char> &blocked = surface.blocked;
+	blocked.assign(size_t(cell_count), 0);
+	for (int64_t flat = 0; flat < cell_count; ++flat) {
+		const uint8_t terrain = projection.terrain_type_codes[size_t(flat)];
+		blocked[size_t(flat)] = terrain == 9 || (!sail && terrain == 8) ? 1 : 0;
+	}
+	if (sail) {
+		// A hero reaches water only from a boat (type 8) or a shipyard's dock (type 87):
+		// the nearest water tile around its visit tile and body, in the order the game
+		// picks it (water_travel_rules_ai.cpp dock_tile). Water with neither blocks, so a
+		// town joined to the rest only across such a lake is cut off (XL m475, seed
+		// 3749470550: a 402-tile lake with no boat touches the main area at one tile).
+		std::vector<int32_t> water_body(size_t(cell_count), -1);
+		std::vector<char> water_body_sailable;
+		for (int64_t start = 0; start < cell_count; ++start) {
+			if (projection.terrain_type_codes[size_t(start)] != 8 || water_body[size_t(start)] >= 0) {
+				continue;
+			}
+			const int32_t body = int32_t(water_body_sailable.size());
+			water_body_sailable.push_back(0);
+			std::vector<int64_t> stack { start };
+			water_body[size_t(start)] = body;
+			while (!stack.empty()) {
+				const int64_t cell = stack.back();
+				stack.pop_back();
+				const int32_t level = int32_t(cell / plane);
+				const int32_t x = int32_t(cell % plane) % width;
+				const int32_t y = int32_t(cell % plane) / width;
+				for (int32_t dy = -1; dy <= 1; ++dy) {
+					for (int32_t dx = -1; dx <= 1; ++dx) {
+						if ((dx == 0 && dy == 0) || x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) {
+							continue;
+						}
+						const int64_t next = int64_t(level) * plane + int64_t(y + dy) * width + (x + dx);
+						if (projection.terrain_type_codes[size_t(next)] == 8 && water_body[size_t(next)] < 0) {
+							water_body[size_t(next)] = body;
+							stack.push_back(next);
+						}
+					}
+				}
+			}
 		}
-		const int32_t body = int32_t(water_body_sailable.size());
-		water_body_sailable.push_back(0);
-		std::vector<int64_t> stack { start };
-		water_body[size_t(start)] = body;
-		while (!stack.empty()) {
-			const int64_t cell = stack.back();
-			stack.pop_back();
-			const int32_t level = int32_t(cell / plane);
-			const int32_t x = int32_t(cell % plane) % width;
-			const int32_t y = int32_t(cell % plane) / width;
-			for (int32_t dy = -1; dy <= 1; ++dy) {
-				for (int32_t dx = -1; dx <= 1; ++dx) {
-					if ((dx == 0 && dy == 0) || x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) {
+		for (const RuntimeMapObjectProjection &object : projection.objects) {
+			if (object.type_id != 8 && object.type_id != 87) {
+				continue;
+			}
+			const RuntimeMapTilePoint origin = object.action_tiles.empty()
+					? RuntimeMapTilePoint { object.x, object.y, object.level }
+					: object.action_tiles.front();
+			if (object.type_id == 8) {
+				const int64_t flat = flat_of(origin);
+				if (flat >= 0 && water_body[size_t(flat)] >= 0) {
+					water_body_sailable[size_t(water_body[size_t(flat)])] = 1;
+				}
+				continue;
+			}
+			static constexpr int32_t DOCK_DX[8] = { 0, -1, 1, 0, -1, 1, -1, 1 };
+			static constexpr int32_t DOCK_DY[8] = { 1, 0, 0, -1, 1, 1, -1, -1 };
+			std::vector<RuntimeMapTilePoint> sources { origin };
+			sources.insert(sources.end(), object.body_tiles.begin(), object.body_tiles.end());
+			int64_t dock = -1;
+			int64_t dock_distance = int64_t(1) << 30;
+			for (const RuntimeMapTilePoint &source : sources) {
+				for (int32_t direction = 0; direction < 8; ++direction) {
+					const RuntimeMapTilePoint tile { source.x + DOCK_DX[direction], source.y + DOCK_DY[direction], origin.level };
+					const int64_t flat = flat_of(tile);
+					if (flat < 0 || projection.terrain_type_codes[size_t(flat)] != 8) {
 						continue;
 					}
-					const int64_t next = int64_t(level) * plane + int64_t(y + dy) * width + (x + dx);
-					if (projection.terrain_type_codes[size_t(next)] == 8 && water_body[size_t(next)] < 0) {
-						water_body[size_t(next)] = body;
-						stack.push_back(next);
+					const int64_t distance = int64_t(tile.x - origin.x) * (tile.x - origin.x) + int64_t(tile.y - origin.y) * (tile.y - origin.y);
+					if (distance < dock_distance) {
+						dock_distance = distance;
+						dock = flat;
 					}
 				}
 			}
-		}
-	}
-	for (const RuntimeMapObjectProjection &object : projection.objects) {
-		if (object.type_id != 8 && object.type_id != 87) {
-			continue;
-		}
-		const RuntimeMapTilePoint origin = object.action_tiles.empty()
-				? RuntimeMapTilePoint { object.x, object.y, object.level }
-				: object.action_tiles.front();
-		if (object.type_id == 8) {
-			const int64_t flat = flat_of(origin);
-			if (flat >= 0 && water_body[size_t(flat)] >= 0) {
-				water_body_sailable[size_t(water_body[size_t(flat)])] = 1;
-			}
-			continue;
-		}
-		static constexpr int32_t DOCK_DX[8] = { 0, -1, 1, 0, -1, 1, -1, 1 };
-		static constexpr int32_t DOCK_DY[8] = { 1, 0, 0, -1, 1, 1, -1, -1 };
-		std::vector<RuntimeMapTilePoint> sources { origin };
-		sources.insert(sources.end(), object.body_tiles.begin(), object.body_tiles.end());
-		int64_t dock = -1;
-		int64_t dock_distance = int64_t(1) << 30;
-		for (const RuntimeMapTilePoint &source : sources) {
-			for (int32_t direction = 0; direction < 8; ++direction) {
-				const RuntimeMapTilePoint tile { source.x + DOCK_DX[direction], source.y + DOCK_DY[direction], origin.level };
-				const int64_t flat = flat_of(tile);
-				if (flat < 0 || projection.terrain_type_codes[size_t(flat)] != 8) {
-					continue;
-				}
-				const int64_t distance = int64_t(tile.x - origin.x) * (tile.x - origin.x) + int64_t(tile.y - origin.y) * (tile.y - origin.y);
-				if (distance < dock_distance) {
-					dock_distance = distance;
-					dock = flat;
-				}
+			if (dock >= 0) {
+				water_body_sailable[size_t(water_body[size_t(dock)])] = 1;
 			}
 		}
-		if (dock >= 0) {
-			water_body_sailable[size_t(water_body[size_t(dock)])] = 1;
-		}
-	}
-	for (int64_t flat = 0; flat < cell_count; ++flat) {
-		if (water_body[size_t(flat)] >= 0 && !water_body_sailable[size_t(water_body[size_t(flat)])]) {
-			blocked[size_t(flat)] = 1;
+		for (int64_t flat = 0; flat < cell_count; ++flat) {
+			if (water_body[size_t(flat)] >= 0 && !water_body_sailable[size_t(water_body[size_t(flat)])]) {
+				blocked[size_t(flat)] = 1;
+			}
 		}
 	}
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
@@ -42204,15 +42274,14 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 			entry_by_serialized_index[object.serialized_index] = flat_of(object.action_tiles.front());
 		}
 	}
-	std::map<int64_t, std::vector<int64_t>> links;
 	auto link = [&](int32_t from_index, int32_t to_index) {
 		const auto from = entry_by_serialized_index.find(from_index);
 		const auto to = entry_by_serialized_index.find(to_index);
 		if (from == entry_by_serialized_index.end() || to == entry_by_serialized_index.end() || from->second < 0 || to->second < 0) {
 			return;
 		}
-		links[from->second].push_back(to->second);
-		links[to->second].push_back(from->second);
+		surface.links[from->second].push_back(to->second);
+		surface.links[to->second].push_back(from->second);
 	};
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
 		for (const int32_t peer : object.monolith_destination_serialized_indices_0x4a7605) {
@@ -42222,42 +42291,62 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 			link(object.serialized_index, object.cross_level_peer_serialized_index_0x4a6cf2);
 		}
 	}
-	std::vector<int32_t> area(size_t(cell_count), -1);
-	int32_t area_count = 0;
-	for (int64_t start = 0; start < cell_count; ++start) {
-		if (area[size_t(start)] >= 0 || blocked[size_t(start)]) {
+	return true;
+}
+
+// Labels the cells open(cell) allows into components joined by eight-way steps and
+// by the surface's links; -1 elsewhere. Returns the component count.
+template <typename Open>
+static int32_t departure_walk_components(const DepartureWalkSurface &surface, Open open, std::vector<int32_t> &component) {
+	component.assign(size_t(surface.cell_count), -1);
+	int32_t count = 0;
+	std::vector<int64_t> stack;
+	for (int64_t start = 0; start < surface.cell_count; ++start) {
+		if (component[size_t(start)] >= 0 || !open(start)) {
 			continue;
 		}
-		std::vector<int64_t> stack { start };
-		area[size_t(start)] = area_count;
+		stack.assign(1, start);
+		component[size_t(start)] = count;
 		while (!stack.empty()) {
 			const int64_t cell = stack.back();
 			stack.pop_back();
-			const int32_t level = int32_t(cell / plane);
-			const int32_t x = int32_t(cell % plane) % width;
-			const int32_t y = int32_t(cell % plane) / width;
+			const int32_t level = int32_t(cell / surface.plane);
+			const int32_t x = int32_t(cell % surface.plane) % surface.width;
+			const int32_t y = int32_t(cell % surface.plane) / surface.width;
 			auto visit = [&](int64_t next_cell) {
-				if (area[size_t(next_cell)] < 0 && !blocked[size_t(next_cell)]) {
-					area[size_t(next_cell)] = area_count;
+				if (component[size_t(next_cell)] < 0 && open(next_cell)) {
+					component[size_t(next_cell)] = count;
 					stack.push_back(next_cell);
 				}
 			};
 			for (int32_t dy = -1; dy <= 1; ++dy) {
 				for (int32_t dx = -1; dx <= 1; ++dx) {
-					if ((dx != 0 || dy != 0) && x + dx >= 0 && y + dy >= 0 && x + dx < width && y + dy < height) {
-						visit(int64_t(level) * plane + int64_t(y + dy) * width + (x + dx));
+					if ((dx != 0 || dy != 0) && x + dx >= 0 && y + dy >= 0 && x + dx < surface.width && y + dy < surface.height) {
+						visit(int64_t(level) * surface.plane + int64_t(y + dy) * surface.width + (x + dx));
 					}
 				}
 			}
-			const auto linked = links.find(cell);
-			if (linked != links.end()) {
+			const auto linked = surface.links.find(cell);
+			if (linked != surface.links.end()) {
 				for (const int64_t next_cell : linked->second) {
 					visit(next_cell);
 				}
 			}
 		}
-		area_count += 1;
+		count += 1;
 	}
+	return count;
+}
+
+// Towns outside the walkable area that holds the most towns, on the walking
+// surface with boats.
+static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
+	DepartureWalkSurface surface;
+	if (!departure_walk_surface(projection, true, surface)) {
+		return 0;
+	}
+	std::vector<int32_t> area;
+	departure_walk_components(surface, [&](int64_t cell) { return !surface.blocked[size_t(cell)]; }, area);
 	std::map<int32_t, int32_t> towns_per_area;
 	int32_t town_count = 0;
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
@@ -42265,7 +42354,7 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 			continue;
 		}
 		town_count += 1;
-		const int64_t flat = object.action_tiles.empty() ? -1 : flat_of(object.action_tiles.front());
+		const int64_t flat = object.action_tiles.empty() ? -1 : surface.flat_of(object.action_tiles.front());
 		if (flat >= 0) {
 			towns_per_area[area[size_t(flat)]] += 1;
 		}
@@ -42546,6 +42635,9 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 	result.generator_object_private_state.guard_minimum_departure_enabled = departures && config.guards_under_minimum;
 	result.generator_object_private_state.treasure_spacing_departure_enabled =
 			departures && config.treasure_spacing_one_tile_less;
+	// And each link's guard, for the guard-free route seal after the final writeout.
+	result.generator_object_private_state.route_seal_departure_enabled =
+			departures && config.seal_guard_free_routes;
 		if (!result.generator_object_private_state.generated_cell_buffer_owned) {
 			result.current_phase_id = "generator_object_private_state";
 			result.status = "blocked";
@@ -44248,6 +44340,1399 @@ RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
 			workflow.final_payload_writeout_0x4ad1e3), workflow);
 }
 
+// Departure from H3MapEd (docs/rmg-guard-free-route-seal.md), owner decision
+// 2026-11-04: the guard-free route seal. Zones joined by a template link that no
+// guard holds form a group. Where a hero can walk, without stepping next to any
+// guard, between two groups' ground (a town, or a sizeable part of their zones)
+// (m936: a resource pile and one diagonal step beside the start zones' 14 Titans;
+// HoMM3 shows the same gap), the narrowest gap near the zone border gets one-tile
+// obstacles, and a pickup in it moves to the nearest plain tile of its zone. A
+// seal that would cut an object or a town off the area it is reached from, or
+// split a zone's own area, is refused and the next narrowest gap is tried; a
+// second pass lets border tiles end up on either side. Where no rock can close a
+// gap because it is the only way between the two sides, a link guard of those
+// zones that guards nothing where it stands moves into it. Eight-way walking
+// stays as H3 has it.
+
+static constexpr int64_t ROUTE_SEAL_INFINITE = int64_t(1) << 40;
+// A gap wider than this is left open: it is no gap but an open border.
+static constexpr int32_t ROUTE_SEAL_MAX_TILES_PER_CUT = 16;
+// A group holds a guard-free area when it has a town there or this many tiles.
+static constexpr int32_t ROUTE_SEAL_MIN_AREA_TILES = 16;
+// The second pass lets tiles this close to another group's ground end up on
+// either side of a seal (a border mine facing the other zone, m868).
+static constexpr int32_t ROUTE_SEAL_BORDER_BAND = 2;
+
+struct RouteSealObstacle {
+	SourceObjectRecord0x4c source_record;
+	int32_t source_catalog_index = -1;
+	int32_t obstacle_id = -1;
+	std::array<int32_t, RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E> terrain_scores {};
+	int32_t area = 0;
+	// Its one blocked cell in descriptor-local coordinates; 0x49e700 anchors a
+	// decoration at the dispatch cell plus this offset.
+	int32_t local_x = 0;
+	int32_t local_y = 0;
+};
+
+struct RouteSealMove {
+	int32_t object = -1;
+	int64_t from = -1;
+	int64_t to = -1;
+};
+
+struct RouteSealLinkGuard {
+	int32_t object = -1;
+	int32_t zone_a = -1;
+	int32_t zone_b = -1;
+};
+
+struct RouteSealState {
+	const RuntimeMapPayloadProjection *projection = nullptr;
+	uint32_t seed = 0;
+	// Water blocks: a sea route is the template's, not a gap. Seals block too.
+	DepartureWalkSurface surface;
+	// How many guards stand next to each tile; guarded where any does.
+	std::vector<int32_t> guard_cover;
+	std::vector<char> guarded;
+	std::vector<int32_t> zone;
+	std::vector<char> action;
+	std::vector<int32_t> pickup;
+	std::vector<char> road;
+	std::vector<char> refused;
+	std::vector<char> sealed;
+	std::map<int32_t, int32_t> group;
+	std::vector<RouteSealObstacle> obstacles;
+	std::array<std::vector<int32_t>, RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E> obstacles_by_terrain;
+	std::vector<int64_t> object_cell;
+	std::vector<int64_t> town_cells;
+	std::vector<char> town;
+	std::vector<int32_t> anchor_town;
+	// The guards the connection tail placed for links, with the links' zones.
+	std::vector<RouteSealLinkGuard> link_guards;
+	std::vector<int64_t> seals;
+	std::vector<RouteSealMove> moves;
+	std::vector<RouteSealMove> guard_moves;
+};
+
+struct RouteSealLeak {
+	int32_t component = -1;
+	std::vector<int32_t> groups;
+	std::vector<int32_t> zones;
+};
+
+static bool route_seal_trace() {
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_ROUTE_SEAL") != nullptr;
+	return enabled;
+}
+
+static bool route_seal_pickup_type(int32_t type_id) {
+	// One-tile treasure a hero collects: artifacts, Pandora's box, campfire,
+	// resources, scholar, spell scroll, treasure chest.
+	switch (type_id) {
+		case 5: case 6: case 12: case 65: case 66: case 67: case 68: case 69:
+		case 76: case 79: case 81: case 93: case 101:
+			return true;
+		default:
+			return false;
+	}
+}
+
+static bool route_seal_free(const RouteSealState &s, int64_t cell) {
+	return !s.surface.blocked[size_t(cell)] && !s.guarded[size_t(cell)];
+}
+
+static int32_t route_seal_group(const RouteSealState &s, int32_t zone) {
+	const auto found = s.group.find(zone);
+	return found == s.group.end() ? zone : found->second;
+}
+
+static void route_seal_cell_xy(const RouteSealState &s, int64_t cell, int32_t &x, int32_t &y, int32_t &level) {
+	level = int32_t(cell / s.surface.plane);
+	x = int32_t(cell % s.surface.plane) % s.surface.width;
+	y = int32_t(cell % s.surface.plane) / s.surface.width;
+}
+
+template <typename Visit>
+static void route_seal_around(const RouteSealState &s, int64_t cell, int32_t radius, Visit visit) {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	route_seal_cell_xy(s, cell, x, y, level);
+	for (int32_t dy = -radius; dy <= radius; ++dy) {
+		for (int32_t dx = -radius; dx <= radius; ++dx) {
+			if ((dx == 0 && dy == 0) || x + dx < 0 || y + dy < 0 || x + dx >= s.surface.width || y + dy >= s.surface.height) {
+				continue;
+			}
+			visit(int64_t(level) * s.surface.plane + int64_t(y + dy) * s.surface.width + (x + dx));
+		}
+	}
+}
+
+static int32_t route_seal_free_components(const RouteSealState &s, std::vector<int32_t> &component) {
+	return departure_walk_components(s.surface, [&](int64_t cell) { return route_seal_free(s, cell); }, component);
+}
+
+// A group holds a guard-free component when one of its towns stands in it or its
+// zones have ROUTE_SEAL_MIN_AREA_TILES tiles there: a town in a pocket its own
+// zone reaches only past a guard counts, and so does a small hub zone's town. A
+// component that two groups or more hold is a guard-free route between them; a
+// few border tiles of another zone are not.
+static std::vector<RouteSealLeak> route_seal_leaks(const RouteSealState &s, const std::vector<int32_t> &component, int32_t *pair_count) {
+	std::map<int32_t, std::map<int32_t, int32_t>> tiles_by_component;
+	std::map<int32_t, std::set<int32_t>> zones_by_component;
+	for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+		const int32_t zone = s.zone[size_t(cell)];
+		if (component[size_t(cell)] >= 0 && zone >= 0) {
+			tiles_by_component[component[size_t(cell)]][route_seal_group(s, zone)] += 1;
+			zones_by_component[component[size_t(cell)]].insert(zone);
+		}
+	}
+	std::map<int32_t, std::set<int32_t>> groups_by_component;
+	for (const auto &entry : tiles_by_component) {
+		for (const auto &group_tiles : entry.second) {
+			if (group_tiles.second >= ROUTE_SEAL_MIN_AREA_TILES) {
+				groups_by_component[entry.first].insert(group_tiles.first);
+			}
+		}
+	}
+	for (const int64_t cell : s.town_cells) {
+		if (component[size_t(cell)] >= 0 && s.zone[size_t(cell)] >= 0) {
+			groups_by_component[component[size_t(cell)]].insert(route_seal_group(s, s.zone[size_t(cell)]));
+		}
+	}
+	std::vector<RouteSealLeak> leaks;
+	int32_t pairs = 0;
+	for (const auto &entry : groups_by_component) {
+		if (entry.second.size() < 2U) {
+			continue;
+		}
+		RouteSealLeak leak;
+		leak.component = entry.first;
+		leak.groups.assign(entry.second.begin(), entry.second.end());
+		for (const int32_t zone : zones_by_component[entry.first]) {
+			if (entry.second.count(route_seal_group(s, zone))) {
+				leak.zones.push_back(zone);
+			}
+		}
+		pairs += int32_t(leak.groups.size() * (leak.groups.size() - 1U) / 2U);
+		leaks.push_back(std::move(leak));
+	}
+	if (pair_count != nullptr) {
+		*pair_count = pairs;
+	}
+	return leaks;
+}
+
+// With a band, the leak's ground within `band` steps of another of its groups'
+// ground, towns apart: border tiles a seal may leave on either side. Empty
+// without one.
+static std::vector<char> route_seal_border(
+		const RouteSealState &s, const std::vector<int32_t> &component, const RouteSealLeak &leak, int32_t band) {
+	std::vector<char> border(size_t(s.surface.cell_count), 0);
+	if (band <= 0) {
+		return border;
+	}
+	auto leak_group = [&](int64_t cell) {
+		if (component[size_t(cell)] != leak.component || s.zone[size_t(cell)] < 0) {
+			return -1;
+		}
+		const int32_t group = route_seal_group(s, s.zone[size_t(cell)]);
+		return std::find(leak.groups.begin(), leak.groups.end(), group) != leak.groups.end() ? group : -1;
+	};
+	for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+		const int32_t group = leak_group(cell);
+		if (group < 0 || s.town[size_t(cell)]) {
+			continue;
+		}
+		route_seal_around(s, cell, band, [&](int64_t next) {
+			const int32_t other = leak_group(next);
+			if (other >= 0 && other != group) {
+				border[size_t(cell)] = 1;
+			}
+		});
+	}
+	return border;
+}
+
+static const RouteSealObstacle *route_seal_obstacle_for(const RouteSealState &s, int64_t cell) {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	route_seal_cell_xy(s, cell, x, y, level);
+	const int32_t terrain = s.projection->terrain_type_codes[size_t(cell)];
+	if (terrain < 0 || terrain >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
+		return nullptr;
+	}
+	std::vector<const RouteSealObstacle *> fitting;
+	int32_t smallest = std::numeric_limits<int32_t>::max();
+	for (const int32_t index : s.obstacles_by_terrain[size_t(terrain)]) {
+		const RouteSealObstacle &obstacle = s.obstacles[size_t(index)];
+		if (x + obstacle.local_x >= s.surface.width || y + obstacle.local_y >= s.surface.height) {
+			continue;
+		}
+		if (obstacle.area < smallest) {
+			smallest = obstacle.area;
+			fitting.clear();
+		}
+		if (obstacle.area == smallest) {
+			fitting.push_back(&obstacle);
+		}
+	}
+	if (fitting.empty()) {
+		return nullptr;
+	}
+	// The smallest obstacles the terrain takes, picked by their terrain scores with
+	// a hash of the tile: no generator RNG is drawn.
+	int64_t total = 0;
+	for (const RouteSealObstacle *obstacle : fitting) {
+		total += std::max(1, obstacle->terrain_scores[size_t(terrain)]);
+	}
+	uint32_t hash = s.seed ^ (uint32_t(x) * 73856093U) ^ (uint32_t(y) * 19349663U) ^ (uint32_t(level) * 83492791U);
+	hash ^= hash >> 16U;
+	hash *= 0x7feb352dU;
+	hash ^= hash >> 15U;
+	int64_t pick = int64_t(hash % uint32_t(std::min<int64_t>(total, 0x7fffffff)));
+	for (const RouteSealObstacle *obstacle : fitting) {
+		pick -= std::max(1, obstacle->terrain_scores[size_t(terrain)]);
+		if (pick < 0) {
+			return obstacle;
+		}
+	}
+	return fitting.back();
+}
+
+// What blocking a tile costs: tiles in a wall's gap are cheapest, a road or a
+// tile next to an object dearer, a pickup (which then moves) dearer still.
+// Infinite on an action tile, where a check refused it or where no one-tile
+// obstacle fits. Every cut lies where one side's tiles meet the other's or in a
+// third zone's ground between them, so it never reaches into a zone's area.
+static int64_t route_seal_cost(const RouteSealState &s, int64_t cell) {
+	if (s.refused[size_t(cell)] || (s.action[size_t(cell)] && s.pickup[size_t(cell)] < 0)
+			|| route_seal_obstacle_for(s, cell) == nullptr) {
+		return ROUTE_SEAL_INFINITE;
+	}
+	// Off-map neighbours count as closed.
+	int32_t open = 0;
+	bool beside_object = false;
+	route_seal_around(s, cell, 1, [&](int64_t next) {
+		if (!s.surface.blocked[size_t(next)] && !s.guarded[size_t(next)]) {
+			open += 1;
+		}
+		if (s.action[size_t(next)] && s.pickup[size_t(next)] < 0) {
+			beside_object = true;
+		}
+	});
+	const int32_t closed = 8 - open;
+	int64_t cost = 12 - std::min(closed, 8);
+	if (s.road[size_t(cell)]) {
+		cost += 30;
+	}
+	if (s.pickup[size_t(cell)] >= 0) {
+		cost += 40;
+	}
+	if (beside_object) {
+		cost += 10;
+	}
+	return cost;
+}
+
+struct RouteSealFlow {
+	struct Edge {
+		int32_t to = 0;
+		int64_t capacity = 0;
+	};
+	std::vector<Edge> edges;
+	std::vector<std::vector<int32_t>> adjacency;
+
+	explicit RouteSealFlow(size_t nodes) : adjacency(nodes) {}
+
+	void add(int32_t from, int32_t to, int64_t capacity) {
+		adjacency[size_t(from)].push_back(int32_t(edges.size()));
+		edges.push_back(Edge { to, capacity });
+		adjacency[size_t(to)].push_back(int32_t(edges.size()));
+		edges.push_back(Edge { from, 0 });
+	}
+
+	// Edmonds-Karp up to limit; breadth-first paths keep it iterative.
+	int64_t max_flow(int32_t source, int32_t sink, int64_t limit) {
+		int64_t total = 0;
+		std::vector<int32_t> parent(adjacency.size(), -1);
+		std::vector<int32_t> queue;
+		while (total < limit) {
+			std::fill(parent.begin(), parent.end(), -1);
+			parent[size_t(source)] = -2;
+			queue.assign(1, source);
+			for (size_t head = 0; head < queue.size() && parent[size_t(sink)] == -1; ++head) {
+				const int32_t node = queue[head];
+				for (const int32_t index : adjacency[size_t(node)]) {
+					const Edge &edge = edges[size_t(index)];
+					if (edge.capacity > 0 && parent[size_t(edge.to)] == -1) {
+						parent[size_t(edge.to)] = index;
+						queue.push_back(edge.to);
+					}
+				}
+			}
+			if (parent[size_t(sink)] == -1) {
+				break;
+			}
+			int64_t push = limit - total;
+			for (int32_t node = sink; node != source; node = edges[size_t(parent[size_t(node)] ^ 1)].to) {
+				push = std::min(push, edges[size_t(parent[size_t(node)])].capacity);
+			}
+			for (int32_t node = sink; node != source; node = edges[size_t(parent[size_t(node)] ^ 1)].to) {
+				edges[size_t(parent[size_t(node)])].capacity -= push;
+				edges[size_t(parent[size_t(node)] ^ 1)].capacity += push;
+			}
+			total += push;
+		}
+		return total;
+	}
+
+	std::vector<char> reachable_from(int32_t source) const {
+		std::vector<char> seen(adjacency.size(), 0);
+		std::vector<int32_t> queue { source };
+		seen[size_t(source)] = 1;
+		for (size_t head = 0; head < queue.size(); ++head) {
+			for (const int32_t index : adjacency[size_t(queue[head])]) {
+				const Edge &edge = edges[size_t(index)];
+				if (edge.capacity > 0 && !seen[size_t(edge.to)]) {
+					seen[size_t(edge.to)] = 1;
+					queue.push_back(edge.to);
+				}
+			}
+		}
+		return seen;
+	}
+};
+
+// The cheapest set of tiles separating the source group's tiles of the leak from
+// the other groups' tiles in it, border tiles left free to fall either way: a
+// minimum vertex cut. With unit costs, the fewest tiles, towns apart, for a guard
+// to cover. False when none is finite or it needs more than
+// ROUTE_SEAL_MAX_TILES_PER_CUT tiles.
+static bool route_seal_min_cut(
+		const RouteSealState &s,
+		const std::vector<int32_t> &component,
+		const RouteSealLeak &leak,
+		int32_t source_group,
+		const std::vector<char> &border,
+		bool unit_costs,
+		std::vector<int64_t> &cut) {
+	cut.clear();
+	std::vector<int64_t> tiles;
+	std::vector<int32_t> local(size_t(s.surface.cell_count), -1);
+	for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+		if (component[size_t(cell)] == leak.component) {
+			local[size_t(cell)] = int32_t(tiles.size());
+			tiles.push_back(cell);
+		}
+	}
+	const int32_t count = int32_t(tiles.size());
+	const int32_t source = 2 * count;
+	const int32_t sink = source + 1;
+	RouteSealFlow flow(size_t(sink) + 1U);
+	for (int32_t index = 0; index < count; ++index) {
+		const int64_t cell = tiles[size_t(index)];
+		flow.add(2 * index, 2 * index + 1,
+				unit_costs ? (s.town[size_t(cell)] ? ROUTE_SEAL_INFINITE : 1) : route_seal_cost(s, cell));
+		route_seal_around(s, cell, 1, [&](int64_t next) {
+			if (local[size_t(next)] >= 0) {
+				flow.add(2 * index + 1, 2 * local[size_t(next)], ROUTE_SEAL_INFINITE);
+			}
+		});
+		const auto linked = s.surface.links.find(cell);
+		if (linked != s.surface.links.end()) {
+			for (const int64_t next : linked->second) {
+				if (local[size_t(next)] >= 0) {
+					flow.add(2 * index + 1, 2 * local[size_t(next)], ROUTE_SEAL_INFINITE);
+				}
+			}
+		}
+		const int32_t zone = s.zone[size_t(cell)];
+		if (zone < 0 || border[size_t(cell)]) {
+			continue;
+		}
+		const int32_t group = route_seal_group(s, zone);
+		if (group == source_group) {
+			flow.add(source, 2 * index, ROUTE_SEAL_INFINITE);
+		} else if (std::find(leak.groups.begin(), leak.groups.end(), group) != leak.groups.end()) {
+			flow.add(2 * index + 1, sink, ROUTE_SEAL_INFINITE);
+		}
+	}
+	const int64_t cost = flow.max_flow(source, sink, ROUTE_SEAL_INFINITE);
+	if (cost >= ROUTE_SEAL_INFINITE) {
+		return false;
+	}
+	const std::vector<char> reached = flow.reachable_from(source);
+	for (int32_t index = 0; index < count; ++index) {
+		if (reached[size_t(2 * index)] && !reached[size_t(2 * index + 1)]) {
+			cut.push_back(tiles[size_t(index)]);
+		}
+	}
+	return !cut.empty() && int32_t(cut.size()) <= ROUTE_SEAL_MAX_TILES_PER_CUT;
+}
+
+// Each object's anchor: the first town (by projection index) of the walking area
+// it is in, guards passable; -1 for an area without a town.
+static std::vector<int32_t> route_seal_anchor_towns(const RouteSealState &s) {
+	std::vector<int32_t> area;
+	departure_walk_components(s.surface, [&](int64_t cell) { return !s.surface.blocked[size_t(cell)]; }, area);
+	std::map<int32_t, int32_t> first_town;
+	const std::vector<RuntimeMapObjectProjection> &objects = s.projection->objects;
+	for (size_t index = 0; index < objects.size(); ++index) {
+		const int64_t cell = s.object_cell[index];
+		if (objects[index].type_id == 98 && cell >= 0 && area[size_t(cell)] >= 0) {
+			first_town.emplace(area[size_t(cell)], int32_t(index));
+		}
+	}
+	std::vector<int32_t> anchor(objects.size(), -1);
+	for (size_t index = 0; index < objects.size(); ++index) {
+		const int64_t cell = s.object_cell[index];
+		if (cell < 0 || area[size_t(cell)] < 0) {
+			continue;
+		}
+		const auto found = first_town.find(area[size_t(cell)]);
+		if (found != first_town.end()) {
+			anchor[index] = found->second;
+		}
+	}
+	return anchor;
+}
+
+// The nearest free plain tile of the pickup's zone, off roads and not beside an
+// object or a seal, walking from the sealed tile; the walk crosses seals, so a
+// pickup on the border can move back into its own zone behind the cut.
+static int64_t route_seal_pickup_target(const RouteSealState &s, int64_t from, const std::set<int64_t> &taken) {
+	const int32_t zone = s.zone[size_t(from)];
+	std::map<int64_t, int32_t> distance;
+	std::vector<int64_t> queue;
+	auto walkable = [&](int64_t cell) { return route_seal_free(s, cell) || s.sealed[size_t(cell)]; };
+	route_seal_around(s, from, 1, [&](int64_t next) {
+		if (walkable(next) && !distance.count(next)) {
+			distance[next] = 1;
+			queue.push_back(next);
+		}
+	});
+	for (size_t head = 0; head < queue.size(); ++head) {
+		const int64_t cell = queue[head];
+		bool clear = route_seal_free(s, cell) && s.zone[size_t(cell)] == zone && !s.action[size_t(cell)]
+				&& !s.road[size_t(cell)] && !taken.count(cell);
+		if (clear) {
+			route_seal_around(s, cell, 1, [&](int64_t next) {
+				if (s.sealed[size_t(next)] || s.action[size_t(next)] || taken.count(next)) {
+					clear = false;
+				}
+			});
+		}
+		if (clear) {
+			return cell;
+		}
+		const int32_t step = distance[cell];
+		if (step >= 10) {
+			continue;
+		}
+		route_seal_around(s, cell, 1, [&](int64_t next) {
+			if (walkable(next) && !distance.count(next)) {
+				distance[next] = step + 1;
+				queue.push_back(next);
+			}
+		});
+	}
+	return -1;
+}
+
+static void route_seal_block(RouteSealState &s, int64_t cell, bool on) {
+	s.surface.blocked[size_t(cell)] = on ? 1 : 0;
+	s.sealed[size_t(cell)] = on ? 1 : 0;
+}
+
+static void route_seal_move_pickup(RouteSealState &s, const RouteSealMove &move, bool forward) {
+	const int64_t from = forward ? move.from : move.to;
+	const int64_t to = forward ? move.to : move.from;
+	s.pickup[size_t(from)] = -1;
+	s.action[size_t(from)] = 0;
+	s.pickup[size_t(to)] = move.object;
+	s.action[size_t(to)] = 1;
+	s.object_cell[size_t(move.object)] = to;
+}
+
+// Components of free tiles joined only through tiles of the same group: a zone's
+// own area, without what it reaches through another group's ground.
+static void route_seal_own_components(const RouteSealState &s, std::vector<int32_t> &component) {
+	component.assign(size_t(s.surface.cell_count), -1);
+	int32_t count = 0;
+	std::vector<int64_t> stack;
+	for (int64_t start = 0; start < s.surface.cell_count; ++start) {
+		if (component[size_t(start)] >= 0 || s.zone[size_t(start)] < 0 || !route_seal_free(s, start)) {
+			continue;
+		}
+		const int32_t group = route_seal_group(s, s.zone[size_t(start)]);
+		stack.assign(1, start);
+		component[size_t(start)] = count;
+		while (!stack.empty()) {
+			const int64_t cell = stack.back();
+			stack.pop_back();
+			auto visit = [&](int64_t next) {
+				if (component[size_t(next)] < 0 && s.zone[size_t(next)] >= 0 && route_seal_free(s, next)
+						&& route_seal_group(s, s.zone[size_t(next)]) == group) {
+					component[size_t(next)] = count;
+					stack.push_back(next);
+				}
+			};
+			route_seal_around(s, cell, 1, visit);
+			const auto linked = s.surface.links.find(cell);
+			if (linked != s.surface.links.end()) {
+				for (const int64_t next : linked->second) {
+					visit(next);
+				}
+			}
+		}
+		count += 1;
+	}
+}
+
+// Blocks the cut and moves its pickups; kept when no object or town loses the
+// area it was reached from and no involved zone's own area splits, border tiles
+// apart.
+static bool route_seal_try_cut(
+		RouteSealState &s,
+		const std::vector<int32_t> &component_before,
+		const RouteSealLeak &leak,
+		const std::vector<char> &border,
+		const std::vector<int64_t> &cut) {
+	std::vector<RouteSealMove> moves;
+	std::set<int64_t> taken;
+	auto undo = [&]() {
+		for (auto move = moves.rbegin(); move != moves.rend(); ++move) {
+			route_seal_move_pickup(s, *move, false);
+		}
+		for (const int64_t cell : cut) {
+			route_seal_block(s, cell, false);
+		}
+	};
+	std::vector<int32_t> own_before;
+	route_seal_own_components(s, own_before);
+	for (const int64_t cell : cut) {
+		route_seal_block(s, cell, true);
+	}
+	for (const int64_t cell : cut) {
+		if (s.pickup[size_t(cell)] < 0) {
+			continue;
+		}
+		const int64_t target = route_seal_pickup_target(s, cell, taken);
+		if (target < 0) {
+			undo();
+			s.refused[size_t(cell)] = 1;
+			if (route_seal_trace()) {
+				std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_REFUSED reason=pickup_has_no_place cell=%lld\n", (long long)cell);
+			}
+			return false;
+		}
+		RouteSealMove move { s.pickup[size_t(cell)], cell, target };
+		route_seal_move_pickup(s, move, true);
+		taken.insert(target);
+		moves.push_back(move);
+	}
+	// Every object stays in the walking area of the town it was reached from.
+	const std::vector<int32_t> anchor = route_seal_anchor_towns(s);
+	bool reach_kept = true;
+	for (size_t index = 0; index < anchor.size(); ++index) {
+		if (s.anchor_town[index] >= 0 && anchor[index] != s.anchor_town[index]) {
+			reach_kept = false;
+			break;
+		}
+	}
+	if (!reach_kept) {
+		undo();
+		if (route_seal_trace()) {
+			for (size_t index = 0; index < anchor.size(); ++index) {
+				if (s.anchor_town[index] >= 0 && anchor[index] != s.anchor_town[index]) {
+					const RuntimeMapObjectProjection &object = s.projection->objects[index];
+					std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_REFUSED reason=cuts_off_object type=%d at=%d,%d,%d\n",
+							object.type_id, object.x, object.y, object.level);
+				}
+			}
+		}
+		// Refuse the tiles that cut something off on their own; all of them when only
+		// their combination does.
+		bool found = false;
+		for (const int64_t cell : cut) {
+			if (s.pickup[size_t(cell)] >= 0) {
+				continue;
+			}
+			route_seal_block(s, cell, true);
+			const std::vector<int32_t> alone = route_seal_anchor_towns(s);
+			route_seal_block(s, cell, false);
+			for (size_t index = 0; index < alone.size(); ++index) {
+				if (s.anchor_town[index] >= 0 && alone[index] != s.anchor_town[index]) {
+					s.refused[size_t(cell)] = 1;
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found) {
+			for (const int64_t cell : cut) {
+				s.refused[size_t(cell)] = 1;
+			}
+		}
+		return false;
+	}
+	// Each involved zone's own area (what it reached through its own group's
+	// ground) stays together, apart from at most four objectless tiles and, in the
+	// second pass, border tiles. Ground it reached only through the other side may
+	// end up behind a guard.
+	std::vector<int32_t> component_after;
+	route_seal_free_components(s, component_after);
+	std::set<int64_t> lost;
+	for (const int32_t zone : leak.zones) {
+		std::map<int32_t, int32_t> own_tiles;
+		for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+			if (component_before[size_t(cell)] == leak.component && s.zone[size_t(cell)] == zone && own_before[size_t(cell)] >= 0) {
+				own_tiles[own_before[size_t(cell)]] += 1;
+			}
+		}
+		int32_t own_main = -1;
+		int32_t own_most = 0;
+		for (const auto &entry : own_tiles) {
+			if (entry.second > own_most) {
+				own_most = entry.second;
+				own_main = entry.first;
+			}
+		}
+		auto own = [&](int64_t cell) {
+			return component_before[size_t(cell)] == leak.component && s.zone[size_t(cell)] == zone
+					&& own_before[size_t(cell)] == own_main && own_main >= 0 && component_after[size_t(cell)] >= 0;
+		};
+		std::map<int32_t, int32_t> per_component;
+		for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+			if (own(cell)) {
+				per_component[component_after[size_t(cell)]] += 1;
+			}
+		}
+		int32_t main = -1;
+		int32_t most = 0;
+		for (const auto &entry : per_component) {
+			if (entry.second > most) {
+				most = entry.second;
+				main = entry.first;
+			}
+		}
+		for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+			if (own(cell) && component_after[size_t(cell)] != main && !border[size_t(cell)]) {
+				lost.insert(cell);
+			}
+		}
+	}
+	bool lost_object = false;
+	for (const int64_t cell : lost) {
+		lost_object = lost_object || s.action[size_t(cell)];
+	}
+	if (lost.size() > 4U || lost_object) {
+		undo();
+		if (route_seal_trace()) {
+			std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_REFUSED reason=splits_zone lost=%zu lost_object=%d\n", lost.size(), lost_object ? 1 : 0);
+		}
+		// The tiles that cut a pocket off its own zone: those beside it of the
+		// pocket's zone. Refusing a tile of the other side as well would leave two
+		// unblockable neighbours across the border, and no seal at all.
+		bool found = false;
+		for (const int64_t cell : cut) {
+			bool separates = false;
+			route_seal_around(s, cell, 1, [&](int64_t next) {
+				separates = separates || (lost.count(next) > 0 && s.zone[size_t(next)] == s.zone[size_t(cell)]);
+			});
+			if (separates) {
+				s.refused[size_t(cell)] = 1;
+				found = true;
+			}
+		}
+		if (!found) {
+			for (const int64_t cell : cut) {
+				bool beside = false;
+				route_seal_around(s, cell, 1, [&](int64_t next) {
+					beside = beside || lost.count(next) > 0;
+				});
+				if (beside) {
+					s.refused[size_t(cell)] = 1;
+					found = true;
+				}
+			}
+		}
+		if (!found) {
+			for (const int64_t cell : cut) {
+				s.refused[size_t(cell)] = 1;
+			}
+		}
+		return false;
+	}
+	s.seals.insert(s.seals.end(), cut.begin(), cut.end());
+	s.moves.insert(s.moves.end(), moves.begin(), moves.end());
+	return true;
+}
+
+// Moves a guard there (forward) or back; the tiles it guards go with it.
+static void route_seal_move_guard(RouteSealState &s, const RouteSealMove &move, bool forward) {
+	const int64_t from = forward ? move.from : move.to;
+	const int64_t to = forward ? move.to : move.from;
+	auto cover = [&](int64_t center, int32_t delta) {
+		auto apply = [&](int64_t cell) {
+			s.guard_cover[size_t(cell)] += delta;
+			s.guarded[size_t(cell)] = s.guard_cover[size_t(cell)] > 0 ? 1 : 0;
+		};
+		apply(center);
+		route_seal_around(s, center, 1, apply);
+	};
+	cover(from, -1);
+	cover(to, 1);
+	s.action[size_t(from)] = 0;
+	s.action[size_t(to)] = 1;
+	s.object_cell[size_t(move.object)] = to;
+}
+
+// A tile for a guard whose zone of control takes in every tile of the cut: free,
+// no object's entrance, out of every other guard's reach and with no town gate
+// beside it; a tile of the cut itself first. -1 when there is none.
+static int64_t route_seal_guard_spot(const RouteSealState &s, const std::vector<int64_t> &cut) {
+	std::set<int64_t> candidates;
+	for (const int64_t cell : cut) {
+		candidates.insert(cell);
+		route_seal_around(s, cell, 1, [&](int64_t next) { candidates.insert(next); });
+	}
+	int64_t best = -1;
+	bool best_in_cut = false;
+	for (const int64_t spot : candidates) {
+		if (!route_seal_free(s, spot) || s.action[size_t(spot)] || s.town[size_t(spot)]) {
+			continue;
+		}
+		int32_t spot_x = 0;
+		int32_t spot_y = 0;
+		int32_t spot_level = 0;
+		route_seal_cell_xy(s, spot, spot_x, spot_y, spot_level);
+		bool covers = true;
+		for (const int64_t cell : cut) {
+			int32_t x = 0;
+			int32_t y = 0;
+			int32_t level = 0;
+			route_seal_cell_xy(s, cell, x, y, level);
+			covers = covers && level == spot_level && std::abs(x - spot_x) <= 1 && std::abs(y - spot_y) <= 1;
+		}
+		bool town_gate = false;
+		route_seal_around(s, spot, 1, [&](int64_t next) { town_gate = town_gate || s.town[size_t(next)]; });
+		if (!covers || town_gate) {
+			continue;
+		}
+		const bool in_cut = std::find(cut.begin(), cut.end(), spot) != cut.end();
+		if (best < 0 || (in_cut && !best_in_cut)) {
+			best = spot;
+			best_in_cut = in_cut;
+		}
+	}
+	return best;
+}
+
+// Where rock cannot close a route without walling a town or an object in, the
+// gap is the only way between the two sides, and the link guard meant to hold it
+// stands where it holds nothing (m128: a zone's guard beside a two-tile pocket
+// while the zone's only way out is a diagonal corridor into another zone). A
+// link guard of the leak's zones, nearest first, moves into the gap when the map
+// is left with fewer guard-free routes.
+static bool route_seal_guard_round(
+		RouteSealState &s, std::vector<int32_t> &component, std::vector<RouteSealLeak> &leaks, int32_t &pairs) {
+	const std::vector<char> no_border(size_t(s.surface.cell_count), 0);
+	for (const RouteSealLeak &leak : leaks) {
+		for (const int32_t source_group : leak.groups) {
+			std::vector<int64_t> cut;
+			const bool found = route_seal_min_cut(s, component, leak, source_group, no_border, true, cut);
+			const int64_t spot = found ? route_seal_guard_spot(s, cut) : -1;
+			if (route_seal_trace()) {
+				std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_GUARD_TRY component=%d source_group=%d cut=%zu found=%d spot=%lld\n",
+						leak.component, source_group, cut.size(), found ? 1 : 0, (long long)spot);
+			}
+			if (spot < 0) {
+				continue;
+			}
+			int32_t spot_x = 0;
+			int32_t spot_y = 0;
+			int32_t spot_level = 0;
+			route_seal_cell_xy(s, spot, spot_x, spot_y, spot_level);
+			std::vector<std::pair<int64_t, size_t>> candidates;
+			for (size_t index = 0; index < s.link_guards.size(); ++index) {
+				const RouteSealLinkGuard &guard = s.link_guards[index];
+				const bool touches = std::find(leak.zones.begin(), leak.zones.end(), guard.zone_a) != leak.zones.end()
+						|| std::find(leak.zones.begin(), leak.zones.end(), guard.zone_b) != leak.zones.end();
+				const int64_t at = s.object_cell[size_t(guard.object)];
+				bool moved = false;
+				for (const RouteSealMove &earlier : s.guard_moves) {
+					moved = moved || earlier.object == guard.object;
+				}
+				if (!touches || moved || at < 0 || at == spot) {
+					continue;
+				}
+				int32_t x = 0;
+				int32_t y = 0;
+				int32_t level = 0;
+				route_seal_cell_xy(s, at, x, y, level);
+				const int64_t distance = int64_t(std::max(std::abs(x - spot_x), std::abs(y - spot_y)))
+						+ (level == spot_level ? 0 : 100000);
+				candidates.emplace_back(distance, index);
+			}
+			std::sort(candidates.begin(), candidates.end());
+			for (const auto &candidate : candidates) {
+				const RouteSealLinkGuard &guard = s.link_guards[candidate.second];
+				const RouteSealMove move { guard.object, s.object_cell[size_t(guard.object)], spot };
+				route_seal_move_guard(s, move, true);
+				std::vector<int32_t> moved_component;
+				route_seal_free_components(s, moved_component);
+				int32_t moved_pairs = 0;
+				std::vector<RouteSealLeak> moved_leaks = route_seal_leaks(s, moved_component, &moved_pairs);
+				if (moved_pairs < pairs) {
+					if (route_seal_trace()) {
+						int32_t from_x = 0;
+						int32_t from_y = 0;
+						int32_t from_level = 0;
+						route_seal_cell_xy(s, move.from, from_x, from_y, from_level);
+						std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_GUARD from=%d,%d,%d to=%d,%d,%d routes=%d->%d\n",
+								from_x, from_y, from_level, spot_x, spot_y, spot_level, pairs, moved_pairs);
+					}
+					s.guard_moves.push_back(move);
+					// Later rock checks hold the guard to the area it now stands in.
+					s.anchor_town[size_t(move.object)] = route_seal_anchor_towns(s)[size_t(move.object)];
+					component = std::move(moved_component);
+					leaks = std::move(moved_leaks);
+					pairs = moved_pairs;
+					return true;
+				}
+				route_seal_move_guard(s, move, false);
+			}
+		}
+	}
+	return false;
+}
+
+static bool route_seal_prepare(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectResolverState4af785 &resolver,
+		const RuntimeMapPayloadProjection &projection,
+		uint32_t seed,
+		RouteSealState &s) {
+	s.projection = &projection;
+	s.seed = seed;
+	if (!departure_walk_surface(projection, false, s.surface)) {
+		return false;
+	}
+	const GeneratedCellRecordGrid0x30 &grid = state.generated_cell_buffer;
+	if (grid.width != s.surface.width || grid.height != s.surface.height || grid.level_count != s.surface.level_count
+			|| int64_t(grid.records.size()) != s.surface.cell_count) {
+		return false;
+	}
+	const size_t cells = size_t(s.surface.cell_count);
+	s.guard_cover.assign(cells, 0);
+	s.guarded.assign(cells, 0);
+	s.zone.assign(cells, -1);
+	s.action.assign(cells, 0);
+	s.pickup.assign(cells, -1);
+	s.road.assign(cells, 0);
+	s.refused.assign(cells, 0);
+	s.sealed.assign(cells, 0);
+	s.town.assign(cells, 0);
+	// Sea zones (terrain policy 8) join the land by water, not by guarded links: their
+	// cells count as no zone's.
+	std::set<int32_t> sea_zones;
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (owner.terrain_policy_0x0c_known && owner.terrain_policy_0x0c == 8) {
+			sea_zones.insert(relation_owner_byte2_for_generated_cell_gate(owner));
+		}
+	}
+	for (size_t cell = 0; cell < cells; ++cell) {
+		const GeneratedCellRecord0x30 &record = grid.records[cell];
+		const int32_t zone = record.word_0x20_known ? generated_cell_word20_owner_byte2_signed(record.word_0x20) : -1;
+		s.zone[cell] = sea_zones.count(zone) ? -1 : zone;
+		s.road[cell] = cell < projection.road_type_codes.size() && projection.road_type_codes[cell] != 0U ? 1 : 0;
+	}
+	const std::vector<RuntimeMapObjectProjection> &objects = projection.objects;
+	s.object_cell.assign(objects.size(), -1);
+	std::map<int64_t, int32_t> objects_on_cell;
+	for (size_t index = 0; index < objects.size(); ++index) {
+		const RuntimeMapObjectProjection &object = objects[index];
+		for (const RuntimeMapTilePoint &tile : object.action_tiles) {
+			const int64_t cell = s.surface.flat_of(tile);
+			if (cell >= 0) {
+				s.action[size_t(cell)] = 1;
+				objects_on_cell[cell] += 1;
+			}
+		}
+		for (const RuntimeMapTilePoint &tile : object.body_tiles) {
+			const int64_t cell = s.surface.flat_of(tile);
+			if (cell >= 0) {
+				objects_on_cell[cell] += 1;
+			}
+		}
+		if (!object.action_tiles.empty()) {
+			s.object_cell[index] = s.surface.flat_of(object.action_tiles.front());
+			if (object.type_id == 98 && s.object_cell[index] >= 0) {
+				s.town_cells.push_back(s.object_cell[index]);
+				s.town[size_t(s.object_cell[index])] = 1;
+			}
+		}
+		if (guard_descriptor_type_departure(object.type_id)) {
+			std::vector<RuntimeMapTilePoint> origins = object.action_tiles;
+			if (origins.empty()) {
+				origins.push_back({
+						std::clamp(object.x, 0, projection.width - 1),
+						std::clamp(object.y, 0, projection.height - 1),
+						std::clamp(object.level, 0, projection.level_count - 1),
+				});
+			}
+			for (const RuntimeMapTilePoint &origin : origins) {
+				for (int32_t dy = -1; dy <= 1; ++dy) {
+					for (int32_t dx = -1; dx <= 1; ++dx) {
+						const int64_t cell = s.surface.flat_of({ origin.x + dx, origin.y + dy, origin.level });
+						if (cell >= 0) {
+							s.guard_cover[size_t(cell)] += 1;
+							s.guarded[size_t(cell)] = 1;
+						}
+					}
+				}
+			}
+		}
+	}
+	for (size_t index = 0; index < objects.size(); ++index) {
+		const RuntimeMapObjectProjection &object = objects[index];
+		if (!route_seal_pickup_type(object.type_id) || object.action_tiles.size() != 1U) {
+			continue;
+		}
+		const int64_t cell = s.surface.flat_of(object.action_tiles.front());
+		bool one_tile = cell >= 0 && objects_on_cell[cell] <= 2;
+		for (const RuntimeMapTilePoint &tile : object.body_tiles) {
+			one_tile = one_tile && s.surface.flat_of(tile) == cell;
+		}
+		if (one_tile && !s.guarded[size_t(cell)]) {
+			s.pickup[size_t(cell)] = int32_t(index);
+		}
+	}
+	// The link guards, by the object record keys the connection tail kept: one-tile
+	// monsters a seal may move into a gap.
+	std::map<uint32_t, std::pair<int32_t, int32_t>> link_guard_zones;
+	for (const ZoneLinkGuardRecordDeparture &link : state.zone_link_guard_records_departure) {
+		for (const uint32_t key : link.guard_object_keys) {
+			link_guard_zones.emplace(key, std::make_pair(link.zone_a, link.zone_b));
+		}
+	}
+	std::map<uint32_t, int32_t> key_uses;
+	for (const ObjectRecordReference4a54a7 &record : state.object_records_0xec4_ecc) {
+		key_uses[record.object_record_key] += 1;
+	}
+	for (size_t index = 0; index < objects.size(); ++index) {
+		const RuntimeMapObjectProjection &object = objects[index];
+		if (!guard_descriptor_type_departure(object.type_id) || object.action_tiles.size() != 1U || object.source_vector_index < 0
+				|| size_t(object.source_vector_index) >= state.object_records_0xec4_ecc.size()) {
+			continue;
+		}
+		const uint32_t key = state.object_records_0xec4_ecc[size_t(object.source_vector_index)].object_record_key;
+		bool one_tile = s.object_cell[index] >= 0;
+		for (const RuntimeMapTilePoint &tile : object.body_tiles) {
+			one_tile = one_tile && s.surface.flat_of(tile) == s.object_cell[index];
+		}
+		const auto zones = link_guard_zones.find(key);
+		if (one_tile && key != 0U && key_uses[key] == 1 && zones != link_guard_zones.end()) {
+			s.link_guards.push_back({ int32_t(index), zones->second.first, zones->second.second });
+		}
+	}
+	// Groups: zones joined by links without a guard.
+	std::map<int32_t, int32_t> parent;
+	std::function<int32_t(int32_t)> find = [&](int32_t zone) -> int32_t {
+		auto found = parent.find(zone);
+		if (found == parent.end()) {
+			parent[zone] = zone;
+			return zone;
+		}
+		if (found->second == zone) {
+			return zone;
+		}
+		const int32_t root = find(found->second);
+		parent[zone] = root;
+		return root;
+	};
+	for (const ZoneLinkGuardRecordDeparture &link : state.zone_link_guard_records_departure) {
+		if (link.guard_committed || link.zone_a < 0 || link.zone_b < 0) {
+			continue;
+		}
+		const int32_t a = find(link.zone_a);
+		const int32_t b = find(link.zone_b);
+		if (a != b) {
+			parent[std::max(a, b)] = std::min(a, b);
+		}
+	}
+	for (const auto &entry : parent) {
+		s.group[entry.first] = find(entry.first);
+	}
+	// One-tile decorative obstacles of the 0x54092c buckets, as 0x49e700 offers them.
+	for (const int32_t bucket : DECORATIVE_TYPE_TABLE_0X54092C) {
+		if (bucket < 0 || bucket >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+			continue;
+		}
+		for (const int32_t wrapper_index : resolver.wrapper_bucket_indices_0xe8[size_t(bucket)]) {
+			if (wrapper_index < 0 || wrapper_index >= int32_t(resolver.wrappers.size())) {
+				continue;
+			}
+			const SourceObjectResolvedWrapper4af785 &wrapper = resolver.wrappers[size_t(wrapper_index)];
+			const SourceObjectRecord0x4c &record = wrapper.source_record_copy;
+			const RandTrnObstacleScoreRecord49dc9e *score = wrapper.wrapper_0x10_known
+					? source_object_attached_score_record_by_obstacle_id_0x49dc9e(record, wrapper.wrapper_0x10)
+					: nullptr;
+			if (score == nullptr || record.action_count > 0 || !decorative_dispatch_type_allowed_0x49e700(state, record.type_id_0x1c)
+					|| !record.descriptor_mask_fields_0x34_0x48_known || record.descriptor_width_0x34 <= 0
+					|| record.descriptor_height_0x38 <= 0) {
+				continue;
+			}
+			int32_t blocked_cells = 0;
+			RouteSealObstacle obstacle;
+			for (int32_t local_y = 0; local_y < 6; ++local_y) {
+				for (int32_t local_x = 0; local_x < 8; ++local_x) {
+					if (!source_object_descriptor_source_primary_mask_bit_0x41e951(record, local_x, local_y)) {
+						blocked_cells += 1;
+						obstacle.local_x = local_x;
+						obstacle.local_y = local_y;
+					}
+				}
+			}
+			if (blocked_cells != 1) {
+				continue;
+			}
+			obstacle.source_record = record;
+			obstacle.source_catalog_index = source_object_catalog_index_0x49da08(record);
+			obstacle.obstacle_id = score->obstacle_id;
+			obstacle.terrain_scores = score->terrain_scores;
+			obstacle.area = record.descriptor_width_0x34 * record.descriptor_height_0x38;
+			for (int32_t terrain = 0; terrain < RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E; ++terrain) {
+				if (obstacle.terrain_scores[size_t(terrain)] > RAND_TRN_HARD_REJECT_SCORE_0X49E700) {
+					s.obstacles_by_terrain[size_t(terrain)].push_back(int32_t(s.obstacles.size()));
+				}
+			}
+			s.obstacles.push_back(std::move(obstacle));
+		}
+	}
+	s.anchor_town = route_seal_anchor_towns(s);
+	if (route_seal_trace()) {
+		std::ostringstream counts;
+		for (int32_t terrain = 0; terrain < RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E; ++terrain) {
+			counts << (terrain > 0 ? "," : "") << s.obstacles_by_terrain[size_t(terrain)].size();
+		}
+		int32_t pickups = 0;
+		for (const int32_t pickup : s.pickup) {
+			pickups += pickup >= 0 ? 1 : 0;
+		}
+		std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_PREPARE one_tile_obstacles_by_terrain=%s movable_pickups=%d links=%zu zones_in_open_links=%zu link_guards=%zu\n",
+				counts.str().c_str(), pickups, state.zone_link_guard_records_departure.size(), s.group.size(), s.link_guards.size());
+		for (const ZoneLinkGuardRecordDeparture &link : state.zone_link_guard_records_departure) {
+			std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_LINK link=%d zones=%d,%d guarded=%d\n",
+					link.source_link_index, link.zone_a, link.zone_b, link.guard_committed ? 1 : 0);
+		}
+	}
+	return true;
+}
+
+// Commits the planned obstacles and pickup moves to the generator's object
+// records, the way 0x49e700 commits a decoration.
+static bool route_seal_commit(GeneratorObjectPrivateState &state, const RouteSealState &s) {
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		return false;
+	}
+	for (const int64_t cell : s.seals) {
+		const RouteSealObstacle *chosen = route_seal_obstacle_for(s, cell);
+		if (chosen == nullptr) {
+			return false;
+		}
+		const RouteSealObstacle obstacle = *chosen;
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t level = 0;
+		route_seal_cell_xy(s, cell, x, y, level);
+		int32_t offset_x = 0;
+		int32_t offset_y = 0;
+		if (!descriptor_source_cell_offset_from_recovered_secondary_mask_0x4906fb(obstacle.source_record, offset_x, offset_y)) {
+			return false;
+		}
+		const uint32_t key = state.next_native_object_record_key_0x4a93a2++;
+		const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+				state,
+				key,
+				obstacle.source_record.type_id_0x1c,
+				x + obstacle.local_x,
+				y + obstacle.local_y,
+				level,
+				false,
+				offset_x,
+				offset_y,
+				&obstacle.source_record,
+				true,
+				0,
+				-1,
+				true);
+		if (!commit.object_vector_appended || state.object_records_0xec4_ecc.empty()) {
+			return false;
+		}
+		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc.back();
+		record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+		record.descriptor_source_key_0x00 = obstacle.source_record.source_row;
+		record.source_catalog_index_0x49da08 = obstacle.source_catalog_index;
+		record.decorative_score_record_0x10_known = obstacle.obstacle_id >= 0;
+		record.decorative_obstacle_id_0x10 = obstacle.obstacle_id;
+		record.copied_source_record_carried = true;
+		record.source_record_copy = obstacle.source_record;
+		build_object_record_score_cache_0x49b89c(record);
+	}
+	std::vector<RouteSealMove> moves = s.moves;
+	moves.insert(moves.end(), s.guard_moves.begin(), s.guard_moves.end());
+	for (const RouteSealMove &move : moves) {
+		const RuntimeMapObjectProjection &object = s.projection->objects[size_t(move.object)];
+		if (object.source_vector_index < 0 || size_t(object.source_vector_index) >= state.object_records_0xec4_ecc.size()) {
+			return false;
+		}
+		int32_t from_x = 0;
+		int32_t from_y = 0;
+		int32_t from_level = 0;
+		int32_t to_x = 0;
+		int32_t to_y = 0;
+		int32_t to_level = 0;
+		route_seal_cell_xy(s, move.from, from_x, from_y, from_level);
+		route_seal_cell_xy(s, move.to, to_x, to_y, to_level);
+		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc[size_t(object.source_vector_index)];
+		record.x += to_x - from_x;
+		record.y += to_y - from_y;
+		record.level += to_level - from_level;
+	}
+	return true;
+}
+
+// Writes the final object stream and payload again after the seal, as the pass
+// tail does; the header and tile stream do not change.
+static bool route_seal_rewrite_final_payload(H3MapedRmgWorkflowResult &result) {
+	result.final_object_writeout_0x4ad309_0x4ad3eb =
+			final_object_count_writeout_0x4ad309_0x4ad318(result.generator_object_private_state);
+	const FinalObjectWriteoutResult4ad1e3 &objects = result.final_object_writeout_0x4ad309_0x4ad3eb;
+	if (!objects.object_count_header_written || !objects.object_payload_prefix_applied
+			|| !objects.final_success_test_0x4ad3de_passed) {
+		return false;
+	}
+	result.final_payload_writeout_0x4ad1e3 = final_payload_assemble_ordered_0x4ad1e3(
+			result.config,
+			result.final_header_writeout_0x4ac857_0x4ad206,
+			result.final_tile_writeout_0x49b2b6,
+			objects);
+	FinalPayloadWriteoutResult4ad1e3 &payload = result.final_payload_writeout_0x4ad1e3;
+	if (!payload.applied) {
+		return false;
+	}
+	const bool native_owned = payload.same_run_h3maped_compare_complete
+			&& payload.same_run_generated_object_payload_native_serialization_match
+			&& !payload.generated_object_count_replayed_from_same_run_authority_0x4ad330
+			&& !payload.generated_object_payload_replayed_from_same_run_authority_0x4ad1e3;
+	if (native_owned) {
+		result.status = "complete";
+		result.blocked_reason.clear();
+	} else {
+		result.status = "blocked";
+		if (payload.same_run_h3maped_compare_complete) {
+			payload.blocked_reason = "full_final_payload_compare_matched_but_native_object_stream_not_owned";
+		}
+		result.blocked_reason = payload.blocked_reason.empty()
+				? "full_final_payload_same_run_compare_pending_after_ordered_payload_assembly"
+				: payload.blocked_reason;
+	}
+	return true;
+}
+
+static int32_t route_seal_pair_count(const RouteSealState &s) {
+	std::vector<int32_t> component;
+	route_seal_free_components(s, component);
+	int32_t pairs = 0;
+	route_seal_leaks(s, component, &pairs);
+	return pairs;
+}
+
+// Rock seals: the first pass keeps every tile on its own zone's side; the second
+// lets border tiles fall either way, for what the first could not close.
+static void route_seal_rock_passes(
+		RouteSealState &s, std::vector<int32_t> &component, std::vector<RouteSealLeak> &leaks, int32_t &pairs) {
+	for (const int32_t band : { 0, ROUTE_SEAL_BORDER_BAND }) {
+		std::fill(s.refused.begin(), s.refused.end(), char(0));
+		std::set<std::pair<int32_t, std::vector<int32_t>>> unsealable;
+		std::map<std::pair<int32_t, std::vector<int32_t>>, int32_t> refusals;
+		for (int32_t round = 0; round < 64 && !leaks.empty(); ++round) {
+			bool tried = false;
+			for (const RouteSealLeak &leak : leaks) {
+				std::vector<char> border;
+				for (const int32_t source_group : leak.groups) {
+					const auto key = std::make_pair(source_group, leak.groups);
+					if (unsealable.count(key)) {
+						continue;
+					}
+					tried = true;
+					if (border.empty()) {
+						border = route_seal_border(s, component, leak, band);
+					}
+					std::vector<int64_t> cut;
+					const bool found = route_seal_min_cut(s, component, leak, source_group, border, false, cut);
+					if (route_seal_trace()) {
+						std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL band=%d round=%d component=%d source_group=%d groups=%zu cut=%zu found=%d\n",
+								band, round, leak.component, source_group, leak.groups.size(), cut.size(), found ? 1 : 0);
+						for (const int64_t cell : cut) {
+							int32_t x = 0;
+							int32_t y = 0;
+							int32_t level = 0;
+							route_seal_cell_xy(s, cell, x, y, level);
+							std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_CUT x=%d y=%d level=%d zone=%d pickup=%d cost=%lld\n",
+									x, y, level, s.zone[size_t(cell)], s.pickup[size_t(cell)], (long long)route_seal_cost(s, cell));
+						}
+						if (!found && rmg_trace_env("AURELION_RMG_TRACE_ROUTE_SEAL_COSTS") != nullptr) {
+							for (int64_t cell = 0; cell < s.surface.cell_count; ++cell) {
+								if (component[size_t(cell)] != leak.component) {
+									continue;
+								}
+								int32_t x = 0;
+								int32_t y = 0;
+								int32_t level = 0;
+								route_seal_cell_xy(s, cell, x, y, level);
+								const int64_t cost = route_seal_cost(s, cell);
+								std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_COST x=%d y=%d level=%d zone=%d terrain=%d action=%d pickup=%d refused=%d cost=%lld\n",
+										x, y, level, s.zone[size_t(cell)], int32_t(s.projection->terrain_type_codes[size_t(cell)]),
+										int32_t(s.action[size_t(cell)]), s.pickup[size_t(cell)], int32_t(s.refused[size_t(cell)]),
+										(long long)(cost >= ROUTE_SEAL_INFINITE ? -1 : cost));
+							}
+						}
+					}
+					if (!found) {
+						unsealable.insert(key);
+						continue;
+					}
+					if (!route_seal_try_cut(s, component, leak, border, cut)) {
+						if (route_seal_trace()) {
+							std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL refused band=%d round=%d component=%d\n", band, round, leak.component);
+						}
+						if (++refusals[key] >= 6) {
+							unsealable.insert(key);
+						}
+					}
+					break;
+				}
+				if (tried) {
+					break;
+				}
+			}
+			if (!tried) {
+				break;
+			}
+			route_seal_free_components(s, component);
+			leaks = route_seal_leaks(s, component, &pairs);
+		}
+	}
+}
+
+// Seals the finished map in place: result and projection become the sealed map.
+// Returns false when the seal failed after changing the generator state; the
+// caller then generates the map again without it.
+static bool route_seal_departure(H3MapedRmgWorkflowResult &result, RuntimeMapPayloadProjection &projection) {
+	GeneratorObjectPrivateState &state = result.generator_object_private_state;
+	if (!state.route_seal_departure_enabled || !projection.applied || !state.source_object_resolver_state_4af785_known) {
+		return true;
+	}
+	RouteSealState s;
+	if (!route_seal_prepare(state, state.source_object_resolver_state_4af785, projection, result.config.seed, s)) {
+		return true;
+	}
+	std::vector<int32_t> component;
+	route_seal_free_components(s, component);
+	int32_t pairs = 0;
+	std::vector<RouteSealLeak> leaks = route_seal_leaks(s, component, &pairs);
+	result.guard_free_routes_before_seal = pairs;
+	result.guard_free_routes_after_seal = pairs;
+	if (pairs == 0) {
+		return true;
+	}
+	// Rock first; where rock cannot close a route, a misplaced link guard moves into
+	// the gap, and rock tries again on what is left.
+	for (int32_t stage = 0; stage < 3 && !leaks.empty(); ++stage) {
+		route_seal_rock_passes(s, component, leaks, pairs);
+		bool moved = false;
+		while (!leaks.empty() && s.guard_moves.size() < 8U && route_seal_guard_round(s, component, leaks, pairs)) {
+			moved = true;
+		}
+		if (!moved) {
+			break;
+		}
+	}
+	result.guard_free_routes_after_seal = pairs;
+	if (s.seals.empty() && s.guard_moves.empty()) {
+		return true;
+	}
+	const int32_t cut_off_before = cut_off_town_count_departure(projection);
+	const size_t first_seal_record = state.object_records_0xec4_ecc.size();
+	if (!route_seal_commit(state, s) || !route_seal_rewrite_final_payload(result)) {
+		return false;
+	}
+	RuntimeMapPayloadProjection sealed = project_runtime_map_from_native_owned_final_payload(result);
+	if (!sealed.applied || cut_off_town_count_departure(sealed) > cut_off_before) {
+		return false;
+	}
+	// On the map the game reads, every new obstacle blocks one sealed tile and
+	// nothing else, and every moved pickup or guard stands where it was put.
+	const std::set<int64_t> seal_cells(s.seals.begin(), s.seals.end());
+	std::set<int64_t> blocked_seals;
+	for (const RuntimeMapObjectProjection &object : sealed.objects) {
+		if (object.source_vector_index >= 0 && size_t(object.source_vector_index) >= first_seal_record) {
+			if (object.body_tiles.size() != 1U || !object.action_tiles.empty()
+					|| !seal_cells.count(s.surface.flat_of(object.body_tiles.front()))) {
+				return false;
+			}
+			blocked_seals.insert(s.surface.flat_of(object.body_tiles.front()));
+		}
+	}
+	if (blocked_seals.size() != seal_cells.size()) {
+		return false;
+	}
+	std::vector<RouteSealMove> moves = s.moves;
+	moves.insert(moves.end(), s.guard_moves.begin(), s.guard_moves.end());
+	for (const RouteSealMove &move : moves) {
+		const RuntimeMapObjectProjection &moved = s.projection->objects[size_t(move.object)];
+		bool found = false;
+		for (const RuntimeMapObjectProjection &object : sealed.objects) {
+			if (object.source_vector_index == moved.source_vector_index) {
+				found = object.type_id == moved.type_id && !object.action_tiles.empty()
+						&& s.surface.flat_of(object.action_tiles.front()) == move.to;
+				break;
+			}
+		}
+		if (!found) {
+			return false;
+		}
+	}
+	RouteSealState after;
+	if (!route_seal_prepare(state, state.source_object_resolver_state_4af785, sealed, result.config.seed, after)) {
+		return false;
+	}
+	result.guard_free_routes_after_seal = route_seal_pair_count(after);
+	result.guard_free_route_obstacles = int32_t(s.seals.size());
+	result.guard_free_route_pickups_moved = int32_t(s.moves.size());
+	result.guard_free_route_guards_moved = int32_t(s.guard_moves.size());
+	if (route_seal_trace()) {
+		std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_DONE routes_before=%d routes_after=%d obstacles=%zu moved=%zu guards_moved=%zu\n",
+				result.guard_free_routes_before_seal, result.guard_free_routes_after_seal, s.seals.size(), s.moves.size(),
+				s.guard_moves.size());
+		for (const int64_t cell : s.seals) {
+			int32_t x = 0;
+			int32_t y = 0;
+			int32_t level = 0;
+			route_seal_cell_xy(s, cell, x, y, level);
+			std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_TILE x=%d y=%d level=%d\n", x, y, level);
+		}
+	}
+	projection = std::move(sealed);
+	return true;
+}
+
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
 	return run_h3maped_rmg_entry_to_writeout_workflow(config, nullptr);
 }
@@ -44255,48 +45740,72 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(
 		const H3MapedRmgWorkflowConfig &config, RuntimeMapPayloadProjection *projection_out) {
 	H3MapedRmgWorkflowResult result = run_h3maped_rmg_workflow_pass(config);
-	const bool repair = config.repair_cut_off_towns && !config.route_join_departure
-			&& rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr;
-	if (!repair && projection_out == nullptr) {
+	const bool strict = rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") != nullptr;
+	const bool repair = config.repair_cut_off_towns && !config.route_join_departure && !strict;
+	const bool seal = config.repair_cut_off_towns && config.seal_guard_free_routes && !strict;
+	if (!repair && !seal && projection_out == nullptr) {
 		return result;
 	}
 	RuntimeMapPayloadProjection projection = project_runtime_map_from_native_owned_final_payload(result);
 	const int32_t cut_off = (repair && projection.applied) ? cut_off_town_count_departure(projection) : 0;
-	if (cut_off <= 0) {
-		if (projection_out != nullptr) {
-			*projection_out = std::move(projection);
+	if (cut_off > 0) {
+		// Departure from H3MapEd: the same seed again, with the zone route joins on.
+		// The H3MapEd result is freed first. It is rebuilt when the repair pass fails or
+		// leaves as many towns cut off, for example when the zone link graph itself is
+		// split (Large two-level seed 73).
+		projection = RuntimeMapPayloadProjection();
+		result = H3MapedRmgWorkflowResult();
+		H3MapedRmgWorkflowConfig repair_config = config;
+		repair_config.route_join_departure = true;
+		H3MapedRmgWorkflowResult repaired = run_h3maped_rmg_workflow_pass(repair_config);
+		RuntimeMapPayloadProjection repaired_projection = project_runtime_map_from_native_owned_final_payload(repaired);
+		const int32_t cut_off_after = repaired_projection.applied ? cut_off_town_count_departure(repaired_projection) : cut_off;
+		if (cut_off_after >= cut_off) {
+			repaired = H3MapedRmgWorkflowResult();
+			repaired_projection = RuntimeMapPayloadProjection();
+			result = run_h3maped_rmg_workflow_pass(config);
+			result.cut_off_towns_before_repair = cut_off;
+			result.cut_off_towns_after_repair = cut_off;
+			projection = project_runtime_map_from_native_owned_final_payload(result);
+		} else {
+			repaired.cut_off_town_repair_applied = true;
+			repaired.cut_off_towns_before_repair = cut_off;
+			repaired.cut_off_towns_after_repair = cut_off_after;
+			result = std::move(repaired);
+			projection = std::move(repaired_projection);
 		}
-		return result;
 	}
-	// Departure from H3MapEd: the same seed again, with the zone route joins on.
-	// The H3MapEd result is freed first. It is rebuilt when the repair pass fails or
-	// leaves as many towns cut off, for example when the zone link graph itself is
-	// split (Large two-level seed 73).
-	projection = RuntimeMapPayloadProjection();
-	result = H3MapedRmgWorkflowResult();
-	H3MapedRmgWorkflowConfig repair_config = config;
-	repair_config.route_join_departure = true;
-	H3MapedRmgWorkflowResult repaired = run_h3maped_rmg_workflow_pass(repair_config);
-	RuntimeMapPayloadProjection repaired_projection = project_runtime_map_from_native_owned_final_payload(repaired);
-	const int32_t cut_off_after = repaired_projection.applied ? cut_off_town_count_departure(repaired_projection) : cut_off;
-	if (cut_off_after >= cut_off) {
-		repaired = H3MapedRmgWorkflowResult();
-		repaired_projection = RuntimeMapPayloadProjection();
-		result = run_h3maped_rmg_workflow_pass(config);
-		result.cut_off_towns_before_repair = cut_off;
-		result.cut_off_towns_after_repair = cut_off;
-		if (projection_out != nullptr) {
-			*projection_out = project_runtime_map_from_native_owned_final_payload(result);
+	const auto seal_started_at = std::chrono::steady_clock::now();
+	const bool sealed = !seal || route_seal_departure(result, projection);
+	if (seal && rmg_trace_env("AURELION_RMG_PROFILE_PHASES") != nullptr) {
+		const double seal_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - seal_started_at).count();
+		std::fprintf(stderr, "RMG_PERFORMANCE_CHECKPOINT id=guard_free_route_seal phase_ms=%.3f total_ms=%.3f\n", seal_ms, seal_ms);
+	}
+	if (!sealed) {
+		// The seal changed the generator state and then failed a check on the map it
+		// wrote: the map is generated again as it was before the seal.
+		const H3MapedRmgWorkflowConfig pass_config = result.config;
+		const bool repaired = result.cut_off_town_repair_applied;
+		const int32_t cut_off_before = result.cut_off_towns_before_repair;
+		const int32_t cut_off_after = result.cut_off_towns_after_repair;
+		const int32_t routes = result.guard_free_routes_before_seal;
+		if (route_seal_trace()) {
+			std::fprintf(stderr, "RMG_TRACE_ROUTE_SEAL_FAILED routes=%d\n", routes);
 		}
-		return result;
+		projection = RuntimeMapPayloadProjection();
+		result = H3MapedRmgWorkflowResult();
+		result = run_h3maped_rmg_workflow_pass(pass_config);
+		result.cut_off_town_repair_applied = repaired;
+		result.cut_off_towns_before_repair = cut_off_before;
+		result.cut_off_towns_after_repair = cut_off_after;
+		result.guard_free_routes_before_seal = routes;
+		result.guard_free_routes_after_seal = routes;
+		projection = project_runtime_map_from_native_owned_final_payload(result);
 	}
-	repaired.cut_off_town_repair_applied = true;
-	repaired.cut_off_towns_before_repair = cut_off;
-	repaired.cut_off_towns_after_repair = cut_off_after;
 	if (projection_out != nullptr) {
-		*projection_out = std::move(repaired_projection);
+		*projection_out = std::move(projection);
 	}
-	return repaired;
+	return result;
 }
 
 RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(

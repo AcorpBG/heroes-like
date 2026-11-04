@@ -3374,6 +3374,17 @@ struct MineResourceMaterializationResult4a9d6a {
 	std::string blocked_reason;
 };
 
+// One template link as the connection tail (0x4a79a3) placed it: its two zones as
+// generated-cell owner bytes, whether any guard object was committed for it, and
+// those guards' object record keys.
+struct ZoneLinkGuardRecordDeparture {
+	int32_t source_link_index = -1;
+	int32_t zone_a = -1;
+	int32_t zone_b = -1;
+	bool guard_committed = false;
+	std::vector<uint32_t> guard_object_keys;
+};
+
 struct GeneratorObjectPrivateState {
 	// Departure state (docs/rmg-cut-off-town-repair.md), unused in H3MapEd order.
 	bool route_join_departure_enabled = false;
@@ -3382,6 +3393,11 @@ struct GeneratorObjectPrivateState {
 	// minimum, and treasure keeps one tile less from placed objects (0x4aab7e).
 	bool guard_minimum_departure_enabled = false;
 	bool treasure_spacing_departure_enabled = false;
+	// Departure (docs/rmg-guard-free-route-seal.md), off under
+	// AURELION_RMG_H3MAPED_STRICT=1: the connection tail records each link's
+	// guard for the guard-free route seal after the final writeout.
+	bool route_seal_departure_enabled = false;
+	std::vector<ZoneLinkGuardRecordDeparture> zone_link_guard_records_departure;
 	std::vector<int64_t> route_join_protected_cells;
 	// Repair pass: 1 on every cell a link passage (0x4a61bc chains) stamped.
 	std::vector<char> route_join_link_passage_cell;
@@ -3831,6 +3847,12 @@ struct H3MapedRmgWorkflowConfig {
 	// AURELION_RMG_H3MAPED_STRICT=1 turns them off too.
 	bool guards_under_minimum = true;
 	bool treasure_spacing_one_tile_less = true;
+	// Departure from H3MapEd (docs/rmg-guard-free-route-seal.md): where the finished
+	// map lets a hero walk without a fight between zones whose template link is
+	// guarded, one-tile obstacles close the narrowest gap, or a link guard that
+	// holds nothing moves into a gap that is the only way in. It applies with
+	// repair_cut_off_towns; AURELION_RMG_H3MAPED_STRICT=1 turns it off.
+	bool seal_guard_free_routes = true;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
@@ -4126,6 +4148,15 @@ struct H3MapedRmgWorkflowResult {
 	bool cut_off_town_repair_applied = false;
 	int32_t cut_off_towns_before_repair = 0;
 	int32_t cut_off_towns_after_repair = 0;
+	// The guard-free route seal (docs/rmg-guard-free-route-seal.md): pairs of zone
+	// groups holding one guard-free area (a town or 16 tiles each), before and
+	// after it, the obstacles it placed, the pickups it moved out of a gap and the
+	// link guards it moved into one.
+	int32_t guard_free_routes_before_seal = 0;
+	int32_t guard_free_routes_after_seal = 0;
+	int32_t guard_free_route_obstacles = 0;
+	int32_t guard_free_route_pickups_moved = 0;
+	int32_t guard_free_route_guards_moved = 0;
 	bool supported_scope = false;
 	bool executed = false;
 	bool final_payload_owned = false;

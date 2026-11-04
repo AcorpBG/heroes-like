@@ -33,6 +33,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
 - 2026-11-01: A computer player may assume a rival not yet eliminated still holds towns or heroes it has not scouted (`_rival_towns_unknown`): common sense, not a fog leak.
 - 2026-11-04: Every generated-map guard (links, treasure, mines) keeps budgets under H3MapEd's 2,000 minimum, and treasure keeps one tile less from placed objects, both deliberate departures; guard budgets become battle power at 0.10 (`docs/generated-neutral-encounter-variety.md`).
+- 2026-11-04: Generated maps close any fight-free walk between zones whose template link is guarded (HoMM3 shows the same gap on m936), a deliberate departure from H3MapEd; eight-way walking stays (`docs/rmg-guard-free-route-seal.md`).
 
 ## Questions for the owner
 
@@ -40,6 +41,7 @@ None open.
 
 ## Open work
 
+- `rmg-guard-free-route-seal-20261104` (in progress): Generated maps close walks between zones whose template link is guarded but which a hero can cross without a fight (m936, m944 day-2 capital rushes; HoMM3 shows the same gap): narrowest gap gets one-tile obstacles, a pickup in it moves aside. h3maped_rmg_core.cpp/.hpp, map_generation.cpp. Owner 2026-11-04: best possible fix, not in strict mode. See `docs/rmg-guard-free-route-seal.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

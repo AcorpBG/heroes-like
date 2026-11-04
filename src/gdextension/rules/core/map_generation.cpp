@@ -46,6 +46,11 @@ struct GeneratorCache::Core {
 	int32_t cut_off_towns_before_repair = 0;
 	int32_t cut_off_towns_after_repair = 0;
 	std::string split_template_repicked_from;
+	int32_t guard_free_routes_before_seal = 0;
+	int32_t guard_free_routes_after_seal = 0;
+	int32_t guard_free_route_obstacles = 0;
+	int32_t guard_free_route_pickups_moved = 0;
+	int32_t guard_free_route_guards_moved = 0;
 };
 
 GeneratorCache::GeneratorCache() = default;
@@ -2294,6 +2299,11 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 		fresh->cut_off_town_repair_applied = workflow->cut_off_town_repair_applied;
 		fresh->cut_off_towns_before_repair = workflow->cut_off_towns_before_repair;
 		fresh->cut_off_towns_after_repair = workflow->cut_off_towns_after_repair;
+		fresh->guard_free_routes_before_seal = workflow->guard_free_routes_before_seal;
+		fresh->guard_free_routes_after_seal = workflow->guard_free_routes_after_seal;
+		fresh->guard_free_route_obstacles = workflow->guard_free_route_obstacles;
+		fresh->guard_free_route_pickups_moved = workflow->guard_free_route_pickups_moved;
+		fresh->guard_free_route_guards_moved = workflow->guard_free_route_guards_moved;
 		if (workflow->template_selection_0x4ac552.split_link_graph_repicked) {
 			fresh->split_template_repicked_from = workflow->template_selection_0x4ac552.split_link_graph_rolled_template_name;
 		}
@@ -2311,6 +2321,13 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, cut_off_town_repair, "towns_cut_off_before", integer(core->cut_off_towns_before_repair));
 	put(state, cut_off_town_repair, "towns_cut_off_after", integer(core->cut_off_towns_after_repair));
 	put(state, cut_off_town_repair, "split_template_repicked_from", text(state, core->split_template_repicked_from));
+	// docs/rmg-guard-free-route-seal.md
+	const Value guard_free_route_seal = new_dict(state);
+	put(state, guard_free_route_seal, "routes_before", integer(core->guard_free_routes_before_seal));
+	put(state, guard_free_route_seal, "routes_after", integer(core->guard_free_routes_after_seal));
+	put(state, guard_free_route_seal, "obstacles", integer(core->guard_free_route_obstacles));
+	put(state, guard_free_route_seal, "pickups_moved", integer(core->guard_free_route_pickups_moved));
+	put(state, guard_free_route_seal, "guards_moved", integer(core->guard_free_route_guards_moved));
 	if (!projection.applied) {
 		const Value result = new_dict(state);
 		put(state, result, "ok", boolean(false));
@@ -2375,6 +2392,7 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, metadata, "template_id", text(state, source_template_id));
 	put(state, metadata, "full_generation_status", text(state, "native_runtime_ready"));
 	put(state, metadata, "cut_off_town_repair", cut_off_town_repair);
+	put(state, metadata, "guard_free_route_seal", guard_free_route_seal);
 	put(state, metadata, "validation_status", text(state, "pass"));
 	put(state, metadata, "native_runtime_authoritative", boolean(true));
 	put(state, metadata, "full_parity_claim", boolean(true));
