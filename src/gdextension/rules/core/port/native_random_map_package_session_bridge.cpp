@@ -15,6 +15,7 @@
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/town_development_rules_ai.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 
@@ -639,6 +640,12 @@ ArrayRef _town_states_from_objects(State &state, ArrayRef objects) {
 		state.set(fields, str(key::available_recruits), dict_value(state.new_dict()));
 		state.set(fields, str(key::garrison), array_value(duplicated_array_or_new(state, gd::field(state, town_template, key::garrison))));
 		gd::merge(state, town_state, fields, true);
+		// A neutral town is not free to take: it holds one week of its own tier
+		// 1-3 growth (owner decision, 2026-11-04). A player's town keeps its
+		// type's garrison.
+		if (text_or(state, town_state, key::owner, str(key::neutral)) == key::neutral) {
+			state.set(town_state, str(key::garrison), array_value(town_development_rules::neutral_garrison(state, town_state)));
+		}
 		state.append(towns, dict_value(town_state));
 	}
 	return towns;

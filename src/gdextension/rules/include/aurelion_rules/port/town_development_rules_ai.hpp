@@ -33,6 +33,10 @@ bool choice_blocked_among(State &state, ArrayRef active, DictRef building);
 bool has_dwelling_tier_among(State &state, ArrayRef active, int64_t tier);
 DictRef growth(State &state, DictRef town);
 DictRef income(State &state, DictRef town);
+// The garrison a neutral town starts with: one week of its tier 1-3 growth,
+// each tier's unit from the dwelling the town has built, else the faction's
+// first choice, at the week the town's buildings give that dwelling.
+ArrayRef neutral_garrison(State &state, DictRef town);
 
 bool choice_blocked(State &state, DictRef town, DictRef building);
 bool has_dwelling_tier(State &state, DictRef town, int64_t tier);

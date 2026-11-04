@@ -217,33 +217,102 @@ bool has_dwelling_tier_among(State &state, ArrayRef active, int64_t tier) {
 	return false;
 }
 
-DictRef growth(State &state, DictRef town) {
-	const DictRef result = state.new_dict();
-	const DictRef bonuses = state.new_dict();
-	int64_t percent = 0;
-	const ArrayRef built = active_buildings(state, town);
+namespace {
+
+// What a town's buildings add to its dwellings: a flat amount per tier and a
+// percent on every dwelling.
+struct GrowthBonuses {
+	DictRef flat;
+	int64_t percent;
+};
+
+GrowthBonuses _growth_bonuses(State &state, ArrayRef built) {
+	GrowthBonuses bonuses{state.new_dict(), 0};
 	for (const Value &id : gd::items(state, array_value(built))) {
 		const DictRef b = gd::content_row(state, ContentTable::Building, gd::stringify(state, id));
 		const Value tier = int_value(gd::int_field(state, b, key::growth_tier, 0));
-		const int64_t bonus = gd::to_int(state, state.get(bonuses, tier, int_value(0)));
-		state.set(bonuses, tier, int_value(gd::add(bonus, gd::int_field(state, b, key::growth_amount, 0))));
-		percent = gd::add(percent, gd::int_field(state, b, key::growth_percent, 0));
+		const int64_t bonus = gd::to_int(state, state.get(bonuses.flat, tier, int_value(0)));
+		state.set(bonuses.flat, tier, int_value(gd::add(bonus, gd::int_field(state, b, key::growth_amount, 0))));
+		bonuses.percent = gd::add(bonuses.percent, gd::int_field(state, b, key::growth_percent, 0));
 	}
-	// Fortifications raise every dwelling's whole week, flat bonuses included;
-	// fractions round up.
+	return bonuses;
+}
+
+// One dwelling's week. Fortifications raise the whole week, flat bonuses
+// included; fractions round up.
+int64_t _dwelling_week(State &state, const GrowthBonuses &bonuses, Atom unit_id) {
+	const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
+	const int64_t unit_growth = gd::int_field(state, unit, key::growth, 1);
+	const Value unit_tier = int_value(gd::int_field(state, unit, key::tier, 0));
+	const int64_t weekly = gd::add(unit_growth, gd::to_int(state, state.get(bonuses.flat, unit_tier, int_value(0))));
+	return gd::add(gd::mul(weekly, gd::add(100, bonuses.percent)), 99) / 100;
+}
+
+} // namespace
+
+DictRef growth(State &state, DictRef town) {
+	const DictRef result = state.new_dict();
+	const ArrayRef built = active_buildings(state, town);
+	const GrowthBonuses bonuses = _growth_bonuses(state, built);
 	for (const Value &id : gd::items(state, array_value(built))) {
 		const DictRef b = gd::content_row(state, ContentTable::Building, gd::stringify(state, id));
 		const Atom uid = ai::string_or_empty(state, b, key::unlock_unit_id);
 		if (uid == key::empty) {
 			continue;
 		}
-		const DictRef unit = gd::content_row(state, ContentTable::Unit, uid);
-		const int64_t unit_growth = gd::int_field(state, unit, key::growth, 1);
-		const Value unit_tier = int_value(gd::int_field(state, unit, key::tier, 0));
-		const int64_t weekly = gd::add(unit_growth, gd::to_int(state, state.get(bonuses, unit_tier, int_value(0))));
-		state.set(result, str(uid), int_value(gd::add(gd::mul(weekly, gd::add(100, percent)), 99) / 100));
+		state.set(result, str(uid), int_value(_dwelling_week(state, bonuses, uid)));
 	}
 	return result;
+}
+
+ArrayRef neutral_garrison(State &state, DictRef town) {
+	const ArrayRef stacks = state.new_array();
+	const ArrayRef built = active_buildings(state, town);
+	const GrowthBonuses bonuses = _growth_bonuses(state, built);
+	Value rosters;
+	Value roster;
+	const bool has_roster = state.lookup(data(state), str(key::rosters), rosters) && gd::is_dict(rosters) &&
+			state.lookup(rosters.ref, str(faction_id(state, town)), roster) && gd::is_array(roster);
+	for (int64_t tier = 1; tier <= 3; ++tier) {
+		// The town's own dwelling of the tier, upgraded or not.
+		Atom unit_id = key::empty;
+		for (const Value &id : gd::items(state, array_value(built))) {
+			const DictRef b = gd::content_row(state, ContentTable::Building, gd::stringify(state, id));
+			if (gd::int_field(state, b, key::dwelling_tier, 0) == tier) {
+				unit_id = ai::string_or_empty(state, b, key::unlock_unit_id);
+				if (unit_id != key::empty) {
+					break;
+				}
+			}
+		}
+		// Else the faction's first choice of the tier.
+		if (unit_id == key::empty && has_roster) {
+			int64_t first_branch = 0;
+			for (const Value &row : gd::items(state, roster)) {
+				if (!gd::is_dict(row) || gd::int_field(state, row.ref, key::tier, 0) != tier) {
+					continue;
+				}
+				const int64_t branch = gd::int_field(state, row.ref, key::branch, 0);
+				const Atom row_unit = ai::string_or_empty(state, row.ref, key::unit_id);
+				if (row_unit != key::empty && (unit_id == key::empty || branch < first_branch)) {
+					unit_id = row_unit;
+					first_branch = branch;
+				}
+			}
+		}
+		if (unit_id == key::empty) {
+			continue;
+		}
+		const int64_t count = _dwelling_week(state, bonuses, unit_id);
+		if (count <= 0) {
+			continue;
+		}
+		const DictRef stack = state.new_dict();
+		state.set(stack, str(key::unit_id), str(unit_id));
+		state.set(stack, str(key::count), int_value(count));
+		state.append(stacks, dict_value(stack));
+	}
+	return stacks;
 }
 
 DictRef income(State &state, DictRef town) {
