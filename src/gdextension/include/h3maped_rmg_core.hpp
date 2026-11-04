@@ -3377,6 +3377,9 @@ struct MineResourceMaterializationResult4a9d6a {
 struct GeneratorObjectPrivateState {
 	// Departure state (docs/rmg-cut-off-town-repair.md), unused in H3MapEd order.
 	bool route_join_departure_enabled = false;
+	// Departure (docs/generated-neutral-encounter-variety.md): link guards keep budgets
+	// under 0x4a65a5's 2,000 minimum. Off under AURELION_RMG_H3MAPED_STRICT=1.
+	bool link_guard_minimum_departure_enabled = false;
 	std::vector<int64_t> route_join_protected_cells;
 	// Repair pass: 1 on every cell a link passage (0x4a61bc chains) stamped.
 	std::vector<char> route_join_link_passage_cell;
@@ -3820,6 +3823,10 @@ struct H3MapedRmgWorkflowConfig {
 	// for H3MapEd parity work.
 	bool repair_cut_off_towns = true;
 	bool route_join_departure = false;
+	// Departure from H3MapEd (docs/generated-neutral-encounter-variety.md): link guards
+	// keep 0x4a65a5 budgets under its 2,000 minimum. It applies with repair_cut_off_towns;
+	// AURELION_RMG_H3MAPED_STRICT=1 turns it off too.
+	bool link_guards_under_minimum = true;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;

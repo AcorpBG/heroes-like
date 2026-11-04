@@ -169,6 +169,7 @@ Exit criteria:
 - Native package/session adoption remains gated behind validators, fixture comparisons, generated-map inspection reports, and save/replay boundary checks.
 - Live native-package navigation must preserve source-owned levels, explicit passage connections and diagonal adjacency without rewriting recovered destination masks; authored-map movement policy remains separate.
 - Every town of a generated map is reachable. The generator keeps H3MapEd's map unless it leaves a town cut off; then it generates the same seed again with the zone route-join steps on. That is a deliberate departure from H3MapEd, not parity (owner decision, 2026-10-17; `docs/rmg-cut-off-town-repair.md`). Parity work turns it off with `AURELION_RMG_H3MAPED_STRICT=1`.
+- Link guards keep budgets under H3MapEd's 2,000 minimum (`0x4a65a5`), so Weak 3,000 and Normal 2,000 links get a guard; treasure and mine guards keep the minimum. That is another deliberate departure (owner decision, 2026-11-04; `docs/generated-neutral-encounter-variety.md`), also off under `AURELION_RMG_H3MAPED_STRICT=1`.
 
 ### Phase 4 — Headless AI Agent Balance Harness
 

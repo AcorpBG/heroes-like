@@ -9343,6 +9343,8 @@ int main() {
 		m014_config.setup_caller_arg_0x0c_known = true;
 		m014_config.setup_caller_arg_0x0c =
 				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		// Recorded with H3MapEd's link guards: the weak 4-1 link had no guard.
+		m014_config.link_guards_under_minimum = false;
 		const H3MapedRmgWorkflowResult m014_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m014_config);
 		if (!require(m014_workflow.cut_off_town_repair_applied
@@ -9383,6 +9385,8 @@ int main() {
 		m003_config.setup_caller_arg_0x0c_known = true;
 		m003_config.setup_caller_arg_0x0c =
 				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		// Recorded with H3MapEd's link guards, which leave weak links unguarded.
+		m003_config.link_guards_under_minimum = false;
 		const H3MapedRmgWorkflowResult m003_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m003_config);
 		if (!require(m003_workflow.cut_off_town_repair_applied

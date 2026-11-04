@@ -500,8 +500,9 @@ def build():
         # Three anchors agree on about 0.045 (same fighting value as the native
         # creatures, same gold cost, same multiple of a starting army); owner
         # playtests (2026-10-09, Large Veilmourn days 18-25: beaten guards at a
-        # median 0.2x the hero's army) asked for stronger guards, so a third more.
-        "power_per_native_value": 0.06,
+        # median 0.2x the hero's army) asked for stronger guards: 0.06. The owner
+        # raised it to 0.10 on 2026-11-04.
+        "power_per_native_value": 0.10,
         "companies": companies,
         # Read by ContentService.get_encounter for encounter_company_* ids.
         "encounters": definitions,

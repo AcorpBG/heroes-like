@@ -3,7 +3,7 @@
  "schema_version": 1,
  "generator": "tools/build_generated_neutral_companies.py",
  "policy": "Each native guard's budget (native quantity x native value) becomes battle power at power_per_native_value; the company's slot shares divide that power, and each slot's headcount is its power divided by its unit's AiHeroRules.army_power.",
- "power_per_native_value": 0.06,
+ "power_per_native_value": 0.1,
  "companies": [
   {"id":"company_roadward_lodge_watch","name":"Roadward Lodge Watch","tier":1,"pool":"neutral","faction_id":"","family":"neutral:unit_neutral_roadwardens","kind":"authored","encounter_id":"encounter_roadward_lodge_watch","asset_id":"generated_neutral_unit_neutral_roadwardens","slots":[{"unit_id":"unit_neutral_roadwardens","share":0.5908},{"unit_id":"unit_neutral_hearthbow_carriers","share":0.4092}]},
   {"id":"company_fenhound_kennel_watch","name":"Fenhound Kennel Watch","tier":2,"pool":"neutral","faction_id":"","family":"neutral:unit_neutral_fenhound_runners","kind":"authored","encounter_id":"encounter_fenhound_kennel_watch","asset_id":"generated_neutral_unit_neutral_fenhound_runners","slots":[{"unit_id":"unit_neutral_fenhound_runners","share":0.7196},{"unit_id":"unit_neutral_mossglass_sentinels","share":0.2804}]},

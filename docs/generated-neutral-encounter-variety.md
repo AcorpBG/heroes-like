@@ -9,8 +9,15 @@ Slice `content-generated-guard-companies-20261009`, owner request. It replaces t
 
 **Strength follows the native budget.** The native generator gives each guard a budget, its headcount times the creature's value. Keeping the headcount threw most of that budget away: native creature value grows about 100x from tier 1 to tier 7, but our units' battle power grows only about 8x. Strong monsters therefore barely changed a fight. Now each guard fields battle power (`AiHeroRules.army_power`, the rating that also pays battle rewards) equal to its budget times `power_per_native_value`.
 - Three anchors agree on about 0.045 for that rate: the same fighting value as the native creatures, the same gold cost, and the same multiple of a hero's starting army (the original median start army is worth 3,153; ours rates about 140).
-- The default is 0.06. The owner's Large Veilmourn playtest (Days 18–25) beat guards at a median of 0.2x the hero's army.
-- On Medium seed 10, the same route guard rates about 200 on Weak, 250–335 on Normal and 530–590 on Strong. Before, all three were about the same. Small tier-1 guards come out about 40% below the old headcount rule; tier-3 and higher guards are stronger.
+- The rate is 0.10 (owner decision, 2026-11-04). It was 0.06 after the owner's Large Veilmourn playtest (Days 18–25), where guards were beaten at a median of 0.2x the hero's army.
+- At 0.06, on Medium seed 10, the same route guard rated about 200 on Weak, 250–335 on Normal and 530–590 on Strong. Before, all three were about the same. Small tier-1 guards came out about 40% below the old headcount rule; tier-3 and higher guards were stronger.
+
+## Link guards under H3MapEd's minimum (2026-11-04)
+
+Owner decision. H3MapEd's band formula (`0x4a65a5`) turns a link's guard value into a budget and drops any budget under 2,000. So Weak 3,000 links (368 of the 756 guarded links in the 53 templates) and Normal 2,000 links (the Ring template's 10) had no guard.
+- Generated maps keep a link guard's budget under that minimum. H3MapEd's creature choice (`0x4a5c07`) still places nothing when no creature fits the budget. The smallest fit is 525, so Weak 2,000 links (budget 375) stay open.
+- Treasure and mine guards keep the minimum.
+- This is a deliberate departure from H3MapEd, like the cut-off town repair (`docs/rmg-cut-off-town-repair.md`). A Weak map, or a Ring map on Normal, differs from H3MapEd's from its first such guard on. `AURELION_RMG_H3MAPED_STRICT=1` restores the minimum for parity work. The workflow config's `link_guards_under_minimum` switches it alone; the map selftest's repair cases recorded on Weak maps before this change turn it off.
 
 **790 companies instead of 51.** `tools/build_generated_neutral_companies.py` builds `content/generated_neutral_companies.json` from the unit roster, using hand-written faction and neutral-theme vocabulary.
 - Every faction upgrade line has five companies: a levy of recruits, a seasoned company with a few upgraded veterans, an upgraded cadre with recruits, an elite of upgraded units only, and a combined-arms line with a same-faction unit of the other role. Lines of tier 3 and above also have a warband with lower-tier escorts.

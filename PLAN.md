@@ -14,7 +14,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-10: The validation budget, and `.import`/`.uid` sidecars tracked in Git (`AGENTS.md`).
 - 2026-10-11: Idle loops use RIFE in-betweens; flagged pairs hold their paintings (`--flagged hold`); the network's weights stay out of Git (`docs/idle-inbetweens.md`).
 - 2026-10-17: Water and two-level games are ordinary games for the computer players; a capped one is a failure to explain.
-- 2026-10-17 and 10-18: Generated maps repair towns that H3MapEd's finished map leaves cut off, the one deliberate departure from H3MapEd (`docs/rmg-cut-off-town-repair.md`).
+- 2026-10-17 and 10-18: Generated maps repair towns that H3MapEd's finished map leaves cut off, a deliberate departure from H3MapEd (`docs/rmg-cut-off-town-repair.md`).
 - 2026-10-18: AI batches pair map size and players: small 2, medium 2-3, large 3-4, extra large 5-6; never large maps with 2 players.
 - 2026-10-19: Balance batches are read by place points with their one-sd band; wins alone swing too much between batches.
 - 2026-10-19: No test file or core case per change (`AGENTS.md`, "Validation budget").
@@ -32,6 +32,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-30: Don't fix split strength by concentrating armies: it leaves the rest of the map vulnerable, and one main army gave poor map control.
 - 2026-10-30: Unspent gold is a recruitment limit, not a bug to chase now; consider it later if needed.
 - 2026-11-01: A computer player may assume a rival not yet eliminated still holds towns or heroes it has not scouted (`_rival_towns_unknown`): common sense, not a fog leak.
+- 2026-11-04: Generated-map link guards keep budgets under H3MapEd's 2,000 minimum, a deliberate departure; guard budgets become battle power at 0.10 (`docs/generated-neutral-encounter-variety.md`).
 
 ## Questions for the owner
 
@@ -39,6 +40,7 @@ None open.
 
 ## Open work
 
+- `rmg-link-guard-minimum-20261104` (in progress): Owner decision 2026-11-04: link guards keep 0x4a65a5 budgets under 2,000 (h3maped_rmg_core.cpp; strict mode keeps H3MapEd's minimum, treasure and mine guards keep it); guard budgets become battle power at 0.10 (build_generated_neutral_companies.py, content). See `docs/generated-neutral-encounter-variety.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

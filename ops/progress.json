@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-far-choice-keeps-away-20261103",
- "currentSliceTitle": "The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; 160 paired games last 107.5 days vs 108.7, no cap vs 1.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-03T15:40:17Z",
+ "currentSliceId": "rmg-link-guard-minimum-20261104",
+ "currentSliceTitle": "Link guards under H3MapEd's minimum; guard rate 0.10",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-04T10:28:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "rmg-link-guard-minimum-20261104",
+   "title": "Link guards under H3MapEd's minimum; guard rate 0.10",
+   "status": "in_progress",
+   "goal": "Owner decision 2026-11-04: link guards keep 0x4a65a5 budgets under 2,000 (h3maped_rmg_core.cpp; strict mode keeps H3MapEd's minimum, treasure and mine guards keep it); guard budgets become battle power at 0.10 (build_generated_neutral_companies.py, content).",
+   "docs": [
+    "docs/generated-neutral-encounter-variety.md"
+   ],
+   "updatedAt": "2026-11-04"
+  },
   {
    "id": "ai-far-choice-keeps-away-20261103",
    "status": "completed",

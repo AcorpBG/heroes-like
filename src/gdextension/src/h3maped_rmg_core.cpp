@@ -7834,7 +7834,8 @@ static bool reward_guard_candidate_vtable_returned_object_vtable_0x4aa166(uint32
 	}
 }
 
-static int32_t reward_guard_attach_value_from_band_0x4a65a5(int32_t selected_value, int32_t effective_band) {
+// 0x4a65a5 before its minimum: the guard value scaled by the band's two thresholds.
+static int32_t guard_value_scaled_by_band_0x4a65a5(int32_t selected_value, int32_t effective_band) {
 	static constexpr std::array<int32_t, 6> first_thresholds_0x58db18 = { 50000, 2500, 1500, 1000, 500, 0 };
 	static constexpr std::array<int32_t, 6> second_thresholds_0x58db30 = { 50000, 7500, 7500, 7500, 5000, 5000 };
 	static constexpr std::array<int32_t, 6> first_multipliers_0x58db48 = { 0, 2, 3, 4, 6, 6 };
@@ -7847,7 +7848,24 @@ static int32_t reward_guard_attach_value_from_band_0x4a65a5(int32_t selected_val
 	if (selected_value > second_thresholds_0x58db30[size_t(band)]) {
 		scaled_value += ((selected_value - second_thresholds_0x58db30[size_t(band)]) * second_multipliers_0x58db60[size_t(band)]) / 4;
 	}
+	return scaled_value;
+}
+
+static int32_t reward_guard_attach_value_from_band_0x4a65a5(int32_t selected_value, int32_t effective_band) {
+	const int32_t scaled_value = guard_value_scaled_by_band_0x4a65a5(selected_value, effective_band);
 	return scaled_value < 0x7d0 ? 0 : scaled_value;
+}
+
+// Departure from H3MapEd (docs/generated-neutral-encounter-variety.md, owner decision
+// 2026-11-04): a link guard keeps a budget under 0x4a65a5's 0x7d0 minimum, so Weak
+// 3,000 and Normal 2,000 links get a guard. 0x4a5c07 still places none when no
+// creature fits the budget (the smallest fit is 525). Treasure and mine guards keep
+// the minimum; AURELION_RMG_H3MAPED_STRICT=1 restores it for links too.
+static int32_t link_guard_budget_0x4a65a5(const GeneratorObjectPrivateState &state, int32_t guard_value, int32_t effective_band) {
+	if (state.link_guard_minimum_departure_enabled) {
+		return guard_value_scaled_by_band_0x4a65a5(guard_value, effective_band);
+	}
+	return reward_guard_attach_value_from_band_0x4a65a5(guard_value, effective_band);
 }
 
 static RewardGuardAttachValueGateResult4a960a reward_guard_attach_value_gate_0x4a960a(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t selected_value) {
@@ -18050,7 +18068,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 			result.blocked_reason = "0x4a7605_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		guard_budget = reward_guard_attach_value_from_band_0x4a65a5(
+		guard_budget = link_guard_budget_0x4a65a5(state,
 				endpoint.guard_value,
 				state.generator_value_band_0x10bc);
 	}
@@ -18373,7 +18391,7 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 			return result;
 		}
 		result.guard_budget_0x4a65a5 =
-				reward_guard_attach_value_from_band_0x4a65a5(source_endpoint.guard_value, state.generator_value_band_0x10bc);
+				link_guard_budget_0x4a65a5(state, source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	result.guard_budget_positive = result.guard_budget_0x4a65a5 > 0;
 
@@ -18940,7 +18958,7 @@ static ConnectionFallbackGateResult4a696b connection_fallback_gate_0x4a696b(
 			result.blocked_reason = "0x4a696b_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		guard_budget = reward_guard_attach_value_from_band_0x4a65a5(
+		guard_budget = link_guard_budget_0x4a65a5(state,
 				source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	result.guard_budget_0x4a65a5 = guard_budget;
@@ -19255,7 +19273,7 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 			result.blocked_reason = "0x4a6cf2_generator_value_band_0x10bc_missing_before_0x4a65a5";
 			return result;
 		}
-		result.guard_budget_0x4a65a5 = reward_guard_attach_value_from_band_0x4a65a5(
+		result.guard_budget_0x4a65a5 = link_guard_budget_0x4a65a5(state,
 				source_endpoint.guard_value, state.generator_value_band_0x10bc);
 	}
 	if (result.guard_budget_0x4a65a5 > 0) {
@@ -42516,6 +42534,10 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 			result.template_selection_0x4ac552,
 			result.coordinate_owner_grid_0x4a218c);
 	result.generator_object_private_state.route_join_departure_enabled = config.route_join_departure;
+	// Departure (docs/generated-neutral-encounter-variety.md): link guards under 0x4a65a5's minimum.
+	result.generator_object_private_state.link_guard_minimum_departure_enabled =
+			config.link_guards_under_minimum && config.repair_cut_off_towns
+			&& rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr;
 		if (!result.generator_object_private_state.generated_cell_buffer_owned) {
 			result.current_phase_id = "generator_object_private_state";
 			result.status = "blocked";
