@@ -41,7 +41,6 @@ None open.
 
 ## Open work
 
-- `rmg-guard-free-route-seal-20261104` (in progress): Generated maps close walks between zones whose template link is guarded but which a hero can cross without a fight (m936, m944 day-2 capital rushes; HoMM3 shows the same gap): narrowest gap gets one-tile obstacles, a pickup in it moves aside. h3maped_rmg_core.cpp/.hpp, map_generation.cpp. Owner 2026-11-04: best possible fix, not in strict mode. See `docs/rmg-guard-free-route-seal.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -51,6 +50,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-04 `rmg-guard-free-route-seal-20261104` (4e2b23f5f): Generated maps close fight-free walks between zones with a guarded link (rocks in the narrowest gap, pickups moved aside, or a link guard moved into it); not in strict mode. 1,200 batch maps: no fight-free town pair between groups.
 - 2026-11-04 `rmg-guard-minimum-treasure-spacing-20261104` (75418897d): Treasure and mine guards also keep 0x4a65a5 budgets under 2,000, and treasure keeps one tile less from placed objects (0x4aab7e); not in strict mode. On 63 maps guards +40%, treasure piles +33%, nearly all in the 500-3,000 tier.
 - 2026-11-04 `rmg-link-guard-minimum-20261104` (120bc3c54): Link guards keep H3MapEd's 0x4a65a5 budgets under 2,000 (not in strict mode; treasure and mine guards keep the minimum): Weak 3,000 and Ring's Normal 2,000 links get a guard, 191 on 18 Weak test maps. Guards rate budget x 0.10, was 0.06.
 - 2026-11-03 `ai-far-choice-keeps-away-20261103` (004416a48): The far choice keeps away from what lies in a much stronger hostile hero's reach unless hero and garrison hold it, as the near choice does (_keeps_away). Ends m137's courier loop; 160 paired games last 107.5 days vs 108.7, no cap vs 1.

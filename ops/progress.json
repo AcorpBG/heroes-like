@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "rmg-guard-free-route-seal-20261104",
- "currentSliceTitle": "Seal guard-free routes between guarded zones",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-04T17:10:21Z",
+ "currentSliceTitle": "Generated maps close fight-free walks between zones with a guarded link (rocks in the narrowest gap, pickups moved aside, or a link guard moved into it); not in strict mode. 1,200 batch maps: no fight-free town pair between groups.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-04T18:47:31Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "rmg-guard-free-route-seal-20261104",
-   "title": "Seal guard-free routes between guarded zones",
-   "status": "in_progress",
-   "goal": "Generated maps close walks between zones whose template link is guarded but which a hero can cross without a fight (m936, m944 day-2 capital rushes; HoMM3 shows the same gap): narrowest gap gets one-tile obstacles, a pickup in it moves aside. h3maped_rmg_core.cpp/.hpp, map_generation.cpp. Owner 2026-11-04: best possible fix, not in strict mode.",
-   "docs": [
-    "docs/rmg-guard-free-route-seal.md"
-   ],
-   "updatedAt": "2026-11-04"
+   "status": "completed",
+   "completedAt": "2026-11-04",
+   "summary": "Generated maps close fight-free walks between zones with a guarded link (rocks in the narrowest gap, pickups moved aside, or a link guard moved into it); not in strict mode. 1,200 batch maps: no fight-free town pair between groups.",
+   "commit": "4e2b23f5f"
   },
   {
    "id": "rmg-guard-minimum-treasure-spacing-20261104",
