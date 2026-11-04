@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "neutral-town-garrisons-20261104",
- "currentSliceTitle": "Neutral town garrisons",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-04T20:29:47Z",
+ "currentSliceTitle": "A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison (each tier's built dwelling, else the faction's first choice), not its town type's small fixed garrison.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-04T20:39:14Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "neutral-town-garrisons-20261104",
-   "title": "Neutral town garrisons",
-   "status": "in_progress",
-   "goal": "A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison, in place of its town type's small fixed garrison, so a first hero cannot take it for free: per tier the unit of a built dwelling, else the faction's first choice, at the week the town's buildings give. Files: town_development_rules_ai.cpp/.hpp, native_random_map_package_session_bridge.cpp. Owner decision 2026-11-04.",
-   "docs": [],
-   "updatedAt": "2026-11-04"
+   "status": "completed",
+   "completedAt": "2026-11-04",
+   "summary": "A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison (each tier's built dwelling, else the faction's first choice), not its town type's small fixed garrison.",
+   "commit": "661fc8218"
   },
   {
    "id": "ai-start-heroes-at-game-start-20261104",

@@ -43,7 +43,6 @@ None open.
 
 ## Open work
 
-- `neutral-town-garrisons-20261104` (in progress): A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison, in place of its town type's small fixed garrison, so a first hero cannot take it for free: per tier the unit of a built dwelling, else the faction's first choice, at the week the town's buildings give. Files: town_development_rules_ai.cpp/.hpp, native_random_map_package_session_bridge.cpp. Owner decision 2026-11-04.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -53,6 +52,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-04 `neutral-town-garrisons-20261104` (661fc8218): A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison (each tier's built dwelling, else the faction's first choice), not its town type's small fixed garrison.
 - 2026-11-04 `ai-start-heroes-at-game-start-20261104` (8593c6e90): Computer players' start heroes and start armies stand at their capitals before player 1 moves (run_enemy_turn before the first seat; AiSeatRules.place_start_heroes as a human's day 1 opens), not from their own first turns.
 - 2026-11-04 `rmg-guard-free-route-seal-20261104` (4e2b23f5f): Generated maps close fight-free walks between zones with a guarded link (rocks in the narrowest gap, pickups moved aside, or a link guard moved into it); not in strict mode. 1,200 batch maps: no fight-free town pair between groups.
 - 2026-11-04 `rmg-guard-minimum-treasure-spacing-20261104` (75418897d): Treasure and mine guards also keep 0x4a65a5 budgets under 2,000, and treasure keeps one tile less from placed objects (0x4aab7e); not in strict mode. On 63 maps guards +40%, treasure piles +33%, nearly all in the 500-3,000 tier.
