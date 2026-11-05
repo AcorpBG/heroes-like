@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-knockout-town-value-20261105",
- "currentSliceTitle": "AI: the town that knocks out a rival is worth what it ends",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-05T13:54:40Z",
+ "currentSliceTitle": "A rival's last town is worth all the rival still has; the last opponent's last town or hero wins the game (1e12), weighed at 1.0x its defense, the preview deciding. The 1,200 batch's seven capped games now finish.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-05T14:07:37Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-knockout-town-value-20261105",
-   "title": "AI: the town that knocks out a rival is worth what it ends",
-   "status": "in_progress",
-   "goal": "A rival's last town is worth everything the rival still has (its heroes and garrison at TROOP_VALUE_PER_POWER), not ELIMINATION_VALUE's 20,000. If that rival is the last opponent, the town wins the game and outranks every plan: weighed once the estimate says the hero wins (the preview decides), joins count it days away. Files: rules/core/port/ai_hero_rules_sight, _defense, _candidates; AiHeroRules.gd notes. Owner, 2026-11-05: 'make it infinitely worth it if it's last opponent'.",
-   "docs": [],
-   "updatedAt": "2026-11-05"
+   "status": "completed",
+   "completedAt": "2026-11-05",
+   "summary": "A rival's last town is worth all the rival still has; the last opponent's last town or hero wins the game (1e12), weighed at 1.0x its defense, the preview deciding. The 1,200 batch's seven capped games now finish.",
+   "commit": "1e7acbf7a"
   },
   {
    "id": "neutral-garrisons-two-weeks-20261105",
