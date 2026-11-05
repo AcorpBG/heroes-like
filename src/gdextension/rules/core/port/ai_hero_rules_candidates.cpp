@@ -185,11 +185,11 @@ DictRef explore_stop(State &state, DictRef search, int64_t tile_index, double va
 // What a hand-over lets the receiver take that neither hero can take alone, the
 // receiver leading the pooled troops (`_newly_beatable_value`). What the one
 // handing over could beat itself is weighed on its own attack.
-double pooled_beatable_value(State &state, DictRef session, DictRef context, DictRef giver, DictRef receiver, ArrayRef pooled) {
+double pooled_beatable_value(State &state, DictRef session, DictRef context, DictRef giver, DictRef receiver, ArrayRef pooled, bool victory_only = false) {
 	const ArrayRef heroes = state.new_array();
 	state.append(heroes, dict_value(receiver));
 	state.append(heroes, dict_value(giver));
-	return ai_hero_rules::_newly_beatable_value(state, session, context, receiver, receiver, heroes, pooled);
+	return ai_hero_rules::_newly_beatable_value(state, session, context, receiver, receiver, heroes, pooled, victory_only);
 }
 
 // The movement points a hero has left today.
@@ -678,7 +678,7 @@ double _hero_war_value(State &state, DictRef session, DictRef context, DictRef e
 double _ai_hero_kill_value(State &state, DictRef session, DictRef context, DictRef other, double power, double war_value, Atom town_id) {
 	double value = tunable(state, key::AI_HERO_KILL_VALUE) + power * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HERO_KILL_TROOP_SHARE);
 	value = value + _threatened_town_share(state, session, context, other);
-	value = value + _last_stand_share(state, session, key::enemy, player_rules::raid_controller_id(state, other));
+	value = value + _last_stand_share(state, session, context, key::enemy, player_rules::raid_controller_id(state, other));
 	value = value + war_value;
 	value = value + _taken_town_worth(state, session, context, ai::string_or_empty(state, other, key::placement_id), town_id);
 	return value;
@@ -686,7 +686,7 @@ double _ai_hero_kill_value(State &state, DictRef session, DictRef context, DictR
 
 double _player_hero_kill_value(State &state, DictRef session, DictRef context, DictRef hero, double power, double war_value, Atom town_id) {
 	double value = tunable(state, key::PLAYER_HERO_KILL_VALUE) + power * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HERO_KILL_TROOP_SHARE);
-	value = value + _last_stand_share(state, session, key::player, key::player);
+	value = value + _last_stand_share(state, session, context, key::player, key::player);
 	value = value + war_value;
 	value = value + _taken_town_worth(state, session, context, ai::string_or_empty(state, hero, key::id), town_id);
 	return value;
@@ -703,7 +703,9 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	// What the receiver can then take counts for a hand-over today, before its
 	// own day: it acts after the heroes bringing troops and uses them that day.
 	// Days away, what it lacks for a target changes before they arrive, with its
-	// own musters and the target's moves; the troops count for what they are.
+	// own musters and the target's moves; the troops count for what they are,
+	// and only a town that wins the game for the pooled army counts on top: it
+	// stays where it is.
 	// Past a gate the steps count from its exit (`_beyond_gate`), not from here.
 	const bool traveller = gd::to_bool(gd::field_or(state, entry, key::ai_traveller, bool_value(false)));
 	const bool today = !traveller && steps >= 0 && steps <= movement_left(state, entry) && !day_over(state, context, other_id);
@@ -732,9 +734,7 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 		double value = base + gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
 		// And what the main army can then take that neither army can now, as a
 		// garrison taken along is worth (`_town_candidate`).
-		if (today) {
-			value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, swap, str(key::stacks))));
-		}
+		value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, swap, str(key::stacks))), !today);
 		const DictRef result = state.new_dict();
 		state.set(result, str(key::kind), str(key::meet));
 		state.set(result, str(key::id), str(id));
@@ -766,9 +766,7 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 		return state.new_dict();
 	}
 	double value = gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
-	if (today) {
-		value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, pooled, str(key::stacks))));
-	}
+	value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, pooled, str(key::stacks))), !today);
 	if (value <= tunable(state, key::MIN_TROOP_ERRAND_VALUE)) {
 		return state.new_dict();
 	}

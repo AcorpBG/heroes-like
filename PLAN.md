@@ -43,6 +43,7 @@ None open.
 
 ## Open work
 
+- `ai-knockout-town-value-20261105` (in progress): A rival's last town is worth everything the rival still has (its heroes and garrison at TROOP_VALUE_PER_POWER), not ELIMINATION_VALUE's 20,000. If that rival is the last opponent, the town wins the game and outranks every plan: weighed once the estimate says the hero wins (the preview decides), joins count it days away. Files: rules/core/port/ai_hero_rules_sight, _defense, _candidates; AiHeroRules.gd notes. Owner, 2026-11-05: 'make it infinitely worth it if it's last opponent'.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

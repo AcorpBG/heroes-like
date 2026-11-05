@@ -171,6 +171,9 @@ ArrayRef beatable_targets(State &state, DictRef session, DictRef context) {
 		state.set(target, str(key::need), float_value(defense * tunable(state, key::TOWN_ATTACK_RATIO)));
 		state.set(target, str(key::value), float_value(gd::float_field(state, candidate, key::value, 0.0)));
 		state.set(target, str(key::fight_power), float_value(defense));
+		if (gd::bool_field(state, candidate, key::victory, false)) {
+			state.set(target, str(key::victory), gd::bool_value(true));
+		}
 		state.append(targets, dict_value(target));
 	}
 	const DictRef needs = ai_hero_rules::_resource_needs(state, session, context);
@@ -457,7 +460,8 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	if (owner != key::neutral && player_rules::allied(state, dict_value(session), controller, owner == key::enemy ? town_controller : key::player)) {
 		return state.new_dict();
 	}
-	double defense = army_power_of(state, get_or_new_array(state, dict_value(town), key::garrison));
+	const double garrison_power = army_power_of(state, get_or_new_array(state, dict_value(town), key::garrison));
+	double defense = garrison_power;
 	const int64_t defender_index = _town_hero_defender_index(state, session, town, controller);
 	double defender_power = 0.0;
 	if (defender_index >= 0) {
@@ -468,7 +472,6 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	Value player_defender;
 	if (owner == key::player) {
 		const DictRef force = hero_command_rules::town_defense_force(state, session, town);
-		const double garrison_power = army_power_of(state, get_or_new_array(state, dict_value(town), key::garrison));
 		const Value hero_army = get_or_new_dict(state, get_or_new_dict(state, dict_value(force), key::hero), key::army);
 		const Value hero_stacks = get_or_new_array(state, hero_army, key::stacks);
 		const Value hero = get_or_new_dict(state, dict_value(force), key::hero);
@@ -477,7 +480,13 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 		player_defender = hero;
 		defender_power = hero_power_value;
 	}
-	if (defense > 0.0 && power < defense * tunable(state, key::TOWN_ATTACK_RATIO)) {
+	// A rival's last town knocks it out; the last rival's wins the game, and any
+	// fight the estimate says is won is worth making for it (the fight preview
+	// decides, `_fight_looks_good`).
+	const int64_t held = owner != key::neutral ? _towns_held_by(state, session, owner, town_controller) : 0;
+	const bool knockout = owner != key::neutral && held <= 1;
+	const bool victory = knockout && _knockout_wins(state, session, context, owner, town_controller);
+	if (defense > 0.0 && power < defense * (victory ? 1.0 : tunable(state, key::TOWN_ATTACK_RATIO))) {
 		return state.new_dict();
 	}
 	// A town is worth its income and troops, the human's most of all; a faction
@@ -487,10 +496,16 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	if (state.array_size(enemy_turn_rules::_owned_town_entries(state, session, controller)) == 0) {
 		value *= tunable(state, key::HOMELESS_TOWN_MULTIPLIER);
 	}
-	if (owner != key::neutral) {
-		const double elimination = tunable(state, key::ELIMINATION_VALUE);
-		const int64_t held = _towns_held_by(state, session, owner, town_controller);
-		value += elimination / static_cast<double>(compat::engine_max<int64_t>(1, held));
+	// Knocking the owner out is worth everything it still has, and winning the
+	// game more than any other plan (owner, 2026-11-05); a town short of that is
+	// worth a share of ELIMINATION_VALUE.
+	if (knockout) {
+		value += _knockout_value(state, session, owner, town_controller, garrison_power);
+		if (victory) {
+			value += kVictoryValue;
+		}
+	} else if (owner != key::neutral) {
+		value += tunable(state, key::ELIMINATION_VALUE) / static_cast<double>(held);
 	}
 	// A hero standing in the town falls with it, worth what it is in the open.
 	if (owner == key::player) {
@@ -507,6 +522,9 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	state.set(result, str(key::index), int_value(index));
 	state.set(result, str(key::value), float_value(value - loss));
 	state.set(result, str(key::fight_power), float_value(defense));
+	if (victory) {
+		state.set(result, str(key::victory), gd::bool_value(true));
+	}
 	return result;
 }
 
@@ -755,7 +773,19 @@ bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size) {
 	return false;
 }
 
-double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led) {
+double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led, bool victory_only) {
+	if (victory_only) {
+		bool any = false;
+		for (const Value &target : gd::items(state, array_value(beatable_targets(state, session, context)))) {
+			if (gd::bool_field(state, target.ref, key::victory, false)) {
+				any = true;
+				break;
+			}
+		}
+		if (!any) {
+			return 0.0;
+		}
+	}
 	// The hero leads those troops as it leads its own.
 	const Value leader = state.get(entry, str(key::enemy_commander_state), dict_value(state.new_dict()));
 	const double after = army_power(state, array_value(led), leader);
@@ -780,6 +810,9 @@ double _newly_beatable_value(State &state, DictRef session, DictRef context, Dic
 	double best = 0.0;
 	for (const Value &target : gd::items(state, array_value(beatable_targets(state, session, context)))) {
 		if (gd::int_field(state, target.ref, key::level, 0) != level) {
+			continue;
+		}
+		if (victory_only && !gd::bool_field(state, target.ref, key::victory, false)) {
 			continue;
 		}
 		const double need = gd::float_field(state, target.ref, key::need, 0.0);

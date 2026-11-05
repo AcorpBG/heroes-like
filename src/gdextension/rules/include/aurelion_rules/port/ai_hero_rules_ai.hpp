@@ -52,7 +52,18 @@ ArrayRef _decision_field_ids(State &state, DictRef session, DictRef context);
 bool _is_raider(State &state, DictRef session, DictRef context, DictRef entry);
 double _main_shortfall(State &state, DictRef session, DictRef context, DictRef main);
 int64_t _towns_held_by(State &state, DictRef session, Atom owner, Atom controller);
-double _last_stand_share(State &state, DictRef session, Atom owner, Atom controller);
+// Winning the game is worth more than any other plan (owner, 2026-11-05).
+constexpr double kVictoryValue = 1.0e12;
+// Everything the rival that holds `owner`'s towns as `controller` still has:
+// its heroes' armies and `garrison_power` at TROOP_VALUE_PER_POWER. Taking its
+// last town or killing the last hero of a townless rival knocks it out.
+double _knockout_value(State &state, DictRef session, Atom owner, Atom controller, double garrison_power);
+// Whether knocking that rival out wins a generated game for the player of
+// `context`: no other player it is not allied with holds a town or a hero.
+bool _knockout_wins(State &state, DictRef session, DictRef context, Atom owner, Atom controller);
+// What killing a hero of a townless rival adds: ELIMINATION_VALUE shared among
+// its heroes, or the knockout for its last one.
+double _last_stand_share(State &state, DictRef session, DictRef context, Atom owner, Atom controller);
 double _burst_share(State &state, DictRef entry, const Value &commander);
 double _spell_burst(State &state, DictRef commander);
 Atom _main_hero_id(State &state, DictRef session, Atom controller);
@@ -188,7 +199,8 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 // hero in sight, on the level of `place` within twelve days of it, less the
 // expected losses, per day of travel from there. A garrison that turns a small
 // army into one that takes towns is worth what it lets the army take.
-double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led);
+// `victory_only`: only a town that wins the game counts.
+double _newly_beatable_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef place, ArrayRef heroes, ArrayRef led, bool victory_only = false);
 bool _position_seen(State &state, DictRef session, DictRef context, DictRef position);
 ArrayRef _hostile_heroes(State &state, DictRef session, DictRef context);
 // A hostile hero as _hostile_heroes lists it: id, owner, x, y, level, power and

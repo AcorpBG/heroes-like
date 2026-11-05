@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "neutral-garrisons-two-weeks-20261105",
- "currentSliceTitle": "A neutral town on a generated map starts with two weeks of its own tier 1-3 growth as its garrison, in place of one week (the same units: each tier's built dwelling, else the faction's first choice).",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-05T07:16:33Z",
+ "currentSliceId": "ai-knockout-town-value-20261105",
+ "currentSliceTitle": "AI: the town that knocks out a rival is worth what it ends",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-05T13:54:40Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-knockout-town-value-20261105",
+   "title": "AI: the town that knocks out a rival is worth what it ends",
+   "status": "in_progress",
+   "goal": "A rival's last town is worth everything the rival still has (its heroes and garrison at TROOP_VALUE_PER_POWER), not ELIMINATION_VALUE's 20,000. If that rival is the last opponent, the town wins the game and outranks every plan: weighed once the estimate says the hero wins (the preview decides), joins count it days away. Files: rules/core/port/ai_hero_rules_sight, _defense, _candidates; AiHeroRules.gd notes. Owner, 2026-11-05: 'make it infinitely worth it if it's last opponent'.",
+   "docs": [],
+   "updatedAt": "2026-11-05"
+  },
   {
    "id": "neutral-garrisons-two-weeks-20261105",
    "status": "completed",

@@ -8,6 +8,7 @@
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
+#include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
@@ -501,7 +502,71 @@ int64_t _towns_held_by(State &state, DictRef session, Atom owner, Atom controlle
 	return count;
 }
 
-double _last_stand_share(State &state, DictRef session, Atom owner, Atom controller) {
+double _knockout_value(State &state, DictRef session, Atom owner, Atom controller, double garrison_power) {
+	double power = garrison_power;
+	if (owner == key::player) {
+		Value heroes;
+		if (state.lookup(session_view::overworld(state, session), str(key::player_heroes), heroes) && gd::is_array(heroes)) {
+			for (const Value &hero : gd::items(state, heroes)) {
+				if (!gd::is_dict(hero)) {
+					continue;
+				}
+				const Value army = state.get(hero.ref, str(key::army), dict_value(state.new_dict()));
+				const Value stacks = gd::is_dict(army) ? state.get(army.ref, str(key::stacks), array_value(state.new_array())) : array_value(state.new_array());
+				power += army_power(state, stacks, hero);
+			}
+		}
+	} else {
+		for (const Value &entry : gd::items(state, array_value(active_hero_entries(state, session, controller)))) {
+			power += hero_power(state, gd::as_dict(entry));
+		}
+	}
+	return power * tunable_float(state, key::TROOP_VALUE_PER_POWER);
+}
+
+bool _knockout_wins(State &state, DictRef session, DictRef context, Atom owner, Atom controller) {
+	if (!player_elimination_rules::applies(state, session)) {
+		return false;
+	}
+	const DictRef overworld = session_view::overworld(state, session);
+	const Atom self = context_controller(state, context);
+	const Atom rival = owner == key::player ? key::player : controller;
+	bool listed = false;
+	for (const Value &player : gd::field_items(state, overworld, str(key::players))) {
+		if (!gd::is_dict(player)) {
+			continue;
+		}
+		// The human's towns and heroes are the player's (`_towns_held_by`).
+		const bool human = gd::bool_field(state, player.ref, key::human, false);
+		const Atom other = human ? key::player : ai::string_or_empty(state, player.ref, key::player_id);
+		if (other == rival) {
+			listed = true;
+			continue;
+		}
+		if (other == self || player_rules::allied(state, dict_value(session), self, other)) {
+			continue;
+		}
+		// Still in the game: it holds a town or a hero (PlayerEliminationRules).
+		if (_towns_held_by(state, session, human ? key::player : key::enemy, other) > 0) {
+			return false;
+		}
+		int64_t heroes = 0;
+		if (human) {
+			Value player_heroes;
+			if (state.lookup(overworld, str(key::player_heroes), player_heroes)) {
+				heroes = ai::vsize(state, player_heroes);
+			}
+		} else {
+			heroes = active_hero_count(state, session, other);
+		}
+		if (heroes > 0) {
+			return false;
+		}
+	}
+	return listed;
+}
+
+double _last_stand_share(State &state, DictRef session, DictRef context, Atom owner, Atom controller) {
 	if (_towns_held_by(state, session, owner, controller) > 0) {
 		return 0.0;
 	}
@@ -513,6 +578,15 @@ double _last_stand_share(State &state, DictRef session, Atom owner, Atom control
 		}
 	} else {
 		heroes = state.array_size(active_hero_entries(state, session, controller));
+	}
+	// Its last hero knocks it out: worth everything it still has, the game when
+	// it is the last rival.
+	if (heroes == 1) {
+		double value = _knockout_value(state, session, owner, controller, 0.0);
+		if (_knockout_wins(state, session, context, owner, controller)) {
+			value += kVictoryValue;
+		}
+		return value;
 	}
 	return tunable_float(state, key::ELIMINATION_VALUE) / static_cast<double>(compat::engine_max<int64_t>(1, heroes));
 }

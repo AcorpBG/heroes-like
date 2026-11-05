@@ -100,11 +100,19 @@ static var THREAT_RATIO: float
 ## towns with 24 defenders stood untaken for 40 to 70 days.
 static var TOWN_BASE_VALUE: float
 static var TOWN_HORIZON_WEEKS: float
-## Knocking a rival out of the game is worth this much, shared among what it
-## still holds: its towns, or its heroes once it has no town left. A player's
-## last town is worth this much more; when it holds two, each is worth half.
-## On a medium map a beaten player kept its last town 40 days against an army
-## twenty times its own while the winner cleared guards and mines.
+## Bringing a rival closer to its end is worth this much, shared among what it
+## still holds: its towns, or its heroes once it has no town left. On a medium
+## map a beaten player kept its last town 40 days against an army twenty times
+## its own while the winner cleared guards and mines.
+## What knocks it out, its last town or the last hero of a townless rival, is
+## worth everything it still has instead: its heroes' armies and the town's
+## garrison at TROOP_VALUE_PER_POWER (`_knockout_value`). When that rival is the
+## last one in a generated game, the knockout wins and is worth more than any
+## other plan (owner, 2026-11-05): such a town is weighed once the estimate says
+## the hero beats it, the fight preview deciding, and a join counts it days
+## away. In the 2026-11-05 batch five games froze to day 320, every main army
+## holding its own town, the strongest attacker 0.91-1.33 times the last town's
+## garrison and hero against the 1.4 the other towns need.
 static var ELIMINATION_VALUE: float
 ## Lesser heroes that keep an army of their own (`_field_hero_ids`): one per
 ## town held beyond the first, given out at the start of the player's day

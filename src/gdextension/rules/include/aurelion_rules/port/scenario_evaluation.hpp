@@ -22,6 +22,8 @@ state::Value objectives_for_session(state::State &state, gd::DictRef session);
 } // namespace scenario_rules
 
 namespace player_elimination_rules {
+// Whether players drop out of the session (a generated map's).
+bool applies(state::State &state, gd::DictRef session);
 gd::ArrayRef apply_daily(state::State &state, gd::DictRef session);
 } // namespace player_elimination_rules
 
