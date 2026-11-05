@@ -219,6 +219,9 @@ bool has_dwelling_tier_among(State &state, ArrayRef active, int64_t tier) {
 
 namespace {
 
+// How many weeks of growth a neutral town's garrison holds.
+constexpr int64_t kNeutralGarrisonWeeks = 2;
+
 // What a town's buildings add to its dwellings: a flat amount per tier and a
 // percent on every dwelling.
 struct GrowthBonuses {
@@ -303,7 +306,7 @@ ArrayRef neutral_garrison(State &state, DictRef town) {
 		if (unit_id == key::empty) {
 			continue;
 		}
-		const int64_t count = _dwelling_week(state, bonuses, unit_id);
+		const int64_t count = gd::mul(_dwelling_week(state, bonuses, unit_id), kNeutralGarrisonWeeks);
 		if (count <= 0) {
 			continue;
 		}

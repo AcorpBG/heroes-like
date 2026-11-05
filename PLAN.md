@@ -35,7 +35,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-04: Every generated-map guard (links, treasure, mines) keeps budgets under H3MapEd's 2,000 minimum, and treasure keeps one tile less from placed objects, both deliberate departures; guard budgets become battle power at 0.10 (`docs/generated-neutral-encounter-variety.md`).
 - 2026-11-04: Generated maps close any fight-free walk between zones whose template link is guarded (HoMM3 shows the same gap on m936), a deliberate departure from H3MapEd; eight-way walking stays (`docs/rmg-guard-free-route-seal.md`).
 - 2026-11-04: Every computer player's start hero and start army stand at its capital before player 1 moves, not from its own first turn.
-- 2026-11-04: A neutral town starts with a garrison of one week of its own tier 1-3 growth, so it is not free to take on day 1.
+- 2026-11-05: A neutral town starts with a garrison of two weeks of its own tier 1-3 growth, so it is not free to take on day 1.
 
 ## Questions for the owner
 
@@ -43,6 +43,7 @@ None open.
 
 ## Open work
 
+- `neutral-garrisons-two-weeks-20261105` (in progress): A neutral town on a generated map starts with two weeks of its own tier 1-3 growth as its garrison, in place of one week; the units stay the same (each tier's built dwelling, else the faction's first choice). Files: town_development_rules_ai.cpp/.hpp. Owner decision 2026-11-05.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

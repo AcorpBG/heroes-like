@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "neutral-town-garrisons-20261104",
- "currentSliceTitle": "A neutral town on a generated map starts with one week of its own tier 1-3 growth as its garrison (each tier's built dwelling, else the faction's first choice), not its town type's small fixed garrison.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-04T20:39:14Z",
+ "currentSliceId": "neutral-garrisons-two-weeks-20261105",
+ "currentSliceTitle": "Neutral garrisons of two weeks",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-05T07:09:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "neutral-garrisons-two-weeks-20261105",
+   "title": "Neutral garrisons of two weeks",
+   "status": "in_progress",
+   "goal": "A neutral town on a generated map starts with two weeks of its own tier 1-3 growth as its garrison, in place of one week; the units stay the same (each tier's built dwelling, else the faction's first choice). Files: town_development_rules_ai.cpp/.hpp. Owner decision 2026-11-05.",
+   "docs": [],
+   "updatedAt": "2026-11-05"
+  },
   {
    "id": "neutral-town-garrisons-20261104",
    "status": "completed",
