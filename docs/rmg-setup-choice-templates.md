@@ -36,3 +36,41 @@ Package metadata names the template (`source_template_authority` `setup_choice`,
 ## Adding another
 
 Write the template and its profile into the catalog with `"selection": "setup_choice"`, every start a `human_start` with an `owner_slot`, and the fields above. Check it connects at every player count it offers (`_random_map_template_active_graph_connected` drops counts where it does not) and generate a map at each fitting size. It needs no native change.
+
+## AI games on the five, 2026-11-06
+
+The owner asked for 100 AI games on each. They ran on d6e8e3fbd with `--map-template`: weak, normal and strong guards, one and two levels, land, balanced line-ups. They are compared with the 1,200-game batch on c7dad2e4e, which had the same guard and level mix on maps H3MapEd's roll chose. All 500 games were decided; none reached the day cap and none failed (2 of the 1,200 were capped). Day, first elimination and winner's gold are medians; towns, captures and fights are means per game.
+
+| Setup | Map | Games | Towns | Day median (q1-q3) | First out | Captures (no defender) | Guard / hero / town fights | Winner's gold |
+|---|---|---|---|---|---|---|---|---|
+| 3P M | Rolled | 180 | 6.4 | 55 (44-67) | 37 | 20.8 (7.0) | 102 / 21 / 13 | 12,451 |
+| 3P M | Trefoil Fields | 50 | 9.0 | 74 (58-88) | 51 | 35.1 (10.8) | 153 / 28 / 23 | 37,297 |
+| 3P L | Rolled | 120 | 9.7 | 80 (64-101) | 53 | 37.9 (11.4) | 259 / 30 / 25 | 40,400 |
+| 3P L | Cartwheel | 25 | 5.0 | 87 (68-94) | 61 | 26.6 (9.6) | 261 / 22 / 16 | 38,803 |
+| 3P L | Inner Keeps | 25 | 6.0 | 72 (67-88) | 52 | 21.1 (8.2) | 242 / 17 / 12 | 19,859 |
+| 3P L | Pilgrim Roads | 25 | 6.0 | 103 (82-124) | 79 | 27.1 (7.1) | 395 / 27 / 19 | 148,695 |
+| 3P L | Trefoil Fields | 50 | 9.0 | 94 (80-108) | 70 | 45.1 (13.0) | 312 / 33 / 31 | 67,278 |
+| 4P L | Rolled | 180 | 10.2 | 84 (69-108) | 46 | 45.0 (14.1) | 301 / 41 / 29 | 61,159 |
+| 4P L | Cartwheel | 25 | 6.0 | 88 (74-99) | 46 | 37.0 (12.8) | 268 / 32 / 23 | 53,009 |
+| 4P L | Inner Keeps | 25 | 8.0 | 73 (57-95) | 36 | 25.2 (8.4) | 236 / 25 / 16 | 23,577 |
+| 4P L | Pilgrim Roads | 25 | 8.0 | 109 (98-132) | 68 | 38.0 (10.4) | 439 / 40 / 27 | 248,520 |
+| 5P XL | Rolled | 150 | 14.5 | 116 (96-134) | 50 | 99.9 (33.7) | 575 / 76 / 63 | 114,460 |
+| 5P XL | Cartwheel | 25 | 7.0 | 106 (95-119) | 51 | 60.4 (21.7) | 498 / 49 / 37 | 140,204 |
+| 5P XL | Five Gates | 100 | 10.3 | 93 (85-110) | 39 | 63.5 (21.5) | 378 / 58 / 40 | 103,600 |
+| 5P XL | Inner Keeps | 25 | 10.0 | 106 (83-131) | 35 | 43.7 (13.6) | 526 / 39 / 29 | 188,758 |
+| 5P XL | Pilgrim Roads | 25 | 10.0 | 130 (118-165) | 73 | 63.6 (17.4) | 762 / 63 / 44 | 400,889 |
+| 6P XL | Rolled | 150 | 14.6 | 123 (98-139) | 41 | 114.2 (39.7) | 580 / 90 / 72 | 151,661 |
+| 6P XL | Cartwheel | 25 | 8.0 | 108 (92-118) | 42 | 69.3 (24.6) | 497 / 62 / 42 | 179,069 |
+| 6P XL | Inner Keeps | 25 | 12.0 | 98 (90-108) | 36 | 53.8 (18.3) | 450 / 51 / 34 | 161,736 |
+| 6P XL | Pilgrim Roads | 25 | 12.0 | 139 (120-163) | 62 | 100.1 (32.7) | 744 / 87 / 65 | 445,738 |
+
+- **Fewer towns.** Cartwheel, Inner Keeps and Pilgrim Roads carry fewer towns than the rolled maps: 5-8 on large against about 10, and 7-12 on extra large against 14.5. Their rims, waystations and far reaches hold no towns, so there are fewer captures. Trefoil Fields has more on medium (9 against 6.4).
+- **Pilgrim Roads plays slowest.** Compared with rolled maps:
+  - the first elimination comes 15-26 days later;
+  - games run 15-29 days longer;
+  - there are about a third more guard fights;
+  - the winner's unspent gold is three to four times as high.
+- **Inner Keeps and Five Gates play fastest.** Games are 8-25 days shorter and the first elimination comes up to 15 days earlier.
+- **Cartwheel** runs about as long as rolled maps on large and 10-15 days shorter on extra large, with the fewest towns.
+- **Trefoil Fields** runs longer than rolled maps (74 against 55 days on medium, 94 against 80 on large), with more captures and town fights.
+- **Factions.** Place points stay within ±2 sd in most batches. On Pilgrim Roads, Brasshollow and Mireclaw are above the band and Embercourt is below it; on Inner Keeps, Embercourt is above. That is one bank of 100 maps per template, not a balance finding.

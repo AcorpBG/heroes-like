@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `rmg-setup-choice-templates-20261106` (in progress): Add Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates to content/random_map_template_catalog.json as setup choices outside H3MapEd's template roll. The recovered generator builds a chosen one from its own zone and link rows (map_generation.cpp, h3maped_rmg_template_catalog.cpp); the setup screen, match_sim_cli and the AI batch tool can pick one. Owner asked 2026-11-06; then 100 AI games on each, compared with the 1,200-game batch. See `docs/rmg-setup-choice-templates.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-06 `rmg-setup-choice-templates-20261106` (d6e8e3fbd): Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's roll (setup picker, match runner, batch tool); 100 AI games on each, all decided, compared with the 1,200-game batch in the doc.
 - 2026-11-06 `ai-threat-route-reach-20261106` (bf79d1881): Threat checks and the keep-away zone walk a rival hero's real route (threat_steps) instead of straight lines; capped m005 and m214 end on days 80 and 174; the walks take 1.9% of AI turn time on m214.
 - 2026-11-06 `ai-hunt-human-raiders-20261106` (ca3808e82): A human hero's kill counts the computer player's towns it threatens, as a computer hero's does, and passage routes hunt human raiders too. AI-only seeds identical; in h-s2 the AI attacks the human's main hero on day 16.
 - 2026-11-06 `ai-hunt-threats-through-passages-20261106` (bb042fd7d): Main and field armies route through gates to rival computer heroes that threaten their towns, at the odds the raider still stands there (still_since in sightings). m470 and m185, capped at day 320, now end on days 110 and 112.
