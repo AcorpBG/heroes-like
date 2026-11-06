@@ -43,7 +43,6 @@ None open.
 
 ## Open work
 
-- `ai-threat-route-reach-20261106` (in progress): Town threats, the danger zone, troops left behind and the threatened-town share of a kill count a rival hero's reach by a walk over the ground it gets to, through gates, portals and monoliths, instead of straight lines between crossings; a hero that can sail keeps the straight lines. Files: ai_hero_rules_defense.cpp, docs/ai-plays-by-player-rules.md. Owner chose the real-route reach after the m005 trace (2026-11-06). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -53,6 +52,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-06 `ai-threat-route-reach-20261106` (bf79d1881): Threat checks and the keep-away zone walk a rival hero's real route (threat_steps) instead of straight lines; capped m005 and m214 end on days 80 and 174; the walks take 1.9% of AI turn time on m214.
 - 2026-11-06 `ai-hunt-human-raiders-20261106` (ca3808e82): A human hero's kill counts the computer player's towns it threatens, as a computer hero's does, and passage routes hunt human raiders too. AI-only seeds identical; in h-s2 the AI attacks the human's main hero on day 16.
 - 2026-11-06 `ai-hunt-threats-through-passages-20261106` (bb042fd7d): Main and field armies route through gates to rival computer heroes that threaten their towns, at the odds the raider still stands there (still_since in sightings). m470 and m185, capped at day 320, now end on days 110 and 112.
 - 2026-11-05 `ai-knockout-town-value-20261105` (1e7acbf7a): A rival's last town is worth all the rival still has; the last opponent's last town or hero wins the game (1e12), weighed at 1.0x its defense, the preview deciding. The 1,200 batch's seven capped games now finish.
