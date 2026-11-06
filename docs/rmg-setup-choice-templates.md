@@ -64,7 +64,7 @@ The owner asked for 100 AI games on each. They ran on d6e8e3fbd with `--map-temp
 | 6P XL | Inner Keeps | 25 | 12.0 | 98 (90-108) | 36 | 53.8 (18.3) | 450 / 51 / 34 | 161,736 |
 | 6P XL | Pilgrim Roads | 25 | 12.0 | 139 (120-163) | 62 | 100.1 (32.7) | 744 / 87 / 65 | 445,738 |
 
-- **Fewer towns.** Cartwheel, Inner Keeps and Pilgrim Roads carry fewer towns than the rolled maps: 5-8 on large against about 10, and 7-12 on extra large against 14.5. Their rims, waystations and far reaches hold no towns, so there are fewer captures. Trefoil Fields has more on medium (9 against 6.4).
+- **Fewer towns.** Cartwheel, Inner Keeps and Pilgrim Roads carry fewer towns than the rolled maps: 5-8 on large against about 10, and 7-12 on extra large against 14.5. Cartwheel's towns are the starts and two in the hub. Inner Keeps and Pilgrim Roads add one per player, in its keep or its waystation. So there are fewer captures. Trefoil Fields has more on medium (9 against 6.4).
 - **Pilgrim Roads plays slowest.** Compared with rolled maps:
   - the first elimination comes 15-26 days later;
   - games run 15-29 days longer;
