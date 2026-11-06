@@ -1013,3 +1013,5 @@ AURELION_KEY(instance_id, "instance_id")
 AURELION_KEY(d_s_s_s, "%d|%s|%s|%s")
 // The day since which a hostile hero has stood where it was last seen (_note_sightings, _route_raiders).
 AURELION_KEY(still_since, "still_since")
+// Per hostile hero the threat checks walk, the steps to each tile of each level (threat_steps).
+AURELION_KEY(threat_steps, "threat_steps")

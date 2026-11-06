@@ -43,6 +43,7 @@ None open.
 
 ## Open work
 
+- `ai-threat-route-reach-20261106` (in progress): Town threats, the danger zone, troops left behind and the threatened-town share of a kill count a rival hero's reach by a walk over the ground it gets to, through gates, portals and monoliths, instead of straight lines between crossings; a hero that can sail keeps the straight lines. Files: ai_hero_rules_defense.cpp, docs/ai-plays-by-player-rules.md. Owner chose the real-route reach after the m005 trace (2026-11-06). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

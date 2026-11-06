@@ -5,6 +5,8 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
+#include "aurelion_rules/port/native_transit_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
@@ -14,6 +16,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <string>
 #include <unordered_map>
@@ -33,6 +36,7 @@ using gd::dict_value;
 using gd::DictRef;
 using gd::float_value;
 using gd::int_value;
+using gd::PackedRef;
 using gd::str;
 using overworld_rules::Vector2i;
 using state::ContentTable;
@@ -222,14 +226,190 @@ const std::vector<Crossing> &level_crossings(State &state, DictRef session, Dict
 	return crossings;
 }
 
+void copy_ints(const State &state, PackedRef packed, std::vector<int32_t> &out) {
+	const int32_t *items = gd::packed_ints(state, packed);
+	const int64_t size = gd::packed_size(state, packed);
+	out.assign(items, items + size);
+}
+
+void copy_bytes(const State &state, PackedRef packed, std::vector<uint8_t> &out) {
+	const uint8_t *items = gd::packed_bytes(state, packed);
+	const int64_t size = gd::packed_size(state, packed);
+	out.assign(items, items + size);
+}
+
+// The steps from (x, y) on `level` to each tile the walker gets to, on every
+// level, walked as a route: eight ways over the ground it gets to (the guards it
+// beats fought on the way, `_level_stretches`) and through gates, portals and
+// monoliths at one step for each crossing, onto the ground beyond it. -1 where
+// it does not get within the days the threat checks look ahead. `homes` is the
+// ground it stands on. One walk for each hostile hero where it stands, kept for
+// the turn as the danger zones are. Until 2026-11-06 the threat checks drew
+// straight lines between up to two crossings, over the walls and water a walk
+// goes round: in m005 of that day's batch (ai-match-2718070196) Veilmourn's main
+// hero counted as a day from 11 of Thornwake's 13 towns, 32 to 57 tiles away,
+// that its own route search put 70 to 121 tiles away.
+ArrayRef threat_steps(State &state, DictRef session, DictRef context, const Walker &walker, int64_t x, int64_t y, int64_t level, const std::vector<int64_t> &homes) {
+	const int64_t days = compat::engine_max<int64_t>(tunable_int(state, key::DEFENSE_HORIZON_DAYS), 1);
+	const int64_t margin = compat::engine_max<int64_t>(tunable_int(state, key::THREAT_REACH_MARGIN), 1);
+	const int64_t horizon = compat::engine_max<int64_t>(walker.limit, gd::add(gd::mul(walker.reach, days), margin));
+	// Each guard beaten during the turn opens ground (`_level_stretches`).
+	Value resolved;
+	const bool listed = state.lookup(session_view::overworld(state, session), str(key::resolved_encounters), resolved) && gd::is_array(resolved);
+	std::string text = gd::text(state, str(walker.id));
+	for (const int64_t part : {x, y, level, horizon, compat::float_to_int(walker.power), listed ? state.array_size(resolved.ref) : int64_t(0)}) {
+		text += ' ';
+		text += std::to_string(part);
+	}
+	text += ' ';
+	text += gd::text(state, str(ai::string_or_empty(state, walker.entry, key::walker_side)));
+	const Atom steps_key = state.intern(text);
+	Value found;
+	const DictRef cache = state.lookup(context, str(key::threat_steps), found) ? gd::as_dict(found) : state.new_dict();
+	if (state.lookup(cache, str(steps_key), found)) {
+		return gd::as_array(found);
+	}
+	const Vector2i size = context_map_size(state, context);
+	const int64_t width = size.x;
+	const int64_t height = size.y;
+	const int64_t count = width > 0 && height > 0 ? gd::mul(width, height) : 0;
+	const int64_t levels = count > 0 ? compat::engine_max<int64_t>(level_rules::level_count(state, session), 0) : 0;
+	const size_t level_slots = static_cast<size_t>(levels);
+	// Each level's ground as the walker gets to it: a tile's patch, a patch's
+	// stretch, the rock for corner steps and the crossings by the tile they
+	// start on.
+	std::vector<std::vector<int32_t>> patches(level_slots);
+	std::vector<std::vector<int32_t>> stretches(level_slots);
+	std::vector<std::vector<uint8_t>> blocked(level_slots);
+	std::vector<std::unordered_map<int64_t, std::vector<Crossing>>> crossings(level_slots);
+	for (int64_t on = 0; on < levels; ++on) {
+		const size_t slot = static_cast<size_t>(on);
+		copy_ints(state, gd::as_ints(gd::index(state, ai_hero_rules::_level_regions(state, session, context, on), str(key::patches))), patches[slot]);
+		copy_ints(state, ai_hero_rules::_level_stretches(state, session, context, on, walker.power, kAnyLoss, walker.entry), stretches[slot]);
+		copy_bytes(state, gd::as_bytes(gd::index(state, ai_hero_rules::_level_surface(state, session, context, on), str(key::blocked))), blocked[slot]);
+		for (const Crossing &crossing : level_crossings(state, session, context, walker, on, width)) {
+			crossings[slot][crossing.tile].push_back(crossing);
+		}
+	}
+	const bool native_corners = native_transit_rules::uses_native_adjacency(state, dict_value(session));
+	// The stretch of a tile, by the name `_level_stretches` gives it (the lowest
+	// tile it starts on), -1 on a tile no patch takes.
+	const auto ground_of = [&](int64_t on, int64_t tile) -> int64_t {
+		const std::vector<int32_t> &level_patches = patches[static_cast<size_t>(on)];
+		if (tile < 0 || tile >= static_cast<int64_t>(level_patches.size())) {
+			return -1;
+		}
+		const int32_t patch = level_patches[static_cast<size_t>(tile)];
+		const std::vector<int32_t> &level_stretches = stretches[static_cast<size_t>(on)];
+		if (patch < 0 || static_cast<size_t>(patch) >= level_stretches.size()) {
+			return -1;
+		}
+		const int64_t name = level_stretches[static_cast<size_t>(patch)];
+		return name >= 0 && name < count ? name : -1;
+	};
+	const auto rock = [&](int64_t on, int64_t tile) {
+		const std::vector<uint8_t> &level_blocked = blocked[static_cast<size_t>(on)];
+		return tile >= 0 && static_cast<size_t>(tile) < level_blocked.size() && level_blocked[static_cast<size_t>(tile)] != 0;
+	};
+	static constexpr int64_t kDx[8] = {1, -1, 0, 0, 1, 1, -1, -1};
+	static constexpr int64_t kDy[8] = {0, 0, 1, -1, 1, -1, 1, -1};
+	std::vector<std::vector<int32_t>> steps(level_slots, std::vector<int32_t>(static_cast<size_t>(count), -1));
+	// The stretches it walks on each level: its own, and each one a crossing
+	// brings it onto.
+	std::vector<std::vector<uint8_t>> walks(level_slots, std::vector<uint8_t>(static_cast<size_t>(count), 0));
+	std::vector<int64_t> queue;
+	if (level >= 0 && level < levels && x >= 0 && y >= 0 && x < width && y < height) {
+		const int64_t start = gd::add(gd::mul(y, width), x);
+		steps[static_cast<size_t>(level)][static_cast<size_t>(start)] = 0;
+		queue.push_back(gd::add(gd::mul(level, count), start));
+		for (const int64_t home : homes) {
+			if (home >= 0 && home < count) {
+				walks[static_cast<size_t>(level)][static_cast<size_t>(home)] = 1;
+			}
+		}
+	}
+	for (size_t head = 0; head < queue.size(); ++head) {
+		const int64_t on = queue[head] / count;
+		const int64_t tile = queue[head] % count;
+		std::vector<int32_t> &level_steps = steps[static_cast<size_t>(on)];
+		const int32_t walked = level_steps[static_cast<size_t>(tile)];
+		if (walked >= horizon) {
+			continue;
+		}
+		const auto starting = crossings[static_cast<size_t>(on)].find(tile);
+		if (starting != crossings[static_cast<size_t>(on)].end()) {
+			for (const Crossing &crossing : starting->second) {
+				if (crossing.exit_level < 0 || crossing.exit_level >= levels || crossing.exit_x < 0 || crossing.exit_y < 0 || crossing.exit_x >= width || crossing.exit_y >= height) {
+					continue;
+				}
+				const int64_t exit = crossing.exit_y * width + crossing.exit_x;
+				std::vector<int32_t> &exit_steps = steps[static_cast<size_t>(crossing.exit_level)];
+				if (exit_steps[static_cast<size_t>(exit)] >= 0) {
+					continue;
+				}
+				exit_steps[static_cast<size_t>(exit)] = walked + 1;
+				const int64_t beyond = ground_of(crossing.exit_level, exit);
+				if (beyond >= 0) {
+					walks[static_cast<size_t>(crossing.exit_level)][static_cast<size_t>(beyond)] = 1;
+				}
+				queue.push_back(crossing.exit_level * count + exit);
+			}
+		}
+		const int64_t cx = tile % width;
+		const int64_t cy = tile / width;
+		for (int direction = 0; direction < 8; ++direction) {
+			const int64_t nx = cx + kDx[direction];
+			const int64_t ny = cy + kDy[direction];
+			if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+				continue;
+			}
+			const int64_t next = ny * width + nx;
+			if (level_steps[static_cast<size_t>(next)] >= 0) {
+				continue;
+			}
+			const int64_t there = ground_of(on, next);
+			if (there < 0 || walks[static_cast<size_t>(on)][static_cast<size_t>(there)] == 0) {
+				continue;
+			}
+			if (nx != cx && ny != cy && !native_corners && rock(on, cy * width + nx) && rock(on, ny * width + cx)) {
+				continue;
+			}
+			level_steps[static_cast<size_t>(next)] = walked + 1;
+			queue.push_back(on * count + next);
+		}
+	}
+	const ArrayRef result = state.new_array();
+	for (int64_t on = 0; on < levels; ++on) {
+		const PackedRef level_steps = gd::new_ints(state);
+		state.packed_write(level_steps).ints = std::move(steps[static_cast<size_t>(on)]);
+		state.append(result, gd::ints_value(level_steps));
+	}
+	state.set(cache, str(steps_key), array_value(result));
+	state.set(context, str(key::threat_steps), dict_value(cache));
+	return result;
+}
+
+// The walk's steps to `tile` on `level`, -1 where it does not get.
+int64_t step_at(State &state, ArrayRef steps, int64_t level, int64_t tile) {
+	if (level < 0 || level >= state.array_size(steps)) {
+		return -1;
+	}
+	const PackedRef level_steps = gd::as_ints(state.at(steps, level));
+	if (tile < 0 || tile >= gd::packed_size(state, level_steps)) {
+		return -1;
+	}
+	return gd::packed_int(state, level_steps, tile);
+}
+
 // Tiles from (x, y) on `level` to a town's doorway as a hostile hero walks there
-// (`Walker`): a straight line over the ground it gets to, or the shortest way
-// through one or two gates, portals or monoliths, one tile for each crossing and
-// each leg a straight line over the ground it gets to there. -1 when no such way
-// lies within the walker's limit. A hostile hero threatens towns on either
-// level, but behind a guard it cannot beat a doorway a few tiles off is out of
-// its reach. A doorway on its level beyond the limit, with no crossing within
-// the limit of the walker to shorten the way, is counted in a straight line.
+// (`Walker`): on foot the route it walks (`threat_steps`), at sea or once it can
+// sail a straight line over the ground it gets to, or the shortest way through
+// one or two gates, portals or monoliths, one tile for each crossing and each leg
+// a straight line over the ground it gets to there. -1 when no such way lies
+// within the walker's limit. A hostile hero threatens towns on either level, but
+// behind a guard it cannot beat a doorway a few tiles off is out of its reach. A
+// doorway on its level beyond the limit, with no crossing within the limit of
+// the walker to shorten the way, is counted in a straight line.
 int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x, int64_t y, int64_t level, DictRef entrance, const Walker &walker) {
 	const int64_t door_x = gd::int_field(state, entrance, key::x, 0);
 	const int64_t door_y = gd::int_field(state, entrance, key::y, 0);
@@ -253,6 +433,10 @@ int64_t steps_to_door(State &state, DictRef session, DictRef context, int64_t x,
 	// anywhere on its level; past a crossing it walks.
 	const std::vector<int64_t> homes = ai_hero_rules::_home_stretches(state, session, context, level, gd::add(gd::mul(y, width), x), walker.id, walker.power, kAnyLoss, walker.entry);
 	const bool afloat = walker.two_days ? takes_ship(state, session, context, walker, x, y, level, homes) : homes.empty();
+	if (!afloat) {
+		const int64_t walked = step_at(state, threat_steps(state, session, context, walker, x, y, level, homes), door_level, gd::add(gd::mul(door_y, width), door_x));
+		return walked >= 0 && walked <= walker.limit ? walked : -1;
+	}
 	const auto stretch = [&](int64_t on_level, int64_t tile) {
 		return ai_hero_rules::_tile_stretch(state, session, context, on_level, tile, walker.power, kAnyLoss, walker.entry);
 	};
@@ -754,6 +938,23 @@ PackedRef _danger_zone(State &state, DictRef session, DictRef context, const Val
 		const Ground start = ground(threat_level);
 		const std::vector<int64_t> homes = ai_hero_rules::_home_stretches(state, session, context, threat_level, gd::add(gd::mul(threat_y, width), threat_x), id, power, kAnyLoss, walker.entry);
 		const bool afloat = homes.empty();
+		// On foot: the tiles its walk gets to (`threat_steps`).
+		if (!afloat) {
+			const ArrayRef steps = threat_steps(state, session, context, walker, threat_x, threat_y, threat_level, homes);
+			if (level >= 0 && level < state.array_size(steps)) {
+				const PackedRef level_steps = gd::as_ints(state.at(steps, level));
+				const int64_t tiles = compat::engine_min<int64_t>(gd::packed_size(state, level_steps), gd::packed_size(state, zone));
+				for (int64_t tile = 0; tile < tiles; ++tile) {
+					const int64_t walked = gd::packed_int(state, level_steps, tile);
+					if (walked >= 0 && walked <= limit) {
+						gd::packed_set(state, zone, tile, 1);
+					}
+				}
+			}
+			state.set(cache, str(zone_key), gd::bytes_value(zone));
+			state.set(context, str(key::danger_zones), dict_value(cache));
+			return zone;
+		}
 		const auto from_home = [&](int64_t tile) {
 			const int64_t there = stretch(start, tile);
 			return afloat || there < 0 || std::find(homes.begin(), homes.end(), there) != homes.end();
