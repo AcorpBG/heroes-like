@@ -1082,19 +1082,15 @@ double _town_worth(State &state, DictRef session, DictRef context, DictRef town)
 	return worth;
 }
 
-// What killing a hostile hero saves: a share of every town of ours it could take
-// within the defence horizon, on either level. A game is won by taking a
-// player's towns and killing its heroes, and a raider loose among our towns
-// costs all of them, not only the best one.
-double _threatened_town_share(State &state, DictRef session, DictRef context, DictRef other) {
+namespace {
+
+// The share for a hostile hero of `side` at (x, y, level), `power` strong and
+// going `movement_max` tiles a day.
+double threatened_town_share_at(State &state, DictRef session, DictRef context, Atom id, Atom side, int64_t other_x, int64_t other_y, int64_t other_level, double power, int64_t movement_max) {
 	double total = 0.0;
-	const double power = hero_power(state, other);
-	const int64_t reach = compat::engine_max<int64_t>(tunable_int(state, key::THREAT_MIN_REACH), _movement_max(state, other));
+	const int64_t reach = compat::engine_max<int64_t>(tunable_int(state, key::THREAT_MIN_REACH), movement_max);
 	const int64_t horizon = gd::add(gd::mul(reach, tunable_int(state, key::DEFENSE_HORIZON_DAYS)), tunable_int(state, key::THREAT_REACH_MARGIN));
-	const int64_t other_x = gd::int_field(state, other, key::x, 0);
-	const int64_t other_y = gd::int_field(state, other, key::y, 0);
-	const int64_t other_level = level_rules::level_of(state, dict_value(other));
-	const Walker walker = threat_walker(state, ai::string_or_empty(state, other, key::placement_id), player_rules::raid_controller_id(state, other), power, reach, horizon, true);
+	const Walker walker = threat_walker(state, id, side, power, reach, horizon, true);
 	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
 		if (!gd::is_dict(town) || ai::string_or_empty(state, town.ref, key::owner) != key::enemy) {
 			continue;
@@ -1112,6 +1108,26 @@ double _threatened_town_share(State &state, DictRef session, DictRef context, Di
 		}
 	}
 	return total;
+}
+
+} // namespace
+
+// What killing a hostile hero saves: a share of every town of ours it could take
+// within the defence horizon, on either level. A game is won by taking a
+// player's towns and killing its heroes, and a raider loose among our towns
+// costs all of them, not only the best one.
+double _threatened_town_share(State &state, DictRef session, DictRef context, DictRef other) {
+	const double power = hero_power(state, other);
+	return threatened_town_share_at(state, session, context, ai::string_or_empty(state, other, key::placement_id), player_rules::raid_controller_id(state, other), gd::int_field(state, other, key::x, 0), gd::int_field(state, other, key::y, 0), level_rules::level_of(state, dict_value(other)), power, _movement_max(state, other));
+}
+
+// The same for the human's hero, `power` strong, as the threat checks walk it
+// (_hostile_heroes).
+double _player_hero_threatened_town_share(State &state, DictRef session, DictRef context, DictRef hero, double power) {
+	Value found;
+	const DictRef position = state.lookup(hero, str(key::position), found) && gd::is_dict(found) ? found.ref : state.new_dict();
+	const DictRef movement = state.lookup(hero, str(key::movement), found) && gd::is_dict(found) ? found.ref : state.new_dict();
+	return threatened_town_share_at(state, session, context, ai::string_or_empty(state, hero, key::id), key::player, gd::int_field(state, position, key::x, 0), gd::int_field(state, position, key::y, 0), level_rules::level_of(state, dict_value(position)), power, gd::int_field(state, movement, key::max, 10));
 }
 
 Atom _decision_main_id(State &state, DictRef session, DictRef context) {

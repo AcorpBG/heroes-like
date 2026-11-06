@@ -686,6 +686,8 @@ double _ai_hero_kill_value(State &state, DictRef session, DictRef context, DictR
 
 double _player_hero_kill_value(State &state, DictRef session, DictRef context, DictRef hero, double power, double war_value, Atom town_id) {
 	double value = tunable(state, key::PLAYER_HERO_KILL_VALUE) + power * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HERO_KILL_TROOP_SHARE);
+	// The towns it could take count as a computer raider's do (owner, 2026-11-06).
+	value = value + _player_hero_threatened_town_share(state, session, context, hero, power);
 	value = value + _last_stand_share(state, session, context, key::player, key::player);
 	value = value + war_value;
 	value = value + _taken_town_worth(state, session, context, ai::string_or_empty(state, hero, key::id), town_id);

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-hunt-threats-through-passages-20261106",
- "currentSliceTitle": "Main and field armies route through gates to rival computer heroes that threaten their towns, at the odds the raider still stands there (still_since in sightings). m470 and m185, capped at day 320, now end on days 110 and 112.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-06T07:49:20Z",
+ "currentSliceId": "ai-hunt-human-raiders-20261106",
+ "currentSliceTitle": "Computer players weigh the human's raiders like computer ones",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-06T08:09:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-hunt-human-raiders-20261106",
+   "title": "Computer players weigh the human's raiders like computer ones",
+   "status": "in_progress",
+   "goal": "A human hero's kill value (_player_hero_kill_value, ai_hero_rules_candidates.cpp) also counts the computer player's towns it threatens (_threatened_town_share), as a computer hero's does, and gate routes (_route_raiders, ai_hero_rules_routes.cpp) lead main and field armies to human heroes too. Owner approved, 2026-11-06, after the computer-hero hunt (bb042fd7d).",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-06"
+  },
   {
    "id": "ai-hunt-threats-through-passages-20261106",
    "status": "completed",

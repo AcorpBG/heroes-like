@@ -60,8 +60,9 @@ static var MIN_SEARCH_RADIUS: int
 ## can walk to (`_gate_candidate`); each costs a search of the other level.
 static var MAX_GATES_WEIGHED: int
 ## Main and field armies also route through any number of gates to a town they
-## can take, to a rival computer hero in sight that threatens their towns and
-## that they beat, at the odds it still stands there when they arrive
+## can take, to a hostile hero in sight, the human's or a rival computer
+## player's, that threatens their towns and that they beat, at the odds it
+## still stands there when they arrive
 ## (`_route_raiders`), or to ground not yet seen while a rival's towns are
 ## unseen (`_gate_routes`). The way between two gates of one stretch of ground counts
 ## its straight distance times ROUTE_DETOUR; a stretch counts as unexplored

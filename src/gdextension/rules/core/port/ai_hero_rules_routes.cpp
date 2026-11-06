@@ -38,6 +38,7 @@ namespace level_rules = overworld_level_rules;
 namespace player_rules = player_identity_rules;
 
 constexpr int64_t kStopEncounter = 4; // STOP_ENCOUNTER
+constexpr int64_t kStopHero = 5; // STOP_HERO
 constexpr int64_t kStopAiHero = 6; // STOP_AI_HERO
 // Days after crossing a gate a hero takes another only toward its errand.
 constexpr int64_t kGateCommitDays = 3;
@@ -852,12 +853,48 @@ ArrayRef _route_raiders(State &state, DictRef session, DictRef context, DictRef 
 	const int64_t day = ai::session_int(state, session, key::day);
 	const DictRef needs = _resource_needs(state, session, context);
 	const Value memory = ai::vget(state, gd::index(state, context, str(key::state)), key::ai_sightings, Value());
-	// A rival computer hero the threat checks walk to the player's towns through
-	// the gates (`steps_to_door`), as the hero would fight it nearby
-	// (`_candidate`): in sight, beaten, worth its kill. With no way back to it,
-	// one raider that stood still pinned every army whose town it could reach
+	// A raider the threat checks walk to the player's towns through the gates
+	// (`steps_to_door`), as the hero would fight it nearby (`_candidate`): in
+	// sight, beaten, worth its kill. With no way back to it, one raider that
+	// stood still pinned every army whose town it could reach
 	// (ai-match-141700231, m470 of the 2026-11-05 batch: nine Thornwake heroes
 	// held their towns from day 177 to 320 against one Brasshollow hero).
+	const auto add = [&](int64_t stop_kind, Atom kind, int64_t index, Atom other_id, int64_t x, int64_t y, int64_t level, const auto &threat_share) {
+		if (x < 0 || y < 0 || x >= size.x || y >= size.y) {
+			return;
+		}
+		// Within a much stronger hostile hero's reach it is left alone there
+		// (`_best_candidate`), so no way leads to it either.
+		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level)) {
+			return;
+		}
+		const DictRef ref = state.new_dict();
+		state.set(ref, str(key::kind), int_value(stop_kind));
+		state.set(ref, str(key::index), int_value(index));
+		const DictRef candidate = _candidate(state, session, context, entry, ref, power, needs, search);
+		if (ai::string_or_empty(state, candidate, key::kind) != kind) {
+			return;
+		}
+		const double value = gd::float_field(state, candidate, key::value, 0.0);
+		if (value <= 0.0 || threat_share() <= 0.0) {
+			return;
+		}
+		// Since when the player has seen it stand there (_note_sightings): seen
+		// anywhere else before, it came today.
+		int64_t still_since = day;
+		Value seen;
+		if (gd::is_dict(memory) && state.lookup(memory.ref, str(other_id), seen) && gd::is_dict(seen) && gd::int_field(state, seen.ref, key::x, -1) == x && gd::int_field(state, seen.ref, key::y, -1) == y && gd::int_field(state, seen.ref, key::level, -1) == level) {
+			still_since = gd::int_field(state, seen.ref, key::still_since, day);
+		}
+		const DictRef target = state.new_dict();
+		state.set(target, str(key::kind), str(kind));
+		state.set(target, str(key::id), str(other_id));
+		state.set(target, str(key::value), float_value(value));
+		state.set(target, str(key::still_since), int_value(still_since));
+		state.set(target, str(key::level), int_value(level));
+		state.set(target, str(key::tile), int_value(gd::add(gd::mul(y, size.x), x)));
+		state.append(raiders, dict_value(target));
+	};
 	for (const Value &other : gd::items(state, array_value(active_hero_entries(state, session, key::empty)))) {
 		const DictRef raider = gd::as_dict(other);
 		const Atom other_controller = player_rules::raid_controller_id(state, raider);
@@ -869,43 +906,31 @@ ArrayRef _route_raiders(State &state, DictRef session, DictRef context, DictRef 
 		if (index < 0 || avoided_until(state, avoid, other_id) >= day) {
 			continue;
 		}
-		const int64_t x = gd::int_field(state, raider, key::x, -1);
-		const int64_t y = gd::int_field(state, raider, key::y, -1);
-		const int64_t level = level_rules::level_of(state, other);
-		if (x < 0 || y < 0 || x >= size.x || y >= size.y) {
+		add(kStopAiHero, key::ai_hero, index, other_id, gd::int_field(state, raider, key::x, -1), gd::int_field(state, raider, key::y, -1), level_rules::level_of(state, other), [&] {
+			return _threatened_town_share(state, session, context, raider);
+		});
+	}
+	// The human's heroes the same way (owner, 2026-11-06).
+	if (player_rules::allied(state, dict_value(session), controller, key::player)) {
+		return raiders;
+	}
+	int64_t index = -1;
+	for (const Value &hero : gd::field_items(state, session_view::overworld(state, session), str(key::player_heroes))) {
+		++index;
+		Value position;
+		if (!gd::is_dict(hero) || !state.lookup(hero.ref, str(key::position), position) || !gd::is_dict(position) || gd::is_empty(state, position.ref)) {
 			continue;
 		}
-		// Within a much stronger hostile hero's reach it is left alone there
-		// (`_best_candidate`), so no way leads to it either.
-		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level)) {
+		const Atom hero_id = ai::string_or_empty(state, hero.ref, key::id);
+		if (hero_id == key::empty || avoided_until(state, avoid, hero_id) >= day) {
 			continue;
 		}
-		const DictRef ref = state.new_dict();
-		state.set(ref, str(key::kind), int_value(kStopAiHero));
-		state.set(ref, str(key::index), int_value(index));
-		const DictRef candidate = _candidate(state, session, context, entry, ref, power, needs, search);
-		if (ai::string_or_empty(state, candidate, key::kind) != key::ai_hero) {
-			continue;
-		}
-		const double value = gd::float_field(state, candidate, key::value, 0.0);
-		if (value <= 0.0 || _threatened_town_share(state, session, context, raider) <= 0.0) {
-			continue;
-		}
-		// Since when the player has seen it stand there (_note_sightings): seen
-		// anywhere else before, it came today.
-		int64_t still_since = day;
-		Value seen;
-		if (gd::is_dict(memory) && state.lookup(memory.ref, str(other_id), seen) && gd::is_dict(seen) && gd::int_field(state, seen.ref, key::x, -1) == x && gd::int_field(state, seen.ref, key::y, -1) == y && gd::int_field(state, seen.ref, key::level, -1) == level) {
-			still_since = gd::int_field(state, seen.ref, key::still_since, day);
-		}
-		const DictRef target = state.new_dict();
-		state.set(target, str(key::kind), str(key::ai_hero));
-		state.set(target, str(key::id), str(other_id));
-		state.set(target, str(key::value), float_value(value));
-		state.set(target, str(key::still_since), int_value(still_since));
-		state.set(target, str(key::level), int_value(level));
-		state.set(target, str(key::tile), int_value(gd::add(gd::mul(y, size.x), x)));
-		state.append(raiders, dict_value(target));
+		add(kStopHero, key::hero, index, hero_id, gd::int_field(state, position.ref, key::x, -1), gd::int_field(state, position.ref, key::y, -1), level_rules::level_of(state, position), [&] {
+			Value army;
+			Value stacks;
+			const bool listed = state.lookup(hero.ref, str(key::army), army) && gd::is_dict(army) && state.lookup(army.ref, str(key::stacks), stacks) && gd::is_array(stacks);
+			return _player_hero_threatened_town_share(state, session, context, hero.ref, army_power(state, listed ? stacks : array_value(state.new_array()), hero));
+		});
 	}
 	return raiders;
 }
