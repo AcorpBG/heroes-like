@@ -36,6 +36,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-04: Generated maps close any fight-free walk between zones whose template link is guarded (HoMM3 shows the same gap on m936), a deliberate departure from H3MapEd; eight-way walking stays (`docs/rmg-guard-free-route-seal.md`).
 - 2026-11-04: Every computer player's start hero and start army stand at its capital before player 1 moves, not from its own first turn.
 - 2026-11-05: A neutral town starts with a garrison of two weeks of its own tier 1-3 growth, so it is not free to take on day 1.
+- 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 
 ## Questions for the owner
 
@@ -43,6 +44,7 @@ None open.
 
 ## Open work
 
+- `rmg-setup-choice-templates-20261106` (in progress): Add Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates to content/random_map_template_catalog.json as setup choices outside H3MapEd's template roll. The recovered generator builds a chosen one from its own zone and link rows (map_generation.cpp, h3maped_rmg_template_catalog.cpp); the setup screen, match_sim_cli and the AI batch tool can pick one. Owner asked 2026-11-06; then 100 AI games on each, compared with the 1,200-game batch. See `docs/rmg-setup-choice-templates.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

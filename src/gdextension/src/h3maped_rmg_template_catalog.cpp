@@ -2008,4 +2008,93 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	return result;
 }
 
+// Departure from H3MapEd (docs/rmg-setup-choice-templates.md): the template the
+// setup chose, in place of the one 0x4ac552 rolls from its catalog. The roll's
+// one draw stays, so every later phase starts from the RNG state it would; the
+// rows go through the same owner masks, player slots and runtime seed build. A
+// chosen template whose filtered links split its zones is refused, not re-picked.
+TemplateSelectionRuntimeResult4ac552 chosen_template_selection_and_runtime_seed_inputs(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask, const ChosenTemplateRecords &chosen) {
+	TemplateSelectionRuntimeResult4ac552 result;
+	result.size_score = size_score;
+	result.human_count = std::max<int32_t>(0, human_count);
+	result.player_count = std::max<int32_t>(result.human_count, player_count);
+	result.rng_state_before_template_selection = seed;
+
+	int32_t human_owner_count = 0;
+	int32_t computer_owner_count = 0;
+	uint8_t human_mask = 0U;
+	uint8_t player_mask = 0U;
+	for (size_t index = 0; index < chosen.zones.size(); ++index) {
+		const TemplateZoneRecord4a218c &zone = chosen.zones[index];
+		if (!player_filter_allows_4a218c(
+					zone.player_filter_min_human,
+					zone.player_filter_max_human,
+					zone.player_filter_min_total,
+					zone.player_filter_max_total,
+					result.human_count,
+					result.player_count)) {
+			continue;
+		}
+		const int32_t role = index < chosen.zone_roles.size() ? chosen.zone_roles[index] : int32_t(TEMPLATE_ZONE_ROLE_OTHER);
+		if (role == TEMPLATE_ZONE_ROLE_HUMAN_START) {
+			human_owner_count += 1;
+		} else if (role == TEMPLATE_ZONE_ROLE_COMPUTER_START) {
+			computer_owner_count += 1;
+		}
+		if (zone.source_owner_index < 0 || zone.source_owner_index >= 8) {
+			continue;
+		}
+		const uint8_t bit = uint8_t(1U) << zone.source_owner_index;
+		if (role == TEMPLATE_ZONE_ROLE_HUMAN_START) {
+			human_mask |= bit;
+			player_mask |= bit;
+		} else if (role == TEMPLATE_ZONE_ROLE_COMPUTER_START) {
+			player_mask |= bit;
+		}
+	}
+	const bool in_range = size_score >= chosen.min_size
+			&& size_score <= chosen.max_size
+			&& result.human_count >= chosen.min_human
+			&& result.human_count <= chosen.max_human
+			&& result.player_count >= chosen.min_total
+			&& result.player_count <= chosen.max_total;
+	if (!in_range || human_owner_count < result.human_count || human_owner_count + computer_owner_count < result.player_count) {
+		result.blocked = true;
+		return result;
+	}
+
+	TemplateCandidateContainerRecord4ac552 candidate;
+	candidate.vector_index = 0;
+	candidate.source_catalog_index = chosen.source_catalog_index;
+	candidate.template_name = chosen.name;
+	candidate.zone_count = int32_t(chosen.zones.size());
+	candidate.link_count = int32_t(chosen.links.size());
+	result.accepted_candidate_containers_10d4_10d8.push_back(candidate);
+	result.accepted_template_count = 1;
+
+	H3MapedRng rng;
+	rng.state = seed;
+	result.rng_value = rng.next();
+	result.rng_state_after_template_selection = rng.state;
+	result.selected_vector_index = 0;
+	result.selected_source_catalog_index = chosen.source_catalog_index;
+	result.selected_template_name = chosen.name;
+	result.source_zone_record_count = int32_t(chosen.zones.size());
+	result.source_link_record_count = int32_t(chosen.links.size());
+	result.human_capable_source_owner_mask = human_mask;
+	result.player_capable_source_owner_mask = player_mask;
+	result.player_assignment = player_slot_assignment_4ac62a_4ac6ec(
+			result.human_count,
+			result.player_count,
+			human_mask,
+			player_mask,
+			selected_color_mask);
+	result.runtime_seed = runtime_seed_inputs_from_template_records_4a218c_4a1f3b(chosen.zones, chosen.links, result.player_assignment, result.human_count, result.player_count);
+	result.blocked = !result.player_assignment.complete
+			|| result.runtime_seed.blocked
+			|| result.runtime_seed.runtime_zone_seeds.empty()
+			|| runtime_link_graph_split(result.runtime_seed);
+	return result;
+}
+
 } // namespace aurelion::h3maped_rmg_core

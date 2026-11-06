@@ -38,6 +38,9 @@ const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 }
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT := "size_default"
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
+# A template chosen in setup instead of H3MapEd's roll
+# (docs/rmg-setup-choice-templates.md).
+const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SETUP_CHOICE := "setup_choice"
 
 static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
@@ -290,6 +293,9 @@ static func random_map_player_count_options_for_template(template_id: String) ->
 
 static func random_map_profile_options_for_template(template_id: String) -> Array:
 	return HumanEngine.native_writing(&"ScenarioSelectRules.random_map_profile_options_for_template", [template_id])
+
+static func random_map_setup_choice_templates(size_class_id: String, level_count: int, water_mode: String) -> Array:
+	return HumanEngine.native_writing(&"ScenarioSelectRules.random_map_setup_choice_templates", [size_class_id, level_count, water_mode])
 
 static func random_map_size_class_default(size_class_id: String) -> Dictionary:
 	return HumanEngine.native_writing(&"ScenarioSelectRules.random_map_size_class_default", [size_class_id])

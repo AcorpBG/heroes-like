@@ -503,8 +503,12 @@ DictRef _maps_folder_package_launch_validation(State &state, DictRef metadata, D
 					state.get(metadata, gd::str(key::profile_id), state.get(map_ref, gd::str(key::profile_id), gd::str(key::empty)))));
 	const Atom source_template_id = gd::strip_edges(state,
 			string_of(state, metadata, key::source_template_id, state.get(map_ref, gd::str(key::source_template_id), gd::str(key::empty))));
-	const bool h3maped_source_authoritative = gd::begins_with(state, source_template_id, key::h3maped_template_)
-			&& gd::strip_edges(state, text_of(state, metadata, key::source_template_authority)) == key::h3maped_exe_rng;
+	const Atom source_template_authority = gd::strip_edges(state, text_of(state, metadata, key::source_template_authority));
+	const bool h3maped_source_authoritative = (gd::begins_with(state, source_template_id, key::h3maped_template_)
+													  && source_template_authority == key::h3maped_exe_rng)
+			// docs/rmg-setup-choice-templates.md: a template the setup chose.
+			|| (source_template_authority == key::setup_choice
+					&& scenario_select_rules::_random_map_is_setup_choice_template(state, source_template_id));
 	const Atom full_generation_status = gd::strip_edges(state,
 			string_of(state, metadata, key::full_generation_status, state.get(normalized, gd::str(key::full_generation_status), gd::str(key::empty))));
 	const Atom validation_status = gd::strip_edges(state, string_of(state, metadata, key::validation_status, gd::str(key::pass)));

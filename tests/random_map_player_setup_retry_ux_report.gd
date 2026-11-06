@@ -306,8 +306,10 @@ func _assert_extra_large_size_surface(snapshot: Dictionary) -> bool:
 		return false
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
 	var provenance: Dictionary = controls.get("internal_template_provenance", {}) if controls.get("internal_template_provenance", {}) is Dictionary else {}
-	if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch" or bool(provenance.get("template_picker_visible", true)) or bool(provenance.get("profile_picker_visible", true)):
-		_fail("Extra Large internal provenance did not remain native-auto and hidden: %s" % JSON.stringify(provenance))
+	# Extra Large offers setup-choice layouts (docs/rmg-setup-choice-templates.md);
+	# Random layout, the default, stays H3MapEd's roll.
+	if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch" or bool(provenance.get("profile_picker_visible", true)):
+		_fail("Extra Large internal provenance did not remain native-auto: %s" % JSON.stringify(provenance))
 		return false
 	return true
 

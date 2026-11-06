@@ -1432,24 +1432,30 @@ private:
 			std::reverse(seat_factions.begin(), seat_factions.end());
 		}
 
-		// _map_key and _map_setup without a corpus.
+		// _map_key and _map_setup without a corpus. HEROES_AI_MATCH_TEMPLATE names a
+		// setup-choice template (docs/rmg-setup-choice-templates.md).
+		const std::string template_id = strip(settings.get("HEROES_AI_MATCH_TEMPLATE"));
 		std::string seat_text;
 		for (size_t index = 0; index < seat_factions.size(); ++index) {
 			seat_text += (index == 0 ? "" : ",") + seat_factions[index];
 		}
-		const std::string map_key = map_seed + "|" + seat_text + "|" + compat::itos(player_count) + "|" + size_class + "|" + guards + "|" + water + "|" +
+		std::string map_key = map_seed + "|" + seat_text + "|" + compat::itos(player_count) + "|" + size_class + "|" + guards + "|" + water + "|" +
 				compat::itos(levels) + "|" + kGeneratedMapDir;
+		if (!template_id.empty()) {
+			map_key += "|" + template_id;
+		}
 		const bool kept = settings.listed && map_key == kept_map_key_;
 		const Value seat_list = strings_value(seat_factions);
 		const Value config_args[12] = {
 			state_.string(map_seed),
-			state_.string(""),
+			state_.string(template_id),
 			state_.string(""),
 			gd::int_value(player_count),
 			state_.string(water),
 			gd::bool_value(levels == 2),
 			state_.string(size_class),
-			state_.string("size_default"),
+			// ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT or _SETUP_CHOICE.
+			state_.string(template_id.empty() ? "size_default" : "setup_choice"),
 			state_.string(seat_factions.front()),
 			state_.string(""),
 			state_.string(guards),

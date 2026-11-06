@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-threat-route-reach-20261106",
- "currentSliceTitle": "Threat checks and the keep-away zone walk a rival hero's real route (threat_steps) instead of straight lines; capped m005 and m214 end on days 80 and 174; the walks take 1.9% of AI turn time on m214.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-06T12:07:56Z",
+ "currentSliceId": "rmg-setup-choice-templates-20261106",
+ "currentSliceTitle": "Five new map templates as setup choices",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-06T16:34:31Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "rmg-setup-choice-templates-20261106",
+   "title": "Five new map templates as setup choices",
+   "status": "in_progress",
+   "goal": "Add Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates to content/random_map_template_catalog.json as setup choices outside H3MapEd's template roll. The recovered generator builds a chosen one from its own zone and link rows (map_generation.cpp, h3maped_rmg_template_catalog.cpp); the setup screen, match_sim_cli and the AI batch tool can pick one. Owner asked 2026-11-06; then 100 AI games on each, compared with the 1,200-game batch.",
+   "docs": [
+    "docs/rmg-setup-choice-templates.md"
+   ],
+   "updatedAt": "2026-11-06"
+  },
   {
    "id": "ai-threat-route-reach-20261106",
    "status": "completed",

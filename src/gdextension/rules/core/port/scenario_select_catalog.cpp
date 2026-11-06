@@ -429,6 +429,7 @@ DictRef random_map_player_setup_options(State &state) {
 	state.set(auto_selection, str(key::catalog_profile_count), int_value(state.array_size(_random_map_profile_options(state))));
 	state.set(auto_selection, str(key::launch_filter), str(key::public_generated_skirmish_startup_is_validator));
 	state.set(result, str(key::player_facing_auto_selection), dict_value(auto_selection));
+	state.set(result, str(key::setup_choice_templates), array_value(random_map_setup_choice_templates(state, key::empty, 0, key::empty)));
 	return result;
 }
 
@@ -973,14 +974,21 @@ DictRef _random_map_public_h3maped_launch_config(State &state, DictRef input_con
 	if (seed_source != key::auto_on_launch) {
 		source_seed = gd::stringify(state, state.get(input_config, str(key::seed_input), read_field(state, seed_identity, key::input_seed, str(source_seed))));
 	}
-	// A catalog-auto setup, or any setup whose caller chose a strength, carries
-	// the monster strength across the rebuild.
+	// A catalog-auto or setup-choice setup, or any setup whose caller chose a
+	// strength, carries the monster strength across the rebuild.
 	const Value template_selection = dict_field_or_nil(state, input_config, key::template_selection);
+	const Atom selection_mode = gd::stringify(state, read_field(state, template_selection, key::mode, str(key::empty)));
 	Atom monster_strength = key::empty;
-	if (gd::stringify(state, read_field(state, template_selection, key::mode, str(key::empty))) == key::native_catalog_auto
+	if (selection_mode == key::native_catalog_auto || selection_mode == key::setup_choice
 			|| gd::to_bool(state.get(input_config, str(key::monster_strength_selected), bool_value(false)))) {
 		monster_strength = string_of(state, input_config, key::monster_strength, key::empty);
 	}
+	// docs/rmg-setup-choice-templates.md: a template the setup chose stays chosen;
+	// every other setup is rebuilt for H3MapEd's roll.
+	const Value chosen_profile = dict_field_or_nil(state, input_config, key::profile);
+	const bool setup_choice = selection_mode == key::setup_choice;
+	const Atom chosen_template_id = setup_choice ? gd::stringify(state, read_field(state, chosen_profile, key::template_id, str(key::empty))) : key::empty;
+	const Atom chosen_profile_id = setup_choice ? gd::stringify(state, read_field(state, chosen_profile, key::id, str(key::empty))) : key::empty;
 	Atom player_faction_id = gd::stringify(state, read_field(state, player_setup, key::faction_id, str(key::empty)));
 	ArrayRef seat_faction_ids;
 	{
@@ -1005,13 +1013,13 @@ DictRef _random_map_public_h3maped_launch_config(State &state, DictRef input_con
 	const DictRef config = build_random_map_player_config(
 			state,
 			source_seed,
-			key::empty,
-			key::empty,
+			chosen_template_id,
+			chosen_profile_id,
 			player_count,
 			water_mode,
 			level_count > 1,
 			size_class_id,
-			key::native_catalog_auto,
+			setup_choice ? key::setup_choice : key::native_catalog_auto,
 			player_faction_id,
 			player_hero_id,
 			monster_strength,
@@ -1019,6 +1027,60 @@ DictRef _random_map_public_h3maped_launch_config(State &state, DictRef input_con
 	state.set(config, str(key::seed_source), str(seed_source));
 	state.set(config, str(key::seed_input), str(gd::stringify(state, state.get(input_config, str(key::seed_input), read_field(state, seed_identity, key::input_seed, str(source_seed))))));
 	return config;
+}
+
+bool _random_map_is_setup_choice_template(State &state, Atom template_id) {
+	const DictRef template_ = _random_map_catalog_template(state, template_id);
+	return !gd::is_empty(state, template_) && string_of(state, template_, key::selection, key::empty) == key::setup_choice;
+}
+
+ArrayRef random_map_setup_choice_templates(State &state, Atom size_class_id, int64_t level_count, Atom water_mode) {
+	// H3MapEd's size score: width x height x levels / 0x510, halved on islands.
+	int64_t score = -1;
+	if (size_class_id != key::empty) {
+		const int64_t size = gd::int_field(state, _random_map_size_option(state, size_class_id), key::source_width, 36);
+		score = size * size * compat::engine_max<int64_t>(1, level_count) / 0x510;
+		if (water_mode == key::islands) {
+			score = compat::engine_max<int64_t>(1, score / 2);
+		}
+	}
+	const DictRef catalog = _random_map_catalog(state);
+	const DictRef profiles_by_template = state.new_dict();
+	for (const Value &profile : gd::field_items(state, catalog, str(key::profiles))) {
+		if (gd::is_dict(profile)) {
+			state.set(profiles_by_template, str(string_of(state, profile.ref, key::template_id, key::empty)), profile);
+		}
+	}
+	const ArrayRef result = state.new_array();
+	for (const Value &template_value : gd::field_items(state, catalog, str(key::templates))) {
+		if (!gd::is_dict(template_value) || string_of(state, template_value.ref, key::selection, key::empty) != key::setup_choice) {
+			continue;
+		}
+		const DictRef template_ = template_value.ref;
+		const Atom template_id = string_of(state, template_, key::id, key::empty);
+		const Value size_score = dict_field_or_nil(state, template_, key::size_score);
+		const int64_t min_score = gd::to_int(state, read_field(state, size_score, key::min_, int_value(0)));
+		const int64_t max_score = gd::to_int(state, read_field(state, size_score, key::max, int_value(0)));
+		if (score >= 0 && (score < min_score || score > max_score)) {
+			continue;
+		}
+		const ArrayRef player_counts = catalog_template_player_counts(state, template_, 3);
+		const Value profile = dict_field_or_nil(state, profiles_by_template, template_id);
+		const DictRef option = state.new_dict();
+		state.set(option, str(key::id), str(template_id));
+		state.set(option, str(key::label), str(string_of(state, template_, key::label, template_id)));
+		state.set(option, str(key::profile_id), str(gd::stringify(state, read_field(state, profile, key::id, str(key::empty)))));
+		state.set(option, str(key::family), str(string_of(state, template_, key::family, key::empty)));
+		state.set(option, str(key::summary), str(string_of(state, template_, key::summary, key::empty)));
+		state.set(option, str(key::player_counts), array_value(player_counts));
+		state.set(option, str(key::player_count_min), int_value(player_count_bound(state, player_counts, option, false)));
+		state.set(option, str(key::player_count_max), int_value(player_count_bound(state, player_counts, option, true)));
+		state.set(option, str(key::size_score), field_or_new_dict(state, template_, key::size_score));
+		state.set(option, str(key::water_modes), array_value(_water_modes_from_catalog_template(state, template_)));
+		state.set(option, str(key::supports_underground), bool_value(_template_supports_underground(state, template_)));
+		state.append(result, dict_value(option));
+	}
+	return result;
 }
 
 } // namespace aurelion::rules::port::scenario_select_rules

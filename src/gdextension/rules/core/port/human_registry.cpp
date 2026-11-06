@@ -271,6 +271,8 @@ const Function kFunctions[] = {
 			return gd::array_value(ssr::random_map_profile_options_for_template(s, S(a, 0)))),
 	NATIVE(ScenarioSelectRules, _random_map_public_h3maped_launch_config, 1, true,
 			return gd::dict_value(ssr::_random_map_public_h3maped_launch_config(s, D(a, 0)))),
+	NATIVE(ScenarioSelectRules, random_map_setup_choice_templates, 3, true,
+			return gd::array_value(ssr::random_map_setup_choice_templates(s, S(a, 0), I(a, 1), S(a, 2)))),
 	// 7.11, generating the map and starting the game.
 	NATIVE(ScenarioSelectRules, generated_map_package_directory_policy, 0, true,
 			return gd::dict_value(ssr::generated_map_package_directory_policy(s))),

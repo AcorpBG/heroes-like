@@ -42503,8 +42503,16 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 			config.height,
 			config.level_count,
 			water_mode_code(config.water_mode));
-	result.template_selection_0x4ac552 =
-			template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+	result.template_selection_0x4ac552 = config.chosen_template != nullptr
+			// Departure (docs/rmg-setup-choice-templates.md): the template the setup chose.
+			? chosen_template_selection_and_runtime_seed_inputs(
+					result.setup_mode_0x49ecf2.rng_state_before_template_selection,
+					score,
+					config.human_count,
+					config.player_count,
+					0xffU,
+					*config.chosen_template)
+			: template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
 					result.setup_mode_0x49ecf2.rng_state_before_template_selection,
 					score,
 					config.human_count,

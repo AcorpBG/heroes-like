@@ -92,6 +92,11 @@ ArrayRef _sorted_string_keys(State &state, DictRef values);
 DictRef _random_map_size_option(State &state, Atom size_class_id);
 DictRef _random_map_profile_option(State &state, Atom profile_id);
 DictRef _random_map_public_h3maped_launch_config(State &state, DictRef input_config);
+// docs/rmg-setup-choice-templates.md: the catalog templates a setup may choose
+// instead of H3MapEd's roll, all of them or those that fit a size, its levels
+// and water (size_class_id empty: all).
+ArrayRef random_map_setup_choice_templates(State &state, Atom size_class_id, int64_t level_count, Atom water_mode);
+bool _random_map_is_setup_choice_template(State &state, Atom template_id);
 
 // Generating the map, writing its packages and starting or restarting the
 // session (scenario_select_setup.cpp).

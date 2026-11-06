@@ -352,8 +352,35 @@ def plan_digest(plan: dict) -> str:
     seats = Counter(short(f) for m in matches for f in m["factions"])
     first = Counter(short(m["factions"][0]) for m in matches)
     setups = Counter(f"{m['players']}P {short_size(m['size'])} {m['guards']} {m['water']} L{m['levels']}" for m in matches)
-    return (f"games per faction {dict(sorted(seats.items()))}; first seat {dict(sorted(first.items()))}; "
+    template = f"template {plan['map_template']}; " if plan.get("map_template") else ""
+    return (f"{template}games per faction {dict(sorted(seats.items()))}; first seat {dict(sorted(first.items()))}; "
             f"setups {dict(sorted(setups.items()))}")
+
+
+def check_map_template(template_id: str, groups: list[tuple[int, str, int]], levels: list[int], water: list[str]) -> None:
+    """Exit unless template_id is a setup-choice template (docs/rmg-setup-choice-templates.md) that
+    fits every group's size, players, levels and water: H3MapEd's size score, width x height x
+    levels / 0x510, halved on islands."""
+    catalog = json.loads((ROOT / "content" / "random_map_template_catalog.json").read_text(encoding="utf-8"))
+    choices = {t["id"]: t for t in catalog["templates"] if t.get("selection") == "setup_choice"}
+    template = choices.get(template_id)
+    if template is None:
+        sys.exit(f"--map-template: {template_id} is no setup-choice template; known: {', '.join(sorted(choices))}")
+    score_range = template["size_score"]
+    total = template["players"]["total"]
+    misfits = []
+    for players, size, _ in groups:
+        if not total["min"] <= players <= total["max"]:
+            misfits.append(f"{players} players (it takes {total['min']}-{total['max']})")
+        for level_count in levels:
+            for mode in water:
+                score = SIDE[size] ** 2 * level_count // 0x510
+                if mode == "islands":
+                    score = max(1, score // 2)
+                if not score_range["min"] <= score <= score_range["max"]:
+                    misfits.append(f"{short_size(size)} L{level_count} {mode} (size score {score}, it takes {score_range['min']}-{score_range['max']})")
+    if misfits:
+        sys.exit(f"--map-template {template_id} does not fit: {'; '.join(dict.fromkeys(misfits))}")
 
 
 # ---------------------------------------------------------------- processes
@@ -474,6 +501,8 @@ def match_settings(out: Path, m: dict, days: int) -> dict[str, str]:
         settings["HEROES_AI_MATCH_WEIGHTS"] = ",".join(m["weights"])
     if m.get("roll_seed"):
         settings["HEROES_AI_MATCH_ROLL_SEED"] = m["roll_seed"]
+    if m.get("template"):
+        settings["HEROES_AI_MATCH_TEMPLATE"] = m["template"]
     return settings
 
 
@@ -1181,6 +1210,7 @@ def write_summary(out: Path, plan: dict) -> None:
         "",
         f"Commit {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, plan seed {plan['plan_seed']}, "
         f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}"
+        f"{', template ' + plan['map_template'] if plan.get('map_template') else ''}"
         f"{', days in bin/match_sim_cli' if plan.get('build') == 'runner' else ''}: "
         f"{groups}.",
         f"{len(rows)} of {len(plan['matches'])} matches played: {len(decided)} decided, {len(capped)} at the day cap, "
@@ -1344,6 +1374,7 @@ def main() -> int:
     parser.add_argument("--fixed-rolls", action="store_true", help="fix hero offers, hire levels and starting armies per map/faction across rotations (implied by --all-arrangements)")
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
     parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
+    parser.add_argument("--map-template", metavar="ID", help="a setup-choice map template for every match in place of H3MapEd's roll (docs/rmg-setup-choice-templates.md)")
     parser.add_argument("--slots", type=positive_int, help="worker processes at once (default 16, or 8 with --desktop)")
     parser.add_argument("--desktop", action="store_true", help="use 8 worker processes for desktop use unless --slots is given")
     parser.add_argument("--per-process", type=positive_int, help="maximum matches per worker batch (default: native 32, Godot 4; whole seed groups stay together)")
@@ -1397,8 +1428,14 @@ def main() -> int:
         for players, size, _ in groups:
             if players not in FITTING_PLAYERS[size]:
                 print(f"WARNING: {short_size(size)} maps are played with {' or '.join(map(str, FITTING_PLAYERS[size]))} players, not {players}")
+        if args.map_template:
+            check_map_template(args.map_template, groups, args.levels, args.water)
         out.mkdir(parents=True, exist_ok=True)
         plan = make_plan(args, groups)
+        if args.map_template:
+            plan["map_template"] = args.map_template
+            for m in plan["matches"]:
+                m["template"] = args.map_template
         plan_path.write_text(json.dumps(plan, indent=1), encoding="utf-8")
         print(f"PLAN {len(plan['matches'])} matches, plan seed {plan['plan_seed']}: {plan_digest(plan)}", flush=True)
         if plan["dirty"]:

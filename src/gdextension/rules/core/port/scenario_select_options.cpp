@@ -435,6 +435,10 @@ DictRef build_random_map_player_config(State &state, Atom seed, Atom template_id
 	const bool auto_catalog_selection = template_selection_mode == key::native_catalog_auto
 			&& gd::strip_edges(state, template_id) == key::empty
 			&& gd::strip_edges(state, profile_id) == key::empty;
+	// docs/rmg-setup-choice-templates.md: a setup-choice template the setup chose
+	// in place of H3MapEd's roll.
+	const bool setup_choice_selection = template_selection_mode == key::setup_choice
+			&& _random_map_is_setup_choice_template(state, gd::strip_edges(state, template_id));
 	Atom normalized_template_id = gd::strip_edges(state, template_id);
 	if (normalized_template_id == key::empty && !auto_catalog_selection) {
 		normalized_template_id = string_of(state, size_defaults, key::template_id, key::translated_rmg_template_049_v1);
@@ -490,7 +494,7 @@ DictRef build_random_map_player_config(State &state, Atom seed, Atom template_id
 	const bool explicit_seat_factions = state.array_size(seat_faction_ids) != 0;
 	Atom normalized_monster_strength = random_map_monster_strength_id(state, monster_strength);
 	if (normalized_monster_strength == key::empty) {
-		normalized_monster_strength = auto_catalog_selection ? key::normal : key::weak;
+		normalized_monster_strength = auto_catalog_selection || setup_choice_selection ? key::normal : key::weak;
 	}
 
 	const DictRef result = state.new_dict();
@@ -537,7 +541,7 @@ DictRef build_random_map_player_config(State &state, Atom seed, Atom template_id
 	const DictRef profile = state.new_dict();
 	state.set(profile, str(key::id), str(auto_catalog_selection ? key::empty : string_of(state, profile_option, key::id, normalized_profile_id)));
 	state.set(profile, str(key::template_id), str(normalized_template_id));
-	state.set(profile, str(key::guard_strength_profile), str(auto_catalog_selection ? normalized_monster_strength : string_of(state, profile_option, key::guard_strength_profile, key::core_low)));
+	state.set(profile, str(key::guard_strength_profile), str(auto_catalog_selection || setup_choice_selection ? normalized_monster_strength : string_of(state, profile_option, key::guard_strength_profile, key::core_low)));
 	Value faction_ids;
 	if (explicit_seat_factions) {
 		faction_ids = array_value(gd::duplicate_array(state, seat_factions));
@@ -552,7 +556,7 @@ DictRef build_random_map_player_config(State &state, Atom seed, Atom template_id
 	state.set(result, str(key::profile), dict_value(profile));
 
 	const DictRef template_selection = state.new_dict();
-	state.set(template_selection, str(key::mode), str(auto_catalog_selection ? key::native_catalog_auto : key::size_default));
+	state.set(template_selection, str(key::mode), str(auto_catalog_selection ? key::native_catalog_auto : (setup_choice_selection ? key::setup_choice : key::size_default)));
 	state.set(template_selection, str(key::selection_deferred_to_native), gd::bool_value(auto_catalog_selection));
 	state.set(template_selection, str(key::fallback_template_id), str(string_of(state, size_defaults, key::template_id, key::empty)));
 	state.set(template_selection, str(key::fallback_profile_id), str(string_of(state, size_defaults, key::profile_id, key::empty)));

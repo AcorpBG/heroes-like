@@ -243,6 +243,9 @@ var _generated_seed := ""
 var _generated_size_class_id := ""
 var _generated_template_id := ""
 var _generated_profile_id := ""
+# A setup-choice template (docs/rmg-setup-choice-templates.md); "" leaves the
+# layout to H3MapEd's roll.
+var _generated_chosen_template_id := ""
 var _generated_faction_id := ""
 var _generated_hero_id := ""
 var _generated_player_count := 3
@@ -974,7 +977,7 @@ func _on_generated_size_selected(index: int) -> void:
 	_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
 	_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
 	_generated_player_count = int(size_defaults.get("player_count", _generated_player_count))
-	_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
+	_rebuild_generated_layout_picker()
 	_rebuild_generated_profile_picker()
 	_clamp_generated_player_count_to_template()
 	_rebuild_generated_player_count_picker()
@@ -984,16 +987,43 @@ func _on_generated_size_selected(index: int) -> void:
 func _on_generated_template_selected(index: int) -> void:
 	if index < 0 or index >= _generated_template_picker.get_item_count():
 		return
-	_generated_template_id = String(_generated_template_picker.get_item_metadata(index))
-	for option in ScenarioSelectRulesScript.random_map_player_setup_options().get("templates", []):
-		if option is Dictionary and String(option.get("id", "")) == _generated_template_id:
-			_generated_profile_id = String(option.get("profile_id", _generated_profile_id))
-			break
-	_rebuild_generated_profile_picker()
+	_generated_chosen_template_id = String(_generated_template_picker.get_item_metadata(index))
+	_refresh_generated_layout_fit()
+
+## The layouts that fit the size, levels and water, and the player counts of
+## the one chosen; a chosen layout that no longer fits goes back to Random.
+func _refresh_generated_layout_fit() -> void:
+	_rebuild_generated_layout_picker()
 	_clamp_generated_player_count_to_template()
 	_rebuild_generated_player_count_picker()
 	_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
+
+## Random (H3MapEd's roll for the size and seed), then each setup-choice
+## template that fits the size, levels and water.
+func _rebuild_generated_layout_picker() -> void:
+	var level_count := 2 if _generated_underground else 1
+	var choices := ScenarioSelectRulesScript.random_map_setup_choice_templates(_generated_size_class_id, level_count, _generated_water_mode)
+	var options := [{"id": "", "label": "Random layout"}]
+	var summary := "Map layout: chosen from the classic layouts for this size and seed."
+	var chosen_fits := _generated_chosen_template_id == ""
+	for choice in choices:
+		if not (choice is Dictionary):
+			continue
+		options.append({"id": String(choice.get("id", "")), "label": String(choice.get("label", ""))})
+		if String(choice.get("id", "")) == _generated_chosen_template_id:
+			chosen_fits = true
+			summary = "Map layout: %s." % String(choice.get("summary", choice.get("label", "")))
+	if not chosen_fits:
+		_generated_chosen_template_id = ""
+	_rebuild_generated_option_picker(_generated_template_picker, options, _generated_chosen_template_id, "layout")
+	_generated_template_picker.visible = options.size() > 1
+	_generated_template_picker.tooltip_text = summary
+
+## The template whose player counts the setup offers: the chosen layout's, else
+## the size default's.
+func _generated_layout_template_id() -> String:
+	return _generated_chosen_template_id if _generated_chosen_template_id != "" else _generated_template_id
 
 func _on_generated_profile_selected(index: int) -> void:
 	if index < 0 or index >= _generated_profile_picker.get_item_count():
@@ -1025,7 +1055,7 @@ func _on_generated_water_selected(index: int) -> void:
 	if index < 0 or index >= _generated_water_picker.get_item_count():
 		return
 	_generated_water_mode = String(_generated_water_picker.get_item_metadata(index))
-	_refresh_generated_random_map_setup()
+	_refresh_generated_layout_fit()
 
 func _on_generated_monster_strength_selected(index: int) -> void:
 	if index < 0 or index >= _generated_monster_strength_picker.get_item_count():
@@ -1037,7 +1067,7 @@ func _on_generated_level_selected(index: int) -> void:
 	if index < 0 or index >= _generated_underground_toggle.get_item_count():
 		return
 	_generated_underground = int(_generated_underground_toggle.get_item_metadata(index)) > 1
-	_refresh_generated_random_map_setup()
+	_refresh_generated_layout_fit()
 
 func _on_generated_map_toggle_pressed() -> void:
 	_set_generated_map_forge_expanded(not _generated_map_forge_expanded)
@@ -1078,7 +1108,7 @@ func _on_generated_underground_toggled(enabled: bool) -> void:
 		return
 	_generated_underground = enabled
 	_select_generated_level_count(2 if _generated_underground else 1)
-	_refresh_generated_random_map_setup()
+	_refresh_generated_layout_fit()
 
 func _on_start_generated_skirmish_pressed() -> void:
 	await _start_generated_skirmish_staged(true)
@@ -2717,15 +2747,13 @@ func _configure_generated_random_map_controls() -> void:
 	_generated_seed_edit.tooltip_text = "Seed: leave blank for a fresh generated seed on launch, or enter a seed to recreate the same map identity."
 
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
-	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
+	_rebuild_generated_layout_picker()
 	_rebuild_generated_profile_picker()
 	var faction_choices: Array = options.get("factions", []).duplicate(true)
 	faction_choices.append({"id": ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID, "label": "Random"})
 	_rebuild_generated_option_picker(_generated_faction_picker, faction_choices, _generated_faction_id, "faction")
 	_rebuild_generated_hero_picker()
-	_generated_template_picker.visible = false
 	_generated_profile_picker.visible = false
-	_generated_template_picker.tooltip_text = "Map layout is chosen automatically from the selected size and seed."
 	_generated_profile_picker.tooltip_text = "Map rules are chosen automatically for this setup."
 	_generated_faction_picker.tooltip_text = "Choose the faction for your starting town and forces, or Random to draw one from the map seed."
 	_generated_hero_picker.tooltip_text = "Choose the commander who leads your selected faction on Day 1."
@@ -3186,9 +3214,9 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		"player_hero_id": _generated_hero_id,
 		"size_class_id": _generated_size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
-		"template_id": "native_catalog_auto",
+		"template_id": _generated_chosen_template_id if _generated_chosen_template_id != "" else "native_catalog_auto",
 		"profile_id": "native_catalog_auto",
-		"preview_template_id": _generated_template_id,
+		"preview_template_id": _generated_layout_template_id(),
 		"preview_profile_id": _generated_profile_id,
 		"normalized_seed": seed,
 		"seed_source": seed_source,
@@ -3224,13 +3252,14 @@ func _generated_random_map_config() -> Dictionary:
 		seat_faction_ids.append(ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID)
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
-		"",
+		_generated_chosen_template_id,
 		"",
 		_generated_player_count,
 		_generated_water_mode,
 		_generated_underground,
 		_generated_size_class_id,
-		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO if _generated_chosen_template_id == ""
+				else ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SETUP_CHOICE,
 		_generated_faction_id,
 		_generated_hero_id,
 		_generated_monster_strength,
@@ -3284,7 +3313,7 @@ func _select_generated_player_count_picker(player_count: int) -> bool:
 func _rebuild_generated_player_count_picker() -> void:
 	_generated_player_count_picker.clear()
 	var player_selected := -1
-	var player_counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_template_id)
+	var player_counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_layout_template_id())
 	if player_counts.is_empty():
 		player_counts = ScenarioSelectRulesScript.random_map_player_setup_options().get("player_counts", [])
 	for index in range(player_counts.size()):
@@ -3311,7 +3340,7 @@ func _rebuild_generated_profile_picker() -> void:
 	_rebuild_generated_option_picker(_generated_profile_picker, profile_options, _generated_profile_id, "profile")
 
 func _clamp_generated_player_count_to_template() -> void:
-	var counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_template_id)
+	var counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_layout_template_id())
 	if counts.is_empty():
 		return
 	var first_count := int(counts[0])
@@ -4623,21 +4652,22 @@ func _generated_underground_supported() -> bool:
 
 func _generated_random_map_internal_template_provenance() -> Dictionary:
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
+	var chosen := _generated_chosen_template_id != ""
 	return {
-		"selection_source": "native_catalog_auto_on_launch",
-		"template_id": "native_catalog_auto",
+		"selection_source": "setup_choice" if chosen else "native_catalog_auto_on_launch",
+		"template_id": _generated_chosen_template_id if chosen else "native_catalog_auto",
 		"profile_id": "native_catalog_auto",
-		"preview_template_id": _generated_template_id,
+		"preview_template_id": _generated_layout_template_id(),
 		"preview_profile_id": _generated_profile_id,
 		"size_class_id": _generated_size_class_id,
 		"size_class_default_template_id": String(size_defaults.get("template_id", "")),
 		"size_class_default_profile_id": String(size_defaults.get("profile_id", "")),
-		"launch_selection_deferred_to_native": true,
+		"launch_selection_deferred_to_native": not chosen,
 		"template_picker_visible": _generated_template_picker.visible,
 		"profile_picker_visible": _generated_profile_picker.visible,
 		"underground_player_control_visible": _generated_underground_toggle.visible,
 		"underground_supported": _generated_underground_supported(),
-		"manual_template_player_control": false,
+		"manual_template_player_control": _generated_template_picker.visible,
 		"manual_profile_player_control": false,
 	}
 

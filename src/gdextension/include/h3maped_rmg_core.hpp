@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <map>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -1193,6 +1194,24 @@ struct TemplateLinkRecord4a1f3b {
 	int32_t player_filter_max_total = 8;
 	int32_t source_endpoint_a = -1;
 	int32_t source_endpoint_b = -1;
+};
+
+// Departure from H3MapEd (docs/rmg-setup-choice-templates.md): a template the
+// player chose in setup instead of 0x4ac552's roll over H3MapEd's catalog. Its
+// rows have the catalog's form; zone_roles[i] is zones[i]'s role there (1 human
+// start, 2 computer start, 0 any other zone).
+struct ChosenTemplateRecords {
+	std::string name;
+	int32_t source_catalog_index = -1;
+	int32_t min_size = 0;
+	int32_t max_size = 0;
+	int32_t min_human = 0;
+	int32_t max_human = 0;
+	int32_t min_total = 0;
+	int32_t max_total = 0;
+	std::vector<TemplateZoneRecord4a218c> zones;
+	std::vector<int32_t> zone_roles;
+	std::vector<TemplateLinkRecord4a1f3b> links;
 };
 
 struct RuntimeSeedBuildResult4a218c {
@@ -3853,6 +3872,9 @@ struct H3MapedRmgWorkflowConfig {
 	// holds nothing moves into a gap that is the only way in. It applies with
 	// repair_cut_off_towns; AURELION_RMG_H3MAPED_STRICT=1 turns it off.
 	bool seal_guard_free_routes = true;
+	// Departure from H3MapEd (docs/rmg-setup-choice-templates.md): set when the
+	// setup chose a template; 0x4ac552 then builds from it instead of its catalog.
+	std::shared_ptr<const ChosenTemplateRecords> chosen_template;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
@@ -4867,6 +4889,7 @@ PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t hu
 uint16_t final_header_faction_mask_for_source_owner_0x4acb0c_0x4acbb1(const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t source_owner_index);
 RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a1f3b(const std::vector<TemplateZoneRecord4a218c> &zones, const std::vector<TemplateLinkRecord4a1f3b> &links, const PlayerSlotAssignmentResult4ac62a &assignment, int32_t human_count, int32_t player_count);
 TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask = 0xffU, bool h3maped_departures = false);
+TemplateSelectionRuntimeResult4ac552 chosen_template_selection_and_runtime_seed_inputs(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask, const ChosenTemplateRecords &chosen);
 CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links, int32_t water_mode_code = 0);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, bool generator_field_0x08_known = true, int32_t generator_field_0x08 = 0);

@@ -29,6 +29,8 @@ extends Node
 #                          homm3_large, homm3_extra_large).
 # HEROES_AI_MATCH_WATER    land (default), normal_water or islands.
 # HEROES_AI_MATCH_LEVELS   1 (default) or 2 (with an underground level).
+# HEROES_AI_MATCH_TEMPLATE a setup-choice template id (docs/rmg-setup-choice-
+#                          templates.md) in place of H3MapEd's roll.
 # HEROES_AI_MATCH_DIGEST   file that gets one line per day, at the start and
 #                          after every end_turn: "day<TAB>digest", the Variant
 #                          hash of the whole session state (hash(); the rules
@@ -608,7 +610,9 @@ func _start_session(map_seed: String, seat_factions: Array, player_count: int = 
 
 ## Everything the generated package depends on, and where it goes.
 func _map_key(map_seed: String, seat_factions: Array, player_count: int, size_class: String, guards: String, water: String, levels: int) -> String:
-	return "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+	var template_id := _env("HEROES_AI_MATCH_TEMPLATE").strip_edges()
+	return key if template_id == "" else key + "|" + template_id
 
 ## The map's setup from the corpus, else newly generated (saved to the corpus);
 ## {} when the generation failed.
@@ -617,9 +621,11 @@ func _map_setup(key: String, map_seed: String, seat_factions: Array, player_coun
 	var setup := _corpus_setup(entry, key)
 	_map_source = "corpus" if not setup.is_empty() else "generated"
 	if setup.is_empty():
+		var template_id := _env("HEROES_AI_MATCH_TEMPLATE").strip_edges()
 		var config := ScenarioSelectRulesScript.build_random_map_player_config(
-			map_seed, "", "", player_count, water, levels == 2, size_class,
-			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+			map_seed, template_id, "", player_count, water, levels == 2, size_class,
+			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT if template_id == ""
+					else ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SETUP_CHOICE,
 			String(seat_factions[0]), "", guards, seat_factions
 		)
 		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)

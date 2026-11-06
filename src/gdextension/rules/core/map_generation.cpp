@@ -71,6 +71,12 @@ constexpr const char *kEligibilitySchema = "aurelion_random_map_object_eligibili
 constexpr const char *kMapObjectCatalogPath = "res://content/map_objects.json";
 constexpr const char *kResourceSiteCatalogPath = "res://content/resource_sites.json";
 constexpr const char *kArtifactCatalogPath = "res://content/artifacts.json";
+constexpr const char *kTemplateCatalogPath = "res://content/random_map_template_catalog.json";
+// docs/rmg-setup-choice-templates.md: the template selection mode and catalog
+// marker of a template the setup chose.
+constexpr const char *kSetupChoiceMode = "setup_choice";
+// A chosen template's source catalog index: past H3MapEd's 53, by catalog order.
+constexpr int32_t kSetupChoiceCatalogIndexBase = 1000;
 constexpr uint64_t kHashModulus = 4294967296ULL;
 // map_document.hpp's SCHEMA_VERSION, MAX_DIMENSION and MAX_LEVEL_COUNT.
 constexpr int32_t kSchemaVersion = 1;
@@ -2050,6 +2056,248 @@ bool holds_opaque(State &state, const Value &value) {
 	}
 }
 
+// ------------------------------------------- setup-choice templates
+// docs/rmg-setup-choice-templates.md. A catalog template marked
+// "selection": "setup_choice" is never in H3MapEd's roll; a setup that chooses
+// it hands the generator its zones and links as the rows H3MapEd's catalog
+// holds (tools/generate_h3maped_rmg_template_catalog_cpp.py's encoding). The
+// catalog's names map back to H3MapEd's codes: the inverse of
+// scripts/tools/import_random_map_template_catalog.py's tables.
+
+// The H3MapEd town bits (0x41..0x49: castle 0 ... elemental 8) a faction
+// stands for.
+uint16_t chosen_town_mask(State &state, const Value &faction_ids) {
+	uint16_t mask = 0U;
+	const int64_t count = size_of(state, faction_ids);
+	for (int64_t index = 0; index < count; ++index) {
+		const std::string id = string_of(state, state.at(faction_ids.ref, index));
+		if (id == "faction_embercourt") {
+			mask |= uint16_t((1U << 0) | (1U << 6));
+		} else if (id == "faction_thornwake") {
+			mask |= uint16_t(1U << 1);
+		} else if (id == "faction_sunvault") {
+			mask |= uint16_t((1U << 2) | (1U << 8));
+		} else if (id == "faction_brasshollow") {
+			mask |= uint16_t(1U << 3);
+		} else if (id == "faction_veilmourn") {
+			mask |= uint16_t(1U << 4);
+		} else if (id == "faction_mireclaw") {
+			mask |= uint16_t((1U << 5) | (1U << 7));
+		}
+	}
+	return mask;
+}
+
+// The monster town bits (neutral 0, castle 1 ... forge 9).
+uint16_t chosen_monster_mask(State &state, const Value &faction_ids) {
+	uint16_t mask = 0U;
+	const int64_t count = size_of(state, faction_ids);
+	for (int64_t index = 0; index < count; ++index) {
+		const std::string id = string_of(state, state.at(faction_ids.ref, index));
+		if (id == "neutral") {
+			mask |= uint16_t(1U << 0);
+		} else if (id == "faction_embercourt") {
+			mask |= uint16_t((1U << 1) | (1U << 7));
+		} else if (id == "faction_thornwake") {
+			mask |= uint16_t(1U << 2);
+		} else if (id == "faction_sunvault") {
+			mask |= uint16_t((1U << 3) | (1U << 9));
+		} else if (id == "faction_brasshollow") {
+			mask |= uint16_t(1U << 4);
+		} else if (id == "faction_veilmourn") {
+			mask |= uint16_t(1U << 5);
+		} else if (id == "faction_mireclaw") {
+			mask |= uint16_t((1U << 6) | (1U << 8));
+		}
+	}
+	return mask;
+}
+
+// The terrain flags 0x85..0x8c: dirt 0, sand 1, grass 2, snow 3, swamp 4,
+// rough 5, cave 6, lava 7. The game's dirt is H3MapEd's dirt, its underground
+// the cave.
+h3::AllowedTerrainFlags0x85_0x8c chosen_terrain_flags(State &state, const Value &terrain_ids) {
+	std::array<uint8_t, 8> flags {};
+	const int64_t count = size_of(state, terrain_ids);
+	for (int64_t index = 0; index < count; ++index) {
+		const std::string id = string_of(state, state.at(terrain_ids.ref, index));
+		if (id == "dirt") {
+			flags[0] = 1U;
+		} else if (id == "sand") {
+			flags[1] = 1U;
+		} else if (id == "grass") {
+			flags[2] = 1U;
+		} else if (id == "snow") {
+			flags[3] = 1U;
+		} else if (id == "rough") {
+			flags[5] = 1U;
+		} else if (id == "underground") {
+			flags[6] = 1U;
+		} else if (id == "lava") {
+			flags[7] = 1U;
+		}
+	}
+	return h3::AllowedTerrainFlags0x85_0x8c(flags);
+}
+
+h3::SourceTownRules4a218c chosen_town_rules(State &state, const Value &rules) {
+	h3::SourceTownRules4a218c result;
+	result.min_towns = int32_field(state, rules, "min_towns", 0);
+	result.min_castles = int32_field(state, rules, "min_castles", 0);
+	result.town_density = int32_field(state, rules, "town_density", 0);
+	result.castle_density = int32_field(state, rules, "castle_density", 0);
+	return result;
+}
+
+h3::SourceMineRules4a218c chosen_mine_rules(State &state, const Value &requirements) {
+	const Value minimum = dict_or_new(state, get(state, requirements, "minimum_by_category"));
+	const Value density = dict_or_new(state, get(state, requirements, "density_by_category"));
+	h3::SourceMineRules4a218c result;
+	result.minimum_wood = int32_field(state, minimum, "timber", 0);
+	result.minimum_mercury = int32_field(state, minimum, "quicksilver", 0);
+	result.minimum_ore = int32_field(state, minimum, "ore", 0);
+	result.minimum_sulfur = int32_field(state, minimum, "ember_salt", 0);
+	result.minimum_crystal = int32_field(state, minimum, "lens_crystal", 0);
+	result.minimum_gems = int32_field(state, minimum, "cut_gems", 0);
+	result.minimum_gold = int32_field(state, minimum, "gold", 0);
+	result.density_wood = int32_field(state, density, "timber", 0);
+	result.density_mercury = int32_field(state, density, "quicksilver", 0);
+	result.density_ore = int32_field(state, density, "ore", 0);
+	result.density_sulfur = int32_field(state, density, "ember_salt", 0);
+	result.density_crystal = int32_field(state, density, "lens_crystal", 0);
+	result.density_gems = int32_field(state, density, "cut_gems", 0);
+	result.density_gold = int32_field(state, density, "gold", 0);
+	return result;
+}
+
+h3::SourceTreasureBand4a218c chosen_treasure_band(State &state, const Value &bands, int64_t index) {
+	h3::SourceTreasureBand4a218c result;
+	if (index < size_of(state, bands)) {
+		const Value band = state.at(bands.ref, index);
+		result.density = int32_field(state, band, "density", 0);
+		result.low = int32_field(state, band, "low", 0);
+		result.high = int32_field(state, band, "high", 0);
+	}
+	return result;
+}
+
+// The player filter's four bounds, with the catalog encoder's defaults.
+void chosen_player_filter(State &state, const Value &record, int32_t &min_human, int32_t &max_human, int32_t &min_total, int32_t &max_total) {
+	const Value filter = dict_or_new(state, get(state, record, "player_filter"));
+	min_human = int32_field(state, filter, "min_human", 0);
+	max_human = int32_field(state, filter, "max_human", 8);
+	min_total = int32_field(state, filter, "min_total", 0);
+	max_total = int32_field(state, filter, "max_total", 8);
+}
+
+// The setup-choice template of that id as H3MapEd catalog rows; nullptr when
+// the catalog has none of that id, or one whose links name a zone it lacks.
+std::shared_ptr<const h3::ChosenTemplateRecords> chosen_template_records(State &state, content::Files &files, const std::string &template_id) {
+	const Value catalog = runtime_json_dictionary(state, files, kTemplateCatalogPath);
+	const Value templates = array_or_new(state, get(state, catalog, "templates"));
+	const int64_t template_count = size_of(state, templates);
+	for (int64_t template_index = 0; template_index < template_count; ++template_index) {
+		const Value template_ = state.at(templates.ref, template_index);
+		if (string_field(state, template_, "id") != template_id || string_field(state, template_, "selection") != kSetupChoiceMode) {
+			continue;
+		}
+		auto chosen = std::make_shared<h3::ChosenTemplateRecords>();
+		chosen->name = string_field(state, template_, "label", template_id.c_str());
+		chosen->source_catalog_index = kSetupChoiceCatalogIndexBase + int32_t(template_index);
+		const Value size_score = dict_or_new(state, get(state, template_, "size_score"));
+		chosen->min_size = int32_field(state, size_score, "min", 0);
+		chosen->max_size = int32_field(state, size_score, "max", 0);
+		const Value players = dict_or_new(state, get(state, template_, "players"));
+		const Value humans = dict_or_new(state, get(state, players, "humans"));
+		const Value total = dict_or_new(state, get(state, players, "total"));
+		chosen->min_human = int32_field(state, humans, "min", 1);
+		chosen->max_human = int32_field(state, humans, "max", 8);
+		chosen->min_total = int32_field(state, total, "min", 2);
+		chosen->max_total = int32_field(state, total, "max", 8);
+
+		std::unordered_map<std::string, int32_t> zone_number_by_id;
+		const Value zones = array_or_new(state, get(state, template_, "zones"));
+		const int64_t zone_count = size_of(state, zones);
+		for (int64_t position = 0; position < zone_count; ++position) {
+			const Value zone = state.at(zones.ref, position);
+			const std::string role = string_field(state, zone, "role", "treasure");
+			int32_t type_code = 3;
+			int32_t bucket = 2;
+			int32_t role_code = 0;
+			if (role == "human_start") {
+				type_code = 1;
+				bucket = 0;
+				role_code = 1;
+			} else if (role == "computer_start") {
+				type_code = 2;
+				bucket = 1;
+				role_code = 2;
+			} else if (role == "junction") {
+				type_code = 4;
+				bucket = 3;
+			}
+			const int32_t owner_slot = int32_field(state, zone, "owner_slot", 0);
+			const int32_t owner_index = owner_slot > 0 ? owner_slot - 1 : -2;
+			h3::TemplateZoneRecord4a218c record;
+			record.source_zone_id = int32_t(position) + 1;
+			record.source_index = int32_t(position);
+			record.h3maped_zone_word_id = int32_t(position);
+			record.source_bucket = bucket;
+			record.source_owner_index = owner_index;
+			record.source_base_size = int32_field(state, zone, "base_size", 1);
+			chosen_player_filter(state, zone, record.player_filter_min_human, record.player_filter_max_human,
+					record.player_filter_min_total, record.player_filter_max_total);
+			const Value town_policy = dict_or_new(state, get(state, zone, "town_policy"));
+			record.allowed_town_mask_0x41_0x49 = chosen_town_mask(state, array_or_new(state, get(state, town_policy, "allowed_faction_ids")));
+			const Value terrain = dict_or_new(state, get(state, zone, "terrain"));
+			record.terrain_match_to_town_0x84 = bool_field(state, terrain, "match_to_faction", false);
+			record.allowed_terrain_flags_0x85_0x8c = chosen_terrain_flags(state, array_or_new(state, get(state, terrain, "allowed")));
+			h3::SourceZonePayload4a218c &payload = record.source_payload;
+			payload.source_row = kSetupChoiceCatalogIndexBase + int32_t(position);
+			payload.source_type_code = type_code;
+			payload.source_ownership = owner_index;
+			payload.same_town_type = bool_field(state, zone, "same_town_type", false);
+			const Value monsters = dict_or_new(state, get(state, zone, "monster_policy"));
+			payload.monster_match_to_town = bool_field(state, monsters, "match_to_town", false);
+			const std::string strength = lower(strip(string_field(state, monsters, "strength", "avg")));
+			payload.monster_strength_mode = begins_with(strength, "n") ? 0 : (begins_with(strength, "w") ? 2 : (begins_with(strength, "s") ? 4 : 3));
+			payload.allowed_monster_town_mask = chosen_monster_mask(state, array_or_new(state, get(state, monsters, "allowed_faction_ids")));
+			payload.player_towns = chosen_town_rules(state, dict_or_new(state, get(state, zone, "player_towns")));
+			payload.neutral_towns = chosen_town_rules(state, dict_or_new(state, get(state, zone, "neutral_towns")));
+			payload.mines = chosen_mine_rules(state, dict_or_new(state, get(state, zone, "mine_requirements")));
+			const Value bands = array_or_new(state, get(state, zone, "treasure_bands"));
+			payload.treasure_band_0 = chosen_treasure_band(state, bands, 0);
+			payload.treasure_band_1 = chosen_treasure_band(state, bands, 1);
+			payload.treasure_band_2 = chosen_treasure_band(state, bands, 2);
+			zone_number_by_id[string_field(state, zone, "id")] = record.source_zone_id;
+			chosen->zones.push_back(record);
+			chosen->zone_roles.push_back(role_code);
+		}
+
+		const Value links = array_or_new(state, get(state, template_, "links"));
+		const int64_t link_count = size_of(state, links);
+		for (int64_t index = 0; index < link_count; ++index) {
+			const Value link = state.at(links.ref, index);
+			const auto from = zone_number_by_id.find(string_field(state, link, "from"));
+			const auto to = zone_number_by_id.find(string_field(state, link, "to"));
+			if (from == zone_number_by_id.end() || to == zone_number_by_id.end()) {
+				return nullptr;
+			}
+			h3::TemplateLinkRecord4a1f3b record;
+			record.source_zone_a = from->second;
+			record.source_zone_b = to->second;
+			record.guard_value = int32_field(state, link, "guard_value", 0);
+			record.wide = bool_field(state, link, "wide", false);
+			record.border_guard = bool_field(state, link, "border_guard", false);
+			chosen_player_filter(state, link, record.player_filter_min_human, record.player_filter_max_human,
+					record.player_filter_min_total, record.player_filter_max_total);
+			chosen->links.push_back(record);
+		}
+		return chosen;
+	}
+	return nullptr;
+}
+
 // write_package_dictionary's failures.
 const char *write_failure_message(const std::string &code) {
 	if (code == "create_directory_failed") {
@@ -2170,8 +2418,10 @@ Value normalize_random_map_config(State &state, const Value &config) {
 		put(state, normalized_player_setup, "selection_mode", text(state, strip(string_field(state, player_setup, "selection_mode", "player_selected"))));
 		put(state, result, "player_setup", normalized_player_setup);
 	}
-	put(state, result, "template_selection_mode", text(state, "recovered_h3maped_exe_rng_exact_state_chain"));
-	put(state, result, "template_selection_authority", text(state, "recovered_h3maped_exe_source_order"));
+	// docs/rmg-setup-choice-templates.md: a template the setup chose replaces the roll.
+	const bool setup_choice = string_field(state, dict_or_new(state, get(state, config, "template_selection")), "mode") == kSetupChoiceMode;
+	put(state, result, "template_selection_mode", text(state, setup_choice ? kSetupChoiceMode : "recovered_h3maped_exe_rng_exact_state_chain"));
+	put(state, result, "template_selection_authority", text(state, setup_choice ? "setup_choice_catalog_rows" : "recovered_h3maped_exe_source_order"));
 	put(state, result, "template_selection_runtime_generation_allowed", boolean(true));
 	put(state, result, "translated_template_authority_used", boolean(false));
 	const bool supported_parity_config = bool_field(state, runtime_policy_classification(state, result), "runtime_generation_allowed", false);
@@ -2274,6 +2524,18 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	workflow_config.setup_object_0x4c = 2;
 	workflow_config.setup_caller_arg_0x0c_known = true;
 	workflow_config.setup_caller_arg_0x0c = h3::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+	// docs/rmg-setup-choice-templates.md: the template the setup chose, from its
+	// catalog rows.
+	const bool setup_choice = string_field(state, normalized, "template_selection_mode") == kSetupChoiceMode;
+	if (setup_choice) {
+		workflow_config.chosen_template = chosen_template_records(state, files, string_field(state, normalized, "template_id"));
+		if (workflow_config.chosen_template == nullptr) {
+			const Value result = blocked(state, "native_rmg_setup_choice_template_unknown",
+					"The chosen template is not a setup choice in content/random_map_template_catalog.json.");
+			put(state, result, "normalized_config", deep_copy(state, normalized));
+			return result;
+		}
+	}
 
 	const auto workflow_started_at = SteadyClock::now();
 	const std::string core_key = generated_core_key(state, normalized);
@@ -2385,9 +2647,11 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	const Value metadata = new_dict(state);
 	put(state, metadata, "generated", boolean(true));
 	put(state, metadata, "source_kind", text(state, "generated_h3maped_native_parity"));
-	put(state, metadata, "source_template_authority", text(state, "h3maped_exe_rng"));
+	put(state, metadata, "source_template_authority", text(state, setup_choice ? kSetupChoiceMode : "h3maped_exe_rng"));
 	put(state, metadata, "source_order_authority", text(state, "recovered_h3maped_exe_source_order"));
-	const std::string source_template_id = "h3maped_template_" + pad_zeros(compat::itos(core->selected_template_catalog_index), 3);
+	const std::string source_template_id = setup_choice
+			? string_field(state, normalized, "template_id")
+			: "h3maped_template_" + pad_zeros(compat::itos(core->selected_template_catalog_index), 3);
 	put(state, metadata, "source_template_id", text(state, source_template_id));
 	put(state, metadata, "template_id", text(state, source_template_id));
 	put(state, metadata, "full_generation_status", text(state, "native_runtime_ready"));
@@ -2395,8 +2659,9 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, metadata, "guard_free_route_seal", guard_free_route_seal);
 	put(state, metadata, "validation_status", text(state, "pass"));
 	put(state, metadata, "native_runtime_authoritative", boolean(true));
-	put(state, metadata, "full_parity_claim", boolean(true));
-	put(state, metadata, "native_h3m_final_payload_parity", boolean(true));
+	// A chosen template has no H3MapEd map to match.
+	put(state, metadata, "full_parity_claim", boolean(!setup_choice));
+	put(state, metadata, "native_h3m_final_payload_parity", boolean(!setup_choice));
 	put(state, metadata, "runtime_payload_projection_complete", boolean(true));
 	put(state, metadata, "production_ready", boolean(true));
 	const Value package_normalized_config = deep_copy(state, normalized);
@@ -2590,7 +2855,7 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, result, "native_runtime_authoritative", boolean(true));
 	put(state, result, "public_runtime_authoritative", boolean(true));
 	put(state, result, "package_session_adoption_ready", boolean(true));
-	put(state, result, "full_parity_claim", boolean(true));
+	put(state, result, "full_parity_claim", boolean(!setup_choice));
 	return result;
 }
 

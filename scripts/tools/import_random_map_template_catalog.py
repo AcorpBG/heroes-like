@@ -568,10 +568,26 @@ def collect_field_coverage(source_templates: list[dict[str, Any]]) -> dict[str, 
     }
 
 
+def setup_choice_entries() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """The templates a setup chooses outside H3MapEd's roll, and their profiles.
+
+    They are written in the catalog itself ("selection": "setup_choice",
+    docs/rmg-setup-choice-templates.md), so an import carries them over.
+    """
+    if not OUTPUT_CATALOG.exists():
+        return [], []
+    current = json.loads(OUTPUT_CATALOG.read_text(encoding="utf-8"))
+    templates = [template for template in current.get("templates", []) if template.get("selection") == "setup_choice"]
+    template_ids = {template.get("id") for template in templates}
+    profiles = [profile for profile in current.get("profiles", []) if profile.get("template_id") in template_ids]
+    return templates, profiles
+
+
 def build_catalog(source: dict[str, Any]) -> dict[str, Any]:
     source_templates = source.get("templates", [])
     imported_templates = [translate_template(template, index) for index, template in enumerate(source_templates, 1)]
     runtime_templates = original_runtime_templates()
+    choice_templates, choice_profiles = setup_choice_entries()
     aggregate = source.get("aggregate", {})
     source_summary = {
         "template_count": int(aggregate.get("template_count", len(source_templates))),
@@ -639,8 +655,8 @@ def build_catalog(source: dict[str, Any]) -> dict[str, Any]:
             "reporting_policy": "metadata_and_staging_expose_recovered_source_fields_and_empty_unsupported_lists_explicitly",
         },
         "resource_category_ids": list(RESOURCE_CATEGORY_IDS),
-        "profiles": original_profiles(imported_templates),
-        "templates": runtime_templates + imported_templates,
+        "profiles": original_profiles(imported_templates) + choice_profiles,
+        "templates": runtime_templates + imported_templates + choice_templates,
     }
 
 
