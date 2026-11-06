@@ -43,7 +43,6 @@ None open.
 
 ## Open work
 
-- `ai-hunt-human-raiders-20261106` (in progress): A human hero's kill value (_player_hero_kill_value, ai_hero_rules_candidates.cpp) also counts the computer player's towns it threatens (_threatened_town_share), as a computer hero's does, and gate routes (_route_raiders, ai_hero_rules_routes.cpp) lead main and field armies to human heroes too. Owner approved, 2026-11-06, after the computer-hero hunt (bb042fd7d). See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -53,6 +52,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-06 `ai-hunt-human-raiders-20261106` (ca3808e82): A human hero's kill counts the computer player's towns it threatens, as a computer hero's does, and passage routes hunt human raiders too. AI-only seeds identical; in h-s2 the AI attacks the human's main hero on day 16.
 - 2026-11-06 `ai-hunt-threats-through-passages-20261106` (bb042fd7d): Main and field armies route through gates to rival computer heroes that threaten their towns, at the odds the raider still stands there (still_since in sightings). m470 and m185, capped at day 320, now end on days 110 and 112.
 - 2026-11-05 `ai-knockout-town-value-20261105` (1e7acbf7a): A rival's last town is worth all the rival still has; the last opponent's last town or hero wins the game (1e12), weighed at 1.0x its defense, the preview deciding. The 1,200 batch's seven capped games now finish.
 - 2026-11-05 `neutral-garrisons-two-weeks-20261105` (539a5e22f): A neutral town on a generated map starts with two weeks of its own tier 1-3 growth as its garrison, in place of one week (the same units: each tier's built dwelling, else the faction's first choice).

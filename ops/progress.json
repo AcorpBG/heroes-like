@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ai-hunt-human-raiders-20261106",
- "currentSliceTitle": "Computer players weigh the human's raiders like computer ones",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-06T08:09:06Z",
+ "currentSliceTitle": "A human hero's kill counts the computer player's towns it threatens, as a computer hero's does, and passage routes hunt human raiders too. AI-only seeds identical; in h-s2 the AI attacks the human's main hero on day 16.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-06T08:32:48Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ai-hunt-human-raiders-20261106",
-   "title": "Computer players weigh the human's raiders like computer ones",
-   "status": "in_progress",
-   "goal": "A human hero's kill value (_player_hero_kill_value, ai_hero_rules_candidates.cpp) also counts the computer player's towns it threatens (_threatened_town_share), as a computer hero's does, and gate routes (_route_raiders, ai_hero_rules_routes.cpp) lead main and field armies to human heroes too. Owner approved, 2026-11-06, after the computer-hero hunt (bb042fd7d).",
-   "docs": [
-    "docs/ai-plays-by-player-rules.md"
-   ],
-   "updatedAt": "2026-11-06"
+   "status": "completed",
+   "completedAt": "2026-11-06",
+   "summary": "A human hero's kill counts the computer player's towns it threatens, as a computer hero's does, and passage routes hunt human raiders too. AI-only seeds identical; in h-s2 the AI attacks the human's main hero on day 16.",
+   "commit": "ca3808e82"
   },
   {
    "id": "ai-hunt-threats-through-passages-20261106",
