@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-knockout-town-value-20261105",
- "currentSliceTitle": "A rival's last town is worth all the rival still has; the last opponent's last town or hero wins the game (1e12), weighed at 1.0x its defense, the preview deciding. The 1,200 batch's seven capped games now finish.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-05T14:07:37Z",
+ "currentSliceId": "ai-hunt-threats-through-passages-20261106",
+ "currentSliceTitle": "Computer armies hunt raiders through the level passages",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-06T07:48:52Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-hunt-threats-through-passages-20261106",
+   "title": "Computer armies hunt raiders through the level passages",
+   "status": "in_progress",
+   "goal": "Gate routes (_route_raiders in ai_hero_rules_routes.cpp) also lead main and field armies to rival computer heroes in sight that threaten their towns and that they beat, valued as the kill times the odds the raider still stands there (still_since in the sightings). With no way back, one Brasshollow hero kept nine Thornwake heroes home from day 177 to 320 in m470 (ai-match-141700231). Owner chose hunting the threat over splitting its guard value, 2026-11-06.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-06"
+  },
   {
    "id": "ai-knockout-town-value-20261105",
    "status": "completed",

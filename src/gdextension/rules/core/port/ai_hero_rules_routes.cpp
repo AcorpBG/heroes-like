@@ -1,11 +1,13 @@
 // AiHeroRules: errands past the subterranean gates a hero can walk to, and the
-// routes through any number of gates to towns and unseen ground elsewhere.
+// routes through any number of gates to towns, raiders and unseen ground
+// elsewhere.
 
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
 #include <cmath>
@@ -33,8 +35,10 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 namespace level_rules = overworld_level_rules;
+namespace player_rules = player_identity_rules;
 
 constexpr int64_t kStopEncounter = 4; // STOP_ENCOUNTER
+constexpr int64_t kStopAiHero = 6; // STOP_AI_HERO
 // Days after crossing a gate a hero takes another only toward its errand.
 constexpr int64_t kGateCommitDays = 3;
 constexpr double kInf = std::numeric_limits<double>::infinity();
@@ -431,10 +435,12 @@ DictRef _gate_routes(State &state, DictRef session, DictRef context, DictRef ent
 	}
 	const double power = hero_power(state, entry);
 	// The objectives, by the losses a fight on the way to each may cost: towns,
-	// and the player's own armies to hand troops to.
+	// the player's own armies to hand troops to, and the raiders threatening its
+	// towns.
 	const DictRef by_limit = state.new_dict();
 	const ArrayRef objectives = _route_towns(state, session, context, entry, power, map);
 	ai::append_array(state, objectives, _route_armies(state, session, context, entry));
+	ai::append_array(state, objectives, _route_raiders(state, session, context, entry, search, power));
 	for (const Value &objective : gd::items(state, array_value(objectives))) {
 		const Value limit = float_value(_route_loss_limit(state, gd::to_float(ai::vmember(state, objective, key::value))));
 		if (!state.has(by_limit, limit)) {
@@ -470,6 +476,7 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 	const Vector2i size = map_size(state, context);
 	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	const int64_t start_tile = _tile_index_of(state, entry, size);
+	const int64_t day = ai::session_int(state, session, key::day);
 	const ArrayRef gates = gd::as_array(gd::index(state, map, str(key::gates)));
 	const Atom home_key = _stretch_key(state, session, context, level, start_tile, power, limit, entry);
 	if (home_key == key::empty) {
@@ -564,7 +571,16 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		const DictRef start_gate = gd::as_dict(state.at(gates, first[here]));
 		for (const Value &target : gd::field_items(state, targets, str(exit_key))) {
 			const double total = arrived + (gd::to_int(state, ai::vmember(state, target, key::tile)) >= 0 ? _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, target, key::tile)), size) * detour : 0.0);
-			double score = gd::to_float(ai::vmember(state, target, key::value)) / (1.0 + total / static_cast<double>(movement_max));
+			double value = gd::to_float(ai::vmember(state, target, key::value));
+			// A raider is worth the odds that it still stands there when the hero
+			// arrives: one seen standing S days is still there T days on about
+			// (S + 1) / (S + 1 + T) of the time. One that keeps moving was a chase
+			// through the gate and back (_route_raiders).
+			if (ai::vhas(state, target, str(key::still_since))) {
+				const double stood = static_cast<double>(gd::sub(day, gd::to_int(state, ai::vmember(state, target, key::still_since)))) + 1.0;
+				value *= stood / (stood + total / static_cast<double>(movement_max));
+			}
+			double score = value / (1.0 + total / static_cast<double>(movement_max));
 			// The hero's errand keeps its way through a gate against a slightly
 			// better one there, as it does everywhere else.
 			if (goal_id != key::empty && gd::stringify(state, ai::vmember(state, target, key::id)) == goal_id) {
@@ -581,7 +597,7 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 				const DictRef route = state.new_dict();
 				state.set(route, str(key::kind), str(gd::stringify(state, ai::vmember(state, target, key::kind))));
 				state.set(route, str(key::id), str(gd::stringify(state, ai::vmember(state, target, key::id))));
-				state.set(route, str(key::value), float_value(gd::to_float(ai::vmember(state, target, key::value))));
+				state.set(route, str(key::value), float_value(value));
 				state.set(route, str(key::distance), int_value(compat::float_to_int(compat::godot_ceil(total))));
 				state.set(route, str(key::score), float_value(score));
 				state.set(route, str(key::tile), int_value(gd::to_int(state, ai::vmember(state, target, key::tile))));
@@ -820,6 +836,78 @@ ArrayRef _route_armies(State &state, DictRef session, DictRef context, DictRef e
 		state.append(armies, dict_value(army));
 	}
 	return armies;
+}
+
+ArrayRef _route_raiders(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, double power) {
+	const ArrayRef raiders = state.new_array();
+	// The main and field armies, as they go for hostile towns.
+	if (!_plans_far(state, session, context, entry)) {
+		return raiders;
+	}
+	const Dict block = typed_dict(state, entry, str(key::ai_hero));
+	const Dict avoid = dict_if_dict(state, block, key::avoid);
+	const ArrayRef dangers = _dangers(state, session, context, entry);
+	const Vector2i size = map_size(state, context);
+	const Atom controller = gd::stringify(state, gd::index(state, context, str(key::controller)));
+	const int64_t day = ai::session_int(state, session, key::day);
+	const DictRef needs = _resource_needs(state, session, context);
+	const Value memory = ai::vget(state, gd::index(state, context, str(key::state)), key::ai_sightings, Value());
+	// A rival computer hero the threat checks walk to the player's towns through
+	// the gates (`steps_to_door`), as the hero would fight it nearby
+	// (`_candidate`): in sight, beaten, worth its kill. With no way back to it,
+	// one raider that stood still pinned every army whose town it could reach
+	// (ai-match-141700231, m470 of the 2026-11-05 batch: nine Thornwake heroes
+	// held their towns from day 177 to 320 against one Brasshollow hero).
+	for (const Value &other : gd::items(state, array_value(active_hero_entries(state, session, key::empty)))) {
+		const DictRef raider = gd::as_dict(other);
+		const Atom other_controller = player_rules::raid_controller_id(state, raider);
+		if (other_controller == controller || player_rules::allied(state, dict_value(session), controller, other_controller)) {
+			continue;
+		}
+		const Atom other_id = ai::string_or_empty(state, raider, key::placement_id);
+		const int64_t index = _entry_index(state, session, other_id);
+		if (index < 0 || avoided_until(state, avoid, other_id) >= day) {
+			continue;
+		}
+		const int64_t x = gd::int_field(state, raider, key::x, -1);
+		const int64_t y = gd::int_field(state, raider, key::y, -1);
+		const int64_t level = level_rules::level_of(state, other);
+		if (x < 0 || y < 0 || x >= size.x || y >= size.y) {
+			continue;
+		}
+		// Within a much stronger hostile hero's reach it is left alone there
+		// (`_best_candidate`), so no way leads to it either.
+		if (state.array_size(dangers) != 0 && _in_danger(state, dangers, x, y, level)) {
+			continue;
+		}
+		const DictRef ref = state.new_dict();
+		state.set(ref, str(key::kind), int_value(kStopAiHero));
+		state.set(ref, str(key::index), int_value(index));
+		const DictRef candidate = _candidate(state, session, context, entry, ref, power, needs, search);
+		if (ai::string_or_empty(state, candidate, key::kind) != key::ai_hero) {
+			continue;
+		}
+		const double value = gd::float_field(state, candidate, key::value, 0.0);
+		if (value <= 0.0 || _threatened_town_share(state, session, context, raider) <= 0.0) {
+			continue;
+		}
+		// Since when the player has seen it stand there (_note_sightings): seen
+		// anywhere else before, it came today.
+		int64_t still_since = day;
+		Value seen;
+		if (gd::is_dict(memory) && state.lookup(memory.ref, str(other_id), seen) && gd::is_dict(seen) && gd::int_field(state, seen.ref, key::x, -1) == x && gd::int_field(state, seen.ref, key::y, -1) == y && gd::int_field(state, seen.ref, key::level, -1) == level) {
+			still_since = gd::int_field(state, seen.ref, key::still_since, day);
+		}
+		const DictRef target = state.new_dict();
+		state.set(target, str(key::kind), str(key::ai_hero));
+		state.set(target, str(key::id), str(other_id));
+		state.set(target, str(key::value), float_value(value));
+		state.set(target, str(key::still_since), int_value(still_since));
+		state.set(target, str(key::level), int_value(level));
+		state.set(target, str(key::tile), int_value(gd::add(gd::mul(y, size.x), x)));
+		state.append(raiders, dict_value(target));
+	}
+	return raiders;
 }
 
 void _route_unseen(State &state, DictRef session, DictRef context, DictRef entry, DictRef map, double power, double limit, Atom home_key, DictRef targets) {

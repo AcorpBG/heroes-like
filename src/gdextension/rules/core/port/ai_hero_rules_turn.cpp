@@ -610,11 +610,25 @@ void _note_sightings(State &state, DictRef session, DictRef context) {
 		}
 		// Seen again, it is still the hero that took the town.
 		Value earlier;
-		if (state.lookup(kept, str(id), earlier) && gd::is_dict(earlier) && state.has(earlier.ref, str(key::taken_day))) {
+		const bool seen_before = state.lookup(kept, str(id), earlier) && gd::is_dict(earlier);
+		if (seen_before && state.has(earlier.ref, str(key::taken_day))) {
 			for (const Atom field : {key::town, key::taken_day}) {
 				state.set(record, str(field), gd::index(state, earlier.ref, str(field)));
 			}
 		}
+		// Seen again where it stood, it has stood there since it was first seen
+		// there (_route_raiders); anywhere else, it came there today.
+		int64_t still_since = day;
+		if (seen_before && state.has(earlier.ref, str(key::x))) {
+			bool same = true;
+			for (const Atom field : {key::x, key::y, key::level}) {
+				same = same && gd::int_field(state, earlier.ref, field, -1) == gd::to_int(state, ai::vmember(state, hostile, field));
+			}
+			if (same) {
+				still_since = gd::int_field(state, earlier.ref, key::still_since, gd::int_field(state, earlier.ref, key::day, day));
+			}
+		}
+		state.set(record, str(key::still_since), int_value(still_since));
 		state.set(kept, str(id), dict_value(record));
 	}
 	state.set(gd::as_dict(gd::index(state, context, str(key::state))), str(key::ai_sightings), dict_value(kept));

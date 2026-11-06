@@ -173,6 +173,10 @@ ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef en
 // The player's own armies the hero would hand troops to, as route objectives
 // (kind meet, id, value, level, tile).
 ArrayRef _route_armies(State &state, DictRef session, DictRef context, DictRef entry);
+// The rival computer heroes threatening the player's towns that a main or field
+// army sees and beats, as route objectives (kind ai_hero, id, value, still_since,
+// level, tile).
+ArrayRef _route_raiders(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, double power);
 void _route_unseen(State &state, DictRef session, DictRef context, DictRef entry, DictRef map, double power, double limit, Atom home_key, DictRef targets);
 double _tile_span(State &state, int64_t from_tile, int64_t to_tile, Vector2i size);
 

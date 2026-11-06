@@ -1011,3 +1011,5 @@ AURELION_KEY(from_s, " from %s")
 // The session view's instance id and the read scope's town keys (OverworldRules._town_read_scope_cache_key).
 AURELION_KEY(instance_id, "instance_id")
 AURELION_KEY(d_s_s_s, "%d|%s|%s|%s")
+// The day since which a hostile hero has stood where it was last seen (_note_sightings, _route_raiders).
+AURELION_KEY(still_since, "still_since")
