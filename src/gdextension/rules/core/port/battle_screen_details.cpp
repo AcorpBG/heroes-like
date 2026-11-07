@@ -673,6 +673,22 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const int64_t reach = spell_move_reach(state, spell, spell_power(state, hero_state));
 		return with_timing(gd::format(state, key::move_s_up_to_d_hexes_keeping_turn, {str(ally_name), int_value(reach)}));
 	}
+	// The two-stack spells: the second stack is picked after the first.
+	if (effect_type == key::graft_allies) {
+		const Atom turns = _turns_label(state, helpful_effect_turns(state, hero_state, spell));
+		return with_timing(gd::format(state, key::graft_two_stacks_for_s, {str(turns)}));
+	}
+	if (effect_type == key::transfer_ally) {
+		return with_timing(gd::format(state, key::move_up_to_d_health_between_stacks, {int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
+	}
+	if (effect_type == key::swap_allies) {
+		const int64_t range = spell_move_reach(state, spell, spell_power(state, hero_state));
+		return with_timing(gd::format(state, key::swap_two_stacks_within_d, {int_value(range)}));
+	}
+	if (effect_type == key::swap_enemy) {
+		const int64_t range = spell_move_reach(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		return with_timing(gd::format(state, key::swap_s_with_yours_within_d, {str(text_or(state, target_stack, key::name, key::the_selected_enemy)), int_value(range)}));
+	}
 	return key::no_authored_battle_summary_is_available;
 }
 

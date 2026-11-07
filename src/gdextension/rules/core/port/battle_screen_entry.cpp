@@ -285,6 +285,23 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 	return spell_rules::move_destinations(state, battle, stack, reach);
 }
 
+ArrayRef spell_second_target_ids(State &state, DictRef session, Atom spell_id, Atom target_id) {
+	const DictRef battle = session_battle(state, session);
+	if (gd::is_empty(state, battle)) {
+		return state.new_array();
+	}
+	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+	if (gd::is_empty(state, spell) || !spell_rules::offers_second_stack(state, spell)) {
+		return state.new_array();
+	}
+	const DictRef first = _get_stack_by_id(state, battle, target_id);
+	if (gd::is_empty(state, first)) {
+		return state.new_array();
+	}
+	const DictRef hero_state = _player_commander_state(state, dict_value(session));
+	return spell_rules::second_stack_ids(state, hero_state, battle, first, spell, key::player);
+}
+
 ArrayRef get_spell_actions(State &state, DictRef session) {
 	if (gd::is_empty(state, session_battle(state, session))) {
 		return state.new_array();

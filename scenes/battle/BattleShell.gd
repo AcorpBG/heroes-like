@@ -160,6 +160,10 @@ var _spell_targeting_hash := 0
 # A move spell's second step: the stack it takes and the hexes it can go to.
 var _spell_destination_stack_id := ""
 var _spell_destination_cells: Array = []
+# A two-stack spell's second step (and a drain's drinker): the first stack and
+# the stacks that can be the second.
+var _spell_second_first_id := ""
+var _spell_second_ids: Array = []
 # What the details card describes while the right button is held: "stack",
 # "chip" (a stack by its ribbon chip) or "hero", its id, and the rect in the
 # HUD it stands beside.
@@ -701,6 +705,8 @@ func _on_board_stack_order_requested(battle_id: String, order: Dictionary) -> Di
 
 
 func _cast_targeted_spell(battle_id: String) -> Dictionary:
+	if _spell_second_first_id != "":
+		return _cast_spell_with_second(battle_id)
 	var spell_id := _spell_targeting_id
 	if _spell_targeting_hash != hash(_session.battle):
 		_cancel_spell_targeting(false)
@@ -715,6 +721,10 @@ func _cast_targeted_spell(battle_id: String) -> Dictionary:
 	var destinations := BattleRules.spell_destination_hexes(_session, spell_id, battle_id)
 	if not destinations.is_empty():
 		return _begin_spell_destination(spell_id, battle_id, destinations)
+	# A two-stack spell takes its first stack, then the second.
+	var seconds := BattleRules.spell_second_target_ids(_session, spell_id, battle_id)
+	if not seconds.is_empty():
+		return _begin_spell_second_target(spell_id, battle_id, seconds)
 	_stop_auto_battle()
 	var result := _perform_action("cast_spell:" + spell_id, {"target_id": battle_id})
 	var response := result.duplicate(true)
@@ -757,6 +767,48 @@ func _cast_spell_to_destination(q: int, r: int) -> Dictionary:
 		return _reject_order("Choose a lit hex for %s, or press Esc to put the spell away." % _spell_name(spell_id), order)
 	_stop_auto_battle()
 	var result := _perform_action("cast_spell:" + spell_id, {"target_id": battle_id, "q": q, "r": r})
+	var response := result.duplicate(true)
+	for key in order.keys():
+		response[key] = order[key]
+	response["message"] = _last_message
+	return _return_board_cursor_action_result(response)
+
+
+## The field lights the stacks that can be the spell's second one; the next
+## click on one of them casts it.
+func _begin_spell_second_target(spell_id: String, battle_id: String, seconds: Array) -> Dictionary:
+	_spell_second_first_id = battle_id
+	_spell_second_ids = seconds.duplicate()
+	_battle_board_view.set_spell_target_candidates(_spell_second_ids, _second_target_previews(spell_id, _spell_second_ids), true)
+	_set_command_hint("%s: click a highlighted stack as the second one. Esc puts the spell away." % _spell_name(spell_id), 0.0)
+	return _return_board_cursor_action_result({
+		"ok": true,
+		"committed": false,
+		"state": "targeting_second",
+		"action": "cast_spell:" + spell_id,
+		"target_battle_id": battle_id,
+		"second_ids": _spell_second_ids.duplicate(),
+	})
+
+
+## The board shows each lit stack as a target (a preview that is ok).
+func _second_target_previews(spell_id: String, ids: Array) -> Dictionary:
+	var previews := {}
+	for id in ids:
+		previews[id] = {"ok": true, "message": "The second stack for %s." % _spell_name(spell_id)}
+	return previews
+
+
+func _cast_spell_with_second(second_id: String) -> Dictionary:
+	var spell_id := _spell_targeting_id
+	var order := {"action": "cast_spell:" + spell_id, "target_battle_id": _spell_second_first_id, "second_target_id": second_id}
+	if _spell_targeting_hash != hash(_session.battle):
+		_cancel_spell_targeting(false)
+		return _reject_order("The battlefield changed. Choose the spell again.", order)
+	if second_id not in _spell_second_ids:
+		return _reject_order("Choose a highlighted stack as the second one for %s, or press Esc to put the spell away." % _spell_name(spell_id), order)
+	_stop_auto_battle()
+	var result := _perform_action("cast_spell:" + spell_id, {"target_id": _spell_second_first_id, "second_target_id": second_id})
 	var response := result.duplicate(true)
 	for key in order.keys():
 		response[key] = order[key]
@@ -1778,6 +1830,8 @@ func _cancel_spell_targeting(announce: bool) -> void:
 	_spell_targeting_hash = 0
 	_spell_destination_stack_id = ""
 	_spell_destination_cells = []
+	_spell_second_first_id = ""
+	_spell_second_ids = []
 	if _battle_board_view != null:
 		_battle_board_view.set_spell_target_candidates([])
 		_battle_board_view.set_spell_destination_hexes([])
@@ -1790,6 +1844,10 @@ func _cancel_spell_targeting(announce: bool) -> void:
 
 func _refresh_spell_target_surface() -> void:
 	if _spell_targeting_id == "" or _session == null or _session.battle.is_empty():
+		return
+	if _spell_second_first_id != "":
+		_spell_second_ids = BattleRules.spell_second_target_ids(_session, _spell_targeting_id, _spell_second_first_id)
+		_battle_board_view.set_spell_target_candidates(_spell_second_ids, _second_target_previews(_spell_targeting_id, _spell_second_ids), true)
 		return
 	var ids := BattleRules.spell_target_ids(_session, _spell_targeting_id)
 	var previews := {}

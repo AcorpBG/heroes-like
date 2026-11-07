@@ -4115,6 +4115,91 @@
         "power_scale": 17,
         "drain_pct": 50
       }
+    },
+    {
+      "id": "spell_graft",
+      "name": "Graft",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Grafts two of your stacks together with living bark: a wound to one is shared by both.",
+      "effect": {
+        "type": "graft_allies",
+        "duration_rounds": 2
+      }
+    },
+    {
+      "id": "spell_blood_tithe",
+      "name": "Blood Tithe",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Draws life from one of your stacks into another, enough to bring its fallen back.",
+      "effect": {
+        "type": "transfer_ally",
+        "base_restore": 40,
+        "power_scale": 8
+      }
+    },
+    {
+      "id": "spell_signal_swap",
+      "name": "Signal Swap",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A flash of signal light, and two of your stacks stand in each other's places.",
+      "effect": {
+        "type": "swap_allies",
+        "range": 4,
+        "range_power_divisor": 1
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_changeling_swap",
+      "name": "Changeling Swap",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Mist folds an enemy stack and one of yours into each other's places.",
+      "effect": {
+        "type": "swap_enemy",
+        "range": 4,
+        "range_power_divisor": 1
+      },
+      "scroll_only": true
     }
   ]
 }

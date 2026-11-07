@@ -1747,6 +1747,50 @@
       "source_sha256": "ee2130adcf4ae8ec04cfddbff823e61a122c4cec08a2f9c4cb4d99ad3eb1e371",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png",
       "icon_sha256": "6978a504a17a3a1e59f50f7494c7e34dbf583f0932c8c887c4ae905837a27c47"
+    },
+    {
+      "id": "spell_graft",
+      "spell_id": "spell_graft",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_graft",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_graft_graft_18.png",
+      "source_sha256": "0752f8e8def71dfb7fcc8cf9556485eb45666b8850d307ecea05500f84e4cba7",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_graft_graft_18.png",
+      "icon_sha256": "34ea642ba193218a163c8550af752271ee317e184423bfd2513898e6f2f04ea4"
+    },
+    {
+      "id": "spell_blood_tithe",
+      "spell_id": "spell_blood_tithe",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_blood_tithe",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_leech_poultice_26.png",
+      "source_sha256": "26ad2dc5a013adf009430a7e95ebd90ae45063cc7b9628a70a15a6f8a0b24535",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_leech_poultice_26.png",
+      "icon_sha256": "7930225064f46fbc3a6d192abe288896def1e11ad0e2b63eba96acac7695cb79"
+    },
+    {
+      "id": "spell_signal_swap",
+      "spell_id": "spell_signal_swap",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_signal_swap",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_roadward_signal_07.png",
+      "source_sha256": "cb336bbb5203c66c23eb7be21bfb6729170380984b063975b77f74782a34fa75",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_roadward_signal_07.png",
+      "icon_sha256": "05f4e7778f6aa6d254d1a7ab9249179fad038d113cce9eff34c22b2413f883c1"
+    },
+    {
+      "id": "spell_changeling_swap",
+      "spell_id": "spell_changeling_swap",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_changeling_swap",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_salt_step_06.png",
+      "source_sha256": "2e0f1c7aeed3a8eaae34f8ded79d28a42d0994838885af3bcb4a5a87f152fd7e",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_salt_step_06.png",
+      "icon_sha256": "d15cbfe748b0d3a52c28583b09e0856cd0c28c42ab99f2e7c2604dd1ccd84d32"
     }
   ]
 }

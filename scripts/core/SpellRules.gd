@@ -548,6 +548,9 @@ static func _validate_spell_schema_record(
 	elif String(effect_type) == "move_ally":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s move metadata must use battle context." % spell_id)
+	elif String(effect_type) in ["graft_allies", "transfer_ally", "swap_allies", "swap_enemy"]:
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s two-stack metadata must use battle context." % spell_id)
 	elif String(effect_type) == "ally_effect":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s ally effect metadata must use battle context." % spell_id)

@@ -207,6 +207,18 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::move_effect;
 		state.append(hooks, str(key::ally_reposition));
 		public_effect = key::ally_reposition_text;
+	} else if (effect_type == key::graft_allies) {
+		resolution_type = key::effect;
+		state.append(hooks, str(key::ally_status_effect));
+		public_effect = key::ally_modifier_effect_text;
+	} else if (effect_type == key::transfer_ally) {
+		resolution_type = key::transfer_effect;
+		state.append(hooks, str(key::ally_health_recovery));
+		public_effect = key::ally_recovery_and_ward_text;
+	} else if (effect_type == key::swap_allies || effect_type == key::swap_enemy) {
+		resolution_type = key::swap_effect;
+		state.append(hooks, str(key::ally_reposition));
+		public_effect = key::ally_reposition_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -326,6 +338,34 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		}
 		if (battle_rules::_stack_is_rooted(state, move_target, battle)) {
 			return refusal(state, gd::format(state, key::rooted_cannot_move_text, { str(battle_rules::_stack_label(state, move_target)) }));
+		}
+		return accepted(state);
+	}
+	// Two stacks: the first is checked here, the second when the cast names it.
+	if (effect_type == key::graft_allies || effect_type == key::transfer_ally || effect_type == key::swap_allies) {
+		const DictRef first = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+		if (gd::is_empty(state, first) || side_of(state, first) != acting_side || _alive_count(state, first) <= 0) {
+			return refusal(state, key::select_allied_target_text);
+		}
+		if (effect_type == key::swap_allies && battle_rules::_stack_is_rooted(state, first, battle)) {
+			return refusal(state, gd::format(state, key::rooted_cannot_move_text, { str(battle_rules::_stack_label(state, first)) }));
+		}
+		if (effect_type == key::transfer_ally) {
+			if (heal_blocked(state, first, battle)) {
+				return refusal(state, gd::format(state, key::wound_sealed_text, { str(battle_rules::_stack_label(state, first)) }));
+			}
+			if (stack_full_health(state, first) <= gd::int_field(state, first, key::total_health, 0)) {
+				return refusal(state, gd::format(state, key::no_health_missing_text, { str(battle_rules::_stack_label(state, first)) }));
+			}
+		}
+		return accepted(state);
+	}
+	if (effect_type == key::swap_enemy) {
+		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
+			return refusal(state, key::select_enemy_target_text);
+		}
+		if (battle_rules::_stack_is_rooted(state, target_stack, battle)) {
+			return refusal(state, gd::format(state, key::rooted_cannot_move_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 		}
 		return accepted(state);
 	}
@@ -798,6 +838,26 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			}
 		}
 	}
+	// A two-stack spell finds its second stack before the mana is spent, or
+	// none is named yet.
+	DictRef second_stack = state.new_dict();
+	bool needs_second = false;
+	if (takes_second_stack(state, spell)) {
+		const DictRef first = effect_type == key::swap_enemy ? target_stack : ally_target;
+		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
+		const ArrayRef options = second_stack_ids(state, hero, battle, first, spell, acting_side);
+		if (state.array_size(options) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_second_stack_text, { str(spell_name) }));
+		}
+		const DictRef picked = second_stack_pick(state, battle, destination);
+		if (gd::is_empty(state, picked)) {
+			needs_second = true;
+		} else if (!gd::array_has(state, options, str(gd::string_field(state, picked, key::battle_id, key::empty)))) {
+			return hero_refusal(state, hero, gd::format(state, key::second_stack_refused_text, { str(battle_rules::_stack_label(state, picked)), str(spell_name) }));
+		} else {
+			second_stack = picked;
+		}
+	}
 	hero = _consume_mana(state, hero, mana_cost);
 	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
 	// Prism Ward: a harmful spell cast on a warded stack lands on a random stack
@@ -962,6 +1022,46 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			state.set(result, str(key::destination), dict_value(move_cell));
 			state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
 		}
+		return result;
+	}
+	if (takes_second_stack(state, spell)) {
+		const DictRef first = effect_type == key::swap_enemy ? target_stack : ally_target;
+		const Atom first_id = gd::string_field(state, first, key::battle_id, key::empty);
+		const Atom resolution_type = effect_type == key::graft_allies ? static_cast<Atom>(key::effect)
+				: (effect_type == key::transfer_ally ? static_cast<Atom>(key::transfer_effect) : static_cast<Atom>(key::swap_effect));
+		const DictRef result = cast_result(state, hero, resolution_type, first_id);
+		if (needs_second) {
+			state.set(result, str(key::needs_second_target), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_second_stack_text, { str(gd::string_field(state, spell, key::name, spell_id)) })));
+			return result;
+		}
+		const Atom second_id = gd::string_field(state, second_stack, key::battle_id, key::empty);
+		state.set(result, str(key::source_battle_id), str(second_id));
+		if (effect_type == key::graft_allies) {
+			// Each end of the graft names the other.
+			const auto graft_payload = [&](DictRef stack, Atom partner_id) {
+				const DictRef payload = _effect_payload_for(state, spell, effect, battle, hero, stack);
+				const DictRef mechanic = state.new_dict();
+				state.set(mechanic, str(key::graft_partner), str(partner_id));
+				state.set(payload, str(key::mechanic), dict_value(mechanic));
+				return payload;
+			};
+			state.set(result, str(key::effect), dict_value(graft_payload(first, second_id)));
+			const DictRef joined = state.new_dict();
+			state.set(joined, str(key::resolution_type), str(key::effect));
+			state.set(joined, str(key::target_battle_id), str(second_id));
+			state.set(joined, str(key::effect), dict_value(graft_payload(second_stack, first_id)));
+			state.set(joined, str(key::message), str(gd::format(state, key::graft_joins_text, { str(battle_rules::_stack_label(state, second_stack)) })));
+			const ArrayRef extra = state.new_array();
+			state.append(extra, dict_value(joined));
+			state.set(result, str(key::extra_resolutions), array_value(extra));
+		} else if (effect_type == key::transfer_ally) {
+			state.set(result, str(key::transfer_amount), int_value(transfer_amount(state, hero, spell, first, second_stack)));
+		}
+		const Atom cast_message = effect_type == key::swap_enemy
+				? gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, first, key::name, key::the_enemy_text)) })
+				: ally_cast_message(state, caster_name, spell, spell_id, first);
+		state.set(result, str(key::message), str(cast_message));
 		return result;
 	}
 	return hero_refusal(state, hero, key::battle_spell_no_supported_effect_text);

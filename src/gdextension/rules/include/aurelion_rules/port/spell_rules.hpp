@@ -181,6 +181,25 @@ int64_t spell_mastery_rank(State &state, DictRef hero_state, DictRef spell);
 // stack lands on instead (empty without a ward), and the ward spent.
 DictRef reflected_spell_target(State &state, DictRef battle, DictRef target, Atom spell_id);
 void spend_reflect_ward(State &state, DictRef battle, Atom battle_id);
+// The spells that take a second stack (spell_pairs.cpp): Graft, Blood Tithe and
+// the two swaps need one, and a drain's drinker can be one. The stacks that can
+// be the second for a first one, the stack a pick ({battle_id}) names, a stack's
+// health with every creature it started with, a swap's reach, whether two
+// stacks fit in each other's places, Blood Tithe's amount, the health it moves,
+// the swap itself, the living stack grafted to one (empty without a graft), and
+// a stack's grafts removed from both ends.
+bool takes_second_stack(State &state, DictRef spell);
+bool offers_second_stack(State &state, DictRef spell);
+ArrayRef second_stack_ids(State &state, DictRef hero, DictRef battle, DictRef first, DictRef spell, Atom acting_side);
+DictRef second_stack_pick(State &state, DictRef battle, const Value &pick);
+int64_t stack_full_health(State &state, DictRef stack);
+int64_t spell_swap_range(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef first);
+bool swap_fits(State &state, DictRef battle, DictRef a, DictRef b);
+int64_t transfer_amount(State &state, DictRef hero, DictRef spell, DictRef receiver, DictRef donor);
+int64_t move_stack_health(State &state, DictRef battle, Atom donor_id, Atom receiver_id, int64_t amount);
+void swap_stack_places(State &state, DictRef battle, Atom a_id, Atom b_id);
+Atom graft_partner(State &state, DictRef battle, Atom battle_id);
+void clear_graft(State &state, DictRef battle, Atom battle_id);
 // A turn's end (backlash, tightening roots, curse) and start (regrowth; true
 // when the stack sleeps through it); begin_active_turn runs the start for the
 // active stack and passes the turns of sleepers on.

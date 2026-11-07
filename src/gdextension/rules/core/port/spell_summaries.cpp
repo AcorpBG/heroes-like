@@ -190,6 +190,23 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		const int64_t reach = spell_move_reach(state, spell, spell_power(state, hero_state));
 		return gd::format(state, key::moves_up_to_hexes_text, { str(ally_label(state, spell, active_stack)), int_value(reach) });
 	}
+	// The two-stack spells (spell_pairs.cpp).
+	if (effect_type == key::graft_allies) {
+		const Atom turns = _turns_label(state, helpful_effect_turns(state, hero_state, spell));
+		return gd::format(state, key::grafts_for_text, { str(turns) });
+	}
+	if (effect_type == key::transfer_ally) {
+		return gd::format(state, key::moves_health_into_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)) });
+	}
+	if (effect_type == key::swap_allies) {
+		const int64_t range = spell_move_reach(state, spell, spell_power(state, hero_state));
+		return gd::format(state, key::swaps_allies_text, { int_value(range) });
+	}
+	if (effect_type == key::swap_enemy) {
+		const int64_t range = spell_move_reach(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		return gd::format(state, key::swaps_enemy_text, { str(target_label), int_value(range) });
+	}
 	return key::no_supported_battle_effect_text;
 }
 

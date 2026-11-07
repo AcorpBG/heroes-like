@@ -212,6 +212,9 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::move_ally) {
 		const DictRef plan = _move_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy })) {
+		const DictRef plan = _pair_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else {
 		score = -9999.0;
 	}
@@ -384,6 +387,30 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(candidate));
 				state.append(lethal_flags, bool_value(false));
 			}
+		} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy })) {
+			// Two stacks: the cast names the plan's second one.
+			const ArrayRef firsts = effect_type == key::swap_enemy ? targets : allies;
+			for (const Value &first_value : gd::items(state, array_value(firsts))) {
+				if (!gd::is_dict(first_value)) {
+					continue;
+				}
+				const DictRef first = first_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, first, spell, acting_side))) {
+					continue;
+				}
+				const DictRef plan = _pair_spell_plan(state, enemy_hero, battle, active_stack, first, spell);
+				if (empty(state, plan)) {
+					continue;
+				}
+				const double score = gd::float_field(state, plan, key::score, -9999.0)
+						+ _spell_metadata_value_modifier(state, battle, active_stack, first, spell, behavior) + role_modifier;
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const Atom target_id = gd::string_field(state, first, key::battle_id, key::empty);
+				const DictRef candidate = cast_candidate(state, spell_id, target_id, score);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
 		}
 	}
 	return candidates;
@@ -443,8 +470,11 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 	} else if (effect_type == key::move_ally) {
 		// A move is only planned where it frees a shooter or brings a strike.
 		delta = _w(state, key::spell_bar_buff);
-	} else if (effect_type == key::recover_ally || effect_type == key::cleanse_ally) {
+	} else if (effect_type == key::recover_ally || effect_type == key::cleanse_ally || effect_type == key::graft_allies || effect_type == key::transfer_ally) {
 		delta = _w(state, key::spell_bar_recovery);
+	} else if (effect_type == key::swap_allies || effect_type == key::swap_enemy) {
+		// A swap is only planned where it frees a shooter or brings a strike.
+		delta = _w(state, key::spell_bar_buff);
 	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff, key::ally_effect })) {
 		// The condition first, then only the branch it picks.
 		if (!support_needs_pressure || _support_spell_has_active_pressure(state, battle, active_stack, target_stack, hostile_targets)) {

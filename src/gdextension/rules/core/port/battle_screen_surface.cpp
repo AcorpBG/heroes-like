@@ -783,6 +783,13 @@ DictRef perform_presented_action(State &state, DictRef session, Atom action, Dic
 			state.set(cell, str(key::r), int_value(gd::int_field(state, destination, key::r, -1)));
 			move_hex = dict_value(cell);
 		}
+		// The second stack a two-stack spell (or a drain's drinker) takes.
+		const Atom second_id = text_or(state, destination, key::second_target_id, key::empty);
+		if (second_id != key::empty) {
+			const DictRef second = state.new_dict();
+			state.set(second, str(key::battle_id), str(second_id));
+			move_hex = dict_value(second);
+		}
 		result = cast_player_spell(state, session_value, spell_id, target_id, move_hex);
 	} else {
 		// A strike can name the hex to strike from as its destination.

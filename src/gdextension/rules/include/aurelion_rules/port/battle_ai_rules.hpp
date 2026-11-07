@@ -253,6 +253,9 @@ double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef ac
 double _any_harm_cleanse_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
 double _dispel_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
 DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
+// A two-stack spell (Graft, Blood Tithe, the swaps) on a first stack: the best
+// second ({destination: {battle_id}, score}), or {} when no pair helps.
+DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef first, DictRef spell);
 
 // Slice 09: the weights, the attack, defend and advance scores, and the melee
 // approach (battle_ai_attack_scores.cpp).

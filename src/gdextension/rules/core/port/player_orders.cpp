@@ -184,8 +184,9 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	if (!gd::bool_field(state, resolution, key::ok, false)) {
 		return refusal(state, gd::string_field(state, resolution, key::message, key::spell_casting_failed_text));
 	}
-	// A move spell cast without its hex: nothing is spent, the screen asks for one.
-	if (gd::bool_field(state, resolution, key::needs_destination, false)) {
+	// A move spell cast without its hex, or a two-stack spell without its second
+	// stack: nothing is spent, the screen asks for it.
+	if (gd::bool_field(state, resolution, key::needs_destination, false) || gd::bool_field(state, resolution, key::needs_second_target, false)) {
 		return refusal(state, gd::string_field(state, resolution, key::message, key::spell_casting_failed_text));
 	}
 	_commit_spell_resistance_roll(state, session_battle(state, session), resolution);

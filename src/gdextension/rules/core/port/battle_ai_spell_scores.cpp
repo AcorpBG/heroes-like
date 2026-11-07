@@ -335,9 +335,13 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 		score += hostile_shooters > 0 ? 1.0 + static_cast<double>(hostile_shooters) * 1.5 : -2.0;
 	}
 	if (amount(key::reflect_spell) > 0) {
-		// Only a hero on the other side casts spells to turn aside.
-		const DictRef other_hero = battle_rules::_hero_payload_for_side(state, battle, battle_rules::_opposing_side(side_of(state, ally)));
-		score += empty(state, other_hero) ? -3.0 : 1.5;
+		// Only a commander on the other side who knows a battle spell casts one
+		// to turn aside; guards and most garrisons know none.
+		const Atom other_side = battle_rules::_opposing_side(side_of(state, ally));
+		const Value commander = gd::field(state, battle, other_side == key::enemy ? key::enemy_hero : key::player_commander_state);
+		const bool other_casts = gd::is_dict(commander) && !empty(state, commander.ref)
+				&& state.array_size(spell_rules::known_spells(state, gd::deep_duplicate_dict(state, commander.ref), key::battle)) > 0;
+		score += other_casts ? 1.5 : -3.0;
 	}
 	if (amount(key::act_next) > 0) {
 		score += 1.0 + _buff_spell_offense_payoff(state, ally);
@@ -656,6 +660,141 @@ DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 	const DictRef plan = state.new_dict();
 	state.set(plan, str(key::destination), dict_value(destination));
 	state.set(plan, str(key::score), gd::float_value(value));
+	return plan;
+}
+
+namespace {
+
+bool in_contact(State &state, DictRef stack, DictRef battle) {
+	return _stack_contact_band(state, stack, battle) == 0;
+}
+
+double stack_tier(const State &state, DictRef stack) {
+	return static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, stack, key::tier, 1)));
+}
+
+double stack_health(const State &state, DictRef stack) {
+	return static_cast<double>(engine_max<int64_t>(0, gd::int_field(state, stack, key::total_health, 0)));
+}
+
+// The living stacks of side within one hex of stack, stack and skip left out.
+int64_t neighbours_of_side(State &state, DictRef battle, DictRef stack, Atom side, DictRef skip) {
+	int64_t count = 0;
+	for (const Value &other : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
+		if (!gd::is_dict(other) || _is_same_stack(state, other.ref, stack) || _is_same_stack(state, other.ref, skip)) {
+			continue;
+		}
+		if (battle_rules::_stack_hex_distance(state, stack, other.ref) == 1) {
+			count += 1;
+		}
+	}
+	return count;
+}
+
+// Graft: worth it when the first stack is under attack and the second can bear
+// half of it; a stack already grafted is left alone.
+double graft_value(State &state, DictRef battle, DictRef first, DictRef second, ArrayRef hostiles) {
+	if (!empty(state, spell_rules::stack_mechanic_effect(state, first, battle, key::graft_partner))
+			|| !empty(state, spell_rules::stack_mechanic_effect(state, second, battle, key::graft_partner))) {
+		return -9999.0;
+	}
+	int64_t hostile_shooters = 0;
+	for (const Value &hostile : gd::items(state, array_value(hostiles))) {
+		if (gd::is_dict(hostile) && ranged(state, hostile.ref) && has_shots(state, hostile.ref)) {
+			hostile_shooters += 1;
+		}
+	}
+	const double threat = in_contact(state, first, battle) ? 1.0 : (hostile_shooters > 0 ? 0.6 : 0.25);
+	const double share = engine_min<double>(1.0, stack_health(state, second) / engine_max<double>(1.0, stack_health(state, first)));
+	double value = 1.0 + 2.5 * threat * share + 0.3 * (stack_tier(state, first) - stack_tier(state, second)) + (1.0 - _health_ratio(state, first)) * 1.5;
+	if (in_contact(state, second, battle)) {
+		value -= 1.0;
+	}
+	return value;
+}
+
+// Blood Tithe: health is worth more in a higher tier; the trade must gain.
+double transfer_value(State &state, DictRef enemy_hero, DictRef battle, DictRef spell, DictRef receiver, DictRef donor) {
+	const int64_t amount = spell_rules::transfer_amount(state, enemy_hero, spell, receiver, donor);
+	if (amount <= 0) {
+		return -9999.0;
+	}
+	const auto per_health = [&](DictRef stack) { return 1.0 + 0.25 * (stack_tier(state, stack) - 1.0); };
+	const double gain = static_cast<double>(amount) * (per_health(receiver) - per_health(donor));
+	if (gain <= 0.0) {
+		return -9999.0;
+	}
+	return 1.0 + gain / 40.0 + (in_contact(state, receiver, battle) ? 0.5 : 0.0);
+}
+
+// Signal Swap, one way round: an engaged shooter trades with a free melee
+// stack (it shoots again, the melee stack is in the fight), or a badly wounded
+// stack in the fight with a fresh one out of it.
+double swap_allies_one_way(State &state, DictRef battle, DictRef a, DictRef b) {
+	const bool b_shooter = ranged(state, b) && has_shots(state, b);
+	if (ranged(state, a) && has_shots(state, a) && in_contact(state, a, battle) && !in_contact(state, b, battle) && !b_shooter && _fights_in_melee(state, b)) {
+		return 3.0 + _buff_spell_offense_payoff(state, a) + 0.5 * _buff_spell_offense_payoff(state, b);
+	}
+	if (in_contact(state, a, battle) && !in_contact(state, b, battle) && !b_shooter && _health_ratio(state, a) < 0.4 && _health_ratio(state, b) > 0.7
+			&& stack_health(state, b) > stack_health(state, a)) {
+		return 1.5 + (1.0 - _health_ratio(state, a)) * 2.0;
+	}
+	return -9999.0;
+}
+
+// Changeling Swap: a free enemy shooter lands among the caster's stacks and
+// one of its melee stacks among the enemy's.
+double swap_enemy_value(State &state, DictRef battle, DictRef enemy, DictRef own) {
+	if (!ranged(state, enemy) || !has_shots(state, enemy) || in_contact(state, enemy, battle) || !_fights_in_melee(state, own)) {
+		return -9999.0;
+	}
+	const int64_t own_near = neighbours_of_side(state, battle, own, side_of(state, own), own);
+	if (own_near == 0) {
+		return -9999.0;
+	}
+	const int64_t enemy_near = neighbours_of_side(state, battle, enemy, side_of(state, enemy), enemy);
+	return 1.5 + static_cast<double>(engine_min<int64_t>(2, own_near)) + 0.75 * static_cast<double>(engine_min<int64_t>(2, enemy_near))
+			+ 0.5 * _buff_spell_offense_payoff(state, enemy);
+}
+
+} // namespace
+
+DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef first, DictRef spell) {
+	const Atom type = gd::string_field(state, get_base(effect_of(state, spell)), key::type, key::empty);
+	const Atom side = side_of(state, active_stack);
+	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
+	DictRef best_second = state.new_dict();
+	double best = -9999.0;
+	for (const Value &id : gd::items(state, array_value(spell_rules::second_stack_ids(state, enemy_hero, battle, first, spell, side)))) {
+		const DictRef second = _stack_by_battle_id(state, battle, gd::to_string(id));
+		if (empty(state, second)) {
+			continue;
+		}
+		double value = -9999.0;
+		if (type == key::graft_allies) {
+			value = graft_value(state, battle, first, second, hostiles);
+		} else if (type == key::transfer_ally) {
+			value = transfer_value(state, enemy_hero, battle, spell, first, second);
+		} else if (type == key::swap_allies) {
+			value = engine_max<double>(swap_allies_one_way(state, battle, first, second), swap_allies_one_way(state, battle, second, first));
+		} else if (type == key::swap_enemy) {
+			value = swap_enemy_value(state, battle, first, second);
+		}
+		if (value > best) {
+			best = value;
+			best_second = second;
+		}
+	}
+	if (empty(state, best_second) || best <= -9000.0) {
+		return state.new_dict();
+	}
+	best += cast_objective_score(state, battle, active_stack, first);
+	best -= mana_cost_term(state, spell);
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::battle_id), str(gd::string_field(state, best_second, key::battle_id, key::empty)));
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::destination), dict_value(destination));
+	state.set(plan, str(key::score), gd::float_value(best));
 	return plan;
 }
 

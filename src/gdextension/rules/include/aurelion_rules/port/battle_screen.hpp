@@ -37,6 +37,9 @@ ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id);
 // The empty hexes the player's move spell can take that stack to ([] for any
 // other spell, or a stack it cannot move).
 ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, Atom target_id);
+// The player's stacks a two-stack spell (or a drain's drinker) can take second
+// after target_id; [] for a spell that takes one stack.
+ArrayRef spell_second_target_ids(State &state, DictRef session, Atom spell_id, Atom target_id);
 ArrayRef get_spell_actions(State &state, DictRef session);
 Atom describe_entry_context(State &state, DictRef session);
 Atom _battle_entry_risk_label(State &state, DictRef session, DictRef battle);

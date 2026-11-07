@@ -249,6 +249,9 @@ static func spell_target_ids(session: SessionStateStoreScript.SessionData, spell
 static func spell_destination_hexes(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String) -> Array:
 	return HumanEngine.native_writing(&"BattleRules.spell_destination_hexes", [session, spell_id, target_id])
 
+static func spell_second_target_ids(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String) -> Array:
+	return HumanEngine.native_writing(&"BattleRules.spell_second_target_ids", [session, spell_id, target_id])
+
 static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return "Battle Spells | Mana 0/0 | No known spells"

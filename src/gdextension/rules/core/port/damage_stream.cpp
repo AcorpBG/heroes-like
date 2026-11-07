@@ -102,7 +102,30 @@ int64_t _calculate_damage(State &state, DictRef attacker, DictRef defender, Dict
 	return _damage_for_roll(state, attacker, defender, battle, base_roll, is_ranged, is_retaliation, attack_distance);
 }
 
+namespace {
+
+void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t damage);
+
+} // namespace
+
 void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_t damage) {
+	// Graft: the grafted stack takes half of it, rounded down.
+	const Atom partner = damage > 1 ? spell_rules::graft_partner(state, battle, battle_id) : static_cast<Atom>(key::empty);
+	if (partner == key::empty) {
+		damage_one_stack(state, battle, battle_id, damage);
+		return;
+	}
+	const int64_t shared = damage / 2;
+	const Atom label = _stack_label(state, _get_stack_by_id(state, battle, battle_id));
+	const Atom partner_label = _stack_label(state, _get_stack_by_id(state, battle, partner));
+	damage_one_stack(state, battle, battle_id, gd::sub(damage, shared));
+	_record_event(state, battle, gd::format(state, key::graft_shares_text, { str(label), int_value(shared), str(partner_label) }));
+	damage_one_stack(state, battle, partner, shared);
+}
+
+namespace {
+
+void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t damage) {
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	bool killed = false;
 	int64_t health_lost = 0;
@@ -137,6 +160,8 @@ void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_
 	// A hit wakes a sleeper; a curse jumps from a fallen stack.
 	spell_rules::after_stack_damaged(state, battle, battle_id, health_lost, killed);
 }
+
+} // namespace
 
 int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int64_t amount) {
 	int64_t restored = 0;

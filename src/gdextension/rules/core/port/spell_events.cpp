@@ -501,6 +501,10 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 	if (resolution_type == key::effect) {
 		Value effect_payload;
 		if (nonempty_dict_field(state, resolution, key::effect, effect_payload)) {
+			// A new graft replaces the stack's old one at both ends.
+			if (state.has(spell_rules::effect_mechanic(state, effect_payload.ref), str(key::graft_partner))) {
+				spell_rules::clear_graft(state, battle, target_battle_id);
+			}
 			_apply_stack_effect(state, battle, target_battle_id, effect_payload);
 			// Call to Arms: the stack acts next.
 			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::act_next, 0) > 0) {
@@ -574,6 +578,35 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		state.set(animation_resolution, str(key::to_r), int_value(gd::int_field(state, to_hex, key::r, -1)));
 		const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
 		message = concat(state, message, gd::format(state, key::moves_to_suffix_text, { str(label), str(_hex_label(state, to_hex)) }));
+		return true;
+	}
+	if (resolution_type == key::transfer_effect) {
+		// Blood Tithe: health from the second stack into the target, fallen creatures too.
+		const Atom donor_id = string_or_empty(state, resolution, key::source_battle_id);
+		const int64_t moved = spell_rules::move_stack_health(state, battle, donor_id, target_battle_id, gd::int_field(state, resolution, key::transfer_amount, 0));
+		recovered_amount = moved;
+		if (moved > 0) {
+			message = concat(state, message, gd::format(state, key::gives_health_suffix_text, {
+				str(_stack_label(state, _get_stack_by_id(state, battle, donor_id))),
+				int_value(moved),
+				str(_stack_label(state, _get_stack_by_id(state, battle, target_battle_id))),
+			}));
+		}
+		return true;
+	}
+	if (resolution_type == key::swap_effect) {
+		const Atom other_id = string_or_empty(state, resolution, key::source_battle_id);
+		const DictRef from_hex = gd::deep_duplicate_dict(state, _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id)));
+		spell_rules::swap_stack_places(state, battle, target_battle_id, other_id);
+		const DictRef to_hex = _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id));
+		state.set(animation_resolution, str(key::from_q), int_value(gd::int_field(state, from_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::from_r), int_value(gd::int_field(state, from_hex, key::r, -1)));
+		state.set(animation_resolution, str(key::to_q), int_value(gd::int_field(state, to_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::to_r), int_value(gd::int_field(state, to_hex, key::r, -1)));
+		message = concat(state, message, gd::format(state, key::trade_places_suffix_text, {
+			str(_stack_label(state, _get_stack_by_id(state, battle, target_battle_id))),
+			str(_stack_label(state, _get_stack_by_id(state, battle, other_id))),
+		}));
 		return true;
 	}
 	return false;

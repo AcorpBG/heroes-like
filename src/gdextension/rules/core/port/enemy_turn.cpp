@@ -360,7 +360,8 @@ DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_sta
 	Value destination;
 	state.lookup(action, str(key::destination), destination);
 	const DictRef resolution = spell_rules::resolve_battle_spell(state, resolved_enemy_hero, session_battle(state, session), active_stack, target, string_or_empty(state, action, key::spell_id), key::enemy, destination);
-	if (!gd::bool_field(state, resolution, key::ok, false) || gd::bool_field(state, resolution, key::needs_destination, false)) {
+	if (!gd::bool_field(state, resolution, key::ok, false) || gd::bool_field(state, resolution, key::needs_destination, false)
+			|| gd::bool_field(state, resolution, key::needs_second_target, false)) {
 		return action_result(state, false, string_or_empty(state, resolution, key::message), key::invalid);
 	}
 	_commit_spell_resistance_roll(state, session_battle(state, session), resolution);

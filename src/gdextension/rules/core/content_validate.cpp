@@ -1447,6 +1447,21 @@ void Check::spell(const Value &spell) {
 		if (integer(effect, "range", 0) <= 0) {
 			warn("Spell " + spell_id + " must define move range > 0.");
 		}
+	} else if (type == "graft_allies" || type == "transfer_ally" || type == "swap_allies" || type == "swap_enemy") {
+		// Two stacks: the first picked as the target mode says, the second when cast.
+		const std::string wanted_mode = type == "swap_enemy" ? "enemy_selected" : "ally_selected";
+		if (text(spell, "target_mode") != wanted_mode) {
+			warn("Spell " + spell_id + " " + type + " must use target_mode " + wanted_mode + ".");
+		}
+		if (type == "graft_allies" && integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
+		if (type == "transfer_ally" && integer(effect, "base_restore", 0) <= 0) {
+			warn("Spell " + spell_id + " must define transfer base_restore > 0.");
+		}
+		if ((type == "swap_allies" || type == "swap_enemy") && integer(effect, "range", 0) <= 0) {
+			warn("Spell " + spell_id + " must define swap range > 0.");
+		}
 	} else if (type == "ally_effect") {
 		// A lasting effect on one of the hero's stacks: a mechanic, modifiers or both.
 		const Value mechanic = get(effect, "mechanic", empty_dict_);
