@@ -4331,6 +4331,596 @@
         "shape": "line",
         "duration_rounds": 2
       }
+    },
+    {
+      "id": "spell_molten_edge",
+      "name": "Molten Edge",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Pours molten metal along one stack's weapons; whatever they strike catches fire.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "on_hit_burning": 8,
+          "on_hit_burning_power_scale": 4,
+          "uses_enemy_power": true,
+          "burning_turns": 2
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_cinderfall",
+      "name": "Cinderfall",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Glowing cinders fall on one enemy stack and set it and its neighbours burning.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 40,
+        "power_scale": 22,
+        "status_splash": "adjacent",
+        "status_effect": {
+          "effect_id": "status_burning",
+          "label": "Burning",
+          "duration_rounds": 1,
+          "mechanic": {
+            "burning_damage": 10,
+            "burning_damage_power_scale": 5
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_flashpoint",
+      "name": "Flashpoint",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Sets off all the heat a stack carries at once; a cold one only warms.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 25,
+        "power_scale": 12,
+        "heat_burst": true
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_annealing",
+      "name": "Annealing",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Slow heat mends one stack and leaves it tougher.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 40,
+        "power_scale": 8,
+        "duration_rounds": 1,
+        "modifiers": {
+          "defense": 2
+        }
+      }
+    },
+    {
+      "id": "spell_heavy_plating",
+      "name": "Heavy Plating",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Bolts thick plates onto one stack: hard to hurt, slow to move.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 5,
+        "duration_rounds": 3,
+        "fixed_duration": true,
+        "modifiers": {
+          "defense": 5,
+          "speed": -2
+        },
+        "modifiers_power_divisor": 4,
+        "modifiers_scaled": [
+          "defense"
+        ]
+      },
+      "mastery_reach": [
+        {
+          "rank": 2,
+          "reach": "adjacent"
+        },
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_tempering",
+      "name": "Tempering",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Tempers one stack like steel: no single blow or spell takes more than a quarter of it.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "damage_cap_pct": 25
+        }
+      }
+    },
+    {
+      "id": "spell_smelters_bargain",
+      "name": "Smelter's Bargain",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "One of your stacks feeds the furnace with its own blood, and the flame falls on an enemy stack.",
+      "effect": {
+        "type": "sacrifice",
+        "cost_pct": 15,
+        "damage_pct": 150,
+        "damage_pct_power_scale": 10
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_budding",
+      "name": "Budding",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "New creatures bud from one stack's ranks; they wither when the battle ends.",
+      "effect": {
+        "type": "temp_creatures",
+        "base_restore": 40,
+        "power_scale": 10
+      }
+    },
+    {
+      "id": "spell_earthsplit",
+      "name": "Earthsplit",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "The ground splits under one enemy stack and throws it back a hex.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 37,
+        "power_scale": 20,
+        "push": 1
+      }
+    },
+    {
+      "id": "spell_bloomburst",
+      "name": "Bloomburst",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A burst of blossom heals one stack and, more softly, the stacks beside it.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 52,
+        "power_scale": 10,
+        "reach": "adjacent",
+        "reach_pct": 50
+      }
+    },
+    {
+      "id": "spell_seed_of_return",
+      "name": "Seed of Return",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Plants a seed in one stack: if it falls, it grows back once.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "death_save_pct": 15,
+          "death_save_pct_power_scale": 2
+        }
+      }
+    },
+    {
+      "id": "spell_bark_ring",
+      "name": "Bark Ring",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A ring of bark closes around one stack and the stacks beside it.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 3,
+        "duration_rounds": 1,
+        "modifiers": {
+          "defense": 3
+        },
+        "reach": "adjacent"
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_blight",
+      "name": "Blight",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Rots one enemy stack: nothing heals it again this battle, and healing burns it instead.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_blighted",
+          "label": "Blighted",
+          "duration_rounds": 1,
+          "battle_long": true,
+          "mechanic": {
+            "heal_inversion_pct": 100,
+            "heal_inversion_pct_power_scale": 10
+          }
+        }
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_volley_signal",
+      "name": "Volley Signal",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A signal flare: every shooter of yours looses at the stack it marks and keeps its turn.",
+      "effect": {
+        "type": "free_volley",
+        "volley_pct": 40,
+        "volley_pct_power_scale": 4
+      }
+    },
+    {
+      "id": "spell_prism_bolt",
+      "name": "Prism Bolt",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A bolt of split light strikes one enemy stack and leaps on, weaker each time.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 37,
+        "power_scale": 20,
+        "chain": [
+          70,
+          50
+        ],
+        "mastery_chain": [
+          {
+            "rank": 3,
+            "pct": 30
+          }
+        ]
+      }
+    },
+    {
+      "id": "spell_rekindle",
+      "name": "Rekindle",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Lights the fallen of one stack back to their feet.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 52,
+        "power_scale": 10,
+        "raise": true
+      }
+    },
+    {
+      "id": "spell_watchful_light",
+      "name": "Watchful Light",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "A light keeps watch over the field and mends whichever stack of yours is worst hurt each round.",
+      "effect": {
+        "type": "battle_aura",
+        "aura": "triage",
+        "duration_rounds": 2,
+        "base_restore": 24,
+        "power_scale": 5
+      }
+    },
+    {
+      "id": "spell_glass_aegis",
+      "name": "Glass Aegis",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A shell of clear glass: no enemy spell can be aimed at the stack inside.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "spell_shield": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_steadfast_halo",
+      "name": "Steadfast Halo",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A steady light over one stack and its neighbours: nothing harries, staggers or roots them.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "reach": "adjacent",
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "mechanic": {
+          "cohesion_lock": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_hollowing",
+      "name": "Hollowing",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One of your stacks hollows out the enemies pressed against it and drinks what it takes.",
+      "effect": {
+        "type": "damage_around",
+        "base_damage": 24,
+        "power_scale": 13,
+        "heal_pct": 100
+      }
+    },
+    {
+      "id": "spell_tolling_doom",
+      "name": "Tolling Doom",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A bell only one enemy stack can hear; on its second toll the doom falls.",
+      "effect": {
+        "type": "doom_enemy",
+        "base_damage": 72,
+        "power_scale": 39,
+        "duration_rounds": 2
+      }
+    },
+    {
+      "id": "spell_last_breath",
+      "name": "Last Breath",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One stack cannot lose its last creature for a while, then catches its breath.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "deathless": 1,
+          "deathless_heal": 20,
+          "deathless_heal_power_scale": 4
+        }
+      }
     }
   ]
 }

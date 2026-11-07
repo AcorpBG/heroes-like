@@ -628,6 +628,10 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	if (status_id == key::status_marked || status_id == key::status_cursed) {
 		return 1.0;
 	}
+	// Tier 3: Burning hurts over its turns; a blighted stack can no longer be healed.
+	if (status_id == key::status_burning || status_id == key::status_blighted) {
+		return 1.0;
+	}
 	return 0.0;
 }
 

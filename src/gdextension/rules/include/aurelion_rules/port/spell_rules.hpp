@@ -249,6 +249,37 @@ Atom add_heat(State &state, DictRef battle, Atom battle_id, int64_t heat, int64_
 void act_next(State &state, DictRef battle, Atom battle_id);
 ArrayRef acts_next_first(State &state, DictRef battle, ArrayRef battle_ids);
 
+// The tier-3 spells' lasting mechanics (spell_tier3.cpp, docs/magic-system-spells.md). Burning (its status, a
+// burning blow's message suffix, empty when none lands) and a turn's end: Burning, Tolling Doom, Last Breath's heal.
+DictRef burning_payload(State &state, DictRef battle, Atom source_id, int64_t damage, int64_t turns);
+Atom burning_blow(State &state, DictRef battle, DictRef striker, Atom defender_id);
+void end_of_turn_tier3(State &state, DictRef battle, Atom battle_id);
+// A hit's health after Tempering's cap, Last Breath's last creature and Seed of Return's regrowth, with Budding's
+// creatures falling first; the creatures a stack keeps when the battle ends (its budded ones wither); Budding.
+int64_t health_after_hit(State &state, DictRef battle, DictRef stack, int64_t health, int64_t taken);
+int64_t kept_alive_count(State &state, DictRef stack);
+int64_t bud_stack(State &state, DictRef battle, Atom battle_id, int64_t amount);
+// Blight turns healing on its stack into harm (true when the stack is blighted); Rekindle raises fallen creatures
+// up to the stack's starting count; Glass Aegis refuses enemy spells; Steadfast Halo holds cohesion.
+bool blight_turns_heal(State &state, DictRef battle, DictRef stack, int64_t amount);
+int64_t raise_stack_health(State &state, DictRef battle, Atom battle_id, int64_t amount);
+bool spell_shielded(State &state, DictRef battle, DictRef stack);
+bool cohesion_locked(State &state, DictRef battle, DictRef stack);
+// Flashpoint spends a stack's Heat or kindles one on a cold stack (the message suffix); Earthsplit's hex toward the
+// stack's own edge (empty when it cannot move); Volley Signal's shooters, one shot's damage and the volley (its
+// messages); Hollowing's enemy stacks next to a stack.
+Atom spend_or_kindle_heat(State &state, DictRef battle, Atom battle_id);
+DictRef push_cell(State &state, DictRef battle, DictRef stack, int64_t steps);
+ArrayRef volley_shooters(State &state, DictRef battle, Atom side, DictRef target);
+int64_t volley_shot_damage(State &state, DictRef battle, DictRef shooter, DictRef target, int64_t pct);
+Atom fire_volley(State &state, DictRef battle, Atom side, Atom target_id, int64_t pct);
+ArrayRef enemies_beside(State &state, DictRef battle, DictRef stack);
+// Watchful Light: auras on battle.spell_auras (a newer one of a kind replaces its side's older one), the stack it
+// heals and the round start that heals it.
+void add_battle_aura(State &state, DictRef battle, DictRef entry);
+DictRef most_wounded_stack(State &state, DictRef battle, Atom side);
+void round_start_auras(State &state, DictRef battle, int64_t round);
+
 // Layer 8, 07b: the cast checked, resolved and paid for, and the hero's
 // known spells (spell_battle.cpp): those it can cast, the learned ones first
 // and then those its worn scrolls lend; learned_spells, the learned ones only.
@@ -290,6 +321,8 @@ Atom status_rules_text(State &state, Atom status_id);
 Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack, bool sentence);
 Atom _turns_label(State &state, int64_t turns);
 ArrayRef _cleanse_labels(State &state, DictRef effect);
+// Readable labels for status ids ("status_harried" -> "Harried").
+ArrayRef status_id_labels(State &state, const Value &ids);
 Atom _status_terms(State &state, DictRef status_effect);
 Atom _modifier_summary(State &state, DictRef modifiers);
 Atom _signed_modifier_label(State &state, int64_t amount);

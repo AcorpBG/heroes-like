@@ -13,6 +13,7 @@
 #include "aurelion_rules/port/hero_command_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 
@@ -762,7 +763,8 @@ ArrayRef _battle_survivor_stacks(State &state, const Value &session, Atom side, 
 		if (text_field(state, stack.ref, key::side) != side) {
 			continue;
 		}
-		const int64_t count = _alive_count(state, stack.ref);
+		// Budded creatures (Budding) wither when the battle ends.
+		const int64_t count = spell_rules::kept_alive_count(state, stack.ref);
 		if (count <= 0) {
 			continue;
 		}

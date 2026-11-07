@@ -1499,6 +1499,45 @@ void Check::spell(const Value &spell) {
 		if (integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
 		}
+	} else if (type == "sacrifice" || type == "doom_enemy" || type == "free_volley") {
+		// Aimed at an enemy stack: a payment in health, a doom that tolls later, the caster's shooters.
+		if (text(spell, "target_mode") != "enemy_selected") {
+			warn("Spell " + spell_id + " " + type + " must use target_mode enemy_selected.");
+		}
+		if (type == "sacrifice") {
+			const int64_t cost_pct = integer(effect, "cost_pct", 0);
+			if (cost_pct < 1 || cost_pct > 99 || integer(effect, "damage_pct", 0) <= 0) {
+				warn("Spell " + spell_id + " must define sacrifice cost_pct 1 to 99 and damage_pct > 0.");
+			}
+		}
+		if (type == "doom_enemy" && (integer(effect, "base_damage", 0) <= 0 || integer(effect, "power_scale", -1) < 0 || integer(effect, "duration_rounds", 0) <= 0)) {
+			warn("Spell " + spell_id + " must define doom base_damage > 0, power_scale >= 0 and duration_rounds > 0.");
+		}
+		if (type == "free_volley" && integer(effect, "volley_pct", 0) <= 0) {
+			warn("Spell " + spell_id + " must define volley_pct > 0.");
+		}
+	} else if (type == "temp_creatures" || type == "damage_around") {
+		// On one of the hero's stacks: creatures for this battle, or a blow at the enemies beside it.
+		if (!one_of(text(spell, "target_mode"), {"ally_selected", "ally_active"})) {
+			warn("Spell " + spell_id + " " + type + " must use target_mode ally_selected or ally_active.");
+		}
+		if (type == "temp_creatures" && integer(effect, "base_restore", 0) <= 0) {
+			warn("Spell " + spell_id + " must define temp_creatures base_restore > 0.");
+		}
+		if (type == "damage_around" && (integer(effect, "base_damage", 0) <= 0 || integer(effect, "power_scale", -1) < 0 || integer(effect, "heal_pct", 100) < 0)) {
+			warn("Spell " + spell_id + " must define damage_around base_damage > 0, power_scale >= 0 and heal_pct >= 0.");
+		}
+	} else if (type == "battle_aura") {
+		// Over the whole battle for some rounds: the caster's side keeps watch.
+		if (text(spell, "target_mode") != "battle") {
+			warn("Spell " + spell_id + " battle_aura must use target_mode battle.");
+		}
+		if (text(effect, "aura") != "triage") {
+			warn("Spell " + spell_id + " uses unsupported aura " + text(effect, "aura") + ".");
+		}
+		if (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define battle_aura base_restore > 0 and duration_rounds > 0.");
+		}
 	} else {
 		warn("Spell " + spell_id + " uses unsupported effect type " + type + ".");
 	}
@@ -1530,8 +1569,68 @@ void Check::spell(const Value &spell) {
 		warn("Spell " + spell_id + " splash must be adjacent.");
 	}
 	const std::string reach = text(effect, "reach");
-	if (!reach.empty() && reach != "all") {
-		warn("Spell " + spell_id + " reach must be all.");
+	if (!reach.empty() && reach != "all" && reach != "adjacent") {
+		warn("Spell " + spell_id + " reach must be all or adjacent.");
+	}
+	const int64_t reach_pct = integer(effect, "reach_pct", 100);
+	if (reach_pct < 1 || reach_pct > 100) {
+		warn("Spell " + spell_id + " reach_pct must be 1 to 100.");
+	}
+	// A status that spreads to the target's neighbours needs the status.
+	const std::string status_splash = text(effect, "status_splash");
+	if (!status_splash.empty() && (status_splash != "adjacent" || text(get(effect, "status_effect", empty_dict_), "effect_id").empty())) {
+		warn("Spell " + spell_id + " status_splash must be adjacent and needs status_effect.effect_id.");
+	}
+	// Jumps: the share of the damage at each jump, and more jumps from a mastery rank.
+	const Value chain = get(effect, "chain", empty_array_);
+	if (!gd::is_array(chain)) {
+		warn("Spell " + spell_id + " chain must be a list.");
+	} else {
+		for (const Value &pct : d_.array(chain.ref).items) {
+			const int64_t share = gd::is_int(pct) || gd::is_float(pct) ? gd::to_int(d_, pct) : 0;
+			if (share < 1 || share > 100) {
+				warn("Spell " + spell_id + " chain entries must be 1 to 100.");
+				break;
+			}
+		}
+	}
+	const Value mastery_chain = get(effect, "mastery_chain", empty_array_);
+	if (!gd::is_array(mastery_chain)) {
+		warn("Spell " + spell_id + " mastery_chain must be a list.");
+	} else {
+		for (const Value &entry : d_.array(mastery_chain.ref).items) {
+			const int64_t rank = is_dict(entry) ? integer(entry, "rank", 0) : 0;
+			const int64_t share = is_dict(entry) ? integer(entry, "pct", 0) : 0;
+			if (rank < 1 || rank > 4 || share < 1 || share > 100) {
+				warn("Spell " + spell_id + " mastery_chain entries need a rank of 1 to 4 and a pct of 1 to 100.");
+				break;
+			}
+		}
+	}
+	if (integer(effect, "push", 0) < 0) {
+		warn("Spell " + spell_id + " push must not be negative.");
+	}
+	for (const char *flag : {"heat_burst", "raise", "fixed_duration"}) {
+		const Value value = get(effect, flag, Value());
+		if (value.kind != Kind::Nil && value.kind != Kind::Bool) {
+			warn("Spell " + spell_id + " " + flag + " must be true or false.");
+		}
+	}
+	const Value battle_long = get(get(effect, "status_effect", empty_dict_), "battle_long", Value());
+	if (battle_long.kind != Kind::Nil && battle_long.kind != Kind::Bool) {
+		warn("Spell " + spell_id + " status_effect battle_long must be true or false.");
+	}
+	// The modifiers that grow with power must be among the spell's modifiers.
+	const Value modifiers_scaled = get(effect, "modifiers_scaled", empty_array_);
+	if (!gd::is_array(modifiers_scaled)) {
+		warn("Spell " + spell_id + " modifiers_scaled must be a list.");
+	} else {
+		for (const Value &field : d_.array(modifiers_scaled.ref).items) {
+			if (!field.is_string_like() || !is_dict(modifiers) || !has(modifiers, d_.text(field.ref).c_str())) {
+				warn("Spell " + spell_id + " modifiers_scaled must name the spell's modifiers.");
+				break;
+			}
+		}
 	}
 	if (integer(effect, "random_hits", 0) < 0 || integer(effect, "random_hits_power_divisor", 0) < 0) {
 		warn("Spell " + spell_id + " random_hits and its divisor must not be negative.");

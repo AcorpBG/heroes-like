@@ -554,6 +554,9 @@ static func _validate_spell_schema_record(
 	elif String(effect_type) == "ground_effect":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s ground metadata must use battle context." % spell_id)
+	elif String(effect_type) in ["sacrifice", "doom_enemy", "free_volley", "temp_creatures", "damage_around", "battle_aura"]:
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s %s metadata must use battle context." % [spell_id, effect_type])
 	elif String(effect_type) == "ally_effect":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s ally effect metadata must use battle context." % spell_id)

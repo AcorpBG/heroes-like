@@ -632,7 +632,9 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const Atom label = text_or(state, control_effect, key::label, key::control);
 		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
 		const Atom terms = harmful_status_terms(state, control_effect, power_against);
-		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, control_effect, power_against));
+		const Atom turns = gd::bool_field(state, control_effect, key::battle_long, false)
+				? static_cast<Atom>(key::rest_of_battle_text)
+				: _turns_label(state, harmful_status_turns(state, hero_state, spell, control_effect, power_against));
 		Atom summary = gd::format(state, key::leave_s_s_s_for_s, {str(target_name), str(label), str(terms), str(turns)});
 		summary = concat(state, summary, clauses_as_sentence(state, spell_extra_clauses(state, hero_state, spell, battle, target_stack)));
 		const DictRef control_payload = _status_effect_from_spell_effect_at(state, spell, battle, hero_state, power_against);
@@ -692,6 +694,42 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	// The spells that take a hex: the hex is picked on the field.
 	if (effect_type == key::ground_effect) {
 		return with_timing(ground_spell_summary(state, hero_state, spell, battle, target_stack, true));
+	}
+	// The tier-3 kinds (spell_tier3.cpp).
+	const Atom enemy_name = text_or(state, target_stack, key::name, key::the_selected_enemy);
+	if (effect_type == key::sacrifice) {
+		const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
+				gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero_state, battle, target_stack)));
+		return with_timing(gd::format(state, key::pay_for_damage_sentence, {int_value(gd::int_field(state, effect, key::cost_pct, 0)), str(enemy_name), int_value(pct)}));
+	}
+	if (effect_type == key::doom_enemy) {
+		const DictRef damage_projection = battle_spell_damage_projection(state, hero_state, battle, target_stack, spell);
+		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 2));
+		Atom summary = gd::format(state, key::doom_sentence, {str(enemy_name), int_value(gd::int_field(state, damage_projection, key::final_damage, 0)), str(_turns_label(state, turns))});
+		if (gd::int_field(state, damage_projection, key::resistance_pct, 0) > 0) {
+			summary = concat(state, summary, gd::format(state, key::resistance_reduces_raw_d_by_d,
+					{int_value(gd::int_field(state, damage_projection, key::raw_damage, 0)), int_value(gd::int_field(state, damage_projection, key::resistance_pct, 0))}));
+		}
+		return with_timing(summary);
+	}
+	if (effect_type == key::free_volley) {
+		const int64_t pct = gd::add(gd::int_field(state, effect, key::volley_pct, 0),
+				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero_state)));
+		return with_timing(gd::format(state, key::volley_sentence, {str(enemy_name), int_value(pct)}));
+	}
+	if (effect_type == key::temp_creatures) {
+		return with_timing(gd::format(state, key::bud_sentence, {int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(ally_name)}));
+	}
+	if (effect_type == key::damage_around) {
+		const Atom caster_side = text_or(state, active_stack, key::side, key::player);
+		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state), opposing_side_knowledge(state, battle, caster_side)));
+		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), against);
+		return with_timing(gd::format(state, key::around_sentence, {int_value(damage), str(ally_name)}));
+	}
+	if (effect_type == key::battle_aura) {
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
+		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, {int_value(rounds)});
+		return with_timing(gd::format(state, key::watch_sentence, {str(rounds_label), int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
 	}
 	return key::no_authored_battle_summary_is_available;
 }

@@ -499,6 +499,22 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		const DictRef target_after = _get_stack_by_id(state, battle, target_battle_id);
 		if (!gd::is_empty(state, target_after) && _alive_count(state, target_after) <= 0) {
 			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(_stack_label(state, target_after)) }));
+			return true;
+		}
+		// Flashpoint spends the Heat it set off, or kindles one.
+		if (gd::bool_field(state, resolution, key::heat_burst, false)) {
+			message = concat(state, message, spell_rules::spend_or_kindle_heat(state, battle, target_battle_id));
+		}
+		// Earthsplit knocks the stack back, when that hex is still free.
+		Value push_to;
+		if (nonempty_dict_field(state, resolution, key::push_to, push_to) && !gd::is_empty(state, target_after)) {
+			const DictRef cell = spell_rules::push_cell(state, battle, target_after, 1);
+			if (!gd::is_empty(state, cell) && gd::int_field(state, cell, key::q, -1) == gd::int_field(state, push_to.ref, key::q, -2)
+					&& gd::int_field(state, cell, key::r, -1) == gd::int_field(state, push_to.ref, key::r, -2)) {
+				_set_stack_hex(state, battle, target_battle_id, cell);
+				_sync_distance_from_hexes(state, battle);
+				message = concat(state, message, gd::format(state, key::knocked_back_suffix_text, { str(_stack_label(state, target_after)) }));
+			}
 		}
 		return true;
 	}
@@ -528,7 +544,11 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
 			message = concat(state, message, gd::format(state, key::sheds_pressure_suffix_text, { str(label), int_value(cleared), str(plural_s(cleared)) }));
 		}
-		const int64_t recovered = _restore_stack_health(state, battle, target_battle_id, gd::int_field(state, resolution, key::recovery_amount, 0));
+		// Rekindle raises fallen creatures; other healing mends the wounded one.
+		const int64_t amount = gd::int_field(state, resolution, key::recovery_amount, 0);
+		const int64_t recovered = gd::bool_field(state, resolution, key::raise, false)
+				? spell_rules::raise_stack_health(state, battle, target_battle_id, amount)
+				: _restore_stack_health(state, battle, target_battle_id, amount);
 		recovered_amount = recovered;
 		if (recovered > 0) {
 			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
@@ -611,6 +631,42 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 			str(_stack_label(state, _get_stack_by_id(state, battle, target_battle_id))),
 			str(_stack_label(state, _get_stack_by_id(state, battle, other_id))),
 		}));
+		return true;
+	}
+	// Budding: creatures for this battle only.
+	if (resolution_type == key::bud_effect) {
+		const int64_t added = spell_rules::bud_stack(state, battle, target_battle_id, gd::int_field(state, resolution, key::amount, 0));
+		if (added > 0) {
+			message = concat(state, message, gd::format(state, key::buds_creatures_suffix_text, { str(_stack_label(state, _get_stack_by_id(state, battle, target_battle_id))), int_value(added) }));
+		}
+		return true;
+	}
+	// Volley Signal: the caster's shooters fire at the target and keep their turns.
+	if (resolution_type == key::volley_effect) {
+		const Atom shots = spell_rules::fire_volley(state, battle, string_or_empty(state, resolution, key::side), target_battle_id, gd::int_field(state, resolution, key::volley_pct, 0));
+		message = concat(state, message, shots);
+		const DictRef target_after = _get_stack_by_id(state, battle, target_battle_id);
+		if (!gd::is_empty(state, target_after) && _alive_count(state, target_after) <= 0) {
+			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(_stack_label(state, target_after)) }));
+		}
+		return true;
+	}
+	// Watchful Light keeps watch from the next round.
+	if (resolution_type == key::aura_effect) {
+		Value entry;
+		if (nonempty_dict_field(state, resolution, key::aura_entry, entry)) {
+			spell_rules::add_battle_aura(state, battle, gd::deep_duplicate_dict(state, entry.ref));
+		}
+		return true;
+	}
+	// Smelter's Bargain: the paying stack loses its share, never its last point.
+	if (resolution_type == key::pay_health) {
+		const DictRef payer = _get_stack_by_id(state, battle, target_battle_id);
+		if (!gd::is_empty(state, payer) && _alive_count(state, payer) > 0) {
+			const int64_t health = gd::int_field(state, payer, key::total_health, 0);
+			state.set(payer, str(key::total_health), int_value(engine_max<int64_t>(1, gd::sub(health, gd::int_field(state, resolution, key::amount, 0)))));
+			_sync_occupied_hexes(state, battle);
+		}
 		return true;
 	}
 	// A hex spell lays its ground; the board reads it from then on.

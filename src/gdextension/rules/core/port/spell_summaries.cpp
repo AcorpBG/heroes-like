@@ -10,6 +10,7 @@
 
 namespace aurelion::rules::port::spell_rules {
 
+using compat::engine_max;
 using gd::array_value;
 using gd::dict_value;
 using gd::int_value;
@@ -137,7 +138,9 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
 		const Atom terms = harmful_status_terms(state, status_effect, power_against);
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
-		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
+		const Atom turns = gd::bool_field(state, status_effect, key::battle_long, false)
+				? static_cast<Atom>(key::rest_of_battle_text)
+				: _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
 		const Atom summary = gd::format(state, key::status_on_for_text, { str(label), str(terms), str(target_label), str(turns) });
 		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, target_stack)));
 	}
@@ -210,6 +213,40 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	// The spells that take a hex (spell_ground.cpp).
 	if (effect_type == key::ground_effect) {
 		return ground_spell_summary(state, hero_state, spell, battle, target_stack, false);
+	}
+	// The tier-3 kinds (spell_tier3.cpp).
+	if (effect_type == key::sacrifice) {
+		const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
+				gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero_state, battle, target_stack)));
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		return gd::format(state, key::sacrifice_summary_text, { int_value(gd::int_field(state, effect, key::cost_pct, 0)), str(target_label), int_value(pct) });
+	}
+	if (effect_type == key::doom_enemy) {
+		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 2));
+		return gd::format(state, key::doom_summary_text, { str(target_label), int_value(damage), str(_turns_label(state, turns)) });
+	}
+	if (effect_type == key::free_volley) {
+		const int64_t pct = gd::add(gd::int_field(state, effect, key::volley_pct, 0),
+				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero_state)));
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		return gd::format(state, key::volley_summary_text, { str(target_label), int_value(pct) });
+	}
+	if (effect_type == key::temp_creatures) {
+		return gd::format(state, key::bud_summary_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(ally_label(state, spell, active_stack)) });
+	}
+	if (effect_type == key::damage_around) {
+		// Harmful numbers at the caster's power less the other side's Knowledge.
+		const Atom caster_side = gd::string_field(state, active_stack, key::side, key::player);
+		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state), opposing_side_knowledge(state, battle, caster_side)));
+		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), against);
+		return gd::format(state, key::around_summary_text, { int_value(damage), str(ally_label(state, spell, active_stack)) });
+	}
+	if (effect_type == key::battle_aura) {
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
+		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
+		return gd::format(state, key::watch_summary_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(rounds_label) });
 	}
 	return key::no_supported_battle_effect_text;
 }
@@ -284,8 +321,12 @@ Atom _turns_label(State &state, int64_t turns) {
 }
 
 ArrayRef _cleanse_labels(State &state, DictRef effect) {
+	return status_id_labels(state, get_or_new_array(state, effect, key::cleanse_effect_ids));
+}
+
+ArrayRef status_id_labels(State &state, const Value &ids) {
 	const ArrayRef labels = state.new_array();
-	const ArrayRef effect_ids = _normalize_string_array(state, get_or_new_array(state, effect, key::cleanse_effect_ids));
+	const ArrayRef effect_ids = _normalize_string_array(state, ids);
 	const int64_t size = state.array_size(effect_ids);
 	for (int64_t index = 0; index < size; ++index) {
 		const Atom effect_id = gd::to_string(state.at(effect_ids, index));
@@ -396,6 +437,35 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 	if (has(key::heal_block)) {
 		parts.push_back(key::heal_block_term_text);
 	}
+	// Tier 3.
+	if (has(key::on_hit_burning)) {
+		const int64_t turns = gd::int_field(state, mechanic, key::burning_turns, 2);
+		parts.push_back(gd::format(state, key::on_hit_burning_term_text, { amount(key::on_hit_burning), int_value(turns) }));
+	}
+	if (has(key::burning_damage)) {
+		parts.push_back(gd::format(state, key::burning_term_text, { amount(key::burning_damage) }));
+	}
+	if (has(key::damage_cap_pct)) {
+		parts.push_back(gd::format(state, key::damage_cap_term_text, { amount(key::damage_cap_pct) }));
+	}
+	if (has(key::death_save_pct)) {
+		parts.push_back(gd::format(state, key::death_save_term_text, { amount(key::death_save_pct) }));
+	}
+	if (has(key::deathless)) {
+		parts.push_back(gd::format(state, key::deathless_term_text, { amount(key::deathless_heal) }));
+	}
+	if (has(key::heal_inversion_pct)) {
+		parts.push_back(gd::format(state, key::heal_inversion_term_text, { amount(key::heal_inversion_pct) }));
+	}
+	if (has(key::spell_shield)) {
+		parts.push_back(key::spell_shield_term_text);
+	}
+	if (has(key::cohesion_lock)) {
+		parts.push_back(key::cohesion_lock_term_text);
+	}
+	if (has(key::doom_damage)) {
+		parts.push_back(gd::format(state, key::doom_term_text, { amount(key::doom_damage) }));
+	}
 	return join_with_comma(state, parts);
 }
 
@@ -459,6 +529,15 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 		if (rooted_bonus > 0) {
 			state.append(clauses, str(gd::format(state, key::rooted_bonus_clause_text, { int_value(rooted_bonus) })));
 		}
+		if (gd::bool_field(state, effect, key::heat_burst, false)) {
+			state.append(clauses, str(key::heat_burst_clause_text));
+		}
+		const int64_t push = gd::int_field(state, effect, key::push, 0);
+		if (push == 1) {
+			state.append(clauses, str(key::push_one_clause_text));
+		} else if (push > 1) {
+			state.append(clauses, str(gd::format(state, key::push_clause_text, { int_value(push) })));
+		}
 	} else if (effect_type == key::control_enemy) {
 		const DictRef follow = gd::as_dict(get_or_new_dict(state, effect, key::follow_status_effect));
 		if (!gd::is_empty(state, follow)) {
@@ -476,6 +555,9 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 			state.append(clauses, str(key::cleanse_status_clause_text));
 		} else if (statuses > 1) {
 			state.append(clauses, str(gd::format(state, key::cleanse_statuses_clause_text, { int_value(statuses) })));
+		}
+		if (gd::bool_field(state, effect, key::raise, false)) {
+			state.append(clauses, str(key::raise_clause_text));
 		}
 	}
 	// The stacks it reaches beyond the target (spell_reach.cpp).
@@ -498,9 +580,39 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 		if (drain_pct > 0) {
 			state.append(clauses, str(gd::format(state, key::drain_clause_text, { int_value(drain_pct) })));
 		}
+		if (gd::string_field(state, effect, key::status_splash, key::empty) == key::adjacent) {
+			const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
+			state.append(clauses, str(gd::format(state, key::status_splash_clause_text, { str(gd::string_field(state, status_effect, key::label, key::effect)) })));
+		}
+		std::string jumps;
+		for (const Value &pct : gd::field_items(state, effect, str(key::chain))) {
+			if (!jumps.empty()) {
+				jumps += state.text(key::then_separator_text);
+			}
+			jumps += state.text(gd::format(state, key::percent_text, { int_value(gd::to_int(state, pct)) }));
+		}
+		if (!jumps.empty()) {
+			state.append(clauses, str(gd::format(state, key::chain_clause_text, { str(state.intern(jumps)) })));
+		}
+		for (const Value &entry : gd::field_items(state, effect, str(key::mastery_chain))) {
+			if (gd::is_dict(entry)) {
+				state.append(clauses, str(gd::format(state, key::mastery_chain_clause_text,
+						{ int_value(gd::int_field(state, entry.ref, key::rank, 0)), int_value(gd::int_field(state, entry.ref, key::pct, 0)) })));
+			}
+		}
 	}
-	if (effect_type == key::recover_ally && gd::string_field(state, effect, key::reach, key::empty) == key::all) {
+	const Atom reach = gd::string_field(state, effect, key::reach, key::empty);
+	if (effect_type == key::recover_ally && reach == key::all) {
 		state.append(clauses, str(key::heal_all_clause_text));
+	}
+	if (effect_type == key::recover_ally && reach == key::adjacent) {
+		state.append(clauses, str(gd::format(state, key::heal_beside_clause_text, { int_value(gd::int_field(state, effect, key::reach_pct, 100)) })));
+	} else if (reach == key::adjacent && (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect)) {
+		state.append(clauses, str(key::reach_beside_clause_text));
+	}
+	const ArrayRef immune = status_id_labels(state, get_or_new_array(state, effect, key::status_immunity_ids));
+	if (state.array_size(immune) > 0) {
+		state.append(clauses, str(gd::format(state, key::keeps_off_clause_text, { str(join_array_with_comma(state, immune)) })));
 	}
 	for (const Value &entry : gd::field_items(state, spell, str(key::mastery_reach))) {
 		if (!gd::is_dict(entry)) {

@@ -81,7 +81,7 @@ int64_t swap_range(State &state, DictRef hero, DictRef battle, DictRef spell, Di
 
 bool takes_second_stack(State &state, DictRef spell) {
 	const Atom type = effect_type_of(state, spell);
-	return type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies || type == key::swap_enemy;
+	return type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies || type == key::swap_enemy || type == key::sacrifice;
 }
 
 bool offers_second_stack(State &state, DictRef spell) {
@@ -147,8 +147,8 @@ ArrayRef second_stack_ids(State &state, DictRef hero, DictRef battle, DictRef fi
 		if (battle_id_of(state, stack) == battle_id_of(state, first)) {
 			continue;
 		}
-		// Blood Tithe's donor keeps at least 1 health.
-		if (type == key::transfer_ally && total_health(state, stack) <= 1) {
+		// Blood Tithe's donor and Smelter's Bargain's payer keep at least 1 health.
+		if ((type == key::transfer_ally || type == key::sacrifice) && total_health(state, stack) <= 1) {
 			continue;
 		}
 		if (swaps && (battle_rules::_stack_is_rooted(state, stack, battle)
@@ -179,7 +179,8 @@ int64_t transfer_amount(State &state, DictRef hero, DictRef spell, DictRef recei
 int64_t move_stack_health(State &state, DictRef battle, Atom donor_id, Atom receiver_id, int64_t amount) {
 	const DictRef donor = battle_rules::_get_stack_by_id(state, battle, donor_id);
 	const DictRef receiver = battle_rules::_get_stack_by_id(state, battle, receiver_id);
-	if (!alive(state, donor) || !alive(state, receiver) || amount <= 0 || heal_blocked(state, receiver, battle)) {
+	if (!alive(state, donor) || !alive(state, receiver) || amount <= 0 || heal_blocked(state, receiver, battle)
+			|| !gd::is_empty(state, stack_status_effect(state, receiver, battle, key::status_blighted))) {
 		return 0;
 	}
 	const int64_t receiver_health = total_health(state, receiver);

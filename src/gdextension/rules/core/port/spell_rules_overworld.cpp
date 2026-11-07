@@ -688,6 +688,9 @@ Atom _target_mode_label(State &state, Atom target_mode) {
 	if (target_mode == key::hex_selected) {
 		return key::a_hex_you_pick_text;
 	}
+	if (target_mode == key::battle) {
+		return key::the_whole_battle_text;
+	}
 	return gd::replace(state, target_mode, key::_, key::space);
 }
 

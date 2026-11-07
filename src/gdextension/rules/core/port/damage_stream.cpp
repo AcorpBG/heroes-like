@@ -140,7 +140,8 @@ void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t dama
 			// max(0, int - max(0, damage - absorbed)): ints.
 			const int64_t health = int_field(state, stack.ref, key::total_health, 0);
 			const int64_t taken = engine_max<int64_t>(0, gd::sub(damage, absorbed));
-			state.set(stack.ref, str(key::total_health), int_value(engine_max<int64_t>(0, gd::sub(health, taken))));
+			// Tempering's cap, Last Breath, Seed of Return and Budding's creatures (spell_tier3.cpp).
+			state.set(stack.ref, str(key::total_health), int_value(spell_rules::health_after_hit(state, battle, stack.ref, health, taken)));
 			health_lost = gd::sub(health, int_field(state, stack.ref, key::total_health, 0));
 			if (absorbed > 0) {
 				const std::string label = state.text(_stack_label(state, stack.ref));
@@ -164,6 +165,11 @@ void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t dama
 } // namespace
 
 int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int64_t amount) {
+	// Blight turns healing on its stack into harm; a sealed wound keeps both out.
+	const DictRef target = _get_stack_by_id(state, battle, battle_id);
+	if (!gd::is_empty(state, target) && !spell_rules::heal_blocked(state, target, battle) && spell_rules::blight_turns_heal(state, battle, target, amount)) {
+		return 0;
+	}
 	int64_t restored = 0;
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	const int64_t count = untyped_size(state, stacks);

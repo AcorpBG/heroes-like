@@ -269,7 +269,7 @@ DictRef reflected_spell_target(State &state, DictRef battle, DictRef target, Ato
 	}
 	const ArrayRef candidates = state.new_array();
 	for (const Value &other : gd::items(state, array_value(alive_stacks(state, battle)))) {
-		if (side_of(state, other.ref) != side_of(state, target)) {
+		if (side_of(state, other.ref) != side_of(state, target) && !spell_shielded(state, battle, other.ref)) {
 			state.append(candidates, other);
 		}
 	}
@@ -324,6 +324,8 @@ void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 		battle_rules::_apply_damage_to_stack(state, battle, battle_id, curse_damage);
 		battle_rules::_record_event(state, battle, gd::format(state, key::curse_deals_text, { str(label), int_value(curse_damage) }));
 	}
+	// Burning, Tolling Doom and Last Breath's heal (spell_tier3.cpp).
+	end_of_turn_tier3(state, battle, battle_id);
 }
 
 bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
@@ -397,6 +399,11 @@ ArrayRef after_blow_mechanics(State &state, DictRef battle, Atom attacker_id, At
 	const DictRef striker = battle_rules::_get_stack_by_id(state, battle, attacker_id);
 	if (dealt <= 0 || _alive_count(state, striker) <= 0) {
 		return messages;
+	}
+	// Molten Edge: the blow leaves its target Burning.
+	const Atom burning = burning_blow(state, battle, striker, defender_id);
+	if (burning != key::empty) {
+		state.append(messages, str(burning));
 	}
 	const int64_t lifesteal_pct = stack_mechanic_int(state, striker, battle, key::lifesteal_pct);
 	if (lifesteal_pct > 0) {

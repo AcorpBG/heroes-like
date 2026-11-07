@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
@@ -298,7 +299,7 @@ Atom _battle_aftermath_side_force_clause(State &state, DictRef battle, Atom side
 			continue;
 		}
 		const int64_t base_count = engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0));
-		const int64_t alive_count = _alive_count(state, stack);
+		const int64_t alive_count = spell_rules::kept_alive_count(state, stack);
 		starting_troops = gd::add(starting_troops, base_count);
 		surviving_troops = gd::add(surviving_troops, alive_count);
 		if (alive_count > 0) {
@@ -386,7 +387,7 @@ DictRef _battle_report_side_casualties(State &state, DictRef battle, Atom side) 
 			continue;
 		}
 		const int64_t starting_count = engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0));
-		const int64_t surviving_count = engine_max<int64_t>(0, _alive_count(state, stack));
+		const int64_t surviving_count = engine_max<int64_t>(0, spell_rules::kept_alive_count(state, stack));
 		const int64_t lost_count = engine_max<int64_t>(0, gd::sub(starting_count, surviving_count));
 		deployed = gd::add(deployed, starting_count);
 		surviving = gd::add(surviving, surviving_count);

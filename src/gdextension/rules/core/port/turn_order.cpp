@@ -144,6 +144,8 @@ void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 		state.set(context, str(key::healing), int_value(healing_amount));
 		_append_presentation_event(state, battle, state.intern("heal"), message, context);
 	}
+	// Watchful Light heals its side's most wounded stack.
+	spell_rules::round_start_auras(state, battle, round_number);
 	_sync_occupied_hexes(state, battle);
 	_sync_distance_from_hexes(state, battle);
 	_apply_round_pressure_shifts(state, battle);

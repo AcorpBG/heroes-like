@@ -249,7 +249,8 @@ double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef ac
 	Value mastery_reach;
 	const bool reaches = (state.lookup(spell, str(key::mastery_reach), mastery_reach) && gd::is_array(mastery_reach) && state.array_size(mastery_reach.ref) > 0)
 			|| state.has(effect, str(key::splash)) || state.has(effect, str(key::line)) || state.has(effect, str(key::random_hits))
-			|| state.has(effect, str(key::drain_pct)) || state.has(effect, str(key::reach));
+			|| state.has(effect, str(key::drain_pct)) || state.has(effect, str(key::reach)) || state.has(effect, str(key::status_splash))
+			|| state.has(effect, str(key::chain));
 	if (!reaches || empty(state, target)) {
 		return 0.0;
 	}
@@ -337,14 +338,30 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	if (amount(key::shot_shield) > 0) {
 		score += hostile_shooters > 0 ? 1.0 + static_cast<double>(hostile_shooters) * 1.5 : -2.0;
 	}
-	if (amount(key::reflect_spell) > 0) {
+	if (amount(key::reflect_spell) > 0 || amount(key::spell_shield) > 0) {
 		// Only a commander on the other side who knows a battle spell casts one
-		// to turn aside; guards and most garrisons know none.
+		// to turn aside or keep off; guards and most garrisons know none.
 		const Atom other_side = battle_rules::_opposing_side(side_of(state, ally));
 		const Value commander = gd::field(state, battle, other_side == key::enemy ? key::enemy_hero : key::player_commander_state);
 		const bool other_casts = gd::is_dict(commander) && !empty(state, commander.ref)
 				&& state.array_size(spell_rules::known_spells(state, gd::deep_duplicate_dict(state, commander.ref), key::battle)) > 0;
 		score += other_casts ? 1.5 : -3.0;
+	}
+	// The tier-3 mechanics: burning blows pay off for a stack that strikes; a cap, a last breath and a seed of
+	// return for a stack under attack, more as it weakens; held cohesion for a stack in a fight.
+	if (amount(key::on_hit_burning) > 0) {
+		const bool strikes = engaged || (ranged(state, ally) && has_shots(state, ally)) || _can_make_melee_attack(state, ally, battle, state.new_dict());
+		score += strikes ? 1.0 + _buff_spell_offense_payoff(state, ally) * 0.8 : 0.3;
+	}
+	const bool threatened = engaged || melee_hostiles > 0 || hostile_shooters > 0;
+	if (amount(key::damage_cap_pct) > 0) {
+		score += engaged ? 2.5 + _health_ratio(state, ally) : (threatened ? 1.0 : -1.0);
+	}
+	if (amount(key::death_save_pct) > 0 || amount(key::deathless) > 0) {
+		score += (engaged ? 2.0 : (threatened ? 0.5 : -1.0)) + (1.0 - _health_ratio(state, ally)) * 3.0;
+	}
+	if (amount(key::cohesion_lock) > 0) {
+		score += engaged ? 1.0 : 0.3;
 	}
 	if (amount(key::act_next) > 0) {
 		score += 1.0 + _buff_spell_offense_payoff(state, ally);
@@ -760,6 +777,23 @@ double swap_enemy_value(State &state, DictRef battle, DictRef enemy, DictRef own
 			+ 0.5 * _buff_spell_offense_payoff(state, enemy);
 }
 
+// Smelter's Bargain: the share of the enemy stack it takes against the share the paying stack gives.
+double sacrifice_value(State &state, DictRef enemy_hero, DictRef battle, DictRef spell, DictRef enemy, DictRef payer) {
+	const DictRef effect = get_base(effect_of(state, spell));
+	const int64_t health = gd::int_field(state, payer, key::total_health, 0);
+	const int64_t cost = engine_min<int64_t>(health - 1, engine_max<int64_t>(1, health * gd::int_field(state, effect, key::cost_pct, 0) / 100));
+	if (cost <= 0) {
+		return -9999.0;
+	}
+	const int64_t pct = gd::int_field(state, effect, key::damage_pct, 0)
+			+ gd::int_field(state, effect, key::damage_pct_power_scale, 0) * spell_rules::spell_power_against(state, enemy_hero, battle, enemy);
+	const int64_t resistance = spell_rules::spell_damage_resistance_pct(state, battle, enemy, spell);
+	const double damage = static_cast<double>(cost) * static_cast<double>(pct) / 100.0 * static_cast<double>(100 - resistance) / 100.0;
+	const double dealt = engine_min<double>(1.0, damage / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, enemy, key::total_health, 0))));
+	const double paid = static_cast<double>(cost) / static_cast<double>(engine_max<int64_t>(1, health));
+	return 1.0 + (dealt - paid * 0.6) * _w(state, key::spell_damage_share) + (stack_tier(state, enemy) >= stack_tier(state, payer) ? 0.5 : 0.0);
+}
+
 } // namespace
 
 DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef first, DictRef spell) {
@@ -774,7 +808,9 @@ DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 			continue;
 		}
 		double value = -9999.0;
-		if (type == key::graft_allies) {
+		if (type == key::sacrifice) {
+			value = sacrifice_value(state, enemy_hero, battle, spell, first, second);
+		} else if (type == key::graft_allies) {
 			value = graft_value(state, battle, first, second, hostiles);
 		} else if (type == key::transfer_ally) {
 			value = transfer_value(state, enemy_hero, battle, spell, first, second);
@@ -799,6 +835,80 @@ DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 	state.set(plan, str(key::destination), dict_value(destination));
 	state.set(plan, str(key::score), gd::float_value(best));
 	return plan;
+}
+
+double _volley_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell) {
+	const DictRef effect = get_base(effect_of(state, spell));
+	const int64_t pct = gd::int_field(state, effect, key::volley_pct, 0) + gd::int_field(state, effect, key::volley_pct_power_scale, 0) * spell_rules::spell_power(state, enemy_hero);
+	int64_t dealt = 0;
+	for (const Value &id : gd::items(state, array_value(spell_rules::volley_shooters(state, battle, side_of(state, active_stack), target)))) {
+		const DictRef shooter = _stack_by_battle_id(state, battle, gd::to_string(id));
+		if (!empty(state, shooter)) {
+			dealt += spell_rules::volley_shot_damage(state, battle, shooter, target, pct);
+		}
+	}
+	if (dealt <= 0) {
+		return -9999.0;
+	}
+	double score = (_attack_score(state, active_stack, target, battle, true) + 1.5) * 0.6;
+	score += engine_min<double>(1.0, static_cast<double>(dealt) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, target, key::total_health, 0)))) * _w(state, key::spell_damage_share);
+	score += cast_objective_score(state, battle, active_stack, target);
+	return score - mana_cost_term(state, spell);
+}
+
+double _bud_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	const double unit_hp = static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1)));
+	const double creatures = static_cast<double>(_battle_recovery_amount(state, enemy_hero, spell)) / unit_hp;
+	const bool engaged = _stack_contact_band(state, ally, battle) == 0;
+	double score = 1.0 + engine_min<double>(4.0, creatures * 0.5) + _buff_spell_offense_payoff(state, ally) + (engaged ? 1.0 : 0.0);
+	score += cast_objective_score(state, battle, active_stack, ally);
+	return score - mana_cost_term(state, spell);
+}
+
+double _around_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	double score = 0.0;
+	int64_t total = 0;
+	for (const Value &enemy : gd::items(state, array_value(spell_rules::enemies_beside(state, battle, ally)))) {
+		const int64_t damage = gd::int_field(state, spell_rules::battle_spell_damage_projection(state, enemy_hero, battle, enemy.ref, spell), key::final_damage, 0);
+		const int64_t health = engine_max<int64_t>(1, gd::int_field(state, enemy.ref, key::total_health, 0));
+		total += engine_min<int64_t>(damage, health);
+		score += 0.5 + engine_min<double>(1.0, static_cast<double>(damage) / static_cast<double>(health)) * _w(state, key::spell_damage_share);
+	}
+	if (total <= 0) {
+		return -9999.0;
+	}
+	const int64_t heal = total * gd::int_field(state, get_base(effect_of(state, spell)), key::heal_pct, 100) / 100;
+	const int64_t useful = engine_min<int64_t>(heal, spell_rules::battle_spell_recoverable_health(state, ally));
+	score += static_cast<double>(useful) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1))) * 0.8;
+	score += cast_objective_score(state, battle, active_stack, ally);
+	return score - mana_cost_term(state, spell);
+}
+
+double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	const DictRef effect = get_base(effect_of(state, spell));
+	const Atom side = side_of(state, active_stack);
+	const int64_t round = battle_round(state, battle);
+	// One watch at a time.
+	for (const Value &aura : gd::field_items(state, battle, str(key::spell_auras))) {
+		if (gd::is_dict(aura) && gd::string_field(state, aura.ref, key::side, key::empty) == side
+				&& gd::string_field(state, aura.ref, key::aura, key::empty) == gd::string_field(state, effect, key::aura, key::empty)
+				&& gd::int_field(state, aura.ref, key::until_round, 0) > round) {
+			return -9999.0;
+		}
+	}
+	// Stacks that are wounded or in a fight will want the heal.
+	int64_t pressed = 0;
+	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
+		if (gd::is_dict(stack) && (spell_rules::battle_spell_recoverable_health(state, stack.ref) > 0 || _stack_contact_band(state, stack.ref, battle) == 0)) {
+			pressed += 1;
+		}
+	}
+	if (pressed == 0) {
+		return -9999.0;
+	}
+	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+	const double score = 1.0 + static_cast<double>(engine_min<int64_t>(rounds, 4)) * 0.9 + engine_min<double>(2.0, static_cast<double>(pressed) * 0.5);
+	return score - mana_cost_term(state, spell);
 }
 
 namespace {

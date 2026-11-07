@@ -1869,6 +1869,14 @@ func _begin_spell_targeting(spell_id: String) -> Dictionary:
 		if hexes.is_empty():
 			return _reject_order("%s has no hex to take on the field now." % _spell_name(spell_id), {"action": "cast_spell:" + spell_id})
 		return _begin_spell_hex_target(spell_id, hexes)
+	if String(ContentService.get_spell(spell_id).get("target_mode", "")) == "battle":
+		# A spell over the whole battle has no stack to pick: it is cast at once.
+		_spell_targeting_id = spell_id
+		_spell_targeting_hash = hash(_session.battle)
+		var cast := _cast_targeted_spell(String(BattleRules.get_active_stack(_session.battle).get("battle_id", "")))
+		if not bool(cast.get("ok", false)):
+			_cancel_spell_targeting(false)
+		return cast
 	var ids := BattleRules.spell_target_ids(_session, spell_id)
 	if ids.is_empty():
 		return _reject_order("%s has no target on the field now." % _spell_name(spell_id), {"action": "cast_spell:" + spell_id})

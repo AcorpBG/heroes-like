@@ -212,9 +212,20 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::move_ally) {
 		const DictRef plan = _move_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
-	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy })) {
+	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice })) {
 		const DictRef plan = _pair_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (effect_type == key::doom_enemy) {
+		// A doom pays as damage two turns on: a little less than the same blow now.
+		score = _damage_spell_score(state, enemy_hero, battle, active_stack, target, spell, damage_projection) - 1.0;
+	} else if (effect_type == key::free_volley) {
+		score = _volley_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+	} else if (effect_type == key::temp_creatures) {
+		score = _bud_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+	} else if (effect_type == key::damage_around) {
+		score = _around_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+	} else if (effect_type == key::battle_aura) {
+		score = _aura_spell_score(state, enemy_hero, battle, active_stack, spell);
 	} else if (effect_type == key::ground_effect) {
 		const DictRef plan = _ground_spell_plan(state, enemy_hero, battle, active_stack, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
@@ -289,7 +300,7 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 		}
 		const double role_modifier = _commander_spell_role_modifier(state, enemy_hero, behavior);
 		const Atom effect_type = gd::string_field(state, behavior, key::effect_type, key::empty);
-		if (effect_type == key::damage_enemy || effect_type == key::control_enemy) {
+		if (effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::doom_enemy || effect_type == key::free_volley) {
 			const bool damages = effect_type == key::damage_enemy;
 			for (const Value &target_value : gd::items(state, array_value(targets))) {
 				if (!gd::is_dict(target_value)) {
@@ -297,6 +308,10 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				}
 				const DictRef target = target_value.ref;
 				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, target, spell, acting_side))) {
+					continue;
+				}
+				// A doom already tolls for it.
+				if (effect_type == key::doom_enemy && spell_rules::has_effect_id(state, target, battle, key::status_doomed)) {
 					continue;
 				}
 				// A Prism Ward would turn the spell on the caster's own stacks.
@@ -318,7 +333,8 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 					continue;
 				}
 				const DictRef ally = ally_value.ref;
-				if (effect_type == key::recover_ally && _stack_missing_health(state, ally) <= 0) {
+				// Healing would hurt a blighted stack.
+				if (effect_type == key::recover_ally && (_stack_missing_health(state, ally) <= 0 || !empty(state, spell_rules::stack_status_effect(state, ally, battle, key::status_blighted)))) {
 					continue;
 				}
 				if (_allied_spell_candidate_suppressed_by_active_buff(state, effect_type, ally, battle, spell)) {
@@ -390,9 +406,31 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(candidate));
 				state.append(lethal_flags, bool_value(false));
 			}
-		} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy })) {
+		} else if (one_of(effect_type, { key::temp_creatures, key::damage_around })) {
+			for (const Value &ally_value : gd::items(state, array_value(allies))) {
+				if (!gd::is_dict(ally_value)) {
+					continue;
+				}
+				const DictRef ally = ally_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, ally, spell, acting_side))) {
+					continue;
+				}
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const Atom target_id = gd::string_field(state, ally, key::battle_id, key::empty);
+				const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, ally, spell, behavior, hostiles, role_modifier, state.new_dict());
+				state.append(candidates, dict_value(cast_candidate(state, spell_id, target_id, score)));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::battle_aura) {
+			// The whole battle: cast with the acting stack as its target.
+			if (check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, active_stack, spell, acting_side))) {
+				const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, active_stack, spell, behavior, hostiles, role_modifier, state.new_dict());
+				state.append(candidates, dict_value(cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, active_stack, key::battle_id, key::empty), score)));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice })) {
 			// Two stacks: the cast names the plan's second one.
-			const ArrayRef firsts = effect_type == key::swap_enemy ? targets : allies;
+			const ArrayRef firsts = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? targets : allies;
 			for (const Value &first_value : gd::items(state, array_value(firsts))) {
 				if (!gd::is_dict(first_value)) {
 					continue;
@@ -489,6 +527,12 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 	} else if (effect_type == key::swap_allies || effect_type == key::swap_enemy) {
 		// A swap is only planned where it frees a shooter or brings a strike.
 		delta = _w(state, key::spell_bar_buff);
+	} else if (one_of(effect_type, { key::sacrifice, key::doom_enemy, key::free_volley, key::damage_around })) {
+		delta = _w(state, key::spell_bar_damage);
+	} else if (effect_type == key::temp_creatures) {
+		delta = _w(state, key::spell_bar_buff);
+	} else if (effect_type == key::battle_aura) {
+		delta = _w(state, key::spell_bar_recovery);
 	} else if (effect_type == key::ground_effect) {
 		// Ground is held to the bar of what it does: control, a buff or damage.
 		Value categories;

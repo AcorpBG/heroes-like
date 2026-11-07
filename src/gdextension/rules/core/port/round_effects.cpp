@@ -334,6 +334,10 @@ void _adjust_stack_cohesion(State &state, DictRef battle, Atom battle_id, int64_
 	for (int64_t index = 0; index < count; ++index) {
 		const Value stack = untyped_at(state, stacks, index);
 		if (gd::is_dict(stack) && gd::string_field(state, stack.ref, key::battle_id, key::empty) == battle_id) {
+			// Steadfast Halo: the stack loses no cohesion.
+			if (amount < 0 && spell_rules::cohesion_locked(state, battle, stack.ref)) {
+				break;
+			}
 			// The inner get (the fallback) is evaluated first; clamp of ints is an int.
 			const Value fallback = state.get(stack.ref, str(key::cohesion_base), int_value(5));
 			const int64_t cohesion = gd::to_int(state, state.get(stack.ref, str(key::cohesion), fallback));

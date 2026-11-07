@@ -17,6 +17,7 @@ namespace aurelion::rules::port::spell_rules {
 
 using compat::engine_clamp;
 using compat::engine_max;
+using compat::engine_min;
 using gd::array_value;
 using gd::bool_value;
 using gd::dict_value;
@@ -223,6 +224,21 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::ground_effect;
 		state.append(hooks, str(key::battle_ground));
 		public_effect = key::ground_public_text;
+	} else if (effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley || effect_type == key::damage_around) {
+		// Tier 3: Smelter's Bargain, Tolling Doom, Volley Signal and Hollowing hurt enemy stacks.
+		resolution_type = effect_type == key::sacrifice ? static_cast<Atom>(key::damage)
+				: effect_type == key::doom_enemy ? static_cast<Atom>(key::effect)
+				: effect_type == key::free_volley ? static_cast<Atom>(key::volley_effect) : static_cast<Atom>(key::recover_effect);
+		state.append(hooks, str(key::battle_damage));
+		public_effect = key::enemy_damage_text;
+	} else if (effect_type == key::temp_creatures) {
+		resolution_type = key::bud_effect;
+		state.append(hooks, str(key::ally_status_effect));
+		public_effect = key::ally_modifier_effect_text;
+	} else if (effect_type == key::battle_aura) {
+		resolution_type = key::aura_effect;
+		state.append(hooks, str(key::ally_health_recovery));
+		public_effect = key::ally_recovery_and_ward_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -276,6 +292,31 @@ DictRef battle_spell_cast_check(State &state, DictRef hero, DictRef spell_dict, 
 DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell_dict, Atom acting_side) {
 	const Value effect = get_or_new_dict(state, spell_dict, key::effect);
 	const Atom effect_type = gd::to_string(state.get(two_argument_get_target(effect), str(key::type), str(key::empty)));
+	// Glass Aegis: no enemy spell can be aimed at the stack.
+	const bool aims_at_enemy = effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::dispel_enemy
+			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley;
+	if (aims_at_enemy && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && spell_shielded(state, battle, target_stack)) {
+		return refusal(state, gd::format(state, key::shielded_from_spells_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+	}
+	if (effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley) {
+		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
+			return refusal(state, key::select_enemy_target_text);
+		}
+		if (effect_type == key::free_volley && state.array_size(volley_shooters(state, battle, acting_side, target_stack)) == 0) {
+			return refusal(state, gd::format(state, key::no_shooter_can_fire_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+		}
+		return accepted(state);
+	}
+	if (effect_type == key::temp_creatures || effect_type == key::damage_around || effect_type == key::battle_aura) {
+		const DictRef own = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+		if (gd::is_empty(state, own) || side_of(state, own) != acting_side || _alive_count(state, own) <= 0) {
+			return refusal(state, key::select_allied_target_text);
+		}
+		if (effect_type == key::damage_around && state.array_size(enemies_beside(state, battle, own)) == 0) {
+			return refusal(state, gd::format(state, key::no_enemy_beside_text, { str(battle_rules::_stack_label(state, own)) }));
+		}
+		return accepted(state);
+	}
 	if (effect_type == key::damage_enemy) {
 		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side) {
 			return refusal(state, key::select_enemy_target_text);
@@ -525,10 +566,17 @@ DictRef scaled_spell_modifiers(State &state, DictRef effect, DictRef modifiers, 
 	}
 	// Each modifier grows away from zero by scale x power and power / divisor.
 	const int64_t extra = gd::add(gd::mul(scale, engine_max<int64_t>(0, power)), divisor > 0 ? compat::int_div(engine_max<int64_t>(0, power), divisor) : 0);
+	// Only the modifiers modifiers_scaled names grow when it names any (Heavy Plating's defense, not its speed).
+	Value only;
+	const bool limited = state.lookup(effect, str(key::modifiers_scaled), only) && gd::is_array(only) && state.array_size(only.ref) > 0;
 	const DictRef scaled = state.new_dict();
 	const state::ValueList names = state.dict(modifiers).keys.list();
 	for (const Value &name : names) {
 		const int64_t amount = gd::to_int(state, gd::index(state, modifiers, name));
+		if (limited && !gd::array_has(state, only.ref, str(gd::to_string(name)))) {
+			state.set(scaled, name, int_value(amount));
+			continue;
+		}
 		state.set(scaled, name, int_value(amount < 0 ? gd::sub(amount, extra) : gd::add(amount, extra)));
 	}
 	return scaled;
@@ -700,6 +748,11 @@ DictRef _status_payload(State &state, DictRef spell, const Value &status_effect,
 	const Value immunity_ids = get_or_new_array(state, status, key::status_immunity_ids);
 	const DictRef built = build_battle_effect(state, effect_id, label, modifiers, duration, battle, key::spell, source_id, immunity_ids);
 	set_effect_mechanic(state, built, status, power);
+	// Blight holds for the rest of the battle.
+	if (gd::bool_field(state, status, key::battle_long, false)) {
+		state.set(built, str(key::expires_after_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
+		return built;
+	}
 	return _counted_in_turns(state, built, duration);
 }
 
@@ -719,6 +772,10 @@ int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell,
 	const int64_t rooted_bonus_pct = gd::int_field(state, effect, key::rooted_bonus_pct, 0);
 	if (rooted_bonus_pct > 0 && !gd::is_empty(state, target_stack) && !gd::is_empty(state, stack_status_effect(state, target_stack, state.new_dict(), key::status_rooted))) {
 		damage = gd::add(damage, compat::int_div(gd::mul(damage, rooted_bonus_pct), 100));
+	}
+	// Flashpoint: as much for each Heat the stack carries (a cold stack takes it once).
+	if (gd::bool_field(state, effect, key::heat_burst, false) && !gd::is_empty(state, target_stack)) {
+		damage = gd::mul(damage, engine_max<int64_t>(1, gd::int_field(state, target_stack, key::spell_heat, 0)));
 	}
 	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
 	const int64_t potency = gd::add(gd::int_field(state, bonuses, key::spell_damage_pct, 0), _school_bonus(state, bonuses, key::school_potency_pct, spell));
@@ -851,7 +908,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	DictRef second_stack = state.new_dict();
 	bool needs_second = false;
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = effect_type == key::swap_enemy ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? target_stack : ally_target;
 		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
 		const ArrayRef options = second_stack_ids(state, hero, battle, first, spell, acting_side);
 		if (state.array_size(options) == 0) {
@@ -890,7 +947,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	// of the caster's side instead; the ward is spent when the cast resolves.
 	Atom reflected_from = key::empty;
 	Atom reflect_text = key::empty;
-	if (effect_type == key::damage_enemy || effect_type == key::control_enemy) {
+	if (effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::doom_enemy) {
 		const DictRef bounce = reflected_spell_target(state, battle, target_stack, spell_id);
 		if (!gd::is_empty(state, bounce)) {
 			reflected_from = gd::string_field(state, target_stack, key::battle_id, key::empty);
@@ -943,6 +1000,17 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			state.set(result, str(key::heat), int_value(heat));
 			state.set(result, str(key::heat_burst_damage), int_value(heat_burst_damage(spell_power_against(state, hero, battle, target_stack))));
 		}
+		// Flashpoint spends the Heat it set off, or kindles one; Earthsplit knocks the stack back.
+		if (gd::bool_field(state, effect, key::heat_burst, false)) {
+			state.set(result, str(key::heat_burst), bool_value(true));
+		}
+		const int64_t push = gd::int_field(state, effect, key::push, 0);
+		if (push > 0) {
+			const DictRef cell = push_cell(state, battle, target_stack, push);
+			if (!gd::is_empty(state, cell)) {
+				state.set(result, str(key::push_to), dict_value(cell));
+			}
+		}
 		message = with_reflection(state, result, reflected_from, reflect_text, message);
 		state.set(result, str(key::message), str(message));
 		add_reach_resolutions(state, hero, battle, target_stack, spell, result, destination);
@@ -983,6 +1051,10 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	if (effect_type == key::recover_ally) {
 		const DictRef result = cast_result(state, hero, key::recover_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::recovery_amount), int_value(_battle_spell_recovery_amount(state, hero, spell)));
+		// Rekindle brings fallen creatures back.
+		if (gd::bool_field(state, effect, key::raise, false)) {
+			state.set(result, str(key::raise), bool_value(true));
+		}
 		const DictRef recover_payload = !gd::is_empty(state, battle_spell_modifiers(state, spell)) ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict();
 		state.set(result, str(key::effect), dict_value(recover_payload));
 		// Hot Iron: no other healing reaches the stack for a while after this one.
@@ -1051,10 +1123,11 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		return result;
 	}
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = effect_type == key::swap_enemy ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? target_stack : ally_target;
 		const Atom first_id = gd::string_field(state, first, key::battle_id, key::empty);
 		const Atom resolution_type = effect_type == key::graft_allies ? static_cast<Atom>(key::effect)
-				: (effect_type == key::transfer_ally ? static_cast<Atom>(key::transfer_effect) : static_cast<Atom>(key::swap_effect));
+				: effect_type == key::transfer_ally ? static_cast<Atom>(key::transfer_effect)
+				: effect_type == key::sacrifice ? static_cast<Atom>(key::damage) : static_cast<Atom>(key::swap_effect);
 		const DictRef result = cast_result(state, hero, resolution_type, first_id);
 		if (needs_second) {
 			state.set(result, str(key::needs_second_target), bool_value(true));
@@ -1083,11 +1156,113 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			state.set(result, str(key::extra_resolutions), array_value(extra));
 		} else if (effect_type == key::transfer_ally) {
 			state.set(result, str(key::transfer_amount), int_value(transfer_amount(state, hero, spell, first, second_stack)));
+		} else if (effect_type == key::sacrifice) {
+			// Smelter's Bargain: the second stack pays its share of its health, never its last point, and the target
+			// takes {150+10E}% of it, after its resistance.
+			const int64_t payer_health = gd::int_field(state, second_stack, key::total_health, 0);
+			const int64_t cost = engine_max<int64_t>(0, engine_min<int64_t>(gd::sub(payer_health, 1),
+					engine_max<int64_t>(1, compat::int_div(gd::mul(payer_health, gd::int_field(state, effect, key::cost_pct, 0)), 100))));
+			const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
+					gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero, battle, first)));
+			const int64_t raw = engine_max<int64_t>(1, compat::int_div(gd::mul(cost, pct), 100));
+			const int64_t resistance = spell_damage_resistance_pct(state, battle, first, spell);
+			const int64_t final_damage = engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(static_cast<double>(raw) * static_cast<double>(gd::sub(100, resistance)) / 100.0)));
+			state.set(result, str(key::damage), int_value(final_damage));
+			state.set(result, str(key::raw_damage), int_value(raw));
+			state.set(result, str(key::final_damage), int_value(final_damage));
+			state.set(result, str(key::resistance_pct), int_value(resistance));
+			state.set(result, str(key::prevented_damage), int_value(engine_max<int64_t>(0, gd::sub(raw, final_damage))));
+			const DictRef pay = state.new_dict();
+			state.set(pay, str(key::resolution_type), str(key::pay_health));
+			state.set(pay, str(key::target_battle_id), str(second_id));
+			state.set(pay, str(key::amount), int_value(cost));
+			state.set(pay, str(key::message), str(gd::format(state, key::pays_health_text, { str(battle_rules::_stack_label(state, second_stack)), int_value(cost) })));
+			const ArrayRef extra = state.new_array();
+			state.append(extra, dict_value(pay));
+			state.set(result, str(key::extra_resolutions), array_value(extra));
 		}
-		const Atom cast_message = effect_type == key::swap_enemy
+		const Atom cast_message = effect_type == key::sacrifice
+				? gd::format(state, key::casts_on_for_damage_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)),
+						str(gd::string_field(state, first, key::name, key::the_enemy_text)), int_value(gd::int_field(state, result, key::final_damage, 0)) })
+				: effect_type == key::swap_enemy
 				? gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, first, key::name, key::the_enemy_text)) })
 				: ally_cast_message(state, caster_name, spell, spell_id, first);
 		state.set(result, str(key::message), str(cast_message));
+		return result;
+	}
+	if (effect_type == key::doom_enemy) {
+		// Tolling Doom: the damage, after the target's resistance, lands at the end of its last turn.
+		const DictRef projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
+		const int64_t final_damage = gd::int_field(state, projection, key::final_damage, 0);
+		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 2));
+		const DictRef doom = build_battle_effect(state, key::status_doomed, key::doomed_label_text, dict_value(state.new_dict()), turns, battle, key::spell, spell_id, array_value(state.new_array()));
+		const DictRef mechanic = state.new_dict();
+		state.set(mechanic, str(key::doom_damage), int_value(final_damage));
+		state.set(doom, str(key::mechanic), dict_value(mechanic));
+		_counted_in_turns(state, doom, turns);
+		const DictRef result = cast_result(state, hero, key::effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::effect), dict_value(doom));
+		state.set(result, str(key::final_damage), int_value(final_damage));
+		state.set(result, str(key::resistance_pct), int_value(gd::int_field(state, projection, key::resistance_pct, 0)));
+		const Atom message = gd::format(state, key::doom_tolls_text, {
+			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)), int_value(final_damage), int_value(turns),
+		});
+		state.set(result, str(key::message), str(with_reflection(state, result, reflected_from, reflect_text, message)));
+		return result;
+	}
+	if (effect_type == key::free_volley) {
+		// Volley Signal: the caster's shooters fire at the target, at {40+4P}% of their damage.
+		const DictRef result = cast_result(state, hero, key::volley_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::volley_pct), int_value(gd::add(gd::int_field(state, effect, key::volley_pct, 0),
+				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero)))));
+		state.set(result, str(key::side), str(acting_side));
+		state.set(result, str(key::message), str(gd::format(state, key::casts_on_format, {
+			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)) })));
+		return result;
+	}
+	if (effect_type == key::temp_creatures) {
+		// Budding: new creatures worth the amount join the stack for this battle.
+		const DictRef result = cast_result(state, hero, key::bud_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::amount), int_value(_battle_spell_recovery_amount(state, hero, spell)));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
+	if (effect_type == key::battle_aura) {
+		// Watchful Light: from the next round's start, for its rounds.
+		const int64_t round = gd::int_field(state, battle, key::round, 1);
+		const DictRef entry = state.new_dict();
+		state.set(entry, str(key::aura), str(gd::string_field(state, effect, key::aura, key::empty)));
+		state.set(entry, str(key::side), str(acting_side));
+		state.set(entry, str(key::heal), int_value(_battle_spell_recovery_amount(state, hero, spell)));
+		state.set(entry, str(key::until_round), int_value(gd::add(round, spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero)))));
+		state.set(entry, str(key::healed_round), int_value(round));
+		state.set(entry, str(key::spell_id), str(spell_id));
+		state.set(entry, str(key::label), str(gd::string_field(state, spell, key::name, spell_id)));
+		const DictRef result = cast_result(state, hero, key::aura_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::aura_entry), dict_value(entry));
+		state.set(result, str(key::message), str(gd::format(state, key::s_casts_s, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)) })));
+		return result;
+	}
+	if (effect_type == key::damage_around) {
+		// Hollowing: every enemy stack next to the stack takes the damage at its own E; the stack heals the total.
+		const DictRef result = cast_result(state, hero, key::recover_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		const ArrayRef extras = state.new_array();
+		int64_t total = 0;
+		for (const Value &enemy : gd::items(state, array_value(enemies_beside(state, battle, ally_target)))) {
+			const int64_t damage = gd::int_field(state, battle_spell_damage_projection(state, hero, battle, enemy.ref, spell), key::final_damage, 0);
+			total = gd::add(total, engine_min<int64_t>(damage, gd::int_field(state, enemy.ref, key::total_health, 0)));
+			const DictRef hit = state.new_dict();
+			state.set(hit, str(key::resolution_type), str(key::damage));
+			state.set(hit, str(key::target_battle_id), str(gd::string_field(state, enemy.ref, key::battle_id, key::empty)));
+			state.set(hit, str(key::damage), int_value(damage));
+			state.set(hit, str(key::message), str(gd::format(state, key::reach_takes_damage_text, { str(battle_rules::_stack_label(state, enemy.ref)), int_value(damage) })));
+			state.append(extras, dict_value(hit));
+		}
+		state.set(result, str(key::recovery_amount), int_value(compat::int_div(gd::mul(total, gd::int_field(state, effect, key::heal_pct, 100)), 100)));
+		state.set(result, str(key::effect), dict_value(state.new_dict()));
+		state.set(result, str(key::extra_resolutions), array_value(extras));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
 		return result;
 	}
 	if (effect_type == key::ground_effect) {

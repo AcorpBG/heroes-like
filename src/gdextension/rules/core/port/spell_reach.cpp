@@ -23,6 +23,7 @@ namespace aurelion::rules::port::spell_rules {
 using compat::engine_max;
 using compat::engine_min;
 using gd::array_value;
+using gd::bool_value;
 using gd::dict_value;
 using gd::int_value;
 using gd::str;
@@ -194,6 +195,73 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			}
 		}
 	}
+	// Cinderfall: the target's neighbours on its side get its status too, each on its own draw.
+	const Atom status_splash = gd::string_field(state, effect, key::status_splash, key::empty);
+	if (status_splash != key::empty) {
+		for (const DictRef stack : shape_stacks(state, battle, target, status_splash)) {
+			const int64_t stack_power = spell_power_against(state, hero, battle, stack);
+			const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, stack_power);
+			const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
+			const int64_t resistance = control_resistance_pct(state, battle, stack, spell);
+			const bool resists = target_is_immune_to_status(state, stack, battle, status_id)
+					|| (resistance > 0 && stable_draw(state, battle, { str(spell_id), str(battle_id_of(state, stack)), str(key::status_splash) }, 100) < resistance);
+			const DictRef sub = sub_resolution(state, key::effect, stack, gd::format(state, resists ? key::reach_resists_text : key::reach_also_text, { str(battle_rules::_stack_label(state, stack)) }));
+			state.set(sub, str(key::effect), dict_value(resists ? state.new_dict() : payload));
+			state.append(extras, dict_value(sub));
+		}
+	}
+	// Prism Bolt: it jumps on to the nearest enemy stack not yet struck, weaker each jump; Glass Aegis turns it.
+	std::vector<int64_t> jumps;
+	for (const Value &pct : gd::field_items(state, effect, str(key::chain))) {
+		jumps.push_back(gd::to_int(state, pct));
+	}
+	if (!jumps.empty()) {
+		const int64_t rank = spell_mastery_rank(state, hero, spell);
+		for (const Value &entry : gd::field_items(state, effect, str(key::mastery_chain))) {
+			if (gd::is_dict(entry) && rank >= gd::int_field(state, entry.ref, key::rank, 99)) {
+				jumps.push_back(gd::int_field(state, entry.ref, key::pct, 0));
+			}
+		}
+		std::vector<Atom> struck = { battle_id_of(state, target) };
+		DictRef from = target;
+		for (const int64_t pct : jumps) {
+			DictRef next = state.new_dict();
+			int64_t next_distance = 0;
+			for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
+				const Atom id = battle_id_of(state, stack);
+				bool seen = false;
+				for (const Atom done : struck) {
+					seen = seen || done == id;
+				}
+				if (seen || spell_shielded(state, battle, stack)) {
+					continue;
+				}
+				const int64_t distance = battle_rules::_stack_hex_distance(state, from, stack);
+				if (gd::is_empty(state, next) || distance < next_distance) {
+					next = stack;
+					next_distance = distance;
+				}
+			}
+			if (gd::is_empty(state, next)) {
+				break;
+			}
+			const int64_t full = damage_at(state, hero, battle, next, spell, spell_power_against(state, hero, battle, next));
+			state.append(extras, dict_value(damage_hit(state, next, engine_max<int64_t>(1, compat::int_div(gd::mul(full, pct), 100)))));
+			struck.push_back(battle_id_of(state, next));
+			from = next;
+		}
+	}
+	// Flashpoint, from its mastery rank: every other stack of the target's side with Heat bursts it too.
+	if (gd::bool_field(state, effect, key::heat_burst, false) && mastery_shape(state, hero, spell) == key::all) {
+		for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
+			if (battle_id_of(state, stack) == battle_id_of(state, target) || gd::int_field(state, stack, key::spell_heat, 0) <= 0) {
+				continue;
+			}
+			const DictRef hit = damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, spell_power_against(state, hero, battle, stack)));
+			state.set(hit, str(key::heat_burst), bool_value(true));
+			state.append(extras, dict_value(hit));
+		}
+	}
 	// Leech: a stack of the caster's side heals a share of what the target loses.
 	const int64_t drain_pct = gd::int_field(state, effect, key::drain_pct, 0);
 	if (drain_pct > 0) {
@@ -231,13 +299,17 @@ void add_control_reach(State &state, DictRef hero, DictRef battle, DictRef targe
 }
 
 void add_ally_reach(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef effect, Atom effect_type, ArrayRef extras) {
-	const Atom shape = effect_type == key::recover_ally
-			? wider_shape(gd::string_field(state, effect, key::reach, key::empty), mastery_shape(state, hero, spell))
-			: mastery_shape(state, hero, spell);
+	// The spell's own reach (Morning Light's every stack, Bloomburst's and Bark Ring's neighbours), widened by mastery.
+	const Atom shape = wider_shape(gd::string_field(state, effect, key::reach, key::empty), mastery_shape(state, hero, spell));
+	// Bloomburst's neighbours heal a share of it.
+	const int64_t reach_pct = gd::int_field(state, effect, key::reach_pct, 100);
 	for (const DictRef stack : shape_stacks(state, battle, target, shape)) {
 		if (effect_type == key::recover_ally) {
 			const DictRef sub = sub_resolution(state, key::recover_effect, stack, key::empty);
-			state.set(sub, str(key::recovery_amount), int_value(_battle_spell_recovery_amount(state, hero, spell)));
+			state.set(sub, str(key::recovery_amount), int_value(compat::int_div(gd::mul(_battle_spell_recovery_amount(state, hero, spell), reach_pct), 100)));
+			if (gd::bool_field(state, effect, key::raise, false)) {
+				state.set(sub, str(key::raise), bool_value(true));
+			}
 			state.set(sub, str(key::effect), dict_value(!gd::is_empty(state, battle_spell_modifiers(state, spell)) ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict()));
 			const int64_t block_turns = gd::int_field(state, effect, key::heal_block_turns, 0);
 			if (block_turns > 0) {
