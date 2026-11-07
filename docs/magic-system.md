@@ -1,6 +1,6 @@
 # Magic system
 
-The owner reworked magic on 2026-11-06 and 2026-11-07, settling it draft by draft on a local plan page (`.artifacts/magic_atlas/magic_plan.html`, built by `.artifacts/magic_atlas/build/plan.py`; magic pages stay local views, never published). This doc holds the rules and the build order. The 139 spells and 138 mechanics are in `docs/magic-system-spells.md`. Nothing here is in the game yet: today's magic is still the one in `docs/magic-system-expansion-foundation.md` and `docs/battle-spell-effects.md`, which this doc replaces at the switch (`magic-switch-20261107`).
+The owner reworked magic on 2026-11-06 and 2026-11-07, settling it draft by draft on a local plan page (`.artifacts/magic_atlas/magic_plan.html`, built by `.artifacts/magic_atlas/build/plan.py`; magic pages stay local views, never published). This doc holds the rules and the build order. The 139 spells and 138 mechanics are in `docs/magic-system-spells.md`. Slices 1 to 3 of the build order are in the game, on today's spells, and the new spells enter content unreleased slice by slice. Today's spells stay the live ones, described in `docs/magic-system-expansion-foundation.md` and `docs/battle-spell-effects.md`, which this doc replaces at the switch (`magic-switch-20261107`).
 
 ## Why
 
@@ -70,6 +70,19 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 
 - One hero spell per side per round in battle, as a free action; one map spell per hero per day.
 - The maximum stays 8 + 4 × Knowledge. A hero gets back a fifth of its maximum each day (rounded up) instead of all of it, and all of it on a day that starts in an own town with a guild. The Ley Well, the Moonspring and the Calibration Court work as today.
+
+## The new spells in content
+
+`magic-basic-tier-20261107` put the 12 basic battle spells in `spells.json` with school `basic` and `"unreleased": true`. Far Sight, Stride and Read Tracks come with the map spells.
+
+- **Unreleased.** The content check, `battle_sim_cli` and focused checks cast them. Guild draws, hero and commander starts, rewards, Pandoras, shrines, scroll items and the battle arena's guild pool leave them out (`spell_rules::spell_is_released`).
+- **Any stack.** A helpful spell picks any of the hero's stacks (`ally_selected`) and a harmful one any enemy stack, as today's support spells already could. The computer weighs every stack.
+- **Shift** (`move_ally`). The player picks the stack, then one of the lit empty hexes it can walk to in {2+P/3} steps, around walls and stacks like a move. The stack keeps its turn. A Rooted stack cannot be shifted, and a cast without a hex in reach costs nothing. Esc puts the spell away.
+- **Daze** (`status_dazed`). The stack acts after every other stack, waiting ones included, for {1+E/4} rounds. **Hobble** puts Slowed (`status_slowed`, −2 speed) and **Snare** today's Rooted.
+- **Unweave** (`dispel_enemy`) takes {1+E/3} of the target's helpful spell effects, the newest first; a stack with none cannot be chosen. **Cleanse** (`cleanse_ally` with a count) takes {1+P/3}, the newest first, of these: the statuses Harried, Staggered, Rooted, Slowed and Dazed, effects that harmful spells put there, and other effects that only lower stats.
+- **Texts.** The spellbook shows each number at the caster's spell power; a cast's summary on a chosen enemy shows it at E, the power less that hero's Knowledge.
+- **Art and sound.** The icons are stand-ins borrowed from today's spells. Slowed and Dazed have no badge, and the spells no battle effects or sounds, until `magic-art-audio-20261107`.
+- **Computer players.** Shift moves an engaged shooter away from the enemy, or the acting melee stack into reach of a strike. Unweave scores 3 per effect it removes, and Slowed and Dazed count as control: Slowed 1.5 on a melee stack and 0.3 on a shooter, Dazed 1.0. These values are first choices, not measured.
 
 ## Faction preference
 

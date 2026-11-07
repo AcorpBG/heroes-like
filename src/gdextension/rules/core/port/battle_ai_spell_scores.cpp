@@ -454,4 +454,93 @@ double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, Dic
 	return score;
 }
 
+double _any_harm_cleanse_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell) {
+	// The newest harmful effects, as many as the cast lifts at the hero's power.
+	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power(state, enemy_hero));
+	const int64_t lifted = state.array_size(spell_rules::newest_effect_ids(state, target_stack, battle, false, count));
+	if (lifted <= 0) {
+		return -9999.0;
+	}
+	double score = 1.25 + static_cast<double>(lifted) * 4.0;
+	if (spell_rules::has_any_effect_ids(state, target_stack, battle, pressure_status_ids(state))) {
+		score += 1.5;
+	}
+	score += cohesion_gap(state, target_stack, battle) * 2.0;
+	score += _stack_spell_target_value(state, target_stack, battle);
+	score += cast_objective_score(state, battle, active_stack, target_stack);
+	score -= mana_cost_term(state, spell);
+	return score;
+}
+
+double _dispel_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell) {
+	// The target's newest helpful spell effects, as many as the cast takes at
+	// the hero's power less the target hero's Knowledge.
+	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power_against(state, enemy_hero, battle, target_stack));
+	const int64_t removed = state.array_size(spell_rules::newest_effect_ids(state, target_stack, battle, true, count));
+	if (removed <= 0) {
+		return -9999.0;
+	}
+	double score = 1.0 + static_cast<double>(removed) * 3.0;
+	score += _target_immediate_threat_score(state, active_stack, target_stack, battle) * 0.5;
+	score += _stack_spell_target_value(state, target_stack, battle);
+	score += cast_objective_score(state, battle, active_stack, target_stack);
+	score -= mana_cost_term(state, spell);
+	return score;
+}
+
+DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, enemy_hero));
+	const ArrayRef cells = spell_rules::move_destinations(state, battle, ally, reach);
+	if (state.array_size(cells) == 0) {
+		return state.new_dict();
+	}
+	const bool acting = _is_same_stack(state, ally, active_stack);
+	DictRef best_cell = state.new_dict();
+	double value = 0.0;
+	if (ranged(state, ally) && has_shots(state, ally) && _stack_is_engaged(state, ally, battle)) {
+		// A shooter caught in melee: the hex farthest from every enemy, so it
+		// shoots again (at once when it is the acting stack).
+		int64_t best_distance = 1;
+		for (const Value &cell : gd::items(state, array_value(cells))) {
+			const int64_t distance = battle_rules::_projected_min_opposing_hex_distance(state, battle, ally, cell.ref);
+			if (distance > best_distance) {
+				best_distance = distance;
+				best_cell = cell.ref;
+			}
+		}
+		if (!empty(state, best_cell)) {
+			value = (acting ? 5.0 : 3.0) + _buff_spell_offense_payoff(state, ally) + static_cast<double>(engine_min<int64_t>(3, best_distance - 1)) * 0.25;
+		}
+	} else if (acting && _fights_in_melee(state, ally) && !_can_make_melee_attack(state, ally, battle, state.new_dict())
+			&& battle_rules::extra_speed_reaches_strike(state, battle, ally, reach)) {
+		// The acting melee stack that reaches no enemy this turn but would with
+		// the cast's steps: the hex nearest an enemy, from where its own move
+		// ends next to one (it keeps its turn).
+		int64_t best_distance = 999;
+		for (const Value &cell : gd::items(state, array_value(cells))) {
+			const int64_t distance = battle_rules::_projected_min_opposing_hex_distance(state, battle, ally, cell.ref);
+			if (distance < best_distance) {
+				best_distance = distance;
+				best_cell = cell.ref;
+			}
+		}
+		if (!empty(state, best_cell)) {
+			value = 4.0 + _buff_spell_offense_payoff(state, ally);
+		}
+	}
+	if (empty(state, best_cell)) {
+		return state.new_dict();
+	}
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::q), gd::int_value(gd::int_field(state, best_cell, key::q, -1)));
+	state.set(destination, str(key::r), gd::int_value(gd::int_field(state, best_cell, key::r, -1)));
+	value += _stack_spell_target_value(state, ally, battle);
+	value += cast_objective_score(state, battle, active_stack, ally);
+	value -= mana_cost_term(state, spell);
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::destination), dict_value(destination));
+	state.set(plan, str(key::score), gd::float_value(value));
+	return plan;
+}
+
 } // namespace aurelion::rules::port::battle_ai_rules

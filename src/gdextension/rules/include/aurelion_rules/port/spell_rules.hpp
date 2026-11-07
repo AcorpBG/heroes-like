@@ -53,6 +53,10 @@ ArrayRef _normalize_spell_ids(State &state, const Value &value);
 int64_t adjusted_spell_mana_cost(State &state, DictRef hero_state, const Value &spell);
 Atom spell_school_id(State &state, DictRef spell);
 int64_t spell_tier(State &state, DictRef spell);
+// A spell marked unreleased in spells.json (the new magic until the switch,
+// docs/magic-system.md) casts where a hero knows it, but no guild, start,
+// reward or scroll hands it out.
+bool spell_is_released(State &state, DictRef spell);
 Atom spell_primary_role(State &state, DictRef spell);
 ArrayRef spell_role_categories(State &state, DictRef spell);
 ArrayRef _normalize_string_array(State &state, const Value &value);
@@ -110,12 +114,34 @@ int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef 
 int64_t _alive_count(State &state, DictRef stack);
 double _health_ratio(State &state, DictRef stack);
 
+// The basic spells' mechanics (spell_mechanics.cpp, docs/magic-system.md):
+// a spell that supports its own side's stacks; whether an effect on a stack
+// helps it (a supporting spell put it there) or harms it (a harmful status, an
+// enemy spell, or modifiers that only lower), and the ids of the newest such
+// effects, up to limit; a count or a reach that grows by one per divisor of
+// spell power, and those of a spell (count for a dispel or a cleanse, range for
+// a move); a cleanse that takes any harmful effect (it names none); the empty
+// hexes a moved stack can reach, and the one of them a destination names, or {}.
+bool spell_supports_allies(State &state, DictRef spell);
+bool effect_helps_stack(State &state, DictRef effect);
+bool effect_harms_stack(State &state, DictRef effect);
+ArrayRef newest_effect_ids(State &state, DictRef stack, DictRef battle, bool helpful, int64_t limit);
+int64_t power_count(State &state, DictRef effect, Atom base_field, Atom divisor_field, int64_t power);
+int64_t spell_effect_count(State &state, DictRef spell, int64_t power);
+int64_t spell_move_reach(State &state, DictRef spell, int64_t power);
+bool cleanse_takes_any_harm(State &state, DictRef effect);
+ArrayRef move_destinations(State &state, DictRef battle, DictRef stack, int64_t reach);
+DictRef move_destination_in_reach(State &state, ArrayRef destinations, const Value &destination);
+
 // Layer 8, 07b: the cast checked, resolved and paid for, and the hero's
 // known spells (spell_battle.cpp): those it can cast, the learned ones first
 // and then those its worn scrolls lend; learned_spells, the learned ones only.
+// A spell that moves a stack takes its destination hex ({q, r}); without one
+// the cast resolves with needs_destination set and moves nothing.
 ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter);
 ArrayRef learned_spells(State &state, DictRef hero_state, Atom context_filter);
 DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side);
+DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side, const Value &destination);
 DictRef validate_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, const Value &spell, Atom acting_side);
 DictRef _consume_mana(State &state, DictRef hero_state, int64_t cost);
 

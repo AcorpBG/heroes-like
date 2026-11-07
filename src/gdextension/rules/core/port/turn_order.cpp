@@ -205,7 +205,22 @@ ArrayRef _sorted_turn_order(State &state, DictRef battle) {
 		state.append(sorted, state.at(candidates, best_index));
 		gd::remove_at(state, candidates, best_index);
 	}
-	return sorted;
+	return _dazed_stacks_last(state, battle, sorted);
+}
+
+ArrayRef _dazed_stacks_last(State &state, DictRef battle, ArrayRef battle_ids) {
+	const ArrayRef acting = state.new_array();
+	const ArrayRef dazed = state.new_array();
+	const int64_t count = state.array_size(battle_ids);
+	for (int64_t index = 0; index < count; ++index) {
+		const Value battle_id = state.at(battle_ids, index);
+		const DictRef stack = _get_stack_by_id(state, battle, gd::to_string(battle_id));
+		state.append(!gd::is_empty(state, stack) && spell_rules::has_effect_id(state, stack, battle, key::status_dazed) ? dazed : acting, battle_id);
+	}
+	if (state.array_size(dazed) == 0) {
+		return battle_ids;
+	}
+	return gd::concat(state, acting, dazed);
 }
 
 bool _compare_stack_order_keys(State &state, DictRef lhs, DictRef rhs) {
@@ -348,7 +363,18 @@ ArrayRef _ordered_remaining_actors(State &state, DictRef battle, ArrayRef battle
 		const DictRef rhs = turn_order_keys_of(state, keys, right);
 		return _compare_waiting_order_keys(state, lhs, rhs);
 	});
-	return gd::concat(state, acting, waiting);
+	// A dazed stack acts after every other stack, the waiting ones too
+	// (Daze, docs/magic-system-spells.md).
+	const ArrayRef still_acting = state.new_array();
+	const ArrayRef dazed = state.new_array();
+	for (const Value &battle_id : gd::items(state, array_value(acting))) {
+		const DictRef stack = _get_stack_by_id(state, battle, gd::to_string(battle_id));
+		state.append(!gd::is_empty(state, stack) && spell_rules::has_effect_id(state, stack, battle, key::status_dazed) ? dazed : still_acting, battle_id);
+	}
+	if (state.array_size(dazed) == 0) {
+		return gd::concat(state, acting, waiting);
+	}
+	return gd::concat(state, gd::concat(state, still_acting, waiting), dazed);
 }
 
 ArrayRef waited_stack_ids(State &state, DictRef battle) {

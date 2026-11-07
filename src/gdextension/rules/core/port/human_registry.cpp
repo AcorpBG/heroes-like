@@ -1709,6 +1709,9 @@ const Function kFunctions[] = {
 	NATIVE(BattleRules, spell_target_ids, 2, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(battle_rules::spell_target_ids(s, D(a, 0), S(a, 1)))),
+	NATIVE(BattleRules, spell_destination_hexes, 3, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(battle_rules::spell_destination_hexes(s, D(a, 0), S(a, 1), S(a, 2)))),
 	NATIVE(BattleRules, get_spell_actions, 1, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(battle_rules::get_spell_actions(s, D(a, 0)))),

@@ -340,6 +340,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_battle.cpp
 	core/port/spell_effects.cpp
 	core/port/spell_events.cpp
+	core/port/spell_mechanics.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
 	core/port/spell_rules_overworld.cpp

@@ -267,7 +267,10 @@ int64_t _player_creatures_standing(State &state, DictRef battle) {
 
 DictRef _perform_player_order(State &state, const Value &session, DictRef decision, Atom action) {
 	if (action == key::cast_spell) {
-		return rules::cast_player_spell(state, session, string_or_empty(state, decision, key::spell_id), key::empty);
+		// A move spell's hex comes with the plan that chose it.
+		Value destination;
+		state.lookup(decision, str(key::destination), destination);
+		return rules::cast_player_spell(state, session, string_or_empty(state, decision, key::spell_id), key::empty, destination);
 	}
 	if (action == key::strike) {
 		// The same approach choice as the enemy's (BattleRules.ai_melee_approach),

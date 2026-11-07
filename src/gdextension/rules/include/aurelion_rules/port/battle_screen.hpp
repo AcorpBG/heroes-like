@@ -34,6 +34,9 @@ DictRef battle_hex_state_summary(State &state, DictRef battle);
 ArrayRef target_cycle_ids(State &state, DictRef battle);
 void cycle_target(State &state, DictRef session, int64_t direction);
 ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id);
+// The empty hexes the player's move spell can take that stack to ([] for any
+// other spell, or a stack it cannot move).
+ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, Atom target_id);
 ArrayRef get_spell_actions(State &state, DictRef session);
 Atom describe_entry_context(State &state, DictRef session);
 Atom _battle_entry_risk_label(State &state, DictRef session, DictRef battle);

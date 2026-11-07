@@ -3037,6 +3037,289 @@
           "cohesion": 2
         }
       }
+    },
+    {
+      "id": "spell_bolt",
+      "name": "Bolt",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A plain spark of force thrown at one enemy stack.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 15,
+        "power_scale": 10
+      }
+    },
+    {
+      "id": "spell_mend",
+      "name": "Mend",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Closes the wounds of one of your stacks; the fallen stay fallen.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 20,
+        "power_scale": 5
+      }
+    },
+    {
+      "id": "spell_sharpen",
+      "name": "Sharpen",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Puts an edge on one of your stacks' blows.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 3
+        }
+      }
+    },
+    {
+      "id": "spell_quicken",
+      "name": "Quicken",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Lightens the step of one of your stacks.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "speed": 2
+        }
+      }
+    },
+    {
+      "id": "spell_shell",
+      "name": "Shell",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Hardens one of your stacks against the blows that come.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3
+        }
+      }
+    },
+    {
+      "id": "spell_steady",
+      "name": "Steady",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 2,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Holds the ranks of one of your stacks together.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "cohesion": 3
+        }
+      }
+    },
+    {
+      "id": "spell_hobble",
+      "name": "Hobble",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Drags at the feet of one enemy stack.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_slowed",
+          "label": "Slowed",
+          "duration_rounds": 2,
+          "modifiers": {
+            "speed": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_daze",
+      "name": "Daze",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Clouds one enemy stack so that it moves after all others.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_dazed",
+          "label": "Dazed",
+          "duration_rounds": 1
+        }
+      }
+    },
+    {
+      "id": "spell_snare",
+      "name": "Snare",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Binds one enemy stack where it stands.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Rooted",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_unweave",
+      "name": "Unweave",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Picks apart the spells that help one enemy stack.",
+      "effect": {
+        "type": "dispel_enemy",
+        "count": 1,
+        "count_power_divisor": 3
+      }
+    },
+    {
+      "id": "spell_cleanse",
+      "name": "Cleanse",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "countermagic",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Washes what harms one of your stacks away.",
+      "effect": {
+        "type": "cleanse_ally",
+        "count": 1,
+        "count_power_divisor": 3
+      }
+    },
+    {
+      "id": "spell_shift",
+      "name": "Shift",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Slides one of your stacks across the field without spending its turn.",
+      "effect": {
+        "type": "move_ally",
+        "range": 2,
+        "range_power_divisor": 3
+      }
     }
   ]
 }

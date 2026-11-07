@@ -775,7 +775,15 @@ DictRef perform_presented_action(State &state, DictRef session, Atom action, Dic
 	} else if (gd::begins_with(state, action, key::cast_spell_prefix_text)) {
 		const Atom spell_id = gd::trim_prefix(state, action, key::cast_spell_prefix_text);
 		const Atom target_id = text_or(state, destination, key::target_id, key::empty);
-		result = cast_player_spell(state, session_value, spell_id, target_id);
+		// The hex a move spell takes its stack to, when the order names one.
+		Value move_hex;
+		if (state.has(destination, str(key::q)) && state.has(destination, str(key::r))) {
+			const DictRef cell = state.new_dict();
+			state.set(cell, str(key::q), int_value(gd::int_field(state, destination, key::q, -1)));
+			state.set(cell, str(key::r), int_value(gd::int_field(state, destination, key::r, -1)));
+			move_hex = dict_value(cell);
+		}
+		result = cast_player_spell(state, session_value, spell_id, target_id, move_hex);
 	} else {
 		// A strike can name the hex to strike from as its destination.
 		result = perform_player_action(state, session_value, action, action == key::strike ? destination : state.new_dict());

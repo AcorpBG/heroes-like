@@ -513,6 +513,11 @@ bool _intent_forecast_tactical_spell_target_is_public(State &state, DictRef batt
 		public_target_id = text_of(state, active_stack, key::battle_id, str(key::empty));
 	} else if (target_mode == key::enemy_selected) {
 		public_target_id = text_of(state, get_selected_target(state, battle), key::battle_id, str(key::empty));
+	} else if (target_mode == key::ally_selected) {
+		// The stack the cast takes without a pick: the selected one when allied,
+		// else the active one.
+		const DictRef ally = spell_rules::_battle_spell_ally_target(state, active_stack, get_selected_target(state, battle), text_of(state, active_stack, key::side, str(key::empty)));
+		public_target_id = text_of(state, ally, key::battle_id, str(key::empty));
 	} else {
 		return false;
 	}

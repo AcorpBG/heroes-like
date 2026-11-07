@@ -87,6 +87,15 @@ bool check_ok(const State &state, DictRef check) {
 	return gd::bool_field(state, check, key::ok, false);
 }
 
+// spell.get("effect", {}) as a Dictionary ({} for any other value).
+DictRef spell_effect(State &state, DictRef spell) {
+	Value found;
+	if (state.lookup(spell, str(key::effect), found) && gd::is_dict(found)) {
+		return found.ref;
+	}
+	return state.new_dict();
+}
+
 // {"action": "cast_spell", "spell_id": ..., "target_battle_id": ..., "score": ...}
 DictRef cast_candidate(State &state, Atom spell_id, Atom target_battle_id, double score) {
 	const DictRef candidate = state.new_dict();
@@ -179,9 +188,16 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::recover_ally) {
 		score = _recovery_spell_score_for_target(state, enemy_hero, battle, active_stack, target, spell);
 	} else if (effect_type == key::cleanse_ally) {
-		score = _cleanse_spell_score_for_target(state, battle, active_stack, target, spell);
+		score = spell_rules::cleanse_takes_any_harm(state, spell_effect(state, spell))
+				? _any_harm_cleanse_score(state, enemy_hero, battle, active_stack, target, spell)
+				: _cleanse_spell_score_for_target(state, battle, active_stack, target, spell);
 	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff })) {
 		score = _buff_spell_score(state, battle, active_stack, target, hostiles, spell);
+	} else if (effect_type == key::dispel_enemy) {
+		score = _dispel_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+	} else if (effect_type == key::move_ally) {
+		const DictRef plan = _move_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else {
 		score = -9999.0;
 	}
@@ -308,6 +324,45 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(cast_candidate(state, spell_id, target_id, score)));
 				state.append(lethal_flags, bool_value(false));
 			}
+		} else if (effect_type == key::dispel_enemy) {
+			for (const Value &target_value : gd::items(state, array_value(targets))) {
+				if (!gd::is_dict(target_value)) {
+					continue;
+				}
+				const DictRef target = target_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, target, spell, acting_side))) {
+					continue;
+				}
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const Atom target_id = gd::string_field(state, target, key::battle_id, key::empty);
+				const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, state.new_dict());
+				state.append(candidates, dict_value(cast_candidate(state, spell_id, target_id, score)));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::move_ally) {
+			// A move is cast with its hex: the plan's, which the cast then takes.
+			for (const Value &ally_value : gd::items(state, array_value(allies))) {
+				if (!gd::is_dict(ally_value)) {
+					continue;
+				}
+				const DictRef ally = ally_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, ally, spell, acting_side))) {
+					continue;
+				}
+				const DictRef plan = _move_spell_plan(state, enemy_hero, battle, active_stack, ally, spell);
+				if (empty(state, plan)) {
+					continue;
+				}
+				// The plan's score with the terms _spell_candidate_score adds.
+				const double score = gd::float_field(state, plan, key::score, -9999.0)
+						+ _spell_metadata_value_modifier(state, battle, active_stack, ally, spell, behavior) + role_modifier;
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const Atom target_id = gd::string_field(state, ally, key::battle_id, key::empty);
+				const DictRef candidate = cast_candidate(state, spell_id, target_id, score);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
 		}
 	}
 	return candidates;
@@ -362,8 +417,11 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 	double delta = _w(state, key::spell_bar_default);
 	if (effect_type == key::damage_enemy) {
 		delta = _w(state, key::spell_bar_damage);
-	} else if (effect_type == key::control_enemy) {
+	} else if (effect_type == key::control_enemy || effect_type == key::dispel_enemy) {
 		delta = _w(state, key::spell_bar_control);
+	} else if (effect_type == key::move_ally) {
+		// A move is only planned where it frees a shooter or brings a strike.
+		delta = _w(state, key::spell_bar_buff);
 	} else if (effect_type == key::recover_ally || effect_type == key::cleanse_ally) {
 		delta = _w(state, key::spell_bar_recovery);
 	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff })) {

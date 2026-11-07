@@ -37,6 +37,32 @@ Atom string_or_empty(const State &state, DictRef dict, Atom field) {
 	return gd::string_field(state, dict, field, key::empty);
 }
 
+// d.get(key, []): a new Array when the key is missing.
+Value get_or_new_array(State &state, DictRef dict, Atom field) {
+	Value found;
+	if (state.lookup(dict, str(field), found)) {
+		return found;
+	}
+	return gd::array_value(state.new_array());
+}
+
+// effect is Dictionary and not effect.is_empty() of d.get(field, {}).
+bool nonempty_dict_field(State &state, DictRef dict, Atom field, Value &out) {
+	return state.lookup(dict, str(field), out) && gd::is_dict(out) && !gd::is_empty(state, out.ref);
+}
+
+// a + b of Strings.
+Atom concat(State &state, Atom a, Atom b) {
+	std::string joined = state.text(a);
+	joined += state.text(b);
+	return state.intern(joined);
+}
+
+// "" for one, "s" for more.
+Atom plural_s(int64_t count) {
+	return count == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s);
+}
+
 // {"ok": false, "message": message}.
 DictRef refusal(State &state, Atom message) {
 	const DictRef result = state.new_dict();
@@ -290,9 +316,16 @@ void _mark_spell_animation_states(State &state, DictRef battle, DictRef caster_s
 		_mark_damage_target_animation(state, battle, target_id, had_status_effect, string_or_empty(state, caster_stack, key::battle_id), target_context, target_before);
 	} else if (resolution_type == key::effect || resolution_type == key::recover_effect) {
 		_mark_stack_animation_event(state, battle, target_id, key::battle_status_applied, target_context);
-	} else if (resolution_type == key::cleanse_effect) {
+	} else if (resolution_type == key::cleanse_effect || resolution_type == key::dispel_effect) {
 		const Atom event_id = gd::int_field(state, resolution, key::cleansed_effect_count, 0) > 0 ? key::battle_status_expired : key::battle_status_applied;
 		_mark_stack_animation_event(state, battle, target_id, event_id, target_context);
+	} else if (resolution_type == key::move_effect) {
+		// The moved stack walks its way, as a move order's stack does.
+		const DictRef move_context = gd::deep_duplicate_dict(state, target_context);
+		for (const Atom field : { key::from_q, key::from_r, key::to_q, key::to_r }) {
+			state.set(move_context, str(field), int_value(gd::int_field(state, resolution, field, -1)));
+		}
+		_mark_stack_animation_event(state, battle, target_id, key::battle_unit_move, move_context);
 	}
 }
 
@@ -345,6 +378,15 @@ void _append_spell_presentation_events(State &state, DictRef battle, DictRef cas
 			_append_presentation_event(state, battle, key::cleanse, text, base_context);
 		}
 		_append_spell_effect_event(state, battle, key::buff, get_or_new_dict(state, resolution, key::effect), base_context, target_name);
+	} else if (resolution_type == key::dispel_effect) {
+		if (cleansed_count > 0) {
+			const Atom text = gd::format(state, key::loses_spell_effects_format, { str(target_name), int_value(cleansed_count), str(plural_s(cleansed_count)) });
+			_append_presentation_event(state, battle, key::cleanse, text, base_context);
+		}
+	} else if (resolution_type == key::move_effect) {
+		const DictRef to_hex = _hex_cell(state, gd::int_field(state, resolution, key::to_q, -1), gd::int_field(state, resolution, key::to_r, -1));
+		const Atom text = gd::format(state, key::moves_to_format, { str(target_name), str(_hex_label(state, to_hex)) });
+		_append_presentation_event(state, battle, key::move_, text, base_context);
 	}
 }
 
@@ -392,18 +434,97 @@ Atom _spell_effect_label(State &state, const Value &effect_payload) {
 }
 
 DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id) {
+	return _player_spell_resolution(state, session, spell_id, target_id, Value());
+}
+
+DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id, const Value &destination) {
 	const DictRef battle = session_battle(state, session);
 	const DictRef active = get_active_stack(state, battle);
 	const DictRef target = target_id == key::empty ? get_selected_target(state, battle) : _get_stack_by_id(state, battle, target_id);
 	if (target_id != key::empty && (gd::is_empty(state, target) || _alive_count(state, target) <= 0)) {
 		return refusal(state, key::spell_target_not_alive_text);
 	}
-	const DictRef resolution = spell_rules::resolve_battle_spell(state, _player_commander_state(state, session), battle, active, target, spell_id, key::player);
+	const DictRef resolution = spell_rules::resolve_battle_spell(state, _player_commander_state(state, session), battle, active, target, spell_id, key::player, destination);
 	// Explicit orders must never inherit the legacy support-spell fallback to the active stack.
 	if (target_id != key::empty && gd::bool_field(state, resolution, key::ok, false) && string_or_empty(state, resolution, key::target_battle_id) != target_id) {
 		return refusal(state, key::stack_not_valid_spell_target_text);
 	}
 	return resolution;
+}
+
+bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, DictRef animation_resolution, Atom &message, int64_t &recovered_amount, int64_t &cleansed_count) {
+	const Atom target_battle_id = string_or_empty(state, resolution, key::target_battle_id);
+	const Atom resolution_type = string_or_empty(state, resolution, key::resolution_type);
+	if (resolution_type == key::damage) {
+		const DictRef before_copy = gd::duplicate_dict(state, _get_stack_by_id(state, battle, target_battle_id));
+		state.set(animation_resolution, str(key::playback_target_before), dict_value(before_copy));
+		_apply_damage_to_stack(state, battle, target_battle_id, gd::int_field(state, resolution, key::damage, 0));
+		const DictRef target_after = _get_stack_by_id(state, battle, target_battle_id);
+		if (!gd::is_empty(state, target_after) && _alive_count(state, target_after) <= 0) {
+			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(_stack_label(state, target_after)) }));
+		}
+		return true;
+	}
+	if (resolution_type == key::effect) {
+		Value effect_payload;
+		if (nonempty_dict_field(state, resolution, key::effect, effect_payload)) {
+			_apply_stack_effect(state, battle, target_battle_id, effect_payload);
+		}
+		return true;
+	}
+	if (resolution_type == key::recover_effect) {
+		const int64_t recovered = _restore_stack_health(state, battle, target_battle_id, gd::int_field(state, resolution, key::recovery_amount, 0));
+		recovered_amount = recovered;
+		if (recovered > 0) {
+			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+			message = concat(state, message, gd::format(state, key::recovers_health_suffix_text, { str(label), int_value(recovered) }));
+		}
+		Value recovery_effect;
+		if (nonempty_dict_field(state, resolution, key::effect, recovery_effect)) {
+			_apply_stack_effect(state, battle, target_battle_id, recovery_effect);
+		}
+		return true;
+	}
+	if (resolution_type == key::cleanse_effect) {
+		const int64_t cleansed = _cleanse_stack_effects(state, battle, target_battle_id, get_or_new_array(state, resolution, key::cleanse_effect_ids));
+		cleansed_count = cleansed;
+		state.set(animation_resolution, str(key::cleansed_effect_count), int_value(cleansed));
+		if (cleansed > 0) {
+			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+			const Atom plural = cleansed == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s);
+			message = concat(state, message, gd::format(state, key::sheds_pressure_suffix_text, { str(label), int_value(cleansed), str(plural) }));
+		}
+		Value cleanse_effect;
+		if (nonempty_dict_field(state, resolution, key::effect, cleanse_effect)) {
+			_apply_stack_effect(state, battle, target_battle_id, cleanse_effect);
+		}
+		return true;
+	}
+	if (resolution_type == key::dispel_effect) {
+		const int64_t removed = _cleanse_stack_effects(state, battle, target_battle_id, get_or_new_array(state, resolution, key::cleanse_effect_ids));
+		cleansed_count = removed;
+		state.set(animation_resolution, str(key::cleansed_effect_count), int_value(removed));
+		if (removed > 0) {
+			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+			message = concat(state, message, gd::format(state, key::loses_spell_effects_suffix_text, { str(label), int_value(removed), str(plural_s(removed)) }));
+		}
+		return true;
+	}
+	if (resolution_type == key::move_effect) {
+		const DictRef from_hex = gd::deep_duplicate_dict(state, _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id)));
+		const DictRef destination = gd::as_dict(get_or_new_dict(state, resolution, key::destination));
+		_set_stack_hex(state, battle, target_battle_id, destination);
+		_sync_distance_from_hexes(state, battle);
+		const DictRef to_hex = _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id));
+		state.set(animation_resolution, str(key::from_q), int_value(gd::int_field(state, from_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::from_r), int_value(gd::int_field(state, from_hex, key::r, -1)));
+		state.set(animation_resolution, str(key::to_q), int_value(gd::int_field(state, to_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::to_r), int_value(gd::int_field(state, to_hex, key::r, -1)));
+		const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+		message = concat(state, message, gd::format(state, key::moves_to_suffix_text, { str(label), str(_hex_label(state, to_hex)) }));
+		return true;
+	}
+	return false;
 }
 
 } // namespace aurelion::rules::port::battle_rules

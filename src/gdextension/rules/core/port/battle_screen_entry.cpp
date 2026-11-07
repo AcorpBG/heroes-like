@@ -264,6 +264,27 @@ ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id) {
 	return ids;
 }
 
+ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, Atom target_id) {
+	const DictRef battle = session_battle(state, session);
+	if (gd::is_empty(state, battle)) {
+		return state.new_array();
+	}
+	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+	Value effect;
+	if (gd::is_empty(state, spell) || !state.lookup(spell, str(key::effect), effect) || !gd::is_dict(effect)
+			|| gd::string_field(state, effect.ref, key::type, key::empty) != key::move_ally) {
+		return state.new_array();
+	}
+	const DictRef stack = _get_stack_by_id(state, battle, target_id);
+	if (gd::is_empty(state, stack) || text_field(state, stack, key::side) != key::player) {
+		return state.new_array();
+	}
+	// The reach the cast itself gives (spell_rules::resolve_battle_spell).
+	const DictRef hero_state = _player_commander_state(state, dict_value(session));
+	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, hero_state));
+	return spell_rules::move_destinations(state, battle, stack, reach);
+}
+
 ArrayRef get_spell_actions(State &state, DictRef session) {
 	if (gd::is_empty(state, session_battle(state, session))) {
 		return state.new_array();

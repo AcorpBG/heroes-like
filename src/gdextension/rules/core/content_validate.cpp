@@ -1349,7 +1349,8 @@ void Check::spell(const Value &spell) {
 	const std::string primary_role = text(spell, "primary_role");
 	const Value role_categories = get(spell, "role_categories", empty_array_);
 	const std::string context = text(spell, "context");
-	if (!one_of(school_id, kSpellSchoolIds)) {
+	// The basic tier's school is for spells only: it has no sigil of its own.
+	if (!one_of(school_id, kSpellSchoolIds) && school_id != "basic") {
 		warn("Spell " + spell_id + " uses unsupported school_id " + school_id + ".");
 	}
 	if (tier < 1 || tier > 5) {
@@ -1358,6 +1359,10 @@ void Check::spell(const Value &spell) {
 	const Value scroll_only = get(spell, "scroll_only", Value());
 	if (scroll_only.kind != Kind::Nil && scroll_only.kind != Kind::Bool) {
 		warn("Spell " + spell_id + " scroll_only must be true or false.");
+	}
+	const Value unreleased = get(spell, "unreleased", Value());
+	if (unreleased.kind != Kind::Nil && unreleased.kind != Kind::Bool) {
+		warn("Spell " + spell_id + " unreleased must be true or false.");
 	}
 	if (accord_family.empty()) {
 		warn("Spell " + spell_id + " must define accord_family.");
@@ -1383,6 +1388,9 @@ void Check::spell(const Value &spell) {
 		return;
 	}
 	const std::string type = text(effect, "type");
+	// A boost that lasts: modifiers or an amount (SpellRules.battle_spell_modifiers).
+	const Value modifiers = get(effect, "modifiers", empty_dict_);
+	const bool lasting_boost = (is_dict(modifiers) && !empty(modifiers)) || has(effect, "amount");
 	if (type == "restore_movement") {
 		if (integer(effect, "amount", 0) <= 0) {
 			warn("Spell " + spell_id + " must define restore_movement amount > 0.");
@@ -1417,16 +1425,27 @@ void Check::spell(const Value &spell) {
 		if (gd::to_int(d_, get(effect, "base_restore", get(effect, "amount", Value::of_int(0)))) <= 0) {
 			warn("Spell " + spell_id + " must define recovery amount > 0.");
 		}
-		if (integer(effect, "duration_rounds", 0) <= 0) {
+		// A plain heal leaves nothing behind; a heal with a ward needs its rounds.
+		if (lasting_boost && integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
 		}
 	} else if (type == "cleanse_ally") {
+		// The statuses it lifts, or a count of the newest harmful effects.
 		const Value cleanse_effect_ids = get(effect, "cleanse_effect_ids", empty_array_);
-		if (!is_array(cleanse_effect_ids) || empty(cleanse_effect_ids)) {
-			warn("Spell " + spell_id + " must define cleanse_effect_ids.");
+		const bool names_statuses = is_array(cleanse_effect_ids) && !empty(cleanse_effect_ids);
+		if (!names_statuses && integer(effect, "count", 0) <= 0) {
+			warn("Spell " + spell_id + " must define cleanse_effect_ids or a count > 0.");
 		}
-		if (integer(effect, "duration_rounds", 0) <= 0) {
+		if ((names_statuses || lasting_boost) && integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
+	} else if (type == "dispel_enemy") {
+		if (integer(effect, "count", 0) <= 0) {
+			warn("Spell " + spell_id + " must define dispel count > 0.");
+		}
+	} else if (type == "move_ally") {
+		if (integer(effect, "range", 0) <= 0) {
+			warn("Spell " + spell_id + " must define move range > 0.");
 		}
 	} else {
 		warn("Spell " + spell_id + " uses unsupported effect type " + type + ".");

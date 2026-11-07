@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-worn-scrolls-20261107",
- "currentSliceTitle": "Scrolls are worn trinkets lending their spell (one per spell, made by the content store); scroll sites hand them over, computer heroes fetch and wear them; scroll_only spells skip guilds and shrines; shops and placed artifacts leave them out.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-07T15:16:23Z",
+ "currentSliceId": "magic-basic-tier-20261107",
+ "currentSliceTitle": "Magic: casting on any stack, and the basic tier",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-07T15:19:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -48,7 +48,7 @@
   {
    "id": "magic-basic-tier-20261107",
    "title": "Magic: casting on any stack, and the basic tier",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "The hero casts on any stack its spell allows, not only the acting one: rules, battle screen target picking and battle AI target choice. The 12 basic battle spells and their 4 new mechanics enter spells.json marked unreleased (no guild, start or reward until magic-switch-20261107) and cast in battle_sim_cli; spell texts show their numbers at the caster's power. Spells: docs/magic-system-spells.md.",
    "docs": [
     "docs/magic-system.md"

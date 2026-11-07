@@ -573,7 +573,7 @@ bool _spell_buff_already_active(State &state, DictRef active_stack, DictRef batt
 
 bool _stack_has_control_effect(State &state, DictRef stack, DictRef battle) {
 	const ArrayRef ids = state.new_array();
-	for (const Atom id : { key::status_harried, key::status_staggered, key::status_rooted }) {
+	for (const Atom id : { key::status_harried, key::status_staggered, key::status_rooted, key::status_slowed, key::status_dazed }) {
 		state.append(ids, str(id));
 	}
 	return spell_rules::has_any_effect_ids(state, stack, battle, array_value(ids));
@@ -599,6 +599,14 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	}
 	if (status_id == key::status_staggered) {
 		return melee && gd::int_field(state, target, key::retaliations_left, 0) > 0 ? 1.5 : 0.5;
+	}
+	// Slowed holds back a melee stack that must close in; a shooter barely
+	// minds. Dazed puts the stack's turn after every other one.
+	if (status_id == key::status_slowed) {
+		return melee ? 1.5 : 0.3;
+	}
+	if (status_id == key::status_dazed) {
+		return 1.0;
 	}
 	return 0.0;
 }

@@ -237,6 +237,12 @@ double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRe
 double _cleanse_spell_score_for_target(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
 double _spell_metadata_value_modifier(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior);
 double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef targets, DictRef spell);
+// The basic tier's mechanics: a cleanse of any harmful effect, a dispel of
+// helpful spell effects, and a move ({destination: {q, r}, score}, or {} when
+// no hex helps the stack).
+double _any_harm_cleanse_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
+double _dispel_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
+DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
 
 // Slice 09: the weights, the attack, defend and advance scores, and the melee
 // approach (battle_ai_attack_scores.cpp).

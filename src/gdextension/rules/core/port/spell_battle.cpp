@@ -7,6 +7,7 @@
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/town_battle_rules.hpp"
 
@@ -186,6 +187,14 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::effect;
 		state.append(hooks, str(key::ally_status_effect));
 		public_effect = key::ally_modifier_effect_text;
+	} else if (effect_type == key::dispel_enemy) {
+		resolution_type = key::dispel_effect;
+		state.append(hooks, str(key::enemy_spell_dispel));
+		public_effect = key::enemy_dispel_text;
+	} else if (effect_type == key::move_ally) {
+		resolution_type = key::move_effect;
+		state.append(hooks, str(key::ally_reposition));
+		public_effect = key::ally_reposition_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -266,6 +275,13 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		if (gd::is_empty(state, cleanse_target) || side_of(state, cleanse_target) != acting_side) {
 			return refusal(state, key::select_allied_target_text);
 		}
+		// A cleanse that names no status takes any harmful effect (Cleanse).
+		if (cleanse_takes_any_harm(state, two_argument_get_target(effect))) {
+			if (state.array_size(newest_effect_ids(state, cleanse_target, battle, false, 1)) == 0) {
+				return refusal(state, key::no_matching_pressure_text);
+			}
+			return accepted(state);
+		}
 		const ArrayRef cleanse_effect_ids = _normalize_string_array(state, get_or_new_array(state, two_argument_get_target(effect), key::cleanse_effect_ids));
 		if (state.array_size(cleanse_effect_ids) == 0) {
 			return refusal(state, key::cleanse_spell_no_target_text);
@@ -279,6 +295,25 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		const DictRef buff_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
 		if (gd::is_empty(state, buff_target) || side_of(state, buff_target) != acting_side) {
 			return refusal(state, key::select_allied_target_text);
+		}
+		return accepted(state);
+	}
+	if (effect_type == key::dispel_enemy) {
+		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side) {
+			return refusal(state, key::select_enemy_target_text);
+		}
+		if (state.array_size(newest_effect_ids(state, target_stack, battle, true, 1)) == 0) {
+			return refusal(state, key::no_helpful_spell_effect_text);
+		}
+		return accepted(state);
+	}
+	if (effect_type == key::move_ally) {
+		const DictRef move_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+		if (gd::is_empty(state, move_target) || side_of(state, move_target) != acting_side || _alive_count(state, move_target) <= 0) {
+			return refusal(state, key::select_allied_target_text);
+		}
+		if (battle_rules::_stack_is_rooted(state, move_target, battle)) {
+			return refusal(state, gd::format(state, key::rooted_cannot_move_text, { str(battle_rules::_stack_label(state, move_target)) }));
 		}
 		return accepted(state);
 	}
@@ -507,6 +542,11 @@ DictRef _spell_effect_modifiers(State &state, DictRef effect, Atom default_kind,
 	if (gd::is_dict(modifiers) && !gd::is_empty(state, modifiers.ref)) {
 		return _normalize_effect_modifiers(state, modifiers);
 	}
+	// An effect with neither modifiers nor an amount carries no boost (Mend's
+	// heal, Cleanse): only an amount stands for the kind's modifier.
+	if (!state.has(effect, str(key::amount))) {
+		return state.new_dict();
+	}
 	const DictRef fallback = state.new_dict();
 	state.set(fallback, str(default_kind), int_value(engine_max<int64_t>(1, default_amount)));
 	return _normalize_effect_modifiers(state, dict_value(fallback));
@@ -634,6 +674,10 @@ ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
 }
 
 DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side) {
+	return resolve_battle_spell(state, hero_state, battle, active_stack, target_stack, spell_id, acting_side, Value());
+}
+
+DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side, const Value &destination) {
 	DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
 	if (!can_cast_spell(state, hero, spell_id)) {
 		return hero_refusal(state, hero, key::spell_not_in_spellbook_text);
@@ -651,9 +695,29 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
 	const Atom effect_type = gd::to_string(state.get(effect, str(key::type), str(key::empty)));
+	const DictRef ally_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+	// A move finds its hex before the mana is spent: within its reach of the
+	// stack's walk over empty hexes, or none named yet.
+	int64_t move_reach = 0;
+	DictRef move_cell = state.new_dict();
+	bool needs_destination = false;
+	if (effect_type == key::move_ally) {
+		move_reach = spell_move_reach(state, spell, spell_power(state, hero));
+		const ArrayRef cells = move_destinations(state, battle, ally_target, move_reach);
+		if (state.array_size(cells) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_open_hex_text, { str(battle_rules::_stack_label(state, ally_target)) }));
+		}
+		if (!gd::is_dict(destination) || gd::is_empty(state, destination.ref)) {
+			needs_destination = true;
+		} else {
+			move_cell = move_destination_in_reach(state, cells, destination);
+			if (gd::is_empty(state, move_cell)) {
+				return hero_refusal(state, hero, key::destination_out_of_reach_text);
+			}
+		}
+	}
 	hero = _consume_mana(state, hero, mana_cost);
 	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
-	const DictRef ally_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
 	if (effect_type == key::damage_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
 		const DictRef post_damage_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
@@ -724,6 +788,15 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
 		return result;
 	}
+	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
+		// Cleanse: the newest harmful effects, one more per 3 spell power.
+		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero));
+		const DictRef result = cast_result(state, hero, key::cleanse_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::cleanse_effect_ids), array_value(newest_effect_ids(state, ally_target, battle, false, count)));
+		state.set(result, str(key::effect), dict_value(state.new_dict()));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
 	if (effect_type == key::cleanse_ally) {
 		const DictRef result = cast_result(state, hero, key::cleanse_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::cleanse_effect_ids), array_value(_normalize_string_array(state, get_or_new_array(state, effect, key::cleanse_effect_ids))));
@@ -737,6 +810,32 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		const DictRef result = cast_result(state, hero, key::effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::effect), dict_value(_effect_payload(state, spell, effect, battle, hero)));
 		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
+	if (effect_type == key::dispel_enemy) {
+		// Unweave: the newest helpful spell effects, one more per 3 of the
+		// caster's power less the target hero's Knowledge.
+		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero, battle, target_stack));
+		const DictRef result = cast_result(state, hero, key::dispel_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::cleanse_effect_ids), array_value(newest_effect_ids(state, target_stack, battle, true, count)));
+		const Atom dispel_message = gd::format(state, key::casts_on_format, {
+			str(caster_name),
+			str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)),
+		});
+		state.set(result, str(key::message), str(dispel_message));
+		return result;
+	}
+	if (effect_type == key::move_ally) {
+		const DictRef result = cast_result(state, hero, key::move_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::range), int_value(move_reach));
+		if (needs_destination) {
+			state.set(result, str(key::needs_destination), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_destination_hex_text, { str(battle_rules::_stack_label(state, ally_target)) })));
+		} else {
+			state.set(result, str(key::destination), dict_value(move_cell));
+			state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		}
 		return result;
 	}
 	return hero_refusal(state, hero, key::battle_spell_no_supported_effect_text);

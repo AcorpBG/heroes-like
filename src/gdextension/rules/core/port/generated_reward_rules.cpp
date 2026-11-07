@@ -11,6 +11,7 @@
 #include "aurelion_rules/port/generated_neutral_encounter_rules.hpp"
 #include "aurelion_rules/port/hero_progression_rules_turn.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
@@ -524,12 +525,13 @@ void add_stack(State &state, DictRef troops, const Value &stack) {
 
 // The spell ids of one tier in spells.json, sorted (_tier_spell_id and
 // _scroll_spell_id): the guild spells, or the scroll-only ones, which only
-// scrolls hold (docs/magic-system.md, Scrolls).
+// scrolls hold (docs/magic-system.md, Scrolls). Unreleased spells are in
+// neither.
 ArrayRef tier_spell_candidates(State &state, int64_t tier, bool scroll_only = false) {
 	const ArrayRef candidates = state.new_array();
 	for (const Value &spell : gd::field_items(state, gd::content_file(state, key::spells_path), str(key::items))) {
 		if (gd::is_dict(spell) && gd::int_field(state, spell.ref, key::tier, 0) == tier && text(state, spell.ref, key::id, key::empty) != key::empty
-				&& gd::bool_field(state, spell.ref, key::scroll_only, false) == scroll_only) {
+				&& gd::bool_field(state, spell.ref, key::scroll_only, false) == scroll_only && spell_rules::spell_is_released(state, spell.ref)) {
 			state.append(candidates, str(text(state, spell.ref, key::id, key::empty)));
 		}
 	}
@@ -1233,7 +1235,7 @@ ArrayRef _pandora_spell_ids(State &state, DictRef contents, Atom key_text) {
 	if (one_of(common_school, {1, 2, 4, 8})) {
 		const ArrayRef schools = state.new_array();
 		for (const Value &spell : gd::items(state, array_value(spells))) {
-			if (gd::is_dict(spell) && text(state, spell.ref, key::school_id, key::empty) != key::empty &&
+			if (gd::is_dict(spell) && text(state, spell.ref, key::school_id, key::empty) != key::empty && spell_rules::spell_is_released(state, spell.ref) &&
 					!gd::array_has(state, schools, str(text(state, spell.ref, key::school_id, key::empty)))) {
 				state.append(schools, str(text(state, spell.ref, key::school_id, key::empty)));
 			}
@@ -1243,7 +1245,8 @@ ArrayRef _pandora_spell_ids(State &state, DictRef contents, Atom key_text) {
 	}
 	const ArrayRef spell_ids = state.new_array();
 	for (const Value &spell : gd::items(state, array_value(spells))) {
-		if (!gd::is_dict(spell) || text(state, spell.ref, key::id, key::empty) == key::empty || gd::bool_field(state, spell.ref, key::scroll_only, false)) {
+		if (!gd::is_dict(spell) || text(state, spell.ref, key::id, key::empty) == key::empty || gd::bool_field(state, spell.ref, key::scroll_only, false)
+				|| !spell_rules::spell_is_released(state, spell.ref)) {
 			continue;
 		}
 		if (gd::array_has(state, levels, int_value(gd::int_field(state, spell.ref, key::tier, 0))) &&

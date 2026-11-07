@@ -10,6 +10,9 @@ const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
 const RARE_RESOURCE_IDS := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
+# The basic tier's spells: a school of their own, with no sigil and no
+# school resistance.
+const BASIC_SCHOOL_ID := "basic"
 const MAX_SPELL_RESISTANCE_PCT := 75
 # Hero field: the day of the hero's last overworld spell.
 const OVERWORLD_SPELL_CAST_DAY_KEY := "overworld_spell_cast_day"
@@ -470,6 +473,8 @@ static func _school_label(school_id: String) -> String:
 			return "Veil"
 		"old_measure":
 			return "Old Measure"
+		"basic":
+			return "Basic"
 		_:
 			return "Unassigned"
 
@@ -485,7 +490,7 @@ static func _validate_spell_schema_record(
 ) -> void:
 	if spell_id == "":
 		errors.append("Spell record must define id.")
-	if school not in SPELL_SCHOOL_IDS:
+	if school not in SPELL_SCHOOL_IDS and school != BASIC_SCHOOL_ID:
 		errors.append("Spell %s uses unsupported school_id %s." % [spell_id, school])
 	if tier < 1 or tier > 5:
 		errors.append("Spell %s tier must be between 1 and 5." % spell_id)
@@ -535,6 +540,14 @@ static func _validate_spell_schema_record(
 			errors.append("Spell %s buff metadata must use battle context." % spell_id)
 		if "buff" not in role_categories and "recovery" not in role_categories:
 			errors.append("Spell %s buff metadata must include buff or recovery role category." % spell_id)
+	elif String(effect_type) == "dispel_enemy":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s dispel metadata must use battle context." % spell_id)
+		if "countermagic" not in role_categories:
+			errors.append("Spell %s dispel metadata must include countermagic role category." % spell_id)
+	elif String(effect_type) == "move_ally":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s move metadata must use battle context." % spell_id)
 
 static func _increment_count(counts: Dictionary, key: String) -> void:
 	var normalized_key := key if key != "" else "missing"

@@ -46,14 +46,6 @@ Value get_or_new_dict(State &state, DictRef dict, Atom field) {
 	return dict_value(state.new_dict());
 }
 
-Value get_or_new_array(State &state, DictRef dict, Atom field) {
-	Value found;
-	if (state.lookup(dict, str(field), found)) {
-		return found;
-	}
-	return array_value(state.new_array());
-}
-
 // effect is Dictionary and not effect.is_empty() of d.get(field, {}): a missing
 // key's new {} is empty.
 bool nonempty_dict_field(State &state, DictRef dict, Atom field, Value &out) {
@@ -170,6 +162,10 @@ DictRef resolve_if_battle_ready(State &state, const Value &session) {
 }
 
 DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Atom target_id) {
+	return cast_player_spell(state, session, spell_id, target_id, Value());
+}
+
+DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Atom target_id, const Value &destination) {
 	if (no_battle(state, session)) {
 		return refusal(state, key::no_battle_is_active_text);
 	}
@@ -183,8 +179,12 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	}
 	const DictRef caster = _hero_caster(state, session_battle(state, session), key::player);
 	_ensure_damage_rng_state(state, session, session_battle(state, session));
-	const DictRef resolution = _player_spell_resolution(state, session, spell_id, target_id);
+	const DictRef resolution = _player_spell_resolution(state, session, spell_id, target_id, destination);
 	if (!gd::bool_field(state, resolution, key::ok, false)) {
+		return refusal(state, gd::string_field(state, resolution, key::message, key::spell_casting_failed_text));
+	}
+	// A move spell cast without its hex: nothing is spent, the screen asks for one.
+	if (gd::bool_field(state, resolution, key::needs_destination, false)) {
 		return refusal(state, gd::string_field(state, resolution, key::message, key::spell_casting_failed_text));
 	}
 	_commit_spell_resistance_roll(state, session_battle(state, session), resolution);
@@ -209,48 +209,7 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	const DictRef target_before = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id));
 	int64_t recovered_amount = 0;
 	int64_t cleansed_count = 0;
-	const Atom resolution_type = string_or_empty(state, resolution, key::resolution_type);
-	if (resolution_type == key::damage) {
-		const Atom target_battle_id = string_or_empty(state, resolution, key::target_battle_id);
-		const DictRef before_copy = gd::duplicate_dict(state, _get_stack_by_id(state, session_battle(state, session), target_battle_id));
-		state.set(animation_resolution, str(key::playback_target_before), dict_value(before_copy));
-		_apply_damage_to_stack(state, session_battle(state, session), target_battle_id, gd::int_field(state, resolution, key::damage, 0));
-		const DictRef target_after = _get_stack_by_id(state, session_battle(state, session), target_battle_id);
-		if (!gd::is_empty(state, target_after) && _alive_count(state, target_after) <= 0) {
-			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(_stack_label(state, target_after)) }));
-		}
-	} else if (resolution_type == key::effect) {
-		Value effect_payload;
-		if (nonempty_dict_field(state, resolution, key::effect, effect_payload)) {
-			_apply_stack_effect(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id), effect_payload);
-		}
-	} else if (resolution_type == key::recover_effect) {
-		const int64_t recovered = _restore_stack_health(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id), gd::int_field(state, resolution, key::recovery_amount, 0));
-		recovered_amount = recovered;
-		if (recovered > 0) {
-			const Atom label = _stack_label(state, _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id)));
-			message = concat(state, message, gd::format(state, key::recovers_health_suffix_text, { str(label), int_value(recovered) }));
-		}
-		Value recovery_effect;
-		if (nonempty_dict_field(state, resolution, key::effect, recovery_effect)) {
-			_apply_stack_effect(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id), recovery_effect);
-		}
-	} else if (resolution_type == key::cleanse_effect) {
-		const DictRef cleanse_battle = session_battle(state, session);
-		const Atom cleanse_target_id = string_or_empty(state, resolution, key::target_battle_id);
-		const int64_t cleansed = _cleanse_stack_effects(state, cleanse_battle, cleanse_target_id, get_or_new_array(state, resolution, key::cleanse_effect_ids));
-		cleansed_count = cleansed;
-		state.set(animation_resolution, str(key::cleansed_effect_count), int_value(cleansed));
-		if (cleansed > 0) {
-			const Atom label = _stack_label(state, _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id)));
-			const Atom plural = cleansed == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s);
-			message = concat(state, message, gd::format(state, key::sheds_pressure_suffix_text, { str(label), int_value(cleansed), str(plural) }));
-		}
-		Value cleanse_effect;
-		if (nonempty_dict_field(state, resolution, key::effect, cleanse_effect)) {
-			_apply_stack_effect(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id), cleanse_effect);
-		}
-	} else {
+	if (!_apply_spell_resolution(state, session_battle(state, session), resolution, animation_resolution, message, recovered_amount, cleansed_count)) {
 		return refusal(state, key::unsupported_spell_resolution_text);
 	}
 	Value post_damage_effect;

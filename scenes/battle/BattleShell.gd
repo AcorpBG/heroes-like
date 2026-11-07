@@ -157,6 +157,9 @@ var _message_log: PanelContainer
 var _last_message := ""
 var _spell_targeting_id := ""
 var _spell_targeting_hash := 0
+# A move spell's second step: the stack it takes and the hexes it can go to.
+var _spell_destination_stack_id := ""
+var _spell_destination_cells: Array = []
 # What the details card describes while the right button is held: "stack",
 # "chip" (a stack by its ribbon chip) or "hero", its id, and the rect in the
 # HUD it stands beside.
@@ -708,11 +711,55 @@ func _cast_targeted_spell(battle_id: String) -> Dictionary:
 		if message == "":
 			message = "That stack is not a target for %s." % _spell_name(spell_id)
 		return _reject_order("%s Choose a highlighted stack, or press Esc." % message.get_slice("\n", 0), {"action": "cast_spell:" + spell_id, "target_battle_id": battle_id})
+	# A move spell takes its stack first, then the hex it goes to.
+	var destinations := BattleRules.spell_destination_hexes(_session, spell_id, battle_id)
+	if not destinations.is_empty():
+		return _begin_spell_destination(spell_id, battle_id, destinations)
 	_stop_auto_battle()
 	var result := _perform_action("cast_spell:" + spell_id, {"target_id": battle_id})
 	var response := result.duplicate(true)
 	response["action"] = "cast_spell:" + spell_id
 	response["target_battle_id"] = battle_id
+	response["message"] = _last_message
+	return _return_board_cursor_action_result(response)
+
+
+## The field lights the hexes the chosen stack can go to; the next click on
+## one of them casts the spell. Another highlighted stack can still be chosen.
+func _begin_spell_destination(spell_id: String, battle_id: String, destinations: Array) -> Dictionary:
+	_spell_destination_stack_id = battle_id
+	_spell_destination_cells = destinations.duplicate(true)
+	_battle_board_view.set_spell_destination_hexes(_spell_destination_cells)
+	_set_command_hint("%s: click a lit hex to move the stack there. Esc puts the spell away." % _spell_name(spell_id), 0.0)
+	return _return_board_cursor_action_result({
+		"ok": true,
+		"committed": false,
+		"state": "targeting_destination",
+		"action": "cast_spell:" + spell_id,
+		"target_battle_id": battle_id,
+		"destination_count": _spell_destination_cells.size(),
+	})
+
+
+func _cast_spell_to_destination(q: int, r: int) -> Dictionary:
+	var spell_id := _spell_targeting_id
+	var battle_id := _spell_destination_stack_id
+	var order := {"action": "cast_spell:" + spell_id, "target_battle_id": battle_id, "q": q, "r": r}
+	if _spell_targeting_hash != hash(_session.battle):
+		_cancel_spell_targeting(false)
+		return _reject_order("The battlefield changed. Choose the spell again.", order)
+	var in_reach := false
+	for cell in _spell_destination_cells:
+		if cell is Dictionary and int(cell.get("q", -1)) == q and int(cell.get("r", -1)) == r:
+			in_reach = true
+			break
+	if not in_reach:
+		return _reject_order("Choose a lit hex for %s, or press Esc to put the spell away." % _spell_name(spell_id), order)
+	_stop_auto_battle()
+	var result := _perform_action("cast_spell:" + spell_id, {"target_id": battle_id, "q": q, "r": r})
+	var response := result.duplicate(true)
+	for key in order.keys():
+		response[key] = order[key]
 	response["message"] = _last_message
 	return _return_board_cursor_action_result(response)
 
@@ -885,6 +932,8 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
 	if _spell_targeting_id != "":
+		if _spell_destination_stack_id != "":
+			return _cast_spell_to_destination(q, r)
 		return _reject_order(
 			"Choose a highlighted stack for %s, or press Esc to put the spell away." % _spell_name(_spell_targeting_id),
 			{"action": "cast_spell:" + _spell_targeting_id, "q": q, "r": r}
@@ -1727,8 +1776,11 @@ func _cancel_spell_targeting(announce: bool) -> void:
 	var spell_id := _spell_targeting_id
 	_spell_targeting_id = ""
 	_spell_targeting_hash = 0
+	_spell_destination_stack_id = ""
+	_spell_destination_cells = []
 	if _battle_board_view != null:
 		_battle_board_view.set_spell_target_candidates([])
+		_battle_board_view.set_spell_destination_hexes([])
 		_battle_board_view.set_hero_cast_ready(_hero_can_cast_now())
 	if announce:
 		_set_command_hint("%s put away. No mana spent." % _spell_name(spell_id))
@@ -1744,6 +1796,9 @@ func _refresh_spell_target_surface() -> void:
 	for id in ids:
 		previews[id] = BattleRules.spell_consequence_preview(_session, _spell_targeting_id, String(id))
 	_battle_board_view.set_spell_target_candidates(ids, previews, true)
+	if _spell_destination_stack_id != "":
+		_spell_destination_cells = BattleRules.spell_destination_hexes(_session, _spell_targeting_id, _spell_destination_stack_id)
+		_battle_board_view.set_spell_destination_hexes(_spell_destination_cells)
 
 
 func _spell_name(spell_id: String) -> String:

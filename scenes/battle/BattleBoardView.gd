@@ -279,6 +279,8 @@ var _consequence_preview: Dictionary = {}
 var _spell_target_candidates: Array = []
 var _spell_target_previews: Dictionary = {}
 var _spell_target_mode := false
+# The empty hexes a move spell can take its chosen stack to ({q, r} cells).
+var _spell_destination_cells: Array = []
 
 func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targeting_active: bool = false) -> void:
 	_spell_target_candidates = ids.duplicate()
@@ -286,6 +288,18 @@ func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targetin
 	_spell_target_mode = targeting_active
 	_consequence_hover_key = ""
 	queue_redraw()
+
+## The hexes lit while the player picks where a move spell takes its stack;
+## a click on one of them asks for it (hex_destination_requested). [] clears them.
+func set_spell_destination_hexes(cells: Array) -> void:
+	_spell_destination_cells = cells.duplicate(true)
+	queue_redraw()
+
+func _is_spell_destination_cell(cell: Vector2i) -> bool:
+	for destination in _spell_destination_cells:
+		if destination is Dictionary and int(destination.get("q", -1)) == cell.x and int(destination.get("r", -1)) == cell.y:
+			return true
+	return false
 var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
 # Keys or a controller are steering the board (see _input()).
@@ -503,6 +517,9 @@ func _gui_input(event: InputEvent) -> void:
 		_update_pointer_hover(motion_event.position)
 		_preview_position(motion_event.position)
 		var hovered_cell := _hex_cell_at_position(motion_event.position)
+		if not _spell_destination_cells.is_empty():
+			# The lit hex under the pointer is drawn brighter.
+			queue_redraw()
 		if not _is_legal_destination_cell(hovered_cell):
 			hovered_cell = Vector2i(-1, -1)
 		if hovered_cell != _hover_destination_cell:
@@ -991,6 +1008,10 @@ func _bounded_battle_board_cursor_semantic_text(value: String, maximum_character
 ## force_strike: Ctrl was held, so a shooter strikes instead of shooting.
 func _dispatch_board_click_at_position(position: Vector2, force_strike: bool = false) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
+	# A lit destination hex takes the click before any standee drawn over it.
+	if _spell_target_mode and _is_spell_destination_cell(target_cell):
+		hex_destination_requested.emit(target_cell.x, target_cell.y)
+		return {"accepted": true, "dispatch": "spell_destination", "battle_id": "", "q": target_cell.x, "r": target_cell.y}
 	var cell_battle_id := _stack_id_at_cell(target_cell)
 	var battle_id := _stack_id_at_board_position(position, target_cell)
 	if _spell_target_mode and battle_id != "":
@@ -2308,6 +2329,15 @@ func _draw_board() -> void:
 			for body_cell in BattleRulesScript.Footprint.cells(_stack_by_id(String(id))):
 				var center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
 				_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
+		if not _spell_destination_cells.is_empty():
+			var pointed_cell := _controller_cursor_cell if _keyboard_cursor_shown() else _hex_cell_at_position(_pointer_position)
+			var radius := float(hex_layout.get("radius", 20.0))
+			for destination in _spell_destination_cells:
+				if not (destination is Dictionary):
+					continue
+				var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
+				var pointed := cell == pointed_cell
+				_draw_hex(_hex_center(cell, hex_layout), radius * 0.9, Color(0.42, 0.80, 1.0, 0.30 if pointed else 0.12), ACTIVE_COLOR if pointed else Color(0.42, 0.80, 1.0, 0.85), 3.0 if pointed else 1.5)
 	if not _hover_ribbon_battle_id.is_empty() and stack_cells.has(_hover_ribbon_battle_id):
 		_draw_body_outline(_hover_ribbon_battle_id, hex_layout, float(hex_layout.get("radius", 20.0)) * 0.98, Color(1.0, 1.0, 1.0, 0.85), 2.4)
 	_draw_turn_ribbon()

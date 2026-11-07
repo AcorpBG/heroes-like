@@ -86,6 +86,10 @@ int64_t spell_tier(State &state, DictRef spell) {
 	return gd::int_field(state, spell, key::tier, 0);
 }
 
+bool spell_is_released(State &state, DictRef spell) {
+	return !gd::bool_field(state, spell, key::unreleased, false);
+}
+
 Atom spell_primary_role(State &state, DictRef spell) {
 	return string_of_field(state, spell, key::primary_role, key::empty);
 }

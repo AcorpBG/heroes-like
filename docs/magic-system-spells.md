@@ -1,6 +1,6 @@
 # Magic system: spells and mechanics
 
-The 139 spells and 138 mechanics of the magic system in `docs/magic-system.md`, as the owner settled them on 2026-11-07. Nothing here is in the game yet. None of today's 119 spells, names or ids is reused; the ids below are `spell_` and the name.
+The 139 spells and 138 mechanics of the magic system in `docs/magic-system.md`, as the owner settled them on 2026-11-07. The 12 basic battle spells are in `spells.json`, marked unreleased (`docs/magic-system.md`, "The new spells in content"); nothing else here is in the game yet. None of today's 119 spells, names or ids is reused; the ids below are `spell_` and the name.
 
 ## Reading the numbers
 

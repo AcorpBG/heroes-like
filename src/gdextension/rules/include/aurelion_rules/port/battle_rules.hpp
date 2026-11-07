@@ -272,9 +272,12 @@ DictRef get_selected_target(State &state, DictRef battle);
 DictRef select_target(State &state, const Value &session, Atom battle_id);
 
 // Turn order: rounds, the turn order and its sort, waiting and the action
-// availability (turn_order.cpp).
+// availability (turn_order.cpp). A dazed stack acts after every other stack:
+// _dazed_stacks_last moves those of a list to its end, in their order (the
+// list itself when none is dazed).
 void _prepare_round(State &state, DictRef battle, int64_t round_number);
 ArrayRef _sorted_turn_order(State &state, DictRef battle);
+ArrayRef _dazed_stacks_last(State &state, DictRef battle, ArrayRef battle_ids);
 bool _compare_stack_order_keys(State &state, DictRef lhs, DictRef rhs);
 bool _compare_waiting_order_keys(State &state, DictRef lhs, DictRef rhs);
 Atom _advance_to_next_alive(State &state, DictRef battle, int64_t start_index);
@@ -389,6 +392,13 @@ void _apply_melee_approach(State &state, DictRef battle, DictRef stack, DictRef 
 // presentation events (spell_events.cpp).
 DictRef _player_commander_state(State &state, const Value &session);
 DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id);
+DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id, const Value &destination);
+// A resolved cast's effect on the field, by its resolution type: damage, a
+// status or boost, a heal, a cleanse, a dispel or a move. It adds to message,
+// recovered_amount and cleansed_count as the cast's text and events read them
+// and to animation_resolution what its animation reads; false for a type no
+// cast resolves to.
+bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, DictRef animation_resolution, Atom &message, int64_t &recovered_amount, int64_t &cleansed_count);
 DictRef _normalize_commander_spell_cast_rounds(State &state, const Value &value);
 bool _commander_spell_cast_this_round(State &state, DictRef battle, Atom side);
 void _mark_commander_spell_cast(State &state, DictRef battle, Atom side);
@@ -411,6 +421,9 @@ bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_s
 // action and the outcome (player_orders.cpp).
 DictRef resolve_if_battle_ready(State &state, const Value &session);
 DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Atom target_id);
+// The same with the hex a move spell takes its stack to ({q, r}, or nil for a
+// spell that moves nothing).
+DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Atom target_id, const Value &destination);
 DictRef perform_player_action(State &state, const Value &session, Atom action, DictRef approach);
 DictRef _resolve_attack_action(State &state, const Value &session, DictRef attacker, DictRef target, bool is_ranged);
 DictRef _complete_action(State &state, const Value &session, Atom initial_message, bool turn_spent);

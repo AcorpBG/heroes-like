@@ -572,6 +572,12 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	const auto with_timing = [&](Atom summary) {
 		return timing_hint != key::empty ? concat(state, summary, gd::format(state, key::timing_s, {str(timing_hint)})) : summary;
 	};
+	// The stack an ally spell names: one the player picks for an ally_selected
+	// spell, else the acting stack.
+	const Atom ally_name = gd::string_field(state, spell, key::target_mode, key::empty) == key::ally_selected
+			? static_cast<Atom>(key::one_of_your_stacks_text)
+			: text_or(state, active_stack, key::name, key::the_active_stack_text);
+	const auto plural = [](int64_t count) { return count == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s); };
 	const auto grant_for = [&](Atom summary) {
 		const DictRef modifiers = battle_spell_modifiers(state, spell);
 		if (!gd::is_empty(state, modifiers)) {
@@ -627,19 +633,31 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	}
 	if (effect_type == key::recover_ally) {
 		const int64_t amount = _battle_spell_recovery_amount(state, hero_state, spell);
-		const Atom recovery_summary = gd::format(state, key::restore_up_to_d_health_to, {int_value(amount), str(text_or(state, active_stack, key::name, key::the_active_stack_text))});
+		const Atom recovery_summary = gd::format(state, key::restore_up_to_d_health_to, {int_value(amount), str(ally_name)});
 		return with_timing(grant_for(recovery_summary));
+	}
+	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
+		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero_state));
+		return with_timing(gd::format(state, key::remove_up_to_d_harmful_effects_from_s, {int_value(count), str(plural(count)), str(ally_name)}));
 	}
 	if (effect_type == key::cleanse_ally) {
 		const Atom cleansed = join_array(state, key::comma_space, _cleanse_labels(state, effect));
-		const Atom cleanse_summary = gd::format(state, key::cleanse_s_from_s, {str(cleansed), str(text_or(state, active_stack, key::name, key::the_active_stack_text))});
+		const Atom cleanse_summary = gd::format(state, key::cleanse_s_from_s, {str(cleansed), str(ally_name)});
 		return with_timing(grant_for(cleanse_summary));
 	}
 	if (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff) {
 		const Atom modifier_text = _modifier_summary(state, battle_spell_modifiers(state, spell));
-		const Atom target_name = text_or(state, active_stack, key::name, key::the_active_stack_text);
 		const Atom turns = _turns_label(state, spell_duration_rounds(state, hero_state, gd::field_or(state, effect, key::duration_rounds, int_value(1)), spell, key::buff));
-		return with_timing(gd::format(state, key::grant_s_to_s_for_s, {str(modifier_text), str(target_name), str(turns)}));
+		return with_timing(gd::format(state, key::grant_s_to_s_for_s, {str(modifier_text), str(ally_name), str(turns)}));
+	}
+	if (effect_type == key::dispel_enemy) {
+		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		const Atom target_name = text_or(state, target_stack, key::name, key::the_selected_enemy);
+		return with_timing(gd::format(state, key::remove_up_to_d_helpful_spell_effects_from_s, {int_value(count), str(plural(count)), str(target_name)}));
+	}
+	if (effect_type == key::move_ally) {
+		const int64_t reach = spell_move_reach(state, spell, spell_power(state, hero_state));
+		return with_timing(gd::format(state, key::move_s_up_to_d_hexes_keeping_turn, {str(ally_name), int_value(reach)}));
 	}
 	return key::no_authored_battle_summary_is_available;
 }

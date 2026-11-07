@@ -59,9 +59,9 @@ class Content:
         self.rosters = json.loads((ROOT / "content" / "town_development.json").read_text(encoding="utf-8"))["rosters"]
         self.factions = [f for f in self.factions if f["id"] in self.rosters]
         # What a faction's guild can draw at each tier: every spell of the tier but the
-        # scroll-only ones, the spells of the faction's preferred school twice as likely
-        # (docs/magic-system.md).
-        spells = [s for s in _items("spells.json") if not s.get("scroll_only", False)]
+        # scroll-only and unreleased ones, the spells of the faction's preferred school
+        # twice as likely (docs/magic-system.md).
+        spells = [s for s in _items("spells.json") if not s.get("scroll_only", False) and not s.get("unreleased", False)]
         self.guild_pool: dict[str, dict[int, list[tuple[str, int]]]] = {}
         for f in self.factions:
             pool: dict[int, list[tuple[str, int]]] = {}
