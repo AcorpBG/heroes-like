@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-tier3-spells-20261107",
- "currentSliceTitle": "Magic: tier 3 battle spells",
+ "currentSliceId": "magic-tier45-spells-20261107",
+ "currentSliceTitle": "Magic: tier 4 and 5 battle spells",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-07T19:38:24Z",
+ "updatedAt": "2026-11-07T22:20:59Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -61,23 +61,20 @@
   },
   {
    "id": "magic-tier3-spells-20261107",
-   "title": "Magic: tier 3 battle spells",
-   "status": "in_progress",
-   "goal": "The 36 tier-3 battle spells, marked unreleased, with their 36 new mechanics (Burning, sentinels, living walls, treants, the Risen, mire, boundaries, spell shields, jumping bolts, doom, decoys, raising the fallen and more) and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-07"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "All 36 tier-3 battle spells unreleased in spells.json (also a0a34f651, 7c58ceb8f): Burning, doom, budding, goading, drags, walls, prisms, mire, summons, the Risen, decoys, rewinds and puppets; second-stack and hex picks; battle AI values.",
+   "commit": "a5546a310"
   },
   {
    "id": "magic-tier45-spells-20261107",
    "title": "Magic: tier 4 and 5 battle spells",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "The 39 tier-4 and tier-5 battle spells, marked unreleased, with their 36 new mechanics (blasts, double strikes, constructs, copies, groves, poison, extra turns, sanctuary, stuns, wraiths, echoes, whole-battle effects, the elder, return of the destroyed, the dome, the Risen host and more) and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
    "docs": [
     "docs/magic-system.md"
    ],
-   "updatedAt": "2026-11-07"
+   "updatedAt": "2026-11-08"
   },
   {
    "id": "magic-map-spells-20261107",
