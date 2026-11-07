@@ -731,6 +731,26 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, {int_value(rounds)});
 		return with_timing(gd::format(state, key::watch_sentence, {str(rounds_label), int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
 	}
+	// Goad and Uproot: a status the target may resist, Uproot's after the drag it always makes.
+	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
+		const DictRef status_effect = typed_dict_field(state, effect, key::status_effect);
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
+		const Value bonus = gd::field(state, status_effect, key::modifiers);
+		const Atom bonus_text = gd::is_dict(bonus) ? _modifier_summary(state, bonus.ref) : static_cast<Atom>(key::empty);
+		Atom summary = effect_type == key::taunt_enemy
+				? gd::format(state, key::goad_sentence, {str(enemy_name), str(bonus_text), str(turns)})
+				: gd::format(state, key::drag_sentence, {str(enemy_name), int_value(spell_move_reach(state, spell, power_against)), str(turns)});
+		const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero_state, power_against);
+		const int64_t control_pct = control_resistance_pct(state, battle, target_stack, spell);
+		if (target_is_immune_to_status(state, target_stack, battle, text_or(state, payload, key::effect_id, key::empty))) {
+			summary = concat(state, summary, effect_type == key::taunt_enemy ? static_cast<Atom>(key::target_is_immune) : static_cast<Atom>(key::target_is_immune_to_that_rider));
+		} else if (control_pct > 0) {
+			summary = concat(state, summary, gd::format(state, effect_type == key::taunt_enemy ? static_cast<Atom>(key::success_chance_d) : static_cast<Atom>(key::rider_success_chance_d),
+					{int_value(engine_max<int64_t>(0, gd::sub(100, control_pct)))}));
+		}
+		return with_timing(summary);
+	}
 	return key::no_authored_battle_summary_is_available;
 }
 

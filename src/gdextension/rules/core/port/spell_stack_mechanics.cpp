@@ -291,6 +291,10 @@ void spend_reflect_ward(State &state, DictRef battle, Atom battle_id) {
 // --- Turns -------------------------------------------------------------------
 
 void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
+	// Fogwalk's unanswered blow ends with the turn that struck it.
+	if (state.has(battle, str(key::unanswered_blow_by))) {
+		state.erase(battle, str(key::unanswered_blow_by));
+	}
 	// Burning ground under a stack that did not walk through it this turn.
 	end_of_turn_ground(state, battle, battle_id);
 	DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
@@ -346,11 +350,16 @@ bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 void begin_active_turn(State &state, DictRef battle) {
 	for (int64_t skipped = 0; skipped < MAX_SKIPPED_TURNS; ++skipped) {
 		const Atom active_id = gd::string_field(state, battle, key::active_stack_id, key::empty);
-		if (active_id == key::empty || !start_of_turn_mechanics(state, battle, active_id)) {
+		if (active_id == key::empty) {
 			return;
 		}
-		const DictRef sleeper = battle_rules::_get_stack_by_id(state, battle, active_id);
-		battle_rules::_record_event(state, battle, gd::format(state, key::sleeps_through_turn_text, { str(battle_rules::_stack_label(state, sleeper)) }));
+		if (start_of_turn_mechanics(state, battle, active_id)) {
+			const DictRef sleeper = battle_rules::_get_stack_by_id(state, battle, active_id);
+			battle_rules::_record_event(state, battle, gd::format(state, key::sleeps_through_turn_text, { str(battle_rules::_stack_label(state, sleeper)) }));
+		} else if (!flee_turn(state, battle, active_id)) {
+			// Night Terror's run takes the turn; any other stack acts.
+			return;
+		}
 		battle_rules::_advance_turn_without_start(state, battle);
 	}
 }
@@ -378,6 +387,10 @@ double blow_damage_multiplier(State &state, DictRef battle, DictRef attacker, Di
 	if (!is_ranged && !gd::is_empty(state, stack_status_effect(state, attacker, battle, key::status_blinded))) {
 		multiplier *= BLINDED_BLOW_SHARE;
 	}
+	// Living Wall: a shot across its trees does half damage.
+	if (is_ranged && shot_crosses_wall(state, battle, attacker, defender)) {
+		multiplier *= 0.5;
+	}
 	return multiplier;
 }
 
@@ -388,6 +401,8 @@ ArrayRef after_blow_mechanics(State &state, DictRef battle, Atom attacker_id, At
 	if (gd::is_empty(state, attacker) || gd::is_empty(state, defender)) {
 		return messages;
 	}
+	// Fogwalk: the active stack's first blow spends the effect, and the strike-back check reads it.
+	note_blow_for_strike_back(state, battle, attacker_id, is_ranged);
 	if (!is_ranged && _alive_count(state, attacker) > 0) {
 		const int64_t thorns = stack_mechanic_int(state, defender, battle, key::thorns);
 		if (thorns > 0) {

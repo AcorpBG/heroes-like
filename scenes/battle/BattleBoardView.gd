@@ -234,6 +234,10 @@ const SPELL_GROUND_TINTS := {
 	"murk": [Color(0.62, 0.66, 0.74, 0.42), Color(0.82, 0.86, 0.92, 0.7)],
 	"pillar": [Color(0.70, 0.88, 1.0, 0.6), Color(0.88, 0.97, 1.0, 1.0)],
 	"trap": [Color(0.0, 0.0, 0.0, 0.0), Color(0.86, 0.66, 0.30, 0.95)],
+	"wall": [Color(0.20, 0.42, 0.16, 0.7), Color(0.52, 0.78, 0.30, 1.0)],
+	"barrier": [Color(1.0, 0.92, 0.55, 0.22), Color(1.0, 0.94, 0.62, 0.95)],
+	"prism": [Color(0.82, 0.74, 1.0, 0.65), Color(0.95, 0.90, 1.0, 1.0)],
+	"mire": [Color(0.30, 0.26, 0.16, 0.5), Color(0.50, 0.44, 0.26, 0.8)],
 }
 const OBSTACLE_ART_VARIANTS := {1: 3, 2: 2}
 const OBSTACLE_ART_CANVAS := {1: Vector2(288.0, 352.0), 2: Vector2(512.0, 352.0)}
@@ -3042,7 +3046,8 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 		_draw_objective_marker(center, objective, color, float(hex_layout.get("radius", 1.0)))
 
 ## Ground the hex spells laid (battle.spell_ground), in stand-in tints until
-## its art: burning ground, brambles, murk, a crystal pillar and a seed.
+## its art: burning ground, brambles, murk, a crystal pillar, a seed, living
+## trees, a boundary line, a prism crystal and mire.
 func _draw_spell_ground(hex_layout: Dictionary) -> void:
 	var entries = _battle.get("spell_ground", [])
 	if not (entries is Array) or entries.is_empty():
@@ -3061,7 +3066,8 @@ func _draw_spell_ground(hex_layout: Dictionary) -> void:
 			if kind == "trap":
 				draw_circle(center, radius * 0.16, tint[1])
 				continue
-			_draw_hex(center, radius * (0.6 if kind == "pillar" else 0.9), tint[0], tint[1], 2.5 if kind == "pillar" else 1.2)
+			var standing := kind in ["pillar", "wall", "prism"]
+			_draw_hex(center, radius * (0.6 if standing else 0.9), tint[0], tint[1], 2.5 if standing else 1.2)
 
 func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float, color: Color, width: float) -> void:
 	var stack := BattleRulesScript._get_stack_by_id(_battle, battle_id)

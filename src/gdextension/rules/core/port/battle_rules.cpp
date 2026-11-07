@@ -304,13 +304,25 @@ ArrayRef _reachable_empty_hexes(State &state, DictRef battle, DictRef stack, int
 	const int64_t start_id = gd::to_int(state, gd::index(state, start, str(key::q))) * BATTLE_HEX_ROWS + gd::to_int(state, gd::index(state, start, str(key::r)));
 	uint8_t open[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
 	_hex_open_mask(state, stack, occupied, open);
+	// The other side's Boundary Line closes its hexes.
+	spell_rules::close_barrier_cells(state, battle, stack, open);
 	const hex::Body body{ battle_footprint::width(state, stack), _hex_tail_step(state, stack) };
 	// A walk that enters brambles stops there (Bramble Patch).
 	uint8_t stop[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
 	const bool stops = spell_rules::bramble_stop_mask(state, battle, stack, stop);
-	const std::vector<hex::CellSteps> pairs = hex::reachable(open, body, start_id, max_steps, stops ? stop : nullptr);
+	// Fogwalk: the walk passes stacks and obstacles, and ends where its body fits.
+	uint8_t pass[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
+	const bool phases = spell_rules::phase_pass_mask(state, battle, stack, pass);
+	uint8_t fit[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
+	if (phases) {
+		hex::fit_mask(open, body, fit);
+	}
+	const std::vector<hex::CellSteps> pairs = hex::reachable(phases ? pass : open, body, start_id, max_steps, stops ? stop : nullptr);
 	const ArrayRef reachable = state.new_array();
 	for (const hex::CellSteps &pair : pairs) {
+		if (phases && fit[pair.id] == 0) {
+			continue;
+		}
 		const DictRef cell = state.new_dict();
 		state.set(cell, str(key::q), int_value(int_div(pair.id, BATTLE_HEX_ROWS)));
 		state.set(cell, str(key::r), int_value(int_mod(pair.id, BATTLE_HEX_ROWS)));
@@ -407,6 +419,7 @@ void _walk_open_mask(State &state, DictRef battle, DictRef stack, uint8_t *open)
 		return;
 	}
 	_hex_open_mask(state, stack, _build_blocking_map(state, battle), open);
+	spell_rules::close_barrier_cells(state, battle, stack, open);
 	const gd::PackedRef mask = gd::new_bytes(state);
 	state.packed_node(mask).bytes.assign(open, open + kCells);
 	state.memo_keep(memo, gd::bytes_value(mask), since);

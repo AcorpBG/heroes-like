@@ -292,6 +292,10 @@ Atom _no_retaliation_reason(State &state, DictRef defender, DictRef battle, bool
 	if (spell_rules::has_effect_id(state, defender, battle, key::status_staggered)) {
 		return key::staggered_label;
 	}
+	const Atom spell_reason = spell_rules::strike_back_refused_reason(state, battle, defender);
+	if (spell_reason != key::empty) {
+		return spell_reason;
+	}
 	if (distance > 0) {
 		return key::out_of_its_reach_text;
 	}

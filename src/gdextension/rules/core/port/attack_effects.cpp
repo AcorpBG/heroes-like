@@ -278,7 +278,8 @@ void consume_stack_count(State &state, DictRef battle, Atom battle_id, Atom fiel
 } // namespace
 
 DictRef stack_strike_backs(State &state, DictRef battle, DictRef stack) {
-	const bool staggered = spell_rules::has_effect_id(state, stack, battle, key::status_staggered);
+	// Staggered, Fleeing (Night Terror) or under the active stack's blow from the fog (Fogwalk).
+	const bool staggered = spell_rules::has_effect_id(state, stack, battle, key::status_staggered) || spell_rules::strike_back_refused(state, battle, stack);
 	const int64_t left = staggered ? 0 : engine_max<int64_t>(0, gd::int_field(state, stack, key::retaliations_left, 0));
 	const int64_t most = engine_max<int64_t>(0, gd::int_field(state, stack, key::retaliations, 0));
 	const DictRef result = state.new_dict();
@@ -297,7 +298,7 @@ void _consume_shot(State &state, DictRef battle, Atom battle_id) {
 }
 
 bool _can_make_retaliation(State &state, DictRef stack, int64_t attack_distance, DictRef battle) {
-	if (spell_rules::has_effect_id(state, stack, battle, key::status_staggered)) {
+	if (spell_rules::has_effect_id(state, stack, battle, key::status_staggered) || spell_rules::strike_back_refused(state, battle, stack)) {
 		return false;
 	}
 	if (attack_distance <= 0) {

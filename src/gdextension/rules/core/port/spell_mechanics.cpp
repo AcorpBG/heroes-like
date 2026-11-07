@@ -19,7 +19,7 @@ bool is_harmful_status(Atom effect_id) {
 			|| effect_id == key::status_slowed || effect_id == key::status_dazed || effect_id == key::status_asleep
 			|| effect_id == key::status_blinded || effect_id == key::status_marked || effect_id == key::status_afraid
 			|| effect_id == key::status_confused || effect_id == key::status_cursed || effect_id == key::status_burning
-			|| effect_id == key::status_blighted || effect_id == key::status_doomed;
+			|| effect_id == key::status_blighted || effect_id == key::status_doomed || effect_id == key::status_fleeing || effect_id == key::status_goaded;
 }
 
 namespace {

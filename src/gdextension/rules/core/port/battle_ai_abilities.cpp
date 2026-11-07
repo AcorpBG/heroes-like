@@ -109,7 +109,7 @@ bool _reach_available(State &state, DictRef stack, DictRef battle) {
 }
 
 bool _can_make_retaliation(State &state, DictRef stack, int64_t attack_distance, DictRef battle) {
-	if (spell_rules::has_effect_id(state, stack, battle, key::status_staggered)) {
+	if (spell_rules::has_effect_id(state, stack, battle, key::status_staggered) || spell_rules::strike_back_refused(state, battle, stack)) {
 		return false;
 	}
 	if (attack_distance <= 0) {

@@ -363,6 +363,15 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	if (amount(key::cohesion_lock) > 0) {
 		score += engaged ? 1.0 : 0.3;
 	}
+	// Fogwalk: a melee stack out of the fight walks through what stands in its way, more when no strike is in reach;
+	// its next blow is not struck back.
+	const bool melee_ally = _fights_in_melee(state, ally) && !(ranged(state, ally) && has_shots(state, ally));
+	if (amount(key::phase) > 0) {
+		score += melee_ally && !engaged ? 1.0 + (_can_make_melee_attack(state, ally, battle, state.new_dict()) ? 0.0 : 1.0) : 0.2;
+	}
+	if (amount(key::no_strike_back) > 0) {
+		score += melee_ally && (engaged || melee_hostiles > 0) ? 1.0 + _buff_spell_offense_payoff(state, ally) * 0.5 : 0.3;
+	}
 	if (amount(key::act_next) > 0) {
 		score += 1.0 + _buff_spell_offense_payoff(state, ally);
 	}
@@ -794,7 +803,91 @@ double sacrifice_value(State &state, DictRef enemy_hero, DictRef battle, DictRef
 	return 1.0 + (dealt - paid * 0.6) * _w(state, key::spell_damage_share) + (stack_tier(state, enemy) >= stack_tier(state, payer) ? 0.5 : 0.0);
 }
 
+// Goad: the enemy stack's attack drawn onto a stack of the caster's that can bear it and strikes back; nothing when
+// the enemy cannot reach that stack or is goaded already, and its +2 attack counts against.
+double taunt_value(State &state, DictRef battle, DictRef enemy, DictRef own) {
+	if (!empty(state, spell_rules::goad_target(state, battle, enemy))) {
+		return -9999.0;
+	}
+	const bool shoots = ranged(state, enemy) && has_shots(state, enemy);
+	if (!shoots && battle_rules::_stack_hex_distance(state, enemy, own) > battle_rules::_stack_movement_points(state, enemy, battle) + 1) {
+		return -9999.0;
+	}
+	double value = 0.5 + 0.4 * stack_tier(state, enemy);
+	if (ranged(state, own) && has_shots(state, own)) {
+		value -= 1.5;
+	} else if (_fights_in_melee(state, own) && gd::int_field(state, own, key::retaliations_left, 0) > 0) {
+		value += 1.0;
+	}
+	value += stack_health(state, own) >= stack_health(state, enemy) ? 1.0 : -0.5;
+	return value - 0.75;
+}
+
 } // namespace
+
+DictRef _pull_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell) {
+	const int64_t reach = spell_rules::spell_pull_reach(state, enemy_hero, battle, spell, target);
+	const ArrayRef cells = spell_rules::pull_destinations(state, battle, target, reach);
+	if (state.array_size(cells) == 0) {
+		return state.new_dict();
+	}
+	const ArrayRef allies = _alive_stacks_for_side(state, battle, side_of(state, active_stack));
+	const bool shooter = ranged(state, target) && has_shots(state, target);
+	const int64_t steps = battle_rules::_stack_movement_points(state, target, battle);
+	const int64_t near_now = battle_rules::_projected_min_opposing_hex_distance(state, battle, target, battle_rules::_stack_hex(state, target));
+	// A shooter of the caster's in a fight with the target now.
+	bool holds_shooter = false;
+	for (const Value &ally : gd::items(state, array_value(allies))) {
+		holds_shooter = holds_shooter || (gd::is_dict(ally) && ranged(state, ally.ref) && has_shots(state, ally.ref) && battle_rules::_stack_hex_distance(state, target, ally.ref) == 1);
+	}
+	DictRef best_cell = state.new_dict();
+	double best = 0.0;
+	for (const Value &cell : gd::items(state, array_value(cells))) {
+		if (!gd::is_dict(cell)) {
+			continue;
+		}
+		double value = 0.0;
+		if (shooter) {
+			// A free enemy shooter dragged in beside a melee stack of the caster's: it is in a fight and can be struck.
+			if (near_now > 1) {
+				for (const Value &ally : gd::items(state, array_value(allies))) {
+					if (gd::is_dict(ally) && _fights_in_melee(state, ally.ref) && !(ranged(state, ally.ref) && has_shots(state, ally.ref))
+							&& battle_footprint::distance(state, target, ally.ref, cell) == 1) {
+						value = 2.5 + _buff_spell_offense_payoff(state, target) * 0.5;
+						break;
+					}
+				}
+			}
+		} else {
+			// An enemy melee stack dragged out of reach of the caster's stacks, or off a shooter it holds.
+			const int64_t near_then = battle_rules::_projected_min_opposing_hex_distance(state, battle, target, cell.ref);
+			if (near_now - 1 <= steps && near_then - 1 > steps) {
+				value += 2.5;
+			} else if (near_then > near_now) {
+				value += engine_min<double>(1.0, 0.2 * static_cast<double>(near_then - near_now));
+			}
+			if (holds_shooter && near_then > 1) {
+				value += 2.0;
+			}
+		}
+		if (value > best) {
+			best = value;
+			best_cell = cell.ref;
+		}
+	}
+	if (empty(state, best_cell)) {
+		return state.new_dict();
+	}
+	best += cast_objective_score(state, battle, active_stack, target);
+	best -= mana_cost_term(state, spell);
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::q), gd::int_value(gd::int_field(state, best_cell, key::q, -1)));
+	state.set(destination, str(key::r), gd::int_value(gd::int_field(state, best_cell, key::r, -1)));
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::destination), dict_value(destination));
+	state.set(plan, str(key::score), gd::float_value(best));
+	return plan;
+}
 
 DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef first, DictRef spell) {
 	const Atom type = gd::string_field(state, get_base(effect_of(state, spell)), key::type, key::empty);
@@ -818,6 +911,8 @@ DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 			value = engine_max<double>(swap_allies_one_way(state, battle, first, second), swap_allies_one_way(state, battle, second, first));
 		} else if (type == key::swap_enemy) {
 			value = swap_enemy_value(state, battle, first, second);
+		} else if (type == key::taunt_enemy) {
+			value = taunt_value(state, battle, first, second);
 		}
 		if (value > best) {
 			best = value;
@@ -948,7 +1043,38 @@ struct Walker {
 	int64_t steps = 0;
 	int64_t free_beside_target = 0;
 	double share = 0.0; // the ground's damage as a share of its health
+	// This turn's walk, read for the ground that stands in it: the hexes its
+	// body may go, its shape, where it starts, the stacks it would strike and
+	// whether it can end beside one of them now.
+	std::vector<uint8_t> open;
+	hex::Body shape;
+	int64_t start_id = -1;
+	std::vector<hex::PlacedBody> marks;
+	bool strikes_now = false;
 };
+
+// Whether a walker can end this turn's walk beside a stack it would strike,
+// the given hexes closed.
+bool walk_strikes(const Walker &walker, const std::vector<int64_t> &closed) {
+	if (walker.start_id < 0 || walker.open.size() != static_cast<size_t>(hex::kCellCount)) {
+		return false;
+	}
+	uint8_t mask[hex::kCellCount];
+	for (int64_t id = 0; id < hex::kCellCount; ++id) {
+		mask[id] = walker.open[static_cast<size_t>(id)];
+	}
+	for (const int64_t id : closed) {
+		mask[id] = 0;
+	}
+	for (const hex::CellSteps &step : hex::reachable(mask, walker.shape, walker.start_id, walker.steps)) {
+		for (const hex::PlacedBody &mark : walker.marks) {
+			if (hex::body_distance(step.id, walker.shape, mark) == 1) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 // What one pick does to a walker: the share of the free hexes beside its target
 // it covers (when the walker reaches the target this turn), and whether a
@@ -993,7 +1119,7 @@ bool body_on(State &state, DictRef stack, const std::vector<int64_t> &cells) {
 } // namespace
 
 DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
-	const ArrayRef picks = spell_rules::ground_pick_shapes(state, battle, spell);
+	const ArrayRef picks = spell_rules::ground_pick_shapes(state, battle, spell, enemy_hero);
 	if (state.array_size(picks) == 0) {
 		return state.new_dict();
 	}
@@ -1057,10 +1183,116 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 			}
 			const int64_t damage = spell_rules::ground_damage_against(state, battle, sample, mover.ref);
 			walker.share = engine_min<double>(1.0, static_cast<double>(damage) / engine_max<double>(1.0, stack_health(state, mover.ref)));
+			// Trees and a Boundary Line stand in the walk itself: its open hexes
+			// (the other side's lines closed already) and the stacks it would strike.
+			if (ground == key::wall || ground == key::barrier) {
+				const DictRef start = battle_rules::_stack_hex(state, mover.ref);
+				if (!gd::is_empty(state, start)) {
+					const DictRef occupied = gd::duplicate_dict(state, blocking);
+					state.erase(occupied, str(battle_rules::_hex_key(state, start)));
+					uint8_t open[hex::kCellCount];
+					battle_rules::_hex_open_mask(state, mover.ref, occupied, open);
+					spell_rules::close_barrier_cells(state, battle, mover.ref, open);
+					walker.open.assign(open, open + hex::kCellCount);
+					walker.shape = hex::Body{ battle_footprint::width(state, mover.ref), battle_rules::_hex_tail_step(state, mover.ref) };
+					walker.start_id = gd::int_field(state, start, key::q, -1) * hex::kRows + gd::int_field(state, start, key::r, -1);
+					for (const Value &other : gd::items(state, array_value(others))) {
+						if (gd::is_dict(other)) {
+							walker.marks.push_back(placed_of(state, other.ref));
+						}
+					}
+					walker.strikes_now = walk_strikes(walker, {});
+				}
+			}
 			walkers.push_back(walker);
 		}
 	}
 	const int64_t defense = gd::int_field(state, sample, key::defense, 0);
+	// Living Wall: the shots each side would loose at the other side's nearest stack, as hexes between.
+	std::vector<std::vector<int64_t>> hostile_lines;
+	std::vector<std::vector<int64_t>> own_lines;
+	if (ground == key::wall) {
+		for (const bool hostile : { true, false }) {
+			for (const Value &stack : gd::items(state, array_value(hostile ? hostiles : allies))) {
+				if (!gd::is_dict(stack) || !shooter(stack.ref) || _stack_is_engaged(state, stack.ref, battle)) {
+					continue;
+				}
+				DictRef aim = 0;
+				bool found = false;
+				int64_t nearest = 999;
+				for (const Value &other : gd::items(state, array_value(hostile ? allies : hostiles))) {
+					const int64_t distance = gd::is_dict(other) ? battle_rules::_stack_hex_distance(state, stack.ref, other.ref) : 999;
+					if (distance < nearest) {
+						nearest = distance;
+						aim = other.ref;
+						found = true;
+					}
+				}
+				if (found) {
+					(hostile ? hostile_lines : own_lines).push_back(spell_rules::shot_line_cells(
+							cell_id_of(state, dict_value(battle_rules::_stack_hex(state, stack.ref))), cell_id_of(state, dict_value(battle_rules::_stack_hex(state, aim)))));
+				}
+			}
+		}
+	}
+	// Prism Array: it fires only after another damage spell of the caster's,
+	// at most once a round: in each later round it stands, while the mana
+	// left after it pays for the cheapest of them (at most four).
+	double prism_firings = 0.0;
+	if (ground == key::prism) {
+		int64_t cheapest = 0;
+		for (const Value &known : gd::items(state, array_value(spell_rules::known_spells(state, enemy_hero, key::battle)))) {
+			const Value categories = gd::is_dict(known) ? gd::field(state, known.ref, key::role_categories) : Value();
+			if (gd::is_dict(known) && known.ref != spell && gd::string_field(state, known.ref, key::id, key::empty) != gd::string_field(state, spell, key::id, key::empty)
+					&& gd::is_array(categories) && gd::array_has(state, categories.ref, str(key::damage))) {
+				const int64_t cost = engine_max<int64_t>(1, spell_rules::adjusted_spell_mana_cost(state, enemy_hero, known));
+				cheapest = cheapest == 0 ? cost : engine_min<int64_t>(cheapest, cost);
+			}
+		}
+		if (cheapest > 0) {
+			const int64_t own_cost = spell_rules::adjusted_spell_mana_cost(state, enemy_hero, dict_value(spell));
+			const int64_t later_rounds = engine_min<int64_t>(4, gd::int_field(state, sample, key::rounds, 1) - 1);
+			int64_t paid = 0;
+			while (paid < later_rounds && spell_rules::_has_mana(state, enemy_hero, own_cost + (paid + 1) * cheapest)) {
+				paid += 1;
+			}
+			prism_firings = static_cast<double>(paid);
+		}
+	}
+	// The best damage spell it can cast now, the cast the crystal puts off: its
+	// score and damage are the yardstick for what the firings deal.
+	double yardstick_score = 0.0;
+	int64_t yardstick_damage = 0;
+	if (ground == key::prism && prism_firings > 0.0) {
+		for (const Value &known : gd::items(state, array_value(spell_rules::known_spells(state, enemy_hero, key::battle)))) {
+			if (!gd::is_dict(known) || gd::string_field(state, get_base(effect_of(state, known.ref)), key::type, key::empty) != key::damage_enemy
+					|| !spell_rules::can_cast_spell(state, enemy_hero, gd::string_field(state, known.ref, key::id, key::empty))) {
+				continue;
+			}
+			for (const Value &stack : gd::items(state, array_value(hostiles))) {
+				if (!gd::is_dict(stack)) {
+					continue;
+				}
+				const DictRef projection = spell_rules::battle_spell_damage_projection(state, enemy_hero, battle, stack.ref, known.ref);
+				const int64_t damage = engine_min<int64_t>(gd::int_field(state, projection, key::final_damage, 0), gd::int_field(state, stack.ref, key::total_health, 0));
+				const double score = _damage_spell_score(state, enemy_hero, battle, active_stack, stack.ref, known.ref, projection);
+				if (damage > 0 && score > yardstick_score) {
+					yardstick_score = score;
+					yardstick_damage = damage;
+				}
+			}
+		}
+	}
+	const auto crosses = [](const std::vector<int64_t> &line, const std::vector<int64_t> &picked) {
+		for (const int64_t id : line) {
+			for (const int64_t cell : picked) {
+				if (id == cell) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
 	DictRef best_pick = state.new_dict();
 	double best = 0.0;
 	std::vector<int64_t> cells;
@@ -1155,6 +1387,73 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 				const double chance = engine_min<double>(1.0, static_cast<double>(near_seed) / static_cast<double>(engine_max<int64_t>(1, walker.free_beside_target)))
 						* (walker.distance - 1 <= walker.steps ? 1.0 : 0.6);
 				value = engine_max<double>(value, chance * (walker.share * damage_weight * 0.6 + 3.0));
+			}
+		} else if (ground == key::wall) {
+			// Trees halve the shots across them, either side's (half what a
+			// shot lost in murk is worth), and stand in either side's way: a
+			// walk that could strike this turn and no longer can, or a longer
+			// way round.
+			for (const std::vector<int64_t> &line : hostile_lines) {
+				value += crosses(line, cells) ? 1.5 : 0.0;
+			}
+			for (const std::vector<int64_t> &line : own_lines) {
+				value -= crosses(line, cells) ? 1.5 : 0.0;
+			}
+			for (const Walker &walker : walkers) {
+				const double stood = walker.strikes_now && !walk_strikes(walker, cells) ? 2.5 : (meeting_of(walker, cells).on_way ? 0.8 : 0.0);
+				value += walker.hostile ? stood : -stood;
+			}
+		} else if (ground == key::barrier) {
+			// The line closes only to the other side: a walk of its that could
+			// strike this turn and no longer can, or a longer way round.
+			for (const Walker &walker : walkers) {
+				if (walker.hostile) {
+					value += walker.strikes_now && !walk_strikes(walker, cells) ? 2.5 : (meeting_of(walker, cells).on_way ? 0.6 : 0.0);
+				}
+			}
+		} else if (ground == key::prism) {
+			// Each later damage spell fires the crystal at the enemy stack
+			// nearest it: worth the cast it takes when the firings out-damage
+			// the best damage spell it puts off (on that spell's score, a
+			// little less for coming later); it also takes a hex.
+			if (prism_firings > 0.0) {
+				double share = 0.0;
+				double dealt = 0.0;
+				int64_t nearest = 999;
+				for (const Value &stack : gd::items(state, array_value(hostiles))) {
+					if (!gd::is_dict(stack)) {
+						continue;
+					}
+					const int64_t distance = spot_distance(cells.front(), placed_of(state, stack.ref));
+					if (distance < nearest) {
+						nearest = distance;
+						const double damage = static_cast<double>(spell_rules::ground_damage_against(state, battle, sample, stack.ref));
+						share = engine_min<double>(1.0, damage / engine_max<double>(1.0, stack_health(state, stack.ref)));
+						dealt = engine_min<double>(prism_firings * damage, stack_health(state, stack.ref));
+					}
+				}
+				value += (yardstick_damage > 0 ? yardstick_score * 0.9 * dealt / static_cast<double>(yardstick_damage) : prism_firings * share * damage_weight) + 0.2;
+				for (const Walker &walker : walkers) {
+					if (meeting_of(walker, cells).on_way) {
+						value += walker.hostile ? 0.2 : -0.3;
+					}
+				}
+			}
+		} else if (ground == key::mire) {
+			// Half speed for a stack standing in it, worth most to one that must still walk; no bracing there.
+			for (const bool hostile : { true, false }) {
+				for (const Value &stack : gd::items(state, array_value(hostile ? hostiles : allies))) {
+					if (!gd::is_dict(stack) || spell_rules::in_mire(state, battle, stack.ref) || !body_on(state, stack.ref, cells)) {
+						continue;
+					}
+					const double slowed = _fights_in_melee(state, stack.ref) && !_stack_is_engaged(state, stack.ref, battle) ? 1.5 : 0.6;
+					value += hostile ? slowed : -slowed;
+				}
+			}
+			for (const Walker &walker : walkers) {
+				if (meeting_of(walker, cells).on_way) {
+					value += walker.hostile ? 0.4 : -0.4;
+				}
 			}
 		}
 		if (value > best) {

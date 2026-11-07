@@ -328,10 +328,11 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 DictRef _resolve_enemy_defend(State &state, const Value &session, DictRef active_stack) {
 	_set_stack_defending(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 	_mark_stack_animation_event(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id), key::battle_unit_defend, state.new_dict());
-	const Atom event_text = gd::format(state, key::braces_for_impact_text, { str(_stack_label(state, active_stack)) });
+	const Atom brace_format = spell_rules::in_mire(state, session_battle(state, session), active_stack) ? static_cast<Atom>(key::stuck_in_mire_text) : static_cast<Atom>(key::braces_for_impact_text);
+	const Atom event_text = gd::format(state, brace_format, { str(_stack_label(state, active_stack)) });
 	const DictRef event_context = actor_context(state, key::defend, string_or_empty(state, active_stack, key::battle_id));
 	_append_presentation_event(state, session_battle(state, session), key::buff, event_text, event_context);
-	Atom defend_message = gd::format(state, key::braces_for_impact_text, { str(_stack_label(state, active_stack)) });
+	Atom defend_message = gd::format(state, brace_format, { str(_stack_label(state, active_stack)) });
 	const Atom defend_pressure = _apply_defend_pressure(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 	if (defend_pressure != key::empty) {
 		defend_message = concat(state, defend_message, gd::format(state, key::space_s_text, { str(defend_pressure) }));
@@ -384,6 +385,8 @@ DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_sta
 	if (!_apply_spell_resolution(state, session_battle(state, session), resolution, animation_resolution, message, recovered_amount, cleansed_count)) {
 		return action_result(state, false, key::unsupported_spell_resolution_text, key::invalid);
 	}
+	// Prism Array: the side's crystals answer a damage spell.
+	message = concat(state, message, spell_rules::fire_prisms(state, session_battle(state, session), key::enemy, gd::content_row(state, state::ContentTable::Spell, string_or_empty(state, action, key::spell_id))));
 	Value post_damage_effect;
 	if (nonempty_dict_field(state, resolution, key::post_damage_effect, post_damage_effect)) {
 		const DictRef effect_target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id));

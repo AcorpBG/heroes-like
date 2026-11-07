@@ -239,6 +239,11 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::aura_effect;
 		state.append(hooks, str(key::ally_health_recovery));
 		public_effect = key::ally_recovery_and_ward_text;
+	} else if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
+		// Goad and Uproot: a status on an enemy stack, Uproot's after it drags the stack.
+		resolution_type = effect_type == key::taunt_enemy ? static_cast<Atom>(key::effect) : static_cast<Atom>(key::pull_effect);
+		state.append(hooks, str(key::enemy_status_control));
+		public_effect = key::enemy_control_status_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -294,9 +299,16 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 	const Atom effect_type = gd::to_string(state.get(two_argument_get_target(effect), str(key::type), str(key::empty)));
 	// Glass Aegis: no enemy spell can be aimed at the stack.
 	const bool aims_at_enemy = effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::dispel_enemy
-			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley;
+			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley
+			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy;
 	if (aims_at_enemy && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && spell_shielded(state, battle, target_stack)) {
 		return refusal(state, gd::format(state, key::shielded_from_spells_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+	}
+	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
+		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
+			return refusal(state, key::select_enemy_target_text);
+		}
+		return accepted(state);
 	}
 	if (effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley) {
 		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
@@ -903,12 +915,28 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			}
 		}
 	}
+	// Uproot: the hex it drags the stack to, within its reach of the stack's walk, or none named yet.
+	if (effect_type == key::pull_enemy) {
+		move_reach = spell_pull_reach(state, hero, battle, spell, target_stack);
+		const ArrayRef cells = pull_destinations(state, battle, target_stack, move_reach);
+		if (state.array_size(cells) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_open_hex_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+		}
+		if (!gd::is_dict(destination) || gd::is_empty(state, destination.ref)) {
+			needs_destination = true;
+		} else {
+			move_cell = move_destination_in_reach(state, cells, destination);
+			if (gd::is_empty(state, move_cell)) {
+				return hero_refusal(state, hero, key::destination_out_of_reach_text);
+			}
+		}
+	}
 	// A two-stack spell finds its second stack before the mana is spent, or
 	// none is named yet.
 	DictRef second_stack = state.new_dict();
 	bool needs_second = false;
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy) ? target_stack : ally_target;
 		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
 		const ArrayRef options = second_stack_ids(state, hero, battle, first, spell, acting_side);
 		if (state.array_size(options) == 0) {
@@ -935,7 +963,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		if (gd::is_empty(state, center)) {
 			needs_hex = true;
 		} else {
-			ground_cells = ground_shape_cells(state, battle, spell, center);
+			ground_cells = ground_shape_cells(state, battle, spell, center, hero);
 			if (state.array_size(ground_cells) == 0) {
 				return hero_refusal(state, hero, gd::format(state, key::hex_refused_for_spell_text, { str(spell_name) }));
 			}
@@ -1122,10 +1150,37 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		}
 		return result;
 	}
+	if (effect_type == key::pull_enemy) {
+		const DictRef result = cast_result(state, hero, key::pull_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::range), int_value(move_reach));
+		if (needs_destination) {
+			state.set(result, str(key::needs_destination), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_drag_hex_text, { str(battle_rules::_stack_label(state, target_stack)) })));
+			return result;
+		}
+		state.set(result, str(key::destination), dict_value(move_cell));
+		// The drag always lands; its Staggered can be resisted or kept off.
+		const DictRef stagger = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
+		const DictRef stagger_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, stagger);
+		Atom pull_message = gd::format(state, key::casts_on_format, {
+			str(caster_name),
+			str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)),
+		});
+		pull_message = _append_status_resolution_message(state, pull_message, target_stack, stagger, stagger_resolution);
+		state.set(result, str(key::effect), dict_value(gd::bool_field(state, stagger_resolution, key::blocked, false) ? state.new_dict() : stagger));
+		state.set(result, str(key::resisted), bool_value(gd::bool_field(state, stagger_resolution, key::resisted, false)));
+		state.set(result, str(key::immune), bool_value(gd::bool_field(state, stagger_resolution, key::immune, false)));
+		state.set(result, str(key::control_resistance_pct), int_value(gd::int_field(state, stagger_resolution, key::control_resistance_pct, 0)));
+		state.set(result, str(key::resistance_roll), int_value(gd::int_field(state, stagger_resolution, key::resistance_roll, -1)));
+		state.set(result, str(key::resistance_rng_state), str(gd::string_field(state, stagger_resolution, key::resistance_rng_state, key::empty)));
+		state.set(result, str(key::message), str(pull_message));
+		return result;
+	}
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy) ? target_stack : ally_target;
 		const Atom first_id = gd::string_field(state, first, key::battle_id, key::empty);
-		const Atom resolution_type = effect_type == key::graft_allies ? static_cast<Atom>(key::effect)
+		const Atom resolution_type = (effect_type == key::graft_allies || effect_type == key::taunt_enemy) ? static_cast<Atom>(key::effect)
 				: effect_type == key::transfer_ally ? static_cast<Atom>(key::transfer_effect)
 				: effect_type == key::sacrifice ? static_cast<Atom>(key::damage) : static_cast<Atom>(key::swap_effect);
 		const DictRef result = cast_result(state, hero, resolution_type, first_id);
@@ -1180,6 +1235,35 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			const ArrayRef extra = state.new_array();
 			state.append(extra, dict_value(pay));
 			state.set(result, str(key::extra_resolutions), array_value(extra));
+		}
+		if (effect_type == key::taunt_enemy) {
+			// Goad: +2 attack and the stack it must attack, unless the target resists.
+			const DictRef goad = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, first));
+			const DictRef goad_resolution = battle_spell_status_resolution(state, battle, active_stack, first, spell, goad);
+			Atom goad_message = gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, first, key::name, key::the_enemy_text)) });
+			goad_message = _append_status_resolution_message(state, goad_message, first, goad, goad_resolution);
+			if (gd::bool_field(state, goad_resolution, key::blocked, false)) {
+				state.set(result, str(key::effect), dict_value(state.new_dict()));
+			} else {
+				Value mechanic;
+				if (!state.lookup(goad, str(key::mechanic), mechanic) || !gd::is_dict(mechanic)) {
+					mechanic = dict_value(state.new_dict());
+					state.set(goad, str(key::mechanic), mechanic);
+				}
+				state.set(mechanic.ref, str(key::taunt_target), str(second_id));
+				state.set(result, str(key::effect), dict_value(goad));
+				goad_message = state.intern(state.text(goad_message) + state.text(gd::format(state, key::must_attack_suffix_text, {
+					str(battle_rules::_stack_label(state, first)),
+					str(battle_rules::_stack_label(state, second_stack)),
+				})));
+			}
+			state.set(result, str(key::resisted), bool_value(gd::bool_field(state, goad_resolution, key::resisted, false)));
+			state.set(result, str(key::immune), bool_value(gd::bool_field(state, goad_resolution, key::immune, false)));
+			state.set(result, str(key::control_resistance_pct), int_value(gd::int_field(state, goad_resolution, key::control_resistance_pct, 0)));
+			state.set(result, str(key::resistance_roll), int_value(gd::int_field(state, goad_resolution, key::resistance_roll, -1)));
+			state.set(result, str(key::resistance_rng_state), str(gd::string_field(state, goad_resolution, key::resistance_rng_state, key::empty)));
+			state.set(result, str(key::message), str(goad_message));
+			return result;
 		}
 		const Atom cast_message = effect_type == key::sacrifice
 				? gd::format(state, key::casts_on_for_damage_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)),

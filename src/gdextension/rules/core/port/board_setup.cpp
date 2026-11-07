@@ -260,7 +260,9 @@ ArrayRef _presentation_walk_path(State &state, DictRef battle, DictRef start, Di
 	const Atom holder = gd::to_string(state.get(occupied, str(_hex_key(state, start)), str(key::empty)));
 	const DictRef moving = _get_stack_by_id(state, battle, holder);
 	// Over burning ground and brambles the walk takes the way the rules do.
-	if (!gd::is_empty(state, moving) && (spell_rules::has_ground(state, battle, key::fire_ground) || spell_rules::has_ground(state, battle, key::bramble_ground))) {
+	uint8_t pass[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
+	if (!gd::is_empty(state, moving) && (spell_rules::has_ground(state, battle, key::fire_ground) || spell_rules::has_ground(state, battle, key::bramble_ground)
+			|| spell_rules::has_ground(state, battle, key::barrier) || spell_rules::phase_pass_mask(state, battle, moving, pass))) {
 		const ArrayRef walk = spell_rules::ground_walk_path(state, battle, moving, start, destination, _stack_movement_points(state, moving, battle));
 		if (state.array_size(walk) > 0) {
 			return walk;
@@ -304,7 +306,9 @@ int64_t _stack_movement_points(State &state, DictRef stack, DictRef battle) {
 	const int64_t speed = engine_clamp<int64_t>(gd::int_field(state, stack, key::speed, 1), 1, 6);
 	const int64_t hasted = gd::add(speed, haste);
 	const int64_t penalty = town_battle_rules::movement_penalty(state, battle, stack);
-	return engine_max<int64_t>(1, gd::sub(hasted, penalty));
+	const int64_t points = engine_max<int64_t>(1, gd::sub(hasted, penalty));
+	// Bog Pool: a stack standing in mire has half speed.
+	return !gd::is_empty(state, battle) && spell_rules::in_mire(state, battle, stack) ? engine_max<int64_t>(1, compat::int_div(points, 2)) : points;
 }
 
 bool _stack_is_rooted(State &state, DictRef stack, DictRef battle) {

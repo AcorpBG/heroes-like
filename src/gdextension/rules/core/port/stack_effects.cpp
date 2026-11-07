@@ -335,6 +335,10 @@ int64_t _cleanse_stack_effects(State &state, DictRef battle, Atom battle_id, con
 }
 
 void _set_stack_defending(State &state, DictRef battle, Atom battle_id) {
+	// Bog Pool: a stack standing in mire cannot brace.
+	if (spell_rules::in_mire(state, battle, _get_stack_by_id(state, battle, battle_id))) {
+		return;
+	}
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	const int64_t count = untyped_size(state, stacks);
 	for (int64_t index = 0; index < count; ++index) {

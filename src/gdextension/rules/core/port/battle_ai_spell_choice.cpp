@@ -188,6 +188,16 @@ double _damage_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 	return score;
 }
 
+// Uproot's Staggered: worth its tactical value at the chance it lands, nothing on a stack it cannot hold.
+double pull_stagger_value(State &state, DictRef battle, DictRef target, DictRef spell) {
+	const DictRef status_effect = _status_effect_from_spell(state, spell);
+	const Atom status_id = gd::string_field(state, status_effect, key::effect_id, key::empty);
+	if (status_id == key::empty || spell_rules::target_is_immune_to_status(state, target, battle, status_id) || spell_rules::has_effect_id(state, target, battle, status_id)) {
+		return 0.0;
+	}
+	return _status_tactical_value(state, status_id, target) * control_success_chance(state, battle, target, spell);
+}
+
 double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior, ArrayRef hostiles, double role_modifier, DictRef damage_projection) {
 	const Atom effect_type = gd::string_field(state, behavior, key::effect_type, key::empty);
 	double score = 0.0;
@@ -212,9 +222,12 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::move_ally) {
 		const DictRef plan = _move_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
-	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice })) {
+	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice, key::taunt_enemy })) {
 		const DictRef plan = _pair_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (effect_type == key::pull_enemy) {
+		const DictRef plan = _pull_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0) + pull_stagger_value(state, battle, target, spell);
 	} else if (effect_type == key::doom_enemy) {
 		// A doom pays as damage two turns on: a little less than the same blow now.
 		score = _damage_spell_score(state, enemy_hero, battle, active_stack, target, spell, damage_projection) - 1.0;
@@ -428,9 +441,30 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, active_stack, key::battle_id, key::empty), score)));
 				state.append(lethal_flags, bool_value(false));
 			}
-		} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice })) {
+		} else if (effect_type == key::pull_enemy) {
+			// Uproot is cast with its hex: the plan's, which the cast then takes.
+			for (const Value &target_value : gd::items(state, array_value(targets))) {
+				if (!gd::is_dict(target_value)) {
+					continue;
+				}
+				const DictRef target = target_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, target, spell, acting_side))) {
+					continue;
+				}
+				const DictRef plan = _pull_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+				if (empty(state, plan)) {
+					continue;
+				}
+				const double score = gd::float_field(state, plan, key::score, -9999.0) + pull_stagger_value(state, battle, target, spell)
+						+ _spell_metadata_value_modifier(state, battle, active_stack, target, spell, behavior) + role_modifier;
+				const DictRef candidate = cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, target, key::battle_id, key::empty), score);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy, key::sacrifice, key::taunt_enemy })) {
 			// Two stacks: the cast names the plan's second one.
-			const ArrayRef firsts = (effect_type == key::swap_enemy || effect_type == key::sacrifice) ? targets : allies;
+			const ArrayRef firsts = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy) ? targets : allies;
 			for (const Value &first_value : gd::items(state, array_value(firsts))) {
 				if (!gd::is_dict(first_value)) {
 					continue;
@@ -517,7 +551,7 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 	double delta = _w(state, key::spell_bar_default);
 	if (effect_type == key::damage_enemy) {
 		delta = _w(state, key::spell_bar_damage);
-	} else if (effect_type == key::control_enemy || effect_type == key::dispel_enemy) {
+	} else if (effect_type == key::control_enemy || effect_type == key::dispel_enemy || effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
 		delta = _w(state, key::spell_bar_control);
 	} else if (effect_type == key::move_ally) {
 		// A move is only planned where it frees a shooter or brings a strike.

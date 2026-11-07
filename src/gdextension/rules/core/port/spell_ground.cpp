@@ -7,8 +7,14 @@
 // its turn, murk refuses shots into and out of it, and a seed goes off under the first stack of the other side that
 // ends a walk next to it.
 //
+// Tier 3 adds four kinds: Living Wall's trees block like a pillar and halve shots whose line crosses them, Boundary
+// Line's light closes its hexes to the other side's walks, Prism Array's crystal blocks its hex and fires at the
+// nearest enemy stack each time its side's hero casts a damage spell, and Bog Pool's mire, for the rest of the
+// battle, halves the speed of a stack standing in it and keeps it from bracing.
+//
 // A "line" is the picked hex and the hexes above and below it (q, r - 1) and (q, r + 1): three hexes across the
-// field, each next to the one before.
+// field, each next to the one before; a longer line (Boundary Line's 4) runs one more hex down. A "blob" is the picked
+// hex and the nearest hexes around it, in the board's neighbour order, up to the cast's count.
 
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -17,6 +23,7 @@
 #include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -238,27 +245,69 @@ void remove_entry(State &state, DictRef battle, DictRef gone) {
 	store_entries(state, battle, kept);
 }
 
-// The hexes a pick covers, with the board's blockers already known.
-ArrayRef shape_cells(State &state, DictRef blocked, DictRef spell, int64_t q, int64_t r) {
+// The hexes a pick covers, with the board's blockers (obstacles and stacks) and its obstacles alone already known;
+// count is a blob's size.
+ArrayRef shape_cells(State &state, DictRef blocked, DictRef obstacles, DictRef spell, int64_t q, int64_t r, int64_t count) {
 	const ArrayRef cells = state.new_array();
 	if (!battle_rules::_hex_in_bounds(q, r)) {
 		return cells;
 	}
 	const DictRef effect = effect_of(state, spell);
 	const bool empty_only = gd::bool_field(state, effect, key::empty_only, false);
+	const Atom shape = gd::string_field(state, effect, key::shape, key::single);
+	// A blob never covers an obstacle's hex: no stack could ever stand there.
 	const auto open = [&](int64_t cq, int64_t cr) {
-		return battle_rules::_hex_in_bounds(cq, cr) && (!empty_only || !state.has(blocked, str(state.pair_atom(cq, cr))));
+		if (!battle_rules::_hex_in_bounds(cq, cr) || (empty_only && state.has(blocked, str(state.pair_atom(cq, cr))))) {
+			return false;
+		}
+		return shape != key::blob || !state.has(obstacles, str(state.pair_atom(cq, cr)));
 	};
 	if (!open(q, r)) {
 		return cells;
 	}
-	const bool line = gd::string_field(state, effect, key::shape, key::single) == key::line;
-	for (int64_t dr = line ? -1 : 0; dr <= (line ? 1 : 0); ++dr) {
+	if (shape == key::blob) {
+		std::vector<int64_t> taken{ cell_id(q, r) };
+		const hex::NeighborList *neighbors = hex::neighbor_table();
+		for (size_t index = 0; index < taken.size() && static_cast<int64_t>(taken.size()) < count; ++index) {
+			const hex::NeighborList &around = neighbors[taken[index]];
+			for (int32_t i = 0; i < around.count && static_cast<int64_t>(taken.size()) < count; ++i) {
+				const int64_t next = around.ids[i];
+				bool seen = false;
+				for (const int64_t id : taken) {
+					seen = seen || id == next;
+				}
+				if (!seen && open(next / hex::kRows, next % hex::kRows)) {
+					taken.push_back(next);
+				}
+			}
+		}
+		for (const int64_t id : taken) {
+			state.append(cells, dict_value(battle_rules::_hex_cell(state, id / hex::kRows, id % hex::kRows)));
+		}
+		return cells;
+	}
+	const int64_t length = shape == key::line ? engine_max<int64_t>(1, gd::int_field(state, effect, key::length, 3)) : 1;
+	const int64_t first = -compat::int_div(gd::sub(length, 1), 2);
+	for (int64_t dr = first; dr < first + length; ++dr) {
 		if (open(q, r + dr)) {
 			state.append(cells, dict_value(battle_rules::_hex_cell(state, q, r + dr)));
 		}
 	}
 	return cells;
+}
+
+// A blob's size at the hero's power (Bog Pool's {2+P/4}); 1 for the other shapes.
+int64_t pick_count(State &state, DictRef spell, DictRef hero) {
+	const DictRef effect = effect_of(state, spell);
+	if (gd::string_field(state, effect, key::shape, key::single) != key::blob) {
+		return 1;
+	}
+	return engine_max<int64_t>(1, power_count(state, effect, key::count, key::count_power_divisor, gd::is_empty(state, hero) ? 0 : spell_power(state, hero)));
+}
+
+// The kinds that stand on their hexes and block them like an obstacle.
+bool blocks_hexes(Atom ground) {
+	return ground == key::pillar || ground == key::wall || ground == key::prism;
 }
 
 } // namespace
@@ -273,9 +322,10 @@ ArrayRef ground_pick_cells(State &state, DictRef battle, DictRef spell) {
 		return picks;
 	}
 	const DictRef blocked = battle_rules::_build_blocking_map(state, battle);
+	const DictRef obstacles = battle_rules::_obstacle_cell_map(state, battle);
 	for (int64_t q = 0; q < hex::kColumns; ++q) {
 		for (int64_t r = 0; r < hex::kRows; ++r) {
-			if (state.array_size(shape_cells(state, blocked, spell, q, r)) > 0) {
+			if (state.array_size(shape_cells(state, blocked, obstacles, spell, q, r, 1)) > 0) {
 				state.append(picks, dict_value(battle_rules::_hex_cell(state, q, r)));
 			}
 		}
@@ -283,15 +333,17 @@ ArrayRef ground_pick_cells(State &state, DictRef battle, DictRef spell) {
 	return picks;
 }
 
-ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell) {
+ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell, DictRef hero) {
 	const ArrayRef picks = state.new_array();
 	if (!takes_hex(state, spell) || gd::is_empty(state, battle)) {
 		return picks;
 	}
 	const DictRef blocked = battle_rules::_build_blocking_map(state, battle);
+	const DictRef obstacles = battle_rules::_obstacle_cell_map(state, battle);
+	const int64_t count = pick_count(state, spell, hero);
 	for (int64_t q = 0; q < hex::kColumns; ++q) {
 		for (int64_t r = 0; r < hex::kRows; ++r) {
-			const ArrayRef cells = shape_cells(state, blocked, spell, q, r);
+			const ArrayRef cells = shape_cells(state, blocked, obstacles, spell, q, r, count);
 			if (state.array_size(cells) > 0) {
 				const DictRef pick = battle_rules::_hex_cell(state, q, r);
 				state.set(pick, str(key::cells), array_value(cells));
@@ -302,12 +354,13 @@ ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell) {
 	return picks;
 }
 
-ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center) {
+ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center, DictRef hero) {
 	if (!takes_hex(state, spell) || gd::is_empty(state, battle) || gd::is_empty(state, center)) {
 		return state.new_array();
 	}
 	const DictRef blocked = battle_rules::_build_blocking_map(state, battle);
-	return shape_cells(state, blocked, spell, gd::int_field(state, center, key::q, -1), gd::int_field(state, center, key::r, -1));
+	const DictRef obstacles = battle_rules::_obstacle_cell_map(state, battle);
+	return shape_cells(state, blocked, obstacles, spell, gd::int_field(state, center, key::q, -1), gd::int_field(state, center, key::r, -1), pick_count(state, spell, hero));
 }
 
 DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, ArrayRef cells) {
@@ -322,10 +375,11 @@ DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRe
 	state.set(entry, str(key::side), str(side));
 	state.set(entry, str(key::cells), array_value(gd::duplicate_array(state, cells)));
 	const int64_t round = gd::int_field(state, battle, key::round, 1);
-	if (ground == key::trap) {
+	// A seed waits until it goes off; mire lasts the battle.
+	if (ground == key::trap || gd::bool_field(state, effect, key::battle_long, false)) {
 		state.set(entry, str(key::until_round), int_value(GROUND_FOREVER));
 	} else {
-		const int64_t rounds = spell_effect_turns(state, hero, effect, spell, ground == key::pillar ? key::buff : key::debuff, power);
+		const int64_t rounds = spell_effect_turns(state, hero, effect, spell, blocks_hexes(ground) ? key::buff : key::debuff, power);
 		state.set(entry, str(key::rounds), int_value(rounds));
 		state.set(entry, str(key::until_round), int_value(gd::sub(gd::add(round, rounds), 1)));
 	}
@@ -388,7 +442,10 @@ bool has_ground(State &state, DictRef battle, Atom ground) {
 }
 
 void add_pillar_blockers(State &state, DictRef battle, DictRef blocked) {
-	for (const DictRef entry : holding(state, battle, key::pillar)) {
+	for (const DictRef entry : holding(state, battle, key::empty)) {
+		if (!blocks_hexes(gd::string_field(state, entry, key::ground, key::empty))) {
+			continue;
+		}
 		const Atom blocker = state.joined_atom(key::obstacle_prefix, gd::string_field(state, entry, key::id, key::empty));
 		for (const Value &cell : gd::field_items(state, entry, str(key::cells))) {
 			const DictRef normalized = battle_rules::_normalize_hex_cell(state, cell);
@@ -436,6 +493,161 @@ bool in_murk(State &state, DictRef battle, DictRef stack) {
 	return !murk.empty() && entry_under(state, murk, stack) != NONE;
 }
 
+void close_barrier_cells(State &state, DictRef battle, DictRef stack, uint8_t *open) {
+	if (gd::is_empty(state, battle) || raw_entries(state, battle) == NONE) {
+		return;
+	}
+	const Atom side = side_of(state, stack);
+	for (const DictRef entry : holding(state, battle, key::barrier)) {
+		if (gd::string_field(state, entry, key::side, key::empty) == side) {
+			continue;
+		}
+		for (const Value &cell : gd::field_items(state, entry, str(key::cells))) {
+			const int64_t id = cell_id_of(state, cell);
+			if (id >= 0) {
+				open[id] = 0;
+			}
+		}
+	}
+}
+
+bool phase_pass_mask(State &state, DictRef battle, DictRef stack, uint8_t *pass) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || stack_mechanic_int(state, stack, battle, key::phase) <= 0) {
+		return false;
+	}
+	for (int64_t id = 0; id < CELL_COUNT; ++id) {
+		pass[id] = 1;
+	}
+	close_barrier_cells(state, battle, stack, pass);
+	return true;
+}
+
+bool in_mire(State &state, DictRef battle, DictRef stack) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || raw_entries(state, battle) == NONE) {
+		return false;
+	}
+	const std::vector<DictRef> mire = holding(state, battle, key::mire);
+	return !mire.empty() && entry_under(state, mire, stack) != NONE;
+}
+
+bool shot_crosses_wall(State &state, DictRef battle, DictRef shooter, DictRef target) {
+	if (gd::is_empty(state, battle) || raw_entries(state, battle) == NONE) {
+		return false;
+	}
+	const std::vector<DictRef> walls = holding(state, battle, key::wall);
+	if (walls.empty()) {
+		return false;
+	}
+	const int64_t from = cell_id_of(state, dict_value(battle_rules::_stack_hex(state, shooter)));
+	const int64_t to = cell_id_of(state, dict_value(battle_rules::_stack_hex(state, target)));
+	if (from < 0 || to < 0) {
+		return false;
+	}
+	uint8_t marked[CELL_COUNT];
+	mark_cells(state, walls, marked);
+	for (const int64_t id : shot_line_cells(from, to)) {
+		if (marked[id] != 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<int64_t> shot_line_cells(int64_t from_id, int64_t to_id) {
+	std::vector<int64_t> cells;
+	if (from_id < 0 || to_id < 0 || from_id >= CELL_COUNT || to_id >= CELL_COUNT) {
+		return cells;
+	}
+	// Cube coordinates of the offset rows, the line nudged so that a line along a hex edge takes one side.
+	const auto cube = [](int64_t id, double &x, double &y, double &z) {
+		const int64_t q = id / hex::kRows;
+		const int64_t r = id % hex::kRows;
+		x = static_cast<double>(q - (r - (r & 1)) / 2);
+		z = static_cast<double>(r);
+		y = -x - z;
+	};
+	double ax = 0.0, ay = 0.0, az = 0.0, bx = 0.0, by = 0.0, bz = 0.0;
+	cube(from_id, ax, ay, az);
+	cube(to_id, bx, by, bz);
+	const int64_t steps = static_cast<int64_t>(std::llround(engine_max<double>(std::fabs(ax - bx), engine_max<double>(std::fabs(ay - by), std::fabs(az - bz)))));
+	for (int64_t step = 1; step < steps; ++step) {
+		const double t = static_cast<double>(step) / static_cast<double>(steps);
+		const double x = ax + 1e-6 + (bx - ax) * t;
+		const double y = ay + 2e-6 + (by - ay) * t;
+		const double z = az - 3e-6 + (bz - az) * t;
+		double rx = std::round(x);
+		double ry = std::round(y);
+		double rz = std::round(z);
+		const double dx = std::fabs(rx - x);
+		const double dy = std::fabs(ry - y);
+		const double dz = std::fabs(rz - z);
+		if (dx > dy && dx > dz) {
+			rx = -ry - rz;
+		} else if (dy > dz) {
+			ry = -rx - rz;
+		} else {
+			rz = -rx - ry;
+		}
+		const int64_t r = static_cast<int64_t>(rz);
+		const int64_t q = static_cast<int64_t>(rx) + (r - (r & 1)) / 2;
+		if (battle_rules::_hex_in_bounds(q, r)) {
+			cells.push_back(cell_id(q, r));
+		}
+	}
+	return cells;
+}
+
+Atom fire_prisms(State &state, DictRef battle, Atom side, DictRef spell) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, spell) || raw_entries(state, battle) == NONE) {
+		return key::empty;
+	}
+	// Only a damage spell sets them off, and a new crystal does not set off the old ones.
+	const Value categories = gd::field(state, spell, key::role_categories);
+	if (!gd::is_array(categories) || !gd::array_has(state, categories.ref, str(key::damage))
+			|| gd::string_field(state, effect_of(state, spell), key::ground, key::empty) == key::prism) {
+		return key::empty;
+	}
+	Atom message = key::empty;
+	for (const DictRef entry : holding(state, battle, key::prism)) {
+		if (gd::string_field(state, entry, key::side, key::empty) != side) {
+			continue;
+		}
+		Value cells;
+		if (!state.lookup(entry, str(key::cells), cells) || !gd::is_array(cells) || state.array_size(cells.ref) == 0) {
+			continue;
+		}
+		const Value crystal = state.at(cells.ref, 0);
+		// The nearest enemy stack, in the stacks' order on a tie; Glass Aegis keeps it off.
+		DictRef nearest = NONE;
+		int64_t best = 999;
+		for (const Value &other : gd::field_items(state, battle, str(key::stacks))) {
+			if (!gd::is_dict(other) || side_of(state, other.ref) == side || side_of(state, other.ref) == key::empty
+					|| _alive_count(state, other.ref) <= 0 || spell_shielded(state, battle, other.ref)) {
+				continue;
+			}
+			const int64_t distance = body_distance_to(state, other.ref, crystal);
+			if (distance < best) {
+				best = distance;
+				nearest = other.ref;
+			}
+		}
+		if (nearest == NONE) {
+			continue;
+		}
+		const Atom target_id = gd::string_field(state, nearest, key::battle_id, key::empty);
+		const Atom line = hurt(state, battle, target_id, entry, key::prism_fires_text);
+		if (line == key::empty) {
+			continue;
+		}
+		message = concat(state, concat(state, message, key::space), line);
+		const DictRef after = battle_rules::_get_stack_by_id(state, battle, target_id);
+		if (!gd::is_empty(state, after) && _alive_count(state, after) <= 0) {
+			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(battle_rules::_stack_label(state, after)) }));
+		}
+	}
+	return message;
+}
+
 ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps) {
 	const ArrayRef path = state.new_array();
 	const int64_t from = cell_id_of(state, dict_value(start));
@@ -450,6 +662,9 @@ ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef s
 	const DictRef occupied = battle_rules::_build_blocking_map(state, battle);
 	uint8_t open[CELL_COUNT];
 	battle_rules::_hex_open_mask(state, stack, occupied, open);
+	close_barrier_cells(state, battle, stack, open);
+	// Fogwalk: the walk passes through stacks and obstacles to its free hex.
+	phase_pass_mask(state, battle, stack, open);
 	open[from] = 1;
 	const hex::Body body = body_of(state, stack);
 	uint8_t fit[CELL_COUNT];

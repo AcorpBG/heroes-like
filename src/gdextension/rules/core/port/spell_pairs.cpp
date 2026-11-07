@@ -81,7 +81,8 @@ int64_t swap_range(State &state, DictRef hero, DictRef battle, DictRef spell, Di
 
 bool takes_second_stack(State &state, DictRef spell) {
 	const Atom type = effect_type_of(state, spell);
-	return type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies || type == key::swap_enemy || type == key::sacrifice;
+	return type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies || type == key::swap_enemy || type == key::sacrifice
+			|| type == key::taunt_enemy;
 }
 
 bool offers_second_stack(State &state, DictRef spell) {

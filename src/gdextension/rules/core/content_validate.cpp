@@ -1468,17 +1468,30 @@ void Check::spell(const Value &spell) {
 			warn("Spell " + spell_id + " ground_effect must use target_mode hex_selected.");
 		}
 		const std::string ground = text(effect, "ground");
-		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap"})) {
+		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap", "wall", "barrier", "prism", "mire"})) {
 			warn("Spell " + spell_id + " uses unsupported ground " + ground + ".");
 		}
 		const std::string shape = text(effect, "shape");
-		if (!shape.empty() && !one_of(shape, {"single", "line"})) {
+		if (!shape.empty() && !one_of(shape, {"single", "line", "blob"})) {
 			warn("Spell " + spell_id + " uses unsupported ground shape " + shape + ".");
 		}
-		if (ground != "trap" && integer(effect, "duration_rounds", 0) <= 0) {
+		// A line's length (3 unless it says) and a blob's size.
+		const int64_t length = integer(effect, "length", 3);
+		if (length < 1 || length > 6) {
+			warn("Spell " + spell_id + " ground length must be 1 to 6.");
+		}
+		if (shape == "blob" && (integer(effect, "count", 0) <= 0 || integer(effect, "count_power_divisor", 0) < 0)) {
+			warn("Spell " + spell_id + " must define blob count > 0 and count_power_divisor >= 0.");
+		}
+		const Value ground_battle_long = get(effect, "battle_long", Value());
+		if (ground_battle_long.kind != Kind::Nil && ground_battle_long.kind != Kind::Bool) {
+			warn("Spell " + spell_id + " battle_long must be true or false.");
+		}
+		const bool lasts_battle = flag(effect, "battle_long");
+		if (ground != "trap" && !lasts_battle && integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
 		}
-		if (one_of(ground, {"fire_ground", "bramble_ground", "trap"}) && integer(effect, "base_damage", 0) <= 0) {
+		if (one_of(ground, {"fire_ground", "bramble_ground", "trap", "prism"}) && integer(effect, "base_damage", 0) <= 0) {
 			warn("Spell " + spell_id + " must define ground base_damage > 0.");
 		}
 		if (ground == "pillar" && integer(effect, "defense", 0) <= 0) {
@@ -1515,6 +1528,18 @@ void Check::spell(const Value &spell) {
 		}
 		if (type == "free_volley" && integer(effect, "volley_pct", 0) <= 0) {
 			warn("Spell " + spell_id + " must define volley_pct > 0.");
+		}
+	} else if (type == "taunt_enemy" || type == "pull_enemy") {
+		// Goad's status and the stack it names; Uproot's drag and its Staggered.
+		if (text(spell, "target_mode") != "enemy_selected") {
+			warn("Spell " + spell_id + " " + type + " must use target_mode enemy_selected.");
+		}
+		const Value status_effect = get(effect, "status_effect", empty_dict_);
+		if (!is_dict(status_effect) || text(status_effect, "effect_id").empty() || integer(status_effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define " + type + " status_effect.effect_id and duration_rounds > 0.");
+		}
+		if (type == "pull_enemy" && integer(effect, "range", 0) <= 0) {
+			warn("Spell " + spell_id + " must define pull range > 0.");
 		}
 	} else if (type == "temp_creatures" || type == "damage_around") {
 		// On one of the hero's stacks: creatures for this battle, or a blow at the enemies beside it.

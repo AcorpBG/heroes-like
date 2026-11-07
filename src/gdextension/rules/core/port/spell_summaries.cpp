@@ -248,6 +248,19 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
 		return gd::format(state, key::watch_summary_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(rounds_label) });
 	}
+	// Goad and Uproot (spell_tier3_control.cpp).
+	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
+		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
+		if (effect_type == key::taunt_enemy) {
+			const Value bonus = gd::field(state, status_effect, key::modifiers);
+			const Atom bonus_text = gd::is_dict(bonus) ? _modifier_summary(state, bonus.ref) : static_cast<Atom>(key::empty);
+			return gd::format(state, key::goad_summary_text, { str(target_label), str(bonus_text), str(turns) });
+		}
+		return gd::format(state, key::drag_summary_text, { str(target_label), int_value(spell_move_reach(state, spell, power_against)), str(turns) });
+	}
 	return key::no_supported_battle_effect_text;
 }
 
@@ -280,6 +293,21 @@ Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictR
 		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, against));
 		return gd::format(state, sentence ? key::plant_seed_sentence : key::seed_ground_text, { int_value(damage), str(turns) });
 	}
+	// Tier 3: Living Wall, Boundary Line, Prism Array and Bog Pool.
+	if (ground == key::wall) {
+		return gd::format(state, sentence ? key::grow_wall_sentence : key::wall_ground_text, { str(rounds_label(key::buff)) });
+	}
+	if (ground == key::barrier) {
+		const int64_t length = engine_max<int64_t>(1, gd::int_field(state, effect, key::length, 3));
+		return gd::format(state, sentence ? key::mark_barrier_sentence : key::barrier_ground_text, { int_value(length), str(rounds_label(key::debuff)) });
+	}
+	if (ground == key::prism) {
+		return gd::format(state, sentence ? key::raise_prism_sentence : key::prism_ground_text, { str(rounds_label(key::buff)), int_value(damage) });
+	}
+	if (ground == key::mire) {
+		const int64_t count = engine_max<int64_t>(1, power_count(state, effect, key::count, key::count_power_divisor, power));
+		return gd::format(state, sentence ? key::lay_mire_sentence : key::mire_ground_text, { int_value(count) });
+	}
 	return key::no_supported_battle_effect_text;
 }
 
@@ -309,6 +337,12 @@ Atom status_rules_text(State &state, Atom status_id) {
 	}
 	if (status_id == key::status_confused) {
 		return key::confused_rules_text;
+	}
+	if (status_id == key::status_fleeing) {
+		return key::fleeing_rules_text;
+	}
+	if (status_id == key::status_goaded) {
+		return key::goaded_rules_text;
 	}
 	return key::empty;
 }
@@ -462,6 +496,12 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 	}
 	if (has(key::cohesion_lock)) {
 		parts.push_back(key::cohesion_lock_term_text);
+	}
+	if (has(key::phase)) {
+		parts.push_back(key::phase_term_text);
+	}
+	if (has(key::no_strike_back)) {
+		parts.push_back(key::no_strike_back_term_text);
 	}
 	if (has(key::doom_damage)) {
 		parts.push_back(gd::format(state, key::doom_term_text, { amount(key::doom_damage) }));

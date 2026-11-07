@@ -616,6 +616,10 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	if (status_id == key::status_asleep) {
 		return 2.5;
 	}
+	// Night Terror: the stack loses its next turn to its run and strikes nothing back meanwhile.
+	if (status_id == key::status_fleeing) {
+		return 2.0 + (melee && gd::int_field(state, target, key::retaliations_left, 0) > 0 ? 0.5 : 0.0);
+	}
 	if (status_id == key::status_blinded) {
 		return !melee && gd::int_field(state, target, key::shots_remaining, 0) > 0 ? 2.5 : 1.0;
 	}

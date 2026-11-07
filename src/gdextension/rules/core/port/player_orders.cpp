@@ -214,6 +214,8 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	if (!_apply_spell_resolution(state, session_battle(state, session), resolution, animation_resolution, message, recovered_amount, cleansed_count)) {
 		return refusal(state, key::unsupported_spell_resolution_text);
 	}
+	// Prism Array: the side's crystals answer a damage spell.
+	message = concat(state, message, spell_rules::fire_prisms(state, session_battle(state, session), key::player, gd::content_row(state, state::ContentTable::Spell, spell_id)));
 	Value post_damage_effect;
 	if (nonempty_dict_field(state, resolution, key::post_damage_effect, post_damage_effect)) {
 		const DictRef effect_target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, resolution, key::target_battle_id));
@@ -257,6 +259,19 @@ DictRef perform_player_action(State &state, const Value &session, Atom action, D
 	DictRef active_stack = get_active_stack(state, session_battle(state, session));
 	if (gd::is_empty(state, active_stack) || string_or_empty(state, active_stack, key::side) != key::player) {
 		return refusal(state, key::not_the_players_turn_text);
+	}
+
+	// Goad: while it can reach the stack the spell named, the goaded stack attacks that stack and nothing else.
+	if (action == key::advance || action == key::defend || action == key::wait || action == key::strike || action == key::shoot) {
+		const DictRef named = spell_rules::goad_forced_target(state, session_battle(state, session), active_stack);
+		if (!gd::is_empty(state, named)) {
+			const DictRef selected = get_selected_target(state, session_battle(state, session));
+			const bool at_named = (action == key::strike || action == key::shoot) && !gd::is_empty(state, selected)
+					&& string_or_empty(state, selected, key::battle_id) == string_or_empty(state, named, key::battle_id);
+			if (!at_named) {
+				return refusal(state, gd::format(state, key::goaded_must_attack_text, { str(_stack_label(state, active_stack)), str(_stack_label(state, named)) }));
+			}
+		}
 	}
 
 	if (action == key::advance) {
@@ -348,10 +363,11 @@ DictRef perform_player_action(State &state, const Value &session, Atom action, D
 		_set_stack_defending(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 		_mark_stack_animation_event(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id), key::battle_unit_defend, state.new_dict());
 		const DictRef buff_battle = session_battle(state, session);
-		const Atom buff_text = gd::format(state, key::braces_for_impact_text, { str(_stack_label(state, active_stack)) });
+		const Atom brace_format = spell_rules::in_mire(state, session_battle(state, session), active_stack) ? static_cast<Atom>(key::stuck_in_mire_text) : static_cast<Atom>(key::braces_for_impact_text);
+		const Atom buff_text = gd::format(state, brace_format, { str(_stack_label(state, active_stack)) });
 		const DictRef buff_context = action_context(state, key::defend, string_or_empty(state, active_stack, key::battle_id));
 		_append_presentation_event(state, buff_battle, key::buff, buff_text, buff_context);
-		Atom defend_message = gd::format(state, key::braces_for_impact_text, { str(_stack_label(state, active_stack)) });
+		Atom defend_message = gd::format(state, brace_format, { str(_stack_label(state, active_stack)) });
 		const Atom defend_pressure = _apply_defend_pressure(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 		if (defend_pressure != key::empty) {
 			defend_message = concat(state, defend_message, gd::format(state, key::space_s_text, { str(defend_pressure) }));

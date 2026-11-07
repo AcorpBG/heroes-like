@@ -2088,6 +2088,94 @@
       "source_sha256": "aef4b00186f1f08414b44ce92d6d68e640e80f9e2996ea785a163b3c97c9f6f3",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_shroud_10.png",
       "icon_sha256": "e6c7d876e7e1a7f5ae47953e07f9c98434f7c01ae523dcea40d393747c54436d"
+    },
+    {
+      "id": "spell_goad",
+      "spell_id": "spell_goad",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_goad",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_coal_rain.png",
+      "source_sha256": "48ecc190cfd6eebb2d9ac44acf59ebcfe5e2ca0f38bc98fc57364c9d31d6d924",
+      "icon_path": "res://art/magic/runtime/spells/spell_coal_rain.png",
+      "icon_sha256": "ad93ec22cbe0e4a8cfb841478d2259bff59c88c3fb51b482c157c74320488b56"
+    },
+    {
+      "id": "spell_uproot",
+      "spell_id": "spell_uproot",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_uproot",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_rootway_tangle.png",
+      "source_sha256": "7b83480930de76f728f36c8a41982af58eea8c77512ba827d2b8b1208d65be4e",
+      "icon_path": "res://art/magic/runtime/spells/spell_rootway_tangle.png",
+      "icon_sha256": "5cf9331f663da9255cb506bc85d1267de9159f8a8b48731d478428d8563586e0"
+    },
+    {
+      "id": "spell_living_wall",
+      "spell_id": "spell_living_wall",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_living_wall",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bark_rootway_24.png",
+      "source_sha256": "626fbb08fa6390bb574800fd5c53dceae8a5f01daeee9d772e929084b255a180",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bark_rootway_24.png",
+      "icon_sha256": "8ae509cf33f808afad07e3d57fa07eba02003b1d291fffd6466efb0e47275504"
+    },
+    {
+      "id": "spell_boundary_line",
+      "spell_id": "spell_boundary_line",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_boundary_line",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_compass_boundary_06.png",
+      "source_sha256": "8374def11e4e968d384d83f68d99e208aeda8f1295aa68f069f4e946010eae11",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png",
+      "icon_sha256": "7d95205cae4a20eb7195701c01cb356e9711e67458973b92abd9b15549651a55"
+    },
+    {
+      "id": "spell_prism_array",
+      "spell_id": "spell_prism_array",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_prism_array",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_starlens_prism_28.png",
+      "source_sha256": "8fa7b12ef3ac3c9c55e67c89963f96ac49c4c0eedae7686646143f8f344e81c4",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_starlens_prism_28.png",
+      "icon_sha256": "f001d7f684f9b9927e69f9ca47ef57e98ec0ae6d9aecc6bec46382b486ef6f82"
+    },
+    {
+      "id": "spell_fogwalk",
+      "spell_id": "spell_fogwalk",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_fogwalk",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_fogwake_step.png",
+      "source_sha256": "64e59672c77328b60ab6ce809aa188eba9f0e213a815915be85bc6d2fbccd7c3",
+      "icon_path": "res://art/magic/runtime/spells/spell_fogwake_step.png",
+      "icon_sha256": "a372099c71c1cb534152870ee1f0f4ae4cbf84880a8fecbd0bd01933acfe0eb0"
+    },
+    {
+      "id": "spell_night_terror",
+      "spell_id": "spell_night_terror",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_night_terror",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_moon_drift_12.png",
+      "source_sha256": "73d03576d80b6f7487c7fc1a3526d9f2fbc868bec336037f9effefba8b572811",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_moon_drift_12.png",
+      "icon_sha256": "188553efcd8eb532dfbb71a616b73c0638b428daaa278a30a69cb4732b78252b"
+    },
+    {
+      "id": "spell_bog_pool",
+      "spell_id": "spell_bog_pool",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_bog_pool",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_bog_drum_18.png",
+      "source_sha256": "a62c926efa9a0febb3eb084a19b3270a02672a8ec5e3e9df58a8f9f36a4b2412",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_bog_drum_18.png",
+      "icon_sha256": "871d83fca2f929a1004e877ecfff3d3907bb7fbc92df2266ff4fa1e84699ad20"
     }
   ]
 }

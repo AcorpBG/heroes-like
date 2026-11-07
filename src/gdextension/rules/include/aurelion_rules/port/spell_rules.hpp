@@ -11,6 +11,7 @@
 #include "aurelion_rules/port/gd.hpp"
 
 #include <cstdint>
+#include <vector>
 
 namespace aurelion::rules::port::spell_rules {
 
@@ -213,9 +214,10 @@ void clear_graft(State &state, DictRef battle, Atom battle_id);
 // turn, with burning ground under a stack that did not walk.
 bool takes_hex(State &state, DictRef spell);
 ArrayRef ground_pick_cells(State &state, DictRef battle, DictRef spell);
-// Every hex a hex spell can be cast on, each with the hexes it covers ({q, r, cells}).
-ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell);
-ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center);
+// Every hex a hex spell can be cast on, each with the hexes it covers ({q, r, cells}); a blob's size is the
+// hero's (Bog Pool).
+ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell, DictRef hero);
+ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center, DictRef hero);
 DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, ArrayRef cells);
 void add_ground(State &state, DictRef battle, DictRef entry);
 // A ground entry's damage to a stack, after its resistance (0 when the entry does no damage).
@@ -225,6 +227,17 @@ void add_pillar_blockers(State &state, DictRef battle, DictRef blocked);
 bool bramble_stop_mask(State &state, DictRef battle, DictRef stack, uint8_t *stop);
 int64_t pillar_defense(State &state, DictRef battle, DictRef stack);
 bool in_murk(State &state, DictRef battle, DictRef stack);
+// Tier 3's ground: Boundary Line closes its hexes to the other side's walks (in an open mask), Fogwalk's walk
+// passes everything else (its pass mask; false when the stack does not phase), a stack in Bog Pool's mire, a shot
+// whose line crosses Living Wall, and Prism Array's crystals firing after a damage spell of their side's hero (the
+// message suffix, empty when none fires).
+void close_barrier_cells(State &state, DictRef battle, DictRef stack, uint8_t *open);
+bool phase_pass_mask(State &state, DictRef battle, DictRef stack, uint8_t *pass);
+bool in_mire(State &state, DictRef battle, DictRef stack);
+bool shot_crosses_wall(State &state, DictRef battle, DictRef shooter, DictRef target);
+// The hex ids a straight shot between two hexes (ids q * rows + r) passes over, the two ends left out.
+std::vector<int64_t> shot_line_cells(int64_t from_id, int64_t to_id);
+Atom fire_prisms(State &state, DictRef battle, Atom side, DictRef spell);
 ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps);
 void after_ground_walk(State &state, DictRef battle, Atom battle_id, DictRef start);
 void end_of_turn_ground(State &state, DictRef battle, Atom battle_id);
@@ -274,6 +287,19 @@ ArrayRef volley_shooters(State &state, DictRef battle, Atom side, DictRef target
 int64_t volley_shot_damage(State &state, DictRef battle, DictRef shooter, DictRef target, int64_t pct);
 Atom fire_volley(State &state, DictRef battle, Atom side, Atom target_id, int64_t pct);
 ArrayRef enemies_beside(State &state, DictRef battle, DictRef stack);
+// Tier 3's control spells and Fogwalk (spell_tier3_control.cpp): Goad's named stack (empty when the stack is not
+// goaded or the named one has fallen) and the stack it must attack now (empty when it cannot reach it); strike-backs
+// refused for a Fleeing defender or the active stack's unanswered blow (the reason, empty when none) and the blow
+// that spends Fogwalk's; Night Terror's run at the start of the stack's turn (true when the turn went to it);
+// Uproot's reach and the hexes it can drag a stack to.
+DictRef goad_target(State &state, DictRef battle, DictRef stack);
+DictRef goad_forced_target(State &state, DictRef battle, DictRef stack);
+Atom strike_back_refused_reason(State &state, DictRef battle, DictRef defender);
+bool strike_back_refused(State &state, DictRef battle, DictRef defender);
+void note_blow_for_strike_back(State &state, DictRef battle, Atom attacker_id, bool is_ranged);
+bool flee_turn(State &state, DictRef battle, Atom battle_id);
+int64_t spell_pull_reach(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target);
+ArrayRef pull_destinations(State &state, DictRef battle, DictRef stack, int64_t reach);
 // Watchful Light: auras on battle.spell_auras (a newer one of a kind replaces its side's older one), the stack it
 // heals and the round start that heals it.
 void add_battle_aura(State &state, DictRef battle, DictRef entry);

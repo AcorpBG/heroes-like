@@ -275,16 +275,23 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 	}
 	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
 	Value effect;
-	if (gd::is_empty(state, spell) || !state.lookup(spell, str(key::effect), effect) || !gd::is_dict(effect)
-			|| gd::string_field(state, effect.ref, key::type, key::empty) != key::move_ally) {
+	if (gd::is_empty(state, spell) || !state.lookup(spell, str(key::effect), effect) || !gd::is_dict(effect)) {
+		return state.new_array();
+	}
+	const Atom effect_type = gd::string_field(state, effect.ref, key::type, key::empty);
+	if (effect_type != key::move_ally && effect_type != key::pull_enemy) {
 		return state.new_array();
 	}
 	const DictRef stack = _get_stack_by_id(state, battle, target_id);
-	if (gd::is_empty(state, stack) || text_field(state, stack, key::side) != key::player) {
+	const Atom wanted_side = effect_type == key::pull_enemy ? static_cast<Atom>(key::enemy) : static_cast<Atom>(key::player);
+	if (gd::is_empty(state, stack) || text_field(state, stack, key::side) != wanted_side) {
 		return state.new_array();
 	}
 	// The reach the cast itself gives (spell_rules::resolve_battle_spell).
 	const DictRef hero_state = _player_commander_state(state, dict_value(session));
+	if (effect_type == key::pull_enemy) {
+		return spell_rules::pull_destinations(state, battle, stack, spell_rules::spell_pull_reach(state, hero_state, battle, spell, stack));
+	}
 	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, hero_state));
 	return spell_rules::move_destinations(state, battle, stack, reach);
 }
@@ -319,7 +326,7 @@ ArrayRef spell_ground_cells(State &state, DictRef session, Atom spell_id, int64_
 	if (gd::is_empty(state, battle) || !_hex_in_bounds(q, r)) {
 		return state.new_array();
 	}
-	return spell_rules::ground_shape_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id), _hex_cell(state, q, r));
+	return spell_rules::ground_shape_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id), _hex_cell(state, q, r), _player_commander_state(state, dict_value(session)));
 }
 
 ArrayRef get_spell_actions(State &state, DictRef session) {

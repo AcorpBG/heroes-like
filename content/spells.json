@@ -4921,6 +4921,217 @@
           "deathless_heal_power_scale": 4
         }
       }
+    },
+    {
+      "id": "spell_goad",
+      "name": "Goad",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Goads one enemy stack into a fury: stronger, but it must go for the stack of yours you name.",
+      "effect": {
+        "type": "taunt_enemy",
+        "status_effect": {
+          "effect_id": "status_goaded",
+          "label": "Goaded",
+          "duration_rounds": 1,
+          "modifiers": {
+            "attack": 2
+          },
+          "mechanic": {
+            "taunt": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_uproot",
+      "name": "Uproot",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Roots tear one enemy stack out of its place and drag it where you will, reeling.",
+      "effect": {
+        "type": "pull_enemy",
+        "range": 2,
+        "range_power_divisor": 3,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 1,
+          "fixed_duration": true
+        }
+      }
+    },
+    {
+      "id": "spell_living_wall",
+      "name": "Living Wall",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "control",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "Trees shoot up in a row across the field: nothing walks through them, and shots across them lose half their force.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "wall",
+        "shape": "line",
+        "empty_only": true,
+        "duration_rounds": 2
+      }
+    },
+    {
+      "id": "spell_boundary_line",
+      "name": "Boundary Line",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A line of light the enemy cannot step across.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "barrier",
+        "shape": "line",
+        "length": 4,
+        "empty_only": true,
+        "duration_rounds": 1
+      }
+    },
+    {
+      "id": "spell_prism_array",
+      "name": "Prism Array",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A standing crystal that answers each of your hero's damage spells with a bolt of its own.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "prism",
+        "shape": "single",
+        "empty_only": true,
+        "duration_rounds": 2,
+        "base_damage": 15,
+        "power_scale": 5
+      }
+    },
+    {
+      "id": "spell_fogwalk",
+      "name": "Fogwalk",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Turns one stack to fog: it walks through anything, and its next blow comes from nowhere.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "phase": 1,
+          "no_strike_back": 1
+        }
+      }
+    },
+    {
+      "id": "spell_night_terror",
+      "name": "Night Terror",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A waking nightmare: one enemy stack runs from your army and has no heart to strike back.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_fleeing",
+          "label": "Fleeing",
+          "duration_rounds": 1,
+          "mechanic": {
+            "flee": 1
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_bog_pool",
+      "name": "Bog Pool",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "The ground turns to sucking mire for the rest of the battle: slow to cross, and no footing to brace on.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "mire",
+        "shape": "blob",
+        "count": 2,
+        "count_power_divisor": 4,
+        "battle_long": true
+      }
     }
   ]
 }

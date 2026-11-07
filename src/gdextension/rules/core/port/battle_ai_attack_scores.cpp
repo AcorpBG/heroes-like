@@ -507,6 +507,10 @@ double _defend_score(State &state, DictRef battle, DictRef active_stack, ArrayRe
 	if (contact > 0 && _fights_in_melee(state, active_stack)) {
 		score -= _w(state, key::defend_melee_out_of_contact);
 	}
+	// Bog Pool: in mire a defend order braces nothing (a first value, not measured).
+	if (spell_rules::in_mire(state, battle, active_stack)) {
+		score -= 2.0;
+	}
 	if ((_brace_available(state, active_stack, battle) || _bramble_ground_available(state, active_stack, battle, state.new_dict())) && contact <= 1) {
 		score += _w(state, key::defend_brace);
 	}

@@ -258,6 +258,9 @@ DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef first, DictRef spell);
 // A hex spell's best hex for the caster's side and its value ({destination: {q, r}, score}), or {} when no hex is worth it.
 DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
+// Uproot on an enemy stack: the hex to drag it to and the drag's value ({destination: {q, r}, score}), or {} when no
+// hex helps (its Staggered is weighed by the caller).
+DictRef _pull_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell);
 // The tier-3 kinds (first values, not measured): Volley Signal's shots at a target, Budding on one of the caster's
 // stacks, Hollowing around one and Watchful Light over the battle (-9999 when the cast would do nothing).
 double _volley_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell);

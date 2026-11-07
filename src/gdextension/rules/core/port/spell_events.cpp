@@ -604,6 +604,25 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		message = concat(state, message, gd::format(state, key::moves_to_suffix_text, { str(label), str(_hex_label(state, to_hex)) }));
 		return true;
 	}
+	// Uproot: the stack is dragged to its hex, then staggered.
+	if (resolution_type == key::pull_effect) {
+		const DictRef from_hex = gd::deep_duplicate_dict(state, _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id)));
+		const DictRef destination = gd::as_dict(get_or_new_dict(state, resolution, key::destination));
+		_set_stack_hex(state, battle, target_battle_id, destination);
+		_sync_distance_from_hexes(state, battle);
+		const DictRef to_hex = _stack_hex(state, _get_stack_by_id(state, battle, target_battle_id));
+		state.set(animation_resolution, str(key::from_q), int_value(gd::int_field(state, from_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::from_r), int_value(gd::int_field(state, from_hex, key::r, -1)));
+		state.set(animation_resolution, str(key::to_q), int_value(gd::int_field(state, to_hex, key::q, -1)));
+		state.set(animation_resolution, str(key::to_r), int_value(gd::int_field(state, to_hex, key::r, -1)));
+		const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+		message = concat(state, message, gd::format(state, key::dragged_to_suffix_text, { str(label), str(_hex_label(state, to_hex)) }));
+		Value stagger;
+		if (nonempty_dict_field(state, resolution, key::effect, stagger)) {
+			_apply_stack_effect(state, battle, target_battle_id, stagger);
+		}
+		return true;
+	}
 	if (resolution_type == key::transfer_effect) {
 		// Blood Tithe: health from the second stack into the target, fallen creatures too.
 		const Atom donor_id = string_or_empty(state, resolution, key::source_battle_id);

@@ -347,6 +347,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_pairs.cpp
 	core/port/spell_ground.cpp
 	core/port/spell_tier3.cpp
+	core/port/spell_tier3_control.cpp
 	core/port/spell_rules_ai.cpp
 	core/port/spell_rules_overworld.cpp
 	core/port/spell_rules_panels.cpp

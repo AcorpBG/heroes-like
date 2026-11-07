@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <string>
 
@@ -136,6 +137,22 @@ DictRef _enemy_action_choice(State &state, DictRef battle, DictRef active_stack,
 }
 
 DictRef _stack_order_choice(State &state, DictRef scoring_battle, DictRef active_stack, ArrayRef targets) {
+	// Goad: while it can reach the stack the spell named, the goaded stack attacks that stack.
+	const DictRef goaded_to = spell_rules::goad_forced_target(state, scoring_battle, active_stack);
+	if (!empty(state, goaded_to)) {
+		const ArrayRef named = state.new_array();
+		state.append(named, dict_value(goaded_to));
+		const DictRef forced = _best_attack_action(state, scoring_battle, active_stack, named);
+		if (!empty(state, forced)) {
+			const DictRef choice = state.new_dict();
+			state.set(choice, str(key::best), dict_value(forced));
+			state.set(choice, str(key::best_attack), dict_value(forced));
+			state.set(choice, str(key::lethal_attack_available), bool_value(_candidate_is_lethal_attack(state, forced, scoring_battle, active_stack)));
+			state.set(choice, str(key::defend_score), float_value(0.0));
+			state.set(choice, str(key::advance_score), float_value(0.0));
+			return choice;
+		}
+	}
 	// GDScript's board-read scope: the native board reads keep their own memo.
 	const DictRef best_attack = _best_attack_action(state, scoring_battle, active_stack, targets);
 	const bool lethal_attack_available = _candidate_is_lethal_attack(state, best_attack, scoring_battle, active_stack);
