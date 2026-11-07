@@ -164,6 +164,10 @@ int64_t health_after_hit(State &state, DictRef battle, DictRef stack, int64_t he
 }
 
 int64_t kept_alive_count(State &state, DictRef stack) {
+	// A conjured stack leaves with the battle.
+	if (is_conjured(state, stack)) {
+		return 0;
+	}
 	const int64_t unit_hp = engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1));
 	const int64_t health = engine_max<int64_t>(0, gd::sub(gd::int_field(state, stack, key::total_health, 0), engine_max<int64_t>(0, gd::int_field(state, stack, key::budded_health, 0))));
 	return compat::int_div(gd::add(health, gd::sub(unit_hp, 1)), unit_hp);

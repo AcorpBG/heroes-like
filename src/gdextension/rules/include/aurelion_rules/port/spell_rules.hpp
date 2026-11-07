@@ -300,6 +300,40 @@ void note_blow_for_strike_back(State &state, DictRef battle, Atom attacker_id, b
 bool flee_turn(State &state, DictRef battle, Atom battle_id);
 int64_t spell_pull_reach(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target);
 ArrayRef pull_destinations(State &state, DictRef battle, DictRef stack, int64_t reach);
+// Tier 3's conjured stacks, rewind and charm (spell_tier3_conjure.cpp). A conjured stack and a decoy; whether a side
+// still holds the field (a living stack that was not conjured); whether a spell conjures on a hex it takes (a summon
+// or a raise), the hexes a cast can take and the cells a pick covers; a decoy's hex beside its stack (empty when
+// none); the stack a cast conjures (not yet on the field; empty when the hex or stack cannot take it), putting it on
+// the field (its battle id), its vanishing (the message, empty when nothing vanished), a hit on a decoy (true when
+// the decoy vanished instead) and the conjured stacks whose rounds ended. Hour Ledger: the snapshots each round's
+// start takes while a commander knows a rewind spell, its reach in rounds, the hexes a stack can go back to (each
+// {q, r, round, total_health, budded_health}), the one a pick names and the rewind. Puppet Strings: its damage share
+// against the stack, whether the stack shoots the victim, whether it reaches it (and the hex it walks to first,
+// empty when it does not walk), the stacks of its side it can attack, a blow's damage and the attack (a message
+// suffix).
+bool is_conjured(const State &state, DictRef stack);
+bool is_decoy(const State &state, DictRef stack);
+bool holds_field(State &state, DictRef battle, Atom side);
+bool conjures_on_hex(State &state, DictRef spell);
+ArrayRef conjure_pick_cells(State &state, DictRef battle, DictRef spell, Atom side);
+ArrayRef conjure_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center, Atom side);
+DictRef decoy_cell(State &state, DictRef battle, DictRef target);
+DictRef conjured_stack_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, DictRef cell, DictRef target);
+Atom add_conjured_stack(State &state, DictRef battle, DictRef stack);
+Atom vanish_conjured(State &state, DictRef battle, Atom battle_id);
+bool decoy_takes_hit(State &state, DictRef battle, Atom battle_id);
+void expire_conjured(State &state, DictRef battle, int64_t round);
+void record_round_ledger(State &state, DictRef battle, int64_t round);
+int64_t rewind_reach(State &state, DictRef hero, DictRef spell);
+ArrayRef rewind_destinations(State &state, DictRef battle, DictRef stack, int64_t reach);
+DictRef rewind_snapshot_at(State &state, DictRef battle, DictRef stack, int64_t reach, const Value &destination);
+void rewind_stack(State &state, DictRef battle, Atom battle_id, DictRef snapshot);
+int64_t charm_damage_pct(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef puppet);
+bool charm_shoots(State &state, DictRef battle, DictRef puppet, DictRef victim);
+bool charm_reach(State &state, DictRef battle, DictRef puppet, DictRef victim, DictRef &approach);
+ArrayRef charm_victim_ids(State &state, DictRef battle, DictRef puppet);
+int64_t charm_blow_damage(State &state, DictRef battle, DictRef puppet, DictRef victim, int64_t pct);
+Atom charm_attack(State &state, DictRef battle, Atom puppet_id, Atom victim_id, int64_t pct);
 // Watchful Light: auras on battle.spell_auras (a newer one of a kind replaces its side's older one), the stack it
 // heals and the round start that heals it.
 void add_battle_aura(State &state, DictRef battle, DictRef entry);

@@ -405,7 +405,8 @@ ArrayRef roster_lines(State &state, DictRef battle, Atom side) {
 ArrayRef _starting_enemy_stacks(State &state, DictRef battle) {
 	const ArrayRef stacks = state.new_array();
 	for (const Value &stack_value : gd::field_items(state, battle, str(key::stacks))) {
-		if (gd::is_dict(stack_value) && text_or(state, stack_value.ref, key::side, key::empty) == key::enemy && gd::int_field(state, stack_value.ref, key::base_count, 0) > 0) {
+		if (gd::is_dict(stack_value) && text_or(state, stack_value.ref, key::side, key::empty) == key::enemy && gd::int_field(state, stack_value.ref, key::base_count, 0) > 0
+				&& !spell_rules::is_conjured(state, stack_value.ref)) {
 			const Atom unit_id = text_or(state, stack_value.ref, key::unit_id, key::empty);
 			const int64_t count = gd::int_field(state, stack_value.ref, key::base_count, 0);
 			state.append(stacks, dict_value(pair_dict(state, key::unit_id, str(unit_id), key::count, int_value(count))));
@@ -750,6 +751,30 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 					{int_value(engine_max<int64_t>(0, gd::sub(100, control_pct)))}));
 		}
 		return with_timing(summary);
+	}
+	// Conjured stacks, Hour Ledger and Puppet Strings: a summon's or a raise's hex is picked on the field, Hour
+	// Ledger's round by the hex the stack stood on, Puppet Strings' victim after the puppet.
+	if (effect_type == key::conjure) {
+		const int64_t power = spell_power(state, hero_state);
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, power);
+		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, {int_value(rounds)});
+		const Atom kind = text_or(state, effect, key::conjure, key::empty);
+		if (kind == key::decoy) {
+			return with_timing(gd::format(state, key::decoy_sentence, {str(ally_name), str(rounds_label)}));
+		}
+		const int64_t health = gd::add(gd::int_field(state, effect, key::base_health, 0), gd::mul(gd::int_field(state, effect, key::power_scale, 0), power));
+		if (kind == key::risen) {
+			return with_timing(gd::format(state, key::risen_sentence, {int_value(health), str(rounds_label)}));
+		}
+		const Atom name = text_or(state, effect, key::name, text_or(state, spell, key::name, key::empty));
+		return with_timing(gd::format(state, gd::bool_field(state, effect, key::immobile, false) ? key::sentinel_sentence : key::summon_sentence,
+				{str(name), int_value(health), str(rounds_label)}));
+	}
+	if (effect_type == key::rewind) {
+		return with_timing(gd::format(state, key::rewind_sentence, {str(ally_name), int_value(rewind_reach(state, hero_state, spell))}));
+	}
+	if (effect_type == key::charm_enemy) {
+		return with_timing(gd::format(state, key::charm_sentence, {str(enemy_name), int_value(charm_damage_pct(state, hero_state, battle, spell, target_stack))}));
 	}
 	return key::no_authored_battle_summary_is_available;
 }

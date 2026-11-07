@@ -261,6 +261,30 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		}
 		return gd::format(state, key::drag_summary_text, { str(target_label), int_value(spell_move_reach(state, spell, power_against)), str(turns) });
 	}
+	// Conjured stacks, Hour Ledger and Puppet Strings (spell_tier3_conjure.cpp).
+	if (effect_type == key::conjure) {
+		const int64_t power = spell_power(state, hero_state);
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, power);
+		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
+		const Atom kind = gd::string_field(state, effect, key::conjure, key::empty);
+		if (kind == key::decoy) {
+			return gd::format(state, key::decoy_summary_text, { str(ally_label(state, spell, active_stack)), str(rounds_label) });
+		}
+		const int64_t health = gd::add(gd::int_field(state, effect, key::base_health, 0), gd::mul(gd::int_field(state, effect, key::power_scale, 0), power));
+		if (kind == key::risen) {
+			return gd::format(state, key::risen_summary_text, { int_value(health), str(rounds_label) });
+		}
+		const Atom name = gd::string_field(state, effect, key::name, gd::string_field(state, spell, key::name, key::empty));
+		return gd::format(state, gd::bool_field(state, effect, key::immobile, false) ? key::sentinel_summary_text : key::summon_summary_text,
+				{ str(name), int_value(health), str(rounds_label) });
+	}
+	if (effect_type == key::rewind) {
+		return gd::format(state, key::rewind_summary_text, { str(ally_label(state, spell, active_stack)), int_value(rewind_reach(state, hero_state, spell)) });
+	}
+	if (effect_type == key::charm_enemy) {
+		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
+		return gd::format(state, key::charm_summary_text, { str(target_label), int_value(charm_damage_pct(state, hero_state, battle, spell, target_stack)) });
+	}
 	return key::no_supported_battle_effect_text;
 }
 

@@ -242,6 +242,19 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::ground_effect) {
 		const DictRef plan = _ground_spell_plan(state, enemy_hero, battle, active_stack, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (effect_type == key::conjure) {
+		if (spell_rules::conjures_on_hex(state, spell)) {
+			const DictRef plan = _conjure_spell_plan(state, enemy_hero, battle, active_stack, spell);
+			score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+		} else {
+			score = _decoy_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+		}
+	} else if (effect_type == key::rewind) {
+		const DictRef plan = _rewind_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (effect_type == key::charm_enemy) {
+		const DictRef plan = _charm_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else {
 		score = -9999.0;
 	}
@@ -486,6 +499,63 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(candidate));
 				state.append(lethal_flags, bool_value(false));
 			}
+		} else if (effect_type == key::conjure && spell_rules::conjures_on_hex(state, spell)) {
+			// A summon or a raise is cast on the plan's hex, as a hex spell is.
+			const DictRef plan = _conjure_spell_plan(state, enemy_hero, battle, active_stack, spell);
+			if (!empty(state, plan)) {
+				const DictRef candidate = cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), key::empty, gd::float_field(state, plan, key::score, -9999.0) + role_modifier);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::conjure || effect_type == key::rewind) {
+			// A decoy of one of the caster's stacks, or Hour Ledger with the plan's hex.
+			for (const Value &ally_value : gd::items(state, array_value(allies))) {
+				if (!gd::is_dict(ally_value)) {
+					continue;
+				}
+				const DictRef ally = ally_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, ally, spell, acting_side))) {
+					continue;
+				}
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const Atom target_id = gd::string_field(state, ally, key::battle_id, key::empty);
+				if (effect_type == key::conjure) {
+					const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, ally, spell, behavior, hostiles, role_modifier, state.new_dict());
+					state.append(candidates, dict_value(cast_candidate(state, spell_id, target_id, score)));
+					state.append(lethal_flags, bool_value(false));
+					continue;
+				}
+				const DictRef plan = _rewind_spell_plan(state, enemy_hero, battle, active_stack, ally, spell);
+				if (empty(state, plan)) {
+					continue;
+				}
+				const double score = gd::float_field(state, plan, key::score, -9999.0) + _spell_metadata_value_modifier(state, battle, active_stack, ally, spell, behavior) + role_modifier;
+				const DictRef candidate = cast_candidate(state, spell_id, target_id, score);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::charm_enemy) {
+			// Puppet Strings names the plan's victim.
+			for (const Value &target_value : gd::items(state, array_value(targets))) {
+				if (!gd::is_dict(target_value)) {
+					continue;
+				}
+				const DictRef target = target_value.ref;
+				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, target, spell, acting_side))) {
+					continue;
+				}
+				const DictRef plan = _charm_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
+				if (empty(state, plan)) {
+					continue;
+				}
+				const double score = gd::float_field(state, plan, key::score, -9999.0) + _spell_metadata_value_modifier(state, battle, active_stack, target, spell, behavior) + role_modifier;
+				const DictRef candidate = cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, target, key::battle_id, key::empty), score);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
 		} else if (effect_type == key::ground_effect) {
 			// A hex spell is cast on the plan's hex; the plan weighs the
 			// stacks it reaches, so no target's terms are added.
@@ -565,8 +635,15 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 		delta = _w(state, key::spell_bar_damage);
 	} else if (effect_type == key::temp_creatures) {
 		delta = _w(state, key::spell_bar_buff);
-	} else if (effect_type == key::battle_aura) {
+	} else if (effect_type == key::battle_aura || effect_type == key::rewind) {
 		delta = _w(state, key::spell_bar_recovery);
+	} else if (effect_type == key::conjure) {
+		// A conjured stack is held to the bar of control; a decoy to a buff's.
+		Value categories;
+		const bool listed = state.lookup(behavior, str(key::role_categories), categories) && gd::is_array(categories);
+		delta = listed && gd::array_has(state, categories.ref, str(key::control)) ? _w(state, key::spell_bar_control) : _w(state, key::spell_bar_buff);
+	} else if (effect_type == key::charm_enemy) {
+		delta = _w(state, key::spell_bar_damage);
 	} else if (effect_type == key::ground_effect) {
 		// Ground is held to the bar of what it does: control, a buff or damage.
 		Value categories;

@@ -267,6 +267,14 @@ double _volley_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 double _bud_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
 double _around_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
 double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
+// Tier 3's conjured stacks, rewind and charm (first values, not measured): a summon's or a raise's best hex
+// ({destination: {q, r}, score}), a decoy of one of the caster's stacks (-9999 when nothing could strike it), Hour
+// Ledger's best round for one ({destination: {q, r}, score}) and Puppet Strings' best victim for an enemy stack
+// ({destination: {battle_id}, score}); each plan is {} when no pick helps.
+DictRef _conjure_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
+double _decoy_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
+DictRef _rewind_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
+DictRef _charm_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef puppet, DictRef spell);
 
 // Slice 09: the weights, the attack, defend and advance scores, and the melee
 // approach (battle_ai_attack_scores.cpp).

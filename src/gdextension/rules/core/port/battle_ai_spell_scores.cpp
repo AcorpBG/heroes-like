@@ -1474,4 +1474,167 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 	return plan;
 }
 
+// --- Tier 3: conjured stacks, rewind and charm -------------------------------------------
+
+namespace {
+
+// A stack's middle blow on another (a shot when it can shoot), as a share of the other's health.
+double blow_share(State &state, DictRef battle, DictRef striker, DictRef target) {
+	const int64_t low = gd::int_field(state, striker, key::min_damage, 1);
+	const int64_t high = engine_max<int64_t>(low, gd::int_field(state, striker, key::max_damage, 1));
+	const bool shoots = ranged(state, striker) && has_shots(state, striker);
+	const int64_t damage = battle_rules::_damage_for_roll(state, striker, target, battle, (low + high) / 2, shoots, false, 1);
+	return engine_min<double>(1.0, static_cast<double>(damage) / engine_max<double>(1.0, stack_health(state, target)));
+}
+
+DictRef plan_of(State &state, DictRef destination, double score) {
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::destination), dict_value(destination));
+	state.set(plan, str(key::score), gd::float_value(score));
+	return plan;
+}
+
+DictRef hex_destination(State &state, DictRef cell) {
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::q), gd::int_value(gd::int_field(state, cell, key::q, -1)));
+	state.set(destination, str(key::r), gd::int_value(gd::int_field(state, cell, key::r, -1)));
+	return destination;
+}
+
+} // namespace
+
+DictRef _conjure_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	const Atom side = side_of(state, active_stack);
+	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
+	const double damage_weight = _w(state, key::spell_damage_share);
+	const int64_t round = battle_round(state, battle);
+	DictRef best_cell = state.new_dict();
+	double best = -9999.0;
+	for (const Value &cell : gd::items(state, array_value(spell_rules::conjure_pick_cells(state, battle, spell, side)))) {
+		const DictRef summon = spell_rules::conjured_stack_for_cast(state, enemy_hero, battle, spell, side, cell.ref, state.new_dict());
+		if (empty(state, summon)) {
+			continue;
+		}
+		// The blows it strikes in its rounds (at most three), each later one worth less.
+		const int64_t rounds = engine_min<int64_t>(3, gd::int_field(state, summon, key::conjured_until_round, round) - round);
+		double blows = 0.0;
+		double worth = 1.0;
+		for (int64_t index = 0; index < rounds; ++index) {
+			worth *= 0.75;
+			blows += worth;
+		}
+		// On the hostile stack nearest its hex; one that cannot move strikes only what comes beside it.
+		DictRef nearest = state.new_dict();
+		int64_t nearest_distance = hex::kFarDistance;
+		for (const Value &hostile : gd::items(state, array_value(hostiles))) {
+			const int64_t distance = gd::is_dict(hostile) ? battle_footprint::distance(state, summon, hostile.ref, Value()) : hex::kFarDistance;
+			if (distance < nearest_distance) {
+				nearest = hostile.ref;
+				nearest_distance = distance;
+			}
+		}
+		if (empty(state, nearest)) {
+			continue;
+		}
+		double reach = 1.0;
+		if (gd::bool_field(state, summon, key::immobile, false) && nearest_distance > 1) {
+			reach = nearest_distance <= gd::int_field(state, nearest, key::speed, 1) + 1 ? 0.6 : 0.25;
+		}
+		double value = blows * reach * blow_share(state, battle, summon, nearest) * damage_weight;
+		// It also stands in the way of blows meant for the caster's stacks.
+		value += engine_min<double>(1.0, stack_health(state, summon) / engine_max<double>(1.0, stack_health(state, nearest))) * 2.0;
+		if (value > best) {
+			best = value;
+			best_cell = cell.ref;
+		}
+	}
+	if (empty(state, best_cell)) {
+		return state.new_dict();
+	}
+	return plan_of(state, hex_destination(state, best_cell), best - mana_cost_term(state, spell));
+}
+
+double _decoy_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	// The copy's worth does not grow with the hero's power.
+	static_cast<void>(enemy_hero);
+	if (spell_rules::is_conjured(state, ally) || empty(state, spell_rules::decoy_cell(state, battle, ally))) {
+		return -9999.0;
+	}
+	// One decoy of a stack at a time.
+	for (const Value &other : gd::field_items(state, battle, str(key::stacks))) {
+		if (gd::is_dict(other) && spell_rules::is_decoy(state, other.ref) && _alive_count(state, other.ref) > 0
+				&& gd::string_field(state, other.ref, key::decoy_of, key::empty) == gd::string_field(state, ally, key::battle_id, key::empty)) {
+			return -9999.0;
+		}
+	}
+	// The blow it may draw: the strongest a hostile stack could land on the stack this turn, about half the time.
+	double drawn = 0.0;
+	for (const Value &hostile : gd::items(state, array_value(_alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side_of(state, ally)))))) {
+		if (!gd::is_dict(hostile)) {
+			continue;
+		}
+		const bool shoots = ranged(state, hostile.ref) && has_shots(state, hostile.ref);
+		if (!shoots && battle_footprint::distance(state, hostile.ref, ally, Value()) > gd::int_field(state, hostile.ref, key::speed, 1) + 1) {
+			continue;
+		}
+		drawn = engine_max<double>(drawn, blow_share(state, battle, hostile.ref, ally));
+	}
+	if (drawn <= 0.0) {
+		return -9999.0;
+	}
+	double score = 1.0 + drawn * _w(state, key::spell_damage_share) * 0.5;
+	score += cast_objective_score(state, battle, active_stack, ally);
+	return score - mana_cost_term(state, spell);
+}
+
+DictRef _rewind_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	const int64_t health = gd::int_field(state, ally, key::total_health, 0);
+	DictRef best_cell = state.new_dict();
+	int64_t best_gain = 0;
+	for (const Value &cell : gd::items(state, array_value(spell_rules::rewind_destinations(state, battle, ally, spell_rules::rewind_reach(state, enemy_hero, spell))))) {
+		const int64_t gain = gd::int_field(state, cell.ref, key::total_health, 0) - health;
+		if (gain > best_gain) {
+			best_gain = gain;
+			best_cell = cell.ref;
+		}
+	}
+	if (empty(state, best_cell)) {
+		return state.new_dict();
+	}
+	// Weighed as a heal of the health it gets back.
+	const int64_t unit_hp = engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1));
+	double score = 1.5 + (static_cast<double>(best_gain) / static_cast<double>(unit_hp)) * 1.15;
+	score += (1.0 - _health_ratio(state, ally)) * 5.0;
+	score += _stack_spell_target_value(state, ally, battle);
+	score += cast_objective_score(state, battle, active_stack, ally);
+	return plan_of(state, hex_destination(state, best_cell), score - mana_cost_term(state, spell));
+}
+
+DictRef _charm_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef puppet, DictRef spell) {
+	const int64_t pct = spell_rules::charm_damage_pct(state, enemy_hero, battle, spell, puppet);
+	DictRef best_victim = state.new_dict();
+	double best = -9999.0;
+	for (const Value &id : gd::items(state, array_value(spell_rules::charm_victim_ids(state, battle, puppet)))) {
+		const DictRef victim = _stack_by_battle_id(state, battle, gd::to_string(id));
+		if (empty(state, victim) || spell_rules::is_conjured(state, victim)) {
+			continue;
+		}
+		// Weighed as a damage spell on the victim, one of the computer's targets.
+		const double dealt = static_cast<double>(spell_rules::charm_blow_damage(state, battle, puppet, victim, pct));
+		double value = (_attack_score(state, active_stack, victim, battle, true) + 1.5) * 0.6;
+		value += engine_min<double>(1.0, dealt / engine_max<double>(1.0, stack_health(state, victim))) * _w(state, key::spell_damage_share);
+		if (value > best) {
+			best = value;
+			best_victim = victim;
+		}
+	}
+	if (empty(state, best_victim)) {
+		return state.new_dict();
+	}
+	best += cast_objective_score(state, battle, active_stack, puppet);
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::battle_id), str(gd::string_field(state, best_victim, key::battle_id, key::empty)));
+	return plan_of(state, destination, best - mana_cost_term(state, spell));
+}
+
 } // namespace aurelion::rules::port::battle_ai_rules

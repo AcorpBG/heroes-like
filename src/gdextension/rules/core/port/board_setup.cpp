@@ -312,7 +312,8 @@ int64_t _stack_movement_points(State &state, DictRef stack, DictRef battle) {
 }
 
 bool _stack_is_rooted(State &state, DictRef stack, DictRef battle) {
-	return spell_rules::has_effect_id(state, stack, battle, key::status_rooted);
+	// A summon that cannot move (Brass Sentinel) stands as a rooted stack does.
+	return gd::bool_field(state, stack, key::immobile, false) || spell_rules::has_effect_id(state, stack, battle, key::status_rooted);
 }
 
 } // namespace aurelion::rules::port::battle_rules

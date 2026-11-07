@@ -244,6 +244,21 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = effect_type == key::taunt_enemy ? static_cast<Atom>(key::effect) : static_cast<Atom>(key::pull_effect);
 		state.append(hooks, str(key::enemy_status_control));
 		public_effect = key::enemy_control_status_text;
+	} else if (effect_type == key::conjure) {
+		// Summons, the Risen and decoys take the field.
+		resolution_type = key::conjure_effect;
+		state.append(hooks, str(key::battle_ground));
+		public_effect = key::ground_public_text;
+	} else if (effect_type == key::rewind) {
+		// Hour Ledger puts a stack back as it stood at a round's start.
+		resolution_type = key::rewind_effect;
+		state.append(hooks, str(key::ally_health_recovery));
+		public_effect = key::ally_recovery_and_ward_text;
+	} else if (effect_type == key::charm_enemy) {
+		// Puppet Strings: the stack attacks one of its own side.
+		resolution_type = key::charm_effect;
+		state.append(hooks, str(key::battle_damage));
+		public_effect = key::enemy_control_status_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -300,13 +315,30 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 	// Glass Aegis: no enemy spell can be aimed at the stack.
 	const bool aims_at_enemy = effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::dispel_enemy
 			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley
-			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy;
+			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy;
+	// A decoy takes no spell of its own side's (a hex spell or one over the battle names no stack).
+	const bool names_no_stack = effect_type == key::ground_effect || effect_type == key::battle_aura || (effect_type == key::conjure && conjures_on_hex(state, spell_dict));
+	if (!names_no_stack && !gd::is_empty(state, target_stack) && side_of(state, target_stack) == acting_side && is_decoy(state, target_stack)) {
+		return refusal(state, gd::format(state, key::decoy_takes_no_spell_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+	}
 	if (aims_at_enemy && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && spell_shielded(state, battle, target_stack)) {
 		return refusal(state, gd::format(state, key::shielded_from_spells_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 	}
-	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
+	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy) {
 		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
 			return refusal(state, key::select_enemy_target_text);
+		}
+		return accepted(state);
+	}
+	// A summon or a raise takes a hex, checked when the cast names it; a decoy copies, and Hour Ledger turns back, a
+	// stack of the caster's that was not conjured.
+	if (effect_type == key::conjure || effect_type == key::rewind) {
+		if (effect_type == key::conjure && conjures_on_hex(state, spell_dict)) {
+			return accepted(state);
+		}
+		const DictRef own = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+		if (gd::is_empty(state, own) || side_of(state, own) != acting_side || _alive_count(state, own) <= 0 || is_conjured(state, own)) {
+			return refusal(state, key::select_allied_target_text);
 		}
 		return accepted(state);
 	}
@@ -936,7 +968,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	DictRef second_stack = state.new_dict();
 	bool needs_second = false;
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy) ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy || effect_type == key::charm_enemy) ? target_stack : ally_target;
 		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
 		const ArrayRef options = second_stack_ids(state, hero, battle, first, spell, acting_side);
 		if (state.array_size(options) == 0) {
@@ -969,6 +1001,47 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			}
 		}
 	}
+	// A conjured stack finds its hex before the mana is spent: a summon or a raise names one (or none yet), a decoy
+	// takes the hex beside its stack nearest the closest enemy stack.
+	DictRef conjured = state.new_dict();
+	if (effect_type == key::conjure) {
+		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
+		if (!conjures_on_hex(state, spell)) {
+			const DictRef cell = decoy_cell(state, battle, ally_target);
+			conjured = gd::is_empty(state, cell) ? state.new_dict() : conjured_stack_for_cast(state, hero, battle, spell, acting_side, cell, ally_target);
+			if (gd::is_empty(state, conjured)) {
+				return hero_refusal(state, hero, gd::format(state, key::no_open_hex_text, { str(battle_rules::_stack_label(state, ally_target)) }));
+			}
+		} else if (state.array_size(conjure_pick_cells(state, battle, spell, acting_side)) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_hex_for_spell_text, { str(spell_name) }));
+		} else {
+			const DictRef center = gd::is_dict(destination) ? battle_rules::_normalize_hex_cell(state, destination) : state.new_dict();
+			if (gd::is_empty(state, center)) {
+				needs_hex = true;
+			} else {
+				conjured = conjured_stack_for_cast(state, hero, battle, spell, acting_side, center, state.new_dict());
+				if (gd::is_empty(state, conjured)) {
+					return hero_refusal(state, hero, gd::format(state, key::hex_refused_for_spell_text, { str(spell_name) }));
+				}
+			}
+		}
+	}
+	// Hour Ledger finds the round it turns the stack back to: a hex it stood on at a round's start, or none named yet.
+	DictRef rewind_to = state.new_dict();
+	if (effect_type == key::rewind) {
+		const int64_t reach = rewind_reach(state, hero, spell);
+		if (state.array_size(rewind_destinations(state, battle, ally_target, reach)) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_earlier_round_text, { str(battle_rules::_stack_label(state, ally_target)) }));
+		}
+		if (!gd::is_dict(destination) || gd::is_empty(state, destination.ref)) {
+			needs_destination = true;
+		} else {
+			rewind_to = rewind_snapshot_at(state, battle, ally_target, reach, destination);
+			if (gd::is_empty(state, rewind_to)) {
+				return hero_refusal(state, hero, key::destination_out_of_reach_text);
+			}
+		}
+	}
 	hero = _consume_mana(state, hero, mana_cost);
 	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
 	// Prism Ward: a harmful spell cast on a warded stack lands on a random stack
@@ -986,6 +1059,15 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			});
 			target_stack = bounce;
 		}
+	}
+	const bool harms_enemy_stack = effect_type == key::damage_enemy || effect_type == key::control_enemy || effect_type == key::dispel_enemy
+			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley
+			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy;
+	if (harms_enemy_stack && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && is_decoy(state, target_stack)) {
+		const DictRef result = cast_result(state, hero, key::vanish_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::message), str(gd::format(state, key::casts_on_format, {
+			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)) })));
+		return result;
 	}
 	if (effect_type == key::damage_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
@@ -1177,8 +1259,47 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		state.set(result, str(key::message), str(pull_message));
 		return result;
 	}
+	// Puppet Strings: the stack attacks the second one, at the spell's share of its damage.
+	if (effect_type == key::charm_enemy) {
+		const DictRef result = cast_result(state, hero, key::charm_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		if (needs_second) {
+			state.set(result, str(key::needs_second_target), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_puppet_victim_text, { str(battle_rules::_stack_label(state, target_stack)) })));
+			return result;
+		}
+		state.set(result, str(key::source_battle_id), str(gd::string_field(state, second_stack, key::battle_id, key::empty)));
+		state.set(result, str(key::damage_pct), int_value(charm_damage_pct(state, hero, battle, spell, target_stack)));
+		state.set(result, str(key::message), str(gd::format(state, key::casts_on_format, {
+			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)) })));
+		return result;
+	}
+	if (effect_type == key::conjure) {
+		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
+		const bool decoy = !conjures_on_hex(state, spell);
+		const DictRef result = cast_result(state, hero, key::conjure_effect, decoy ? gd::string_field(state, ally_target, key::battle_id, key::empty) : static_cast<Atom>(key::empty));
+		if (needs_hex) {
+			state.set(result, str(key::needs_destination), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_hex_for_spell_text, { str(spell_name) })));
+			return result;
+		}
+		state.set(result, str(key::conjured_stack), dict_value(conjured));
+		state.set(result, str(key::message), str(decoy ? ally_cast_message(state, caster_name, spell, spell_id, ally_target)
+				: gd::format(state, key::s_casts_s, { str(caster_name), str(spell_name) })));
+		return result;
+	}
+	if (effect_type == key::rewind) {
+		const DictRef result = cast_result(state, hero, key::rewind_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		if (needs_destination) {
+			state.set(result, str(key::needs_destination), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_rewind_hex_text, { str(battle_rules::_stack_label(state, ally_target)) })));
+			return result;
+		}
+		state.set(result, str(key::rewind_entry), dict_value(rewind_to));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
 	if (takes_second_stack(state, spell)) {
-		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy) ? target_stack : ally_target;
+		const DictRef first = (effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::taunt_enemy || effect_type == key::charm_enemy) ? target_stack : ally_target;
 		const Atom first_id = gd::string_field(state, first, key::battle_id, key::empty);
 		const Atom resolution_type = (effect_type == key::graft_allies || effect_type == key::taunt_enemy) ? static_cast<Atom>(key::effect)
 				: effect_type == key::transfer_ally ? static_cast<Atom>(key::transfer_effect)

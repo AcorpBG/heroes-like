@@ -593,8 +593,9 @@ DictRef _complete_action(State &state, const Value &session, Atom initial_messag
 }
 
 DictRef _evaluate_outcome(State &state, const Value &session) {
-	const bool player_alive = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::player)) != 0;
-	const bool enemy_alive = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::enemy)) != 0;
+	// Conjured stacks hold no field: a side whose own stacks have all fallen has lost.
+	const bool player_alive = spell_rules::holds_field(state, session_battle(state, session), key::player);
+	const bool enemy_alive = spell_rules::holds_field(state, session_battle(state, session), key::enemy);
 	if (!enemy_alive && player_alive) {
 		return _finalize_victory(state, session);
 	}

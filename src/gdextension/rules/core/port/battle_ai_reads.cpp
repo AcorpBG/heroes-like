@@ -581,7 +581,7 @@ bool _stack_has_control_effect(State &state, DictRef stack, DictRef battle) {
 }
 
 bool _stack_is_rooted(State &state, DictRef stack, DictRef battle) {
-	return spell_rules::has_effect_id(state, stack, battle, key::status_rooted);
+	return gd::bool_field(state, stack, key::immobile, false) || spell_rules::has_effect_id(state, stack, battle, key::status_rooted);
 }
 
 DictRef _status_effect_from_spell(State &state, DictRef spell) {

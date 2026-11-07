@@ -109,6 +109,10 @@ void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t dama
 } // namespace
 
 void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_t damage) {
+	// A decoy vanishes at any hit instead (Decoy).
+	if (damage > 0 && spell_rules::decoy_takes_hit(state, battle, battle_id)) {
+		return;
+	}
 	// Graft: the grafted stack takes half of it, rounded down.
 	const Atom partner = damage > 1 ? spell_rules::graft_partner(state, battle, battle_id) : static_cast<Atom>(key::empty);
 	if (partner == key::empty) {

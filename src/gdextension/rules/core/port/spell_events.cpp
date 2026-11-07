@@ -688,6 +688,39 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		}
 		return true;
 	}
+	// Tier 3: a conjured stack takes the field, a decoy the other side aimed at vanishes, Hour Ledger turns a stack
+	// back and Puppet Strings makes a stack attack one of its own side (spell_tier3_conjure.cpp).
+	if (resolution_type == key::conjure_effect) {
+		Value conjured;
+		if (nonempty_dict_field(state, resolution, key::conjured_stack, conjured)) {
+			const Atom id = spell_rules::add_conjured_stack(state, battle, gd::deep_duplicate_dict(state, conjured.ref));
+			const DictRef stack = _get_stack_by_id(state, battle, id);
+			if (!gd::is_empty(state, stack)) {
+				message = concat(state, message, gd::format(state, key::conjured_stands_suffix_text, { str(_stack_label(state, stack)), str(_hex_label(state, _stack_hex(state, stack))) }));
+			}
+		}
+		return true;
+	}
+	if (resolution_type == key::vanish_effect) {
+		const Atom gone = spell_rules::vanish_conjured(state, battle, target_battle_id);
+		if (gone != key::empty) {
+			message = state.intern(state.text(message) + " " + state.text(gone));
+		}
+		return true;
+	}
+	if (resolution_type == key::rewind_effect) {
+		Value entry;
+		if (nonempty_dict_field(state, resolution, key::rewind_entry, entry)) {
+			spell_rules::rewind_stack(state, battle, target_battle_id, entry.ref);
+			const DictRef stack = _get_stack_by_id(state, battle, target_battle_id);
+			message = concat(state, message, gd::format(state, key::turned_back_suffix_text, { str(_stack_label(state, stack)), int_value(gd::int_field(state, entry.ref, key::round, 1)) }));
+		}
+		return true;
+	}
+	if (resolution_type == key::charm_effect) {
+		message = concat(state, message, spell_rules::charm_attack(state, battle, target_battle_id, string_or_empty(state, resolution, key::source_battle_id), gd::int_field(state, resolution, key::damage_pct, 0)));
+		return true;
+	}
 	// A hex spell lays its ground; the board reads it from then on.
 	if (resolution_type == key::ground_effect) {
 		Value entry;

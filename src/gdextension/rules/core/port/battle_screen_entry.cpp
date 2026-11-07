@@ -279,7 +279,7 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 		return state.new_array();
 	}
 	const Atom effect_type = gd::string_field(state, effect.ref, key::type, key::empty);
-	if (effect_type != key::move_ally && effect_type != key::pull_enemy) {
+	if (effect_type != key::move_ally && effect_type != key::pull_enemy && effect_type != key::rewind) {
 		return state.new_array();
 	}
 	const DictRef stack = _get_stack_by_id(state, battle, target_id);
@@ -289,6 +289,10 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 	}
 	// The reach the cast itself gives (spell_rules::resolve_battle_spell).
 	const DictRef hero_state = _player_commander_state(state, dict_value(session));
+	// Hour Ledger: the hexes the stack stood on at the starts of the rounds within its reach.
+	if (effect_type == key::rewind) {
+		return spell_rules::rewind_destinations(state, battle, stack, spell_rules::rewind_reach(state, hero_state, spell));
+	}
 	if (effect_type == key::pull_enemy) {
 		return spell_rules::pull_destinations(state, battle, stack, spell_rules::spell_pull_reach(state, hero_state, battle, spell, stack));
 	}
@@ -318,7 +322,12 @@ ArrayRef spell_ground_hexes(State &state, DictRef session, Atom spell_id) {
 	if (gd::is_empty(state, battle)) {
 		return state.new_array();
 	}
-	return spell_rules::ground_pick_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id));
+	// A summon or a raise takes its hex as a ground spell does.
+	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+	if (spell_rules::conjures_on_hex(state, spell)) {
+		return spell_rules::conjure_pick_cells(state, battle, spell, key::player);
+	}
+	return spell_rules::ground_pick_cells(state, battle, spell);
 }
 
 ArrayRef spell_ground_cells(State &state, DictRef session, Atom spell_id, int64_t q, int64_t r) {
@@ -326,7 +335,11 @@ ArrayRef spell_ground_cells(State &state, DictRef session, Atom spell_id, int64_
 	if (gd::is_empty(state, battle) || !_hex_in_bounds(q, r)) {
 		return state.new_array();
 	}
-	return spell_rules::ground_shape_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id), _hex_cell(state, q, r), _player_commander_state(state, dict_value(session)));
+	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+	if (spell_rules::conjures_on_hex(state, spell)) {
+		return spell_rules::conjure_shape_cells(state, battle, spell, _hex_cell(state, q, r), key::player);
+	}
+	return spell_rules::ground_shape_cells(state, battle, spell, _hex_cell(state, q, r), _player_commander_state(state, dict_value(session)));
 }
 
 ArrayRef get_spell_actions(State &state, DictRef session) {

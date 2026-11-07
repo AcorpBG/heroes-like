@@ -13,6 +13,7 @@
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -327,7 +328,8 @@ DictRef _current_battle_encounter_placement(State &state, const Value &session) 
 ArrayRef _beaten_enemy_stacks(State &state, DictRef battle) {
 	const ArrayRef beaten = state.new_array();
 	for (const Value &stack_value : gd::field_items(state, battle, str(key::stacks))) {
-		if (!gd::is_dict(stack_value) || text_field(state, stack_value.ref, key::side, key::empty) != key::enemy) {
+		// Conjured stacks are no beaten army.
+		if (!gd::is_dict(stack_value) || text_field(state, stack_value.ref, key::side, key::empty) != key::enemy || spell_rules::is_conjured(state, stack_value.ref)) {
 			continue;
 		}
 		const int64_t count = std::max<int64_t>(0, gd::sub(gd::int_field(state, stack_value.ref, key::base_count, 0), _alive_count(state, stack_value.ref)));

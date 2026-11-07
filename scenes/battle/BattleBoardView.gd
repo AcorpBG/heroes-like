@@ -3420,6 +3420,8 @@ func _battle_corpse_entries(hex_layout: Dictionary) -> Array:
 	var radius := float(hex_layout.get("radius", 1.0))
 	for stack in _battle.get("stacks", []):
 		if not stack is Dictionary or _stack_alive_count(stack) > 0: continue
+		# Conjured stacks leave no corpse, nor does a fallen stack that rose again.
+		if bool(stack.get("conjured", false)) or bool(stack.get("raised", false)): continue
 		if not _animation_playback_record_for_stack(String(stack.get("battle_id", ""))).is_empty(): continue
 		var cell := _stack_hex_cell(stack)
 		if not _cell_in_bounds(cell): continue

@@ -5132,6 +5132,154 @@
         "count_power_divisor": 4,
         "battle_long": true
       }
+    },
+    {
+      "id": "spell_brass_sentinel",
+      "name": "Brass Sentinel",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "control",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "Builds a brass sentinel beside one of your stacks. It cannot move, but it strikes whatever comes next to it.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "summon",
+        "unit_id": "unit_neutral_mossglass_sentinels",
+        "name": "Brass Sentinel",
+        "base_health": 60,
+        "power_scale": 15,
+        "duration_rounds": 2,
+        "immobile": true,
+        "place": "beside_own"
+      }
+    },
+    {
+      "id": "spell_wake_the_grove",
+      "name": "Wake the Grove",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "Treants rise beside one of your stacks, slow and sturdy, and fight for you for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "summon",
+        "unit_id": "unit_neutral_rootvault_barkhulks",
+        "name": "Treants",
+        "base_health": 70,
+        "power_scale": 16,
+        "duration_rounds": 3,
+        "speed": 2,
+        "place": "beside_own"
+      }
+    },
+    {
+      "id": "spell_raise_the_fallen",
+      "name": "Raise the Fallen",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A stack destroyed in this battle, yours or the enemy's, rises and fights for you for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "risen",
+        "base_health": 60,
+        "power_scale": 14,
+        "duration_rounds": 2,
+        "place": "fallen"
+      }
+    },
+    {
+      "id": "spell_decoy",
+      "name": "Decoy",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A copy of one of your stacks stands beside it and draws the enemy's blows; it vanishes when anything hits it.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "decoy",
+        "duration_rounds": 1,
+        "place": "beside_target"
+      }
+    },
+    {
+      "id": "spell_hour_ledger",
+      "name": "Hour Ledger",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One of your stacks goes back to the creatures, health and hex it had at the start of an earlier round.",
+      "effect": {
+        "type": "rewind",
+        "rounds_back": 1,
+        "rounds_back_power_divisor": 4
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_puppet_strings",
+      "name": "Puppet Strings",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "One enemy stack makes an attack now, at part of its strength, against a stack of its own side.",
+      "effect": {
+        "type": "charm_enemy",
+        "damage_pct": 50,
+        "damage_pct_power_scale": 10
+      },
+      "scroll_only": true
     }
   ]
 }

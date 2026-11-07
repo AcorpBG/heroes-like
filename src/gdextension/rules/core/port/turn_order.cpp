@@ -101,6 +101,8 @@ DictRef turn_order_keys_of(const State &state, DictRef keys, const Value &id) {
 void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	_ensure_battle_hex_state(state, battle);
 	state.set(battle, str(key::round), int_value(round_number));
+	// Conjured stacks whose rounds have ended vanish (spell_tier3_conjure.cpp).
+	spell_rules::expire_conjured(state, battle, round_number);
 	const Value stacks = turn_field_or_new_array(state, battle, key::stacks);
 	const int64_t count = turn_untyped_size(state, stacks);
 	for (int64_t index = 0; index < count; ++index) {
@@ -150,6 +152,8 @@ void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	_sync_distance_from_hexes(state, battle);
 	_apply_round_pressure_shifts(state, battle);
 	state.set(battle, str(key::waited_stack_ids), array_value(state.new_array()));
+	// Hour Ledger: how each stack stands as the round starts.
+	spell_rules::record_round_ledger(state, battle, round_number);
 	const ArrayRef sorted = _sorted_turn_order(state, battle);
 	state.set(battle, str(key::turn_order), array_value(sorted));
 	state.set(battle, str(key::turn_index), int_value(0));
@@ -170,7 +174,8 @@ ArrayRef _sorted_turn_order(State &state, DictRef battle) {
 	const ArrayRef candidates = state.new_array();
 	// candidates is a new node: walking the stacks while it grows is safe.
 	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
-		if (!gd::is_dict(stack) || _alive_count(state, stack.ref) <= 0) {
+		// A decoy never takes a turn.
+		if (!gd::is_dict(stack) || _alive_count(state, stack.ref) <= 0 || spell_rules::is_decoy(state, stack.ref)) {
 			continue;
 		}
 		state.append(candidates, str(gd::string_field(state, stack.ref, key::battle_id, key::empty)));

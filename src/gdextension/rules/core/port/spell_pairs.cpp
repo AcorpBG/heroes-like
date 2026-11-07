@@ -82,7 +82,7 @@ int64_t swap_range(State &state, DictRef hero, DictRef battle, DictRef spell, Di
 bool takes_second_stack(State &state, DictRef spell) {
 	const Atom type = effect_type_of(state, spell);
 	return type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies || type == key::swap_enemy || type == key::sacrifice
-			|| type == key::taunt_enemy;
+			|| type == key::taunt_enemy || type == key::charm_enemy;
 }
 
 bool offers_second_stack(State &state, DictRef spell) {
@@ -138,6 +138,10 @@ ArrayRef second_stack_ids(State &state, DictRef hero, DictRef battle, DictRef fi
 		return ids;
 	}
 	const Atom type = effect_type_of(state, spell);
+	// Puppet Strings: a stack of the puppet's own side it can attack now.
+	if (type == key::charm_enemy) {
+		return charm_victim_ids(state, battle, first);
+	}
 	const bool swaps = type == key::swap_allies || type == key::swap_enemy;
 	const int64_t range = swaps ? spell_swap_range(state, hero, battle, spell, first) : 0;
 	for (const Value &other : gd::field_items(state, battle, str(key::stacks))) {
@@ -145,7 +149,8 @@ ArrayRef second_stack_ids(State &state, DictRef hero, DictRef battle, DictRef fi
 			continue;
 		}
 		const DictRef stack = other.ref;
-		if (battle_id_of(state, stack) == battle_id_of(state, first)) {
+		// A decoy is no second stack.
+		if (battle_id_of(state, stack) == battle_id_of(state, first) || is_decoy(state, stack)) {
 			continue;
 		}
 		// Blood Tithe's donor and Smelter's Bargain's payer keep at least 1 health.

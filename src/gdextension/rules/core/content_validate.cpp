@@ -1563,6 +1563,48 @@ void Check::spell(const Value &spell) {
 		if (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define battle_aura base_restore > 0 and duration_rounds > 0.");
 		}
+	} else if (type == "conjure") {
+		// A stack on the field for some rounds: summoned creatures or the Risen on a hex, or a decoy of a stack.
+		const std::string kind = text(effect, "conjure");
+		if (!one_of(kind, {"summon", "risen", "decoy"})) {
+			warn("Spell " + spell_id + " uses unsupported conjure " + kind + ".");
+		}
+		const std::string wanted_mode = kind == "decoy" ? "ally_selected" : "hex_selected";
+		if (text(spell, "target_mode") != wanted_mode) {
+			warn("Spell " + spell_id + " conjure " + kind + " must use target_mode " + wanted_mode + ".");
+		}
+		if (integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
+		if (kind != "decoy" && (integer(effect, "base_health", 0) <= 0 || integer(effect, "power_scale", -1) < 0)) {
+			warn("Spell " + spell_id + " must define conjure base_health > 0 and power_scale >= 0.");
+		}
+		if (kind == "summon" && text(effect, "unit_id").empty()) {
+			warn("Spell " + spell_id + " must define the summoned unit_id.");
+		}
+		if (integer(effect, "speed", 0) < 0) {
+			warn("Spell " + spell_id + " conjure speed must be 0 or more.");
+		}
+		const Value immobile = get(effect, "immobile", Value());
+		if (immobile.kind != Kind::Nil && immobile.kind != Kind::Bool) {
+			warn("Spell " + spell_id + " immobile must be true or false.");
+		}
+	} else if (type == "rewind") {
+		// One of the hero's stacks goes back to how it stood at an earlier round's start.
+		if (text(spell, "target_mode") != "ally_selected") {
+			warn("Spell " + spell_id + " rewind must use target_mode ally_selected.");
+		}
+		if (integer(effect, "rounds_back", 0) <= 0 || integer(effect, "rounds_back_power_divisor", 0) < 0) {
+			warn("Spell " + spell_id + " must define rewind rounds_back > 0 and rounds_back_power_divisor >= 0.");
+		}
+	} else if (type == "charm_enemy") {
+		// An enemy stack attacks a stack of its own side, at a share of its damage.
+		if (text(spell, "target_mode") != "enemy_selected") {
+			warn("Spell " + spell_id + " charm_enemy must use target_mode enemy_selected.");
+		}
+		if (integer(effect, "damage_pct", 0) <= 0 || integer(effect, "damage_pct_power_scale", -1) < 0) {
+			warn("Spell " + spell_id + " must define charm damage_pct > 0 and damage_pct_power_scale >= 0.");
+		}
 	} else {
 		warn("Spell " + spell_id + " uses unsupported effect type " + type + ".");
 	}

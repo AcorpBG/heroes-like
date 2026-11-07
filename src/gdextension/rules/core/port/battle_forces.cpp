@@ -179,7 +179,8 @@ int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side) {
 	const int64_t size = state.array_size(stacks);
 	for (int64_t index = 0; index < size; ++index) {
 		const Value stack = state.at(stacks, index);
-		if (!gd::is_dict(stack) || text_field(state, stack.ref, key::side) != side) {
+		// Conjured creatures do not come back.
+		if (!gd::is_dict(stack) || text_field(state, stack.ref, key::side) != side || spell_rules::is_conjured(state, stack.ref)) {
 			continue;
 		}
 		const int64_t fallen = compat::engine_max<int64_t>(0, gd::sub(gd::int_field(state, stack.ref, key::base_count, 0), _alive_count(state, stack.ref)));

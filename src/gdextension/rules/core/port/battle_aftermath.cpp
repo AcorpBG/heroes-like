@@ -295,7 +295,8 @@ Atom _battle_aftermath_side_force_clause(State &state, DictRef battle, Atom side
 			continue;
 		}
 		const DictRef stack = stack_value.ref;
-		if (string_of(state, stack, key::side, key::empty) != side) {
+		// Conjured stacks bring no troops and leave none.
+		if (string_of(state, stack, key::side, key::empty) != side || spell_rules::is_conjured(state, stack)) {
 			continue;
 		}
 		const int64_t base_count = engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0));
@@ -383,7 +384,7 @@ DictRef _battle_report_side_casualties(State &state, DictRef battle, Atom side) 
 			continue;
 		}
 		const DictRef stack = stack_value.ref;
-		if (string_of(state, stack, key::side, key::empty) != side) {
+		if (string_of(state, stack, key::side, key::empty) != side || spell_rules::is_conjured(state, stack)) {
 			continue;
 		}
 		const int64_t starting_count = engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0));
