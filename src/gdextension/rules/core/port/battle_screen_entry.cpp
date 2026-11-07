@@ -255,6 +255,10 @@ ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id) {
 	if (gd::is_empty(state, session_battle(state, session))) {
 		return ids;
 	}
+	// A spell that takes a hex has no stack to light (spell_ground_hexes).
+	if (spell_rules::takes_hex(state, gd::content_row(state, ContentTable::Spell, spell_id))) {
+		return ids;
+	}
 	for (const Value &stack : gd::field_items(state, session_battle(state, session), str(key::stacks))) {
 		const Atom id = string_of(state, ai::vget(state, stack, key::battle_id, str(key::empty)));
 		if (id != key::empty && gd::bool_field(state, spell_consequence_preview(state, dict_value(session), spell_id, id), key::ok, false)) {
@@ -300,6 +304,22 @@ ArrayRef spell_second_target_ids(State &state, DictRef session, Atom spell_id, A
 	}
 	const DictRef hero_state = _player_commander_state(state, dict_value(session));
 	return spell_rules::second_stack_ids(state, hero_state, battle, first, spell, key::player);
+}
+
+ArrayRef spell_ground_hexes(State &state, DictRef session, Atom spell_id) {
+	const DictRef battle = session_battle(state, session);
+	if (gd::is_empty(state, battle)) {
+		return state.new_array();
+	}
+	return spell_rules::ground_pick_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id));
+}
+
+ArrayRef spell_ground_cells(State &state, DictRef session, Atom spell_id, int64_t q, int64_t r) {
+	const DictRef battle = session_battle(state, session);
+	if (gd::is_empty(state, battle) || !_hex_in_bounds(q, r)) {
+		return state.new_array();
+	}
+	return spell_rules::ground_shape_cells(state, battle, gd::content_row(state, ContentTable::Spell, spell_id), _hex_cell(state, q, r));
 }
 
 ArrayRef get_spell_actions(State &state, DictRef session) {

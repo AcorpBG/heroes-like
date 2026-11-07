@@ -291,6 +291,8 @@ void spend_reflect_ward(State &state, DictRef battle, Atom battle_id) {
 // --- Turns -------------------------------------------------------------------
 
 void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
+	// Burning ground under a stack that did not walk through it this turn.
+	end_of_turn_ground(state, battle, battle_id);
 	DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
 	if (gd::is_empty(state, stack) || _alive_count(state, stack) <= 0) {
 		return;
@@ -449,6 +451,10 @@ DictRef confused_blow_target(State &state, DictRef battle, DictRef attacker, Dic
 
 bool shot_refused_by_spells(State &state, DictRef battle, DictRef shooter, DictRef target) {
 	if (!gd::is_empty(state, stack_status_effect(state, shooter, battle, key::status_blinded))) {
+		return true;
+	}
+	// Murk: no shot into the fog or out of it.
+	if (in_murk(state, battle, shooter) || in_murk(state, battle, target)) {
 		return true;
 	}
 	return !gd::is_empty(state, stack_mechanic_effect(state, target, battle, key::shot_shield));

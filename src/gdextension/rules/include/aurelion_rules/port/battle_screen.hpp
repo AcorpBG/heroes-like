@@ -40,6 +40,10 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 // The player's stacks a two-stack spell (or a drain's drinker) can take second
 // after target_id; [] for a spell that takes one stack.
 ArrayRef spell_second_target_ids(State &state, DictRef session, Atom spell_id, Atom target_id);
+// The hexes the player's hex spell can be cast on ([] for any other spell), and
+// the hexes a cast on (q, r) covers.
+ArrayRef spell_ground_hexes(State &state, DictRef session, Atom spell_id);
+ArrayRef spell_ground_cells(State &state, DictRef session, Atom spell_id, int64_t q, int64_t r);
 ArrayRef get_spell_actions(State &state, DictRef session);
 Atom describe_entry_context(State &state, DictRef session);
 Atom _battle_entry_risk_label(State &state, DictRef session, DictRef battle);

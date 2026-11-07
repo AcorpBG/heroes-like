@@ -200,6 +200,34 @@ int64_t move_stack_health(State &state, DictRef battle, Atom donor_id, Atom rece
 void swap_stack_places(State &state, DictRef battle, Atom a_id, Atom b_id);
 Atom graft_partner(State &state, DictRef battle, Atom battle_id);
 void clear_graft(State &state, DictRef battle, Atom battle_id);
+// The spells that take a hex (spell_ground.cpp): Flame Furrow's burning ground,
+// Bramble Patch, Crystal Pillar, Murk and Thorn Seed lay an entry on
+// battle.spell_ground with their numbers fixed at the cast. Whether a spell
+// takes a hex, the hexes a cast can pick, the hexes a pick covers (empty when
+// it cannot take the spell), the entry a cast lays and laying it, and whether
+// an entry of a kind holds. What the board reads from them: pillars as
+// blockers, the anchors a walk stops in (brambles; false without any), a
+// pillar's defense for its side's stacks next to it, murk over a stack, the
+// walk a stack takes (the fewest burning hexes, then the fewest steps), what a
+// walk met (noted on the battle), and its price at the end of the stack's
+// turn, with burning ground under a stack that did not walk.
+bool takes_hex(State &state, DictRef spell);
+ArrayRef ground_pick_cells(State &state, DictRef battle, DictRef spell);
+// Every hex a hex spell can be cast on, each with the hexes it covers ({q, r, cells}).
+ArrayRef ground_pick_shapes(State &state, DictRef battle, DictRef spell);
+ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef center);
+DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, ArrayRef cells);
+void add_ground(State &state, DictRef battle, DictRef entry);
+// A ground entry's damage to a stack, after its resistance (0 when the entry does no damage).
+int64_t ground_damage_against(State &state, DictRef battle, DictRef entry, DictRef stack);
+bool has_ground(State &state, DictRef battle, Atom ground);
+void add_pillar_blockers(State &state, DictRef battle, DictRef blocked);
+bool bramble_stop_mask(State &state, DictRef battle, DictRef stack, uint8_t *stop);
+int64_t pillar_defense(State &state, DictRef battle, DictRef stack);
+bool in_murk(State &state, DictRef battle, DictRef stack);
+ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps);
+void after_ground_walk(State &state, DictRef battle, Atom battle_id, DictRef start);
+void end_of_turn_ground(State &state, DictRef battle, Atom battle_id);
 // A turn's end (backlash, tightening roots, curse) and start (regrowth; true
 // when the stack sleeps through it); begin_active_turn runs the start for the
 // active stack and passes the turns of sleepers on.
@@ -257,6 +285,9 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 Atom clauses_as_phrase(State &state, ArrayRef clauses);
 Atom clauses_as_sentence(State &state, ArrayRef clauses);
 Atom status_rules_text(State &state, Atom status_id);
+// A hex spell's words at the caster's numbers: a spellbook phrase, or the
+// battle screen's sentence.
+Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack, bool sentence);
 Atom _turns_label(State &state, int64_t turns);
 ArrayRef _cleanse_labels(State &state, DictRef effect);
 Atom _status_terms(State &state, DictRef status_effect);

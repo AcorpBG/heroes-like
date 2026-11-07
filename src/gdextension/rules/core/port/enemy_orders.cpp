@@ -2,6 +2,7 @@
 // its advance plan, both BattleAiRules' decisions, and the walk of an advance.
 
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
@@ -32,7 +33,10 @@ bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_s
 	const DictRef destination = ai_route::by_stack(state, gd::dict_value(active_stack), [&] { return battle_ai_rules::best_advance_destination(state, battle, active_stack, preferred_target, desired_gap); });
 	// End of GDScript's board-read scope.
 	if (!gd::is_empty(state, destination)) {
+		const DictRef start = _stack_hex(state, active_stack);
 		_set_stack_hex(state, battle, battle_id, destination);
+		// Burning ground, brambles and seeds the walk met (paid at its turn's end).
+		spell_rules::after_ground_walk(state, battle, battle_id, start);
 	}
 	// Without a destination nobody moved, so the band must not shrink.
 	_sync_distance_from_hexes(state, battle);

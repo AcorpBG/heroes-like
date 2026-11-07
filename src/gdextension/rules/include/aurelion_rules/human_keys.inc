@@ -6005,3 +6005,8 @@ AURELION_KEY(graft_two_stacks_for_s, "Graft two of your stacks together for %s: 
 AURELION_KEY(move_up_to_d_health_between_stacks, "Move up to %d health from one of your stacks into another; fallen creatures can come back.")
 AURELION_KEY(swap_two_stacks_within_d, "Swap two of your stacks up to %d hexes apart; neither spends its turn.")
 AURELION_KEY(swap_s_with_yours_within_d, "Swap %s with one of your stacks up to %d hexes away.")
+AURELION_KEY(burn_hexes_sentence, "Burn up to 3 empty hexes in a row for %s: a stack that walks through or stands in one takes %d.")
+AURELION_KEY(grow_brambles_sentence, "Grow brambles on up to 3 empty hexes in a row for %s: a stack that enters one stops there and takes %d.")
+AURELION_KEY(raise_pillar_sentence, "Raise a crystal pillar on an empty hex for %s: it blocks the way, and your stacks next to it have +%d defense.")
+AURELION_KEY(lay_murk_sentence, "Lay fog on up to 3 hexes in a row for %s: stacks in it cannot shoot or be shot.")
+AURELION_KEY(plant_seed_sentence, "Plant a seed on an empty hex: the first enemy stack that ends a move next to it takes %d and is Rooted for %s.")

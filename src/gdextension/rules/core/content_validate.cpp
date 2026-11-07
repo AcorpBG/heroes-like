@@ -1462,6 +1462,34 @@ void Check::spell(const Value &spell) {
 		if ((type == "swap_allies" || type == "swap_enemy") && integer(effect, "range", 0) <= 0) {
 			warn("Spell " + spell_id + " must define swap range > 0.");
 		}
+	} else if (type == "ground_effect") {
+		// Ground on hexes the cast picks: what it is, its shape, how long it holds and what it does.
+		if (text(spell, "target_mode") != "hex_selected") {
+			warn("Spell " + spell_id + " ground_effect must use target_mode hex_selected.");
+		}
+		const std::string ground = text(effect, "ground");
+		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap"})) {
+			warn("Spell " + spell_id + " uses unsupported ground " + ground + ".");
+		}
+		const std::string shape = text(effect, "shape");
+		if (!shape.empty() && !one_of(shape, {"single", "line"})) {
+			warn("Spell " + spell_id + " uses unsupported ground shape " + shape + ".");
+		}
+		if (ground != "trap" && integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
+		if (one_of(ground, {"fire_ground", "bramble_ground", "trap"}) && integer(effect, "base_damage", 0) <= 0) {
+			warn("Spell " + spell_id + " must define ground base_damage > 0.");
+		}
+		if (ground == "pillar" && integer(effect, "defense", 0) <= 0) {
+			warn("Spell " + spell_id + " must define pillar defense > 0.");
+		}
+		if (ground == "trap") {
+			const Value status_effect = get(effect, "status_effect", empty_dict_);
+			if (!is_dict(status_effect) || text(status_effect, "effect_id").empty()) {
+				warn("Spell " + spell_id + " must define trap status_effect.effect_id.");
+			}
+		}
 	} else if (type == "ally_effect") {
 		// A lasting effect on one of the hero's stacks: a mechanic, modifiers or both.
 		const Value mechanic = get(effect, "mechanic", empty_dict_);

@@ -56,7 +56,9 @@ int64_t body_distance(int64_t anchor_id, Body mover, PlacedBody target);
 
 // Every hex the body reaches from start_id within max_steps, in the order the
 // breadth-first walk finds them, with its step count. The start is not listed.
-std::vector<CellSteps> reachable(const uint8_t *open, Body body, int64_t start_id, int64_t max_steps);
+// A stop mask (one byte per anchor id, or null) marks hexes a walk can end in
+// but not go on from.
+std::vector<CellSteps> reachable(const uint8_t *open, Body body, int64_t start_id, int64_t max_steps, const uint8_t *stop = nullptr);
 
 // Walking steps from every hex the body can reach to the nearest hex gap hexes
 // from target, in the walk's order (the start hexes first, by id).

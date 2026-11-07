@@ -164,6 +164,8 @@ var _spell_destination_cells: Array = []
 # the stacks that can be the second.
 var _spell_second_first_id := ""
 var _spell_second_ids: Array = []
+# A hex spell's pick: the hexes it can be cast on.
+var _spell_hex_cells: Array = []
 # What the details card describes while the right button is held: "stack",
 # "chip" (a stack by its ribbon chip) or "hero", its id, and the rect in the
 # HUD it stands beside.
@@ -707,6 +709,9 @@ func _on_board_stack_order_requested(battle_id: String, order: Dictionary) -> Di
 func _cast_targeted_spell(battle_id: String) -> Dictionary:
 	if _spell_second_first_id != "":
 		return _cast_spell_with_second(battle_id)
+	if not _spell_hex_cells.is_empty():
+		var hex: Dictionary = BattleRules._get_stack_by_id(_session.battle, battle_id).get("hex", {})
+		return _cast_spell_on_hex(int(hex.get("q", -1)), int(hex.get("r", -1)))
 	var spell_id := _spell_targeting_id
 	if _spell_targeting_hash != hash(_session.battle):
 		_cancel_spell_targeting(false)
@@ -767,6 +772,55 @@ func _cast_spell_to_destination(q: int, r: int) -> Dictionary:
 		return _reject_order("Choose a lit hex for %s, or press Esc to put the spell away." % _spell_name(spell_id), order)
 	_stop_auto_battle()
 	var result := _perform_action("cast_spell:" + spell_id, {"target_id": battle_id, "q": q, "r": r})
+	var response := result.duplicate(true)
+	for key in order.keys():
+		response[key] = order[key]
+	response["message"] = _last_message
+	return _return_board_cursor_action_result(response)
+
+
+## A hex spell: the field lights the hexes it can be cast on, and the next
+## click on one of them casts it there.
+func _begin_spell_hex_target(spell_id: String, hexes: Array) -> Dictionary:
+	_stop_auto_battle()
+	_spell_targeting_id = spell_id
+	_spell_targeting_hash = hash(_session.battle)
+	_spell_hex_cells = hexes.duplicate(true)
+	_battle_board_view.set_spell_target_candidates([], {}, true)
+	_battle_board_view.set_spell_destination_hexes(_spell_hex_cells, _spell_hex_shapes(spell_id, _spell_hex_cells))
+	_set_command_hint("%s: click a lit hex. Esc puts the spell away." % _spell_name(spell_id), 0.0)
+	_battle_board_view.set_hero_cast_ready(false)
+	if _battle_board_view.focus_mode != Control.FOCUS_NONE:
+		_battle_board_view.grab_focus()
+	return {"ok": true, "state": "targeting_hex", "spell_id": spell_id, "hex_count": _spell_hex_cells.size()}
+
+
+## The hexes each lit hex's cast would cover, by "q,r".
+func _spell_hex_shapes(spell_id: String, hexes: Array) -> Dictionary:
+	var shapes := {}
+	for cell in hexes:
+		if cell is Dictionary:
+			var q := int(cell.get("q", -1))
+			var r := int(cell.get("r", -1))
+			shapes["%d,%d" % [q, r]] = BattleRules.spell_ground_cells(_session, spell_id, q, r)
+	return shapes
+
+
+func _cast_spell_on_hex(q: int, r: int) -> Dictionary:
+	var spell_id := _spell_targeting_id
+	var order := {"action": "cast_spell:" + spell_id, "q": q, "r": r}
+	if _spell_targeting_hash != hash(_session.battle):
+		_cancel_spell_targeting(false)
+		return _reject_order("The battlefield changed. Choose the spell again.", order)
+	var lit := false
+	for cell in _spell_hex_cells:
+		if cell is Dictionary and int(cell.get("q", -1)) == q and int(cell.get("r", -1)) == r:
+			lit = true
+			break
+	if not lit:
+		return _reject_order("Choose a lit hex for %s, or press Esc to put the spell away." % _spell_name(spell_id), order)
+	_stop_auto_battle()
+	var result := _perform_action("cast_spell:" + spell_id, {"q": q, "r": r})
 	var response := result.duplicate(true)
 	for key in order.keys():
 		response[key] = order[key]
@@ -986,6 +1040,8 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _spell_targeting_id != "":
 		if _spell_destination_stack_id != "":
 			return _cast_spell_to_destination(q, r)
+		if not _spell_hex_cells.is_empty():
+			return _cast_spell_on_hex(q, r)
 		return _reject_order(
 			"Choose a highlighted stack for %s, or press Esc to put the spell away." % _spell_name(_spell_targeting_id),
 			{"action": "cast_spell:" + _spell_targeting_id, "q": q, "r": r}
@@ -1808,6 +1864,11 @@ func _begin_spell_targeting(spell_id: String) -> Dictionary:
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		_apply_battle_resolution_checkpoint_failure_surface()
 		return {"ok": false, "state": "invalid"}
+	if String(ContentService.get_spell(spell_id).get("target_mode", "")) == "hex_selected":
+		var hexes := BattleRules.spell_ground_hexes(_session, spell_id)
+		if hexes.is_empty():
+			return _reject_order("%s has no hex to take on the field now." % _spell_name(spell_id), {"action": "cast_spell:" + spell_id})
+		return _begin_spell_hex_target(spell_id, hexes)
 	var ids := BattleRules.spell_target_ids(_session, spell_id)
 	if ids.is_empty():
 		return _reject_order("%s has no target on the field now." % _spell_name(spell_id), {"action": "cast_spell:" + spell_id})
@@ -1832,6 +1893,7 @@ func _cancel_spell_targeting(announce: bool) -> void:
 	_spell_destination_cells = []
 	_spell_second_first_id = ""
 	_spell_second_ids = []
+	_spell_hex_cells = []
 	if _battle_board_view != null:
 		_battle_board_view.set_spell_target_candidates([])
 		_battle_board_view.set_spell_destination_hexes([])
@@ -1844,6 +1906,11 @@ func _cancel_spell_targeting(announce: bool) -> void:
 
 func _refresh_spell_target_surface() -> void:
 	if _spell_targeting_id == "" or _session == null or _session.battle.is_empty():
+		return
+	if not _spell_hex_cells.is_empty():
+		_spell_hex_cells = BattleRules.spell_ground_hexes(_session, _spell_targeting_id)
+		_battle_board_view.set_spell_target_candidates([], {}, true)
+		_battle_board_view.set_spell_destination_hexes(_spell_hex_cells, _spell_hex_shapes(_spell_targeting_id, _spell_hex_cells))
 		return
 	if _spell_second_first_id != "":
 		_spell_second_ids = BattleRules.spell_second_target_ids(_session, _spell_targeting_id, _spell_second_first_id)
@@ -1879,6 +1946,8 @@ func _hero_can_cast_now() -> bool:
 	for spell in SpellRules.known_spells(hero_state, "battle"):
 		if spell is Dictionary and SpellRules.adjusted_spell_mana_cost(hero_state, spell) <= mana:
 			if not BattleRules.spell_target_ids(_session, String(spell.get("id", ""))).is_empty():
+				return true
+			if String(spell.get("target_mode", "")) == "hex_selected" and not BattleRules.spell_ground_hexes(_session, String(spell.get("id", ""))).is_empty():
 				return true
 	return false
 

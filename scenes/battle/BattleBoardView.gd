@@ -227,6 +227,14 @@ const TERRAIN_AMBIENT_PROFILES := {
 # tuft halfway across at OBSTACLE_ART_ANCHOR_Y; that point stands on the hex
 # centre, or on the seam of a two-hex obstacle (tools/build_battlefield_art.py).
 const OBSTACLE_ART_ROOT := "res://art/battle/runtime/obstacles"
+# The hex spells' ground until its art (fill, outline).
+const SPELL_GROUND_TINTS := {
+	"fire_ground": [Color(1.0, 0.42, 0.12, 0.34), Color(1.0, 0.64, 0.22, 0.9)],
+	"bramble_ground": [Color(0.18, 0.36, 0.12, 0.45), Color(0.46, 0.70, 0.26, 0.9)],
+	"murk": [Color(0.62, 0.66, 0.74, 0.42), Color(0.82, 0.86, 0.92, 0.7)],
+	"pillar": [Color(0.70, 0.88, 1.0, 0.6), Color(0.88, 0.97, 1.0, 1.0)],
+	"trap": [Color(0.0, 0.0, 0.0, 0.0), Color(0.86, 0.66, 0.30, 0.95)],
+}
 const OBSTACLE_ART_VARIANTS := {1: 3, 2: 2}
 const OBSTACLE_ART_CANVAS := {1: Vector2(288.0, 352.0), 2: Vector2(512.0, 352.0)}
 const OBSTACLE_ART_PIXELS_PER_HEX := 216.0
@@ -281,6 +289,8 @@ var _spell_target_previews: Dictionary = {}
 var _spell_target_mode := false
 # The empty hexes a move spell can take its chosen stack to ({q, r} cells).
 var _spell_destination_cells: Array = []
+# A hex spell's lit hexes: the hexes each one's cast covers, by "q,r".
+var _spell_destination_shapes: Dictionary = {}
 
 func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targeting_active: bool = false) -> void:
 	_spell_target_candidates = ids.duplicate()
@@ -291,8 +301,9 @@ func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targetin
 
 ## The hexes lit while the player picks where a move spell takes its stack;
 ## a click on one of them asks for it (hex_destination_requested). [] clears them.
-func set_spell_destination_hexes(cells: Array) -> void:
+func set_spell_destination_hexes(cells: Array, shapes: Dictionary = {}) -> void:
 	_spell_destination_cells = cells.duplicate(true)
+	_spell_destination_shapes = shapes.duplicate(true)
 	queue_redraw()
 
 func _is_spell_destination_cell(cell: Vector2i) -> bool:
@@ -2316,6 +2327,7 @@ func _draw_board() -> void:
 	_draw_hero_figures(hex_layout)
 	_draw_hex_grid(hex_layout)
 	_draw_field_objectives(hex_layout)
+	_draw_spell_ground(hex_layout)
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
 	_draw_controller_cursor(hex_layout)
@@ -2338,6 +2350,11 @@ func _draw_board() -> void:
 				var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
 				var pointed := cell == pointed_cell
 				_draw_hex(_hex_center(cell, hex_layout), radius * 0.9, Color(0.42, 0.80, 1.0, 0.30 if pointed else 0.12), ACTIVE_COLOR if pointed else Color(0.42, 0.80, 1.0, 0.85), 3.0 if pointed else 1.5)
+			# The hexes the pointed hex's cast would cover.
+			for covered in _spell_destination_shapes.get("%d,%d" % [pointed_cell.x, pointed_cell.y], []):
+				if covered is Dictionary:
+					var covered_cell := Vector2i(int(covered.get("q", -1)), int(covered.get("r", -1)))
+					_draw_hex_outline(_hex_center(covered_cell, hex_layout), radius * 0.82, ACTIVE_COLOR, 2.5)
 	if not _hover_ribbon_battle_id.is_empty() and stack_cells.has(_hover_ribbon_battle_id):
 		_draw_body_outline(_hover_ribbon_battle_id, hex_layout, float(hex_layout.get("radius", 20.0)) * 0.98, Color(1.0, 1.0, 1.0, 0.85), 2.4)
 	_draw_turn_ribbon()
@@ -3023,6 +3040,28 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 		var center := _hex_center(cell, hex_layout)
 		var color := _controller_color(String(objective.get("control_side", "neutral")))
 		_draw_objective_marker(center, objective, color, float(hex_layout.get("radius", 1.0)))
+
+## Ground the hex spells laid (battle.spell_ground), in stand-in tints until
+## its art: burning ground, brambles, murk, a crystal pillar and a seed.
+func _draw_spell_ground(hex_layout: Dictionary) -> void:
+	var entries = _battle.get("spell_ground", [])
+	if not (entries is Array) or entries.is_empty():
+		return
+	var round_now := int(_battle.get("round", 1))
+	var radius := float(hex_layout.get("radius", 20.0))
+	for entry in entries:
+		if not (entry is Dictionary) or int(entry.get("until_round", 0)) < round_now:
+			continue
+		var kind := String(entry.get("ground", ""))
+		var tint: Array = SPELL_GROUND_TINTS.get(kind, SPELL_GROUND_TINTS["murk"])
+		for cell in entry.get("cells", []):
+			if not (cell is Dictionary):
+				continue
+			var center := _hex_center(Vector2i(int(cell.get("q", -1)), int(cell.get("r", -1))), hex_layout)
+			if kind == "trap":
+				draw_circle(center, radius * 0.16, tint[1])
+				continue
+			_draw_hex(center, radius * (0.6 if kind == "pillar" else 0.9), tint[0], tint[1], 2.5 if kind == "pillar" else 1.2)
 
 func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float, color: Color, width: float) -> void:
 	var stack := BattleRulesScript._get_stack_by_id(_battle, battle_id)

@@ -259,6 +259,13 @@ ArrayRef _presentation_walk_path(State &state, DictRef battle, DictRef start, Di
 	const DictRef occupied = _build_blocking_map(state, battle);
 	const Atom holder = gd::to_string(state.get(occupied, str(_hex_key(state, start)), str(key::empty)));
 	const DictRef moving = _get_stack_by_id(state, battle, holder);
+	// Over burning ground and brambles the walk takes the way the rules do.
+	if (!gd::is_empty(state, moving) && (spell_rules::has_ground(state, battle, key::fire_ground) || spell_rules::has_ground(state, battle, key::bramble_ground))) {
+		const ArrayRef walk = spell_rules::ground_walk_path(state, battle, moving, start, destination, _stack_movement_points(state, moving, battle));
+		if (state.array_size(walk) > 0) {
+			return walk;
+		}
+	}
 	state.erase(occupied, str(_hex_key(state, start)));
 	// frontier and seen stay local: a queue of the paths (Arrays, one of which
 	// is returned) and the set of the cells' keys.

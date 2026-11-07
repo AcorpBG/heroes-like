@@ -3,6 +3,7 @@
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <cstring>
 #include <string>
@@ -238,6 +239,8 @@ DictRef _normalize_hex_cell(State &state, const Value &value) {
 
 DictRef _obstacle_cell_map(State &state, DictRef battle) {
 	const DictRef blocked = state.new_dict();
+	// A crystal pillar blocks its hex like an obstacle while it stands.
+	spell_rules::add_pillar_blockers(state, battle, blocked);
 	Value obstacles;
 	if (!state.lookup(battle, str(key::obstacles), obstacles)) {
 		return blocked; // the default [] has nothing to walk
@@ -302,7 +305,10 @@ ArrayRef _reachable_empty_hexes(State &state, DictRef battle, DictRef stack, int
 	uint8_t open[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
 	_hex_open_mask(state, stack, occupied, open);
 	const hex::Body body{ battle_footprint::width(state, stack), _hex_tail_step(state, stack) };
-	const std::vector<hex::CellSteps> pairs = hex::reachable(open, body, start_id, max_steps);
+	// A walk that enters brambles stops there (Bramble Patch).
+	uint8_t stop[BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS];
+	const bool stops = spell_rules::bramble_stop_mask(state, battle, stack, stop);
+	const std::vector<hex::CellSteps> pairs = hex::reachable(open, body, start_id, max_steps, stops ? stop : nullptr);
 	const ArrayRef reachable = state.new_array();
 	for (const hex::CellSteps &pair : pairs) {
 		const DictRef cell = state.new_dict();

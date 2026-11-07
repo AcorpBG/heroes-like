@@ -4200,6 +4200,137 @@
         "range_power_divisor": 1
       },
       "scroll_only": true
+    },
+    {
+      "id": "spell_flame_furrow",
+      "name": "Flame Furrow",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A furrow of fire across the field: whatever walks through it or stands in it burns.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "fire_ground",
+        "shape": "line",
+        "empty_only": true,
+        "duration_rounds": 2,
+        "base_damage": 12,
+        "power_scale": 6
+      }
+    },
+    {
+      "id": "spell_bramble_patch",
+      "name": "Bramble Patch",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "Brambles burst from the ground; a stack that blunders in is held there and torn.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "bramble_ground",
+        "shape": "line",
+        "empty_only": true,
+        "duration_rounds": 2,
+        "base_damage": 10,
+        "power_scale": 5
+      }
+    },
+    {
+      "id": "spell_thorn_seed",
+      "name": "Thorn Seed",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A seed waits in the ground for the first enemy to stop beside it.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "trap",
+        "shape": "single",
+        "empty_only": true,
+        "base_damage": 20,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Rooted",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1
+          }
+        }
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_crystal_pillar",
+      "name": "Crystal Pillar",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A pillar of clear crystal rises from an empty hex and shelters your stacks beside it.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "pillar",
+        "shape": "single",
+        "empty_only": true,
+        "duration_rounds": 3,
+        "defense": 2
+      }
+    },
+    {
+      "id": "spell_murk",
+      "name": "Murk",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A bank of fog settles over a few hexes; nothing shoots into it or out of it.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "murk",
+        "shape": "line",
+        "duration_rounds": 2
+      }
     }
   ]
 }

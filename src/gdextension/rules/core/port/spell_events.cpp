@@ -349,8 +349,12 @@ void _append_spell_presentation_events(State &state, DictRef battle, DictRef cas
 	state.set(base_context, str(key::target_battle_id), str(target_battle_id));
 	state.set(base_context, str(key::spell_id), str(spell_id));
 	state.set(base_context, str(key::spell_name), str(spell_name));
-	_append_presentation_event(state, battle, key::cast, gd::format(state, key::casts_on_format, { str(_stack_label(state, caster_stack)), str(spell_name), str(target_name) }), base_context);
 	const Atom resolution_type = string_or_empty(state, resolution, key::resolution_type);
+	// A hex spell names no stack.
+	const Atom cast_text = resolution_type == key::ground_effect
+			? gd::format(state, key::s_casts_s, { str(_stack_label(state, caster_stack)), str(spell_name) })
+			: gd::format(state, key::casts_on_format, { str(_stack_label(state, caster_stack)), str(spell_name), str(target_name) });
+	_append_presentation_event(state, battle, key::cast, cast_text, base_context);
 	if (resolution_type == key::damage) {
 		_append_damage_presentation_event(state, battle, key::spell_damage, caster_stack, target_before, target_after, gd::int_field(state, resolution, key::damage, 0), action_id, base_context);
 		if (gd::int_field(state, resolution, key::prevented_damage, 0) > 0) {
@@ -607,6 +611,14 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 			str(_stack_label(state, _get_stack_by_id(state, battle, target_battle_id))),
 			str(_stack_label(state, _get_stack_by_id(state, battle, other_id))),
 		}));
+		return true;
+	}
+	// A hex spell lays its ground; the board reads it from then on.
+	if (resolution_type == key::ground_effect) {
+		Value entry;
+		if (nonempty_dict_field(state, resolution, key::ground_entry, entry)) {
+			spell_rules::add_ground(state, battle, gd::deep_duplicate_dict(state, entry.ref));
+		}
 		return true;
 	}
 	return false;

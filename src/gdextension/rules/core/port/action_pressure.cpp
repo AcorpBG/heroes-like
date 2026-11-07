@@ -2,6 +2,7 @@
 // the target before a strike.
 
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 
@@ -143,6 +144,8 @@ void _apply_melee_approach(State &state, DictRef battle, DictRef stack, DictRef 
 	const DictRef start = _stack_hex(state, stack);
 	const Atom id = gd::string_field(state, stack, key::battle_id, key::empty);
 	_set_stack_hex(state, battle, id, destination);
+	// Burning ground, brambles and seeds the walk met (paid at its turn's end).
+	spell_rules::after_ground_walk(state, battle, id, start);
 	_sync_distance_from_hexes(state, battle);
 	// The literal's values in order: start.q and start.r are read after the move, as GDScript reads them.
 	const DictRef move_context = state.new_dict();

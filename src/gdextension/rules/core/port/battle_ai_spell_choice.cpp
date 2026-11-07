@@ -215,6 +215,9 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (one_of(effect_type, { key::graft_allies, key::transfer_ally, key::swap_allies, key::swap_enemy })) {
 		const DictRef plan = _pair_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+	} else if (effect_type == key::ground_effect) {
+		const DictRef plan = _ground_spell_plan(state, enemy_hero, battle, active_stack, spell);
+		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else {
 		score = -9999.0;
 	}
@@ -411,6 +414,17 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(candidate));
 				state.append(lethal_flags, bool_value(false));
 			}
+		} else if (effect_type == key::ground_effect) {
+			// A hex spell is cast on the plan's hex; the plan weighs the
+			// stacks it reaches, so no target's terms are added.
+			const DictRef plan = _ground_spell_plan(state, enemy_hero, battle, active_stack, spell);
+			if (!empty(state, plan)) {
+				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+				const DictRef candidate = cast_candidate(state, spell_id, key::empty, gd::float_field(state, plan, key::score, -9999.0) + role_modifier);
+				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
+				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
 		}
 	}
 	return candidates;
@@ -475,6 +489,17 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 	} else if (effect_type == key::swap_allies || effect_type == key::swap_enemy) {
 		// A swap is only planned where it frees a shooter or brings a strike.
 		delta = _w(state, key::spell_bar_buff);
+	} else if (effect_type == key::ground_effect) {
+		// Ground is held to the bar of what it does: control, a buff or damage.
+		Value categories;
+		const bool listed = state.lookup(behavior, str(key::role_categories), categories) && gd::is_array(categories);
+		if (listed && gd::array_has(state, categories.ref, str(key::control))) {
+			delta = _w(state, key::spell_bar_control);
+		} else if (listed && gd::array_has(state, categories.ref, str(key::buff))) {
+			delta = _w(state, key::spell_bar_buff);
+		} else {
+			delta = _w(state, key::spell_bar_damage);
+		}
 	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff, key::ally_effect })) {
 		// The condition first, then only the branch it picks.
 		if (!support_needs_pressure || _support_spell_has_active_pressure(state, battle, active_stack, target_stack, hostile_targets)) {

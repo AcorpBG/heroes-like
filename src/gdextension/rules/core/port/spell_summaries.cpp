@@ -207,6 +207,42 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::swaps_enemy_text, { str(target_label), int_value(range) });
 	}
+	// The spells that take a hex (spell_ground.cpp).
+	if (effect_type == key::ground_effect) {
+		return ground_spell_summary(state, hero_state, spell, battle, target_stack, false);
+	}
+	return key::no_supported_battle_effect_text;
+}
+
+Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack, bool sentence) {
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	const Atom ground = gd::string_field(state, effect, key::ground, key::empty);
+	const int64_t power = spell_power(state, hero_state);
+	// Harmful numbers at the caster's power less the target hero's Knowledge
+	// (all of the power without a target), its rounds at the caster's power.
+	const int64_t against = spell_power_against(state, hero_state, battle, target_stack);
+	const auto rounds_label = [&](Atom kind) {
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, kind, power);
+		return rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
+	};
+	const int64_t damage = gd::int_field(state, effect, key::base_damage, 0) > 0 ? _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), against) : 0;
+	if (ground == key::fire_ground) {
+		return gd::format(state, sentence ? key::burn_hexes_sentence : key::burns_ground_text, { str(rounds_label(key::debuff)), int_value(damage) });
+	}
+	if (ground == key::bramble_ground) {
+		return gd::format(state, sentence ? key::grow_brambles_sentence : key::brambles_ground_text, { str(rounds_label(key::debuff)), int_value(damage) });
+	}
+	if (ground == key::pillar) {
+		return gd::format(state, sentence ? key::raise_pillar_sentence : key::pillar_ground_text, { str(rounds_label(key::buff)), int_value(gd::int_field(state, effect, key::defense, 0)) });
+	}
+	if (ground == key::murk) {
+		return gd::format(state, sentence ? key::lay_murk_sentence : key::murk_ground_text, { str(rounds_label(key::debuff)) });
+	}
+	if (ground == key::trap) {
+		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
+		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, against));
+		return gd::format(state, sentence ? key::plant_seed_sentence : key::seed_ground_text, { int_value(damage), str(turns) });
+	}
 	return key::no_supported_battle_effect_text;
 }
 

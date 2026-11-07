@@ -106,7 +106,7 @@ int64_t body_distance(int64_t anchor_id, Body mover, PlacedBody target) {
 	return nearest;
 }
 
-std::vector<CellSteps> reachable(const uint8_t *open, Body body, int64_t start_id, int64_t max_steps) {
+std::vector<CellSteps> reachable(const uint8_t *open, Body body, int64_t start_id, int64_t max_steps, const uint8_t *stop) {
 	std::vector<CellSteps> found;
 	if (max_steps <= 0 || start_id < 0 || start_id >= kCellCount) {
 		return found;
@@ -125,7 +125,7 @@ std::vector<CellSteps> reachable(const uint8_t *open, Body body, int64_t start_i
 	for (int64_t index = 0; index < frontier_size; ++index) {
 		const int32_t current_id = frontier[index];
 		const int32_t steps = steps_by_id[current_id];
-		if (steps >= max_steps) {
+		if (steps >= max_steps || (stop != nullptr && current_id != start_id && stop[current_id] != 0)) {
 			continue;
 		}
 		const NeighborList &neighbors = kNeighborTable[static_cast<size_t>(current_id)];

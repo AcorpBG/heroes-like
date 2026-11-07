@@ -2,6 +2,7 @@
 // carried out, and the selected target's continuity and closing context after it.
 
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 
@@ -333,6 +334,8 @@ DictRef _resolve_move_action(State &state, const Value &session, DictRef active_
 	{
 		const DictRef battle = session_battle(state, session);
 		_set_stack_hex(state, battle, string_or_empty(state, active_stack, key::battle_id), destination);
+		// Burning ground, brambles and seeds the walk met (paid at its turn's end).
+		spell_rules::after_ground_walk(state, battle, string_or_empty(state, active_stack, key::battle_id), start_hex);
 	}
 	{
 		// The arguments in the GDScript order: the battle, the id, then the literal.

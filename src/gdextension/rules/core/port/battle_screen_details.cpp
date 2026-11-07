@@ -689,6 +689,10 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const int64_t range = spell_move_reach(state, spell, spell_power_against(state, hero_state, battle, target_stack));
 		return with_timing(gd::format(state, key::swap_s_with_yours_within_d, {str(text_or(state, target_stack, key::name, key::the_selected_enemy)), int_value(range)}));
 	}
+	// The spells that take a hex: the hex is picked on the field.
+	if (effect_type == key::ground_effect) {
+		return with_timing(ground_spell_summary(state, hero_state, spell, battle, target_stack, true));
+	}
 	return key::no_authored_battle_summary_is_available;
 }
 

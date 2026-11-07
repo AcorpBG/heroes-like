@@ -2,6 +2,8 @@
 // the recovery, cleanse, buff and metadata terms of a spell on a target.
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/battle_hex.hpp"
+#include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -9,6 +11,7 @@
 
 #include <initializer_list>
 #include <string>
+#include <vector>
 
 namespace aurelion::rules::port::battle_ai_rules {
 
@@ -792,6 +795,270 @@ DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 	best -= mana_cost_term(state, spell);
 	const DictRef destination = state.new_dict();
 	state.set(destination, str(key::battle_id), str(gd::string_field(state, best_second, key::battle_id, key::empty)));
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::destination), dict_value(destination));
+	state.set(plan, str(key::score), gd::float_value(best));
+	return plan;
+}
+
+namespace {
+
+namespace hex = battle_hex;
+
+hex::PlacedBody placed_of(const State &state, DictRef stack) {
+	hex::PlacedBody placed;
+	battle_footprint::placed_columns(state, stack, placed.q, placed.r, placed.tail_q);
+	return placed;
+}
+
+// Hexes from a one-hex spot to a placed body.
+int64_t spot_distance(int64_t id, hex::PlacedBody body) {
+	return hex::body_distance(id, hex::Body{ 1, -1 }, body);
+}
+
+int64_t cell_id_of(State &state, const Value &cell) {
+	if (!gd::is_dict(cell)) {
+		return -1;
+	}
+	const int64_t q = gd::int_field(state, cell.ref, key::q, -1);
+	const int64_t r = gd::int_field(state, cell.ref, key::r, -1);
+	return battle_rules::_hex_in_bounds(q, r) ? q * hex::kRows + r : -1;
+}
+
+// A melee stack not yet in a fight, walking toward the nearest stack of the
+// other side: the stack ground on its way or beside that stack can catch.
+struct Walker {
+	DictRef stack = 0;
+	bool found = false; // a target was found (handle 0 is a real node)
+	bool hostile = false; // an enemy of the caster
+	hex::PlacedBody body;
+	hex::PlacedBody target;
+	DictRef target_stack = 0;
+	int64_t distance = 999;
+	int64_t steps = 0;
+	int64_t free_beside_target = 0;
+	double share = 0.0; // the ground's damage as a share of its health
+};
+
+// What one pick does to a walker: the share of the free hexes beside its target
+// it covers (when the walker reaches the target this turn), and whether a
+// covered hex lies on its shortest way there within this turn's steps.
+struct Meeting {
+	double beside_share = 0.0;
+	bool on_way = false;
+};
+
+Meeting meeting_of(const Walker &walker, const std::vector<int64_t> &cells) {
+	Meeting meeting;
+	const bool reaches = walker.distance - 1 <= walker.steps;
+	int64_t beside = 0;
+	for (const int64_t id : cells) {
+		const int64_t from_walker = spot_distance(id, walker.body);
+		if (from_walker > walker.steps) {
+			continue;
+		}
+		const int64_t to_target = spot_distance(id, walker.target);
+		if (to_target == 1 && reaches) {
+			beside += 1;
+		} else if (from_walker >= 1 && to_target >= 1 && from_walker + to_target <= walker.distance) {
+			meeting.on_way = true;
+		}
+	}
+	if (beside > 0) {
+		meeting.beside_share = engine_min<double>(1.0, static_cast<double>(beside) / static_cast<double>(engine_max<int64_t>(1, walker.free_beside_target)));
+	}
+	return meeting;
+}
+
+bool body_on(State &state, DictRef stack, const std::vector<int64_t> &cells) {
+	const hex::PlacedBody body = placed_of(state, stack);
+	for (const int64_t id : cells) {
+		if (spot_distance(id, body) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+} // namespace
+
+DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	const ArrayRef picks = spell_rules::ground_pick_shapes(state, battle, spell);
+	if (state.array_size(picks) == 0) {
+		return state.new_dict();
+	}
+	const Atom side = side_of(state, active_stack);
+	const Atom ground = gd::string_field(state, get_base(effect_of(state, spell)), key::ground, key::empty);
+	// The numbers the cast lays down do not depend on the hexes.
+	const DictRef sample = spell_rules::ground_entry_for_cast(state, enemy_hero, battle, spell, side, state.new_array());
+	const double damage_weight = _w(state, key::spell_damage_share);
+	const DictRef blocking = battle_rules::_build_blocking_map(state, battle);
+	uint8_t blocked[hex::kCellCount];
+	for (int64_t q = 0; q < hex::kColumns; ++q) {
+		for (int64_t r = 0; r < hex::kRows; ++r) {
+			blocked[q * hex::kRows + r] = state.has(blocking, str(state.pair_atom(q, r))) ? 1 : 0;
+		}
+	}
+	const ArrayRef allies = _alive_stacks_for_side(state, battle, side);
+	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
+	const auto shooter = [&](DictRef stack) { return ranged(state, stack) && has_shots(state, stack); };
+	int64_t hostile_shooters = 0;
+	int64_t own_shooters = 0;
+	for (const Value &stack : gd::items(state, array_value(hostiles))) {
+		hostile_shooters += gd::is_dict(stack) && shooter(stack.ref) ? 1 : 0;
+	}
+	for (const Value &stack : gd::items(state, array_value(allies))) {
+		own_shooters += gd::is_dict(stack) && shooter(stack.ref) ? 1 : 0;
+	}
+	// The walkers of both sides.
+	std::vector<Walker> walkers;
+	for (const bool hostile : { true, false }) {
+		const ArrayRef movers = hostile ? hostiles : allies;
+		const ArrayRef others = hostile ? allies : hostiles;
+		for (const Value &mover : gd::items(state, array_value(movers))) {
+			if (!gd::is_dict(mover) || !_fights_in_melee(state, mover.ref) || _stack_is_engaged(state, mover.ref, battle)) {
+				continue;
+			}
+			Walker walker;
+			walker.stack = mover.ref;
+			walker.hostile = hostile;
+			walker.steps = battle_rules::_stack_movement_points(state, mover.ref, battle);
+			if (walker.steps <= 0) {
+				continue;
+			}
+			for (const Value &other : gd::items(state, array_value(others))) {
+				if (!gd::is_dict(other)) {
+					continue;
+				}
+				const int64_t distance = battle_rules::_stack_hex_distance(state, mover.ref, other.ref);
+				if (distance < walker.distance) {
+					walker.distance = distance;
+					walker.target_stack = other.ref;
+					walker.found = true;
+				}
+			}
+			if (!walker.found) {
+				continue;
+			}
+			walker.body = placed_of(state, mover.ref);
+			walker.target = placed_of(state, walker.target_stack);
+			for (int64_t id = 0; id < hex::kCellCount; ++id) {
+				walker.free_beside_target += blocked[id] == 0 && spot_distance(id, walker.target) == 1 ? 1 : 0;
+			}
+			const int64_t damage = spell_rules::ground_damage_against(state, battle, sample, mover.ref);
+			walker.share = engine_min<double>(1.0, static_cast<double>(damage) / engine_max<double>(1.0, stack_health(state, mover.ref)));
+			walkers.push_back(walker);
+		}
+	}
+	const int64_t defense = gd::int_field(state, sample, key::defense, 0);
+	DictRef best_pick = state.new_dict();
+	double best = 0.0;
+	std::vector<int64_t> cells;
+	for (const Value &pick : gd::items(state, array_value(picks))) {
+		if (!gd::is_dict(pick)) {
+			continue;
+		}
+		cells.clear();
+		for (const Value &cell : gd::field_items(state, pick.ref, str(key::cells))) {
+			const int64_t id = cell_id_of(state, cell);
+			if (id >= 0) {
+				cells.push_back(id);
+			}
+		}
+		if (cells.empty()) {
+			continue;
+		}
+		double value = 0.0;
+		if (ground == key::fire_ground || ground == key::bramble_ground) {
+			// A walker burns once on its way or where it ends beside its
+			// target, and keeps burning while it fights there; brambles stop
+			// a walk that would have struck this turn. The caster's own
+			// walkers count against, and as sure to walk through: the
+			// computer's moves do not weigh ground yet.
+			for (const Walker &walker : walkers) {
+				const Meeting meeting = meeting_of(walker, cells);
+				const double on_way = meeting.on_way ? (walker.hostile ? 0.35 : 1.0) : 0.0;
+				const double hit = engine_max<double>(meeting.beside_share * (ground == key::fire_ground ? 1.5 : 1.0), on_way);
+				double meets = hit * walker.share * damage_weight * 0.8;
+				if (ground == key::bramble_ground && meeting.on_way) {
+					meets += walker.distance - 1 <= walker.steps ? 1.0 : 0.4;
+				}
+				value += walker.hostile ? meets : -1.5 * meets;
+			}
+		} else if (ground == key::murk) {
+			// Shooters in the fog do not shoot, and nothing in it is shot.
+			for (const bool hostile : { true, false }) {
+				for (const Value &stack : gd::items(state, array_value(hostile ? hostiles : allies))) {
+					if (!gd::is_dict(stack) || spell_rules::in_murk(state, battle, stack.ref) || !body_on(state, stack.ref, cells)) {
+						continue;
+					}
+					if (shooter(stack.ref)) {
+						value += hostile ? 3.0 : -3.0;
+					} else if (!hostile && hostile_shooters > 0) {
+						value += 0.75;
+					} else if (hostile && own_shooters > 0) {
+						value -= 0.75;
+					}
+				}
+			}
+		} else if (ground == key::pillar) {
+			// Defense for the caster's stacks beside it, most for those in a
+			// fight; it also takes a hex to strike from.
+			const int64_t id = cells.front();
+			for (const Value &ally : gd::items(state, array_value(allies))) {
+				if (!gd::is_dict(ally) || spot_distance(id, placed_of(state, ally.ref)) != 1 || spell_rules::pillar_defense(state, battle, ally.ref) >= defense) {
+					continue;
+				}
+				double threat = 0.2;
+				if (_stack_is_engaged(state, ally.ref, battle)) {
+					threat = 1.0;
+				} else {
+					for (const Walker &walker : walkers) {
+						if (walker.hostile && walker.target_stack == ally.ref && walker.distance - 1 <= walker.steps) {
+							threat = 0.6;
+						}
+					}
+				}
+				value += threat * static_cast<double>(defense) / 2.0;
+			}
+			for (const Walker &walker : walkers) {
+				if (walker.hostile && meeting_of(walker, cells).beside_share > 0.0) {
+					value += 0.3;
+				}
+			}
+		} else if (ground == key::trap) {
+			// The first enemy walker that ends beside the seed sets it off:
+			// the seed beside a stack it walks to, and the more of the hexes
+			// it can strike from lie beside the seed, the likelier.
+			const int64_t id = cells.front();
+			for (const Walker &walker : walkers) {
+				if (!walker.hostile || spot_distance(id, walker.target) != 1 || walker.distance - 1 > 2 * walker.steps) {
+					continue;
+				}
+				int64_t near_seed = 0;
+				for (int64_t other = 0; other < hex::kCellCount; ++other) {
+					if (blocked[other] == 0 && spot_distance(other, walker.target) == 1
+							&& spot_distance(other, hex::PlacedBody{ id / hex::kRows, id % hex::kRows, id / hex::kRows }) <= 1) {
+						near_seed += 1;
+					}
+				}
+				const double chance = engine_min<double>(1.0, static_cast<double>(near_seed) / static_cast<double>(engine_max<int64_t>(1, walker.free_beside_target)))
+						* (walker.distance - 1 <= walker.steps ? 1.0 : 0.6);
+				value = engine_max<double>(value, chance * (walker.share * damage_weight * 0.6 + 3.0));
+			}
+		}
+		if (value > best) {
+			best = value;
+			best_pick = pick.ref;
+		}
+	}
+	if (empty(state, best_pick)) {
+		return state.new_dict();
+	}
+	best -= mana_cost_term(state, spell);
+	const DictRef destination = state.new_dict();
+	state.set(destination, str(key::q), gd::int_value(gd::int_field(state, best_pick, key::q, -1)));
+	state.set(destination, str(key::r), gd::int_value(gd::int_field(state, best_pick, key::r, -1)));
 	const DictRef plan = state.new_dict();
 	state.set(plan, str(key::destination), dict_value(destination));
 	state.set(plan, str(key::score), gd::float_value(best));

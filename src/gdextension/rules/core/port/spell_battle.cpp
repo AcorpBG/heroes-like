@@ -219,6 +219,10 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::swap_effect;
 		state.append(hooks, str(key::ally_reposition));
 		public_effect = key::ally_reposition_text;
+	} else if (effect_type == key::ground_effect) {
+		resolution_type = key::ground_effect;
+		state.append(hooks, str(key::battle_ground));
+		public_effect = key::ground_public_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -358,6 +362,10 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 				return refusal(state, gd::format(state, key::no_health_missing_text, { str(battle_rules::_stack_label(state, first)) }));
 			}
 		}
+		return accepted(state);
+	}
+	// A hex spell takes no stack; its hex is checked when the cast names it.
+	if (effect_type == key::ground_effect) {
 		return accepted(state);
 	}
 	if (effect_type == key::swap_enemy) {
@@ -858,6 +866,24 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			second_stack = picked;
 		}
 	}
+	// A hex spell finds its hexes before the mana is spent, or none is named yet.
+	ArrayRef ground_cells = 0;
+	bool needs_hex = false;
+	if (effect_type == key::ground_effect) {
+		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
+		if (state.array_size(ground_pick_cells(state, battle, spell)) == 0) {
+			return hero_refusal(state, hero, gd::format(state, key::no_hex_for_spell_text, { str(spell_name) }));
+		}
+		const DictRef center = gd::is_dict(destination) ? battle_rules::_normalize_hex_cell(state, destination) : state.new_dict();
+		if (gd::is_empty(state, center)) {
+			needs_hex = true;
+		} else {
+			ground_cells = ground_shape_cells(state, battle, spell, center);
+			if (state.array_size(ground_cells) == 0) {
+				return hero_refusal(state, hero, gd::format(state, key::hex_refused_for_spell_text, { str(spell_name) }));
+			}
+		}
+	}
 	hero = _consume_mana(state, hero, mana_cost);
 	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
 	// Prism Ward: a harmful spell cast on a warded stack lands on a random stack
@@ -1062,6 +1088,18 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 				? gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, first, key::name, key::the_enemy_text)) })
 				: ally_cast_message(state, caster_name, spell, spell_id, first);
 		state.set(result, str(key::message), str(cast_message));
+		return result;
+	}
+	if (effect_type == key::ground_effect) {
+		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
+		const DictRef result = cast_result(state, hero, key::ground_effect, key::empty);
+		if (needs_hex) {
+			state.set(result, str(key::needs_destination), bool_value(true));
+			state.set(result, str(key::message), str(gd::format(state, key::choose_hex_for_spell_text, { str(spell_name) })));
+			return result;
+		}
+		state.set(result, str(key::ground_entry), dict_value(ground_entry_for_cast(state, hero, battle, spell, acting_side, ground_cells)));
+		state.set(result, str(key::message), str(gd::format(state, key::s_casts_s, { str(caster_name), str(spell_name) })));
 		return result;
 	}
 	return hero_refusal(state, hero, key::battle_spell_no_supported_effect_text);
