@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rmg-setup-choice-templates-20261106",
- "currentSliceTitle": "Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's roll (setup picker, match runner, batch tool); 100 AI games on each, all decided, compared with the 1,200-game batch in the doc.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-06T17:51:32Z",
+ "currentSliceId": "magic-system-spec-20261107",
+ "currentSliceTitle": "Magic system spec and build slices",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-07T10:25:58Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,117 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "magic-system-spec-20261107",
+   "title": "Magic system spec and build slices",
+   "status": "in_progress",
+   "goal": "docs/magic-system.md (rules, owner decisions, build order) and docs/magic-system-spells.md (139 spells, 138 mechanics) from the settled local plan page; ten build slices in PLAN.md.",
+   "docs": [
+    "docs/magic-system.md",
+    "docs/magic-system-spells.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-power-mana-20261107",
+   "title": "Magic: spell power against Knowledge, turns and mana",
+   "status": "pending",
+   "goal": "Native rules, on today's spells first: a spell's harmful numbers and turns against an enemy hero's stacks use spell power less all of that hero's Knowledge, never below 0; lasting effects get one more turn per 4 spell power, with no limit; a hero regains a fifth of its maximum mana each day, all of it on a day that starts in an own town with a guild. spell_rules, spell_battle, day_economy; six-seed native check; battle_sim_cli rebuilt.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-guild-draws-20261107",
+   "title": "Magic: each town draws its own guild",
+   "status": "pending",
+   "goal": "When the map is made each town draws its guild: a third of each tier's guild spells per level, each spell of the faction's preferred school (new in factions.json) twice as likely, no guarantee. Kept on capture and in saves; old saves draw on load. Replaces towns.json spell_library; the town screen shows the draw. Uses today's spells and home schools until magic-switch-20261107.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-worn-scrolls-20261107",
+   "title": "Magic: scrolls are worn, never learned",
+   "status": "pending",
+   "goal": "A scroll becomes an item worn in one of the two trinket slots that lends its spell while worn, for mana; it teaches nothing and is not used up. Spells marked scroll-only never enter guilds; map scrolls, rewards and sites hand out scroll items by tier, about 1 in 3 scroll-only once those exist. Hero sheet and exchange; saves; computer players wear and fetch scrolls.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-basic-tier-20261107",
+   "title": "Magic: casting on any stack, and the basic tier",
+   "status": "pending",
+   "goal": "The hero casts on any stack its spell allows, not only the acting one: rules, battle screen target picking and battle AI target choice. The 12 basic battle spells and their 4 new mechanics enter spells.json marked unreleased (no guild, start or reward until magic-switch-20261107) and cast in battle_sim_cli; spell texts show their numbers at the caster's power. Spells: docs/magic-system-spells.md.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-tier2-spells-20261107",
+   "title": "Magic: tier 2 battle spells",
+   "status": "pending",
+   "goal": "The 36 tier-2 battle spells of Furnace, Root, Beacon and Veil, scroll-only ones included, marked unreleased, with the 36 new mechanics they need (Heat, plates, regrowth, grafts, brambles, traps, marks, reflection, beams, crystals, drain, curses, fear, sleep, murk and more), mastery shapes at mastery 2 and 3, and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-tier3-spells-20261107",
+   "title": "Magic: tier 3 battle spells",
+   "status": "pending",
+   "goal": "The 36 tier-3 battle spells, marked unreleased, with their 36 new mechanics (Burning, sentinels, living walls, treants, the Risen, mire, boundaries, spell shields, jumping bolts, doom, decoys, raising the fallen and more) and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-tier45-spells-20261107",
+   "title": "Magic: tier 4 and 5 battle spells",
+   "status": "pending",
+   "goal": "The 39 tier-4 and tier-5 battle spells, marked unreleased, with their 36 new mechanics (blasts, double strikes, constructs, copies, groves, poison, extra turns, sanctuary, stuns, wraiths, echoes, whole-battle effects, the elder, return of the destroyed, the dome, the Risen host and more) and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-map-spells-20261107",
+   "title": "Magic: map spells",
+   "status": "pending",
+   "goal": "The 16 map spells of every tier, marked unreleased, with the 16 map mechanics (more movement, farther sight, reading armies, fast roads, firebreaks, scorched ground, forest and mire ways, rootways, harvest, the wardwood, flares, Relay, the lens, the ferry, mist jumps); one map spell per hero per day; computer players' map values. Native map rules and the overworld screen.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-art-audio-20261107",
+   "title": "Magic: spell art and sound",
+   "status": "pending",
+   "goal": "An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each spell, and badges for the 25 new statuses; the four school sigils stay. spell_icons, battle_vfx_manifest, audio_production_banks and animation_event_cues, in the painted look of the art rules. Lands before or with magic-switch-20261107.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
+  {
+   "id": "magic-switch-20261107",
+   "title": "Magic: the switch to the new spells",
+   "status": "pending",
+   "goal": "Today's 119 spells go and the 139 go live, unreleased marks removed. Lens, Mire and Old Measure merge into Beacon and Veil, four masteries. Factions prefer Beacon (Embercourt, Sunvault), Veil (Mireclaw, Veilmourn), Furnace (Brasshollow), Root (Thornwake); their heroes cast it at 1 more spell power and start with mastery 1 in a specialty slot. Resistances move; new picks in heroes, encounters, sites and RMG data; saves convert; core tests and docs follow.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-07"
+  },
   {
    "id": "rmg-setup-choice-templates-20261106",
    "status": "completed",
