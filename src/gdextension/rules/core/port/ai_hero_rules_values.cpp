@@ -377,10 +377,19 @@ double _site_spell_value(State &state, DictRef site, DictRef entry) {
 	const DictRef commander = state.lookup(entry, str(key::enemy_commander_state), found) && gd::is_dict(found) ? found.ref : state.new_dict();
 	double value = 0.0;
 	const ArrayRef spell_ids = overworld_rules::_resource_site_spell_ids(state, site);
+	// A scroll lends its spell only while worn, and one the hero holds is
+	// not taken twice.
+	const bool scrolls = gd::bool_field(state, site, key::gives_spell_scrolls, false);
 	for (const Value &spell_id : gd::items(state, array_value(spell_ids))) {
 		const DictRef spell = gd::content_row(state, ContentTable::Spell, gd::stringify(state, spell_id));
 		if (gd::is_empty(state, spell) || spell_rules::knows_spell(state, commander, gd::stringify(state, spell_id))) {
 			continue;
+		}
+		if (scrolls) {
+			const Atom artifact_id = artifact_rules::spell_scroll_artifact_id(state, gd::stringify(state, spell_id));
+			if (artifact_id == key::empty || gd::string_field(state, artifact_rules::locate_artifact(state, commander, artifact_id), key::location, key::missing) != key::missing) {
+				continue;
+			}
 		}
 		const int64_t tier = compat::engine_max<int64_t>(1, gd::int_field(state, spell, key::tier, 1));
 		value += tunable(state, key::SCROLL_SPELL_BASE_VALUE) + tunable(state, key::SCROLL_SPELL_TIER_VALUE) * static_cast<double>(tier);

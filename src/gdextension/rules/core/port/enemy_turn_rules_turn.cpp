@@ -224,6 +224,7 @@ void apply_ai_weights(State &state, DictRef weights) {
 	ai::assign_float(state, script, key::LOADOUT_SCHOOL_RESISTANCE_VALUE, weights, key::loadout_school_resistance_value);
 	ai::assign_float(state, script, key::LOADOUT_SPELL_EFFECT_VALUE, weights, key::loadout_spell_effect_value);
 	ai::assign_float(state, script, key::LOADOUT_MANA_COST_VALUE, weights, key::loadout_mana_cost_value);
+	ai::assign_float(state, script, key::LOADOUT_SCROLL_SPELL_TIER_VALUE, weights, key::loadout_scroll_spell_tier_value);
 	faction_town_services::apply_ai_weights(state, weights);
 	gd::set_static_var(state, script, key::_ai_weights_ready, bool_value(true));
 }

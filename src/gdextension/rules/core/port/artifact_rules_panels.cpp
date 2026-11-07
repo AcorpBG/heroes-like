@@ -86,7 +86,8 @@ void append_positive(State &state, ArrayRef parts, Atom pattern, int64_t amount)
 }
 
 // ContentService.get_content_ids(path).size(), as the content store answers
-// it: the ids of raw.get("items", raw.get("entries", [])) when it is an Array.
+// it: the ids of raw.get("items", raw.get("entries", [])) when it is an Array,
+// less the scroll items, which are no relics.
 int64_t content_id_count(State &state, Atom path) {
 	const DictRef raw = gd::content_file(state, path);
 	if (gd::is_empty(state, raw)) {
@@ -104,7 +105,7 @@ int64_t content_id_count(State &state, Atom path) {
 		if (!gd::is_dict(item)) {
 			throw state::NotPorted("left to GDScript: get_content_ids over an item that is no Dictionary");
 		}
-		if (state.has(item.ref, str(key::id))) {
+		if (state.has(item.ref, str(key::id)) && !artifact_rules::is_spell_scroll(state, item)) {
 			++count;
 		}
 	}
@@ -241,7 +242,12 @@ Atom describe_impact_summary(State &state, DictRef hero_state) {
 }
 
 Atom describe_collection_summary(State &state, DictRef hero_state) {
-	const int64_t owned_count = state.array_size(owned_artifact_ids(state, hero_state));
+	int64_t owned_count = 0;
+	for (const Value &artifact_id : gd::items(state, array_value(owned_artifact_ids(state, hero_state)))) {
+		if (scroll_spell_id(state, gd::stringify(state, artifact_id)) == key::empty) {
+			++owned_count;
+		}
+	}
 	const int64_t total_count = content_id_count(state, key::artifacts_path);
 	if (total_count <= 0) {
 		return gd::format(state, key::collection_d_owned, {int_value(owned_count)});
@@ -258,7 +264,10 @@ Atom artifact_icon_path(State &state, Atom artifact_id) {
 		icon_path = text_or(state, ui.ref, key::icon_path, key::empty);
 	}
 	icon_path = gd::strip_edges(state, icon_path);
-	if (!gd::begins_with(state, icon_path, key::artifact_atlas_prefix) || !gd::resource_exists(state, icon_path)) {
+	// A scroll shows its spell's icon.
+	const bool own_art = gd::begins_with(state, icon_path, key::artifact_atlas_prefix)
+			|| (is_spell_scroll(state, dict_value(artifact)) && gd::begins_with(state, icon_path, key::res_art_magic_runtime_spells));
+	if (!own_art || !gd::resource_exists(state, icon_path)) {
 		return key::empty;
 	}
 	return icon_path;

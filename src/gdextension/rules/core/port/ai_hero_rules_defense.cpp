@@ -12,6 +12,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
 #include <algorithm>
@@ -802,8 +803,9 @@ double _spell_burst(State &state, DictRef commander) {
 	if (!state.lookup(commander, str(key::spellbook), spellbook) || !gd::is_dict(spellbook)) {
 		return 0.0;
 	}
-	Value known;
-	if (!state.lookup(spellbook.ref, str(key::known_spell_ids), known) || !gd::is_array(known) || state.array_size(known.ref) == 0) {
+	// Its known spells and those its worn scrolls lend.
+	const ArrayRef known = spell_rules::castable_spell_ids(state, commander);
+	if (state.array_size(known) == 0) {
 		return 0.0;
 	}
 	int64_t mana = 0;
@@ -819,7 +821,7 @@ double _spell_burst(State &state, DictRef commander) {
 	}
 	const int64_t power = compat::engine_max<int64_t>(0, command_power);
 	double best = 0.0;
-	for (const Value &spell_id : gd::items(state, known)) {
+	for (const Value &spell_id : gd::items(state, array_value(known))) {
 		const DictRef spell = gd::content_row(state, ContentTable::Spell, gd::stringify(state, spell_id));
 		Value effect;
 		const bool has_effect = state.lookup(spell, str(key::effect), effect) && gd::is_dict(effect);

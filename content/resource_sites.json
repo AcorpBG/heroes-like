@@ -28,6 +28,7 @@
       "name": "Beacon Path Scroll",
       "family": "one_shot_pickup",
       "learn_spell_id": "spell_beacon_path",
+      "gives_spell_scrolls": true,
       "runtime_boundary": {
         "status": "spell_reward_live",
         "live_reward_grants": true,
@@ -41,9 +42,10 @@
       "id": "site_spell_scroll",
       "name": "Spell Scroll",
       "family": "one_shot_pickup",
-      "action_label": "Read Scroll",
+      "action_label": "Take Scroll",
       "overworld_sprite_asset_id": "beacon_path_scroll",
-      "learn_spell_id": "spell_beacon_path"
+      "learn_spell_id": "spell_beacon_path",
+      "gives_spell_scrolls": true
     },
     {
       "id": "site_wood_wagon",

@@ -59,6 +59,12 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 - The 16 scroll-only spells never appear in a guild. About 1 scroll in 3 found on the map holds one.
 - A scroll teaches nothing. A hero casts a scroll's spell, for mana as usual, only while the scroll is worn in one of its two trinket slots, like a charm, so a hero wears at most two, in place of charms. The scroll is not used up and can be handed to another hero like any item.
 - Generated maps keep placing scrolls by tier as they do today.
+- Each spell has one scroll item, which the content store adds to `artifacts.json` as it reads the file: `artifact_scroll_<spell id without spell_>`, a trinket of class `spell_scroll` naming its `spell_id`, with no bonus. Rarity follows the tier: 1 common, 2 uncommon, 3 rare, 4 and 5 epic. It shows the spell's icon.
+- A scroll site (`site_spell_scroll`, `gives_spell_scrolls`) hands its scroll to the hero, worn at once when a trinket slot is free, else carried. A hero holds one copy of each scroll; a second copy of one it holds is lost. Shrines and Pandora-style sites still teach, and only guild spells.
+- A spell marked `scroll_only` in `spells.json` never enters a guild draw, a shrine or a Pandora's lesson. Where a tier has both kinds, a map scroll holds a scroll-only spell 1 time in 3.
+- Scrolls are found only as scroll sites: placed artifacts, merchants, the field market and the collection count leave scroll items out, so generated maps place the same artifacts as before.
+- The spellbook lists a worn scroll's spell after the learned ones, in battle, on the map and on the hero sheet. Two heroes meeting teach each other only learned spells.
+- Computer players walk to scrolls whose spell they lack, as they valued scroll sites before, and wear a scroll when it beats a charm: `loadout_scroll_spell_tier_value` (8 per tier of a spell they have not learned) in `content/ai_hero_weights.json`. Their battle and strength estimates count lent spells.
 
 ## Mana and casting limits
 

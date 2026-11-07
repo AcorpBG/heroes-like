@@ -523,11 +523,13 @@ void add_stack(State &state, DictRef troops, const Value &stack) {
 }
 
 // The spell ids of one tier in spells.json, sorted (_tier_spell_id and
-// _scroll_spell_id).
-ArrayRef tier_spell_candidates(State &state, int64_t tier) {
+// _scroll_spell_id): the guild spells, or the scroll-only ones, which only
+// scrolls hold (docs/magic-system.md, Scrolls).
+ArrayRef tier_spell_candidates(State &state, int64_t tier, bool scroll_only = false) {
 	const ArrayRef candidates = state.new_array();
 	for (const Value &spell : gd::field_items(state, gd::content_file(state, key::spells_path), str(key::items))) {
-		if (gd::is_dict(spell) && gd::int_field(state, spell.ref, key::tier, 0) == tier && text(state, spell.ref, key::id, key::empty) != key::empty) {
+		if (gd::is_dict(spell) && gd::int_field(state, spell.ref, key::tier, 0) == tier && text(state, spell.ref, key::id, key::empty) != key::empty
+				&& gd::bool_field(state, spell.ref, key::scroll_only, false) == scroll_only) {
 			state.append(candidates, str(text(state, spell.ref, key::id, key::empty)));
 		}
 	}
@@ -1241,7 +1243,7 @@ ArrayRef _pandora_spell_ids(State &state, DictRef contents, Atom key_text) {
 	}
 	const ArrayRef spell_ids = state.new_array();
 	for (const Value &spell : gd::items(state, array_value(spells))) {
-		if (!gd::is_dict(spell) || text(state, spell.ref, key::id, key::empty) == key::empty) {
+		if (!gd::is_dict(spell) || text(state, spell.ref, key::id, key::empty) == key::empty || gd::bool_field(state, spell.ref, key::scroll_only, false)) {
 			continue;
 		}
 		if (gd::array_has(state, levels, int_value(gd::int_field(state, spell.ref, key::tier, 0))) &&
@@ -1325,7 +1327,13 @@ Atom _scroll_spell_id(State &state, Atom key_text) {
 			break;
 		}
 	}
-	const ArrayRef candidates = tier_spell_candidates(state, chosen_tier);
+	// About one scroll in three holds a scroll-only spell where the tier has
+	// both kinds.
+	ArrayRef candidates = tier_spell_candidates(state, chosen_tier);
+	const ArrayRef scroll_only = tier_spell_candidates(state, chosen_tier, true);
+	if (state.array_size(scroll_only) > 0 && (state.array_size(candidates) == 0 || _roll(state, key_text, key::scroll_only, 3) == 0)) {
+		candidates = scroll_only;
+	}
 	return state.array_size(candidates) > 0 ? _pick(state, candidates, key_text, key::scroll_spell) : key::empty;
 }
 

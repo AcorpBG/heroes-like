@@ -434,7 +434,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 		or String(presentation.get("town_placement_id", "")) != String(_town.get("placement_id", ""))
 		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and String(presentation.get("artifact_id", "")) == ""
 		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and String(presentation.get("artifact_name", "")) == ""
-		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and not String(presentation.get("artifact_icon_path", "")).begins_with("res://art/artifacts/runtime/")
+		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and not String(presentation.get("artifact_icon_path", "")).begins_with("res://art/artifacts/runtime/") and not String(presentation.get("artifact_icon_path", "")).begins_with("res://art/magic/runtime/spells/")
 		or event_id == "artifact_acquired" and String(presentation.get("artifact_action_kind", "")) != "commission"
 		or event_id == "artifact_acquired" and String(presentation.get("artifact_location", "")) not in ["equipped", "inventory"]
 		or event_id == "artifact_acquired" and String(presentation.get("building_id", "")) == ""

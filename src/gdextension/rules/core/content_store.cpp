@@ -15,6 +15,9 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
 
 namespace aurelion::rules::content {
 
@@ -137,8 +140,132 @@ Value Store::parse_file(const std::string &path, std::vector<Message> &messages)
 		messages.push_back({true, "Unsupported JSON root for content file: " + path});
 		return Value();
 	}
+	if (path == kArtifactsPath) {
+		append_spell_scrolls(root, messages);
+	}
 	freeze_from(arrays, dicts);
 	return root;
+}
+
+// A scroll is an item made from its spell, so the two never drift apart: one
+// trinket per spell with a tier, appended to the artifacts each time the file
+// is read. It lends its spell while worn in a trinket slot, teaches nothing
+// and has no bonus. Its id is artifact_scroll_ and the spell id without its
+// spell_ prefix, its rarity follows the tier (1 common, 2 uncommon, 3 rare,
+// higher epic), and it shows the spell's icon. A row of that id in the file
+// stands instead.
+void Store::append_spell_scrolls(const Value &root, std::vector<Message> &messages) {
+	const Value items = items_from_raw(root, "items");
+	if (items.kind != Kind::Array) {
+		return;
+	}
+	const Value spells = items_from_raw(load_json(kSpellsPath, messages), "items");
+	if (spells.kind != Kind::Array) {
+		return;
+	}
+	const auto field_text = [this](const Value &row, const char *name) {
+		Value found;
+		if (row.kind != Kind::Dict || !data_.lookup(row.ref, data_.string(name), found) || !is_text(found)) {
+			return std::string();
+		}
+		return data_.text(found.ref);
+	};
+	std::unordered_map<std::string, std::pair<std::string, std::string>> icons;
+	const Value icon_items = items_from_raw(load_json(kSpellIconsPath, messages), "items");
+	if (icon_items.kind == Kind::Array) {
+		for (int64_t index = 0; index < data_.array_size(icon_items.ref); ++index) {
+			const Value icon = data_.at(icon_items.ref, index);
+			const std::string spell_id = field_text(icon, "spell_id");
+			if (!spell_id.empty() && icons.count(spell_id) == 0) {
+				icons.emplace(spell_id, std::make_pair(field_text(icon, "icon_id"), field_text(icon, "icon_path")));
+			}
+		}
+	}
+	std::unordered_set<std::string> taken;
+	for (int64_t index = 0; index < data_.array_size(items.ref); ++index) {
+		taken.insert(field_text(data_.at(items.ref, index), "id"));
+	}
+	const auto put = [this](uint32_t dict, const char *name, const Value &value) {
+		data_.set(dict, data_.string(name), value);
+	};
+	const auto texts = [this](std::initializer_list<std::string> values) {
+		const uint32_t list = data_.new_array();
+		for (const std::string &value : values) {
+			data_.append(list, data_.string(value));
+		}
+		return Value::of_ref(Kind::Array, list);
+	};
+	const auto dict = [this]() { return data_.new_dict(); };
+	const auto of = [](uint32_t made) { return Value::of_ref(Kind::Dict, made); };
+	const int64_t spell_count = data_.array_size(spells.ref);
+	for (int64_t index = 0; index < spell_count; ++index) {
+		const Value spell = data_.at(spells.ref, index);
+		const std::string spell_id = field_text(spell, "id");
+		Value tier_value;
+		int64_t tier = 0;
+		if (spell.kind == Kind::Dict && data_.lookup(spell.ref, data_.string("tier"), tier_value)) {
+			tier = tier_value.kind == Kind::Int ? tier_value.i : tier_value.kind == Kind::Float ? static_cast<int64_t>(tier_value.f) : 0;
+		}
+		if (spell_id.empty() || tier <= 0) {
+			continue;
+		}
+		const std::string artifact_id = "artifact_scroll_" + (begins_with(spell_id, "spell_") ? spell_id.substr(6) : spell_id);
+		if (!taken.insert(artifact_id).second) {
+			continue;
+		}
+		const std::string spell_name = field_text(spell, "name").empty() ? spell_id : field_text(spell, "name");
+		const std::string school_id = field_text(spell, "school_id");
+		const char *rarity = tier == 1 ? "common" : tier == 2 ? "uncommon" : tier == 3 ? "rare" : "epic";
+		const auto icon = icons.find(spell_id);
+
+		const uint32_t row = dict();
+		put(row, "id", data_.string(artifact_id));
+		put(row, "name", data_.string("Scroll of " + spell_name));
+		put(row, "slot", data_.string("trinket"));
+		put(row, "artifact_class", data_.string("spell_scroll"));
+		put(row, "rarity", data_.string(rarity));
+		put(row, "family", data_.string("spell_scroll"));
+		put(row, "roles", texts({"magic"}));
+		put(row, "accord_affinity", data_.string(school_id));
+		put(row, "faction_affinity", texts({}));
+		put(row, "source_tags", texts({"spell_scroll"}));
+		put(row, "spell_id", data_.string(spell_id));
+		const uint32_t constraints = dict();
+		put(constraints, "slot_limit", Value::of_int(2));
+		put(constraints, "unique_per_hero", Value::of_bool(true));
+		put(constraints, "allowed_faction_ids", texts({}));
+		put(constraints, "required_tags", texts({}));
+		put(row, "equip_constraints", of(constraints));
+		put(row, "bonus_metadata", texts({}));
+		const uint32_t risk = dict();
+		put(risk, "cursed", Value::of_bool(false));
+		put(risk, "tradeoff", Value::of_bool(false));
+		put(risk, "warning_tags", texts({}));
+		put(row, "risk", of(risk));
+		const uint32_t ui = dict();
+		put(ui, "summary", data_.string("Lends " + spell_name + " while worn in a trinket slot."));
+		put(ui, "icon_id", data_.string(icon != icons.end() ? icon->second.first : std::string()));
+		put(ui, "icon_path", data_.string(icon != icons.end() ? icon->second.second : std::string()));
+		put(ui, "effect_tags", texts({"spell_scroll"}));
+		put(ui, "comparison_priority", texts({}));
+		put(row, "ui", of(ui));
+		const uint32_t hints = dict();
+		put(hints, "value_drivers", texts({"spell_access"}));
+		put(hints, "preferred_hero_roles", texts({"magic"}));
+		put(hints, "preferred_faction_ids", texts({}));
+		put(hints, "combo_tags", texts({}));
+		put(row, "ai_hints", of(hints));
+		const uint32_t tags = dict();
+		put(tags, "schema", data_.string("artifact_taxonomy_v1"));
+		put(tags, "save_behavior", data_.string("content_reference_only"));
+		put(tags, "set_id", data_.string(""));
+		put(tags, "mutual_exclusions", texts({}));
+		put(tags, "stack_rule", data_.string("unique_per_hero"));
+		put(row, "validation_tags", of(tags));
+		put(row, "description", data_.string("Worn in a trinket slot, this scroll lets its hero cast " + spell_name + " for mana. It teaches nothing and is never used up."));
+		put(row, "bonuses", of(dict()));
+		data_.append(items.ref, of(row));
+	}
 }
 
 Value Store::load_json(const std::string &path, std::vector<Message> &messages) {

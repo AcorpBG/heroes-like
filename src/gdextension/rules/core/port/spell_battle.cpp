@@ -594,7 +594,7 @@ double _health_ratio(State &state, DictRef stack) {
 	return engine_clamp(health / static_cast<double>(max_health), 0.0, 1.0);
 }
 
-ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
+ArrayRef learned_spells(State &state, DictRef hero_state, Atom context_filter) {
 	const DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
 	const ArrayRef results = state.new_array();
 	// for spell_id_value in hero.get("spellbook", {}).get("known_spell_ids", [])
@@ -616,9 +616,26 @@ ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
 	return results;
 }
 
+ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
+	const ArrayRef results = learned_spells(state, hero_state, context_filter);
+	// The spells worn scrolls lend follow the learned ones (docs/magic-system.md).
+	for (const Value &spell_id_value : gd::items(state, array_value(worn_scroll_spell_ids(state, hero_state)))) {
+		const Atom spell_id = gd::stringify(state, spell_id_value);
+		if (_knows_spell(state, hero_state, spell_id)) {
+			continue;
+		}
+		const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);
+		if (context_filter != key::empty && gd::string_field(state, spell, key::context, key::empty) != context_filter) {
+			continue;
+		}
+		state.append(results, dict_value(spell));
+	}
+	return results;
+}
+
 DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side) {
 	DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
-	if (!_knows_spell(state, hero, spell_id)) {
+	if (!can_cast_spell(state, hero, spell_id)) {
 		return hero_refusal(state, hero, key::spell_not_in_spellbook_text);
 	}
 	const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);

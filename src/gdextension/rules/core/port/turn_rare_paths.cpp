@@ -348,6 +348,13 @@ double loadout_value(State &state, DictRef hero) {
 		const double mana = gd::to_float(ai::vget(state, modifier, key::mana_cost_delta, int_value(0))) * ai::static_float(state, script, key::LOADOUT_MANA_COST_VALUE);
 		score += effect - mana;
 	}
+	// A worn scroll is worth its spell's tier when the hero has not learned it.
+	for (const Value &spell_id : gd::items(state, array_value(spell_rules::worn_scroll_spell_ids(state, hero)))) {
+		if (!spell_rules::_knows_spell(state, hero, gd::stringify(state, spell_id))) {
+			const DictRef spell = gd::content_row(state, ContentTable::Spell, gd::stringify(state, spell_id));
+			score += static_cast<double>(compat::engine_max<int64_t>(1, gd::int_field(state, spell, key::tier, 1))) * ai::static_float(state, script, key::LOADOUT_SCROLL_SPELL_TIER_VALUE);
+		}
+	}
 	return score;
 }
 
@@ -624,7 +631,9 @@ ArrayRef offers(State &state, DictRef town, int64_t day, ArrayRef excluded_ids) 
 	for (const Value &artifact : gd::field_items(state, gd::content_file(state, key::artifacts_path), str(key::items))) {
 		// Authored quest/relic rewards stay outside the merchant inventory.
 		const Atom rarity = gd::stringify(state, ai::vget(state, artifact, key::rarity, str(key::common)));
-		if ((rarity == key::common || rarity == key::uncommon || rarity == key::rare) && !gd::to_bool(ai::vget(state, artifact, key::quest_item, bool_value(false)))) {
+		// Nor does a merchant sell scrolls.
+		if ((rarity == key::common || rarity == key::uncommon || rarity == key::rare) && !gd::to_bool(ai::vget(state, artifact, key::quest_item, bool_value(false)))
+				&& !artifact_rules::is_spell_scroll(state, artifact)) {
 			state.append(eligible, str(gd::stringify(state, ai::vmember(state, artifact, key::id))));
 		}
 	}

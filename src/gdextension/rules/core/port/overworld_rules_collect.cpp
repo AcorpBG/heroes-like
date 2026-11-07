@@ -456,7 +456,10 @@ DictRef _collect_resource_node_result(State &state, DictRef session, DictRef nod
 			state.set(flags, str(value_text(state, flag_key)), gd::index(state, claim_flags, flag_key));
 		}
 	}
-	const ArrayRef spell_messages = _learn_site_spells(state, session, array_value(_resource_site_spell_ids(state, site)));
+	// A scroll site hands over scroll items; any other site teaches.
+	const ArrayRef spell_messages = gd::bool_field(state, site, key::gives_spell_scrolls, false)
+			? _take_site_scrolls(state, session, array_value(_resource_site_spell_ids(state, site)))
+			: _learn_site_spells(state, session, array_value(_resource_site_spell_ids(state, site)));
 	if (state.array_size(spell_messages) > 3) {
 		// A Pandora's Box can teach a whole school at once.
 		state.append(messages, str(gd::format(state, key::learns_d_spells, {int_value(state.array_size(spell_messages))})));

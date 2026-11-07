@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-guild-draws-20261107",
- "currentSliceTitle": "Each town draws its guild once: a third of each tier's spells (nearest), its faction's preferred school x2 (factions.json; today's home schools), kept on capture and in saves, old saves draw on load; replaces town spell libraries.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-07T14:34:00Z",
+ "currentSliceId": "magic-worn-scrolls-20261107",
+ "currentSliceTitle": "Magic: scrolls are worn, never learned",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-07T14:48:14Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -41,7 +41,7 @@
   {
    "id": "magic-worn-scrolls-20261107",
    "title": "Magic: scrolls are worn, never learned",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "A scroll becomes an item worn in one of the two trinket slots that lends its spell while worn, for mana; it teaches nothing and is not used up. Spells marked scroll-only never enter guilds; map scrolls, rewards and sites hand out scroll items by tier, about 1 in 3 scroll-only once those exist. Hero sheet and exchange; saves; computer players wear and fetch scrolls.",
    "docs": [
     "docs/magic-system.md"

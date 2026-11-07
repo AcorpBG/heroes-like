@@ -76,7 +76,7 @@ DictRef stock(State &s, DictRef session, DictRef node, DictRef site) {
     for(auto v:field_items(s,content_file(s,key::artifacts_path),str(key::items)))if(is_dict(v)) {
         auto id=text(s,v.ref,key::id),cls=text(s,v.ref,key::artifact_class);
         if(array_has(s,rarities,str(text(s,v.ref,key::rarity)))&&!bool_field(s,v.ref,key::quest_item,false)
-            &&cls!=key::scenario&&cls!=key::relic&&!array_has(s,excluded,str(id)))pool.push_back(id);
+            &&cls!=key::scenario&&cls!=key::relic&&cls!=key::spell_scroll&&!array_has(s,excluded,str(id)))pool.push_back(id);
     }
     auto seed=s.text(text(s,node,key::placement_id))+":market:"+std::to_string(week(s,session));
     std::sort(pool.begin(),pool.end(),[&](Atom x,Atom y) {

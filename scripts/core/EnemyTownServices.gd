@@ -20,6 +20,8 @@ static var LOADOUT_INCOME_VALUE: float
 static var LOADOUT_SCHOOL_RESISTANCE_VALUE: float
 static var LOADOUT_SPELL_EFFECT_VALUE: float
 static var LOADOUT_MANA_COST_VALUE: float
+## Per tier of a spell a worn scroll lends that the hero has not learned.
+static var LOADOUT_SCROLL_SPELL_TIER_VALUE: float
 static var _ai_weights_ready := false
 
 static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day: int, controller: String) -> Dictionary:

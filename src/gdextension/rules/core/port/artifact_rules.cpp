@@ -255,6 +255,28 @@ Atom artifact_slot(State &state, Atom artifact_id) {
 	return std::find(std::begin(kArtifactSlots), std::end(kArtifactSlots), slot) != std::end(kArtifactSlots) ? slot : key::empty;
 }
 
+bool is_spell_scroll(State &state, const Value &artifact) {
+	return gd::is_dict(artifact) && string_of_field(state, artifact.ref, key::artifact_class, key::empty) == key::spell_scroll;
+}
+
+Atom scroll_spell_id(State &state, Atom artifact_id) {
+	if (artifact_id == key::empty) {
+		return key::empty;
+	}
+	const DictRef artifact = gd::content_row(state, ContentTable::Artifact, artifact_id);
+	return is_spell_scroll(state, dict_value(artifact)) ? gd::strip_edges(state, string_of_field(state, artifact, key::spell_id, key::empty)) : static_cast<Atom>(key::empty);
+}
+
+Atom spell_scroll_artifact_id(State &state, Atom spell_id) {
+	if (spell_id == key::empty) {
+		return key::empty;
+	}
+	const std::string &text = state.text(spell_id);
+	const Atom stem = gd::begins_with(state, spell_id, key::spell_) ? state.intern(text.substr(state.text(key::spell_).size())) : spell_id;
+	const Atom artifact_id = gd::format(state, key::artifact_scroll_s, {str(stem)});
+	return scroll_spell_id(state, artifact_id) == spell_id ? artifact_id : static_cast<Atom>(key::empty);
+}
+
 ArrayRef _compatible_equipment_slots(State &state, Atom slot_type) {
 	const ArrayRef slots = state.new_array();
 	if (slot_type == key::trinket) {

@@ -136,6 +136,9 @@ DictRef _add_to_active_army(State &state, DictRef session, DictRef recruits);
 Atom _describe_recruit_count(State &state, DictRef recruits);
 Atom _learn_site_spell(State &state, DictRef session, Atom spell_id);
 ArrayRef _learn_site_spells(State &state, DictRef session, const Value &spell_ids);
+// A scroll site's spells as scroll items the active hero takes, worn when a
+// trinket slot is free (docs/magic-system.md, Scrolls).
+ArrayRef _take_site_scrolls(State &state, DictRef session, const Value &spell_ids);
 ArrayRef _resource_site_spell_names(State &state, DictRef site);
 ArrayRef _award_experience(State &state, DictRef session, int64_t amount);
 bool _can_afford(State &state, DictRef session, const Value &cost);

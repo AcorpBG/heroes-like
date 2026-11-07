@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/ai_battle_preview.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
@@ -1681,9 +1682,9 @@ DictRef _commander_brief(State &state, const Value &commander) {
 	state.set(brief, str(key::defense), int_value(gd::int_field(state, command, key::defense, 0)));
 	state.set(brief, str(key::power), int_value(gd::int_field(state, command, key::power, 0)));
 	state.set(brief, str(key::knowledge), int_value(gd::int_field(state, command, key::knowledge, 0)));
+	// The spells it can cast: its known ones, then those its worn scrolls lend.
+	state.set(brief, str(key::spells), array_value(spell_rules::castable_spell_ids(state, source)));
 	Value found;
-	const bool has_spells = state.lookup(spellbook, str(key::known_spell_ids), found) && gd::is_array(found);
-	state.set(brief, str(key::spells), array_value(has_spells ? gd::duplicate_array(state, found.ref) : state.new_array()));
 	const bool has_mana = state.lookup(spellbook, str(key::mana), found) && gd::is_dict(found);
 	state.set(brief, str(key::mana), dict_value(has_mana ? gd::duplicate_dict(state, found.ref) : state.new_dict()));
 	state.set(brief, str(key::spell_damage_per_round), float_value(_spell_damage_per_round(state, source)));

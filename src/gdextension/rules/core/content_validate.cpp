@@ -204,7 +204,7 @@ public:
 	void building(const Value &building, const RowIndex &building_index, const RowIndex &unit_index);
 	void town(const Value &town, const RowIndex &faction_index, const RowIndex &building_index, const RowIndex &unit_index);
 	void encounter(const Value &encounter, const RowIndex &army_group_index, const RowIndex &spell_index);
-	void artifact(const Value &artifact);
+	void artifact(const Value &artifact, const RowIndex &spell_index);
 	void spell_school_icons(const RowIndex &icon_index);
 	void spell_icons(const RowIndex &spell_index, const RowIndex &icon_index);
 	void faction_crests(const RowIndex &faction_index, const RowIndex &crest_index);
@@ -1198,13 +1198,24 @@ void Check::encounter(const Value &encounter, const RowIndex &army_group_index, 
 	}
 }
 
-void Check::artifact(const Value &artifact) {
+void Check::artifact(const Value &artifact, const RowIndex &spell_index) {
 	const std::string artifact_id = text(artifact, "id");
 	const std::string slot = text(artifact, "slot");
 	if (slot.empty()) {
 		warn("Artifact " + artifact_id + " must define a slot.");
 	} else if (!one_of(slot, {"boots", "banner", "armor", "trinket"})) {
 		warn("Artifact " + artifact_id + " uses unsupported slot " + slot + ".");
+	}
+	// A scroll lends its spell instead of a bonus (docs/magic-system.md).
+	if (text(artifact, "artifact_class") == "spell_scroll") {
+		const std::string spell_id = text(artifact, "spell_id");
+		if (!spell_index.has(spell_id)) {
+			warn("Spell scroll " + artifact_id + " must name an existing spell, not " + spell_id + ".");
+		}
+		if (slot != "trinket") {
+			warn("Spell scroll " + artifact_id + " must be a trinket.");
+		}
+		return;
 	}
 	const Value bonuses = get(artifact, "bonuses", empty_dict_);
 	if (!is_dict(bonuses) || empty(bonuses)) {
@@ -1343,6 +1354,10 @@ void Check::spell(const Value &spell) {
 	}
 	if (tier < 1 || tier > 5) {
 		warn("Spell " + spell_id + " tier must be between 1 and 5.");
+	}
+	const Value scroll_only = get(spell, "scroll_only", Value());
+	if (scroll_only.kind != Kind::Nil && scroll_only.kind != Kind::Bool) {
+		warn("Spell " + spell_id + " scroll_only must be true or false.");
 	}
 	if (accord_family.empty()) {
 		warn("Spell " + spell_id + " must define accord_family.");
@@ -1487,7 +1502,7 @@ void Store::validate(std::vector<Message> &messages) {
 	each_row(town_index, [&](const Value &row) {
 		check.guard("_validate_town", [&] { check.town(row, faction_index, building_index, unit_index); });
 	});
-	each_row(artifact_index, [&](const Value &row) { check.guard("_validate_artifact", [&] { check.artifact(row); }); });
+	each_row(artifact_index, [&](const Value &row) { check.guard("_validate_artifact", [&] { check.artifact(row, spell_index); }); });
 	each_row(spell_index, [&](const Value &row) { check.guard("_validate_spell", [&] { check.spell(row); }); });
 	check.guard("_validate_spell_icons", [&] { check.spell_icons(spell_index, spell_icon_index); });
 	check.guard("_validate_spell_school_icons", [&] { check.spell_school_icons(spell_school_icon_index); });

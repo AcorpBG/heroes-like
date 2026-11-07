@@ -170,6 +170,32 @@ ArrayRef _learn_site_spells(State &state, DictRef session, const Value &spell_id
 	return messages;
 }
 
+ArrayRef _take_site_scrolls(State &state, DictRef session, const Value &spell_ids) {
+	const ArrayRef messages = state.new_array();
+	if (!gd::is_array(spell_ids)) {
+		return messages;
+	}
+	for (int64_t index = 0; index < state.array_size(spell_ids.ref); ++index) {
+		const Atom artifact_id = artifact_rules::spell_scroll_artifact_id(state, gd::stringify(state, state.at(spell_ids.ref, index)));
+		if (artifact_id == key::empty) {
+			continue;
+		}
+		// A scroll has no bonus, so the hero's movement stays as it is.
+		const DictRef hero = gd::as_dict(field_or_new_dict(state, session_view::overworld(state, session), key::hero));
+		const DictRef result = artifact_rules::claim_artifact(state, hero, artifact_id, key::Found, true);
+		if (!gd::bool_field(state, result, key::ok, false)) {
+			continue;
+		}
+		const Value fallback = field_or_new_dict(state, session_view::overworld(state, session), key::hero);
+		state.set(session_view::overworld(state, session), str(key::hero), state.get(result, str(key::hero), fallback));
+		const Atom message = text_or(state, result, key::message, key::empty);
+		if (message != key::empty) {
+			state.append(messages, str(message));
+		}
+	}
+	return messages;
+}
+
 ArrayRef _resource_site_spell_names(State &state, DictRef site) {
 	const ArrayRef result = state.new_array();
 	const ArrayRef spell_ids = _resource_site_spell_ids(state, site);

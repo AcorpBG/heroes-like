@@ -405,7 +405,9 @@ DictRef field_exchange_snapshot(State &state, DictRef session, Atom hero_id) {
 	// normalize_hero_artifacts({}) is normalize_hero_artifacts(null).
 	const DictRef artifacts = artifact_rules::normalize_hero_artifacts(state, gd::field(state, hero, key::artifacts));
 	const ArrayRef spell_ids = state.new_array();
-	const ArrayRef known = spell_rules::known_spells(state, hero, key::empty);
+	// The learned spells, which one hero can teach the other; a worn scroll
+	// teaches nothing.
+	const ArrayRef known = spell_rules::learned_spells(state, hero, key::empty);
 	for (const Value &spell_value : gd::items(state, array_value(known))) {
 		if (gd::is_dict(spell_value) && text_or(state, spell_value.ref, key::id, key::empty) != key::empty) {
 			state.append(spell_ids, str(text_or(state, spell_value.ref, key::id, key::empty)));

@@ -415,7 +415,8 @@ Atom _resource_site_yield_line(State &state, const Value &session, DictRef node,
 	}
 	const ArrayRef lesson_names = _resource_site_spell_names(state, site);
 	if (state.array_size(lesson_names) != 0) {
-		state.append(parts, str(gd::format(state, key::teaches_s, {str(_spell_list_text(state, lesson_names))})));
+		const Atom lesson = gd::bool_field(state, site, key::gives_spell_scrolls, false) ? static_cast<Atom>(key::holds_a_scroll_of_s) : static_cast<Atom>(key::teaches_s);
+		state.append(parts, str(gd::format(state, lesson, {str(_spell_list_text(state, lesson_names))})));
 	}
 	return join_items(state, key::comma_space, _non_empty_strings(state, parts));
 }

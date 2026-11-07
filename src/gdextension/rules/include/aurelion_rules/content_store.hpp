@@ -146,6 +146,9 @@ private:
 	};
 
 	state::Value parse_file(const std::string &path, std::vector<Message> &messages);
+	// The scroll items artifacts.json gets as it is read: one trinket per
+	// spell of spells.json (docs/magic-system.md, Scrolls).
+	void append_spell_scrolls(const state::Value &root, std::vector<Message> &messages);
 	state::Value items_from_raw(const state::Value &raw, const std::string &list_key);
 	const Index &index(const std::string &path, const std::string &list_key, const std::string &id_field, const state::Value &raw);
 	std::string id_text(const state::Value &value, const char *what);

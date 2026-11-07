@@ -125,6 +125,50 @@ bool _knows_spell(State &state, DictRef hero_state, Atom spell_id) {
 	return false;
 }
 
+ArrayRef worn_scroll_spell_ids(State &state, DictRef hero_state) {
+	const ArrayRef spell_ids = state.new_array();
+	Value artifacts;
+	Value equipped;
+	if (!state.lookup(hero_state, str(key::artifacts), artifacts) || !gd::is_dict(artifacts)
+			|| !state.lookup(artifacts.ref, str(key::equipped), equipped) || !gd::is_dict(equipped)) {
+		return spell_ids;
+	}
+	for (const Atom slot : {key::trinket, key::trinket_2}) {
+		Value worn;
+		if (!state.lookup(equipped.ref, str(slot), worn) || !worn.is_string_like()) {
+			continue;
+		}
+		const Atom spell_id = artifact_rules::scroll_spell_id(state, gd::stringify(state, worn));
+		if (spell_id != key::empty && !gd::array_has(state, spell_ids, str(spell_id))
+				&& !gd::is_empty(state, gd::content_row(state, state::ContentTable::Spell, spell_id))) {
+			state.append(spell_ids, str(spell_id));
+		}
+	}
+	return spell_ids;
+}
+
+bool can_cast_spell(State &state, DictRef hero_state, Atom spell_id) {
+	return _knows_spell(state, hero_state, spell_id) || gd::array_has(state, worn_scroll_spell_ids(state, hero_state), str(spell_id));
+}
+
+ArrayRef castable_spell_ids(State &state, DictRef hero_state) {
+	const ArrayRef spell_ids = state.new_array();
+	Value spellbook;
+	Value known;
+	if (state.lookup(hero_state, str(key::spellbook), spellbook) && gd::is_dict(spellbook)
+			&& state.lookup(spellbook.ref, str(key::known_spell_ids), known) && gd::is_array(known)) {
+		for (const Value &spell_id : gd::items(state, known)) {
+			state.append(spell_ids, spell_id);
+		}
+	}
+	for (const Value &spell_id : gd::items(state, array_value(worn_scroll_spell_ids(state, hero_state)))) {
+		if (!gd::array_has(state, spell_ids, spell_id)) {
+			state.append(spell_ids, spell_id);
+		}
+	}
+	return spell_ids;
+}
+
 DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template) {
 	const int64_t max_mana = mana_max_from_hero(state, hero_state);
 	const ArrayRef default_known_spells = !gd::is_empty(state, hero_template) ? _normalize_spell_ids(state, get_or_new_array(state, hero_template, key::starting_spell_ids)) : state.new_array();

@@ -401,7 +401,8 @@ DictRef _draw_from_rarities(State &state, Atom source_tag, ArrayRef tiers, Atom 
 		const ArrayRef candidates = state.new_array();
 		if (has_items) {
 			for (const Value &artifact_value : gd::items(state, items)) {
-				if (!gd::is_dict(artifact_value) || !gd::in(state, str(string_of_field(state, artifact_value.ref, key::rarity, key::empty)), rarities)) {
+				// Scrolls are found as scroll sites, never as a placed artifact.
+				if (!gd::is_dict(artifact_value) || is_spell_scroll(state, artifact_value) || !gd::in(state, str(string_of_field(state, artifact_value.ref, key::rarity, key::empty)), rarities)) {
 					continue;
 				}
 				const Atom artifact_id = gd::strip_edges(state, string_of_field(state, artifact_value.ref, key::id, key::empty));
@@ -575,6 +576,9 @@ Atom artifact_reward_role(State &state, Atom artifact_id) {
 	if (gd::is_empty(state, artifact)) {
 		return key::equipment_reward;
 	}
+	if (is_spell_scroll(state, dict_value(artifact))) {
+		return key::spell_access_reward;
+	}
 	const DictRef bonuses = get_target(get_or_new_dict(state, artifact, key::bonuses));
 	// A missing daily income is the {} fallback, which holds no amount.
 	Value income;
@@ -666,6 +670,11 @@ Atom _already_owned_message(State &state, Atom artifact_id, DictRef location, At
 Atom _artifact_effect_summary(State &state, DictRef artifact) {
 	if (gd::is_empty(state, artifact)) {
 		return key::no_bonuses;
+	}
+	if (is_spell_scroll(state, dict_value(artifact))) {
+		const Atom spell_id = string_of_field(state, artifact, key::spell_id, key::empty);
+		const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+		return gd::format(state, key::lends_s_while_worn, {str(string_of_field(state, spell, key::name, spell_id))});
 	}
 	const DictRef bonuses = get_target(get_or_new_dict(state, artifact, key::bonuses));
 	const ArrayRef parts = state.new_array();

@@ -28,6 +28,13 @@ bool _artifact_exists(State &state, Atom artifact_id);
 bool _artifact_is_owned(State &state, DictRef equipped, ArrayRef inventory, Atom artifact_id);
 Atom artifact_slot(State &state, Atom artifact_id);
 ArrayRef _compatible_equipment_slots(State &state, Atom slot_type);
+// Scroll items (docs/magic-system.md, Scrolls): an artifact of the
+// spell_scroll class, which the content store makes from each spell. The
+// spell a scroll lends ("" for any other artifact), and a spell's scroll
+// ("" when content has none).
+bool is_spell_scroll(State &state, const Value &artifact);
+Atom scroll_spell_id(State &state, Atom artifact_id);
+Atom spell_scroll_artifact_id(State &state, Atom spell_id);
 DictRef _blank_bonus_totals(State &state);
 void _apply_bonus_payload(State &state, DictRef totals, const Value &bonuses_value, DictRef modifier_source, Atom modifier_source_id);
 DictRef _merge_school_resistance(State &state, const Value &base, const Value &delta);

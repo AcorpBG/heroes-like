@@ -9,6 +9,7 @@
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <cmath>
 #include <string>
@@ -173,8 +174,9 @@ double _spell_damage_per_round(State &state, DictRef commander) {
 	if (!dict_field(state, commander, key::spellbook, spellbook)) {
 		return 0.0;
 	}
-	Value known;
-	if (!state.lookup(spellbook.ref, str(key::known_spell_ids), known) || !gd::is_array(known) || state.array_size(known.ref) == 0) {
+	// Its known spells and those its worn scrolls lend.
+	const ArrayRef known = spell_rules::castable_spell_ids(state, commander);
+	if (state.array_size(known) == 0) {
 		return 0.0;
 	}
 	Value mana_state;
@@ -187,8 +189,8 @@ double _spell_damage_per_round(State &state, DictRef commander) {
 	const int64_t power = compat::engine_max<int64_t>(0, dict_field(state, commander, key::command, command) ? gd::int_field(state, command.ref, key::power, 0) : 0);
 	const DictRef memo = ai::static_dict(state, kScript, key::_damage_spell_memo);
 	double best = 0.0;
-	for (int64_t index = 0; index < state.array_size(known.ref); ++index) {
-		const Atom spell_id = gd::stringify(state, state.at(known.ref, index));
+	for (int64_t index = 0; index < state.array_size(known); ++index) {
+		const Atom spell_id = gd::stringify(state, state.at(known, index));
 		Value figures = state.get(memo, str(spell_id), Value());
 		if (figures.kind == Kind::Nil) {
 			figures = array_value(_damage_spell_figures(state, spell_id));

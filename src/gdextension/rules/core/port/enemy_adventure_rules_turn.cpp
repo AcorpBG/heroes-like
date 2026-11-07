@@ -585,7 +585,8 @@ DictRef _secure_resource_target(State &state, DictRef session, DictRef raid, Dic
 	if (gd::bool_field(state, spell_reward, key::learned, false)) {
 		const Atom commander_name = raid_commander_display_name(state, updated_raid);
 		const Atom spell_name = text_or(state, spell_reward, key::spell_name, state.get(spell_reward, str(key::spell_id), str(key::the_site_spell)));
-		message = gd::format(state, key::s_s_learns_s, { str(message), str(commander_name), str(spell_name) });
+		const Atom line = gd::bool_field(state, spell_reward, key::scroll, false) ? static_cast<Atom>(key::s_s_takes_a_scroll_of_s) : static_cast<Atom>(key::s_s_learns_s);
+		message = gd::format(state, line, { str(message), str(commander_name), str(spell_name) });
 	}
 	if (gd::bool_field(state, recruit_reward, key::applied, false)) {
 		const Atom commander_name = raid_commander_display_name(state, updated_raid);
@@ -1050,8 +1051,22 @@ DictRef _apply_resource_site_spell_reward_to_commander(State &state, DictRef ses
 	DictRef commander = spell_rules::ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, commander_state.ref), state.new_dict());
 	const ArrayRef learned_ids = state.new_array();
 	std::vector<Atom> learned_names;
+	// A scroll site hands over scroll items, worn when a trinket slot is free,
+	// as the human's hero takes them; "learned" then means the hero gained
+	// them.
+	const bool scrolls = gd::bool_field(state, site, key::gives_spell_scrolls, false);
 	for (const Value &spell_id : gd::items(state, array_value(spell_ids))) {
 		const DictRef spell = gd::content_row(state, ContentTable::Spell, gd::stringify(state, spell_id));
+		if (scrolls && !gd::is_empty(state, spell)) {
+			const Atom artifact_id = artifact_rules::spell_scroll_artifact_id(state, gd::stringify(state, spell_id));
+			const DictRef claim = artifact_id != key::empty ? artifact_rules::claim_artifact(state, commander, artifact_id, key::Found, true) : state.new_dict();
+			if (gd::bool_field(state, claim, key::ok, false) && !gd::bool_field(state, claim, key::duplicate, false)) {
+				commander = gd::as_dict(state.get(claim, str(key::hero), dict_value(commander)));
+				state.append(learned_ids, str(gd::stringify(state, spell_id)));
+				learned_names.push_back(text_or(state, spell, key::name, spell_id));
+			}
+			continue;
+		}
 		if (gd::is_empty(state, spell) || spell_rules::knows_spell(state, commander, gd::stringify(state, spell_id))) {
 			continue;
 		}
@@ -1077,6 +1092,7 @@ DictRef _apply_resource_site_spell_reward_to_commander(State &state, DictRef ses
 	state.set(result, str(key::spell_id), str(gd::stringify(state, state.at(learned_ids, 0))));
 	state.set(result, str(key::spell_ids), array_value(learned_ids));
 	state.set(result, str(key::spell_name), str(spell_name));
+	state.set(result, str(key::scroll), bool_value(scrolls));
 	return result;
 }
 

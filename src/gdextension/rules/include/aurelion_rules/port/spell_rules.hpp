@@ -58,6 +58,13 @@ ArrayRef spell_role_categories(State &state, DictRef spell);
 ArrayRef _normalize_string_array(State &state, const Value &value);
 bool _has_mana(State &state, DictRef hero_state, int64_t cost);
 bool _knows_spell(State &state, DictRef hero_state, Atom spell_id);
+// Worn scrolls (docs/magic-system.md, Scrolls): the spells the scrolls in a
+// hero's trinket slots lend, once each; whether the hero can cast a spell (it
+// knows it, or a worn scroll lends it); and the ids it can cast, its known
+// spells first. Learning reads only the known spells.
+ArrayRef worn_scroll_spell_ids(State &state, DictRef hero_state);
+bool can_cast_spell(State &state, DictRef hero_state, Atom spell_id);
+ArrayRef castable_spell_ids(State &state, DictRef hero_state);
 
 // Layer 5: a battle effect built from an ability (attack_effects.cpp).
 DictRef build_battle_effect(State &state, Atom effect_id, Atom label, const Value &modifiers, int64_t duration_rounds, DictRef battle, Atom source_type, Atom source_id, const Value &status_immunity_ids);
@@ -104,8 +111,10 @@ int64_t _alive_count(State &state, DictRef stack);
 double _health_ratio(State &state, DictRef stack);
 
 // Layer 8, 07b: the cast checked, resolved and paid for, and the hero's
-// known spells (spell_battle.cpp).
+// known spells (spell_battle.cpp): those it can cast, the learned ones first
+// and then those its worn scrolls lend; learned_spells, the learned ones only.
 ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter);
+ArrayRef learned_spells(State &state, DictRef hero_state, Atom context_filter);
 DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side);
 DictRef validate_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, const Value &spell, Atom acting_side);
 DictRef _consume_mana(State &state, DictRef hero_state, int64_t cost);

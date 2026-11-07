@@ -98,7 +98,8 @@ ArrayRef spell_ids_through_tier(State &state, DictRef town, int64_t tier) {
 ArrayRef draw_guild_spell_ids(State &state, DictRef session, DictRef town) {
 	const DictRef faction = gd::content_row(state, ContentTable::Faction, town_faction_id(state, town));
 	const Atom preferred_school = text_field(state, faction, key::preferred_spell_school_id, key::empty);
-	// Each tier's spells in content order.
+	// Each tier's spells in content order; a scroll-only spell never enters a
+	// guild (docs/magic-system.md, Scrolls).
 	std::map<int64_t, std::vector<GuildCandidate>> tiers;
 	Value spells;
 	if (state.lookup(gd::content_file(state, key::spells_path), str(key::items), spells) && gd::is_array(spells)) {
@@ -108,7 +109,7 @@ ArrayRef draw_guild_spell_ids(State &state, DictRef session, DictRef town) {
 			}
 			const Atom spell_id = text_field(state, spell_value.ref, key::id, key::empty);
 			const int64_t tier = gd::int_field(state, spell_value.ref, key::tier, 0);
-			if (spell_id == key::empty || tier <= 0) {
+			if (spell_id == key::empty || tier <= 0 || gd::bool_field(state, spell_value.ref, key::scroll_only, false)) {
 				continue;
 			}
 			const bool preferred = preferred_school != key::empty && text_field(state, spell_value.ref, key::school_id, key::empty) == preferred_school;

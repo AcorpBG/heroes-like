@@ -389,7 +389,7 @@ ArrayRef get_overworld_actions(State &state, DictRef hero_state, DictRef movemen
 DictRef cast_overworld_spell(State &state, DictRef hero_state, DictRef movement_state, Atom spell_id, int64_t today) {
 	DictRef hero = spellbook_copy(state, hero_state);
 	const DictRef movement = gd::as_dict(gd::engine_duplicate(state, dict_value(movement_state), true));
-	if (!_knows_spell(state, hero, spell_id)) {
+	if (!can_cast_spell(state, hero, spell_id)) {
 		return cast_refusal(state, hero, movement, key::spell_not_in_spellbook_text);
 	}
 	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);

@@ -203,16 +203,23 @@ func _build() -> void:
 	_spellbook_view = SpellbookViewScript.new()
 	_tabs.add_child(_spellbook_view)
 	if is_interactive():
-		_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []), "overworld", _spell_availability())
+		_spellbook_view.configure(hero, _castable_spell_ids(), "overworld", _spell_availability())
 		_spellbook_view.spell_requested.connect(func(spell_id: String): spell_cast_requested.emit(spell_id))
 	else:
-		_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []))
+		_spellbook_view.configure(hero, _castable_spell_ids())
 	_spellbook_view.controls_changed.connect(_focus_cycle)
 	_tabs.get_tab_bar().focus_mode = Control.FOCUS_ALL
 	_tabs.get_tab_bar().accessibility_name = "Hero information tabs"
 	_tabs.tab_changed.connect(func(_index: int): _focus_cycle())
 	_focusable.append(_tabs.get_tab_bar())
 	_focus_cycle()
+
+## The spells the hero can cast: those it knows, then those its worn scrolls lend.
+func _castable_spell_ids() -> Array:
+	var spell_ids := []
+	for spell in SpellRules.known_spells(hero):
+		spell_ids.append(String(spell.get("id", "")))
+	return spell_ids
 
 func _spell_availability() -> Dictionary:
 	var availability := {}

@@ -417,7 +417,8 @@ Atom _resource_site_context_summary(State &state, DictRef session, DictRef node,
 	}
 	const ArrayRef lesson_names = _resource_site_spell_names(state, site);
 	if (state.array_size(lesson_names) != 0) {
-		parts.push_back(gd::format(state, key::teaches_s_2, {str(_spell_list_text(state, lesson_names))}));
+		const Atom lesson = gd::bool_field(state, site, key::gives_spell_scrolls, false) ? static_cast<Atom>(key::Holds_a_scroll_of_s) : static_cast<Atom>(key::teaches_s_2);
+		parts.push_back(gd::format(state, lesson, {str(_spell_list_text(state, lesson_names))}));
 	}
 	if (_resource_site_is_repeatable(state, site)) {
 		const Atom service_summary = field_text(state, site, key::service_summary, key::empty);
