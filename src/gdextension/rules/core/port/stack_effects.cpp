@@ -529,6 +529,8 @@ ArrayRef stack_status_immunity_ids(State &state, DictRef stack, DictRef battle) 
 			}
 		}
 	}
+	// Eternal Noon keeps its statuses off every stack of its side.
+	aura_status_immunity_ids(state, battle, stack, ids);
 	return ids;
 }
 

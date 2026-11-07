@@ -603,7 +603,16 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	if (effect_type == key::damage_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero_state, battle, target_stack, spell);
 		const int64_t final_damage = gd::int_field(state, damage_projection, key::final_damage, 0);
-		Atom summary = gd::format(state, key::projected_d_damage_to_s, {int_value(final_damage), str(text_or(state, target_stack, key::name, key::the_selected_enemy))});
+		// Black Tide names its share of the creatures.
+		const Atom damaged_name = text_or(state, target_stack, key::name, key::the_selected_enemy);
+		const int64_t creature_share = creature_share_pct(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		Atom summary = gd::format(state, key::projected_d_damage_to_s, {int_value(final_damage), str(damaged_name)});
+		if (gd::int_field(state, effect, key::creature_pct, 0) > 0) {
+			// Without a target there are no creatures to count.
+			summary = gd::is_empty(state, target_stack)
+					? gd::format(state, key::creature_share_untargeted_sentence, {int_value(creature_share), str(damaged_name)})
+					: gd::format(state, key::creature_share_sentence, {int_value(creature_share), str(damaged_name), int_value(final_damage)});
+		}
 		if (gd::int_field(state, damage_projection, key::resistance_pct, 0) > 0) {
 			const int64_t raw_damage = gd::int_field(state, damage_projection, key::raw_damage, 0);
 			const int64_t resistance_pct = gd::int_field(state, damage_projection, key::resistance_pct, 0);
@@ -742,6 +751,19 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	if (effect_type == key::battle_aura) {
 		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, {int_value(rounds)});
+		const Atom aura = text_or(state, effect, key::aura, key::empty);
+		if (aura == key::sun) {
+			const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), spell_power_against(state, hero_state, battle, target_stack));
+			return with_timing(gd::format(state, key::second_sun_sentence, {int_value(damage)}));
+		}
+		if (aura == key::noon) {
+			const ArrayRef kept_off = state.new_array();
+			for (const Value &status_id : gd::field_items(state, effect, str(key::status_immunity_ids))) {
+				state.append(kept_off, status_id);
+			}
+			const Atom labels = join_array(state, key::comma_space, status_id_labels(state, array_value(kept_off)));
+			return with_timing(gd::format(state, key::noon_sentence, {str(rounds_label), str(labels)}));
+		}
 		return with_timing(gd::format(state, key::watch_sentence, {str(rounds_label), int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
 	}
 	// Goad and Uproot: a status the target may resist, Uproot's after the drag it always makes.

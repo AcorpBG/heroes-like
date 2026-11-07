@@ -79,6 +79,10 @@ Atom burning_blow(State &state, DictRef battle, DictRef striker, Atom defender_i
 	const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, mechanic, key::burning_turns, BURNING_BLOW_TURNS));
 	const Atom source_id = gd::string_field(state, blows, key::source_id, key::empty);
 	battle_rules::_apply_stack_effect(state, battle, defender_id, dict_value(burning_payload(state, battle, source_id, damage, turns)));
+	// Full Steam: only the first blow that lands sets its target Burning.
+	if (gd::int_field(state, mechanic, key::on_hit_once, 0) > 0) {
+		state.erase(mechanic, str(key::on_hit_burning));
+	}
 	return gd::format(state, key::set_burning_text, { str(battle_rules::_stack_label(state, defender)) });
 }
 
@@ -375,6 +379,11 @@ void round_start_auras(State &state, DictRef battle, int64_t round) {
 			continue;
 		}
 		state.set(aura.ref, str(key::healed_round), int_value(round));
+		// Second Sun: every stack of the other side burns as the round before ends.
+		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::sun) {
+			second_sun_burns(state, battle, aura.ref);
+			continue;
+		}
 		// Watchful Light: its side's most wounded stack heals.
 		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::triage) {
 			const DictRef stack = most_wounded_stack(state, battle, gd::string_field(state, aura.ref, key::side, key::empty));

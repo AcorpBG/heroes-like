@@ -273,7 +273,14 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 }
 
 double _control_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell) {
-	const DictRef status_effect = _status_effect_from_spell(state, spell);
+	DictRef status_effect = _status_effect_from_spell(state, spell);
+	// Grasp of the Deep stuns a stack that is already Rooted.
+	Value stun;
+	const bool stuns_rooted = state.lookup(spell_effect(state, spell), str(key::rooted_stun_status), stun) && gd::is_dict(stun)
+			&& spell_rules::has_effect_id(state, target, battle, key::status_rooted);
+	if (stuns_rooted) {
+		status_effect = stun.ref;
+	}
 	const Atom status_id = gd::string_field(state, status_effect, key::effect_id, key::empty);
 	if (status_id != key::empty && spell_rules::target_is_immune_to_status(state, target, battle, status_id)) {
 		return -9999.0;
@@ -289,7 +296,7 @@ double _control_spell_score(State &state, DictRef battle, DictRef active_stack, 
 	} else if (status_id != key::empty) {
 		score -= 4.0;
 	}
-	if (already_controlled) {
+	if (already_controlled && !stuns_rooted) {
 		score -= 5.0;
 	}
 	if (_health_ratio(state, target) > 0.5) {

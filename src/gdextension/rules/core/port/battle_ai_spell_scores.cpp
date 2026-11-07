@@ -274,7 +274,7 @@ double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef ac
 					/ static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, stack, key::total_health, 0))));
 			value += (side_of(state, stack) == side_of(state, active_stack) ? -1.5 : 1.0) * share * _w(state, key::spell_damage_share);
 		} else if (type == key::recover_effect) {
-			const int64_t useful = engine_min<int64_t>(gd::int_field(state, sub.ref, key::recovery_amount, 0), _stack_missing_health(state, stack));
+			const int64_t useful = engine_min<int64_t>(gd::int_field(state, sub.ref, key::recovery_amount, 0), _recovery_room(state, stack, spell));
 			value += static_cast<double>(useful) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1))) * 0.8;
 		} else if (type == key::effect) {
 			Value payload;
@@ -316,7 +316,11 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 		score += 1.5 + engine_min<double>(4.0, static_cast<double>(amount(key::plate)) / unit_hp * 0.8) + (engaged ? 2.0 : 0.5);
 	}
 	if (amount(key::regrowth) > 0) {
-		const int64_t useful = engine_min<int64_t>(gd::add(_stack_missing_health(state, ally), amount(key::regrowth)), gd::mul(amount(key::regrowth), turns));
+		// Spring Eternal's regrowth raises the fallen too, up to the starting count.
+		const int64_t room = amount(key::regrowth_raise) > 0
+				? engine_max<int64_t>(0, gd::sub(gd::mul(engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1)), gd::int_field(state, ally, key::base_count, 0)), gd::int_field(state, ally, key::total_health, 0)))
+				: _stack_missing_health(state, ally);
+		const int64_t useful = engine_min<int64_t>(gd::add(room, amount(key::regrowth)), gd::mul(amount(key::regrowth), turns));
 		score += 1.0 + static_cast<double>(useful) / unit_hp * 0.8 + (1.0 - _health_ratio(state, ally)) * 3.0;
 	}
 	if (amount(key::thorns) > 0) {
@@ -351,7 +355,9 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	// return for a stack under attack, more as it weakens; held cohesion for a stack in a fight.
 	if (amount(key::on_hit_burning) > 0) {
 		const bool strikes = engaged || (ranged(state, ally) && has_shots(state, ally)) || _can_make_melee_attack(state, ally, battle, state.new_dict());
-		score += strikes ? 1.0 + _buff_spell_offense_payoff(state, ally) * 0.8 : 0.3;
+		// Full Steam's burns only on the first blow.
+		const double once = amount(key::on_hit_once) > 0 ? 0.5 : 1.0;
+		score += (strikes ? 1.0 + _buff_spell_offense_payoff(state, ally) * 0.8 : 0.3) * once;
 	}
 	const bool threatened = engaged || melee_hostiles > 0 || hostile_shooters > 0;
 	if (amount(key::damage_cap_pct) > 0) {
@@ -373,6 +379,10 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	}
 	if (amount(key::half_ranged) > 0) {
 		score += hostile_shooters > 0 ? 1.0 + static_cast<double>(hostile_shooters) : -1.0;
+	}
+	// Daybreak Charge: first place next round, worth most to a stack that must still close in.
+	if (amount(key::act_first_next) > 0) {
+		score += engaged ? 1.0 : (_fights_in_melee(state, ally) ? 1.5 : 0.8);
 	}
 	if (amount(key::pierce_blows) > 0) {
 		const bool strikes = engaged || (ranged(state, ally) && has_shots(state, ally)) || _can_make_melee_attack(state, ally, battle, state.new_dict());
@@ -1005,6 +1015,38 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 				&& gd::int_field(state, aura.ref, key::until_round, 0) > round) {
 			return -9999.0;
 		}
+	}
+	const Atom kind = gd::string_field(state, effect, key::aura, key::empty);
+	if (kind == key::sun) {
+		// Second Sun: each round's burn on every enemy stack, as a share of its health, counted for two rounds.
+		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_rules::spell_power(state, enemy_hero), spell_rules::opposing_side_knowledge(state, battle, side)));
+		const int64_t raw = spell_rules::_battle_spell_damage_at(state, enemy_hero, spell, state.new_dict(), against);
+		double share = 0.0;
+		for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side))))) {
+			if (!gd::is_dict(stack)) {
+				continue;
+			}
+			const int64_t resistance = spell_rules::spell_damage_resistance_pct(state, battle, stack.ref, spell);
+			const double damage = static_cast<double>(raw) * static_cast<double>(100 - resistance) / 100.0;
+			share += engine_min<double>(1.0, damage / engine_max<double>(1.0, static_cast<double>(gd::int_field(state, stack.ref, key::total_health, 1))));
+		}
+		return share > 0.0 ? share * _w(state, key::spell_damage_share) * 2.0 - mana_cost_term(state, spell) : -9999.0;
+	}
+	if (kind == key::noon) {
+		// Eternal Noon: first place for each of its side's stacks, valued as Daybreak Charge's (most for a melee stack
+		// that must still close in), over its rounds at half a round each, up to two rounds' worth.
+		double value = 0.0;
+		for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
+			if (!gd::is_dict(stack)) {
+				continue;
+			}
+			value += _stack_is_engaged(state, stack.ref, battle) ? 1.0 : (_fights_in_melee(state, stack.ref) ? 1.5 : 0.8);
+		}
+		if (value <= 0.0) {
+			return -9999.0;
+		}
+		const int64_t noon_rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+		return value * engine_min<double>(2.0, static_cast<double>(noon_rounds) / 2.0) - mana_cost_term(state, spell);
 	}
 	// Stacks that are wounded or in a fight will want the heal.
 	int64_t pressed = 0;

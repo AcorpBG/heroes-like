@@ -343,7 +343,9 @@ bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 	}
 	const int64_t regrowth = stack_mechanic_int(state, stack, battle, key::regrowth);
 	if (regrowth > 0) {
-		const int64_t restored = battle_rules::_restore_stack_health(state, battle, battle_id, regrowth);
+		// Spring Eternal's regrowth raises the fallen too.
+		const bool raises = gd::int_field(state, effect_mechanic(state, stack_mechanic_effect(state, stack, battle, key::regrowth)), key::regrowth_raise, 0) > 0;
+		const int64_t restored = raises ? raise_stack_health(state, battle, battle_id, regrowth) : battle_rules::_restore_stack_health(state, battle, battle_id, regrowth);
 		if (restored > 0) {
 			battle_rules::_record_event(state, battle, gd::format(state, key::regrows_health_text, { str(battle_rules::_stack_label(state, stack)), int_value(restored) }));
 		}
@@ -554,7 +556,9 @@ ArrayRef acts_next_first(State &state, DictRef battle, ArrayRef battle_ids) {
 	const ArrayRef rest = state.new_array();
 	for (const Value &battle_id : gd::items(state, array_value(battle_ids))) {
 		const DictRef stack = battle_rules::_get_stack_by_id(state, battle, gd::to_string(battle_id));
-		const bool called = !gd::is_empty(state, stack) && gd::int_field(state, stack, key::acts_next_round, 0) == round;
+		// Call to Arms and Daybreak Charge name the round; Eternal Noon puts its side first in every round it lasts.
+		const bool called = !gd::is_empty(state, stack) && (gd::int_field(state, stack, key::acts_next_round, 0) == round
+				|| side_acts_first(state, battle, gd::string_field(state, stack, key::side, key::empty), round));
 		state.append(called ? first : rest, battle_id);
 	}
 	if (state.array_size(first) == 0) {

@@ -506,7 +506,8 @@ DictRef battle_spell_damage_projection(State &state, DictRef hero_state, DictRef
 	const int64_t raw_damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
 	const int64_t resistance_pct = spell_damage_resistance_pct(state, battle, target_stack, spell);
 	const double scaled = static_cast<double>(raw_damage) * static_cast<double>(gd::sub(100, resistance_pct)) / 100.0;
-	const int64_t final_damage = engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(scaled)));
+	// Black Tide never takes a stack's last creature.
+	const int64_t final_damage = spare_last_creature(state, spell, target_stack, engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(scaled))));
 	const DictRef projection = state.new_dict();
 	state.set(projection, str(key::raw_damage), int_value(raw_damage));
 	state.set(projection, str(key::final_damage), int_value(final_damage));
@@ -832,6 +833,10 @@ int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell,
 	const int64_t base_damage = gd::int_field(state, effect, key::base_damage, 0);
 	const int64_t power_scale = gd::int_field(state, effect, key::power_scale, 0);
 	int64_t damage = engine_max<int64_t>(1, gd::add(base_damage, gd::mul(power, power_scale)));
+	// Black Tide: a share of the stack's creatures instead of a sum.
+	if (gd::int_field(state, effect, key::creature_pct, 0) > 0) {
+		damage = creature_share_damage(state, spell, target_stack, power);
+	}
 	if (_wounded_bonus_applies(state, effect, target_stack)) {
 		damage = gd::add(damage, engine_max<int64_t>(0, gd::int_field(state, effect, key::wounded_bonus_damage, 0)));
 	}
@@ -1141,6 +1146,10 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		if (heat > 0) {
 			state.set(result, str(key::heat), int_value(heat));
 			state.set(result, str(key::heat_burst_damage), int_value(heat_burst_damage(spell_power_against(state, hero, battle, target_stack))));
+			// Molten Deluge's Heat stops short of a burst.
+			if (gd::bool_field(state, effect, key::heat_short_of_burst, false)) {
+				state.set(result, str(key::heat_short_of_burst), bool_value(true));
+			}
 		}
 		// Flashpoint spends the Heat it set off, or kindles one; Earthsplit knocks the stack back.
 		if (gd::bool_field(state, effect, key::heat_burst, false)) {
@@ -1159,7 +1168,9 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		return result;
 	}
 	if (effect_type == key::control_enemy) {
-		const DictRef control_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
+		// Grasp of the Deep stuns a stack that is already Rooted.
+		const int64_t control_power = spell_power_against(state, hero, battle, target_stack);
+		const DictRef control_effect = grasp_status(state, spell, battle, hero, target_stack, _status_effect_from_spell_effect_at(state, spell, battle, hero, control_power), control_power);
 		const DictRef control_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, control_effect);
 		DictRef resolved_control_effect = control_effect;
 		if (gd::bool_field(state, control_resolution, key::blocked, false)) {
@@ -1496,6 +1507,22 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		state.set(entry, str(key::healed_round), int_value(round));
 		state.set(entry, str(key::spell_id), str(spell_id));
 		state.set(entry, str(key::label), str(gd::string_field(state, spell, key::name, spell_id)));
+		const Atom aura_kind = gd::string_field(state, effect, key::aura, key::empty);
+		if (aura_kind == key::sun) {
+			// Second Sun: for the rest of the battle, at the caster's power less the other side's Knowledge.
+			const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero), opposing_side_knowledge(state, battle, acting_side)));
+			state.set(entry, str(key::damage), int_value(_battle_spell_damage_at(state, hero, spell, state.new_dict(), against)));
+			state.set(entry, str(key::school_id), str(gd::string_field(state, spell, key::school_id, key::empty)));
+			state.set(entry, str(key::until_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
+		} else if (aura_kind == key::noon) {
+			// Eternal Noon: the statuses it keeps off from the cast on, first place from the next round.
+			state.set(entry, str(key::from_round), int_value(gd::add(round, 1)));
+			const ArrayRef kept_off = state.new_array();
+			for (const Value &status_id : gd::field_items(state, effect, str(key::status_immunity_ids))) {
+				state.append(kept_off, status_id);
+			}
+			state.set(entry, str(key::status_immunity_ids), array_value(kept_off));
+		}
 		const DictRef result = cast_result(state, hero, key::aura_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::aura_entry), dict_value(entry));
 		state.set(result, str(key::message), str(gd::format(state, key::s_casts_s, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)) })));

@@ -1400,7 +1400,12 @@ void Check::spell(const Value &spell) {
 			warn("Spell " + spell_id + " must define reveal_radius amount > 0.");
 		}
 	} else if (type == "damage_enemy") {
-		if (integer(effect, "base_damage", 0) <= 0) {
+		// Black Tide takes a share of the creatures instead of a sum.
+		const int64_t creature_pct = integer(effect, "creature_pct", 0);
+		if (creature_pct > 100 || integer(effect, "creature_pct_power_scale", 0) < 0) {
+			warn("Spell " + spell_id + " must define creature_pct up to 100 and creature_pct_power_scale >= 0.");
+		}
+		if (creature_pct <= 0 && integer(effect, "base_damage", 0) <= 0) {
 			warn("Spell " + spell_id + " must define damage base_damage > 0.");
 		}
 		if (integer(effect, "power_scale", -1) < 0) {
@@ -1569,11 +1574,19 @@ void Check::spell(const Value &spell) {
 		if (text(spell, "target_mode") != "battle") {
 			warn("Spell " + spell_id + " battle_aura must use target_mode battle.");
 		}
-		if (text(effect, "aura") != "triage") {
-			warn("Spell " + spell_id + " uses unsupported aura " + text(effect, "aura") + ".");
+		// Watchful Light heals; Second Sun burns the other side for the battle; Eternal Noon keeps statuses off.
+		const std::string aura = text(effect, "aura");
+		if (!one_of(aura, {"triage", "sun", "noon"})) {
+			warn("Spell " + spell_id + " uses unsupported aura " + aura + ".");
 		}
-		if (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0) {
+		if (aura == "triage" && (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0)) {
 			warn("Spell " + spell_id + " must define battle_aura base_restore > 0 and duration_rounds > 0.");
+		}
+		if (aura == "sun" && (integer(effect, "base_damage", 0) <= 0 || integer(effect, "power_scale", -1) < 0)) {
+			warn("Spell " + spell_id + " must define sun base_damage > 0 and power_scale >= 0.");
+		}
+		if (aura == "noon" && integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define noon duration_rounds > 0.");
 		}
 	} else if (type == "conjure") {
 		// A stack on the field for some rounds: summoned creatures or the Risen on a hex, or a decoy of a stack.
@@ -1640,6 +1653,15 @@ void Check::spell(const Value &spell) {
 	} else if (!empty(follow_status) && (text(follow_status, "effect_id").empty() || integer(follow_status, "duration_rounds", 0) <= 0)) {
 		warn("Spell " + spell_id + " follow_status_effect must define effect_id and duration_rounds > 0.");
 	}
+	// Grasp of the Deep's stun for a stack already Rooted, and Long Night's flight for the smallest stack.
+	for (const char *field : { "rooted_stun_status", "flee_smallest_status" }) {
+		const Value status = get(effect, field, empty_dict_);
+		if (!is_dict(status)) {
+			warn("Spell " + spell_id + " " + field + " must be a dictionary.");
+		} else if (!empty(status) && (text(status, "effect_id").empty() || integer(status, "duration_rounds", 0) <= 0)) {
+			warn("Spell " + spell_id + " " + field + " must define effect_id and duration_rounds > 0.");
+		}
+	}
 	// The stacks a cast reaches beyond its target: a splash, a beam, sparks, a
 	// drain, every stack, and from a mastery rank the stacks next to the target
 	// or every stack of its side.
@@ -1657,8 +1679,8 @@ void Check::spell(const Value &spell) {
 	}
 	// A status that spreads to the target's neighbours needs the status.
 	const std::string status_splash = text(effect, "status_splash");
-	if (!status_splash.empty() && (status_splash != "adjacent" || text(get(effect, "status_effect", empty_dict_), "effect_id").empty())) {
-		warn("Spell " + spell_id + " status_splash must be adjacent and needs status_effect.effect_id.");
+	if (!status_splash.empty() && ((status_splash != "adjacent" && status_splash != "all") || text(get(effect, "status_effect", empty_dict_), "effect_id").empty())) {
+		warn("Spell " + spell_id + " status_splash must be adjacent or all and needs status_effect.effect_id.");
 	}
 	// Jumps: the share of the damage at each jump, and more jumps from a mastery rank.
 	const Value chain = get(effect, "chain", empty_array_);

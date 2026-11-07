@@ -118,7 +118,10 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		// (all of the power without a target).
 		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
-		Atom summary = gd::format(state, key::damage_to_text, { int_value(damage), str(target_label) });
+		// Black Tide names its share of the creatures.
+		Atom summary = gd::int_field(state, effect, key::creature_pct, 0) > 0
+				? gd::format(state, key::creature_share_summary_text, { str(target_label), int_value(creature_share_pct(state, spell, spell_power_against(state, hero_state, battle, target_stack))) })
+				: gd::format(state, key::damage_to_text, { int_value(damage), str(target_label) });
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
 		if (!gd::is_empty(state, status_effect)) {
 			const Atom label = gd::string_field(state, status_effect, key::label, key::effect);
@@ -260,6 +263,15 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::battle_aura) {
 		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
+		const Atom aura = gd::string_field(state, effect, key::aura, key::empty);
+		if (aura == key::sun) {
+			const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), spell_power_against(state, hero_state, battle, target_stack));
+			return gd::format(state, key::second_sun_summary_text, { int_value(damage) });
+		}
+		if (aura == key::noon) {
+			const ArrayRef labels = status_id_labels(state, get_or_new_array(state, effect, key::status_immunity_ids));
+			return gd::format(state, key::noon_summary_text, { str(rounds_label), str(join_array_with_comma(state, labels)) });
+		}
 		return gd::format(state, key::watch_summary_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(rounds_label) });
 	}
 	// Goad and Uproot (spell_tier3_control.cpp).
@@ -496,7 +508,8 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 		parts.push_back(gd::format(state, key::thorns_term_text, { amount(key::thorns) }));
 	}
 	if (has(key::regrowth)) {
-		parts.push_back(gd::format(state, key::regrowth_term_text, { amount(key::regrowth) }));
+		// Spring Eternal's regrowth raises the fallen too.
+		parts.push_back(gd::format(state, has(key::regrowth_raise) ? static_cast<Atom>(key::regrowth_raise_term_text) : static_cast<Atom>(key::regrowth_term_text), { amount(key::regrowth) }));
 	}
 	if (has(key::shot_shield)) {
 		parts.push_back(key::shot_shield_term_text);
@@ -506,6 +519,9 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 	}
 	if (has(key::act_next)) {
 		parts.push_back(key::act_next_term_text);
+	}
+	if (has(key::act_first_next)) {
+		parts.push_back(key::act_first_next_term_text);
 	}
 	if (has(key::backlash_pct)) {
 		parts.push_back(gd::format(state, key::backlash_term_text, { amount(key::backlash_pct) }));
@@ -525,10 +541,15 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 	// Tier 3.
 	if (has(key::on_hit_burning)) {
 		const int64_t turns = gd::int_field(state, mechanic, key::burning_turns, 2);
-		parts.push_back(gd::format(state, key::on_hit_burning_term_text, { amount(key::on_hit_burning), int_value(turns) }));
+		// Full Steam's first blow only.
+		parts.push_back(gd::format(state, has(key::on_hit_once) ? static_cast<Atom>(key::on_hit_burning_once_term_text) : static_cast<Atom>(key::on_hit_burning_term_text),
+				{ amount(key::on_hit_burning), int_value(turns) }));
 	}
 	if (has(key::burning_damage)) {
 		parts.push_back(gd::format(state, key::burning_term_text, { amount(key::burning_damage) }));
+	}
+	if (has(key::fever_damage)) {
+		parts.push_back(gd::format(state, key::burning_term_text, { amount(key::fever_damage) }));
 	}
 	if (has(key::damage_cap_pct)) {
 		parts.push_back(gd::format(state, key::damage_cap_term_text, { amount(key::damage_cap_pct) }));
@@ -648,7 +669,9 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 	const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
 	if (effect_type == key::damage_enemy) {
 		const int64_t heat = gd::int_field(state, effect, key::heat, 0);
-		if (heat > 0) {
+		if (heat > 0 && gd::bool_field(state, effect, key::heat_short_of_burst, false)) {
+			state.append(clauses, str(gd::format(state, key::heat_short_clause_text, { int_value(heat) })));
+		} else if (heat > 0) {
 			state.append(clauses, str(gd::format(state, key::heat_clause_text, { int_value(heat), int_value(heat_burst_damage(power_against)) })));
 		}
 		const int64_t rooted_bonus = gd::int_field(state, effect, key::rooted_bonus_pct, 0);
@@ -673,9 +696,27 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 		} else if (push > 1) {
 			state.append(clauses, str(gd::format(state, key::push_clause_text, { int_value(push) })));
 		}
+		// Molten Deluge, Fever Wind and Black Tide reach every enemy stack; Fever Wind's fever lands on each.
+		if (gd::string_field(state, effect, key::reach, key::empty) == key::all) {
+			state.append(clauses, str(gd::int_field(state, effect, key::creature_pct, 0) > 0 ? static_cast<Atom>(key::creature_share_all_clause_text) : static_cast<Atom>(key::damage_all_clause_text)));
+		}
+		if (gd::string_field(state, effect, key::status_splash, key::empty) == key::all) {
+			const DictRef splash_status = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
+			state.append(clauses, str(gd::format(state, key::status_splash_all_clause_text, { str(gd::string_field(state, splash_status, key::label, key::effect)) })));
+		}
 	} else if (effect_type == key::control_enemy) {
 		if (gd::string_field(state, effect, key::reach, key::empty) == key::adjacent) {
 			state.append(clauses, str(key::control_beside_clause_text));
+		}
+		// Grasp of the Deep and Long Night reach every enemy stack.
+		if (gd::string_field(state, effect, key::reach, key::empty) == key::all) {
+			state.append(clauses, str(key::control_all_clause_text));
+		}
+		if (state.has(effect, str(key::rooted_stun_status))) {
+			state.append(clauses, str(key::rooted_stun_clause_text));
+		}
+		if (state.has(effect, str(key::flee_smallest_status))) {
+			state.append(clauses, str(key::flee_smallest_clause_text));
 		}
 		const DictRef follow = gd::as_dict(get_or_new_dict(state, effect, key::follow_status_effect));
 		if (!gd::is_empty(state, follow)) {
@@ -744,6 +785,8 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 		state.append(clauses, str(gd::format(state, key::heal_beside_clause_text, { int_value(gd::int_field(state, effect, key::reach_pct, 100)) })));
 	} else if (reach == key::adjacent && (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect)) {
 		state.append(clauses, str(key::reach_beside_clause_text));
+	} else if (reach == key::all && (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect)) {
+		state.append(clauses, str(key::reach_all_clause_text));
 	}
 	const ArrayRef immune = status_id_labels(state, get_or_new_array(state, effect, key::status_immunity_ids));
 	if (state.array_size(immune) > 0) {

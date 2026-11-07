@@ -6034,3 +6034,7 @@ AURELION_KEY(sentinel_sentence, "Build %s worth %d health beside one of your sta
 AURELION_KEY(summon_sentence, "Call %s worth %d health beside one of your stacks, to fight for you for %s.")
 AURELION_KEY(deaths_door_sentence, "Doom %s to lose %d%% of its creatures when death knocks after %s.")
 AURELION_KEY(snare_sentence, "Every enemy stack on the hex or next to it is %s for %s.")
+AURELION_KEY(creature_share_sentence, "Take %d%% of the creatures of %s, never its last one: projected %d damage.")
+AURELION_KEY(second_sun_sentence, "Every enemy stack takes %d at the end of each round, for the rest of the battle.")
+AURELION_KEY(noon_sentence, "For the next %s your stacks act first and shrug off %s.")
+AURELION_KEY(creature_share_untargeted_sentence, "Take %d%% of the creatures of %s, never its last one.")

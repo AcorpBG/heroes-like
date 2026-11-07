@@ -61,7 +61,7 @@ int64_t damage_at(State &state, DictRef hero, DictRef battle, DictRef stack, Dic
 	const int64_t raw = _battle_spell_damage_at(state, hero, spell, stack, power);
 	const int64_t resistance = spell_damage_resistance_pct(state, battle, stack, spell);
 	const double scaled = static_cast<double>(raw) * static_cast<double>(gd::sub(100, resistance)) / 100.0;
-	return engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(scaled)));
+	return spare_last_creature(state, spell, stack, engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(scaled))));
 }
 
 DictRef sub_resolution(State &state, Atom type, DictRef stack, Atom message) {
@@ -199,6 +199,30 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			}
 		}
 	}
+	// Molten Deluge, Fever Wind and Black Tide: every other stack of the target's side takes it too, at its own
+	// numbers; Molten Deluge's Heat lands on each.
+	if (gd::string_field(state, effect, key::reach, key::empty) == key::all) {
+		const int64_t heat = gd::int_field(state, effect, key::heat, 0);
+		for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
+			if (battle_id_of(state, stack) == battle_id_of(state, target)) {
+				continue;
+			}
+			const int64_t stack_power = spell_power_against(state, hero, battle, stack);
+			const int64_t damage = damage_at(state, hero, battle, stack, spell, stack_power);
+			if (damage <= 0) {
+				continue;
+			}
+			const DictRef hit = damage_hit(state, stack, damage);
+			if (heat > 0) {
+				state.set(hit, str(key::heat), int_value(heat));
+				state.set(hit, str(key::heat_burst_damage), int_value(heat_burst_damage(stack_power)));
+				if (gd::bool_field(state, effect, key::heat_short_of_burst, false)) {
+					state.set(hit, str(key::heat_short_of_burst), bool_value(true));
+				}
+			}
+			state.append(extras, dict_value(hit));
+		}
+	}
 	// Dawn Lance: the beam runs along the target's row from the caster's edge, through every stack of its side.
 	if (gd::bool_field(state, effect, key::line, false)) {
 		const int64_t row = gd::int_field(state, battle_rules::_stack_hex(state, target), key::r, -1);
@@ -296,7 +320,8 @@ void add_control_reach(State &state, DictRef hero, DictRef battle, DictRef targe
 	const Atom shape = wider_shape(gd::string_field(state, effect, key::reach, key::empty), mastery_shape(state, hero, spell));
 	for (const DictRef stack : shape_stacks(state, battle, target, shape)) {
 		const int64_t power_against = spell_power_against(state, hero, battle, stack);
-		const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against);
+		// Grasp of the Deep stuns a stack that is already Rooted.
+		const DictRef payload = grasp_status(state, spell, battle, hero, stack, _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against), power_against);
 		const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
 		const Atom label = battle_rules::_stack_label(state, stack);
 		const int64_t resistance = control_resistance_pct(state, battle, stack, spell);
@@ -348,6 +373,41 @@ void add_ally_reach(State &state, DictRef hero, DictRef battle, DictRef target, 
 	}
 }
 
+// Long Night: the smallest stack of the target's side (fewest creatures, then least health) also runs, on its own draw.
+void add_flee_smallest(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef effect, ArrayRef extras) {
+	Value flee;
+	if (!state.lookup(effect, str(key::flee_smallest_status), flee) || !gd::is_dict(flee)) {
+		return;
+	}
+	DictRef smallest = state.new_dict();
+	for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
+		if (is_decoy(state, stack)) {
+			continue;
+		}
+		if (gd::is_empty(state, smallest)) {
+			smallest = stack;
+			continue;
+		}
+		const int64_t count = battle_rules::_alive_count(state, stack);
+		const int64_t best = battle_rules::_alive_count(state, smallest);
+		if (count < best || (count == best && gd::int_field(state, stack, key::total_health, 0) < gd::int_field(state, smallest, key::total_health, 0))) {
+			smallest = stack;
+		}
+	}
+	if (gd::is_empty(state, smallest)) {
+		return;
+	}
+	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+	const DictRef payload = _status_payload(state, spell, flee, battle, hero, spell_power_against(state, hero, battle, smallest), 0);
+	const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
+	const int64_t resistance = control_resistance_pct(state, battle, smallest, spell);
+	const bool resists = target_is_immune_to_status(state, smallest, battle, status_id)
+			|| (resistance > 0 && stable_draw(state, battle, { str(spell_id), str(battle_id_of(state, smallest)), str(key::flee) }, 100) < resistance);
+	const DictRef sub = sub_resolution(state, key::effect, smallest, gd::format(state, resists ? key::reach_resists_text : key::flees_smallest_text, { str(battle_rules::_stack_label(state, smallest)) }));
+	state.set(sub, str(key::effect), dict_value(resists ? state.new_dict() : payload));
+	state.append(extras, dict_value(sub));
+}
+
 } // namespace
 
 ArrayRef snare_resolutions(State &state, DictRef hero, DictRef battle, DictRef spell, ArrayRef cells, Atom caster_side) {
@@ -390,6 +450,7 @@ void add_reach_resolutions(State &state, DictRef hero, DictRef battle, DictRef t
 		add_damage_reach(state, hero, battle, target, spell, effect, result, second_pick, extras);
 	} else if (effect_type == key::control_enemy) {
 		add_control_reach(state, hero, battle, target, spell, effect, extras);
+		add_flee_smallest(state, hero, battle, target, spell, effect, extras);
 	} else if (effect_type == key::recover_ally || effect_type == key::ally_effect || effect_type == key::attack_buff
 			|| effect_type == key::defense_buff || effect_type == key::initiative_buff) {
 		add_ally_reach(state, hero, battle, target, spell, effect, effect_type, extras);

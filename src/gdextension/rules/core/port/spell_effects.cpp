@@ -276,8 +276,8 @@ ArrayRef normalize_status_immunity_ids(State &state, const Value &value) {
 	}
 	for (const Value &status_id_value : gd::items(state, value)) {
 		const Atom status_id = gd::to_string(status_id_value);
-		// status_id in STATUS_EFFECT_IDS.
-		const bool known = status_id == key::status_harried || status_id == key::status_staggered || status_id == key::status_rooted || status_id == key::status_overheated;
+		// Any harmful status, and Overheated.
+		const bool known = is_harmful_status(status_id) || status_id == key::status_overheated;
 		if (known && !gd::array_has(state, ids, str(status_id))) {
 			state.append(ids, str(status_id));
 		}

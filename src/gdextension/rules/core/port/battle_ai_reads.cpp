@@ -652,7 +652,7 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	}
 	// Tier 4: a Branded stack takes more from every later hurt and Poison hurts over its turns; a Censured stack
 	// loses its abilities and its hero's help; a Stunned stack loses its next turn outright.
-	if (status_id == key::status_branded || status_id == key::status_poisoned) {
+	if (status_id == key::status_branded || status_id == key::status_poisoned || status_id == key::status_fevered) {
 		return 1.0;
 	}
 	if (status_id == key::status_censured) {

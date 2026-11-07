@@ -350,6 +350,18 @@ bool censured(State &state, DictRef stack);
 bool stunned_turn(State &state, DictRef battle, Atom battle_id);
 void end_of_turn_tier45(State &state, DictRef battle, Atom battle_id);
 int64_t deaths_door_pct(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target);
+// Tier 4 and 5, every stack and the whole battle (spell_tier45.cpp): Grasp of the Deep's stun for a stack already
+// Rooted; Heat that stops short of a burst; Daybreak Charge's first place next round; Eternal Noon's first place and the
+// statuses an aura keeps off; Second Sun's burn as a round ends; Black Tide's share of the creatures, never the last.
+DictRef grasp_status(State &state, DictRef spell, DictRef battle, DictRef hero, DictRef stack, DictRef payload, int64_t power_against);
+Atom heat_short_of_burst(State &state, DictRef battle, Atom battle_id, int64_t heat);
+void act_first_next_round(State &state, DictRef battle, Atom battle_id);
+bool side_acts_first(State &state, DictRef battle, Atom side, int64_t round);
+void aura_status_immunity_ids(State &state, DictRef battle, DictRef stack, ArrayRef ids);
+void second_sun_burns(State &state, DictRef battle, DictRef aura);
+int64_t creature_share_pct(State &state, DictRef spell, int64_t power);
+int64_t creature_share_damage(State &state, DictRef spell, DictRef stack, int64_t power);
+int64_t spare_last_creature(State &state, DictRef spell, DictRef stack, int64_t damage);
 // Thicket Snare (spell_ground.cpp, spell_reach.cpp): a hex spell that lays no ground; the enemy stacks its area
 // catches, and their statuses, each on its own resistance draw.
 bool snare_ground(State &state, DictRef spell);

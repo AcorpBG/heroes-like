@@ -491,7 +491,10 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		// Heat (Ember Lash): it builds on the stack and bursts at the third.
 		const int64_t heat = gd::int_field(state, resolution, key::heat, 0);
 		if (heat > 0) {
-			const Atom heat_message = spell_rules::add_heat(state, battle, target_battle_id, heat, gd::int_field(state, resolution, key::heat_burst_damage, 0));
+			// Molten Deluge's Heat stops short of a burst.
+			const Atom heat_message = gd::bool_field(state, resolution, key::heat_short_of_burst, false)
+					? spell_rules::heat_short_of_burst(state, battle, target_battle_id, heat)
+					: spell_rules::add_heat(state, battle, target_battle_id, heat, gd::int_field(state, resolution, key::heat_burst_damage, 0));
 			if (heat_message != key::empty) {
 				message = concat(state, message, heat_message);
 			}
@@ -529,6 +532,10 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 			// Call to Arms: the stack acts next.
 			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::act_next, 0) > 0) {
 				spell_rules::act_next(state, battle, target_battle_id);
+			}
+			// Daybreak Charge: the stack acts before any enemy stack next round.
+			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::act_first_next, 0) > 0) {
+				spell_rules::act_first_next_round(state, battle, target_battle_id);
 			}
 		}
 		Value follow_payload;

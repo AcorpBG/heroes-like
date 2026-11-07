@@ -4,12 +4,19 @@
 // cap. Grave Edge's blows ignore the target's defense. Poison hurts at the end of each of the stack's turns and halves
 // healing on it. Censure turns its abilities off and keeps its own hero's spells from it. A Stunned stack loses its
 // next turn. Death's Door takes a share of the stack's creatures at the end of its last counted turn.
+//
+// The spells on every stack or the whole battle: Grasp of the Deep stuns a stack already Rooted; Molten Deluge's Heat
+// stops short of a burst; Fever hurts at the end of each of the stack's turns; Daybreak Charge puts its stacks first
+// next round and Eternal Noon its side first every round, keeping statuses off it; Second Sun burns every stack of the
+// other side as each round ends; Black Tide takes a share of each stack's creatures, never its last one.
 
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
+
+#include <vector>
 
 namespace aurelion::rules::port::spell_rules {
 
@@ -23,6 +30,9 @@ using gd::str;
 namespace key = state::key;
 
 namespace {
+
+// Heat bursts at its third (spell_stack_mechanics.cpp); Molten Deluge stops at the second.
+constexpr int64_t HEAT_SHORT_OF_BURST = 2;
 
 Atom battle_id_of(const State &state, DictRef stack) {
 	return gd::string_field(state, stack, key::battle_id, key::empty);
@@ -170,6 +180,16 @@ void end_of_turn_tier45(State &state, DictRef battle, Atom battle_id) {
 			return;
 		}
 	}
+	// Fever Wind's fever hurts at the end of each of its turns too.
+	const int64_t fever = gd::int_field(state, effect_mechanic(state, stack_status_effect(state, stack, battle, key::status_fevered)), key::fever_damage, 0);
+	if (fever > 0) {
+		battle_rules::_apply_damage_to_stack(state, battle, battle_id, fever);
+		battle_rules::_record_event(state, battle, gd::format(state, key::fever_hurts_text, { str(label), int_value(fever) }));
+		stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
+		if (!living(state, stack)) {
+			return;
+		}
+	}
 	// Death's Door takes its share of the creatures as its last turn ends.
 	const DictRef door = stack_status_effect(state, stack, battle, key::status_deaths_door);
 	if (last_counted_turn(state, door)) {
@@ -193,6 +213,123 @@ int64_t deaths_door_pct(State &state, DictRef hero, DictRef battle, DictRef spel
 	const int64_t pct = gd::add(gd::int_field(state, effect, key::doom_pct, 0), gd::mul(gd::int_field(state, effect, key::doom_pct_power_scale, 0), power));
 	const int64_t resistance = spell_damage_resistance_pct(state, battle, target, spell);
 	return engine_max<int64_t>(1, engine_min<int64_t>(100, compat::int_div(gd::mul(pct, gd::sub(100, resistance)), 100)));
+}
+
+// --- Every stack and the whole battle ---------------------------------------------------
+
+DictRef grasp_status(State &state, DictRef spell, DictRef battle, DictRef hero, DictRef stack, DictRef payload, int64_t power_against) {
+	const DictRef effect = gd::as_dict(state.get(spell, str(key::effect), dict_value(state.new_dict())));
+	Value stun;
+	if (gd::is_empty(state, payload) || !living(state, stack) || !state.lookup(effect, str(key::rooted_stun_status), stun) || !gd::is_dict(stun)
+			|| gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_rooted))) {
+		return payload;
+	}
+	return _status_payload(state, spell, stun, battle, hero, power_against, 0);
+}
+
+Atom heat_short_of_burst(State &state, DictRef battle, Atom battle_id, int64_t heat) {
+	const DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
+	if (heat <= 0 || !living(state, stack)) {
+		return key::empty;
+	}
+	const int64_t now = gd::int_field(state, stack, key::spell_heat, 0);
+	const int64_t total = engine_min<int64_t>(HEAT_SHORT_OF_BURST, gd::add(now, heat));
+	if (total <= now) {
+		return key::empty;
+	}
+	state.set(stack, str(key::spell_heat), int_value(total));
+	return gd::format(state, key::has_heat_suffix_text, { str(battle_rules::_stack_label(state, stack)), int_value(total) });
+}
+
+void act_first_next_round(State &state, DictRef battle, Atom battle_id) {
+	const DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
+	if (living(state, stack)) {
+		state.set(stack, str(key::acts_next_round), int_value(gd::add(gd::int_field(state, battle, key::round, 1), 1)));
+	}
+}
+
+bool side_acts_first(State &state, DictRef battle, Atom side, int64_t round) {
+	for (const Value &aura : gd::field_items(state, battle, str(key::spell_auras))) {
+		if (gd::is_dict(aura) && gd::string_field(state, aura.ref, key::aura, key::empty) == key::noon
+				&& gd::string_field(state, aura.ref, key::side, key::empty) == side
+				&& gd::int_field(state, aura.ref, key::from_round, 0) <= round && gd::int_field(state, aura.ref, key::until_round, 0) >= round) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void aura_status_immunity_ids(State &state, DictRef battle, DictRef stack, ArrayRef ids) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack)) {
+		return;
+	}
+	const int64_t round = gd::int_field(state, battle, key::round, 1);
+	const Atom side = gd::string_field(state, stack, key::side, key::empty);
+	for (const Value &aura : gd::field_items(state, battle, str(key::spell_auras))) {
+		if (!gd::is_dict(aura) || gd::string_field(state, aura.ref, key::side, key::empty) != side || gd::int_field(state, aura.ref, key::until_round, 0) < round) {
+			continue;
+		}
+		for (const Value &status_id : gd::field_items(state, aura.ref, str(key::status_immunity_ids))) {
+			if (!gd::array_has(state, ids, status_id)) {
+				state.append(ids, status_id);
+			}
+		}
+	}
+}
+
+void second_sun_burns(State &state, DictRef battle, DictRef aura) {
+	const int64_t raw = gd::int_field(state, aura, key::damage, 0);
+	if (raw <= 0) {
+		return;
+	}
+	const Atom side = gd::string_field(state, aura, key::side, key::empty);
+	const Atom label = gd::string_field(state, aura, key::label, key::empty);
+	// Each stack's resistance to the spell's school.
+	const DictRef school = state.new_dict();
+	state.set(school, str(key::school_id), str(gd::string_field(state, aura, key::school_id, key::empty)));
+	std::vector<Atom> burning;
+	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+		if (gd::is_dict(stack) && living(state, stack.ref) && gd::string_field(state, stack.ref, key::side, key::empty) != side) {
+			burning.push_back(battle_id_of(state, stack.ref));
+		}
+	}
+	for (const Atom id : burning) {
+		const DictRef stack = battle_rules::_get_stack_by_id(state, battle, id);
+		if (!living(state, stack)) {
+			continue;
+		}
+		const int64_t resistance = spell_damage_resistance_pct(state, battle, stack, school);
+		const int64_t damage = compat::float_to_int(compat::godot_round(static_cast<double>(raw) * static_cast<double>(gd::sub(100, resistance)) / 100.0));
+		if (damage <= 0) {
+			continue;
+		}
+		battle_rules::_record_event(state, battle, gd::format(state, key::second_sun_burns_text, { str(label), str(battle_rules::_stack_label(state, stack)), int_value(damage) }));
+		battle_rules::_apply_damage_to_stack(state, battle, id, damage);
+	}
+}
+
+int64_t creature_share_pct(State &state, DictRef spell, int64_t power) {
+	const DictRef effect = gd::as_dict(state.get(spell, str(key::effect), dict_value(state.new_dict())));
+	const int64_t pct = gd::add(gd::int_field(state, effect, key::creature_pct, 0), gd::mul(gd::int_field(state, effect, key::creature_pct_power_scale, 0), engine_max<int64_t>(0, power)));
+	return engine_max<int64_t>(0, engine_min<int64_t>(100, pct));
+}
+
+int64_t creature_share_damage(State &state, DictRef spell, DictRef stack, int64_t power) {
+	const int64_t alive = gd::is_empty(state, stack) ? 0 : battle_rules::_alive_count(state, stack);
+	if (alive <= 1) {
+		return 0;
+	}
+	const int64_t lost = engine_min<int64_t>(alive - 1, engine_max<int64_t>(1, compat::int_div(gd::add(gd::mul(alive, creature_share_pct(state, spell, power)), 50), 100)));
+	return gd::mul(lost, engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1)));
+}
+
+int64_t spare_last_creature(State &state, DictRef spell, DictRef stack, int64_t damage) {
+	const DictRef effect = gd::as_dict(state.get(spell, str(key::effect), dict_value(state.new_dict())));
+	if (gd::int_field(state, effect, key::creature_pct, 0) <= 0 || gd::is_empty(state, stack)) {
+		return damage;
+	}
+	const int64_t alive = battle_rules::_alive_count(state, stack);
+	return engine_min<int64_t>(damage, gd::mul(engine_max<int64_t>(0, alive - 1), engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1))));
 }
 
 } // namespace aurelion::rules::port::spell_rules

@@ -150,7 +150,7 @@ Learning stays free: a hero in an own town learns everything its guild offers up
   - Prism Array is worth its cast when the firings in its later rounds, as far as the hero's mana pays for damage spells, out-damage the best damage spell it puts off, on that spell's own score. At spell power 8 Ember Lash still wins; from about 12 the crystal does.
   - Fogwalk suits a melee stack out of the fight or with a strike to make. Fleeing counts 2.5 as control. Bog Pool scores the enemy stacks it slows, most a melee stack that must still walk.
 
-`magic-tier45-spells-20261107` puts the 39 tier-4 and tier-5 battle spells in `spells.json`, unreleased the same way. 13 are in: Molten Brand, Kiln Burst, Crucible Ward, Spore Cloud, Thicket Snare, Sapflood, Ironbark, Censure, Searing Ray, Sanctuary, Grave Edge, Stupor and Death's Door. Scorched Earth, Harvest Bloom, Wardwood, Watchtower Lens and Mist Jump come with the map spells.
+`magic-tier45-spells-20261107` puts the 39 tier-4 and tier-5 battle spells in `spells.json`, unreleased the same way. 26 are in: Molten Brand, Kiln Burst, Crucible Ward, Spore Cloud, Thicket Snare, Sapflood, Ironbark, Censure, Searing Ray, Sanctuary, Grave Edge, Stupor, Death's Door, Full Steam, Molten Deluge, Iron Oath, Second Sun, Grasp of the Deep, Spring Eternal, Lantern Vigil, Daybreak Charge, Dawn of Return, Eternal Noon, Fever Wind, Long Night and Black Tide. Scorched Earth, Harvest Bloom, Wardwood, Watchtower Lens and Mist Jump come with the map spells.
 
 - **A hurt** is any damage a stack takes: a blow, shot, spell or end-of-turn damage, as for Tempering and Decoy. Each hurt meets, in order, a decoy, a graft, Sanctuary or Crucible Ward, a plate, the town's absorb, then the caps and Last Breath.
 - **Molten Brand** (`status_branded`) lasts the battle. Each hurt that takes health and leaves the stack standing melts 1 more point of its defense, down to −{4+E/2}.
@@ -166,13 +166,28 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 - **Grave Edge** gives {1+P/4} blows that ignore the target's defense, its hero's and the defend bonus included. Each attack the stack makes spends one (strikes, strike-backs, shots, volleys and puppet blows), and it lasts until spent.
 - **Stupor** (`status_stunned`): the stack loses its next turn, before it could flee; then it is Harried for {1+E/4} turns.
 - **Death's Door** (`status_deaths_door`) fixes its share at the cast, {30+4E}% after spell resistance. At the end of the stack's third turn it loses that share of its living creatures, at least 1, as damage, so caps, plates, wards and Sanctuary still count. Cleanse takes it off.
+- **Every stack.** The spells on every stack of a side take one stack, and their reach carries them to every other stack of its side, as for Morning Light. Each stack meets the spell at its own resistance and on its own draw; Censured stacks are passed by.
+- **Full Steam**: only the first blow each stack lands sets Burning; the +4 attack and +2 speed stay for the turns.
+- **Molten Deluge** adds Heat up to 2 on each stack and never more, so it never bursts.
+- **Iron Oath**: a spell can now keep off any harmful status, Stunned too, not only the four the units name.
+- **Second Sun** lasts the rest of the battle. Its {12+6E} is fixed at the cast, against the other side's Knowledge then; each stack's resistance applies at each burn. It burns as each later round starts, which is the end of the round before.
+- **Grasp of the Deep**: a stack already Rooted is Stunned for 1 turn instead, unless it is immune to stuns.
+- **Spring Eternal**'s regrowth raises the fallen up to the starting count, as Sapflood's heal does.
+- **Daybreak Charge**: every reached stack acts before any enemy stack next round, in initiative order among them.
+- **Eternal Noon** keeps its four statuses off from the cast, and puts its side first in each of the {3+P/3} rounds after the cast, in initiative order among its stacks. Dazed stacks still go last, and waiting ones after the rest.
+- **Fever** (`status_fevered`, Fever Wind): the {14+7E} now goes through each stack's resistance; the {14+7E} at the end of each of its turns does not, like Burning.
+- **Long Night**: Afraid carries −3 cohesion, as Dread's does. The smallest enemy stack (fewest creatures, then least health; decoys aside) is also Fleeing for 1 turn, on its own draw.
+- **Black Tide** takes min(creatures − 1, max(1, round(creatures × (10+E)%))) creatures as damage. Resistance and the hero's potency then count, but never past the last creature, and a stack of one is untouched.
 - **Texts and art.** A helpful spell with a mechanic reads like a status under the spell's name, tier-2 and tier-3 ones too: "Ironbark (shots and spells do half damage to it) on Bog Brute for its next 4 turns". A raising heal no longer also says the fallen are not restored. The icons are stand-ins until `magic-art-audio-20261107`.
 - **Computer players.** First values, not measured.
   - As control, Molten Brand and Poison count 1, Censure 1.5 on a stack with abilities (else 0.5), and Stun 3.
   - Crucible Ward suits a stack in the fight (2 plus half its health share). Sanctuary suits one in the fight more as it weakens (1 plus 3.5 times its lost share). Ironbark scores 1 plus the enemy's shooters; Grave Edge 1 plus the stack's offense when it strikes.
   - Kiln Burst's blast counts in its reach value. Thicket Snare scores each enemy stack its area catches as the one-stack Rooted spell would, the mana counted once.
   - Death's Door scores as the creatures it takes, dealt now, less 1.5; a stack already at Death's Door is not marked again.
-  - A raising heal (Rekindle, Sapflood) counts the fallen up to the starting count as room to heal.
+  - A raising heal (Rekindle, Sapflood, Spring Eternal, Dawn of Return) counts the fallen up to the starting count as room to heal.
+  - Fever counts 1 as control, as Poison does. Grasp of the Deep scores a Rooted stack as a stun. Full Steam's burn counts half, for its one blow.
+  - Daybreak Charge's first place counts 1.5 for a melee stack that must still close in, 1 for one in the fight and 0.8 otherwise. Eternal Noon counts as much for each of its side's stacks, times half its rounds, at most 2.
+  - Second Sun counts each enemy stack's burn as a share of its health, for two rounds. The computer does not cast Second Sun again while its own burns, nor Eternal Noon before its last round.
 
 ## Faction preference
 
