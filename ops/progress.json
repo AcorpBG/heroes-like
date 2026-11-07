@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-system-spec-20261107",
- "currentSliceTitle": "The settled magic rework as a spec: rules, owner decisions and build order in docs/magic-system.md, the 139 spells and 138 mechanics in docs/magic-system-spells.md, and ten build slices.",
+ "currentSliceId": "magic-power-mana-20261107",
+ "currentSliceTitle": "Native rules: against an enemy hero's stacks, spell damage and debuff turns use power less its Knowledge (heroes only; Knowledge's % resistances gone); a turn per 4 power, no cap; a fifth of max mana back daily, all of it in an own guild town.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-07T10:26:19Z",
+ "updatedAt": "2026-11-07T11:20:56Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -26,13 +26,10 @@
   },
   {
    "id": "magic-power-mana-20261107",
-   "title": "Magic: spell power against Knowledge, turns and mana",
-   "status": "pending",
-   "goal": "Native rules, on today's spells first: a spell's harmful numbers and turns against an enemy hero's stacks use spell power less all of that hero's Knowledge, never below 0; lasting effects get one more turn per 4 spell power, with no limit; a hero regains a fifth of its maximum mana each day, all of it on a day that starts in an own town with a guild. spell_rules, spell_battle, day_economy; six-seed native check; battle_sim_cli rebuilt.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-07"
+   "status": "completed",
+   "completedAt": "2026-11-07",
+   "summary": "Native rules: against an enemy hero's stacks, spell damage and debuff turns use power less its Knowledge (heroes only; Knowledge's % resistances gone); a turn per 4 power, no cap; a fifth of max mana back daily, all of it in an own guild town.",
+   "commit": "ad18b7f1d"
   },
   {
    "id": "magic-guild-draws-20261107",
