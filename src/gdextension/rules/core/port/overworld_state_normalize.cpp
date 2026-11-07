@@ -19,6 +19,7 @@
 #include "aurelion_rules/port/scenario_factory.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/town_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -167,6 +168,8 @@ void normalize_overworld_state(State &state, DictRef session) {
 		const ArrayRef towns = _normalize_towns(state, gd::as_array(gd::field(state, overworld, key::towns)), gd::to_int(state, gd::field(state, session, key::day)));
 		state.set(session_view::overworld(state, session), str(key::towns), array_value(towns));
 	}
+	// A new game's towns, and those of an older save, draw their guilds once.
+	town_rules::ensure_guild_draws(state, session);
 	_normalize_active_town_visit_context(state, session);
 
 	if (lacks_array(state, session_view::overworld(state, session), key::resource_nodes)) {

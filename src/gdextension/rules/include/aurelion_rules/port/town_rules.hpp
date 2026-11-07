@@ -15,11 +15,16 @@ using gd::DictRef;
 using state::State;
 
 // Phase 4's ports shared with Phase 5's battle ends (town_rules_shared.cpp): the
-// spells a town's mage guild teaches.
+// spells a town's mage guild teaches, from the guild the town drew.
 int64_t current_spell_tier(State &state, DictRef town);
 ArrayRef accessible_spell_ids(State &state, DictRef town);
 ArrayRef spell_ids_through_tier(State &state, DictRef town, int64_t tier);
-ArrayRef _school_spell_ids_for_town(State &state, DictRef town_template, int64_t tier);
-ArrayRef _town_spell_school_access(State &state, DictRef town_template);
+// A town's guild (docs/magic-system.md, "Guilds and learning"): at each level a
+// third of that tier's spells, each of the faction's preferred school twice as
+// likely, seeded by the game and the town's placement.
+ArrayRef draw_guild_spell_ids(State &state, DictRef session, DictRef town);
+// Draws the guild of every town of the session that has none yet: a new game's
+// towns and those of a save from before the draws.
+void ensure_guild_draws(State &state, DictRef session);
 
 } // namespace aurelion::rules::port::town_rules

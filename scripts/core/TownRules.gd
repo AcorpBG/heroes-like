@@ -19,15 +19,6 @@ static var _read_scope_session_id := ""
 static var _read_scope_depth := 0
 static var _read_scope_cache := {}
 
-const FACTION_SPELL_SCHOOL_ACCESS := {
-	"faction_embercourt": ["beacon", "furnace"],
-	"faction_mireclaw": ["mire", "root"],
-	"faction_sunvault": ["lens", "beacon"],
-	"faction_thornwake": ["root", "mire"],
-	"faction_brasshollow": ["furnace", "old_measure"],
-	"faction_veilmourn": ["veil", "old_measure"],
-}
-
 static func building_id_for_action(action_id: String) -> String:
 	return HumanEngine.native(&"TownRules.building_id_for_action", [action_id])
 

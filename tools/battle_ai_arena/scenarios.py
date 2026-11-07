@@ -58,11 +58,16 @@ class Content:
         self.factions = [f for f in _items("factions.json") if f.get("hero_ids")]
         self.rosters = json.loads((ROOT / "content" / "town_development.json").read_text(encoding="utf-8"))["rosters"]
         self.factions = [f for f in self.factions if f["id"] in self.rosters]
-        towns = {t["id"]: t for t in _items("towns.json")}
-        self.guild = {
-            f["id"]: {int(tier["tier"]): list(tier.get("spell_ids", [])) for tier in towns.get(f.get("seed_town_id", ""), {}).get("spell_library", [])}
-            for f in self.factions
-        }
+        # What a faction's guild can draw at each tier: every spell of the tier, the spells of
+        # the faction's preferred school twice as likely (docs/magic-system.md).
+        spells = _items("spells.json")
+        self.guild_pool: dict[str, dict[int, list[tuple[str, int]]]] = {}
+        for f in self.factions:
+            pool: dict[int, list[tuple[str, int]]] = {}
+            for spell in spells:
+                weight = 2 if spell.get("school_id") == f.get("preferred_spell_school_id") else 1
+                pool.setdefault(int(spell.get("tier", 0)), []).append((spell["id"], weight))
+            self.guild_pool[f["id"]] = pool
         self.neutral_units = sorted({uid for d in _items("neutral_dwellings.json") for uid in d.get("unit_ids", []) if uid in self.units})
 
     def value(self, unit_id: str) -> float:
@@ -148,10 +153,25 @@ def compose_army(content: Content, faction: str, week: int, doctrine: str, rng: 
     return [{"unit_id": unit, "count": count} for unit, count in ordered]
 
 
+def guild_draw(content: Content, faction: str, rng: random.Random) -> dict[int, list[str]]:
+    """A town's guild as the game draws it: a third of each tier's spells, weighted, no guarantee."""
+    drawn: dict[int, list[str]] = {}
+    for tier, pool in sorted(content.guild_pool[faction].items()):
+        left = list(pool)
+        picks: list[str] = []
+        for _ in range((len(pool) + 1) // 3):
+            spell_id, weight = rng.choices(left, weights=[w for _, w in left])[0]
+            left.remove((spell_id, weight))
+            picks.append(spell_id)
+        drawn[tier] = picks
+    return drawn
+
+
 def hero_spec(content: Content, faction: str, week: int, rng: random.Random, hero_id: str = "") -> dict:
     faction_row = next(f for f in content.factions if f["id"] == faction)
     spell_tier = 1 if week <= 1 else (2 if week <= 3 else 3)
-    spells = [s for tier, ids in content.guild[faction].items() if tier <= spell_tier for s in ids if rng.random() < 0.85]
+    guild = guild_draw(content, faction, rng)
+    spells = [s for tier, ids in guild.items() if tier <= spell_tier for s in ids if rng.random() < 0.85]
     return {
         "hero_id": hero_id or rng.choice(faction_row["hero_ids"]),
         "level": max(1, min(20, int(round(1 + 1.3 * week + rng.uniform(-1.0, 1.0))))),

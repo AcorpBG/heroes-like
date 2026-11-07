@@ -15,7 +15,7 @@ Strategy: `project.md`; execution: `PLAN.md`.
   filtering and hover must not cast spells or mutate gameplay. Other-context,
   insufficient-mana and wrong-turn spells remain inspectable without bypasses.
 - Town visits teach every unknown spell currently offered by the town's built
-  archive tier and school access. The existing rules have no hero-tier/mastery
+  archive tier from the guild the town drew (`docs/magic-system.md`). The existing rules have no hero-tier/mastery
   prerequisite and learning is free: do not invent one or spend mana/resources.
   Learning must be idempotent, local to the eligible visiting hero, preserve
   roster mirrors and save schema, and never teach an absent hero from remote

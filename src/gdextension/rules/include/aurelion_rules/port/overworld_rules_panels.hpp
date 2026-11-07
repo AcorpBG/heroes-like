@@ -57,7 +57,7 @@ DictRef _player_daily_income_projection(State &state, DictRef session, int64_t n
 Atom _town_strategic_summary(State &state, DictRef town);
 Atom _town_identity_surface(State &state, DictRef town, const Value &session);
 Atom _town_economy_identity_line(State &state, DictRef town, DictRef town_template, DictRef faction, const Value &session);
-Atom _town_magic_identity_line(State &state, DictRef town, DictRef town_template);
+Atom _town_magic_identity_line(State &state, DictRef town);
 Atom _town_role_label(State &state, Atom role);
 ArrayRef _town_response_panel_lines(State &state, DictRef session, DictRef town);
 ArrayRef _town_market_panel_lines(State &state, DictRef session, DictRef town);

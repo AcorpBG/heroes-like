@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-power-mana-20261107",
- "currentSliceTitle": "Native rules: against an enemy hero's stacks, spell damage and debuff turns use power less its Knowledge (heroes only; Knowledge's % resistances gone); a turn per 4 power, no cap; a fifth of max mana back daily, all of it in an own guild town.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-07T11:20:56Z",
+ "currentSliceId": "magic-guild-draws-20261107",
+ "currentSliceTitle": "Magic: each town draws its own guild",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-07T14:16:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -34,7 +34,7 @@
   {
    "id": "magic-guild-draws-20261107",
    "title": "Magic: each town draws its own guild",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "When the map is made each town draws its guild: a third of each tier's guild spells per level, each spell of the faction's preferred school (new in factions.json) twice as likely, no guarantee. Kept on capture and in saves; old saves draw on load. Replaces towns.json spell_library; the town screen shows the draw. Uses today's spells and home schools until magic-switch-20261107.",
    "docs": [
     "docs/magic-system.md"

@@ -15,6 +15,7 @@
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/resource_node_payload_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/town_rules.hpp"
 
 #include <algorithm>
 #include <string>
@@ -757,7 +758,7 @@ Atom _town_identity_surface(State &state, DictRef town, const Value &session) {
 	if (economy_line != key::empty) {
 		lines.push_back(economy_line);
 	}
-	const Atom magic_line = _town_magic_identity_line(state, town, town_template);
+	const Atom magic_line = _town_magic_identity_line(state, town);
 	if (magic_line != key::empty) {
 		lines.push_back(magic_line);
 	}
@@ -803,31 +804,26 @@ Atom _town_economy_identity_line(State &state, DictRef town, DictRef town_templa
 	return gd::format(state, key::economy_s_2, { str(join_atoms(state, key::space_bar_space, parts)) });
 }
 
-Atom _town_magic_identity_line(State &state, DictRef town, DictRef town_template) {
-	std::vector<Atom> spell_names;
-	int64_t max_library_tier = 0;
-	for (const Value &tier_value : gd::field_items(state, town_template, str(key::spell_library))) {
-		if (!gd::is_dict(tier_value)) {
-			continue;
-		}
-		max_library_tier = compat::engine_max<int64_t>(max_library_tier, gd::int_field(state, tier_value.ref, key::tier, 0));
-		for (const Value &spell_id_value : gd::field_items(state, tier_value.ref, str(key::spell_ids))) {
-			if (spell_names.size() >= 3) {
-				break;
-			}
-			const Atom spell_id = gd::stringify(state, spell_id_value);
-			const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
-			const Atom spell_name = field_text(state, spell, key::name, spell_id);
-			if (spell_name != key::empty && std::find(spell_names.begin(), spell_names.end(), spell_name) == spell_names.end()) {
-				spell_names.push_back(spell_name);
-			}
-		}
-	}
-	if (max_library_tier <= 0 && spell_names.empty()) {
+Atom _town_magic_identity_line(State &state, DictRef town) {
+	// The guild the town drew, as far as it is built.
+	const int64_t guild_level = _town_spell_tier(state, town);
+	if (guild_level <= 0) {
 		return key::empty;
 	}
+	std::vector<Atom> spell_names;
+	for (const Value &spell_id_value : gd::items(state, array_value(town_rules::spell_ids_through_tier(state, town, guild_level)))) {
+		if (spell_names.size() >= 3) {
+			break;
+		}
+		const Atom spell_id = gd::stringify(state, spell_id_value);
+		const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+		const Atom spell_name = field_text(state, spell, key::name, spell_id);
+		if (spell_name != key::empty && std::find(spell_names.begin(), spell_names.end(), spell_name) == spell_names.end()) {
+			spell_names.push_back(spell_name);
+		}
+	}
 	std::vector<Atom> parts;
-	parts.push_back(gd::format(state, key::tier_d_library, { int_value(compat::engine_max<int64_t>(max_library_tier, _town_spell_tier(state, town))) }));
+	parts.push_back(gd::format(state, key::tier_d_library, { int_value(guild_level) }));
 	if (!spell_names.empty()) {
 		parts.push_back(gd::format(state, key::flavor_s, { str(join_atoms(state, key::comma_space, spell_names)) }));
 	}

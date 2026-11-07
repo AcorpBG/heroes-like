@@ -1702,6 +1702,13 @@ private:
 		const std::string roll_seed = text_of(setting("roll_seed"));
 		if (!roll_seed.empty()) {
 			state_.set(gd::as_dict(field(kFlags)), state_.string("ai_match_roll_seed"), state_.string(roll_seed));
+			// The towns drew their guilds when the game started: drop the draws
+			// so the next normalization draws them from the roll seed too.
+			for (const Value &town : gd::items(state_, overworld_list(names_.towns))) {
+				if (town.kind == Kind::Dict) {
+					state_.erase(town.ref, gd::str(key::guild_spell_ids));
+				}
+			}
 		}
 		const int64_t player_count = gd::to_int(state_, setting("player_count"));
 		const Value seat_factions = setting("seat_factions");

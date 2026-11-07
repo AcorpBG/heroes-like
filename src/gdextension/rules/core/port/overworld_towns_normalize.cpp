@@ -128,6 +128,7 @@ constexpr Atom kTownRuntimeMetadataKeys[] = {
 	key::artifact_reward_claimed_by_player_id,
 	key::artifact_reward_claimed_day,
 	key::artifact_reward_service_building_id,
+	key::guild_spell_ids,
 };
 
 // _pathing_debug_profile[counter] = int(_pathing_debug_profile.get(counter, 0)) + 1.

@@ -70,6 +70,9 @@ bool one_of(const std::string &text, std::initializer_list<const char *> values)
 	return false;
 }
 
+// The spell schools a spell, a school sigil or a faction's preference names.
+const std::initializer_list<const char *> kSpellSchoolIds = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"};
+
 bool contains(const std::vector<std::string> &values, const std::string &text) {
 	for (const std::string &value : values) {
 		if (value == text) {
@@ -199,7 +202,7 @@ public:
 	void unit_animation_manifest(const RowIndex &unit_index, const Value &manifest, const RowIndex &unit_animation_index);
 	void army_group(const Value &army_group, const RowIndex &faction_index, const RowIndex &unit_index);
 	void building(const Value &building, const RowIndex &building_index, const RowIndex &unit_index);
-	void town(const Value &town, const RowIndex &faction_index, const RowIndex &building_index, const RowIndex &unit_index, const RowIndex &spell_index);
+	void town(const Value &town, const RowIndex &faction_index, const RowIndex &building_index, const RowIndex &unit_index);
 	void encounter(const Value &encounter, const RowIndex &army_group_index, const RowIndex &spell_index);
 	void artifact(const Value &artifact);
 	void spell_school_icons(const RowIndex &icon_index);
@@ -945,6 +948,10 @@ void Check::faction(const Value &faction, const RowIndex &town_index, const RowI
 			warn("Faction " + faction_id + " references missing hero id " + hero_id + ".");
 		}
 	}
+	const std::string preferred_school_id = text(faction, "preferred_spell_school_id");
+	if (!one_of(preferred_school_id, kSpellSchoolIds)) {
+		warn("Faction " + faction_id + " must name a spell school as preferred_spell_school_id, not '" + preferred_school_id + "'.");
+	}
 }
 
 void Check::hero(const Value &hero, const RowIndex &faction_index, const RowIndex &spell_index) {
@@ -1132,7 +1139,7 @@ void Check::building(const Value &building, const RowIndex &building_index, cons
 	}
 }
 
-void Check::town(const Value &town, const RowIndex &faction_index, const RowIndex &building_index, const RowIndex &unit_index, const RowIndex &spell_index) {
+void Check::town(const Value &town, const RowIndex &faction_index, const RowIndex &building_index, const RowIndex &unit_index) {
 	const std::string town_id = text(town, "id");
 	const std::string faction_id = text(town, "faction_id");
 	if (faction_id.empty() || !faction_index.has(faction_id)) {
@@ -1157,24 +1164,6 @@ void Check::town(const Value &town, const RowIndex &faction_index, const RowInde
 		const std::string unit_id = text(garrison_stack, "unit_id");
 		if (unit_id.empty() || !unit_index.has(unit_id)) {
 			warn("Town " + town_id + " references missing garrison unit id " + unit_id + ".");
-		}
-	}
-	const Value spell_library = get(town, "spell_library", empty_array_);
-	if (is_array(spell_library)) {
-		for (const Value &entry : each(spell_library)) {
-			if (!is_dict(entry)) {
-				warn("Town " + town_id + " contains a non-dictionary spell library entry.");
-				continue;
-			}
-			if (integer(entry, "tier", 0) <= 0) {
-				warn("Town " + town_id + " spell library entries must define tier > 0.");
-			}
-			for (const Value &spell_id_value : each(get(entry, "spell_ids", empty_array_))) {
-				const std::string spell_id = str(spell_id_value);
-				if (spell_id.empty() || !spell_index.has(spell_id)) {
-					warn("Town " + town_id + " references missing spell library id " + spell_id + ".");
-				}
-			}
 		}
 	}
 }
@@ -1224,8 +1213,7 @@ void Check::artifact(const Value &artifact) {
 }
 
 void Check::spell_school_icons(const RowIndex &icon_index) {
-	const std::initializer_list<const char *> expected_school_ids = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"};
-	for (const char *school_id : expected_school_ids) {
+	for (const char *school_id : kSpellSchoolIds) {
 		const Value icon = row(icon_index, school_id);
 		if (empty(icon)) {
 			warn(std::string("Spell school ") + school_id + " must define an icon manifest row.");
@@ -1240,7 +1228,7 @@ void Check::spell_school_icons(const RowIndex &icon_index) {
 		art_path(text(icon, "icon_path"), std::string("Spell school ") + school_id + " sigil");
 	}
 	for (const std::string &school_id : icon_index.ids()) {
-		if (!one_of(school_id, expected_school_ids)) {
+		if (!one_of(school_id, kSpellSchoolIds)) {
 			warn("Spell school icon manifest contains unsupported school " + school_id + ".");
 		}
 	}
@@ -1350,7 +1338,7 @@ void Check::spell(const Value &spell) {
 	const std::string primary_role = text(spell, "primary_role");
 	const Value role_categories = get(spell, "role_categories", empty_array_);
 	const std::string context = text(spell, "context");
-	if (!one_of(school_id, {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"})) {
+	if (!one_of(school_id, kSpellSchoolIds)) {
 		warn("Spell " + spell_id + " uses unsupported school_id " + school_id + ".");
 	}
 	if (tier < 1 || tier > 5) {
@@ -1497,7 +1485,7 @@ void Store::validate(std::vector<Message> &messages) {
 	check.guard("_validate_building_art_manifest", [&] { check.building_art_manifest(building_index, building_art_index); });
 	check.guard("_validate_resources", [&] { check.resources(resource_index); });
 	each_row(town_index, [&](const Value &row) {
-		check.guard("_validate_town", [&] { check.town(row, faction_index, building_index, unit_index, spell_index); });
+		check.guard("_validate_town", [&] { check.town(row, faction_index, building_index, unit_index); });
 	});
 	each_row(artifact_index, [&](const Value &row) { check.guard("_validate_artifact", [&] { check.artifact(row); }); });
 	each_row(spell_index, [&](const Value &row) { check.guard("_validate_spell", [&] { check.spell(row); }); });

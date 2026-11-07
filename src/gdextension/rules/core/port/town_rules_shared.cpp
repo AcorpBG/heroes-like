@@ -1,11 +1,17 @@
 // TownRules ports shared by the computer players' day (Phase 4) and the ends of a
 // battle (Phase 5): the spells a town's mage guild teaches. Phase 4's ports
-// (branch native-phase4-faction-turn), moved unchanged by Phase 5's slice 09.
+// (branch native-phase4-faction-turn), moved by Phase 5's slice 09. Since
+// magic-guild-draws-20261107 each town teaches the guild it drew
+// (docs/magic-system.md, "Guilds and learning").
 
 #include "aurelion_rules/port/town_rules.hpp"
 
+#include "aurelion_rules/port/hero_command_rules_turn.hpp"
+#include "aurelion_rules/port/session_view.hpp"
+
 #include "aurelion_rules/compat/godot_math.hpp"
 
+#include <map>
 #include <vector>
 
 namespace aurelion::rules::port {
@@ -22,6 +28,10 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
+// Each spell of the town faction's preferred school is this many times as
+// likely to be drawn as any other spell of its tier.
+constexpr int64_t kPreferredSchoolWeight = 2;
+
 // maxi and max() of ints.
 int64_t imax(int64_t a, int64_t b) {
 	return compat::engine_max<int64_t>(a, b);
@@ -32,27 +42,22 @@ Atom text_field(State &state, DictRef dict, Atom field, Atom fallback) {
 	return gd::stringify(state, state.get(dict, str(field), str(fallback)));
 }
 
-// TownRules.FACTION_SPELL_SCHOOL_ACCESS.get(faction_id, []).
-std::vector<Atom> faction_spell_schools(Atom faction_id) {
-	if (faction_id == key::faction_embercourt) {
-		return { key::beacon, key::furnace };
-	}
-	if (faction_id == key::faction_mireclaw) {
-		return { key::mire, key::root };
-	}
-	if (faction_id == key::faction_sunvault) {
-		return { key::lens, key::beacon };
-	}
-	if (faction_id == key::faction_thornwake) {
-		return { key::root, key::mire };
-	}
-	if (faction_id == key::faction_brasshollow) {
-		return { key::furnace, key::old_measure };
-	}
-	if (faction_id == key::faction_veilmourn) {
-		return { key::veil, key::old_measure };
-	}
-	return {};
+// A spell a guild level can draw, with its weight.
+struct GuildCandidate {
+	Atom spell_id;
+	int64_t weight;
+};
+
+// A guild level offers a third of its tier's spells, to the nearest spell.
+int64_t drawn_per_level(int64_t candidates) {
+	return compat::int_div(candidates + 1, 3);
+}
+
+// The faction whose preferred school the town's draw favours: its type's.
+Atom town_faction_id(State &state, DictRef town) {
+	const DictRef town_template = gd::content_row(state, ContentTable::Town, text_field(state, town, key::town_id, key::empty));
+	const Atom faction_id = text_field(state, town_template, key::faction_id, key::empty);
+	return faction_id != key::empty ? faction_id : text_field(state, town, key::faction_id, key::empty);
 }
 
 } // namespace
@@ -73,74 +78,96 @@ ArrayRef accessible_spell_ids(State &state, DictRef town) {
 }
 
 ArrayRef spell_ids_through_tier(State &state, DictRef town, int64_t tier) {
-	const DictRef town_template = gd::content_row(state, ContentTable::Town, text_field(state, town, key::town_id, key::empty));
-	if (tier <= 0) {
-		return state.new_array();
-	}
 	const ArrayRef spell_ids = state.new_array();
-	for (const Value &entry : gd::field_items(state, town_template, str(key::spell_library))) {
-		if (!gd::is_dict(entry)) {
-			continue;
-		}
-		if (gd::int_field(state, entry.ref, key::tier, 0) > tier) {
-			continue;
-		}
-		for (const Value &spell_id_value : gd::field_items(state, entry.ref, str(key::spell_ids))) {
-			const Atom spell_id = gd::stringify(state, spell_id_value);
-			if (spell_id != key::empty && !gd::array_has(state, spell_ids, str(spell_id))) {
-				state.append(spell_ids, str(spell_id));
-			}
-		}
+	if (tier <= 0) {
+		return spell_ids;
 	}
-	for (const Value &spell_id : gd::items(state, array_value(_school_spell_ids_for_town(state, town_template, tier)))) {
-		if (!gd::equal(state, spell_id, str(key::empty)) && !gd::array_has(state, spell_ids, spell_id)) {
-			state.append(spell_ids, spell_id);
+	for (const Value &spell_id_value : gd::field_items(state, town, str(key::guild_spell_ids))) {
+		const Atom spell_id = gd::stringify(state, spell_id_value);
+		const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+		if (gd::is_empty(state, spell) || gd::int_field(state, spell, key::tier, 0) > tier) {
+			continue;
+		}
+		if (!gd::array_has(state, spell_ids, str(spell_id))) {
+			state.append(spell_ids, str(spell_id));
 		}
 	}
 	return spell_ids;
 }
 
-ArrayRef _school_spell_ids_for_town(State &state, DictRef town_template, int64_t tier) {
-	const ArrayRef allowed_schools = _town_spell_school_access(state, town_template);
-	if (state.array_size(allowed_schools) == 0) {
-		return state.new_array();
-	}
-	const ArrayRef results = state.new_array();
+ArrayRef draw_guild_spell_ids(State &state, DictRef session, DictRef town) {
+	const DictRef faction = gd::content_row(state, ContentTable::Faction, town_faction_id(state, town));
+	const Atom preferred_school = text_field(state, faction, key::preferred_spell_school_id, key::empty);
+	// Each tier's spells in content order.
+	std::map<int64_t, std::vector<GuildCandidate>> tiers;
 	Value spells;
-	if (!state.lookup(gd::content_file(state, key::spells_path), str(key::items), spells) || !gd::is_array(spells)) {
-		return results;
-	}
-	for (const Value &spell_value : gd::items(state, spells)) {
-		if (!gd::is_dict(spell_value)) {
-			continue;
-		}
-		const DictRef spell = spell_value.ref;
-		const Atom spell_id = text_field(state, spell, key::id, key::empty);
-		if (spell_id == key::empty) {
-			continue;
-		}
-		if (gd::int_field(state, spell, key::tier, 0) > tier) {
-			continue;
-		}
-		if (gd::array_has(state, allowed_schools, str(text_field(state, spell, key::school_id, key::empty))) && !gd::array_has(state, results, str(spell_id))) {
-			state.append(results, str(spell_id));
+	if (state.lookup(gd::content_file(state, key::spells_path), str(key::items), spells) && gd::is_array(spells)) {
+		for (const Value &spell_value : gd::items(state, spells)) {
+			if (!gd::is_dict(spell_value)) {
+				continue;
+			}
+			const Atom spell_id = text_field(state, spell_value.ref, key::id, key::empty);
+			const int64_t tier = gd::int_field(state, spell_value.ref, key::tier, 0);
+			if (spell_id == key::empty || tier <= 0) {
+				continue;
+			}
+			const bool preferred = preferred_school != key::empty && text_field(state, spell_value.ref, key::school_id, key::empty) == preferred_school;
+			tiers[tier].push_back({ spell_id, preferred ? kPreferredSchoolWeight : 1 });
 		}
 	}
-	return results;
+	// One stream per game and town: the same seed draws the same guilds, and an
+	// AI match with fixed rolls draws them from its roll seed.
+	const Atom fixed_seed = hero_command_rules::fixed_match_roll_seed(state, session);
+	const Atom game_seed = fixed_seed != key::empty ? fixed_seed : text_field(state, session, key::session_id, key::empty);
+	const Value rng = hero_command_rules::_seeded_rng(state, gd::format(state, key::s_guild_s, { str(game_seed), str(text_field(state, town, key::placement_id, key::empty)) }));
+	const ArrayRef drawn = state.new_array();
+	for (const auto &tier_entry : tiers) {
+		const std::vector<GuildCandidate> &candidates = tier_entry.second;
+		std::vector<bool> taken(candidates.size(), false);
+		int64_t total = 0;
+		for (const GuildCandidate &candidate : candidates) {
+			total += candidate.weight;
+		}
+		// A plain weighted draw without replacement, with no guarantee.
+		const int64_t count = drawn_per_level(static_cast<int64_t>(candidates.size()));
+		for (int64_t pick = 0; pick < count && total > 0; ++pick) {
+			int64_t roll = gd::rng_randi_range(state, rng, 0, total - 1);
+			for (size_t index = 0; index < candidates.size(); ++index) {
+				if (taken[index]) {
+					continue;
+				}
+				if (roll < candidates[index].weight) {
+					taken[index] = true;
+					total -= candidates[index].weight;
+					break;
+				}
+				roll -= candidates[index].weight;
+			}
+		}
+		for (size_t index = 0; index < candidates.size(); ++index) {
+			if (taken[index]) {
+				state.append(drawn, str(candidates[index].spell_id));
+			}
+		}
+	}
+	return drawn;
 }
 
-ArrayRef _town_spell_school_access(State &state, DictRef town_template) {
-	const ArrayRef schools = state.new_array();
-	const Atom faction_id = text_field(state, town_template, key::faction_id, key::empty);
-	for (const Atom school_id : faction_spell_schools(faction_id)) {
-		if (school_id != key::empty && !gd::array_has(state, schools, str(school_id))) {
-			state.append(schools, str(school_id));
+void ensure_guild_draws(State &state, DictRef session) {
+	const Value towns = gd::field(state, session_view::overworld(state, session), key::towns);
+	if (!gd::is_array(towns)) {
+		return;
+	}
+	for (const Value &town_value : gd::items(state, towns)) {
+		if (!gd::is_dict(town_value)) {
+			continue;
 		}
+		Value drawn;
+		if (state.lookup(town_value.ref, str(key::guild_spell_ids), drawn) && gd::is_array(drawn)) {
+			continue;
+		}
+		state.set(town_value.ref, str(key::guild_spell_ids), array_value(draw_guild_spell_ids(state, session, town_value.ref)));
 	}
-	if (!gd::array_has(state, schools, str(key::old_measure))) {
-		state.append(schools, str(key::old_measure));
-	}
-	return schools;
 }
 
 } // namespace town_rules

@@ -327,6 +327,11 @@ func _play() -> void:
 	var roll_seed := _env("HEROES_AI_MATCH_ROLL_SEED").strip_edges()
 	if roll_seed != "":
 		session.flags["ai_match_roll_seed"] = roll_seed
+		# The towns drew their guilds when the game started: drop the draws so
+		# the next normalization draws them from the roll seed too.
+		for town in session.overworld.get("towns", []):
+			if town is Dictionary:
+				town.erase("guild_spell_ids")
 	var seats := []
 	for record in session.overworld.get("players", []):
 		seats.append(String(record.get("player_id", "")))

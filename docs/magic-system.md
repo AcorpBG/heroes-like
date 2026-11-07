@@ -45,7 +45,7 @@ When the map is made, every town draws its own guild: at each level, a third of 
 | 4 | 4 | 24, 6 per school | 4 | 8 |
 | 5 | 5 | 12, 3 per school | 4 | 4 |
 
-A full guild offers 41 of the 123 guild spells. Each spell of the town faction's preferred school is twice as likely to be drawn as any other. The exact odds of a draw without replacement, as spells of one school per town:
+A full guild offers 41 of the 123 guild spells. Each spell of the town faction's preferred school (`preferred_spell_school_id` in `factions.json`) is twice as likely to be drawn as any other. A town keeps its draw (`guild_spell_ids` in its state) through captures and saves; a save from before the draws draws on load, from the game's seed and the town's placement like a new game. Until the switch the draw runs on today's 119 spells and each faction's school today (Lens for Sunvault, Mire for Mireclaw), with the third rounded to the nearest spell: 12, 7, 9, 6 and 5 of 36, 22, 26, 19 and 16. The exact odds of a draw without replacement, as spells of one school per town:
 
 | Weight | Level 2 (12 drawn) | Level 3 (12) | Level 4 (8) | Level 5 (4) | Levels 2 to 5 (36) | Level 5 has none of it |
 |---|---|---|---|---|---|---|

@@ -105,6 +105,7 @@
         "building_embercourt_charter_bastion"
       ],
       "seed_town_id": "town_riverwatch",
+      "preferred_spell_school_id": "beacon",
       "design_pillars": {
         "theme": "River charters, lockworks, beacon-fire civic war",
         "economy_style": "Stable civic investment, readiness, and discounted prepared levies",
@@ -265,6 +266,7 @@
         "building_mireclaw_antler_pit"
       ],
       "seed_town_id": "town_duskfen",
+      "preferred_spell_school_id": "mire",
       "design_pillars": {
         "theme": "Predatory bog clans, ferry chains, and drum oaths",
         "economy_style": "Low safe income, high growth, raid spoils, and den replacement",
@@ -427,6 +429,7 @@
         "building_sunvault_daybreak_matrix"
       ],
       "seed_town_id": "town_prismhearth",
+      "preferred_spell_school_id": "lens",
       "design_pillars": {
         "theme": "Solar crystals, lens relays, and harmonic command",
         "economy_style": "Ore-heavy quality economy, support buildings, and spell access",
@@ -590,6 +593,7 @@
         "building_thornwake_worldroot_gate"
       ],
       "seed_town_id": "town_thornwake_graftroot_caravan",
+      "preferred_spell_school_id": "root",
       "design_pillars": {
         "theme": "Migratory living orchards, grafted pilgrims, and root law",
         "economy_style": "Site-rooted growth, wood pressure, and slow gold",
@@ -743,6 +747,7 @@
         "building_brasshollow_titan_charter_hall"
       ],
       "seed_town_id": "town_brasshollow_orevein_gantry",
+      "preferred_spell_school_id": "furnace",
       "design_pillars": {
         "theme": "Furnace contracts, pressure rails, and brass debt engines",
         "economy_style": "Ore and capital projects, expensive low growth",
@@ -897,6 +902,7 @@
         "building_veilmourn_leviathan_sounding"
       ],
       "seed_town_id": "town_veilmourn_bellwake_harbor",
+      "preferred_spell_school_id": "veil",
       "design_pillars": {
         "theme": "Fog-bound funeral fleets, memory piracy, and mirror charts",
         "economy_style": "Salvage, scouting rewards, and uneven income spikes",

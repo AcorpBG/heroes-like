@@ -22,9 +22,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Ported in enemy_turn_rules_turn.cpp.
-ArrayRef _school_spell_ids_for_town(State &state, DictRef town_template, int64_t tier);
-ArrayRef _town_spell_school_access(State &state, DictRef town_template);
+// Ported in town_rules_shared.cpp.
 ArrayRef accessible_spell_ids(State &state, DictRef town);
 int64_t current_spell_tier(State &state, DictRef town);
 ArrayRef spell_ids_through_tier(State &state, DictRef town, int64_t tier);
