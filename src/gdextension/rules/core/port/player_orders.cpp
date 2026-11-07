@@ -274,6 +274,11 @@ DictRef perform_player_action(State &state, const Value &session, Atom action, D
 		}
 	}
 
+	// Sanctuary: the stack makes no attack while it lasts.
+	if ((action == key::strike || action == key::shoot) && spell_rules::in_sanctuary(state, session_battle(state, session), active_stack)) {
+		return refusal(state, gd::format(state, key::sanctuary_no_attack_text, { str(_stack_label(state, active_stack)) }));
+	}
+
 	if (action == key::advance) {
 		if (_stack_is_rooted(state, active_stack, session_battle(state, session))) {
 			return refusal(state, gd::format(state, key::rooted_cannot_move_text, { str(_stack_label(state, active_stack)) }));

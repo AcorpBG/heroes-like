@@ -256,6 +256,10 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 		_mark_side_animation_event(state, session_battle(state, session), key::enemy, key::battle_unit_surrender);
 		return _finalize_enemy_withdrawal(state, session, key::enemy_surrender);
 	}
+	// Sanctuary: the stack makes no attack while it lasts, so it holds its ground.
+	if (spell_rules::in_sanctuary(state, session_battle(state, session), active_stack) && order != key::wait && order != key::defend) {
+		return _resolve_enemy_defend(state, session, active_stack);
+	}
 	if (order == key::shoot) {
 		const DictRef target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, action, key::target_battle_id));
 		return _resolve_ai_attack(state, session, active_stack, target, true);

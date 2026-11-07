@@ -286,6 +286,18 @@ ArrayRef shape_cells(State &state, DictRef blocked, DictRef obstacles, DictRef s
 		}
 		return cells;
 	}
+	// An area: the picked hex and the six around it.
+	if (shape == key::area) {
+		state.append(cells, dict_value(battle_rules::_hex_cell(state, q, r)));
+		const hex::NeighborList &around = hex::neighbor_table()[cell_id(q, r)];
+		for (int32_t i = 0; i < around.count; ++i) {
+			const int64_t next = around.ids[i];
+			if (open(next / hex::kRows, next % hex::kRows)) {
+				state.append(cells, dict_value(battle_rules::_hex_cell(state, next / hex::kRows, next % hex::kRows)));
+			}
+		}
+		return cells;
+	}
 	const int64_t length = shape == key::line ? engine_max<int64_t>(1, gd::int_field(state, effect, key::length, 3)) : 1;
 	const int64_t first = -compat::int_div(gd::sub(length, 1), 2);
 	for (int64_t dr = first; dr < first + length; ++dr) {
@@ -311,6 +323,33 @@ bool blocks_hexes(Atom ground) {
 }
 
 } // namespace
+
+bool snare_ground(State &state, DictRef spell) {
+	return !gd::is_empty(state, spell) && gd::string_field(state, effect_of(state, spell), key::ground, key::empty) == key::snare;
+}
+
+ArrayRef snared_stacks(State &state, DictRef battle, ArrayRef cells, Atom caster_side) {
+	const ArrayRef caught = state.new_array();
+	std::vector<int64_t> ids;
+	for (const Value &cell : gd::items(state, array_value(cells))) {
+		ids.push_back(cell_id_of(state, cell));
+	}
+	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+		if (!gd::is_dict(stack) || side_of(state, stack.ref) == caster_side || side_of(state, stack.ref) == key::empty || battle_rules::_alive_count(state, stack.ref) <= 0) {
+			continue;
+		}
+		bool inside = false;
+		for (const int64_t id : body_ids(state, stack.ref)) {
+			for (const int64_t cell : ids) {
+				inside = inside || cell == id;
+			}
+		}
+		if (inside) {
+			state.append(caught, dict_value(stack.ref));
+		}
+	}
+	return caught;
+}
 
 bool takes_hex(State &state, DictRef spell) {
 	return !gd::is_empty(state, spell) && gd::string_field(state, effect_of(state, spell), key::type, key::empty) == key::ground_effect;

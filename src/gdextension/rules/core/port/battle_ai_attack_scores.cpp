@@ -168,6 +168,10 @@ double _w(State &state, Atom weight_key) {
 
 DictRef _best_attack_action(State &state, DictRef battle, DictRef active_stack, ArrayRef targets) {
 	DictRef best = state.new_dict();
+	// Sanctuary: the stack makes no attack while it lasts.
+	if (spell_rules::in_sanctuary(state, battle, active_stack)) {
+		return best;
+	}
 	if (ranged(state, active_stack) && has_shots(state, active_stack)) {
 		for (const Value &target : gd::items(state, array_value(targets))) {
 			if (!gd::is_dict(target)) {

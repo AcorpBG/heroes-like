@@ -137,7 +137,9 @@ void damage_one_stack(State &state, DictRef battle, Atom battle_id, int64_t dama
 	for (int64_t index = 0; index < count; ++index) {
 		const Value stack = untyped_at(state, stacks, index);
 		if (gd::is_dict(stack) && string_field(state, stack.ref, key::battle_id, key::empty) == battle_id) {
-			// A spell's plate takes the damage first (Rivet Plate).
+			// Sanctuary keeps the hurt off and Crucible Ward takes it (spell_tier45.cpp); a spell's plate comes next
+			// (Rivet Plate).
+			damage = spell_rules::hit_after_wards(state, battle, stack.ref, damage);
 			damage = spell_rules::plate_absorb(state, battle, stack.ref, damage);
 			const int64_t absorbed = town_battle_rules::absorb(state, stack.ref, damage);
 			const bool was_alive = int_field(state, stack.ref, key::total_health, 0) > 0;
@@ -174,6 +176,8 @@ int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int6
 	if (!gd::is_empty(state, target) && !spell_rules::heal_blocked(state, target, battle) && spell_rules::blight_turns_heal(state, battle, target, amount)) {
 		return 0;
 	}
+	// Poison halves healing on its stack.
+	amount = spell_rules::poisoned_healing(state, battle, target, amount);
 	int64_t restored = 0;
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	const int64_t count = untyped_size(state, stacks);

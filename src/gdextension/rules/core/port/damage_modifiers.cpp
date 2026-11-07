@@ -101,6 +101,10 @@ double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRe
 	if (gd::bool_field(state, defender, key::defending, false)) {
 		defense_stat = gd::add(defense_stat, gd::add(2, gd::int_field(state, defender_hero, key::defend_defense_bonus, 0)));
 	}
+	// Grave Edge: the target's defense does not count.
+	if (spell_rules::pierces_defense(state, battle, attacker)) {
+		defense_stat = 0;
+	}
 
 	double modifier = battle_damage_rules::attack_defense_multiplier(state, attack_stat, defense_stat);
 	const int64_t resolved_distance = attack_distance < 0 ? gd::int_field(state, battle, key::distance, 1) : attack_distance;

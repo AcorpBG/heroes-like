@@ -158,6 +158,9 @@ double _average_unit_damage(State &state, DictRef stack);
 double _creature_average_damage(State &state, DictRef stack);
 double _creature_threat_weight(State &state, DictRef battle, DictRef target);
 int64_t _stack_missing_health(State &state, DictRef stack);
+// The health a heal can give the stack: the top creature's wound, or with a raise (Rekindle, Sapflood) every fallen
+// creature too, up to its starting count, as raise_stack_health gives it.
+int64_t _recovery_room(State &state, DictRef stack, DictRef spell);
 int64_t _battle_recovery_amount(State &state, DictRef hero_state, DictRef spell);
 int64_t _side_current_health(State &state, DictRef battle, Atom side);
 int64_t _side_base_health(State &state, DictRef battle, Atom side);

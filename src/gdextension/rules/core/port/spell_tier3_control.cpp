@@ -83,6 +83,10 @@ Atom strike_back_refused_reason(State &state, DictRef battle, DictRef defender) 
 	if (has_effect_id(state, defender, battle, key::status_fleeing)) {
 		return key::it_is_fleeing_text;
 	}
+	// Sanctuary: the stack makes no attack while it lasts.
+	if (in_sanctuary(state, battle, defender)) {
+		return key::it_is_in_sanctuary_text;
+	}
 	// Fogwalk: the active stack's next blow, or the one it has just struck, comes out of the fog.
 	const Atom active_id = gd::string_field(state, battle, key::active_stack_id, key::empty);
 	if (active_id == key::empty) {

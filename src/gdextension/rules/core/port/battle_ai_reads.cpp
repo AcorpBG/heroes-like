@@ -317,6 +317,20 @@ int64_t _stack_missing_health(State &state, DictRef stack) {
 	return spell_rules::battle_spell_recoverable_health(state, stack);
 }
 
+int64_t _recovery_room(State &state, DictRef stack, DictRef spell) {
+	Value effect;
+	const bool raises = state.lookup(spell, str(key::effect), effect) && gd::is_dict(effect) && gd::bool_field(state, effect.ref, key::raise, false);
+	if (!raises) {
+		return _stack_missing_health(state, stack);
+	}
+	const int64_t health = gd::int_field(state, stack, key::total_health, 0);
+	if (health <= 0) {
+		return 0;
+	}
+	const int64_t full = gd::mul(engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1)), engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0)));
+	return engine_max<int64_t>(0, gd::sub(full, health));
+}
+
 int64_t _battle_recovery_amount(State &state, DictRef hero_state, DictRef spell) {
 	return spell_rules::_battle_spell_recovery_amount(state, hero_state, spell);
 }
@@ -635,6 +649,21 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	// Tier 3: Burning hurts over its turns; a blighted stack can no longer be healed.
 	if (status_id == key::status_burning || status_id == key::status_blighted) {
 		return 1.0;
+	}
+	// Tier 4: a Branded stack takes more from every later hurt and Poison hurts over its turns; a Censured stack
+	// loses its abilities and its hero's help; a Stunned stack loses its next turn outright.
+	if (status_id == key::status_branded || status_id == key::status_poisoned) {
+		return 1.0;
+	}
+	if (status_id == key::status_censured) {
+		bool gifted = false;
+		for (const Value &ability : gd::field_items(state, target, str(key::abilities))) {
+			gifted = gifted || gd::is_dict(ability);
+		}
+		return gifted ? 1.5 : 0.5;
+	}
+	if (status_id == key::status_stunned) {
+		return 3.0;
 	}
 	return 0.0;
 }

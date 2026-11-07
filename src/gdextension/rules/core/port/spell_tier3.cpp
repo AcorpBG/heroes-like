@@ -207,6 +207,7 @@ int64_t raise_stack_health(State &state, DictRef battle, Atom battle_id, int64_t
 	if (blight_turns_heal(state, battle, stack, amount)) {
 		return 0;
 	}
+	amount = poisoned_healing(state, battle, stack, amount);
 	const int64_t health = gd::int_field(state, stack, key::total_health, 0);
 	const int64_t full = gd::mul(engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1)), engine_max<int64_t>(0, gd::int_field(state, stack, key::base_count, 0)));
 	const int64_t raised = engine_max<int64_t>(0, engine_min<int64_t>(amount, gd::sub(full, health)));
@@ -344,7 +345,8 @@ DictRef most_wounded_stack(State &state, DictRef battle, Atom side) {
 	double best_ratio = 2.0;
 	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
 		if (!gd::is_dict(stack) || side_of(state, stack.ref) != side || !living(state, stack.ref)
-				|| heal_blocked(state, stack.ref, battle) || !gd::is_empty(state, stack_status_effect(state, stack.ref, battle, key::status_blighted))) {
+				|| heal_blocked(state, stack.ref, battle) || !gd::is_empty(state, stack_status_effect(state, stack.ref, battle, key::status_blighted))
+				|| censured(state, stack.ref)) {
 			continue;
 		}
 		const int64_t missing = battle_spell_recoverable_health(state, stack.ref);

@@ -2242,6 +2242,149 @@
       "source_sha256": "7ab992c0ba763e408be9970f0e481da83aafebd7a168a76a90dab62189c1a723",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_moon_mark_28.png",
       "icon_sha256": "a8f47c59c76b20edc17ab9e09dd40e30234fd67e9618acce106138ea45e481b7"
+    },
+    {
+      "id": "spell_molten_brand",
+      "spell_id": "spell_molten_brand",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_molten_brand",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_bloodwake_drum.png",
+      "source_sha256": "17483be3295245102174a656ccf23bfe26ed06fda8d49145f2a0ffc6718b76c8",
+      "icon_path": "res://art/magic/runtime/spells/spell_bloodwake_drum.png",
+      "icon_sha256": "6888b5c96105e0db71851ccecd451f4ff22c1be123aa645b81a13159339158fc"
+    },
+    {
+      "id": "spell_kiln_burst",
+      "spell_id": "spell_kiln_burst",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_kiln_burst",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_aurora_array_26.png",
+      "source_sha256": "b8e65d85cdffc3421cf1d6eea323c143bd359749d91f2161b62f926ae0f0ebf6",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_aurora_array_26.png",
+      "icon_sha256": "c6346c610779263c9369c3b0cd9fe13f6a40f97892149f3554fad0199b1d9bfa"
+    },
+    {
+      "id": "spell_crucible_ward",
+      "spell_id": "spell_crucible_ward",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_crucible_ward",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_tally_axiom_04.png",
+      "source_sha256": "ae8bd110652b6765761f95e971c75a40a3a417acea00e94c857bc64e0ee5d015",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_tally_axiom_04.png",
+      "icon_sha256": "1e1467981b6c1ae0b63b575c5523e06c58ff21c38452cb3c575d7e0ad959eb1c"
+    },
+    {
+      "id": "spell_spore_cloud",
+      "spell_id": "spell_spore_cloud",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_spore_cloud",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_brine_fenlight_24.png",
+      "source_sha256": "06ed97d429f4238fa894a149d604d9120b6d21c42adeb33bdaa883222348bda9",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_brine_fenlight_24.png",
+      "icon_sha256": "932f3dc3a8dd2f712a5862917ff2f04b3308c264ad1496d5dd8c0de95872f608"
+    },
+    {
+      "id": "spell_thicket_snare",
+      "spell_id": "spell_thicket_snare",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_thicket_snare",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_leech_snare_10.png",
+      "source_sha256": "a4a6bbe5b3fcec1260e08a6e0bda9a89c1b0a83ad904534b3c9075c4485db96e",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_leech_snare_10.png",
+      "icon_sha256": "4b2ce4ce8980d373d44c4012f9bef43e97f9b45954d618c365d3c062e7b71de2"
+    },
+    {
+      "id": "spell_sapflood",
+      "spell_id": "spell_sapflood",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_sapflood",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bloom_briar_04.png",
+      "source_sha256": "0411544b4c6ca37777bfe4b1adcb57907033f09f9621707b93ca989034514ba6",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bloom_briar_04.png",
+      "icon_sha256": "9ea62f69e3d89b3bcb5ba1704e9d632b1e9887651d61d0cd31219fdcb6022543"
+    },
+    {
+      "id": "spell_ironbark",
+      "spell_id": "spell_ironbark",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_ironbark",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_green_rootway_12.png",
+      "source_sha256": "d4a71f0d4dfa31ca17164a8c9ab981293ea5522a679f2478ab1ea9d1d26feeaa",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_green_rootway_12.png",
+      "icon_sha256": "5d00cc05db8abf973106f08672851741471528711268c9c692882925a285c9a7"
+    },
+    {
+      "id": "spell_censure",
+      "spell_id": "spell_censure",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_censure",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_lockfire_muster.png",
+      "source_sha256": "8b0b66c06122cffb76d80396934b1e6b6388a31be255174191273a93622e2e88",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_lockfire_muster.png",
+      "icon_sha256": "61f209fe546d9392f7c8de560ce1370d117642fdbd3088be2dec9c863da0c6ca"
+    },
+    {
+      "id": "spell_searing_ray",
+      "spell_id": "spell_searing_ray",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_searing_ray",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_array_ray_06.png",
+      "source_sha256": "92a5c13a0a83647abb7b372e3dddf002cd3b8284a04daf8a20e9778f7ab37845",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_array_ray_06.png",
+      "icon_sha256": "a351e0466bbd5833fde7b329e66a869b23f6f5561da3ec97f45d9da23acebc16"
+    },
+    {
+      "id": "spell_sanctuary",
+      "spell_id": "spell_sanctuary",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_sanctuary",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_starlens_survey_12.png",
+      "source_sha256": "fc73e19548f31bdfdb80f5744eb96ea72da38659480d344b1ebf72a96c504ea7",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_starlens_survey_12.png",
+      "icon_sha256": "ad430f863cdc895a95238a0bc392a0ceff1d52f6c7ad24733fccf72e079afcb4"
+    },
+    {
+      "id": "spell_grave_edge",
+      "spell_id": "spell_grave_edge",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_grave_edge",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_obituary_step_18.png",
+      "source_sha256": "b81d973d0c5f293bc3c988031b7285106d83be7ae5ff005ea31bdaef0e3cfd72",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_obituary_step_18.png",
+      "icon_sha256": "e22dbae54ee7ee147d5fa9adfb7d5c4b35604089fc0d48b71836564a05c2f3a9"
+    },
+    {
+      "id": "spell_stupor",
+      "spell_id": "spell_stupor",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_stupor",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_dusk_snare_22.png",
+      "source_sha256": "06bcf87503b8cf9db91c62d2e5a24407282d8096393f78d70dd6995738f54ced",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_dusk_snare_22.png",
+      "icon_sha256": "259940358680e89fbde9a5abe40480af8bc6743549f2f271a70a21f848d293a1"
+    },
+    {
+      "id": "spell_deaths_door",
+      "spell_id": "spell_deaths_door",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_deaths_door",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_lantern_mark_16.png",
+      "source_sha256": "f1bb5d25e7d166fb2ada4be35f01446c770745158da55d5132b661f525ea3b97",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_lantern_mark_16.png",
+      "icon_sha256": "1ad944502c60f9d5d62cf926bec1045c39bc3e6144170a8e869dc39fd8a2ccd2"
     }
   ]
 }

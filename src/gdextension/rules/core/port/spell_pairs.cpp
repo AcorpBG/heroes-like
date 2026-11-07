@@ -149,8 +149,9 @@ ArrayRef second_stack_ids(State &state, DictRef hero, DictRef battle, DictRef fi
 			continue;
 		}
 		const DictRef stack = other.ref;
-		// A decoy is no second stack.
-		if (battle_id_of(state, stack) == battle_id_of(state, first) || is_decoy(state, stack)) {
+		// A decoy is no second stack, and a Censured stack takes no helpful pair spell of its own hero's.
+		if (battle_id_of(state, stack) == battle_id_of(state, first) || is_decoy(state, stack)
+				|| ((type == key::graft_allies || type == key::transfer_ally || type == key::swap_allies) && censured(state, stack))) {
 			continue;
 		}
 		// Blood Tithe's donor and Smelter's Bargain's payer keep at least 1 health.

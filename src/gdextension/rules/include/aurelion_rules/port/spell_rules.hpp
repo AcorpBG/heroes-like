@@ -334,6 +334,27 @@ bool charm_reach(State &state, DictRef battle, DictRef puppet, DictRef victim, D
 ArrayRef charm_victim_ids(State &state, DictRef battle, DictRef puppet);
 int64_t charm_blow_damage(State &state, DictRef battle, DictRef puppet, DictRef victim, int64_t pct);
 Atom charm_attack(State &state, DictRef battle, Atom puppet_id, Atom victim_id, int64_t pct);
+// Tier 4 and 5, one stack (spell_tier45.cpp): Sanctuary and Ironbark, read by the damage of blows and spells; a hurt
+// meets the stack's wards first (Sanctuary keeps it off, Crucible Ward takes it and lends attack) and what gets
+// through comes back; Molten Brand melts at each hurt; Grave Edge's blows ignore defense and are spent one by one;
+// Poison halves healing; a Censured stack has no abilities and takes no help from its own hero's spells; a Stunned
+// stack loses its turn; Poison and Death's Door at a turn's end; Death's Door's share at the cast.
+bool in_sanctuary(State &state, DictRef battle, DictRef stack);
+bool halves_shots_and_spells(State &state, DictRef battle, DictRef stack);
+int64_t hit_after_wards(State &state, DictRef battle, DictRef stack, int64_t damage);
+void brand_melts(State &state, DictRef battle, DictRef stack);
+bool pierces_defense(State &state, DictRef battle, DictRef attacker);
+void spend_pierce(State &state, DictRef battle, Atom attacker_id);
+int64_t poisoned_healing(State &state, DictRef battle, DictRef stack, int64_t amount);
+bool censured(State &state, DictRef stack);
+bool stunned_turn(State &state, DictRef battle, Atom battle_id);
+void end_of_turn_tier45(State &state, DictRef battle, Atom battle_id);
+int64_t deaths_door_pct(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target);
+// Thicket Snare (spell_ground.cpp, spell_reach.cpp): a hex spell that lays no ground; the enemy stacks its area
+// catches, and their statuses, each on its own resistance draw.
+bool snare_ground(State &state, DictRef spell);
+ArrayRef snared_stacks(State &state, DictRef battle, ArrayRef cells, Atom caster_side);
+ArrayRef snare_resolutions(State &state, DictRef hero, DictRef battle, DictRef spell, ArrayRef cells, Atom caster_side);
 // Watchful Light: auras on battle.spell_auras (a newer one of a kind replaces its side's older one), the stack it
 // heals and the round start that heals it.
 void add_battle_aura(State &state, DictRef battle, DictRef entry);
@@ -370,6 +391,10 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 Atom mechanic_terms(State &state, DictRef mechanic);
 Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictRef battle, Atom caster_side);
 int64_t helpful_effect_turns(State &state, DictRef hero_state, DictRef spell);
+// A helpful spell's lasting mechanic at the caster's power (empty without one), and its turns: "the rest of the
+// battle" for one that lasts until spent.
+Atom lasting_mechanic_terms(State &state, DictRef hero_state, DictRef spell);
+Atom helpful_effect_turns_label(State &state, DictRef hero_state, DictRef spell);
 Atom harmful_status_terms(State &state, DictRef status_effect, int64_t power_against);
 int64_t harmful_status_turns(State &state, DictRef hero_state, DictRef spell, DictRef status_effect, int64_t power_against);
 ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack);

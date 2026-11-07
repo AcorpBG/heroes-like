@@ -221,6 +221,8 @@ void after_stack_damaged(State &state, DictRef battle, Atom battle_id, int64_t t
 		return;
 	}
 	if (taken > 0 && !killed) {
+		// Molten Brand melts a point of defense (spell_tier45.cpp).
+		brand_melts(state, battle, stack);
 		const DictRef sleep = stack_status_effect(state, stack, battle, key::status_asleep);
 		if (!gd::is_empty(state, sleep)) {
 			remove_stack_effect(state, stack, sleep);
@@ -330,6 +332,8 @@ void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 	}
 	// Burning, Tolling Doom and Last Breath's heal (spell_tier3.cpp).
 	end_of_turn_tier3(state, battle, battle_id);
+	// Poison and Death's Door (spell_tier45.cpp).
+	end_of_turn_tier45(state, battle, battle_id);
 }
 
 bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
@@ -356,7 +360,7 @@ void begin_active_turn(State &state, DictRef battle) {
 		if (start_of_turn_mechanics(state, battle, active_id)) {
 			const DictRef sleeper = battle_rules::_get_stack_by_id(state, battle, active_id);
 			battle_rules::_record_event(state, battle, gd::format(state, key::sleeps_through_turn_text, { str(battle_rules::_stack_label(state, sleeper)) }));
-		} else if (!flee_turn(state, battle, active_id)) {
+		} else if (!stunned_turn(state, battle, active_id) && !flee_turn(state, battle, active_id)) {
 			// Night Terror's run takes the turn; any other stack acts.
 			return;
 		}
@@ -391,6 +395,13 @@ double blow_damage_multiplier(State &state, DictRef battle, DictRef attacker, Di
 	if (is_ranged && shot_crosses_wall(state, battle, attacker, defender)) {
 		multiplier *= 0.5;
 	}
+	// Ironbark: shots do half damage to it; Sanctuary: nothing hurts it.
+	if (is_ranged && halves_shots_and_spells(state, battle, defender)) {
+		multiplier *= 0.5;
+	}
+	if (in_sanctuary(state, battle, defender)) {
+		multiplier = 0.0;
+	}
 	return multiplier;
 }
 
@@ -403,6 +414,8 @@ ArrayRef after_blow_mechanics(State &state, DictRef battle, Atom attacker_id, At
 	}
 	// Fogwalk: the active stack's first blow spends the effect, and the strike-back check reads it.
 	note_blow_for_strike_back(state, battle, attacker_id, is_ranged);
+	// Grave Edge: each blow spends one of its blows.
+	spend_pierce(state, battle, attacker_id);
 	if (!is_ranged && _alive_count(state, attacker) > 0) {
 		const int64_t thorns = stack_mechanic_int(state, defender, battle, key::thorns);
 		if (thorns > 0) {

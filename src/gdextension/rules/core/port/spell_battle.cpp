@@ -321,6 +321,13 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 	if (!names_no_stack && !gd::is_empty(state, target_stack) && side_of(state, target_stack) == acting_side && is_decoy(state, target_stack)) {
 		return refusal(state, gd::format(state, key::decoy_takes_no_spell_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 	}
+	// Censure: no spell of its own hero's helps the stack.
+	if (!names_no_stack && !aims_at_enemy) {
+		const DictRef helped = gd::is_empty(state, target_stack) ? active_stack : target_stack;
+		if (!gd::is_empty(state, helped) && side_of(state, helped) == acting_side && censured(state, helped)) {
+			return refusal(state, gd::format(state, key::censured_takes_no_help_text, { str(battle_rules::_stack_label(state, helped)) }));
+		}
+	}
 	if (aims_at_enemy && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && spell_shielded(state, battle, target_stack)) {
 		return refusal(state, gd::format(state, key::shielded_from_spells_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 	}
@@ -475,7 +482,12 @@ int64_t spell_damage_resistance_pct(State &state, DictRef battle, DictRef target
 	total = gd::add(total, gd::int_field(state, hero, key::battle_spell_resistance_pct, 0));
 	const DictRef hero_schools = normalize_school_resistance(state, get_or_new_dict(state, hero, key::battle_school_resistance_pct));
 	total = gd::add(total, gd::int_field(state, hero_schools, school_id, 0));
-	return engine_clamp<int64_t>(total, 0, MAX_SPELL_RESISTANCE_PCT);
+	// Sanctuary: nothing hurts it; Ironbark: half of what is left gets through (spell_tier45.cpp).
+	if (in_sanctuary(state, battle, target_stack)) {
+		return 100;
+	}
+	const int64_t resistance = engine_clamp<int64_t>(total, 0, MAX_SPELL_RESISTANCE_PCT);
+	return halves_shots_and_spells(state, battle, target_stack) ? gd::sub(100, compat::int_div(gd::sub(100, resistance), 2)) : resistance;
 }
 
 int64_t control_resistance_pct(State &state, DictRef battle, DictRef target_stack, DictRef spell) {
@@ -630,7 +642,13 @@ int64_t spell_effect_turns(State &state, DictRef hero_state, DictRef effect, Dic
 	if (gd::bool_field(state, effect, key::fixed_duration, false)) {
 		return engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 1));
 	}
-	return _spell_duration_rounds_at(state, hero_state, gd::field_or(state, effect, key::duration_rounds, int_value(1)), spell, kind, power);
+	const int64_t rounds = _spell_duration_rounds_at(state, hero_state, gd::field_or(state, effect, key::duration_rounds, int_value(1)), spell, kind, power);
+	// Sanctuary: one more turn per its own share of spell power instead of the usual one.
+	const int64_t divisor = gd::int_field(state, effect, key::duration_power_divisor, 0);
+	if (divisor > 0) {
+		return engine_max<int64_t>(1, gd::add(gd::sub(rounds, duration_bonus_at(power)), compat::int_div(engine_max<int64_t>(0, power), divisor)));
+	}
+	return rounds;
 }
 
 void set_effect_mechanic(State &state, DictRef built, DictRef holder, int64_t power) {
@@ -661,6 +679,11 @@ DictRef _effect_payload_for(State &state, DictRef spell, DictRef effect, DictRef
 			&& gd::bool_field(state, raw_mechanic.ref, key::uses_enemy_power, false) && !gd::is_empty(state, target_stack);
 	const int64_t mechanic_power = against_enemy ? engine_max<int64_t>(0, gd::sub(power, opposing_side_knowledge(state, battle, side_of(state, target_stack)))) : power;
 	set_effect_mechanic(state, built, effect, mechanic_power);
+	// Grave Edge lasts until its blows are spent.
+	if (gd::bool_field(state, effect, key::battle_long, false)) {
+		state.set(built, str(key::expires_after_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
+		return built;
+	}
 	return _counted_in_turns(state, built, duration);
 }
 
@@ -816,6 +839,11 @@ int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell,
 	const int64_t rooted_bonus_pct = gd::int_field(state, effect, key::rooted_bonus_pct, 0);
 	if (rooted_bonus_pct > 0 && !gd::is_empty(state, target_stack) && !gd::is_empty(state, stack_status_effect(state, target_stack, state.new_dict(), key::status_rooted))) {
 		damage = gd::add(damage, compat::int_div(gd::mul(damage, rooted_bonus_pct), 100));
+	}
+	// Against the Blinded (Searing Ray): a share more on a Blinded stack.
+	const int64_t blinded_bonus_pct = gd::int_field(state, effect, key::blinded_bonus_pct, 0);
+	if (blinded_bonus_pct > 0 && !gd::is_empty(state, target_stack) && !gd::is_empty(state, stack_status_effect(state, target_stack, state.new_dict(), key::status_blinded))) {
+		damage = gd::add(damage, compat::int_div(gd::mul(damage, blinded_bonus_pct), 100));
 	}
 	// Flashpoint: as much for each Heat the stack carries (a cold stack takes it once).
 	if (gd::bool_field(state, effect, key::heat_burst, false) && !gd::is_empty(state, target_stack)) {
@@ -999,6 +1027,10 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			if (state.array_size(ground_cells) == 0) {
 				return hero_refusal(state, hero, gd::format(state, key::hex_refused_for_spell_text, { str(spell_name) }));
 			}
+			// Thicket Snare: its area must catch an enemy stack.
+			if (snare_ground(state, spell) && state.array_size(snared_stacks(state, battle, ground_cells, acting_side)) == 0) {
+				return hero_refusal(state, hero, gd::format(state, key::snare_catches_nothing_text, { str(spell_name) }));
+			}
 		}
 	}
 	// A conjured stack finds its hex before the mana is spent: a summon or a raise names one (or none yet), a decoy
@@ -1165,7 +1197,9 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		if (gd::bool_field(state, effect, key::raise, false)) {
 			state.set(result, str(key::raise), bool_value(true));
 		}
-		const DictRef recover_payload = !gd::is_empty(state, battle_spell_modifiers(state, spell)) ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict();
+		// Sapflood: a mechanic (Regrowth) lasts after the heal too.
+		const bool lasting = !gd::is_empty(state, battle_spell_modifiers(state, spell)) || state.has(effect, str(key::mechanic));
+		const DictRef recover_payload = lasting ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict();
 		state.set(result, str(key::effect), dict_value(recover_payload));
 		// Hot Iron: no other healing reaches the stack for a while after this one.
 		const int64_t block_turns = gd::int_field(state, effect, key::heal_block_turns, 0);
@@ -1395,6 +1429,24 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		state.set(result, str(key::message), str(cast_message));
 		return result;
 	}
+	if (effect_type == key::doom_enemy && state.has(effect, str(key::doom_pct))) {
+		// Death's Door: a share of the creatures, after resistance, goes at the end of its last turn.
+		const int64_t pct = deaths_door_pct(state, hero, battle, spell, target_stack);
+		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 3));
+		const DictRef door = build_battle_effect(state, key::status_deaths_door, key::deaths_door_label_text, dict_value(state.new_dict()), turns, battle, key::spell, spell_id, array_value(state.new_array()));
+		const DictRef mechanic = state.new_dict();
+		state.set(mechanic, str(key::doom_pct), int_value(pct));
+		state.set(door, str(key::mechanic), dict_value(mechanic));
+		_counted_in_turns(state, door, turns);
+		const DictRef result = cast_result(state, hero, key::effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::effect), dict_value(door));
+		const Atom message = gd::format(state, key::deaths_door_cast_text, {
+			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)), int_value(pct), int_value(turns),
+		});
+		state.set(result, str(key::message), str(with_reflection(state, result, reflected_from, reflect_text, message)));
+		return result;
+	}
 	if (effect_type == key::doom_enemy) {
 		// Tolling Doom: the damage, after the target's resistance, lands at the end of its last turn.
 		const DictRef projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
@@ -1478,7 +1530,12 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			state.set(result, str(key::message), str(gd::format(state, key::choose_hex_for_spell_text, { str(spell_name) })));
 			return result;
 		}
-		state.set(result, str(key::ground_entry), dict_value(ground_entry_for_cast(state, hero, battle, spell, acting_side, ground_cells)));
+		if (snare_ground(state, spell)) {
+			// Thicket Snare lays no ground: every enemy stack its area catches takes the status, each on its own draw.
+			state.set(result, str(key::extra_resolutions), array_value(snare_resolutions(state, hero, battle, spell, ground_cells, acting_side)));
+		} else {
+			state.set(result, str(key::ground_entry), dict_value(ground_entry_for_cast(state, hero, battle, spell, acting_side, ground_cells)));
+		}
 		state.set(result, str(key::message), str(gd::format(state, key::s_casts_s, { str(caster_name), str(spell_name) })));
 		return result;
 	}

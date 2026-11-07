@@ -214,7 +214,7 @@ double _field_objective_value(State &state, DictRef objective, DictRef battle, A
 }
 
 double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell) {
-	const int64_t missing_health = _stack_missing_health(state, target_stack);
+	const int64_t missing_health = _recovery_room(state, target_stack, spell);
 	if (missing_health <= 0) {
 		return -9999.0;
 	}
@@ -250,7 +250,7 @@ double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef ac
 	const bool reaches = (state.lookup(spell, str(key::mastery_reach), mastery_reach) && gd::is_array(mastery_reach) && state.array_size(mastery_reach.ref) > 0)
 			|| state.has(effect, str(key::splash)) || state.has(effect, str(key::line)) || state.has(effect, str(key::random_hits))
 			|| state.has(effect, str(key::drain_pct)) || state.has(effect, str(key::reach)) || state.has(effect, str(key::status_splash))
-			|| state.has(effect, str(key::chain));
+			|| state.has(effect, str(key::chain)) || state.has(effect, str(key::blast_radius));
 	if (!reaches || empty(state, target)) {
 		return 0.0;
 	}
@@ -362,6 +362,21 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	}
 	if (amount(key::cohesion_lock) > 0) {
 		score += engaged ? 1.0 : 0.3;
+	}
+	// Tier 4: Crucible Ward and Sanctuary suit a stack under attack, Sanctuary most a weak one, since it gives up its
+	// blows; Ironbark one facing shooters; Grave Edge a stack that strikes.
+	if (amount(key::absorb_one) > 0) {
+		score += engaged ? 2.0 + _health_ratio(state, ally) * 0.5 : (threatened ? 1.0 : -1.0);
+	}
+	if (amount(key::invulnerable) > 0) {
+		score += engaged ? 1.0 + (1.0 - _health_ratio(state, ally)) * 3.5 : (threatened ? 0.2 : -2.0);
+	}
+	if (amount(key::half_ranged) > 0) {
+		score += hostile_shooters > 0 ? 1.0 + static_cast<double>(hostile_shooters) : -1.0;
+	}
+	if (amount(key::pierce_blows) > 0) {
+		const bool strikes = engaged || (ranged(state, ally) && has_shots(state, ally)) || _can_make_melee_attack(state, ally, battle, state.new_dict());
+		score += strikes ? 1.0 + _buff_spell_offense_payoff(state, ally) : 0.2;
 	}
 	// Fogwalk: a melee stack out of the fight walks through what stands in its way, more when no strike is in reach;
 	// its next blow is not struck back.
@@ -1293,6 +1308,17 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 		}
 		return false;
 	};
+	// Thicket Snare roots each enemy stack its area catches on its own draw: each is worth what the one-stack Rooted
+	// spell would score on it, the mana counted once for the cast.
+	std::vector<std::pair<DictRef, double>> snare_values;
+	if (ground == key::snare) {
+		for (const Value &stack : gd::items(state, array_value(hostiles))) {
+			if (gd::is_dict(stack)) {
+				snare_values.emplace_back(stack.ref,
+						engine_max<double>(0.0, _control_spell_score(state, battle, active_stack, stack.ref, spell) + mana_cost_term(state, spell)));
+			}
+		}
+	}
 	DictRef best_pick = state.new_dict();
 	double best = 0.0;
 	std::vector<int64_t> cells;
@@ -1438,6 +1464,10 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 						value += walker.hostile ? 0.2 : -0.3;
 					}
 				}
+			}
+		} else if (ground == key::snare) {
+			for (const auto &[stack, one] : snare_values) {
+				value += body_on(state, stack, cells) ? one : 0.0;
 			}
 		} else if (ground == key::mire) {
 			// Half speed for a stack standing in it, worth most to one that must still walk; no bracing there.

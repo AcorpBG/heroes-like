@@ -649,8 +649,14 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	}
 	if (effect_type == key::recover_ally) {
 		const int64_t amount = _battle_spell_recovery_amount(state, hero_state, spell);
-		const Atom recovery_summary = gd::format(state, key::restore_up_to_d_health_to, {int_value(amount), str(ally_name)});
-		return with_timing(concat(state, grant_for(recovery_summary), clauses_as_sentence(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack))));
+		const Atom base = gd::bool_field(state, effect, key::raise, false) ? static_cast<Atom>(key::restore_raising_sentence) : static_cast<Atom>(key::restore_up_to_d_health_to);
+		Atom recovery_summary = grant_for(gd::format(state, base, {int_value(amount), str(ally_name)}));
+		const Atom lasting = lasting_mechanic_terms(state, hero_state, spell);
+		if (lasting != key::empty) {
+			recovery_summary = concat(state, recovery_summary, gd::format(state, key::then_status_sentence,
+					{str(text_or(state, spell, key::name, key::spell_word)), str(lasting), str(helpful_effect_turns_label(state, hero_state, spell))}));
+		}
+		return with_timing(concat(state, recovery_summary, clauses_as_sentence(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack))));
 	}
 	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
 		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero_state));
@@ -663,8 +669,10 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	}
 	if (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect) {
 		const Atom modifier_text = helpful_effect_terms(state, hero_state, spell, battle, text_or(state, active_stack, key::side, key::player));
-		const Atom turns = _turns_label(state, helpful_effect_turns(state, hero_state, spell));
-		const Atom summary = gd::format(state, key::grant_s_to_s_for_s, {str(modifier_text), str(ally_name), str(turns)});
+		const Atom turns = helpful_effect_turns_label(state, hero_state, spell);
+		const Atom summary = lasting_mechanic_terms(state, hero_state, spell) != key::empty
+				? gd::format(state, key::give_s_s_s_for_s, {str(ally_name), str(text_or(state, spell, key::name, key::spell_word)), str(modifier_text), str(turns)})
+				: gd::format(state, key::grant_s_to_s_for_s, {str(modifier_text), str(ally_name), str(turns)});
 		return with_timing(concat(state, summary, clauses_as_sentence(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack))));
 	}
 	if (effect_type == key::dispel_enemy) {
@@ -702,6 +710,10 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
 				gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero_state, battle, target_stack)));
 		return with_timing(gd::format(state, key::pay_for_damage_sentence, {int_value(gd::int_field(state, effect, key::cost_pct, 0)), str(enemy_name), int_value(pct)}));
+	}
+	if (effect_type == key::doom_enemy && state.has(effect, str(key::doom_pct))) {
+		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 3));
+		return with_timing(gd::format(state, key::deaths_door_sentence, {str(enemy_name), int_value(deaths_door_pct(state, hero_state, battle, spell, target_stack)), str(_turns_label(state, turns))}));
 	}
 	if (effect_type == key::doom_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero_state, battle, target_stack, spell);

@@ -186,6 +186,19 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			}
 		}
 	}
+	// Kiln Burst: every other stack of the target's side within the blast's radius takes the blast's own numbers.
+	const int64_t blast_radius = gd::int_field(state, effect, key::blast_radius, 0);
+	if (blast_radius > 0) {
+		const DictRef blast = gd::deep_duplicate_dict(state, spell);
+		const DictRef blast_effect = effect_of(state, blast);
+		state.set(blast_effect, str(key::base_damage), int_value(gd::int_field(state, effect, key::blast_base_damage, 0)));
+		state.set(blast_effect, str(key::power_scale), int_value(gd::int_field(state, effect, key::blast_power_scale, 0)));
+		for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
+			if (battle_id_of(state, stack) != battle_id_of(state, target) && battle_rules::_stack_hex_distance(state, stack, target) <= blast_radius) {
+				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, blast, spell_power_against(state, hero, battle, stack)))));
+			}
+		}
+	}
 	// Dawn Lance: the beam runs along the target's row from the caster's edge, through every stack of its side.
 	if (gd::bool_field(state, effect, key::line, false)) {
 		const int64_t row = gd::int_field(state, battle_rules::_stack_hex(state, target), key::r, -1);
@@ -279,7 +292,9 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 
 void add_control_reach(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef effect, ArrayRef extras) {
 	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
-	for (const DictRef stack : shape_stacks(state, battle, target, mastery_shape(state, hero, spell))) {
+	// The spell's own reach (Spore Cloud's neighbours), widened by mastery.
+	const Atom shape = wider_shape(gd::string_field(state, effect, key::reach, key::empty), mastery_shape(state, hero, spell));
+	for (const DictRef stack : shape_stacks(state, battle, target, shape)) {
 		const int64_t power_against = spell_power_against(state, hero, battle, stack);
 		const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against);
 		const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
@@ -304,13 +319,18 @@ void add_ally_reach(State &state, DictRef hero, DictRef battle, DictRef target, 
 	// Bloomburst's neighbours heal a share of it.
 	const int64_t reach_pct = gd::int_field(state, effect, key::reach_pct, 100);
 	for (const DictRef stack : shape_stacks(state, battle, target, shape)) {
+		// Censure: no spell of its own hero's helps the stack.
+		if (censured(state, stack)) {
+			continue;
+		}
 		if (effect_type == key::recover_ally) {
 			const DictRef sub = sub_resolution(state, key::recover_effect, stack, key::empty);
 			state.set(sub, str(key::recovery_amount), int_value(compat::int_div(gd::mul(_battle_spell_recovery_amount(state, hero, spell), reach_pct), 100)));
 			if (gd::bool_field(state, effect, key::raise, false)) {
 				state.set(sub, str(key::raise), bool_value(true));
 			}
-			state.set(sub, str(key::effect), dict_value(!gd::is_empty(state, battle_spell_modifiers(state, spell)) ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict()));
+			const bool lasting = !gd::is_empty(state, battle_spell_modifiers(state, spell)) || state.has(effect, str(key::mechanic));
+			state.set(sub, str(key::effect), dict_value(lasting ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict()));
 			const int64_t block_turns = gd::int_field(state, effect, key::heal_block_turns, 0);
 			if (block_turns > 0) {
 				state.set(sub, str(key::heal_block_effect), dict_value(heal_block_payload(state, spell, battle, block_turns)));
@@ -329,6 +349,27 @@ void add_ally_reach(State &state, DictRef hero, DictRef battle, DictRef target, 
 }
 
 } // namespace
+
+ArrayRef snare_resolutions(State &state, DictRef hero, DictRef battle, DictRef spell, ArrayRef cells, Atom caster_side) {
+	const ArrayRef extras = state.new_array();
+	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+	for (const Value &caught : gd::items(state, array_value(snared_stacks(state, battle, cells, caster_side)))) {
+		if (!gd::is_dict(caught)) {
+			continue;
+		}
+		const DictRef stack = caught.ref;
+		const int64_t power_against = spell_power_against(state, hero, battle, stack);
+		const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against);
+		const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
+		const int64_t resistance = control_resistance_pct(state, battle, stack, spell);
+		const bool resists = target_is_immune_to_status(state, stack, battle, status_id)
+				|| (resistance > 0 && stable_draw(state, battle, { str(spell_id), str(battle_id_of(state, stack)), str(key::resisted) }, 100) < resistance);
+		const DictRef sub = sub_resolution(state, key::effect, stack, gd::format(state, resists ? key::reach_resists_text : key::snare_catches_text, { str(battle_rules::_stack_label(state, stack)) }));
+		state.set(sub, str(key::effect), dict_value(resists ? state.new_dict() : payload));
+		state.append(extras, dict_value(sub));
+	}
+	return extras;
+}
 
 int64_t spell_mastery_rank(State &state, DictRef hero_state, DictRef spell) {
 	const Atom school = gd::string_field(state, spell, key::school_id, key::empty);

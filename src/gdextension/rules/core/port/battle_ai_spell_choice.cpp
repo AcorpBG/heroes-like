@@ -228,6 +228,13 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 	} else if (effect_type == key::pull_enemy) {
 		const DictRef plan = _pull_spell_plan(state, enemy_hero, battle, active_stack, target, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0) + pull_stagger_value(state, battle, target, spell);
+	} else if (effect_type == key::doom_enemy && state.has(spell_effect(state, spell), str(key::doom_pct))) {
+		// Death's Door pays as the creatures it takes, three turns on.
+		const int64_t pct = spell_rules::deaths_door_pct(state, enemy_hero, battle, spell, target);
+		const int64_t lost = engine_max<int64_t>(1, compat::int_div(gd::add(gd::mul(_alive_count(state, target), pct), 50), 100));
+		const DictRef projection = state.new_dict();
+		state.set(projection, str(key::final_damage), gd::int_value(gd::mul(lost, engine_max<int64_t>(1, gd::int_field(state, target, key::unit_hp, 1)))));
+		score = _damage_spell_score(state, enemy_hero, battle, active_stack, target, spell, projection) - 1.5;
 	} else if (effect_type == key::doom_enemy) {
 		// A doom pays as damage two turns on: a little less than the same blow now.
 		score = _damage_spell_score(state, enemy_hero, battle, active_stack, target, spell, damage_projection) - 1.0;
@@ -337,7 +344,8 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 					continue;
 				}
 				// A doom already tolls for it.
-				if (effect_type == key::doom_enemy && spell_rules::has_effect_id(state, target, battle, key::status_doomed)) {
+				const Atom doom_id = state.has(spell_effect(state, spell), str(key::doom_pct)) ? static_cast<Atom>(key::status_deaths_door) : static_cast<Atom>(key::status_doomed);
+				if (effect_type == key::doom_enemy && spell_rules::has_effect_id(state, target, battle, doom_id)) {
 					continue;
 				}
 				// A Prism Ward would turn the spell on the caster's own stacks.
@@ -360,7 +368,7 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				}
 				const DictRef ally = ally_value.ref;
 				// Healing would hurt a blighted stack.
-				if (effect_type == key::recover_ally && (_stack_missing_health(state, ally) <= 0 || !empty(state, spell_rules::stack_status_effect(state, ally, battle, key::status_blighted)))) {
+				if (effect_type == key::recover_ally && (_recovery_room(state, ally, spell) <= 0 || !empty(state, spell_rules::stack_status_effect(state, ally, battle, key::status_blighted)))) {
 					continue;
 				}
 				if (_allied_spell_candidate_suppressed_by_active_buff(state, effect_type, ally, battle, spell)) {

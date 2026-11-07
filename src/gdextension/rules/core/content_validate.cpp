@@ -1468,11 +1468,11 @@ void Check::spell(const Value &spell) {
 			warn("Spell " + spell_id + " ground_effect must use target_mode hex_selected.");
 		}
 		const std::string ground = text(effect, "ground");
-		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap", "wall", "barrier", "prism", "mire"})) {
+		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap", "wall", "barrier", "prism", "mire", "snare"})) {
 			warn("Spell " + spell_id + " uses unsupported ground " + ground + ".");
 		}
 		const std::string shape = text(effect, "shape");
-		if (!shape.empty() && !one_of(shape, {"single", "line", "blob"})) {
+		if (!shape.empty() && !one_of(shape, {"single", "line", "blob", "area"})) {
 			warn("Spell " + spell_id + " uses unsupported ground shape " + shape + ".");
 		}
 		// A line's length (3 unless it says) and a blob's size.
@@ -1488,8 +1488,15 @@ void Check::spell(const Value &spell) {
 			warn("Spell " + spell_id + " battle_long must be true or false.");
 		}
 		const bool lasts_battle = flag(effect, "battle_long");
-		if (ground != "trap" && !lasts_battle && integer(effect, "duration_rounds", 0) <= 0) {
+		if (ground != "trap" && ground != "snare" && !lasts_battle && integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
+		// A snare lays no ground: it gives the stacks its area catches a status.
+		if (ground == "snare") {
+			const Value snare_status = get(effect, "status_effect", Value());
+			if (snare_status.kind != Kind::Dict || text(snare_status, "effect_id").empty() || integer(snare_status, "duration_rounds", 0) <= 0) {
+				warn("Spell " + spell_id + " snare must define a status_effect with effect_id and duration_rounds > 0.");
+			}
 		}
 		if (one_of(ground, {"fire_ground", "bramble_ground", "trap", "prism"}) && integer(effect, "base_damage", 0) <= 0) {
 			warn("Spell " + spell_id + " must define ground base_damage > 0.");
@@ -1523,8 +1530,13 @@ void Check::spell(const Value &spell) {
 				warn("Spell " + spell_id + " must define sacrifice cost_pct 1 to 99 and damage_pct > 0.");
 			}
 		}
-		if (type == "doom_enemy" && (integer(effect, "base_damage", 0) <= 0 || integer(effect, "power_scale", -1) < 0 || integer(effect, "duration_rounds", 0) <= 0)) {
+		// A doom tolls fixed damage, or a share of the creatures (Death's Door).
+		const bool doom_share = integer(effect, "doom_pct", 0) > 0;
+		if (type == "doom_enemy" && !doom_share && (integer(effect, "base_damage", 0) <= 0 || integer(effect, "power_scale", -1) < 0 || integer(effect, "duration_rounds", 0) <= 0)) {
 			warn("Spell " + spell_id + " must define doom base_damage > 0, power_scale >= 0 and duration_rounds > 0.");
+		}
+		if (type == "doom_enemy" && doom_share && (integer(effect, "doom_pct", 0) > 100 || integer(effect, "doom_pct_power_scale", -1) < 0 || integer(effect, "duration_rounds", 0) <= 0)) {
+			warn("Spell " + spell_id + " must define doom_pct 1 to 100, doom_pct_power_scale >= 0 and duration_rounds > 0.");
 		}
 		if (type == "free_volley" && integer(effect, "volley_pct", 0) <= 0) {
 			warn("Spell " + spell_id + " must define volley_pct > 0.");

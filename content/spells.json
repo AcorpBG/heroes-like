@@ -5280,6 +5280,362 @@
         "damage_pct_power_scale": 10
       },
       "scroll_only": true
+    },
+    {
+      "id": "spell_molten_brand",
+      "name": "Molten Brand",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Brands one enemy stack with molten iron; every hurt it takes melts its armour further.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_branded",
+          "label": "Branded",
+          "duration_rounds": 1,
+          "battle_long": true,
+          "mechanic": {
+            "defense_melt": 4,
+            "defense_melt_power_divisor": 2
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_kiln_burst",
+      "name": "Kiln Burst",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A kiln bursts on one enemy stack and throws its fire over the stacks around it.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 62,
+        "power_scale": 34,
+        "heat": 1,
+        "blast_radius": 2,
+        "blast_base_damage": 28,
+        "blast_power_scale": 15
+      }
+    },
+    {
+      "id": "spell_crucible_ward",
+      "name": "Crucible Ward",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A crucible's heat takes the next wound meant for one of your stacks, and the stack strikes back hotter.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "absorb_one": 1,
+          "absorb_attack": 4
+        }
+      }
+    },
+    {
+      "id": "spell_spore_cloud",
+      "name": "Spore Cloud",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A cloud of spores sickens one enemy stack and those beside it; healing barely takes on them.",
+      "effect": {
+        "type": "control_enemy",
+        "reach": "adjacent",
+        "status_effect": {
+          "effect_id": "status_poisoned",
+          "label": "Poisoned",
+          "duration_rounds": 2,
+          "mechanic": {
+            "poison_damage": 12,
+            "poison_damage_power_scale": 6
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_thicket_snare",
+      "name": "Thicket Snare",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A thicket springs up around one hex and holds fast every enemy stack inside it.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "snare",
+        "shape": "area",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Rooted",
+          "duration_rounds": 1
+        }
+      }
+    },
+    {
+      "id": "spell_sapflood",
+      "name": "Sapflood",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Sap floods one stack's wounds, raises its fallen and keeps on healing it.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 73,
+        "power_scale": 14,
+        "raise": true,
+        "duration_rounds": 1,
+        "mechanic": {
+          "regrowth": 15,
+          "regrowth_power_scale": 3
+        }
+      }
+    },
+    {
+      "id": "spell_ironbark",
+      "name": "Ironbark",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Bark like iron covers one stack; shots and spells glance off it.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "half_ranged": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_censure",
+      "name": "Censure",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A judgement of light falls on one enemy stack: its gifts fail and its own hero cannot help it.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_censured",
+          "label": "Censured",
+          "duration_rounds": 1
+        }
+      }
+    },
+    {
+      "id": "spell_searing_ray",
+      "name": "Searing Ray",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A searing ray burns one enemy stack, worst of all one already blinded.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 51,
+        "power_scale": 28,
+        "blinded_bonus_pct": 100
+      }
+    },
+    {
+      "id": "spell_sanctuary",
+      "name": "Sanctuary",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A ring of light keeps every hurt off one stack, which can only wait inside it.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "duration_power_divisor": 6,
+        "mechanic": {
+          "invulnerable": 1
+        }
+      }
+    },
+    {
+      "id": "spell_grave_edge",
+      "name": "Grave Edge",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Grave-cold edges pass through any armour, blow after blow.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "battle_long": true,
+        "mechanic": {
+          "pierce_blows": 1,
+          "pierce_blows_power_divisor": 4
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_stupor",
+      "name": "Stupor",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A heavy stupor drops one enemy stack where it stands; it comes round harried.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_stunned",
+          "label": "Stunned",
+          "duration_rounds": 1,
+          "fixed_duration": true
+        },
+        "follow_status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 1,
+          "modifiers": {
+            "cohesion": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_deaths_door",
+      "name": "Death's Door",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Death knocks for one enemy stack; three turns later a share of it answers.",
+      "effect": {
+        "type": "doom_enemy",
+        "doom_pct": 30,
+        "doom_pct_power_scale": 4,
+        "duration_rounds": 3
+      },
+      "scroll_only": true
     }
   ]
 }

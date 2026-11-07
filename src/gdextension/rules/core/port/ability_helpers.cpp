@@ -2,6 +2,7 @@
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <string>
 
@@ -60,7 +61,8 @@ DictRef source_ability_context(State &state, const Value &source, DictRef abilit
 } // namespace
 
 DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id) {
-	if (ability_id == key::empty) {
+	// Censure: a Censured stack's abilities do not work.
+	if (ability_id == key::empty || spell_rules::censured(state, stack)) {
 		return state.new_dict();
 	}
 	for (const Value &ability : gd::field_items(state, stack, str(key::abilities))) {
@@ -72,6 +74,9 @@ DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id) {
 }
 
 DictRef _authored_ability_by_id(State &state, DictRef stack, Atom ability_id) {
+	if (spell_rules::censured(state, stack)) {
+		return state.new_dict();
+	}
 	const DictRef unit = gd::content_row(state, state::ContentTable::Unit, gd::string_field(state, stack, key::unit_id, key::empty));
 	const DictRef authored = _ability_by_id(state, unit, ability_id);
 	return !gd::is_empty(state, authored) ? authored : _ability_by_id(state, stack, ability_id);
