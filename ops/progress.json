@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "magic-guild-draws-20261107",
- "currentSliceTitle": "Magic: each town draws its own guild",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-07T14:16:04Z",
+ "currentSliceTitle": "Each town draws its guild once: a third of each tier's spells (nearest), its faction's preferred school x2 (factions.json; today's home schools), kept on capture and in saves, old saves draw on load; replaces town spell libraries.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-07T14:34:00Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -33,13 +33,10 @@
   },
   {
    "id": "magic-guild-draws-20261107",
-   "title": "Magic: each town draws its own guild",
-   "status": "in_progress",
-   "goal": "When the map is made each town draws its guild: a third of each tier's guild spells per level, each spell of the faction's preferred school (new in factions.json) twice as likely, no guarantee. Kept on capture and in saves; old saves draw on load. Replaces towns.json spell_library; the town screen shows the draw. Uses today's spells and home schools until magic-switch-20261107.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-07"
+   "status": "completed",
+   "completedAt": "2026-11-07",
+   "summary": "Each town draws its guild once: a third of each tier's spells (nearest), its faction's preferred school x2 (factions.json; today's home schools), kept on capture and in saves, old saves draw on load; replaces town spell libraries.",
+   "commit": "eacc3f7a6"
   },
   {
    "id": "magic-worn-scrolls-20261107",

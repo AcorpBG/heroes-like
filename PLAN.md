@@ -45,7 +45,6 @@ None open.
 
 ## Open work
 
-- `magic-guild-draws-20261107` (in progress): When the map is made each town draws its guild: a third of each tier's guild spells per level, each spell of the faction's preferred school (new in factions.json) twice as likely, no guarantee. Kept on capture and in saves; old saves draw on load. Replaces towns.json spell_library; the town screen shows the draw. Uses today's spells and home schools until magic-switch-20261107. See `docs/magic-system.md`.
 - `magic-worn-scrolls-20261107` (pending): A scroll becomes an item worn in one of the two trinket slots that lends its spell while worn, for mana; it teaches nothing and is not used up. Spells marked scroll-only never enter guilds; map scrolls, rewards and sites hand out scroll items by tier, about 1 in 3 scroll-only once those exist. Hero sheet and exchange; saves; computer players wear and fetch scrolls. See `docs/magic-system.md`.
 - `magic-basic-tier-20261107` (pending): The hero casts on any stack its spell allows, not only the acting one: rules, battle screen target picking and battle AI target choice. The 12 basic battle spells and their 4 new mechanics enter spells.json marked unreleased (no guild, start or reward until magic-switch-20261107) and cast in battle_sim_cli; spell texts show their numbers at the caster's power. Spells: docs/magic-system-spells.md. See `docs/magic-system.md`.
 - `magic-tier2-spells-20261107` (pending): The 36 tier-2 battle spells of Furnace, Root, Beacon and Veil, scroll-only ones included, marked unreleased, with the 36 new mechanics they need (Heat, plates, regrowth, grafts, brambles, traps, marks, reflection, beams, crystals, drain, curses, fear, sleep, murk and more), mastery shapes at mastery 2 and 3, and battle AI values; battle_sim_cli rebuilt; six-seed native check. See `docs/magic-system.md`.
@@ -63,6 +62,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-07 `magic-guild-draws-20261107` (eacc3f7a6): Each town draws its guild once: a third of each tier's spells (nearest), its faction's preferred school x2 (factions.json; today's home schools), kept on capture and in saves, old saves draw on load; replaces town spell libraries.
 - 2026-11-07 `magic-power-mana-20261107` (ad18b7f1d): Native rules: against an enemy hero's stacks, spell damage and debuff turns use power less its Knowledge (heroes only; Knowledge's % resistances gone); a turn per 4 power, no cap; a fifth of max mana back daily, all of it in an own guild town.
 - 2026-11-07 `magic-system-spec-20261107` (da16c5bde): The settled magic rework as a spec: rules, owner decisions and build order in docs/magic-system.md, the 139 spells and 138 mechanics in docs/magic-system-spells.md, and ten build slices.
 - 2026-11-06 `rmg-setup-choice-templates-20261106` (d6e8e3fbd): Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's roll (setup picker, match runner, batch tool); 100 AI games on each, all decided, compared with the 1,200-game batch in the doc.
