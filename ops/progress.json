@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "magic-system-spec-20261107",
- "currentSliceTitle": "Magic system spec and build slices",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-07T10:25:58Z",
+ "currentSliceTitle": "The settled magic rework as a spec: rules, owner decisions and build order in docs/magic-system.md, the 139 spells and 138 mechanics in docs/magic-system-spells.md, and ten build slices.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-07T10:26:19Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,14 +19,10 @@
  "plannedSlices": [
   {
    "id": "magic-system-spec-20261107",
-   "title": "Magic system spec and build slices",
-   "status": "in_progress",
-   "goal": "docs/magic-system.md (rules, owner decisions, build order) and docs/magic-system-spells.md (139 spells, 138 mechanics) from the settled local plan page; ten build slices in PLAN.md.",
-   "docs": [
-    "docs/magic-system.md",
-    "docs/magic-system-spells.md"
-   ],
-   "updatedAt": "2026-11-07"
+   "status": "completed",
+   "completedAt": "2026-11-07",
+   "summary": "The settled magic rework as a spec: rules, owner decisions and build order in docs/magic-system.md, the 139 spells and 138 mechanics in docs/magic-system-spells.md, and ten build slices.",
+   "commit": "da16c5bde"
   },
   {
    "id": "magic-power-mana-20261107",
