@@ -77,7 +77,13 @@ DictRef battle_spell_damage_projection(State &state, DictRef hero_state, DictRef
 DictRef battle_spell_status_resolution(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell, DictRef effect_payload);
 int64_t spell_duration_bonus(State &state, DictRef hero_state);
 int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind);
+// The rounds at a given spell power: spell_power_against for harmful spells.
+int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind, int64_t power);
 int64_t spell_power(State &state, DictRef hero_state);
+// The Knowledge of the hero leading the target's side, and the caster's power
+// less all of it, never below 0 (docs/magic-system.md).
+int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack);
+int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack);
 int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell);
 DictRef _counted_in_turns(State &state, DictRef effect, int64_t turns);
 DictRef battle_spell_modifiers(State &state, DictRef spell);
@@ -89,7 +95,9 @@ int64_t _stable_percent(State &state, ArrayRef parts);
 Atom _append_status_resolution_message(State &state, Atom message, DictRef target_stack, DictRef effect_payload, DictRef status_resolution);
 DictRef _spell_effect_modifiers(State &state, DictRef effect, Atom default_kind, int64_t default_amount);
 DictRef _status_effect_from_spell_effect(State &state, DictRef spell, DictRef battle, DictRef hero_state);
+DictRef _status_effect_from_spell_effect_at(State &state, DictRef spell, DictRef battle, DictRef hero_state, int64_t power);
 int64_t _battle_spell_damage(State &state, DictRef hero_state, DictRef spell, DictRef target_stack);
+int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell, DictRef target_stack, int64_t power);
 bool _wounded_bonus_applies(State &state, DictRef effect, DictRef target_stack);
 int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef spell);
 int64_t _alive_count(State &state, DictRef stack);
@@ -123,7 +131,10 @@ Atom _signed_modifier_label(State &state, int64_t amount);
 // hero learning a spell.
 DictRef learn_spell(State &state, DictRef hero_state, Atom spell_id);
 
-// A hero's mana at the start of a day (day_economy.cpp).
+// A hero's mana at the start of a day (day_economy.cpp): refresh_daily_mana fills
+// it; regain_daily_mana gives back a fifth of the maximum, or all of it on a day
+// that starts in an own town with a mage guild (docs/magic-system.md).
 gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state);
+gd::DictRef regain_daily_mana(State &state, gd::DictRef hero_state, bool full);
 
 } // namespace aurelion::rules::port::spell_rules

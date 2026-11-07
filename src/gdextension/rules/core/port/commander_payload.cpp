@@ -95,6 +95,7 @@ constexpr Atom kFallbackPayloadKeys[] = {
 	key::battle_spell_resistance_pct,
 	key::battle_control_resistance_pct,
 	key::battle_school_resistance_pct,
+	key::knowledge,
 	key::mana_current,
 	key::mana_max,
 };
@@ -102,10 +103,6 @@ constexpr Atom kFallbackPayloadKeys[] = {
 // The untyped max(a, b), min(a, b) and clamp(x, lo, hi) of ints: the result is an int.
 int64_t variant_max_int(int64_t a, int64_t b) {
 	return compat::variant_max({ compat::Number::of_int(a), compat::Number::of_int(b) }).i;
-}
-
-int64_t variant_min_int(int64_t a, int64_t b) {
-	return compat::variant_min({ compat::Number::of_int(a), compat::Number::of_int(b) }).i;
 }
 
 int64_t variant_clamp_int(int64_t x, int64_t lo, int64_t hi) {
@@ -171,6 +168,18 @@ DictRef dict_field_or_new(State &state, DictRef dict, Atom field) {
 // String(d.get(key, "")).strip_edges().
 Atom stripped_string_field(State &state, DictRef dict, Atom field) {
 	return gd::strip_edges(state, gd::string_field(state, dict, field, key::empty));
+}
+
+// A hero names a row of the hero table, by its own id or the roster hero it was
+// built from; a neutral army's leader and a town's captain do not.
+bool _commander_is_hero(State &state, DictRef hero_state) {
+	for (const Atom field : kHeroIdKeys) {
+		const Atom hero_id = stripped_string_field(state, hero_state, field);
+		if (hero_id != key::empty && !gd::is_empty(state, gd::content_row(state, state::ContentTable::Hero, hero_id))) {
+			return true;
+		}
+	}
+	return false;
 }
 
 // text.ends_with(":%s" % suffix).
@@ -339,14 +348,10 @@ DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonus
 	const int64_t initiative_bonus = gd::int_field(state, resolved_bonuses, key::battle_initiative, 0);
 	const int64_t initiative = gd::add(initiative_bonus, difficulty_rules::initiative_bonus_for_side(state, session, side));
 	const double damage_multiplier = difficulty_rules::damage_multiplier_for_side(state, session, side);
-	const int64_t spell_resistance = variant_clamp_int(
-			gd::add(gd::int_field(state, resolved_bonuses, key::battle_spell_resistance_pct, 0), variant_min_int(20, gd::mul(knowledge, 2))),
-			0,
-			kMaxSpellResistancePct);
-	const int64_t control_resistance = variant_clamp_int(
-			gd::add(gd::int_field(state, resolved_bonuses, key::battle_control_resistance_pct, 0), variant_min_int(15, knowledge)),
-			0,
-			kMaxControlResistancePct);
+	// Knowledge resists by lowering the caster's spell power (SpellRules.spell_power_against),
+	// so only items and specialties give percentages.
+	const int64_t spell_resistance = variant_clamp_int(gd::int_field(state, resolved_bonuses, key::battle_spell_resistance_pct, 0), 0, kMaxSpellResistancePct);
+	const int64_t control_resistance = variant_clamp_int(gd::int_field(state, resolved_bonuses, key::battle_control_resistance_pct, 0), 0, kMaxControlResistancePct);
 	const DictRef school_resistance = spell_rules::normalize_school_resistance(state, get_or_new_dict(state, resolved_bonuses, key::battle_school_resistance_pct));
 	const int64_t mana_current = gd::to_int(state, variant_get(state, mana, key::current, int_value(0)));
 	const int64_t mana_max = gd::to_int(state, variant_get(state, mana, key::max, int_value(0)));
@@ -359,6 +364,8 @@ DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonus
 	state.set(payload, str(key::battle_spell_resistance_pct), int_value(spell_resistance));
 	state.set(payload, str(key::battle_control_resistance_pct), int_value(control_resistance));
 	state.set(payload, str(key::battle_school_resistance_pct), dict_value(school_resistance));
+	// The Knowledge enemy spells meet: a hero's, none for a neutral army's leader or a town's captain.
+	state.set(payload, str(key::knowledge), int_value(_commander_is_hero(state, hero_state) ? knowledge : 0));
 	state.set(payload, str(key::mana_current), int_value(mana_current));
 	state.set(payload, str(key::mana_max), int_value(mana_max));
 	state.set(payload, str(key::battle_traits), array_value(battle_traits));

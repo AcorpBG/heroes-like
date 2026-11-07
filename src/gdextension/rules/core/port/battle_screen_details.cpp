@@ -593,11 +593,12 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		}
 		const DictRef status_effect = typed_dict_field(state, effect, key::status_effect);
 		if (!gd::is_empty(state, status_effect)) {
-			const DictRef status_payload = _status_effect_from_spell_effect(state, spell, battle, hero_state);
+			const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+			const DictRef status_payload = _status_effect_from_spell_effect_at(state, spell, battle, hero_state, power_against);
 			const int64_t control_pct = control_resistance_pct(state, battle, target_stack, spell);
 			const Atom label = text_or(state, status_effect, key::label, key::a_battle_effect);
 			const Atom terms = _status_terms(state, status_effect);
-			const Atom turns = _turns_label(state, spell_duration_rounds(state, hero_state, gd::field_or(state, status_effect, key::duration_rounds, int_value(1)), spell, key::debuff));
+			const Atom turns = _turns_label(state, _spell_duration_rounds_at(state, hero_state, gd::field_or(state, status_effect, key::duration_rounds, int_value(1)), spell, key::debuff, power_against));
 			summary = concat(state, summary, gd::format(state, key::leaves_it_s_s_for_s, {str(label), str(terms), str(turns)}));
 			if (target_is_immune_to_status(state, target_stack, battle, text_or(state, status_payload, key::effect_id, key::empty))) {
 				summary = concat(state, summary, key::target_is_immune_to_that_rider);
@@ -612,9 +613,10 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		const Atom target_name = text_or(state, target_stack, key::name, key::the_selected_enemy);
 		const Atom label = text_or(state, control_effect, key::label, key::control);
 		const Atom terms = _status_terms(state, control_effect);
-		const Atom turns = _turns_label(state, spell_duration_rounds(state, hero_state, gd::field_or(state, control_effect, key::duration_rounds, int_value(1)), spell, key::debuff));
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const Atom turns = _turns_label(state, _spell_duration_rounds_at(state, hero_state, gd::field_or(state, control_effect, key::duration_rounds, int_value(1)), spell, key::debuff, power_against));
 		Atom summary = gd::format(state, key::leave_s_s_s_for_s, {str(target_name), str(label), str(terms), str(turns)});
-		const DictRef control_payload = _status_effect_from_spell_effect(state, spell, battle, hero_state);
+		const DictRef control_payload = _status_effect_from_spell_effect_at(state, spell, battle, hero_state, power_against);
 		const int64_t control_pct = control_resistance_pct(state, battle, target_stack, spell);
 		if (target_is_immune_to_status(state, target_stack, battle, text_or(state, control_payload, key::effect_id, key::empty))) {
 			summary = concat(state, summary, key::target_is_immune);

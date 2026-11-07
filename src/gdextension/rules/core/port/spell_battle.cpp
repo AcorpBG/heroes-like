@@ -16,7 +16,6 @@ namespace aurelion::rules::port::spell_rules {
 
 using compat::engine_clamp;
 using compat::engine_max;
-using compat::engine_min;
 using gd::array_value;
 using gd::bool_value;
 using gd::dict_value;
@@ -31,8 +30,12 @@ namespace {
 constexpr int64_t MAX_SPELL_RESISTANCE_PCT = 75;
 constexpr int64_t MAX_CONTROL_RESISTANCE_PCT = 80;
 constexpr int64_t POWER_PER_EXTRA_ROUND = 4;
-constexpr int64_t MAX_POWER_EXTRA_ROUNDS = 3;
 constexpr int64_t TURN_EFFECT_ROUND_SENTINEL = 1000000;
+
+// One more turn per POWER_PER_EXTRA_ROUND spell power, with no limit.
+int64_t duration_bonus_at(int64_t power) {
+	return compat::int_div(engine_max<int64_t>(0, power), POWER_PER_EXTRA_ROUND);
+}
 
 // d.get(key, {}) and d.get(key, []): a new container when the key is missing.
 Value get_or_new_dict(State &state, DictRef dict, Atom field) {
@@ -308,7 +311,7 @@ int64_t control_resistance_pct(State &state, DictRef battle, DictRef target_stac
 }
 
 DictRef battle_spell_damage_projection(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell) {
-	const int64_t raw_damage = _battle_spell_damage(state, hero_state, spell, target_stack);
+	const int64_t raw_damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
 	const int64_t resistance_pct = spell_damage_resistance_pct(state, battle, target_stack, spell);
 	const double scaled = static_cast<double>(raw_damage) * static_cast<double>(gd::sub(100, resistance_pct)) / 100.0;
 	const int64_t final_damage = engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(scaled)));
@@ -346,12 +349,16 @@ DictRef battle_spell_status_resolution(State &state, DictRef battle, DictRef act
 }
 
 int64_t spell_duration_bonus(State &state, DictRef hero_state) {
-	return engine_min<int64_t>(MAX_POWER_EXTRA_ROUNDS, compat::int_div(spell_power(state, hero_state), POWER_PER_EXTRA_ROUND));
+	return duration_bonus_at(spell_power(state, hero_state));
 }
 
 int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind) {
+	return _spell_duration_rounds_at(state, hero_state, base_rounds, spell, kind, spell_power(state, hero_state));
+}
+
+int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind, int64_t power) {
 	int64_t rounds = engine_max<int64_t>(1, gd::to_int(state, base_rounds));
-	rounds = gd::add(rounds, spell_duration_bonus(state, hero_state));
+	rounds = gd::add(rounds, duration_bonus_at(power));
 	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
 	rounds = gd::add(rounds, gd::int_field(state, bonuses, kind == key::debuff ? key::debuff_duration_bonus : key::buff_duration_bonus, 0));
 	rounds = gd::add(rounds, _school_bonus(state, bonuses, key::school_duration_bonus, spell));
@@ -363,6 +370,18 @@ int64_t spell_power(State &state, DictRef hero_state) {
 	const int64_t power = gd::is_dict(command) ? engine_max<int64_t>(0, gd::int_field(state, command.ref, key::power, 0)) : 0;
 	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
 	return gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0)));
+}
+
+int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack) {
+	if (gd::is_empty(state, target_stack)) {
+		return 0;
+	}
+	const DictRef hero = _hero_payload_for_target_side(state, battle, target_stack);
+	return engine_max<int64_t>(0, gd::int_field(state, hero, key::knowledge, 0));
+}
+
+int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack) {
+	return engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state), target_side_knowledge(state, battle, target_stack)));
 }
 
 int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell) {
@@ -494,6 +513,10 @@ DictRef _spell_effect_modifiers(State &state, DictRef effect, Atom default_kind,
 }
 
 DictRef _status_effect_from_spell_effect(State &state, DictRef spell, DictRef battle, DictRef hero_state) {
+	return _status_effect_from_spell_effect_at(state, spell, battle, hero_state, spell_power(state, hero_state));
+}
+
+DictRef _status_effect_from_spell_effect_at(State &state, DictRef spell, DictRef battle, DictRef hero_state, int64_t power) {
 	const Value effect = get_or_new_dict(state, spell, key::effect);
 	const Value status_effect = get_or_new_dict(state, two_argument_get_target(effect), key::status_effect);
 	if (!gd::is_dict(status_effect) || gd::is_empty(state, status_effect.ref)) {
@@ -508,17 +531,20 @@ DictRef _status_effect_from_spell_effect(State &state, DictRef spell, DictRef ba
 	// build_battle_effect's arguments in their order, then the second duration.
 	const Atom label = gd::to_string(state.get(status, str(key::label), str(gd::capitalize(state, effect_id))));
 	const Value modifiers = get_or_new_dict(state, status, key::modifiers);
-	const int64_t duration = spell_duration_rounds(state, hero_state, gd::field_or(state, status, key::duration_rounds, int_value(1)), spell, key::debuff);
+	const int64_t duration = _spell_duration_rounds_at(state, hero_state, gd::field_or(state, status, key::duration_rounds, int_value(1)), spell, key::debuff, power);
 	const Atom source_id = gd::string_field(state, spell, key::id, key::empty);
 	const Value immunity_ids = get_or_new_array(state, status, key::status_immunity_ids);
 	const DictRef built = build_battle_effect(state, effect_id, label, modifiers, duration, battle, key::spell, source_id, immunity_ids);
-	return _counted_in_turns(state, built, spell_duration_rounds(state, hero_state, gd::field_or(state, status, key::duration_rounds, int_value(1)), spell, key::debuff));
+	return _counted_in_turns(state, built, _spell_duration_rounds_at(state, hero_state, gd::field_or(state, status, key::duration_rounds, int_value(1)), spell, key::debuff, power));
 }
 
 int64_t _battle_spell_damage(State &state, DictRef hero_state, DictRef spell, DictRef target_stack) {
+	return _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power(state, hero_state));
+}
+
+int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell, DictRef target_stack, int64_t power) {
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
 	const int64_t base_damage = gd::int_field(state, effect, key::base_damage, 0);
-	const int64_t power = spell_power(state, hero_state);
 	const int64_t power_scale = gd::int_field(state, effect, key::power_scale, 0);
 	int64_t damage = engine_max<int64_t>(1, gd::add(base_damage, gd::mul(power, power_scale)));
 	if (_wounded_bonus_applies(state, effect, target_stack)) {
@@ -613,7 +639,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	const DictRef ally_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
 	if (effect_type == key::damage_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
-		const DictRef post_damage_effect = _status_effect_from_spell_effect(state, spell, battle, hero);
+		const DictRef post_damage_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
 		const DictRef status_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, post_damage_effect);
 		DictRef resolved_post_damage_effect = post_damage_effect;
 		if (gd::bool_field(state, status_resolution, key::blocked, false)) {
@@ -650,7 +676,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		return result;
 	}
 	if (effect_type == key::control_enemy) {
-		const DictRef control_effect = _status_effect_from_spell_effect(state, spell, battle, hero);
+		const DictRef control_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
 		const DictRef control_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, control_effect);
 		DictRef resolved_control_effect = control_effect;
 		if (gd::bool_field(state, control_resolution, key::blocked, false)) {

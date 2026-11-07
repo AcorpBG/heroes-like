@@ -26,7 +26,7 @@ The owner found seven schools too many and today's spells bad: their review of 2
 
 - Every spell grows with its caster's spell power: damage or healing, turns, hexes, shares or counts. The notation (`{a+bP}`, `{a+bE}`, `{a+P/d}`) is explained at the top of `docs/magic-system-spells.md`; damage and healing follow the bands there.
 - A lasting effect gets one more turn per 4 spell power, with no limit (today's limit of 3 more turns goes). A summoned stack stays a number of rounds set the same way.
-- The enemy hero's Knowledge is the resistance: against an enemy hero's stacks a spell's harmful numbers and turns work at the caster's spell power less all of that hero's Knowledge, never below 0. At power 8 against Knowledge 6 it works at power 2; against Knowledge as high as the power, only the flat part and the base turns are left. A neutral army has no hero, so only its creatures resist.
+- The enemy hero's Knowledge is the resistance: against an enemy hero's stacks a spell's harmful numbers and turns work at the caster's spell power less all of that hero's Knowledge, never below 0. At power 8 against Knowledge 6 it works at power 2; against Knowledge as high as the power, only the flat part and the base turns are left. A neutral army's leader and a heroless town's captain are not heroes, so there only the creatures resist. Knowledge no longer gives a percentage of spell or control resistance; items and specialties keep theirs.
 - Creatures keep their own resistances on top of Knowledge. General spell and control resistance stay; resistance to Furnace, Root, Beacon and Veil stays as it is; Lens resistance becomes Beacon (30 creatures), Mire becomes Veil (30) and the one Old Measure resistance (Galehorn Striders) becomes Beacon. No creature has both of a merged pair. Basic spells meet only general spell resistance.
 
 ## Masteries
@@ -63,7 +63,7 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 ## Mana and casting limits
 
 - One hero spell per side per round in battle, as a free action; one map spell per hero per day.
-- The maximum stays 8 + 4 × Knowledge. A hero gets back a fifth of its maximum each day instead of all of it, and all of it on a day that starts in an own town with a guild. The Ley Well, the Moonspring and the Calibration Court work as today.
+- The maximum stays 8 + 4 × Knowledge. A hero gets back a fifth of its maximum each day (rounded up) instead of all of it, and all of it on a day that starts in an own town with a guild. The Ley Well, the Moonspring and the Calibration Court work as today.
 
 ## Faction preference
 

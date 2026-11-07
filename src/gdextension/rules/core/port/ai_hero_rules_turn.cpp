@@ -19,6 +19,7 @@
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
+#include "aurelion_rules/port/town_rules.hpp"
 #include "aurelion_rules/port/visit_building_rules_ai.hpp"
 #include "aurelion_rules/port/water_travel_rules.hpp"
 
@@ -494,7 +495,10 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 			// VisitBuildings.WEEK_BONUSES.
 			state.erase(held_commander, str(key::week_bonuses));
 		}
-		const DictRef commander = _wear_best_artifacts(state, spell_rules::refresh_daily_mana(state, held_commander));
+		// A fifth of the mana back, all of it in an own town with a mage guild.
+		const DictRef home = _own_town_at(state, session, controller, entry.ref);
+		const bool guild_home = !gd::is_empty(state, home) && town_rules::current_spell_tier(state, home) > 0;
+		const DictRef commander = _wear_best_artifacts(state, spell_rules::regain_daily_mana(state, held_commander, guild_home));
 		state.set(entry.ref, str(key::enemy_commander_state), dict_value(commander));
 		const DictRef block = dict_or_new(state, entry.ref, key::ai_hero);
 		const int64_t movement_max = _movement_max(state, entry.ref);

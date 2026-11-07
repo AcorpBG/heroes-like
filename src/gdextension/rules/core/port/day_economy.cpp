@@ -38,6 +38,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
+#include "aurelion_rules/port/town_rules.hpp"
 #include "aurelion_rules/port/visit_building_rules_ai.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -184,6 +185,19 @@ void resource_keys(State &state, const Value &value, std::vector<Atom> &keys) {
 			keys.push_back(resource_key);
 		}
 	}
+}
+
+// A hero standing in one of the player's own towns with a mage guild gets all of
+// its mana back that day.
+bool starts_day_in_guild_town(State &state, DictRef session, DictRef hero) {
+	for (const Value &town : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
+		if (gd::is_dict(town) && text(state, town.ref, key::owner, key::neutral) == key::player
+				&& hero_command_rules::_hero_is_stationed_at_town(state, hero, town.ref)
+				&& town_rules::current_spell_tier(state, town.ref) > 0) {
+			return true;
+		}
+	}
+	return false;
 }
 
 } // namespace
@@ -513,7 +527,7 @@ void _refresh_all_player_heroes_for_new_day(State &state, DictRef session) {
 			// VisitBuildings.WEEK_BONUSES, erased from the roster entry itself.
 			state.erase(hero_value.ref, str(key::week_bonuses));
 		}
-		const DictRef hero = spell_rules::refresh_daily_mana(state, hero_value.ref);
+		const DictRef hero = spell_rules::regain_daily_mana(state, hero_value.ref, starts_day_in_guild_town(state, session, hero_value.ref));
 		const int64_t carry_limit = gd::int_field(state, hero_progression_rules::aggregate_bonuses(state, hero), key::movement_carry, 0);
 		// int(hero.get("movement", {}).get("current", 0)) if hero.get("movement", {}) is Dictionary else 0
 		int64_t leftover = 0;
@@ -932,11 +946,25 @@ int64_t _scale_amount(State &state, int64_t amount, double multiplier) {
 
 namespace spell_rules {
 
+// The share of its maximum a hero's mana regains on a day away from a guild.
+constexpr int64_t DAILY_MANA_SHARE_DIVISOR = 5;
+
 gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state) {
+	return regain_daily_mana(state, hero_state, true);
+}
+
+gd::DictRef regain_daily_mana(State &state, gd::DictRef hero_state, bool full) {
 	const DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
 	const Value spellbook = field_or_new_dict(state, hero, key::spellbook);
 	const Value mana = field_or_new_dict(state, gd::as_dict(spellbook), key::mana);
-	state.set(gd::as_dict(mana), str(key::current), int_value(gd::int_field(state, gd::as_dict(mana), key::max, 0)));
+	const int64_t max_mana = gd::int_field(state, gd::as_dict(mana), key::max, 0);
+	int64_t current = max_mana;
+	if (!full) {
+		// A fifth of the maximum, rounded up, and never past the maximum.
+		const int64_t regained = compat::int_div(gd::add(max_mana, DAILY_MANA_SHARE_DIVISOR - 1), DAILY_MANA_SHARE_DIVISOR);
+		current = compat::engine_min<int64_t>(max_mana, gd::add(compat::engine_max<int64_t>(0, gd::int_field(state, gd::as_dict(mana), key::current, 0)), regained));
+	}
+	state.set(gd::as_dict(mana), str(key::current), int_value(current));
 	state.set(gd::as_dict(spellbook), str(key::mana), mana);
 	state.set(hero, str(key::spellbook), spellbook);
 	return hero;
