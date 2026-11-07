@@ -264,11 +264,21 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 		// It may step to a better side first, such as one next to a shooter (ai_melee_approach).
 		const DictRef strike_target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, action, key::target_battle_id));
 		const DictRef strike_from = ai_melee_approach(state, session_battle(state, session), active_stack, strike_target);
+		// Stand fast (Heartwood Stance) counts only a strike made without moving first.
+		const bool marks_move = gd::int_field(state, strike_from, key::steps, 0) > 0
+				&& spell_rules::stack_mechanic_int(state, active_stack, session_battle(state, session), key::stationary_attack) > 0;
 		if (gd::int_field(state, strike_from, key::steps, 0) > 0) {
 			_apply_melee_approach(state, session_battle(state, session), active_stack, strike_from);
 			active_stack = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 		}
-		return _resolve_ai_attack(state, session, active_stack, strike_target, false);
+		if (marks_move) {
+			state.set(session_battle(state, session), str(key::strike_moved_battle_id), str(string_or_empty(state, active_stack, key::battle_id)));
+		}
+		const DictRef strike_result = _resolve_ai_attack(state, session, active_stack, strike_target, false);
+		if (marks_move) {
+			state.erase(session_battle(state, session), str(key::strike_moved_battle_id));
+		}
+		return strike_result;
 	}
 	if (order == key::advance) {
 		const DictRef plan = ai_advance_plan(state, session_battle(state, session), active_stack);
@@ -282,11 +292,20 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 		if (plan_action == key::strike) {
 			const DictRef plan_target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, plan, key::target_battle_id));
 			const DictRef plan_approach = typed_dict_field(state, plan, key::approach);
+			const bool marks_move = gd::int_field(state, plan_approach, key::steps, 0) > 0
+					&& spell_rules::stack_mechanic_int(state, active_stack, session_battle(state, session), key::stationary_attack) > 0;
 			if (gd::int_field(state, plan_approach, key::steps, 0) > 0) {
 				_apply_melee_approach(state, session_battle(state, session), active_stack, plan_approach);
 			}
 			const DictRef attacker = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
-			return _resolve_ai_attack(state, session, attacker, plan_target, false);
+			if (marks_move) {
+				state.set(session_battle(state, session), str(key::strike_moved_battle_id), str(string_or_empty(state, attacker, key::battle_id)));
+			}
+			const DictRef plan_result = _resolve_ai_attack(state, session, attacker, plan_target, false);
+			if (marks_move) {
+				state.erase(session_battle(state, session), str(key::strike_moved_battle_id));
+			}
+			return plan_result;
 		}
 		return enemy_advance(state, session, active_stack);
 	}
@@ -420,6 +439,12 @@ DictRef _resolve_ai_attack(State &state, const Value &session, DictRef attacker,
 	const Atom action_id = is_ranged ? static_cast<Atom>(key::shoot) : static_cast<Atom>(key::strike);
 	const Value rng = _damage_rng_for_battle(state, session);
 	std::vector<Value> messages;
+	// A Confused attacker's blow lands on a stack next to it (Fog Mind).
+	const DictRef blow_target = spell_rules::confused_blow_target(state, session_battle(state, session), attacker, target, is_ranged);
+	if (string_or_empty(state, blow_target, key::battle_id) != target_id()) {
+		messages.push_back(str(gd::format(state, key::confused_hits_text, { str(_stack_label(state, attacker)), str(_stack_label(state, blow_target)) })));
+		target = blow_target;
+	}
 	const int64_t attack_distance = _attack_distance_for_action(state, attacker, target, session_battle(state, session), is_ranged);
 	const DictRef target_before = gd::deep_duplicate_dict(state, target);
 	const int64_t damage = _calculate_damage(state, attacker, target, session_battle(state, session), rng, is_ranged, false, attack_distance);
@@ -443,6 +468,13 @@ DictRef _resolve_ai_attack(State &state, const Value &session, DictRef attacker,
 
 	DictRef defender_after = _get_stack_by_id(state, session_battle(state, session), target_id());
 	const ArrayRef ability_messages = _apply_attack_ability_effects(state, session_battle(state, session), attacker, defender_after, is_ranged, attack_distance, target_before);
+	// The blow's spell extras: thorns, lifesteal, momentum.
+	const bool attacker_stood = _alive_count(state, _get_stack_by_id(state, session_battle(state, session), attacker_id())) > 0;
+	const int64_t blow_dealt = gd::sub(gd::int_field(state, target_before, key::total_health, 0), gd::int_field(state, defender_after, key::total_health, 0));
+	for (const Value &blow_message : gd::items(state, array_value(spell_rules::after_blow_mechanics(state, session_battle(state, session), attacker_id(), target_id(), is_ranged, blow_dealt)))) {
+		state.append(ability_messages, blow_message);
+	}
+	const bool attacker_fell_to_spells = attacker_stood && _alive_count(state, _get_stack_by_id(state, session_battle(state, session), attacker_id())) <= 0;
 	for (int64_t index = 0; index < state.array_size(ability_messages); ++index) {
 		messages.push_back(state.at(ability_messages, index));
 	}
@@ -463,6 +495,8 @@ DictRef _resolve_ai_attack(State &state, const Value &session, DictRef attacker,
 			&& !gd::is_empty(state, defender_after)
 			&& _alive_count(state, defender_after) > 0
 			&& gd::int_field(state, defender_after, key::retaliations_left, 0) > 0
+			&& !attacker_fell_to_spells
+			&& string_or_empty(state, defender_after, key::side) != string_or_empty(state, attacker, key::side)
 			&& _can_make_retaliation(state, defender_after, attack_distance, session_battle(state, session))) {
 		const auto defender_id = [&]() { return string_or_empty(state, defender_after, key::battle_id); };
 		const DictRef attacker_after = _get_stack_by_id(state, session_battle(state, session), attacker_id());
@@ -479,6 +513,10 @@ DictRef _resolve_ai_attack(State &state, const Value &session, DictRef attacker,
 		messages.push_back(str(gd::format(state, key::retaliates_for_damage_text, { str(_stack_label(state, defender_after)), int_value(retaliation_damage) })));
 		DictRef attacker_after_retaliation = _get_stack_by_id(state, session_battle(state, session), attacker_id());
 		const ArrayRef retaliation_ability_messages = _apply_retaliation_ability_effects(state, session_battle(state, session), defender_after, attacker_after_retaliation);
+		const int64_t retaliation_dealt = gd::sub(gd::int_field(state, attacker_before_retaliation, key::total_health, 0), gd::int_field(state, attacker_after_retaliation, key::total_health, 0));
+		for (const Value &blow_message : gd::items(state, array_value(spell_rules::after_blow_mechanics(state, session_battle(state, session), defender_id(), attacker_id(), false, retaliation_dealt)))) {
+			state.append(retaliation_ability_messages, blow_message);
+		}
 		for (int64_t index = 0; index < state.array_size(retaliation_ability_messages); ++index) {
 			messages.push_back(state.at(retaliation_ability_messages, index));
 		}

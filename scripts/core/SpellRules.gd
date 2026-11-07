@@ -548,6 +548,11 @@ static func _validate_spell_schema_record(
 	elif String(effect_type) == "move_ally":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s move metadata must use battle context." % spell_id)
+	elif String(effect_type) == "ally_effect":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s ally effect metadata must use battle context." % spell_id)
+		if "buff" not in role_categories and "recovery" not in role_categories and "countermagic" not in role_categories:
+			errors.append("Spell %s ally effect metadata must include buff, recovery or countermagic role category." % spell_id)
 
 static func _increment_count(counts: Dictionary, key: String) -> void:
 	var normalized_key := key if key != "" else "missing"

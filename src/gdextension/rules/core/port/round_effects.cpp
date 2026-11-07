@@ -471,7 +471,7 @@ ArrayRef heal_round(State &state, DictRef battle) {
 	Value stack;
 	while (loop.next(stack)) {
 		const int64_t health = gd::to_int(state, variant_get(state, stack, key::total_health, int_value(0)));
-		if (!defends(state, battle, gd::as_dict(stack)) || health <= 0) {
+		if (!defends(state, battle, gd::as_dict(stack)) || health <= 0 || spell_rules::heal_blocked(state, gd::as_dict(stack), battle)) {
 			continue;
 		}
 		const int64_t hp = engine_max<int64_t>(1, gd::to_int(state, variant_get(state, stack, key::unit_hp, int_value(1))));

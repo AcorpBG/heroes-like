@@ -93,7 +93,8 @@ int64_t _damage_for_roll(State &state, DictRef attacker, DictRef defender, DictR
 double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance) {
 	const int64_t attack_bonus = gd::int_field(state, _hero_payload_for_side(state, battle, gd::string_field(state, attacker, key::side, key::empty)), key::attack, 0);
 	const int64_t defense_bonus = gd::int_field(state, _hero_payload_for_side(state, battle, gd::string_field(state, defender, key::side, key::empty)), key::defense, 0);
-	const int64_t attack_stat = gd::add(_stack_attack_total(state, attacker, battle), attack_bonus);
+	// Stand fast (Heartwood Stance): more attack when it attacks without moving first.
+	const int64_t attack_stat = gd::add(gd::add(_stack_attack_total(state, attacker, battle), attack_bonus), spell_rules::stationary_attack_bonus(state, battle, attacker, is_retaliation));
 	int64_t defense_stat = gd::add(_stack_defense_total(state, defender, battle), defense_bonus);
 	const DictRef attacker_hero = _hero_payload_for_side(state, battle, gd::string_field(state, attacker, key::side, key::empty));
 	const DictRef defender_hero = _hero_payload_for_side(state, battle, gd::string_field(state, defender, key::side, key::empty));
@@ -116,6 +117,8 @@ double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRe
 		modifier *= 0.9;
 	}
 	modifier *= _cohesion_damage_modifier(state, attacker, defender, battle, is_ranged, is_retaliation);
+	// Marked targets take more from the other side; Blinded blows do less.
+	modifier *= spell_rules::blow_damage_multiplier(state, battle, attacker, defender, is_ranged);
 	modifier *= _ability_damage_modifier(state, attacker, defender, battle, is_ranged, is_retaliation, resolved_distance);
 	modifier *= _terrain_tag_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);
 	modifier *= _field_objective_cover_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);

@@ -148,7 +148,6 @@ bool _can_make_melee_attack(State &state, DictRef stack, DictRef battle, DictRef
 }
 
 bool _can_make_ranged_attack(State &state, DictRef stack, DictRef battle, DictRef target) {
-	(void)battle;
 	return !empty(state, stack)
 			&& !empty(state, target)
 			&& _alive_count(state, stack) > 0
@@ -157,7 +156,8 @@ bool _can_make_ranged_attack(State &state, DictRef stack, DictRef battle, DictRe
 			&& ranged(state, stack)
 			&& gd::int_field(state, stack, key::shots_remaining, 0) > 0
 			&& !empty(state, _stack_hex(state, stack))
-			&& !empty(state, _stack_hex(state, target));
+			&& !empty(state, _stack_hex(state, target))
+			&& !spell_rules::shot_refused_by_spells(state, battle, stack, target);
 }
 
 bool _can_make_any_ranged_attack(State &state, DictRef stack, DictRef battle, ArrayRef targets) {
@@ -573,7 +573,8 @@ bool _spell_buff_already_active(State &state, DictRef active_stack, DictRef batt
 
 bool _stack_has_control_effect(State &state, DictRef stack, DictRef battle) {
 	const ArrayRef ids = state.new_array();
-	for (const Atom id : { key::status_harried, key::status_staggered, key::status_rooted, key::status_slowed, key::status_dazed }) {
+	for (const Atom id : { key::status_harried, key::status_staggered, key::status_rooted, key::status_slowed, key::status_dazed,
+				 key::status_asleep, key::status_blinded, key::status_afraid, key::status_confused }) {
 		state.append(ids, str(id));
 	}
 	return spell_rules::has_any_effect_ids(state, stack, battle, array_value(ids));
@@ -608,7 +609,32 @@ double _status_tactical_value(State &state, Atom status_id, DictRef target) {
 	if (status_id == key::status_dazed) {
 		return 1.0;
 	}
+	// The tier-2 statuses (docs/magic-system-spells.md, Statuses): a sleeper
+	// loses whole turns; a Blinded shooter cannot shoot and a Blinded fighter
+	// hits softer; Afraid holds a fighter back; a Confused stack may strike its
+	// own side; Marked and Cursed pay off over the following blows and turns.
+	if (status_id == key::status_asleep) {
+		return 2.5;
+	}
+	if (status_id == key::status_blinded) {
+		return !melee && gd::int_field(state, target, key::shots_remaining, 0) > 0 ? 2.5 : 1.0;
+	}
+	if (status_id == key::status_afraid) {
+		return melee ? 1.5 : 0.3;
+	}
+	if (status_id == key::status_confused) {
+		return 1.5;
+	}
+	if (status_id == key::status_marked || status_id == key::status_cursed) {
+		return 1.0;
+	}
 	return 0.0;
+}
+
+bool _spell_effect_already_on(State &state, DictRef stack, DictRef battle, DictRef spell) {
+	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+	const Atom type = gd::string_field(state, dict_or_new(state, spell, key::effect), key::type, key::empty);
+	return spell_rules::has_effect_id(state, stack, battle, gd::format(state, key::spell_effect_id_format, { str(spell_id), str(type) }));
 }
 
 double _buff_spell_offense_payoff(State &state, DictRef stack) {

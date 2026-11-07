@@ -176,6 +176,8 @@ bool _candidate_is_lethal_damage_spell(State &state, DictRef candidate, DictRef 
 bool _damage_candidate_is_lethal(State &state, DictRef candidate, DictRef battle, DictRef enemy_hero, DictRef target, DictRef projection);
 bool _allied_spell_candidate_suppressed_by_active_buff(State &state, Atom effect_type, DictRef ally, DictRef battle, DictRef spell);
 bool _spell_buff_already_active(State &state, DictRef active_stack, DictRef battle, DictRef spell);
+// The stack holds this spell's own effect still (an ally effect cast on it before).
+bool _spell_effect_already_on(State &state, DictRef stack, DictRef battle, DictRef spell);
 bool _stack_has_control_effect(State &state, DictRef stack, DictRef battle);
 bool _stack_is_rooted(State &state, DictRef stack, DictRef battle);
 DictRef _status_effect_from_spell(State &state, DictRef spell);
@@ -237,6 +239,14 @@ double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRe
 double _cleanse_spell_score_for_target(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
 double _spell_metadata_value_modifier(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior);
 double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef targets, DictRef spell);
+// A helpful spell's lasting mechanic on one of the caster's stacks (plate,
+// regrowth, thorns, lifesteal, momentum, stand fast, shroud, prism, act next,
+// backlash), at the hero's power; 0 without one.
+double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, ArrayRef hostiles, DictRef spell);
+// What the stacks a cast reaches beyond its target add (spell_reach.cpp): hits
+// on the other side, less those on the caster's own, heals and effects; 0 for
+// a spell that reaches no further.
+double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, int64_t main_damage);
 // The basic tier's mechanics: a cleanse of any harmful effect, a dispel of
 // helpful spell effects, and a move ({destination: {q, r}, score}, or {} when
 // no hex helps the stack).

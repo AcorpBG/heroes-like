@@ -105,16 +105,20 @@ int64_t _calculate_damage(State &state, DictRef attacker, DictRef defender, Dict
 void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_t damage) {
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	bool killed = false;
+	int64_t health_lost = 0;
 	const int64_t count = untyped_size(state, stacks);
 	for (int64_t index = 0; index < count; ++index) {
 		const Value stack = untyped_at(state, stacks, index);
 		if (gd::is_dict(stack) && string_field(state, stack.ref, key::battle_id, key::empty) == battle_id) {
+			// A spell's plate takes the damage first (Rivet Plate).
+			damage = spell_rules::plate_absorb(state, battle, stack.ref, damage);
 			const int64_t absorbed = town_battle_rules::absorb(state, stack.ref, damage);
 			const bool was_alive = int_field(state, stack.ref, key::total_health, 0) > 0;
 			// max(0, int - max(0, damage - absorbed)): ints.
 			const int64_t health = int_field(state, stack.ref, key::total_health, 0);
 			const int64_t taken = engine_max<int64_t>(0, gd::sub(damage, absorbed));
 			state.set(stack.ref, str(key::total_health), int_value(engine_max<int64_t>(0, gd::sub(health, taken))));
+			health_lost = gd::sub(health, int_field(state, stack.ref, key::total_health, 0));
 			if (absorbed > 0) {
 				const std::string label = state.text(_stack_label(state, stack.ref));
 				_record_event(state, battle, state.intern("Pressure shield absorbs " + compat::itos(absorbed) + " damage for " + label + "."));
@@ -130,6 +134,8 @@ void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_
 	if (killed) {
 		_sync_distance_from_hexes(state, battle);
 	}
+	// A hit wakes a sleeper; a curse jumps from a fallen stack.
+	spell_rules::after_stack_damaged(state, battle, battle_id, health_lost, killed);
 }
 
 int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int64_t amount) {
@@ -140,6 +146,10 @@ int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int6
 		const Value stack = untyped_at(state, stacks, index);
 		if (!gd::is_dict(stack) || string_field(state, stack.ref, key::battle_id, key::empty) != battle_id) {
 			continue;
+		}
+		// A sealed wound takes no healing (Hot Iron).
+		if (spell_rules::heal_blocked(state, stack.ref, battle)) {
+			break;
 		}
 		const int64_t current_health = engine_max<int64_t>(0, int_field(state, stack.ref, key::total_health, 0));
 		const int64_t max_recoverable_health = gd::add(current_health, spell_rules::battle_spell_recoverable_health(state, stack.ref));

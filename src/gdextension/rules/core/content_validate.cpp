@@ -1447,8 +1447,68 @@ void Check::spell(const Value &spell) {
 		if (integer(effect, "range", 0) <= 0) {
 			warn("Spell " + spell_id + " must define move range > 0.");
 		}
+	} else if (type == "ally_effect") {
+		// A lasting effect on one of the hero's stacks: a mechanic, modifiers or both.
+		const Value mechanic = get(effect, "mechanic", empty_dict_);
+		if ((!is_dict(mechanic) || empty(mechanic)) && !lasting_boost) {
+			warn("Spell " + spell_id + " must define an ally_effect mechanic or modifiers.");
+		}
+		if (integer(effect, "duration_rounds", 0) <= 0) {
+			warn("Spell " + spell_id + " must define duration_rounds > 0.");
+		}
 	} else {
 		warn("Spell " + spell_id + " uses unsupported effect type " + type + ".");
+	}
+	// A mechanic holds numbers and flags; a follow-up status names its effect and turns.
+	for (const Value &holder : { effect, get(effect, "status_effect", empty_dict_) }) {
+		const Value mechanic = get(holder, "mechanic", empty_dict_);
+		if (!is_dict(mechanic)) {
+			warn("Spell " + spell_id + " mechanic must be a dictionary.");
+			continue;
+		}
+		for (const Value &value : d_.dict(mechanic.ref).values) {
+			if (!gd::is_int(value) && !gd::is_float(value) && !gd::is_bool(value)) {
+				warn("Spell " + spell_id + " mechanic values must be numbers or true/false.");
+				break;
+			}
+		}
+	}
+	const Value follow_status = get(effect, "follow_status_effect", empty_dict_);
+	if (!is_dict(follow_status)) {
+		warn("Spell " + spell_id + " follow_status_effect must be a dictionary.");
+	} else if (!empty(follow_status) && (text(follow_status, "effect_id").empty() || integer(follow_status, "duration_rounds", 0) <= 0)) {
+		warn("Spell " + spell_id + " follow_status_effect must define effect_id and duration_rounds > 0.");
+	}
+	// The stacks a cast reaches beyond its target: a splash, a beam, sparks, a
+	// drain, every stack, and from a mastery rank the stacks next to the target
+	// or every stack of its side.
+	const std::string splash = text(effect, "splash");
+	if (!splash.empty() && splash != "adjacent") {
+		warn("Spell " + spell_id + " splash must be adjacent.");
+	}
+	const std::string reach = text(effect, "reach");
+	if (!reach.empty() && reach != "all") {
+		warn("Spell " + spell_id + " reach must be all.");
+	}
+	if (integer(effect, "random_hits", 0) < 0 || integer(effect, "random_hits_power_divisor", 0) < 0) {
+		warn("Spell " + spell_id + " random_hits and its divisor must not be negative.");
+	}
+	const int64_t drain_pct = integer(effect, "drain_pct", 0);
+	if (drain_pct < 0 || drain_pct > 100) {
+		warn("Spell " + spell_id + " drain_pct must be 0 to 100.");
+	}
+	const Value mastery_reach = get(spell, "mastery_reach", empty_array_);
+	if (!gd::is_array(mastery_reach)) {
+		warn("Spell " + spell_id + " mastery_reach must be a list.");
+	} else {
+		for (const Value &entry : d_.array(mastery_reach.ref).items) {
+			const std::string entry_reach = is_dict(entry) ? text(entry, "reach") : std::string();
+			const int64_t rank = is_dict(entry) ? integer(entry, "rank", 0) : 0;
+			if (rank < 1 || rank > 4 || (entry_reach != "adjacent" && entry_reach != "all")) {
+				warn("Spell " + spell_id + " mastery_reach entries need a rank of 1 to 4 and a reach of adjacent or all.");
+				break;
+			}
+		}
 	}
 }
 

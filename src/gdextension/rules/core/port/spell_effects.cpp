@@ -224,6 +224,11 @@ ArrayRef _normalize_effects(State &state, const Value &value) {
 				state.set(normalized, str(key::skip_current_turn), gd::bool_value(true));
 			}
 		}
+		// A spell mechanic's values (spell_stack_mechanics.cpp) stay with the effect.
+		Value mechanic;
+		if (state.lookup(effect, str(key::mechanic), mechanic) && gd::is_dict(mechanic)) {
+			state.set(normalized, str(key::mechanic), mechanic);
+		}
 		state.append(effects, dict_value(normalized));
 	}
 	return effects;

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-basic-tier-20261107",
- "currentSliceTitle": "The 12 basic battle spells enter spells.json unreleased, with Slowed, Dazed, Unweave and Shift (a lit hex to pick on the battle screen); heroes cast on any stack; battle AI values for each; spell texts show numbers at the caster's power.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-07T16:33:15Z",
+ "currentSliceId": "magic-tier2-spells-20261107",
+ "currentSliceTitle": "Magic: tier 2 battle spells",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-07T16:34:50Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -55,7 +55,7 @@
   {
    "id": "magic-tier2-spells-20261107",
    "title": "Magic: tier 2 battle spells",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "The 36 tier-2 battle spells of Furnace, Root, Beacon and Veil, scroll-only ones included, marked unreleased, with the 36 new mechanics they need (Heat, plates, regrowth, grafts, brambles, traps, marks, reflection, beams, crystals, drain, curses, fear, sleep, murk and more), mastery shapes at mastery 2 and 3, and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
    "docs": [
     "docs/magic-system.md"

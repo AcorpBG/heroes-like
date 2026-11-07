@@ -173,6 +173,16 @@ double _damage_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 	if (_hero_has_trait(state, battle, side_of(state, active_stack), key::packhunter) && _health_ratio(state, target) <= 0.75) {
 		score += 1.0;
 	}
+	// Heat: a burst when the stack reaches 3 is more damage now; less Heat only builds toward one.
+	const int64_t heat = gd::int_field(state, spell_effect(state, spell), key::heat, 0);
+	if (heat > 0) {
+		if (gd::add(gd::int_field(state, target, key::spell_heat, 0), heat) >= 3) {
+			const int64_t burst = spell_rules::heat_burst_damage(spell_rules::spell_power_against(state, enemy_hero, battle, target));
+			score += variant_min_float(1.0, static_cast<double>(burst) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, target, key::total_health, 0)))) * _w(state, key::spell_damage_share);
+		} else {
+			score += 0.4;
+		}
+	}
 	score += cast_objective_score(state, battle, active_stack, target);
 	score -= mana_cost(state, spell) * 0.25;
 	return score;
@@ -192,7 +202,11 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 				? _any_harm_cleanse_score(state, enemy_hero, battle, active_stack, target, spell)
 				: _cleanse_spell_score_for_target(state, battle, active_stack, target, spell);
 	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff })) {
-		score = _buff_spell_score(state, battle, active_stack, target, hostiles, spell);
+		score = _buff_spell_score(state, battle, active_stack, target, hostiles, spell)
+				+ _ally_effect_mechanic_score(state, enemy_hero, battle, active_stack, target, hostiles, spell);
+	} else if (effect_type == key::ally_effect) {
+		score = _buff_spell_score(state, battle, active_stack, target, hostiles, spell)
+				+ _ally_effect_mechanic_score(state, enemy_hero, battle, active_stack, target, hostiles, spell);
 	} else if (effect_type == key::dispel_enemy) {
 		score = _dispel_spell_score(state, enemy_hero, battle, active_stack, target, spell);
 	} else if (effect_type == key::move_ally) {
@@ -200,6 +214,9 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else {
 		score = -9999.0;
+	}
+	if (score > -9000.0) {
+		score += _reach_value(state, enemy_hero, battle, active_stack, target, spell, gd::int_field(state, damage_projection, key::final_damage, 0));
 	}
 	const double metadata_modifier = _spell_metadata_value_modifier(state, battle, active_stack, target, spell, behavior);
 	return score + metadata_modifier + role_modifier;
@@ -276,6 +293,10 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, target, spell, acting_side))) {
 					continue;
 				}
+				// A Prism Ward would turn the spell on the caster's own stacks.
+				if (!empty(state, spell_rules::reflected_spell_target(state, battle, target, gd::string_field(state, spell, key::id, key::empty)))) {
+					continue;
+				}
 				const DictRef projection = damages ? spell_rules::battle_spell_damage_projection(state, enemy_hero, battle, target, spell) : state.new_dict();
 				const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
 				const Atom target_id = gd::string_field(state, target, key::battle_id, key::empty);
@@ -306,13 +327,13 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				state.append(candidates, dict_value(cast_candidate(state, spell_id, target_id, score)));
 				state.append(lethal_flags, bool_value(false));
 			}
-		} else if (effect_type == key::initiative_buff || effect_type == key::attack_buff) {
+		} else if (effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect) {
 			for (const Value &ally_value : gd::items(state, array_value(allies))) {
 				if (!gd::is_dict(ally_value)) {
 					continue;
 				}
 				const DictRef ally = ally_value.ref;
-				if (_spell_buff_already_active(state, ally, battle, spell)) {
+				if (_spell_buff_already_active(state, ally, battle, spell) || (effect_type == key::ally_effect && _spell_effect_already_on(state, ally, battle, spell))) {
 					continue;
 				}
 				if (!check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, ally, spell, acting_side))) {
@@ -424,7 +445,7 @@ double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, D
 		delta = _w(state, key::spell_bar_buff);
 	} else if (effect_type == key::recover_ally || effect_type == key::cleanse_ally) {
 		delta = _w(state, key::spell_bar_recovery);
-	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff })) {
+	} else if (one_of(effect_type, { key::defense_buff, key::initiative_buff, key::attack_buff, key::ally_effect })) {
 		// The condition first, then only the branch it picks.
 		if (!support_needs_pressure || _support_spell_has_active_pressure(state, battle, active_stack, target_stack, hostile_targets)) {
 			delta = _w(state, key::spell_bar_buff);

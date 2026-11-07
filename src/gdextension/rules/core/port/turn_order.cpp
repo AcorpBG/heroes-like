@@ -205,7 +205,8 @@ ArrayRef _sorted_turn_order(State &state, DictRef battle) {
 		state.append(sorted, state.at(candidates, best_index));
 		gd::remove_at(state, candidates, best_index);
 	}
-	return _dazed_stacks_last(state, battle, sorted);
+	// Call to Arms puts its stack first; a dazed stack acts last.
+	return _dazed_stacks_last(state, battle, spell_rules::acts_next_first(state, battle, sorted));
 }
 
 ArrayRef _dazed_stacks_last(State &state, DictRef battle, ArrayRef battle_ids) {
@@ -294,7 +295,15 @@ Atom _advance_to_next_alive(State &state, DictRef battle, int64_t start_index) {
 }
 
 void advance_turn(State &state, DictRef battle) {
-	spend_effect_turns(state, battle, gd::string_field(state, battle, key::active_stack_id, key::empty));
+	_advance_turn_without_start(state, battle);
+	spell_rules::begin_active_turn(state, battle);
+}
+
+void _advance_turn_without_start(State &state, DictRef battle) {
+	const Atom ending_id = gd::string_field(state, battle, key::active_stack_id, key::empty);
+	// The ending turn's spell mechanics (backlash, tightening roots, curse), then its effects' turns.
+	spell_rules::end_of_turn_mechanics(state, battle, ending_id);
+	spend_effect_turns(state, battle, ending_id);
 	Value turn_order;
 	const bool has_turn_order = state.lookup(battle, str(key::turn_order), turn_order);
 	// A missing key's default [] is an empty Array.
@@ -363,16 +372,17 @@ ArrayRef _ordered_remaining_actors(State &state, DictRef battle, ArrayRef battle
 		const DictRef rhs = turn_order_keys_of(state, keys, right);
 		return _compare_waiting_order_keys(state, lhs, rhs);
 	});
-	// A dazed stack acts after every other stack, the waiting ones too
-	// (Daze, docs/magic-system-spells.md).
+	// Call to Arms puts its stack first. A dazed stack acts after every other
+	// stack, the waiting ones too (Daze, docs/magic-system-spells.md).
+	const ArrayRef called_first = spell_rules::acts_next_first(state, battle, acting);
 	const ArrayRef still_acting = state.new_array();
 	const ArrayRef dazed = state.new_array();
-	for (const Value &battle_id : gd::items(state, array_value(acting))) {
+	for (const Value &battle_id : gd::items(state, array_value(called_first))) {
 		const DictRef stack = _get_stack_by_id(state, battle, gd::to_string(battle_id));
 		state.append(!gd::is_empty(state, stack) && spell_rules::has_effect_id(state, stack, battle, key::status_dazed) ? dazed : still_acting, battle_id);
 	}
 	if (state.array_size(dazed) == 0) {
-		return gd::concat(state, acting, waiting);
+		return gd::concat(state, called_first, waiting);
 	}
 	return gd::concat(state, gd::concat(state, still_acting, waiting), dazed);
 }

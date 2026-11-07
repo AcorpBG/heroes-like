@@ -3,6 +3,8 @@
 
 #include "aurelion_rules/port/spell_rules.hpp"
 
+#include "aurelion_rules/compat/godot_math.hpp"
+
 #include <string>
 #include <vector>
 
@@ -119,24 +121,25 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
 		if (!gd::is_empty(state, status_effect)) {
 			const Atom label = gd::string_field(state, status_effect, key::label, key::effect);
-			const Atom terms = _status_terms(state, status_effect);
-			const int64_t rounds = _spell_duration_rounds_at(state, hero_state, gd::field_or(state, status_effect, key::duration_rounds, int_value(1)), spell, key::debuff, spell_power_against(state, hero_state, battle, target_stack));
-			const Atom turns = _turns_label(state, rounds);
+			const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+			const Atom terms = harmful_status_terms(state, status_effect, power_against);
+			const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
 			summary = concat(state, summary, gd::format(state, key::leaves_it_for_text, { str(label), str(terms), str(turns) }));
 		}
 		if (_wounded_bonus_applies(state, effect, target_stack)) {
 			summary = concat(state, summary, key::wounded_target_bonus_text);
 		}
-		return summary;
+		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, target_stack)));
 	}
 	if (effect_type == key::control_enemy) {
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
 		const Atom label = gd::string_field(state, status_effect, key::label, key::control);
-		const Atom terms = _status_terms(state, status_effect);
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const Atom terms = harmful_status_terms(state, status_effect, power_against);
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
-		const int64_t rounds = _spell_duration_rounds_at(state, hero_state, gd::field_or(state, status_effect, key::duration_rounds, int_value(1)), spell, key::debuff, spell_power_against(state, hero_state, battle, target_stack));
-		const Atom turns = _turns_label(state, rounds);
-		return gd::format(state, key::status_on_for_text, { str(label), str(terms), str(target_label), str(turns) });
+		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
+		const Atom summary = gd::format(state, key::status_on_for_text, { str(label), str(terms), str(target_label), str(turns) });
+		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, target_stack)));
 	}
 	if (effect_type == key::recover_ally) {
 		const Atom target_label = ally_label(state, spell, active_stack);
@@ -149,7 +152,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 			const Atom turns = _turns_label(state, rounds);
 			summary = concat(state, summary, gd::format(state, key::modifiers_for_text, { str(modifier_text), str(turns) }));
 		}
-		return summary;
+		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack)));
 	}
 	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
 		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero_state));
@@ -169,12 +172,12 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		}
 		return cleanse_summary;
 	}
-	if (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff) {
+	if (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff || effect_type == key::ally_effect) {
 		const Atom target_label = ally_label(state, spell, active_stack);
-		const Atom modifier_text = _modifier_summary(state, battle_spell_modifiers(state, spell));
-		const int64_t rounds = spell_duration_rounds(state, hero_state, gd::field_or(state, effect, key::duration_rounds, int_value(1)), spell, key::buff);
-		const Atom turns = _turns_label(state, rounds);
-		return gd::format(state, key::modifiers_to_for_text, { str(modifier_text), str(target_label), str(turns) });
+		const Atom modifier_text = helpful_effect_terms(state, hero_state, spell, battle, gd::string_field(state, active_stack, key::side, key::player));
+		const Atom turns = _turns_label(state, helpful_effect_turns(state, hero_state, spell));
+		const Atom summary = gd::format(state, key::modifiers_to_for_text, { str(modifier_text), str(target_label), str(turns) });
+		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack)));
 	}
 	if (effect_type == key::dispel_enemy) {
 		// At the caster's power less the target hero's Knowledge when a target
@@ -204,6 +207,18 @@ Atom status_rules_text(State &state, Atom status_id) {
 	}
 	if (status_id == key::status_dazed) {
 		return key::dazed_rules_text;
+	}
+	if (status_id == key::status_asleep) {
+		return key::asleep_rules_text;
+	}
+	if (status_id == key::status_blinded) {
+		return key::blinded_rules_text;
+	}
+	if (status_id == key::status_afraid) {
+		return key::afraid_rules_text;
+	}
+	if (status_id == key::status_confused) {
+		return key::confused_rules_text;
 	}
 	return key::empty;
 }
@@ -275,6 +290,200 @@ Atom _signed_modifier_label(State &state, int64_t amount) {
 		return gd::format(state, key::plus_d_text, { int_value(amount) });
 	}
 	return gd::format(state, key::d_text, { int_value(amount) });
+}
+
+// --- The new spells' words (docs/magic-system-spells.md, Mechanics) ----------
+
+Atom mechanic_terms(State &state, DictRef mechanic) {
+	if (gd::is_empty(state, mechanic)) {
+		return key::empty;
+	}
+	const auto has = [&](Atom field) { return state.has(mechanic, str(field)); };
+	const auto amount = [&](Atom field) { return int_value(gd::int_field(state, mechanic, field, 0)); };
+	std::vector<Atom> parts;
+	if (has(key::plate)) {
+		parts.push_back(gd::format(state, key::plate_term_text, { amount(key::plate) }));
+	}
+	if (has(key::stationary_attack)) {
+		parts.push_back(gd::format(state, key::stationary_attack_term_text, { amount(key::stationary_attack) }));
+	}
+	if (has(key::momentum_per_blow)) {
+		parts.push_back(gd::format(state, key::momentum_term_text, { amount(key::momentum_per_blow), amount(key::momentum_cap) }));
+	}
+	if (has(key::lifesteal_pct)) {
+		parts.push_back(gd::format(state, key::lifesteal_term_text, { amount(key::lifesteal_pct) }));
+	}
+	if (has(key::thorns)) {
+		parts.push_back(gd::format(state, key::thorns_term_text, { amount(key::thorns) }));
+	}
+	if (has(key::regrowth)) {
+		parts.push_back(gd::format(state, key::regrowth_term_text, { amount(key::regrowth) }));
+	}
+	if (has(key::shot_shield)) {
+		parts.push_back(key::shot_shield_term_text);
+	}
+	if (has(key::reflect_spell)) {
+		parts.push_back(key::reflect_term_text);
+	}
+	if (has(key::act_next)) {
+		parts.push_back(key::act_next_term_text);
+	}
+	if (has(key::backlash_pct)) {
+		parts.push_back(gd::format(state, key::backlash_term_text, { amount(key::backlash_pct) }));
+	}
+	if (has(key::damage_taken_pct)) {
+		parts.push_back(gd::format(state, key::damage_taken_term_text, { amount(key::damage_taken_pct) }));
+	}
+	if (has(key::tightening)) {
+		parts.push_back(gd::format(state, key::tightening_term_text, { amount(key::tightening) }));
+	}
+	if (has(key::curse_damage)) {
+		parts.push_back(gd::format(state, key::curse_term_text, { amount(key::curse_damage) }));
+	}
+	if (has(key::heal_block)) {
+		parts.push_back(key::heal_block_term_text);
+	}
+	return join_with_comma(state, parts);
+}
+
+Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictRef battle, Atom caster_side) {
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	const int64_t power = spell_power(state, hero_state);
+	std::vector<Atom> parts;
+	const DictRef modifiers = battle_spell_modifiers(state, spell);
+	if (!gd::is_empty(state, modifiers)) {
+		parts.push_back(_modifier_summary(state, scaled_spell_modifiers(state, effect, modifiers, power)));
+	}
+	Value raw;
+	if (state.lookup(effect, str(key::mechanic), raw) && gd::is_dict(raw)) {
+		// Thorns cut at power less the other side's Knowledge, as the cast resolves them.
+		const bool against_enemy = gd::bool_field(state, raw.ref, key::uses_enemy_power, false);
+		const int64_t mechanic_power = against_enemy ? gd::sub(power, opposing_side_knowledge(state, battle, caster_side)) : power;
+		const Atom terms = mechanic_terms(state, resolve_mechanic(state, raw, mechanic_power < 0 ? 0 : mechanic_power));
+		if (terms != key::empty) {
+			parts.push_back(terms);
+		}
+	}
+	return parts.empty() ? _modifier_summary(state, modifiers) : join_with_comma(state, parts);
+}
+
+int64_t helpful_effect_turns(State &state, DictRef hero_state, DictRef spell) {
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	return spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
+}
+
+Atom harmful_status_terms(State &state, DictRef status_effect, int64_t power_against) {
+	std::vector<Atom> parts;
+	const Atom terms = _status_terms(state, status_effect);
+	if (terms != key::empty) {
+		parts.push_back(terms);
+	}
+	Value raw;
+	if (state.lookup(status_effect, str(key::mechanic), raw) && gd::is_dict(raw)) {
+		const Atom mechanic = mechanic_terms(state, resolve_mechanic(state, raw, power_against));
+		if (mechanic != key::empty) {
+			parts.push_back(mechanic);
+		}
+	}
+	return join_with_comma(state, parts);
+}
+
+int64_t harmful_status_turns(State &state, DictRef hero_state, DictRef spell, DictRef status_effect, int64_t power_against) {
+	return spell_effect_turns(state, hero_state, status_effect, spell, key::debuff, power_against);
+}
+
+ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack) {
+	const ArrayRef clauses = state.new_array();
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	const Atom effect_type = gd::to_string(state.get(effect, str(key::type), str(key::empty)));
+	const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+	if (effect_type == key::damage_enemy) {
+		const int64_t heat = gd::int_field(state, effect, key::heat, 0);
+		if (heat > 0) {
+			state.append(clauses, str(gd::format(state, key::heat_clause_text, { int_value(heat), int_value(heat_burst_damage(power_against)) })));
+		}
+		const int64_t rooted_bonus = gd::int_field(state, effect, key::rooted_bonus_pct, 0);
+		if (rooted_bonus > 0) {
+			state.append(clauses, str(gd::format(state, key::rooted_bonus_clause_text, { int_value(rooted_bonus) })));
+		}
+	} else if (effect_type == key::control_enemy) {
+		const DictRef follow = gd::as_dict(get_or_new_dict(state, effect, key::follow_status_effect));
+		if (!gd::is_empty(state, follow)) {
+			const Atom label = gd::string_field(state, follow, key::label, key::effect);
+			const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, follow, power_against));
+			state.append(clauses, str(gd::format(state, key::follow_status_clause_text, { str(label), str(harmful_status_terms(state, follow, power_against)), str(turns) })));
+		}
+	} else if (effect_type == key::recover_ally) {
+		const int64_t block_turns = gd::int_field(state, effect, key::heal_block_turns, 0);
+		if (block_turns > 0) {
+			state.append(clauses, str(gd::format(state, key::heal_block_clause_text, { str(_turns_label(state, block_turns)) })));
+		}
+		const int64_t statuses = gd::int_field(state, effect, key::cleanse_statuses, 0);
+		if (statuses == 1) {
+			state.append(clauses, str(key::cleanse_status_clause_text));
+		} else if (statuses > 1) {
+			state.append(clauses, str(gd::format(state, key::cleanse_statuses_clause_text, { int_value(statuses) })));
+		}
+	}
+	// The stacks it reaches beyond the target (spell_reach.cpp).
+	if (effect_type == key::damage_enemy) {
+		int64_t sparks = gd::int_field(state, effect, key::random_hits, 0);
+		const int64_t spark_divisor = gd::int_field(state, effect, key::random_hits_power_divisor, 0);
+		if (sparks > 0 && spark_divisor > 0) {
+			sparks = gd::add(sparks, compat::int_div(spell_power(state, hero_state), spark_divisor));
+		}
+		if (sparks > 1) {
+			state.append(clauses, str(gd::format(state, key::sparks_clause_text, { int_value(sparks) })));
+		}
+		if (gd::string_field(state, effect, key::splash, key::empty) == key::adjacent) {
+			state.append(clauses, str(key::splash_clause_text));
+		}
+		if (gd::bool_field(state, effect, key::line, false)) {
+			state.append(clauses, str(key::line_clause_text));
+		}
+		const int64_t drain_pct = gd::int_field(state, effect, key::drain_pct, 0);
+		if (drain_pct > 0) {
+			state.append(clauses, str(gd::format(state, key::drain_clause_text, { int_value(drain_pct) })));
+		}
+	}
+	if (effect_type == key::recover_ally && gd::string_field(state, effect, key::reach, key::empty) == key::all) {
+		state.append(clauses, str(key::heal_all_clause_text));
+	}
+	for (const Value &entry : gd::field_items(state, spell, str(key::mastery_reach))) {
+		if (!gd::is_dict(entry)) {
+			continue;
+		}
+		const Atom reach = gd::string_field(state, entry.ref, key::reach, key::empty);
+		const Value rank = int_value(gd::int_field(state, entry.ref, key::rank, 0));
+		if (reach == key::adjacent) {
+			state.append(clauses, str(gd::format(state, key::mastery_adjacent_clause_text, { rank })));
+		} else if (reach == key::all) {
+			state.append(clauses, str(gd::format(state, key::mastery_all_clause_text, { rank })));
+		}
+	}
+	return clauses;
+}
+
+Atom clauses_as_phrase(State &state, ArrayRef clauses) {
+	std::string joined;
+	const int64_t size = state.array_size(clauses);
+	for (int64_t index = 0; index < size; ++index) {
+		joined += state.text(key::semicolon_space);
+		joined += state.text(gd::to_string(state.at(clauses, index)));
+	}
+	return state.intern(joined);
+}
+
+Atom clauses_as_sentence(State &state, ArrayRef clauses) {
+	if (state.array_size(clauses) == 0) {
+		return key::empty;
+	}
+	// The phrase without its leading "; ", first letter raised, as a sentence.
+	std::string sentence = state.text(clauses_as_phrase(state, clauses)).substr(state.text(key::semicolon_space).size());
+	if (!sentence.empty() && sentence[0] >= 'a' && sentence[0] <= 'z') {
+		sentence[0] = static_cast<char>(sentence[0] - 'a' + 'A');
+	}
+	return state.intern(" " + sentence + ".");
 }
 
 } // namespace aurelion::rules::port::spell_rules

@@ -446,19 +446,52 @@ DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_
 	}
 	const DictRef resolution = spell_rules::resolve_battle_spell(state, _player_commander_state(state, session), battle, active, target, spell_id, key::player, destination);
 	// Explicit orders must never inherit the legacy support-spell fallback to the active stack.
-	if (target_id != key::empty && gd::bool_field(state, resolution, key::ok, false) && string_or_empty(state, resolution, key::target_battle_id) != target_id) {
+	// (A cast Prism Ward turned aside lands elsewhere by design.)
+	if (target_id != key::empty && gd::bool_field(state, resolution, key::ok, false) && string_or_empty(state, resolution, key::target_battle_id) != target_id
+			&& string_or_empty(state, resolution, key::reflected_from_battle_id) != target_id) {
 		return refusal(state, key::stack_not_valid_spell_target_text);
 	}
 	return resolution;
 }
 
+// One stack's share of a cast: the target's, or a stack it reaches beyond (spell_reach.cpp).
+bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef resolution, DictRef animation_resolution, Atom &message, int64_t &recovered_amount, int64_t &cleansed_count);
+
 bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, DictRef animation_resolution, Atom &message, int64_t &recovered_amount, int64_t &cleansed_count) {
+	if (!_apply_spell_resolution_on_target(state, battle, resolution, animation_resolution, message, recovered_amount, cleansed_count)) {
+		return false;
+	}
+	for (const Value &extra : gd::field_items(state, resolution, str(key::extra_resolutions))) {
+		if (!gd::is_dict(extra)) {
+			continue;
+		}
+		message = concat(state, message, gd::string_field(state, extra.ref, key::message, key::empty));
+		int64_t extra_recovered = 0;
+		int64_t extra_cleansed = 0;
+		_apply_spell_resolution_on_target(state, battle, extra.ref, state.new_dict(), message, extra_recovered, extra_cleansed);
+	}
+	return true;
+}
+
+bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef resolution, DictRef animation_resolution, Atom &message, int64_t &recovered_amount, int64_t &cleansed_count) {
 	const Atom target_battle_id = string_or_empty(state, resolution, key::target_battle_id);
 	const Atom resolution_type = string_or_empty(state, resolution, key::resolution_type);
+	const Atom reflected_from = string_or_empty(state, resolution, key::reflected_from_battle_id);
+	if (reflected_from != key::empty) {
+		spell_rules::spend_reflect_ward(state, battle, reflected_from);
+	}
 	if (resolution_type == key::damage) {
 		const DictRef before_copy = gd::duplicate_dict(state, _get_stack_by_id(state, battle, target_battle_id));
 		state.set(animation_resolution, str(key::playback_target_before), dict_value(before_copy));
 		_apply_damage_to_stack(state, battle, target_battle_id, gd::int_field(state, resolution, key::damage, 0));
+		// Heat (Ember Lash): it builds on the stack and bursts at the third.
+		const int64_t heat = gd::int_field(state, resolution, key::heat, 0);
+		if (heat > 0) {
+			const Atom heat_message = spell_rules::add_heat(state, battle, target_battle_id, heat, gd::int_field(state, resolution, key::heat_burst_damage, 0));
+			if (heat_message != key::empty) {
+				message = concat(state, message, heat_message);
+			}
+		}
 		const DictRef target_after = _get_stack_by_id(state, battle, target_battle_id);
 		if (!gd::is_empty(state, target_after) && _alive_count(state, target_after) <= 0) {
 			message = concat(state, message, gd::format(state, key::stack_destroyed_suffix_text, { str(_stack_label(state, target_after)) }));
@@ -469,10 +502,24 @@ bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, D
 		Value effect_payload;
 		if (nonempty_dict_field(state, resolution, key::effect, effect_payload)) {
 			_apply_stack_effect(state, battle, target_battle_id, effect_payload);
+			// Call to Arms: the stack acts next.
+			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::act_next, 0) > 0) {
+				spell_rules::act_next(state, battle, target_battle_id);
+			}
+		}
+		Value follow_payload;
+		if (nonempty_dict_field(state, resolution, key::follow_effect, follow_payload)) {
+			_apply_stack_effect(state, battle, target_battle_id, follow_payload);
 		}
 		return true;
 	}
 	if (resolution_type == key::recover_effect) {
+		const int64_t cleared = _cleanse_stack_effects(state, battle, target_battle_id, get_or_new_array(state, resolution, key::cleanse_status_ids));
+		if (cleared > 0) {
+			cleansed_count = cleared;
+			const Atom label = _stack_label(state, _get_stack_by_id(state, battle, target_battle_id));
+			message = concat(state, message, gd::format(state, key::sheds_pressure_suffix_text, { str(label), int_value(cleared), str(plural_s(cleared)) }));
+		}
 		const int64_t recovered = _restore_stack_health(state, battle, target_battle_id, gd::int_field(state, resolution, key::recovery_amount, 0));
 		recovered_amount = recovered;
 		if (recovered > 0) {
@@ -482,6 +529,11 @@ bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, D
 		Value recovery_effect;
 		if (nonempty_dict_field(state, resolution, key::effect, recovery_effect)) {
 			_apply_stack_effect(state, battle, target_battle_id, recovery_effect);
+		}
+		// Hot Iron seals the wound after its own heal.
+		Value heal_block_effect;
+		if (nonempty_dict_field(state, resolution, key::heal_block_effect, heal_block_effect)) {
+			_apply_stack_effect(state, battle, target_battle_id, heal_block_effect);
 		}
 		return true;
 	}

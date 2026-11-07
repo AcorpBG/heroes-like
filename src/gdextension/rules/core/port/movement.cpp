@@ -8,6 +8,7 @@
 
 #include "aurelion_rules/compat/godot_string.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <initializer_list>
 #include <string>
@@ -59,6 +60,16 @@ ArrayRef legal_destinations_for_stack(State &state, DictRef battle, Atom battle_
 		destinations = state.new_array();
 	} else {
 		destinations = _reachable_empty_hexes(state, battle, stack, _stack_movement_points(state, stack, battle));
+		// An Afraid stack (Dread) takes no hex nearer to the other side's stacks.
+		if (!gd::is_empty(state, spell_rules::stack_status_effect(state, stack, battle, key::status_afraid))) {
+			const ArrayRef brave = state.new_array();
+			for (const Value &cell : gd::items(state, array_value(destinations))) {
+				if (gd::is_dict(cell) && !spell_rules::move_refused_by_fear(state, battle, stack, cell.ref)) {
+					state.append(brave, cell);
+				}
+			}
+			destinations = brave;
+		}
 	}
 	state.memo_keep(memo, array_value(destinations), since);
 	return destinations;
@@ -314,7 +325,6 @@ DictRef _attack_legality_for_target(State &state, DictRef active_stack, DictRef 
 }
 
 bool _can_make_ranged_attack(State &state, DictRef stack, DictRef battle, DictRef target) {
-	(void)battle;
 	return !gd::is_empty(state, stack)
 			&& !gd::is_empty(state, target)
 			&& _alive_count(state, stack) > 0
@@ -323,7 +333,8 @@ bool _can_make_ranged_attack(State &state, DictRef stack, DictRef battle, DictRe
 			&& gd::bool_field(state, stack, key::ranged, false)
 			&& gd::int_field(state, stack, key::shots_remaining, 0) > 0
 			&& !gd::is_empty(state, _stack_hex(state, stack))
-			&& !gd::is_empty(state, _stack_hex(state, target));
+			&& !gd::is_empty(state, _stack_hex(state, target))
+			&& !spell_rules::shot_refused_by_spells(state, battle, stack, target);
 }
 
 int64_t _attack_distance_for_action(State &state, DictRef attacker, DictRef target, DictRef battle, bool is_ranged) {

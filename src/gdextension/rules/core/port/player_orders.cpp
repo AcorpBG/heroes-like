@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/battle_rules.hpp"
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <initializer_list>
 #include <string>
@@ -313,11 +314,21 @@ DictRef perform_player_action(State &state, const Value &session, Atom action, D
 		_clear_stack_animation_states(state, session_battle(state, session));
 		_clear_selected_target_continuity(state, session_battle(state, session));
 		_clear_selected_target_closing(state, session_battle(state, session));
+		// Stand fast (Heartwood Stance) counts only a strike made without moving first.
+		const bool marks_move = gd::int_field(state, strike_from, key::steps, 0) > 0
+				&& spell_rules::stack_mechanic_int(state, active_stack, session_battle(state, session), key::stationary_attack) > 0;
 		if (gd::int_field(state, strike_from, key::steps, 0) > 0) {
 			_apply_melee_approach(state, session_battle(state, session), active_stack, strike_from);
 			active_stack = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 		}
-		return _resolve_attack_action(state, session, active_stack, strike_target, false);
+		if (marks_move) {
+			state.set(session_battle(state, session), str(key::strike_moved_battle_id), str(string_or_empty(state, active_stack, key::battle_id)));
+		}
+		const DictRef strike_result = _resolve_attack_action(state, session, active_stack, strike_target, false);
+		if (marks_move) {
+			state.erase(session_battle(state, session), str(key::strike_moved_battle_id));
+		}
+		return strike_result;
 	}
 	if (action == key::shoot) {
 		const DictRef shoot_target = get_selected_target(state, session_battle(state, session));
@@ -410,6 +421,12 @@ DictRef _resolve_attack_action(State &state, const Value &session, DictRef attac
 	// it spells out.
 	const Atom action_id = is_ranged ? static_cast<Atom>(key::shoot) : static_cast<Atom>(key::strike);
 	const ArrayRef messages = state.new_array();
+	// A Confused attacker's blow lands on a stack next to it (Fog Mind).
+	const DictRef blow_target = spell_rules::confused_blow_target(state, session_battle(state, session), attacker, target, is_ranged);
+	if (string_or_empty(state, blow_target, key::battle_id) != string_or_empty(state, target, key::battle_id)) {
+		state.append(messages, str(gd::format(state, key::confused_hits_text, { str(_stack_label(state, attacker)), str(_stack_label(state, blow_target)) })));
+		target = blow_target;
+	}
 	const int64_t attack_distance = _attack_distance_for_action(state, attacker, target, session_battle(state, session), is_ranged);
 	const DictRef target_before = gd::deep_duplicate_dict(state, target);
 	const int64_t damage = _calculate_damage(state, attacker, target, session_battle(state, session), rng, is_ranged, false, attack_distance);
@@ -440,6 +457,11 @@ DictRef _resolve_attack_action(State &state, const Value &session, DictRef attac
 	bool retaliated = false;
 	DictRef defender_after = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, target, key::battle_id));
 	const ArrayRef ability_messages = _apply_attack_ability_effects(state, session_battle(state, session), attacker, defender_after, is_ranged, attack_distance, target_before);
+	// The blow's spell extras: thorns, lifesteal, momentum.
+	const bool attacker_stood = _alive_count(state, _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id))) > 0;
+	const int64_t blow_dealt = gd::sub(gd::int_field(state, target_before, key::total_health, 0), gd::int_field(state, defender_after, key::total_health, 0));
+	append_all(state, ability_messages, spell_rules::after_blow_mechanics(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id), string_or_empty(state, target, key::battle_id), is_ranged, blow_dealt));
+	const bool attacker_fell_to_spells = attacker_stood && _alive_count(state, _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id))) <= 0;
 	append_all(state, messages, ability_messages);
 	defender_after = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, target, key::battle_id));
 	_append_damage_presentation_event(state, session_battle(state, session), key::damage, attacker, target_before, defender_after, damage, action_id, state.new_dict());
@@ -454,6 +476,8 @@ DictRef _resolve_attack_action(State &state, const Value &session, DictRef attac
 			&& !gd::is_empty(state, defender_after)
 			&& _alive_count(state, defender_after) > 0
 			&& gd::int_field(state, defender_after, key::retaliations_left, 0) > 0
+			&& !attacker_fell_to_spells
+			&& string_or_empty(state, defender_after, key::side) != string_or_empty(state, attacker, key::side)
 			&& _can_make_retaliation(state, defender_after, attack_distance, session_battle(state, session))) {
 		const DictRef attacker_after = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id));
 		const DictRef attacker_before_retaliation = gd::deep_duplicate_dict(state, attacker_after);
@@ -479,6 +503,8 @@ DictRef _resolve_attack_action(State &state, const Value &session, DictRef attac
 		state.append(messages, str(gd::format(state, key::retaliates_for_damage_text, { str(_stack_label(state, defender_after)), int_value(retaliation_damage) })));
 		DictRef attacker_after_retaliation = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id));
 		const ArrayRef retaliation_ability_messages = _apply_retaliation_ability_effects(state, session_battle(state, session), defender_after, attacker_after_retaliation);
+		const int64_t retaliation_dealt = gd::sub(gd::int_field(state, attacker_before_retaliation, key::total_health, 0), gd::int_field(state, attacker_after_retaliation, key::total_health, 0));
+		append_all(state, retaliation_ability_messages, spell_rules::after_blow_mechanics(state, session_battle(state, session), string_or_empty(state, defender_after, key::battle_id), string_or_empty(state, attacker, key::battle_id), false, retaliation_dealt));
 		append_all(state, messages, retaliation_ability_messages);
 		attacker_after_retaliation = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, attacker, key::battle_id));
 		_append_damage_presentation_event(state, session_battle(state, session), key::damage, defender_after, attacker_before_retaliation, attacker_after_retaliation, retaliation_damage, key::retaliation, state.new_dict());

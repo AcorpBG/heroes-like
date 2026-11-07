@@ -236,6 +236,8 @@ int64_t _estimate_damage_on(State &state, DictRef attacker, DictRef defender, Di
 		modifier *= 0.9;
 	}
 	modifier *= _cohesion_damage_modifier(state, attacker, defender, battle, is_ranged, is_retaliation);
+	// Marked targets and Blinded blows, as the battle reads them.
+	modifier *= spell_rules::blow_damage_multiplier(state, battle, attacker, defender, is_ranged);
 	modifier *= _ability_damage_modifier(state, attacker, defender, battle, is_ranged, is_retaliation, resolved_distance);
 	modifier *= _terrain_tag_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);
 	modifier *= _field_objective_cover_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);

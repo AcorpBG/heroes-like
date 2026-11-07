@@ -3320,6 +3320,801 @@
         "range": 2,
         "range_power_divisor": 3
       }
+    },
+    {
+      "id": "spell_overdrive",
+      "name": "Overdrive",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Opens one stack's furnace valves: harder blows, paid for in its own health.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 4,
+        "duration_rounds": 2,
+        "fixed_duration": true,
+        "modifiers": {
+          "attack": 4
+        },
+        "modifiers_power_divisor": 3,
+        "mechanic": {
+          "backlash_pct": 8
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 2,
+          "reach": "adjacent"
+        },
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_stoke",
+      "name": "Stoke",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Every blow one stack lands feeds the fire for the next.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "momentum_per_blow": 1,
+          "momentum_cap": 4
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_cooling_slag",
+      "name": "Cooling Slag",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Pours slag over one enemy stack's feet; it holds, then drags as it cools.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Rooted",
+          "duration_rounds": 1,
+          "fixed_duration": true,
+          "modifiers": {
+            "defense": -1
+          }
+        },
+        "follow_status_effect": {
+          "effect_id": "status_slowed",
+          "label": "Slowed",
+          "duration_rounds": 1,
+          "modifiers": {
+            "speed": -2
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_ember_lash",
+      "name": "Ember Lash",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A whip of embers that leaves heat in what it strikes.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 30,
+        "power_scale": 18,
+        "heat": 1
+      }
+    },
+    {
+      "id": "spell_hot_iron",
+      "name": "Hot Iron",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Sears one stack's wounds shut at once; nothing else can mend them for a while.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 36,
+        "power_scale": 8,
+        "heal_block_turns": 2
+      }
+    },
+    {
+      "id": "spell_rivet_plate",
+      "name": "Rivet Plate",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Rivets a plate of forged iron over one stack, taking blows until it breaks.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "plate": 36,
+          "plate_power_scale": 10
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_heartwood_stance",
+      "name": "Heartwood Stance",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One stack roots its stance and strikes hardest where it stands.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "stationary_attack": 4
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_grasping_roots",
+      "name": "Grasping Roots",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Roots seize one enemy stack and close tighter every turn it stays.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Rooted",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1
+          },
+          "mechanic": {
+            "tightening": 1
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_pollen_drift",
+      "name": "Pollen Drift",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A drift of heavy pollen puts one enemy stack to sleep until something hits it.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_asleep",
+          "label": "Asleep",
+          "duration_rounds": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_thornshot",
+      "name": "Thornshot",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A volley of thorns that bites deepest into a stack that cannot move.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 26,
+        "power_scale": 15,
+        "rooted_bonus_pct": 50
+      }
+    },
+    {
+      "id": "spell_green_mending",
+      "name": "Green Mending",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Living growth knits one stack's wounds at the start of each of its turns.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "regrowth": 14,
+          "regrowth_power_scale": 3
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 2,
+          "reach": "adjacent"
+        },
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_thornmail",
+      "name": "Thornmail",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Wraps one stack in thorns that cut whoever strikes it in melee.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "thorns": 8,
+          "thorns_power_scale": 3,
+          "uses_enemy_power": true
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_call_to_arms",
+      "name": "Call to Arms",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A signal flare that sends one stack forward to act next.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "fixed_duration": true,
+        "modifiers": {
+          "speed": 1
+        },
+        "modifiers_power_divisor": 4,
+        "mechanic": {
+          "act_next": 1
+        }
+      }
+    },
+    {
+      "id": "spell_sighting_mark",
+      "name": "Sighting Mark",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A bright mark on one enemy stack that every one of yours can aim for.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_marked",
+          "label": "Marked",
+          "duration_rounds": 1,
+          "mechanic": {
+            "damage_taken_pct": 20
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_dazzle",
+      "name": "Dazzle",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A flash that leaves one enemy stack unable to aim and swinging wild.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_blinded",
+          "label": "Blinded",
+          "duration_rounds": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_radiant_mend",
+      "name": "Radiant Mend",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Clean light that heals one stack and burns away one harmful status.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 32,
+        "power_scale": 7,
+        "cleanse_statuses": 1
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_prism_ward",
+      "name": "Prism Ward",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A prism around one stack turns the next harmful spell aside.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "reflect_spell": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_hungering",
+      "name": "Hungering",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One stack's blows feed it a share of what they take.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 2,
+        "mechanic": {
+          "lifesteal_pct": 25
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_dread",
+      "name": "Dread",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Whispers that shake one enemy stack and keep it from closing on yours.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_afraid",
+          "label": "Afraid",
+          "duration_rounds": 1,
+          "modifiers": {
+            "cohesion": -3
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_fog_mind",
+      "name": "Fog Mind",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Fills one enemy stack's heads with fog; its blows fall on whoever stands near.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_confused",
+          "label": "Confused",
+          "duration_rounds": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_wasting_curse",
+      "name": "Wasting Curse",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A curse that eats at one enemy stack each turn and seeks a new host if it falls.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_cursed",
+          "label": "Cursed",
+          "duration_rounds": 2,
+          "mechanic": {
+            "curse_damage": 10,
+            "curse_damage_power_scale": 6
+          }
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 3,
+          "reach": "adjacent"
+        }
+      ]
+    },
+    {
+      "id": "spell_mist_cloak",
+      "name": "Mist Cloak",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Wraps one stack in mist that no archer can find.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "shot_shield": 1
+        }
+      },
+      "mastery_reach": [
+        {
+          "rank": 2,
+          "reach": "adjacent"
+        },
+        {
+          "rank": 3,
+          "reach": "all"
+        }
+      ]
+    },
+    {
+      "id": "spell_cinder_spray",
+      "name": "Cinder Spray",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A spray of cinders that burns the target and everything around it, friend or foe.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 24,
+        "power_scale": 13,
+        "splash": "adjacent"
+      }
+    },
+    {
+      "id": "spell_spark_swarm",
+      "name": "Spark Swarm",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A swarm of sparks that scatters across the enemy line.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 8,
+        "power_scale": 4,
+        "random_hits": 4,
+        "random_hits_power_divisor": 2
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_dawn_lance",
+      "name": "Dawn Lance",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "A lance of dawn light from your edge of the field through every enemy in its path.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 20,
+        "power_scale": 11,
+        "line": true
+      }
+    },
+    {
+      "id": "spell_morning_light",
+      "name": "Morning Light",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Morning light falls on every stack of yours and closes its wounds.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 10,
+        "power_scale": 2,
+        "reach": "all"
+      }
+    },
+    {
+      "id": "spell_leech",
+      "name": "Leech",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "unreleased": true,
+      "description": "Draws the life out of one enemy stack and pours half of it into one of yours.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 30,
+        "power_scale": 17,
+        "drain_pct": 50
+      }
     }
   ]
 }

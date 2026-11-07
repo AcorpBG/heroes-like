@@ -281,7 +281,11 @@ ArrayRef _dazed_stacks_last(State &state, DictRef battle, ArrayRef battle_ids);
 bool _compare_stack_order_keys(State &state, DictRef lhs, DictRef rhs);
 bool _compare_waiting_order_keys(State &state, DictRef lhs, DictRef rhs);
 Atom _advance_to_next_alive(State &state, DictRef battle, int64_t start_index);
+// advance_turn ends the active stack's turn, makes the next one active and
+// starts its turn (spell_rules::begin_active_turn: regrowth, sleepers pass);
+// _advance_turn_without_start leaves the new turn's start out.
 void advance_turn(State &state, DictRef battle);
+void _advance_turn_without_start(State &state, DictRef battle);
 void _resort_remaining_turn_order(State &state, DictRef battle);
 ArrayRef _ordered_remaining_actors(State &state, DictRef battle, ArrayRef battle_ids, const Value &waited_override);
 ArrayRef waited_stack_ids(State &state, DictRef battle);

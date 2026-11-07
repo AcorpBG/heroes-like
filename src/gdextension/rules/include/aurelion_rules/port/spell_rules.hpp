@@ -99,6 +99,19 @@ int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell);
 DictRef _counted_in_turns(State &state, DictRef effect, int64_t turns);
 DictRef battle_spell_modifiers(State &state, DictRef spell);
 DictRef _effect_payload(State &state, DictRef spell, DictRef effect, DictRef battle, DictRef hero_state);
+// The tier-2 payload terms: modifiers that grow with power
+// (modifiers_power_scale, modifiers_power_divisor), an effect's turns (fixed
+// with fixed_duration), its resolved mechanic, the payload on a target (a
+// mechanic with uses_enemy_power grows with power less the other side's
+// Knowledge), a sealed wound's payload, and a status payload from any status
+// Dictionary, extra_turns longer (a follow-up status starts as the first ends).
+int64_t heat_burst_damage(int64_t power_against);
+DictRef scaled_spell_modifiers(State &state, DictRef effect, DictRef modifiers, int64_t power);
+int64_t spell_effect_turns(State &state, DictRef hero_state, DictRef effect, DictRef spell, Atom kind, int64_t power);
+void set_effect_mechanic(State &state, DictRef built, DictRef holder, int64_t power);
+DictRef _effect_payload_for(State &state, DictRef spell, DictRef effect, DictRef battle, DictRef hero_state, DictRef target_stack);
+DictRef heal_block_payload(State &state, DictRef spell, DictRef battle, int64_t turns);
+DictRef _status_payload(State &state, DictRef spell, const Value &status_effect, DictRef battle, DictRef hero_state, int64_t power, int64_t extra_turns);
 DictRef _hero_payload_for_target_side(State &state, DictRef battle, DictRef target_stack);
 DictRef _status_resistance_roll(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell, Atom status_id);
 Value _battle_stream_rng(State &state, DictRef battle);
@@ -132,6 +145,62 @@ int64_t spell_move_reach(State &state, DictRef spell, int64_t power);
 bool cleanse_takes_any_harm(State &state, DictRef effect);
 ArrayRef move_destinations(State &state, DictRef battle, DictRef stack, int64_t reach);
 DictRef move_destination_in_reach(State &state, ArrayRef destinations, const Value &destination);
+// The statuses that harm the stack they are on, whoever put them there.
+bool is_harmful_status(Atom effect_id);
+
+// The tier-2 spells' lasting mechanics (spell_stack_mechanics.cpp,
+// docs/magic-system-spells.md). An effect's mechanic (its "mechanic"
+// Dictionary, kept through normalization) and a content mechanic resolved at a
+// spell power (<name> + <name>_power_scale x power + power / <name>_power_divisor);
+// the newest active effect on a stack whose mechanic names a field, its value,
+// the newest active effect with an id, removing one effect, the newest harmful
+// statuses, and the Knowledge of the side facing side.
+DictRef effect_mechanic(State &state, DictRef effect);
+DictRef resolve_mechanic(State &state, const Value &raw, int64_t power);
+DictRef stack_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field);
+int64_t stack_mechanic_int(State &state, DictRef stack, DictRef battle, Atom field);
+DictRef stack_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id);
+void remove_stack_effect(State &state, DictRef stack, DictRef effect);
+ArrayRef newest_status_ids(State &state, DictRef stack, DictRef battle, int64_t limit);
+int64_t opposing_side_knowledge(State &state, DictRef battle, Atom side);
+// Damage a plate takes first (the rest is answered); a hit's aftermath (a
+// sleeper wakes, a curse jumps from a fallen stack); a sealed wound.
+int64_t plate_absorb(State &state, DictRef battle, DictRef stack, int64_t damage);
+void after_stack_damaged(State &state, DictRef battle, Atom battle_id, int64_t taken, bool killed);
+bool heal_blocked(State &state, DictRef stack, DictRef battle);
+// A stable draw in [0, count) named by parts (the battle's random streams
+// stay as they are).
+int64_t stable_draw(State &state, DictRef battle, std::initializer_list<Value> parts, int64_t count);
+// The stacks a cast reaches beyond its target (spell_reach.cpp): a mastery's
+// shape, every stack, splash, beam, sparks and drain, as extra_resolutions;
+// second_pick names a drain's drinker ({battle_id}). The hero's mastery rank
+// in the spell's school.
+void add_reach_resolutions(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef result, const Value &second_pick);
+int64_t spell_mastery_rank(State &state, DictRef hero_state, DictRef spell);
+// Prism Ward: the stack of the caster's side a harmful spell cast on a warded
+// stack lands on instead (empty without a ward), and the ward spent.
+DictRef reflected_spell_target(State &state, DictRef battle, DictRef target, Atom spell_id);
+void spend_reflect_ward(State &state, DictRef battle, Atom battle_id);
+// A turn's end (backlash, tightening roots, curse) and start (regrowth; true
+// when the stack sleeps through it); begin_active_turn runs the start for the
+// active stack and passes the turns of sleepers on.
+void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id);
+bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id);
+void begin_active_turn(State &state, DictRef battle);
+// Blows: stand fast's attack, the marked and blinded share, a landed blow's
+// thorns, lifesteal and momentum (messages), the stack a confused attacker
+// hits, shots the spells refuse, and moves fear refuses.
+int64_t stationary_attack_bonus(State &state, DictRef battle, DictRef attacker, bool is_retaliation);
+double blow_damage_multiplier(State &state, DictRef battle, DictRef attacker, DictRef defender, bool is_ranged);
+ArrayRef after_blow_mechanics(State &state, DictRef battle, Atom attacker_id, Atom defender_id, bool is_ranged, int64_t dealt);
+DictRef confused_blow_target(State &state, DictRef battle, DictRef attacker, DictRef target, bool is_ranged);
+bool shot_refused_by_spells(State &state, DictRef battle, DictRef shooter, DictRef target);
+bool move_refused_by_fear(State &state, DictRef battle, DictRef stack, DictRef cell);
+// Heat on a stack (the message suffix of the Heat it holds or its burst);
+// Call to Arms (it acts next, or first next round) and the order it makes.
+Atom add_heat(State &state, DictRef battle, Atom battle_id, int64_t heat, int64_t burst_damage);
+void act_next(State &state, DictRef battle, Atom battle_id);
+ArrayRef acts_next_first(State &state, DictRef battle, ArrayRef battle_ids);
 
 // Layer 8, 07b: the cast checked, resolved and paid for, and the hero's
 // known spells (spell_battle.cpp): those it can cast, the learned ones first
@@ -155,6 +224,19 @@ int64_t mana_max_from_command(State &state, const Value &command);
 // Slice 10b: the text a battle spell's effect prints on the battle screen
 // (spell_summaries.cpp).
 Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef active_stack, DictRef target_stack);
+// The new spells' words: an effect's mechanic at the numbers it holds; a
+// helpful spell's modifiers and mechanic at the caster's power and its turns;
+// a harmful status's terms and turns at power less Knowledge; a cast's extra
+// clauses (Heat, a bonus, a sealed wound, a cleanse, a status that follows),
+// joined as "; a; b" or as the sentence " A; b.".
+Atom mechanic_terms(State &state, DictRef mechanic);
+Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictRef battle, Atom caster_side);
+int64_t helpful_effect_turns(State &state, DictRef hero_state, DictRef spell);
+Atom harmful_status_terms(State &state, DictRef status_effect, int64_t power_against);
+int64_t harmful_status_turns(State &state, DictRef hero_state, DictRef spell, DictRef status_effect, int64_t power_against);
+ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack);
+Atom clauses_as_phrase(State &state, ArrayRef clauses);
+Atom clauses_as_sentence(State &state, ArrayRef clauses);
 Atom status_rules_text(State &state, Atom status_id);
 Atom _turns_label(State &state, int64_t turns);
 ArrayRef _cleanse_labels(State &state, DictRef effect);

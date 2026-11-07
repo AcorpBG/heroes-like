@@ -226,9 +226,125 @@ double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRe
 	if (_stack_is_anchor_side(state, target_stack, battle) || _stack_is_assault_side(state, target_stack, battle)) {
 		score += 0.75;
 	}
+	// Hot Iron seals the wound after it; Radiant Mend lifts harmful statuses too.
+	const DictRef recovery_effect = get_base(effect_of(state, spell));
+	if (gd::int_field(state, recovery_effect, key::heal_block_turns, 0) > 0) {
+		score -= 0.75;
+	}
+	const int64_t statuses = gd::int_field(state, recovery_effect, key::cleanse_statuses, 0);
+	if (statuses > 0) {
+		score += 2.0 * static_cast<double>(state.array_size(spell_rules::newest_status_ids(state, target_stack, battle, statuses)));
+	}
 	score += _stack_spell_target_value(state, target_stack, battle);
 	score += cast_objective_score(state, battle, active_stack, target_stack);
 	score -= mana_cost_term(state, spell);
+	return score;
+}
+
+double _reach_value(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, int64_t main_damage) {
+	const DictRef effect = get_base(effect_of(state, spell));
+	Value mastery_reach;
+	const bool reaches = (state.lookup(spell, str(key::mastery_reach), mastery_reach) && gd::is_array(mastery_reach) && state.array_size(mastery_reach.ref) > 0)
+			|| state.has(effect, str(key::splash)) || state.has(effect, str(key::line)) || state.has(effect, str(key::random_hits))
+			|| state.has(effect, str(key::drain_pct)) || state.has(effect, str(key::reach));
+	if (!reaches || empty(state, target)) {
+		return 0.0;
+	}
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::ok), gd::bool_value(true));
+	state.set(result, str(key::damage), gd::int_value(main_damage));
+	spell_rules::add_reach_resolutions(state, enemy_hero, battle, target, spell, result, Value());
+	double value = 0.0;
+	for (const Value &sub : gd::field_items(state, result, str(key::extra_resolutions))) {
+		if (!gd::is_dict(sub)) {
+			continue;
+		}
+		const DictRef stack = battle_rules::_get_stack_by_id(state, battle, gd::string_field(state, sub.ref, key::target_battle_id, key::empty));
+		if (empty(state, stack)) {
+			continue;
+		}
+		const Atom type = gd::string_field(state, sub.ref, key::resolution_type, key::empty);
+		if (type == key::damage) {
+			// A hit on the other side counts; a splash on the caster's own stacks counts against it.
+			const double share = engine_min<double>(1.0, static_cast<double>(gd::int_field(state, sub.ref, key::damage, 0))
+					/ static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, stack, key::total_health, 0))));
+			value += (side_of(state, stack) == side_of(state, active_stack) ? -1.5 : 1.0) * share * _w(state, key::spell_damage_share);
+		} else if (type == key::recover_effect) {
+			const int64_t useful = engine_min<int64_t>(gd::int_field(state, sub.ref, key::recovery_amount, 0), _stack_missing_health(state, stack));
+			value += static_cast<double>(useful) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1))) * 0.8;
+		} else if (type == key::effect) {
+			Value payload;
+			if (state.lookup(sub.ref, str(key::effect), payload) && gd::is_dict(payload) && !empty(state, payload.ref)) {
+				value += 1.5;
+			}
+		}
+	}
+	return value;
+}
+
+double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, ArrayRef hostiles, DictRef spell) {
+	(void)active_stack;
+	const DictRef effect = get_base(effect_of(state, spell));
+	Value raw;
+	if (!state.lookup(effect, str(key::mechanic), raw) || !gd::is_dict(raw)) {
+		return 0.0;
+	}
+	const int64_t power = spell_rules::spell_power(state, enemy_hero);
+	const DictRef mechanic = spell_rules::resolve_mechanic(state, raw, power);
+	const auto amount = [&](Atom field) { return gd::int_field(state, mechanic, field, 0); };
+	const double unit_hp = static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1)));
+	const bool engaged = _stack_contact_band(state, ally, battle) == 0;
+	const int64_t turns = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, power);
+	int64_t melee_hostiles = 0;
+	int64_t hostile_shooters = 0;
+	for (const Value &hostile : gd::items(state, array_value(hostiles))) {
+		if (!gd::is_dict(hostile)) {
+			continue;
+		}
+		if (ranged(state, hostile.ref) && has_shots(state, hostile.ref)) {
+			hostile_shooters += 1;
+		} else if (_fights_in_melee(state, hostile.ref)) {
+			melee_hostiles += 1;
+		}
+	}
+	double score = 0.0;
+	if (amount(key::plate) > 0) {
+		score += 1.5 + engine_min<double>(4.0, static_cast<double>(amount(key::plate)) / unit_hp * 0.8) + (engaged ? 2.0 : 0.5);
+	}
+	if (amount(key::regrowth) > 0) {
+		const int64_t useful = engine_min<int64_t>(gd::add(_stack_missing_health(state, ally), amount(key::regrowth)), gd::mul(amount(key::regrowth), turns));
+		score += 1.0 + static_cast<double>(useful) / unit_hp * 0.8 + (1.0 - _health_ratio(state, ally)) * 3.0;
+	}
+	if (amount(key::thorns) > 0) {
+		score += melee_hostiles > 0
+				? engine_min<double>(3.0, static_cast<double>(melee_hostiles) * 0.75) + (engaged ? 1.5 : 0.0) + engine_min<double>(2.0, static_cast<double>(amount(key::thorns)) / 25.0)
+				: -1.0;
+	}
+	if (amount(key::lifesteal_pct) > 0) {
+		score += _buff_spell_offense_payoff(state, ally) * 1.2 + (1.0 - _health_ratio(state, ally)) * 2.0;
+	}
+	if (amount(key::momentum_per_blow) > 0) {
+		score += _buff_spell_offense_payoff(state, ally) + (_can_make_melee_attack(state, ally, battle, state.new_dict()) ? 1.0 : 0.0);
+	}
+	if (amount(key::stationary_attack) > 0) {
+		// Stand fast pays off for a stack that can strike from where it stands.
+		const bool strikes_in_place = engaged || (ranged(state, ally) && has_shots(state, ally));
+		score += strikes_in_place ? static_cast<double>(amount(key::stationary_attack)) * 1.2 + _buff_spell_offense_payoff(state, ally) : 0.5;
+	}
+	if (amount(key::shot_shield) > 0) {
+		score += hostile_shooters > 0 ? 1.0 + static_cast<double>(hostile_shooters) * 1.5 : -2.0;
+	}
+	if (amount(key::reflect_spell) > 0) {
+		// Only a hero on the other side casts spells to turn aside.
+		const DictRef other_hero = battle_rules::_hero_payload_for_side(state, battle, battle_rules::_opposing_side(side_of(state, ally)));
+		score += empty(state, other_hero) ? -3.0 : 1.5;
+	}
+	if (amount(key::act_next) > 0) {
+		score += 1.0 + _buff_spell_offense_payoff(state, ally);
+	}
+	if (amount(key::backlash_pct) > 0) {
+		score -= static_cast<double>(amount(key::backlash_pct)) / 100.0 * static_cast<double>(turns) * 4.0;
+	}
 	return score;
 }
 
