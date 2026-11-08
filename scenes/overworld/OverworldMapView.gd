@@ -1720,6 +1720,7 @@ func _state_cache_signature_for(session) -> int:
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("encounters", []), ["encounter_id", "placement_id", "spawned_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(_standing_map_spell_marks(session), ["map", "x", "y", "radius", "until_day"]))
 	return _combine_cache_signature(signature, _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"]))
 
 func _combine_cache_signature(signature: int, value: int) -> int:
@@ -2470,6 +2471,12 @@ func _draw_state_layer() -> void:
 				object_presentations += _visible_object_presentation_count(tile)
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
+	var spell_marks := _standing_map_spell_marks(_session)
+	_draw_map_spell_mark_grounds(spell_marks, board_rect, visible_bounds)
+	var spell_mark_tiles := {}
+	for mark in spell_marks:
+		var mark_tile := Vector2i(int(mark.get("x", 0)), int(mark.get("y", 0)))
+		spell_mark_tiles[mark_tile] = spell_mark_tiles.get(mark_tile, []) + [mark]
 	# A tree's canopy can reach tiles several rows above its ground anchor.
 	_object_shadows_casting = true
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
@@ -2482,6 +2489,8 @@ func _draw_state_layer() -> void:
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
 			var rect := _tile_rect(board_rect, tile)
+			if spell_mark_tiles.has(tile):
+				_draw_tile_map_spell_marks(tile, rect, spell_mark_tiles[tile])
 			_draw_tile_ground_pickups(tile, rect)
 			_draw_tile_state_icon(tile, rect, false)
 	_object_shadows_casting = false
@@ -4158,6 +4167,75 @@ func _draw_tile_ground_pickups(tile: Vector2i, rect: Rect2) -> void:
 			_draw_artifact_marker(rect, remembered, tile)
 		elif not remembered:
 			_draw_pickup_glint(rect)
+
+## The map spells' marks standing today on the level in view
+## (overworld.map_spell_marks): Scorched Earth, wardwoods and Firebreaks.
+func _standing_map_spell_marks(session) -> Array:
+	var marks := []
+	if session == null:
+		return marks
+	var day := int(session.day)
+	for mark in session.overworld.get("map_spell_marks", []):
+		if mark is Dictionary and int(mark.get("until_day", 0)) >= day and int(mark.get("level", 0)) == _level:
+			marks.append(mark)
+	return marks
+
+## A mark's paintings (overworld_vfx_manifest map_spell_marks, by its map
+## mechanic): an "area" piece lies over its reach under the map's objects, a
+## "standing" one stands on its tile among them.
+func _map_spell_mark_pieces(mark: Dictionary, placement: String) -> Array:
+	_load_overworld_vfx_manifest()
+	var kinds: Dictionary = _overworld_vfx_manifest.get("map_spell_marks", {}) if _overworld_vfx_manifest.get("map_spell_marks", {}) is Dictionary else {}
+	var pieces: Array = []
+	for piece in kinds.get(String(mark.get("map", "")), []):
+		if piece is Dictionary and String(piece.get("placement", "")) == placement and _overworld_vfx_texture_for_path(String(piece.get("texture_path", ""))) is Texture2D:
+			pieces.append(piece)
+	return pieces
+
+## Scorched Earth's burnt ground and a wardwood's root ring over the reach of
+## their mark. With its tile scouted under the soft fog, which covers the
+## unscouted ground above the objects, a piece is drawn whole; otherwise tile by
+## tile, so only scouted ground shows it.
+func _draw_map_spell_mark_grounds(marks: Array, board_rect: Rect2, visible_bounds: Rect2i) -> void:
+	for mark in marks:
+		var mark_tile := Vector2i(int(mark.get("x", 0)), int(mark.get("y", 0)))
+		var center := Vector2(mark_tile) + Vector2(0.5, 0.5)
+		for piece in _map_spell_mark_pieces(mark, "area"):
+			var texture: Texture2D = _overworld_vfx_texture_for_path(String(piece.get("texture_path", "")))
+			var half := float(mark.get("radius", 0)) + 0.5
+			var area := Rect2(center - Vector2(half, half), Vector2(half, half) * 2.0)
+			var texture_size := texture.get_size()
+			var alpha := float(piece.get("alpha", 1.0))
+			if _soft_fog_active() and _fog_explored(mark_tile.x, mark_tile.y):
+				var origin := _tile_rect(board_rect, Vector2i.ZERO)
+				var whole := Rect2(origin.position + area.position * origin.size, area.size * origin.size)
+				var tint := Color(1.0, 1.0, 1.0, alpha) if _fog_visible(mark_tile.x, mark_tile.y) else Color(OBJECT_SPRITE_MEMORY_MODULATE, OBJECT_SPRITE_MEMORY_MODULATE.a * alpha)
+				_canvas_draw_texture_rect(texture, whole, false, tint)
+				continue
+			for y in range(floori(area.position.y), ceili(area.end.y)):
+				for x in range(floori(area.position.x), ceili(area.end.x)):
+					var tile := Vector2i(x, y)
+					if not _tile_in_visible_bounds(tile, visible_bounds) or not _fog_explored(x, y):
+						continue
+					var cell := Rect2(Vector2(tile), Vector2.ONE).intersection(area)
+					var tile_rect := _tile_rect(board_rect, tile)
+					var source := Rect2((cell.position - area.position) / area.size * texture_size, cell.size / area.size * texture_size)
+					var target := Rect2(tile_rect.position + (cell.position - Vector2(tile)) * tile_rect.size, cell.size * tile_rect.size)
+					var modulate := Color(1.0, 1.0, 1.0, alpha) if _fog_visible(x, y) else Color(OBJECT_SPRITE_MEMORY_MODULATE, OBJECT_SPRITE_MEMORY_MODULATE.a * alpha)
+					_canvas_draw_texture_rect_region(texture, target, source, modulate)
+
+## A mark's standing piece on its tile (a Firebreak, a wardwood's tree), its
+## base on the tile's foot, while nothing else stands there.
+func _draw_tile_map_spell_marks(tile: Vector2i, rect: Rect2, marks: Array) -> void:
+	if not _fog_explored(tile.x, tile.y) or _visible_object_presentation_count(tile) > 0 or _has_hero_at(tile):
+		return
+	var remembered := not _fog_visible(tile.x, tile.y)
+	for mark in marks:
+		for piece in _map_spell_mark_pieces(mark, "standing"):
+			var texture: Texture2D = _overworld_vfx_texture_for_path(String(piece.get("texture_path", "")))
+			var size := Vector2.ONE * rect.size.x * float(piece.get("width", 1.0))
+			var foot := Vector2(rect.get_center().x, rect.end.y - rect.size.y * float(piece.get("foot", 0.1)))
+			_canvas_draw_texture_rect(texture, Rect2(foot - Vector2(size.x * 0.5, size.y), size), false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else Color.WHITE)
 
 ## A faint, still four-point glint above a visible pickup so loot catches the
 ## eye; static, so reduced motion is unaffected.

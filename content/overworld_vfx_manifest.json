@@ -97,5 +97,47 @@
       "render_mode": "object_resolution",
       "scale": 1.12
     }
+  },
+  "map_spell_marks": {
+    "map_slow_zone": [
+      {
+        "piece": "scorched_earth",
+        "placement": "area",
+        "texture_path": "res://art/overworld/runtime/map_spell_marks/scorched_earth.png",
+        "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/scorched_earth_source.png",
+        "alpha": 0.64,
+        "alt_text": "Scorched Earth: burnt black ground and ash with smouldering embers."
+      }
+    ],
+    "map_watch": [
+      {
+        "piece": "wardwood_ground",
+        "placement": "area",
+        "texture_path": "res://art/overworld/runtime/map_spell_marks/wardwood_ground.png",
+        "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/wardwood_ground_source.png",
+        "alpha": 0.9,
+        "alt_text": "A wardwood's ward ring: living roots and moss in a wide ring."
+      },
+      {
+        "piece": "wardwood",
+        "placement": "standing",
+        "texture_path": "res://art/overworld/runtime/map_spell_marks/wardwood.png",
+        "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/wardwood_source.png",
+        "width": 1.55,
+        "foot": 0.08,
+        "alt_text": "A wardwood: a ward tree with glowing green runes in its bark."
+      }
+    ],
+    "map_block": [
+      {
+        "piece": "firebreak",
+        "placement": "standing",
+        "texture_path": "res://art/overworld/runtime/map_spell_marks/firebreak.png",
+        "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/firebreak_source.png",
+        "width": 1.3,
+        "foot": 0.18,
+        "alt_text": "A Firebreak: burning stakes over a trench of flame."
+      }
+    ]
   }
 }

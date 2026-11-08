@@ -1,0 +1,92 @@
+{
+  "schema": "map_spell_mark_sources_v1",
+  "content_slice_id": "magic-art-audio-20261107",
+  "generation_mode": "imggen --backend codex (the owner's ChatGPT plan), one transparent painting per piece",
+  "prompt_template": "Use case: stylized-concept. Asset type: original painterly fantasy strategy overworld cutout for a hand-painted adventure map, a cohesive hand-painted adventure-map prop with clean antialiased edges, soft natural overhead light from the upper left, richly painted natural colour, not a flat icon, not photoreal, not a schematic. One single centred subject with a clear transparent margin around every part, on a genuinely transparent RGBA background: no black, white or grey backing, no checkerboard, no frame, no sheet dividers, no glow rectangle, no symbols, no text, no logo, no buildings, no characters, no creatures. Subject: ",
+  "items": [
+    {
+      "piece": "scorched_earth",
+      "map": "map_slow_zone",
+      "placement": "area",
+      "prompt_subject": "Scorched Earth, a wide round patch of freshly burnt ground: blackened earth and pale grey ash, scattered small smouldering embers glowing orange, a few thin curls of smoke, scorched grass stubble at its rim. No flames taller than a hand, no rocks. Seen from almost straight above, it is round, a disc about as deep as it is wide, filling most of the square canvas, low and flat on the ground so the map stays readable through it, its outer edge fading softly into transparency with no hard rim.",
+      "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/scorched_earth_source.png",
+      "runtime_path": "res://art/overworld/runtime/map_spell_marks/scorched_earth.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "source_sha256": "97983e0f713bf9ac7ecf8a513cf84f62e0194cea44e4fc3656242879f2919a6a",
+      "runtime_sha256": "32055abd2a5b242079ca032cffa828c199ef073f5615c12c7d3d94453c48ab1e",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 500x500 and center in a 512x512 RGBA transparent canvas."
+    },
+    {
+      "piece": "wardwood_ground",
+      "map": "map_watch",
+      "placement": "area",
+      "prompt_subject": "The ward ring of a wardwood: a wide round ring of living roots, moss and small ferns spreading over the ground with a faint green-gold light along the roots, open bare ground in the middle. Seen from almost straight above, it is round, a disc about as deep as it is wide, filling most of the square canvas, low and flat on the ground so the map stays readable through it, its outer edge fading softly into transparency with no hard rim.",
+      "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/wardwood_ground_source.png",
+      "runtime_path": "res://art/overworld/runtime/map_spell_marks/wardwood_ground.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1242
+      ],
+      "source_sha256": "346c2ebd92e901c3ae27bacaf23299959267b9dbc404ed1a3471de36a3ebe4f0",
+      "runtime_sha256": "3ec537d68c8f10ca66dfc32a5f1e693576c781a704220b1cb13da584ddb33dd0",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 500x500 and center in a 512x512 RGBA transparent canvas. Then the painted bare ground inside the ring fades out: alpha times clamp((r/R - 0.6)/0.15, 0, 1), r from the canvas centre, R half the fitted painting's width, so the map shows through the middle."
+    },
+    {
+      "piece": "wardwood",
+      "map": "map_watch",
+      "placement": "standing",
+      "prompt_subject": "A wardwood, one sturdy magical ward tree: a twisting dark trunk with faint glowing green runes in the bark, a full rounded crown of deep green leaves touched with gold light, thick roots gripping the ground. Seen from an elevated three-quarter top-down camera looking down about 30 degrees, as an adventure map landmark: it stands on its own small patch of ground at the bottom of the picture, with a clear readable silhouette.",
+      "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/wardwood_source.png",
+      "runtime_path": "res://art/overworld/runtime/map_spell_marks/wardwood.png",
+      "source_dimensions": [
+        1312,
+        1199
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "source_sha256": "d349c645f391f2d8390f329a648101b7cf37a651e0a0557bceb2440d59fbc3e4",
+      "runtime_sha256": "407ff5d8edaf27f646df90ec83dcb917130662515639535eff47f0cadd2253a0",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and place in a 256x256 RGBA transparent canvas, centred, its base at y 252."
+    },
+    {
+      "piece": "firebreak",
+      "map": "map_block",
+      "placement": "standing",
+      "prompt_subject": "A firebreak, a short low barrier of burning sharpened wooden stakes over a trench of flame across a strip of scorched ground, bright orange flames and thin smoke, wide and low and plainly impassable. Seen from an elevated three-quarter top-down camera looking down about 30 degrees, as an adventure map landmark: it stands on its own small patch of ground at the bottom of the picture, with a clear readable silhouette.",
+      "source_path": "res://art/overworld/source/generated/map_spell_marks_20261108/firebreak_source.png",
+      "runtime_path": "res://art/overworld/runtime/map_spell_marks/firebreak.png",
+      "source_dimensions": [
+        1962,
+        801
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1954,
+        801
+      ],
+      "source_sha256": "f09c4aae80d97a2d46457a98d81648242032d3887c768be6aac5385625a812f8",
+      "runtime_sha256": "d6b9d3cd51bdad8d4af7d9a8cb8d928664c4524106925c3793d19a234d880907",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and place in a 256x256 RGBA transparent canvas, centred, its base at y 252."
+    }
+  ]
+}
