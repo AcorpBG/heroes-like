@@ -418,7 +418,8 @@ DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRe
 	if (ground == key::trap || gd::bool_field(state, effect, key::battle_long, false)) {
 		state.set(entry, str(key::until_round), int_value(GROUND_FOREVER));
 	} else {
-		const int64_t rounds = spell_effect_turns(state, hero, effect, spell, blocks_hexes(ground) ? key::buff : key::debuff, power);
+		// A ward of its caster's (Glass Dome) lasts as a boost does.
+		const int64_t rounds = spell_effect_turns(state, hero, effect, spell, blocks_hexes(ground) || ground == key::dome ? key::buff : key::debuff, power);
 		state.set(entry, str(key::rounds), int_value(rounds));
 		state.set(entry, str(key::until_round), int_value(gd::sub(gd::add(round, rounds), 1)));
 	}
@@ -426,6 +427,11 @@ DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRe
 		state.set(entry, str(key::damage), int_value(_battle_spell_damage_at(state, hero, spell, state.new_dict(), against)));
 	}
 	if (ground == key::pillar) {
+		state.set(entry, str(key::defense), int_value(engine_max<int64_t>(0, gd::int_field(state, effect, key::defense, 0))));
+	}
+	// Elder Grove: its heal at the caster's power, and its defense.
+	if (ground == key::grove) {
+		state.set(entry, str(key::heal), int_value(_battle_spell_recovery_amount(state, hero, spell)));
 		state.set(entry, str(key::defense), int_value(engine_max<int64_t>(0, gd::int_field(state, effect, key::defense, 0))));
 	}
 	if (ground == key::trap) {
@@ -530,6 +536,65 @@ bool in_murk(State &state, DictRef battle, DictRef stack) {
 	}
 	const std::vector<DictRef> murk = holding(state, battle, key::murk);
 	return !murk.empty() && entry_under(state, murk, stack) != NONE;
+}
+
+int64_t grove_defense(State &state, DictRef battle, DictRef stack) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || raw_entries(state, battle) == NONE) {
+		return 0;
+	}
+	int64_t best = 0;
+	for (const DictRef entry : holding(state, battle, key::grove)) {
+		if (gd::string_field(state, entry, key::side, key::empty) == side_of(state, stack) && entry_under(state, { entry }, stack) != NONE) {
+			best = engine_max<int64_t>(best, gd::int_field(state, entry, key::defense, 0));
+		}
+	}
+	return best;
+}
+
+void grove_heal(State &state, DictRef battle, Atom battle_id) {
+	if (raw_entries(state, battle) == NONE) {
+		return;
+	}
+	const DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
+	if (gd::is_empty(state, stack) || _alive_count(state, stack) <= 0) {
+		return;
+	}
+	// The best grove of its side under it.
+	DictRef grove = NONE;
+	for (const DictRef entry : holding(state, battle, key::grove)) {
+		if (gd::string_field(state, entry, key::side, key::empty) == side_of(state, stack) && entry_under(state, { entry }, stack) != NONE
+				&& (grove == NONE || gd::int_field(state, entry, key::heal, 0) > gd::int_field(state, grove, key::heal, 0))) {
+			grove = entry;
+		}
+	}
+	if (grove == NONE || gd::int_field(state, grove, key::heal, 0) <= 0) {
+		return;
+	}
+	const Atom label = battle_rules::_stack_label(state, stack);
+	const int64_t restored = battle_rules::_restore_stack_health(state, battle, battle_id, gd::int_field(state, grove, key::heal, 0));
+	if (restored > 0) {
+		battle_rules::_record_event(state, battle, gd::format(state, key::grove_heals_text, { str(label), int_value(restored) }));
+	}
+}
+
+bool in_dome(State &state, DictRef battle, DictRef stack) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || raw_entries(state, battle) == NONE) {
+		return false;
+	}
+	const std::vector<DictRef> domes = holding(state, battle, key::dome);
+	return !domes.empty() && entry_under(state, domes, stack) != NONE;
+}
+
+bool dome_keeps_off(State &state, DictRef battle, DictRef shooter, DictRef target) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, target) || raw_entries(state, battle) == NONE) {
+		return false;
+	}
+	for (const DictRef entry : holding(state, battle, key::dome)) {
+		if (entry_under(state, { entry }, target) != NONE && (gd::is_empty(state, shooter) || entry_under(state, { entry }, shooter) == NONE)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void close_barrier_cells(State &state, DictRef battle, DictRef stack, uint8_t *open) {
@@ -661,7 +726,7 @@ Atom fire_prisms(State &state, DictRef battle, Atom side, DictRef spell) {
 		int64_t best = 999;
 		for (const Value &other : gd::field_items(state, battle, str(key::stacks))) {
 			if (!gd::is_dict(other) || side_of(state, other.ref) == side || side_of(state, other.ref) == key::empty
-					|| _alive_count(state, other.ref) <= 0 || spell_shielded(state, battle, other.ref)) {
+					|| _alive_count(state, other.ref) <= 0 || spell_shielded(state, battle, other.ref) || in_dome(state, battle, other.ref)) {
 				continue;
 			}
 			const int64_t distance = body_distance_to(state, other.ref, crystal);

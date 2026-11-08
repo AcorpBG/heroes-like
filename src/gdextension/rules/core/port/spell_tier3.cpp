@@ -341,6 +341,10 @@ void add_battle_aura(State &state, DictRef battle, DictRef entry) {
 	}
 	state.append(kept, dict_value(entry));
 	state.set(battle, str(key::spell_auras), array_value(kept));
+	// Green Return comes once a battle to a side.
+	if (gd::string_field(state, entry, key::aura, key::empty) == key::green_return) {
+		mark_green_return(state, battle, gd::string_field(state, entry, key::side, key::empty));
+	}
 }
 
 DictRef most_wounded_stack(State &state, DictRef battle, Atom side) {
@@ -382,6 +386,11 @@ void round_start_auras(State &state, DictRef battle, int64_t round) {
 		// Second Sun: every stack of the other side burns as the round before ends.
 		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::sun) {
 			second_sun_burns(state, battle, aura.ref);
+			continue;
+		}
+		// Green Return: the side's fallen grow back (spell_tier45_turns.cpp).
+		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::green_return) {
+			green_return_rises(state, battle, aura.ref);
 			continue;
 		}
 		// Watchful Light: its side's most wounded stack heals.

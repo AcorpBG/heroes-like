@@ -455,6 +455,14 @@ void add_reach_resolutions(State &state, DictRef hero, DictRef battle, DictRef t
 			|| effect_type == key::defense_buff || effect_type == key::initiative_buff) {
 		add_ally_reach(state, hero, battle, target, spell, effect, effect_type, extras);
 	}
+	// Glass Dome: no spell's damage reaches a stack under one.
+	for (int64_t index = state.array_size(extras) - 1; index >= 0; --index) {
+		const Value extra = state.at(extras, index);
+		if (gd::is_dict(extra) && gd::string_field(state, extra.ref, key::resolution_type, key::empty) == key::damage
+				&& in_dome(state, battle, battle_rules::_get_stack_by_id(state, battle, gd::string_field(state, extra.ref, key::target_battle_id, key::empty)))) {
+			gd::remove_at(state, extras, index);
+		}
+	}
 	if (state.array_size(extras) > 0) {
 		state.set(result, str(key::extra_resolutions), array_value(extras));
 	}

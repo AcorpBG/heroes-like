@@ -316,6 +316,38 @@ double _control_spell_score(State &state, DictRef battle, DictRef active_stack, 
 	return score * variant_max_float(0.15, success_chance);
 }
 
+// Echo: the side's last spell, scored as that spell at the echo's power on what it named, for the echo's mana (the
+// spell's own mana counted back). Only a spell that needs no hex or second pick is weighed again.
+double _echo_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell, ArrayRef hostiles, double role_modifier) {
+	const DictRef last = spell_rules::last_cast_of(state, battle, side_of(state, active_stack));
+	const Atom inner_id = gd::string_field(state, last, key::spell_id, key::empty);
+	const DictRef inner = gd::content_row(state, state::ContentTable::Spell, inner_id);
+	if (empty(state, inner) || !spell_rules::echo_scores_inner(state, inner)) {
+		return -9999.0;
+	}
+	const DictRef target = spell_rules::echo_target(state, battle, active_stack, inner, last);
+	if (empty(state, target)) {
+		return -9999.0;
+	}
+	const DictRef behavior = spell_rules::battle_spell_behavior(state, inner);
+	const Atom type = gd::string_field(state, behavior, key::effect_type, key::empty);
+	// A Prism Ward would turn it on the caster's own stacks; a doom already tolls.
+	if ((type == key::damage_enemy || type == key::control_enemy || type == key::doom_enemy) && !empty(state, spell_rules::reflected_spell_target(state, battle, target, inner_id))) {
+		return -9999.0;
+	}
+	if (type == key::doom_enemy && (spell_rules::has_effect_id(state, target, battle, key::status_doomed) || spell_rules::has_effect_id(state, target, battle, key::status_deaths_door))) {
+		return -9999.0;
+	}
+	const DictRef caster = spell_rules::echo_caster(state, enemy_hero, spell, inner_id);
+	const DictRef projection = type == key::damage_enemy ? spell_rules::battle_spell_damage_projection(state, caster, battle, target, inner) : state.new_dict();
+	const double score = _spell_candidate_score(state, caster, battle, active_stack, target, inner, behavior, hostiles, 0.0, projection);
+	if (score <= -9000.0) {
+		return -9999.0;
+	}
+	const auto mana_term = [&](DictRef row) { return static_cast<double>(gd::int_field(state, row, key::mana_cost, 0)) * 0.2; };
+	return score + mana_term(inner) - mana_term(spell) + role_modifier;
+}
+
 ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets, ArrayRef lethal_flags) {
 	const ArrayRef candidates = state.new_array();
 	const Atom acting_side = side_of(state, active_stack);
@@ -466,6 +498,13 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 			// The whole battle: cast with the acting stack as its target.
 			if (check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, active_stack, spell, acting_side))) {
 				const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, active_stack, spell, behavior, hostiles, role_modifier, state.new_dict());
+				state.append(candidates, dict_value(cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, active_stack, key::battle_id, key::empty), score)));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::recast) {
+			// Echo is cast with the acting stack, as a spell over the battle is; it resolves as the side's last spell.
+			if (check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, active_stack, spell, acting_side))) {
+				const double score = _echo_spell_score(state, enemy_hero, battle, active_stack, spell, hostiles, role_modifier);
 				state.append(candidates, dict_value(cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, active_stack, key::battle_id, key::empty), score)));
 				state.append(lethal_flags, bool_value(false));
 			}

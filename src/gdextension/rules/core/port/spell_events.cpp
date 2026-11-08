@@ -451,8 +451,9 @@ DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_
 	const DictRef resolution = spell_rules::resolve_battle_spell(state, _player_commander_state(state, session), battle, active, target, spell_id, key::player, destination);
 	// Explicit orders must never inherit the legacy support-spell fallback to the active stack.
 	// (A cast Prism Ward turned aside lands elsewhere by design.)
+	// (An echo names the stack its spell named.)
 	if (target_id != key::empty && gd::bool_field(state, resolution, key::ok, false) && string_or_empty(state, resolution, key::target_battle_id) != target_id
-			&& string_or_empty(state, resolution, key::reflected_from_battle_id) != target_id) {
+			&& string_or_empty(state, resolution, key::reflected_from_battle_id) != target_id && string_or_empty(state, resolution, key::echo_of) == key::empty) {
 		return refusal(state, key::stack_not_valid_spell_target_text);
 	}
 	return resolution;
@@ -536,6 +537,10 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 			// Daybreak Charge: the stack acts before any enemy stack next round.
 			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::act_first_next, 0) > 0) {
 				spell_rules::act_first_next_round(state, battle, target_battle_id);
+			}
+			// Clarion Call: another full turn right after its next one.
+			if (gd::int_field(state, spell_rules::effect_mechanic(state, effect_payload.ref), key::extra_turn, 0) > 0) {
+				spell_rules::grant_extra_turn(state, battle, target_battle_id);
 			}
 		}
 		Value follow_payload;

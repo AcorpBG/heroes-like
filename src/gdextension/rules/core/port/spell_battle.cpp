@@ -259,6 +259,11 @@ DictRef battle_spell_behavior(State &state, DictRef spell) {
 		resolution_type = key::charm_effect;
 		state.append(hooks, str(key::battle_damage));
 		public_effect = key::enemy_control_status_text;
+	} else if (effect_type == key::recast) {
+		// Echo: the side's last spell again, which resolves as that spell.
+		resolution_type = key::recast;
+		state.append(hooks, str(key::ally_status_effect));
+		public_effect = key::ally_modifier_effect_text;
 	} else {
 		resolution_type = key::unsupported;
 		public_effect = key::unsupported_battle_effect_text;
@@ -317,7 +322,8 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 			|| effect_type == key::swap_enemy || effect_type == key::sacrifice || effect_type == key::doom_enemy || effect_type == key::free_volley
 			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy;
 	// A decoy takes no spell of its own side's (a hex spell or one over the battle names no stack).
-	const bool names_no_stack = effect_type == key::ground_effect || effect_type == key::battle_aura || (effect_type == key::conjure && conjures_on_hex(state, spell_dict));
+	const bool names_no_stack = effect_type == key::ground_effect || effect_type == key::battle_aura || effect_type == key::recast
+			|| (effect_type == key::conjure && conjures_on_hex(state, spell_dict));
 	if (!names_no_stack && !gd::is_empty(state, target_stack) && side_of(state, target_stack) == acting_side && is_decoy(state, target_stack)) {
 		return refusal(state, gd::format(state, key::decoy_takes_no_spell_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 	}
@@ -330,6 +336,24 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 	}
 	if (aims_at_enemy && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && spell_shielded(state, battle, target_stack)) {
 		return refusal(state, gd::format(state, key::shielded_from_spells_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+	}
+	// Glass Dome: no spell from outside it hurts a stack under it.
+	const bool hurts = effect_type == key::damage_enemy || effect_type == key::doom_enemy || effect_type == key::sacrifice || effect_type == key::free_volley;
+	if (hurts && !gd::is_empty(state, target_stack) && side_of(state, target_stack) != acting_side && in_dome(state, battle, target_stack)) {
+		return refusal(state, gd::format(state, key::dome_keeps_spell_text, { str(battle_rules::_stack_label(state, target_stack)) }));
+	}
+	// Echo: the side's last spell of the battle, on what it named, as that spell's own check finds it.
+	if (effect_type == key::recast) {
+		const DictRef last = last_cast_of(state, battle, acting_side);
+		const DictRef inner = gd::content_row(state, state::ContentTable::Spell, gd::string_field(state, last, key::spell_id, key::empty));
+		if (gd::is_empty(state, inner)) {
+			return refusal(state, key::nothing_to_echo_text);
+		}
+		const DictRef inner_target = echo_target(state, battle, active_stack, inner, last);
+		if (gd::is_empty(state, inner_target)) {
+			return refusal(state, gd::format(state, key::echo_target_gone_text, { str(gd::string_field(state, inner, key::name, key::spell_word)) }));
+		}
+		return battle_spell_target_check(state, battle, active_stack, inner_target, inner, acting_side);
 	}
 	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy) {
 		if (gd::is_empty(state, target_stack) || side_of(state, target_stack) == acting_side || _alive_count(state, target_stack) <= 0) {
@@ -365,6 +389,11 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		}
 		if (effect_type == key::damage_around && state.array_size(enemies_beside(state, battle, own)) == 0) {
 			return refusal(state, gd::format(state, key::no_enemy_beside_text, { str(battle_rules::_stack_label(state, own)) }));
+		}
+		// Green Return comes once a battle to a side.
+		if (effect_type == key::battle_aura && gd::string_field(state, two_argument_get_target(effect), key::aura, key::empty) == key::green_return
+				&& green_return_used(state, battle, acting_side)) {
+			return refusal(state, key::green_return_used_text);
 		}
 		return accepted(state);
 	}
@@ -1079,6 +1108,26 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			}
 		}
 	}
+	// Echo: the side's last spell of the battle again, at once, stronger and for no more mana (spell_tier45_turns.cpp).
+	// It resolves as that spell; the hero pays for the echo alone.
+	if (effect_type == key::recast) {
+		const DictRef last = last_cast_of(state, battle, acting_side);
+		const Atom inner_id = gd::string_field(state, last, key::spell_id, key::empty);
+		const DictRef inner_spell = gd::content_row(state, state::ContentTable::Spell, inner_id);
+		const DictRef inner = resolve_battle_spell(state, echo_caster(state, hero, spell, inner_id), battle, active_stack, echo_target(state, battle, active_stack, inner_spell, last),
+				inner_id, acting_side, gd::field(state, last, key::destination));
+		if (!gd::bool_field(state, inner, key::ok, false)) {
+			return hero_refusal(state, hero, gd::string_field(state, inner, key::message, key::spell_cannot_be_cast_now_text));
+		}
+		if (gd::bool_field(state, inner, key::needs_destination, false) || gd::bool_field(state, inner, key::needs_second_target, false)) {
+			return hero_refusal(state, hero, gd::format(state, key::echo_target_gone_text, { str(gd::string_field(state, inner_spell, key::name, inner_id)) }));
+		}
+		state.set(inner, str(key::hero), dict_value(_consume_mana(state, hero, mana_cost)));
+		state.set(inner, str(key::echo_of), str(inner_id));
+		const Atom rings = gd::format(state, key::echo_rings_text, { str(gd::string_field(state, spell, key::name, spell_id)) });
+		state.set(inner, str(key::message), str(state.intern(state.text(rings) + state.text(gd::string_field(state, inner, key::message, key::empty)))));
+		return inner;
+	}
 	hero = _consume_mana(state, hero, mana_cost);
 	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
 	// Prism Ward: a harmful spell cast on a warded stack lands on a random stack
@@ -1522,6 +1571,11 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 				state.append(kept_off, status_id);
 			}
 			state.set(entry, str(key::status_immunity_ids), array_value(kept_off));
+		} else if (aura_kind == key::green_return) {
+			// Green Return: the side's fallen grow back as the next round starts, with their share at the caster's power.
+			const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero)));
+			state.set(entry, str(key::pct), int_value(engine_max<int64_t>(1, engine_min<int64_t>(100, pct))));
+			state.set(entry, str(key::until_round), int_value(gd::add(round, 1)));
 		}
 		const DictRef result = cast_result(state, hero, key::aura_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::aura_entry), dict_value(entry));

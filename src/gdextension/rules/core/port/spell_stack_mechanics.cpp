@@ -220,6 +220,8 @@ void after_stack_damaged(State &state, DictRef battle, Atom battle_id, int64_t t
 	if (gd::is_empty(state, stack)) {
 		return;
 	}
+	// Shadow Ranks counts the creatures it loses (spell_tier45_turns.cpp).
+	count_shadow_losses(state, battle, battle_id, taken, killed);
 	if (taken > 0 && !killed) {
 		// Molten Brand melts a point of defense (spell_tier45.cpp).
 		brand_melts(state, battle, stack);
@@ -334,6 +336,8 @@ void end_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 	end_of_turn_tier3(state, battle, battle_id);
 	// Poison and Death's Door (spell_tier45.cpp).
 	end_of_turn_tier45(state, battle, battle_id);
+	// Redline's price (spell_tier45_turns.cpp).
+	redline_turn_end(state, battle, battle_id);
 }
 
 bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
@@ -350,6 +354,8 @@ bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 			battle_rules::_record_event(state, battle, gd::format(state, key::regrows_health_text, { str(battle_rules::_stack_label(state, stack)), int_value(restored) }));
 		}
 	}
+	// Elder Grove heals its side's stacks in it.
+	grove_heal(state, battle, battle_id);
 	return !gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_asleep));
 }
 
@@ -490,8 +496,8 @@ bool shot_refused_by_spells(State &state, DictRef battle, DictRef shooter, DictR
 	if (!gd::is_empty(state, stack_status_effect(state, shooter, battle, key::status_blinded))) {
 		return true;
 	}
-	// Murk: no shot into the fog or out of it.
-	if (in_murk(state, battle, shooter) || in_murk(state, battle, target)) {
+	// Murk: no shot into the fog or out of it. Glass Dome: none from outside it at a stack under it.
+	if (in_murk(state, battle, shooter) || in_murk(state, battle, target) || dome_keeps_off(state, battle, shooter, target)) {
 		return true;
 	}
 	return !gd::is_empty(state, stack_mechanic_effect(state, target, battle, key::shot_shield));

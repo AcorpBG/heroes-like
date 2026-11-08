@@ -1473,7 +1473,7 @@ void Check::spell(const Value &spell) {
 			warn("Spell " + spell_id + " ground_effect must use target_mode hex_selected.");
 		}
 		const std::string ground = text(effect, "ground");
-		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap", "wall", "barrier", "prism", "mire", "snare"})) {
+		if (!one_of(ground, {"fire_ground", "bramble_ground", "pillar", "murk", "trap", "wall", "barrier", "prism", "mire", "snare", "grove", "dome"})) {
 			warn("Spell " + spell_id + " uses unsupported ground " + ground + ".");
 		}
 		const std::string shape = text(effect, "shape");
@@ -1508,6 +1508,10 @@ void Check::spell(const Value &spell) {
 		}
 		if (ground == "pillar" && integer(effect, "defense", 0) <= 0) {
 			warn("Spell " + spell_id + " must define pillar defense > 0.");
+		}
+		// Elder Grove heals its side's stacks in it and lends them defense.
+		if (ground == "grove" && (integer(effect, "base_restore", 0) <= 0 || integer(effect, "power_scale", 0) < 0 || integer(effect, "defense", 0) < 0)) {
+			warn("Spell " + spell_id + " must define grove base_restore > 0, power_scale >= 0 and defense >= 0.");
 		}
 		if (ground == "trap") {
 			const Value status_effect = get(effect, "status_effect", empty_dict_);
@@ -1576,7 +1580,7 @@ void Check::spell(const Value &spell) {
 		}
 		// Watchful Light heals; Second Sun burns the other side for the battle; Eternal Noon keeps statuses off.
 		const std::string aura = text(effect, "aura");
-		if (!one_of(aura, {"triage", "sun", "noon"})) {
+		if (!one_of(aura, {"triage", "sun", "noon", "green_return"})) {
 			warn("Spell " + spell_id + " uses unsupported aura " + aura + ".");
 		}
 		if (aura == "triage" && (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0)) {
@@ -1587,6 +1591,11 @@ void Check::spell(const Value &spell) {
 		}
 		if (aura == "noon" && integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define noon duration_rounds > 0.");
+		}
+		// Green Return: a share of the fallen's starting creatures.
+		const int64_t return_pct = integer(effect, "return_pct", 0);
+		if (aura == "green_return" && (return_pct <= 0 || return_pct > 100 || integer(effect, "return_pct_power_scale", 0) < 0)) {
+			warn("Spell " + spell_id + " must define green_return return_pct 1 to 100 and return_pct_power_scale >= 0.");
 		}
 	} else if (type == "conjure") {
 		// A stack on the field for some rounds: summoned creatures or the Risen on a hex, or a decoy of a stack.
@@ -1621,6 +1630,14 @@ void Check::spell(const Value &spell) {
 		}
 		if (integer(effect, "rounds_back", 0) <= 0 || integer(effect, "rounds_back_power_divisor", 0) < 0) {
 			warn("Spell " + spell_id + " must define rewind rounds_back > 0 and rounds_back_power_divisor >= 0.");
+		}
+	} else if (type == "recast") {
+		// Echo casts the side's last spell of the battle again, with more spell power.
+		if (text(spell, "target_mode") != "battle") {
+			warn("Spell " + spell_id + " recast must use target_mode battle.");
+		}
+		if (integer(effect, "power_bonus", 0) < 0 || integer(effect, "power_bonus_power_divisor", 0) < 0) {
+			warn("Spell " + spell_id + " must define recast power_bonus >= 0 and power_bonus_power_divisor >= 0.");
 		}
 	} else if (type == "charm_enemy") {
 		// An enemy stack attacks a stack of its own side, at a share of its damage.

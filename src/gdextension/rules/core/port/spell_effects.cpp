@@ -87,7 +87,8 @@ int64_t battle_spell_recoverable_health(State &state, DictRef stack) {
 
 int64_t effect_bonus_for_kind(State &state, DictRef stack, DictRef battle, Atom kind) {
 	// A crystal pillar of its side next to it (Crystal Pillar).
-	int64_t total = kind == key::defense ? pillar_defense(state, battle, stack) : 0;
+	// Crystal Pillar's and Elder Grove's defense.
+	int64_t total = kind == key::defense ? gd::add(pillar_defense(state, battle, stack), grove_defense(state, battle, stack)) : 0;
 	const int64_t current_round = gd::int_field(state, battle, key::round, 1);
 	const ArrayRef active = active_effects_for_round(state, stack, current_round);
 	for (const Value &effect : gd::items(state, array_value(active))) {

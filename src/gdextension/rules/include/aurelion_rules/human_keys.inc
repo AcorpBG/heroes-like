@@ -6038,3 +6038,8 @@ AURELION_KEY(creature_share_sentence, "Take %d%% of the creatures of %s, never i
 AURELION_KEY(second_sun_sentence, "Every enemy stack takes %d at the end of each round, for the rest of the battle.")
 AURELION_KEY(noon_sentence, "For the next %s your stacks act first and shrug off %s.")
 AURELION_KEY(creature_share_untargeted_sentence, "Take %d%% of the creatures of %s, never its last one.")
+AURELION_KEY(grow_grove_sentence, "Grow a grove on the hex and the six around it for the rest of the battle: your stacks in it heal %d at the start of their turns and have +%d defense.")
+AURELION_KEY(raise_dome_sentence, "Raise a crystal dome over the hex and the six around it for %s: no shot or spell from outside it hurts the stacks under it.")
+AURELION_KEY(green_return_sentence, "Once a battle, every stack of yours that has fallen grows back with %d%% of its starting creatures as the next round starts.")
+AURELION_KEY(echo_sentence, "Cast your hero's last spell of the battle again at once, with +%d spell power, for no more mana.")
+AURELION_KEY(echo_last_sentence, "Cast %s again at once, with +%d spell power, for no more mana.")

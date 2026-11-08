@@ -6000,6 +6000,181 @@
         "power_scale": 0,
         "reach": "all"
       }
+    },
+    {
+      "id": "spell_redline",
+      "name": "Redline",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "One of your stacks runs past the red line: it strikes twice on its next turn, and harder, then cannot strike back for a while.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "fixed_duration": true,
+        "modifiers": {
+          "attack": 2
+        },
+        "modifiers_power_divisor": 3,
+        "mechanic": {
+          "double_strike": 1,
+          "staggered_after": 2
+        }
+      }
+    },
+    {
+      "id": "spell_clarion_call",
+      "name": "Clarion Call",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "A clarion rings for one of your stacks: it takes another full turn straight after this one, and strikes harder.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "fixed_duration": true,
+        "modifiers": {
+          "attack": 2
+        },
+        "modifiers_power_divisor": 4,
+        "mechanic": {
+          "extra_turn": 1
+        }
+      }
+    },
+    {
+      "id": "spell_echo",
+      "name": "Echo",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "The last spell your hero cast in this battle rings out again at once, stronger, and costs nothing more.",
+      "effect": {
+        "type": "recast",
+        "power_bonus": 1,
+        "power_bonus_power_divisor": 2
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_shadow_ranks",
+      "name": "Shadow Ranks",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Shadows stand in the ranks of one of your stacks: many of the creatures it loses come back as the round ends.",
+      "effect": {
+        "type": "ally_effect",
+        "duration_rounds": 1,
+        "mechanic": {
+          "loss_return_pct": 40,
+          "loss_return_pct_power_scale": 2
+        }
+      }
+    },
+    {
+      "id": "spell_elder_grove",
+      "name": "Elder Grove",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery",
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 10,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "An elder grove rises around one hex for the rest of the battle; your stacks in it heal and stand harder.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "grove",
+        "shape": "area",
+        "battle_long": true,
+        "base_restore": 10,
+        "power_scale": 2,
+        "defense": 2
+      }
+    },
+    {
+      "id": "spell_glass_dome",
+      "name": "Glass Dome",
+      "school_id": "beacon",
+      "tier": 5,
+      "accord_family": "beacon_tier5",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 15,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A crystal dome closes over one hex and the six around it: no shot or spell from outside it hurts the stacks within.",
+      "effect": {
+        "type": "ground_effect",
+        "ground": "dome",
+        "shape": "area",
+        "duration_rounds": 1
+      }
+    },
+    {
+      "id": "spell_green_return",
+      "name": "Green Return",
+      "school_id": "root",
+      "tier": 5,
+      "accord_family": "root_tier5",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 18,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "Once a battle, every stack of yours that has fallen grows back with a share of its starting creatures as the next round begins.",
+      "effect": {
+        "type": "battle_aura",
+        "aura": "green_return",
+        "return_pct": 30,
+        "return_pct_power_scale": 4
+      },
+      "scroll_only": true
     }
   ]
 }

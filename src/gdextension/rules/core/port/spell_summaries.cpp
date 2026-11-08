@@ -11,6 +11,7 @@
 namespace aurelion::rules::port::spell_rules {
 
 using compat::engine_max;
+using compat::engine_min;
 using gd::array_value;
 using gd::dict_value;
 using gd::int_value;
@@ -272,6 +273,9 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 			const ArrayRef labels = status_id_labels(state, get_or_new_array(state, effect, key::status_immunity_ids));
 			return gd::format(state, key::noon_summary_text, { str(rounds_label), str(join_array_with_comma(state, labels)) });
 		}
+		if (aura == key::green_return) {
+			return gd::format(state, key::green_return_summary_text, { int_value(green_return_pct(state, hero_state, spell)) });
+		}
 		return gd::format(state, key::watch_summary_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)), str(rounds_label) });
 	}
 	// Goad and Uproot (spell_tier3_control.cpp).
@@ -310,6 +314,14 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::charm_enemy) {
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::charm_summary_text, { str(target_label), int_value(charm_damage_pct(state, hero_state, battle, spell, target_stack)) });
+	}
+	// Echo names the side's last spell of the battle when there is one.
+	if (effect_type == key::recast) {
+		const DictRef last = gd::content_row(state, state::ContentTable::Spell,
+				gd::string_field(state, last_cast_of(state, battle, gd::string_field(state, active_stack, key::side, key::player)), key::spell_id, key::empty));
+		const int64_t bonus = echo_power_bonus(state, hero_state, spell);
+		return gd::is_empty(state, last) ? gd::format(state, key::echo_summary_text, { int_value(bonus) })
+				: gd::format(state, key::echo_last_summary_text, { str(gd::string_field(state, last, key::name, key::spell_word)), int_value(bonus) });
 	}
 	return key::no_supported_battle_effect_text;
 }
@@ -357,6 +369,14 @@ Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictR
 	if (ground == key::mire) {
 		const int64_t count = engine_max<int64_t>(1, power_count(state, effect, key::count, key::count_power_divisor, power));
 		return gd::format(state, sentence ? key::lay_mire_sentence : key::mire_ground_text, { int_value(count) });
+	}
+	// Tier 4 and 5: Elder Grove heals and shields its side's stacks in it; Glass Dome keeps shots and spells off.
+	if (ground == key::grove) {
+		return gd::format(state, sentence ? key::grow_grove_sentence : key::grove_ground_text,
+				{ int_value(_battle_spell_recovery_amount(state, hero_state, spell)), int_value(gd::int_field(state, effect, key::defense, 0)) });
+	}
+	if (ground == key::dome) {
+		return gd::format(state, sentence ? key::raise_dome_sentence : key::dome_ground_text, { str(rounds_label(key::buff)) });
 	}
 	// Tier 4: Thicket Snare lays no ground; the stacks its area catches take its status.
 	if (ground == key::snare) {
@@ -485,6 +505,12 @@ Atom _signed_modifier_label(State &state, int64_t amount) {
 
 // --- The new spells' words (docs/magic-system-spells.md, Mechanics) ----------
 
+int64_t green_return_pct(State &state, DictRef hero_state, DictRef spell) {
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero_state)));
+	return engine_max<int64_t>(1, engine_min<int64_t>(100, pct));
+}
+
 Atom mechanic_terms(State &state, DictRef mechanic) {
 	if (gd::is_empty(state, mechanic)) {
 		return key::empty;
@@ -597,6 +623,16 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 	}
 	if (has(key::doom_damage)) {
 		parts.push_back(gd::format(state, key::doom_term_text, { amount(key::doom_damage) }));
+	}
+	// Tier 4 and 5, turns and losses (spell_tier45_turns.cpp).
+	if (has(key::double_strike)) {
+		parts.push_back(gd::format(state, key::double_strike_term_text, { amount(key::staggered_after) }));
+	}
+	if (has(key::extra_turn)) {
+		parts.push_back(key::extra_turn_term_text);
+	}
+	if (has(key::loss_return_pct)) {
+		parts.push_back(gd::format(state, key::loss_return_term_text, { amount(key::loss_return_pct) }));
 	}
 	return join_with_comma(state, parts);
 }

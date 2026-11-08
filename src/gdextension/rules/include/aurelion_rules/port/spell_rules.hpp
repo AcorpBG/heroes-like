@@ -227,6 +227,13 @@ void add_pillar_blockers(State &state, DictRef battle, DictRef blocked);
 bool bramble_stop_mask(State &state, DictRef battle, DictRef stack, uint8_t *stop);
 int64_t pillar_defense(State &state, DictRef battle, DictRef stack);
 bool in_murk(State &state, DictRef battle, DictRef stack);
+// Tier 4 and 5's ground: Elder Grove's defense and heal for its side's stacks in it (the heal at the start of the
+// stack's turn), and Glass Dome: a stack under one, and a shot or spell kept off a stack under a dome by coming from
+// outside it (a spell has no shooter).
+int64_t grove_defense(State &state, DictRef battle, DictRef stack);
+void grove_heal(State &state, DictRef battle, Atom battle_id);
+bool in_dome(State &state, DictRef battle, DictRef stack);
+bool dome_keeps_off(State &state, DictRef battle, DictRef shooter, DictRef target);
 // Tier 3's ground: Boundary Line closes its hexes to the other side's walks (in an open mask), Fogwalk's walk
 // passes everything else (its pass mask; false when the stack does not phase), a stack in Bog Pool's mire, a shot
 // whose line crosses Living Wall, and Prism Array's crystals firing after a damage spell of their side's hero (the
@@ -362,6 +369,32 @@ void second_sun_burns(State &state, DictRef battle, DictRef aura);
 int64_t creature_share_pct(State &state, DictRef spell, int64_t power);
 int64_t creature_share_damage(State &state, DictRef spell, DictRef stack, int64_t power);
 int64_t spare_last_creature(State &state, DictRef spell, DictRef stack, int64_t damage);
+// Tier 4 and 5, turns and losses (spell_tier45_turns.cpp). Redline: a melee attack's blows (2 while it holds), the
+// double blow spent, and its price as the turn ends (Staggered). Clarion Call: the extra turn promised at the cast,
+// taken as the stack's turn ends (true when the stack acts again at once), and whether the active stack is in one.
+// Shadow Ranks: the creatures a warded stack loses, and their share back as the round ends. Green Return: once a
+// battle for a side (used, marked), its fallen grow back as the next round starts. Echo: the side's last spell of
+// the battle (its id, the target it named and its hex or second stack), recorded after each cast but an echo; the
+// stack it names again (empty when gone); the hero that casts it again, stronger and with the mana for it; the
+// echo's power bonus; and whether the computer weighs a spell again (one that needs no hex or second pick).
+int64_t melee_blows(State &state, DictRef battle, DictRef attacker);
+void spend_double_strike(State &state, DictRef battle, Atom attacker_id);
+void redline_turn_end(State &state, DictRef battle, Atom battle_id);
+void grant_extra_turn(State &state, DictRef battle, Atom battle_id);
+bool take_extra_turn(State &state, DictRef battle, Atom ending_id);
+bool in_extra_turn(State &state, DictRef battle, Atom battle_id);
+void count_shadow_losses(State &state, DictRef battle, Atom battle_id, int64_t taken, bool killed);
+void shadows_return(State &state, DictRef battle);
+bool green_return_used(State &state, DictRef battle, Atom side);
+void mark_green_return(State &state, DictRef battle, Atom side);
+void green_return_rises(State &state, DictRef battle, DictRef aura);
+DictRef last_cast_of(State &state, DictRef battle, Atom side);
+void record_last_cast(State &state, DictRef battle, Atom side, Atom spell_id, DictRef resolution, const Value &destination);
+bool echo_names_stack(State &state, DictRef inner_spell);
+DictRef echo_target(State &state, DictRef battle, DictRef active_stack, DictRef inner_spell, DictRef last);
+DictRef echo_caster(State &state, DictRef hero, DictRef echo_spell, Atom inner_id);
+int64_t echo_power_bonus(State &state, DictRef hero, DictRef echo_spell);
+bool echo_scores_inner(State &state, DictRef inner_spell);
 // Thicket Snare (spell_ground.cpp, spell_reach.cpp): a hex spell that lays no ground; the enemy stacks its area
 // catches, and their statuses, each on its own resistance draw.
 bool snare_ground(State &state, DictRef spell);
@@ -401,6 +434,8 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 // clauses (Heat, a bonus, a sealed wound, a cleanse, a status that follows),
 // joined as "; a; b" or as the sentence " A; b.".
 Atom mechanic_terms(State &state, DictRef mechanic);
+// Green Return's share of the starting creatures at the hero's power.
+int64_t green_return_pct(State &state, DictRef hero_state, DictRef spell);
 Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictRef battle, Atom caster_side);
 int64_t helpful_effect_turns(State &state, DictRef hero_state, DictRef spell);
 // A helpful spell's lasting mechanic at the caster's power (empty without one), and its turns: "the rest of the

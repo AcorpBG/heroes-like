@@ -523,6 +523,9 @@ DictRef _retaliation_range_preview(State &state, DictRef attacker, DictRef defen
 
 Atom _wait_action_summary(State &state, DictRef battle, DictRef stack) {
 	const Atom battle_id = text_or(state, stack, key::battle_id, key::empty);
+	if (spell_rules::in_extra_turn(state, battle, battle_id)) {
+		return gd::format(state, key::extra_turn_no_wait_text, {str(_stack_label(state, stack))});
+	}
 	if (stack_has_waited(state, battle, battle_id)) {
 		return gd::format(state, key::already_waited_text, {str(_stack_label(state, stack))});
 	}
@@ -764,6 +767,9 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 			const Atom labels = join_array(state, key::comma_space, status_id_labels(state, array_value(kept_off)));
 			return with_timing(gd::format(state, key::noon_sentence, {str(rounds_label), str(labels)}));
 		}
+		if (aura == key::green_return) {
+			return with_timing(gd::format(state, key::green_return_sentence, {int_value(green_return_pct(state, hero_state, spell))}));
+		}
 		return with_timing(gd::format(state, key::watch_sentence, {str(rounds_label), int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
 	}
 	// Goad and Uproot: a status the target may resist, Uproot's after the drag it always makes.
@@ -809,6 +815,14 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 	}
 	if (effect_type == key::charm_enemy) {
 		return with_timing(gd::format(state, key::charm_sentence, {str(enemy_name), int_value(charm_damage_pct(state, hero_state, battle, spell, target_stack))}));
+	}
+	// Echo: the side's last spell of the battle, by name when there is one.
+	if (effect_type == key::recast) {
+		const DictRef last = gd::content_row(state, state::ContentTable::Spell,
+				text_or(state, last_cast_of(state, battle, text_or(state, active_stack, key::side, key::player)), key::spell_id, key::empty));
+		const int64_t bonus = echo_power_bonus(state, hero_state, spell);
+		return with_timing(gd::is_empty(state, last) ? gd::format(state, key::echo_sentence, {int_value(bonus)})
+				: gd::format(state, key::echo_last_sentence, {str(text_or(state, last, key::name, key::spell_word)), int_value(bonus)}));
 	}
 	return key::no_authored_battle_summary_is_available;
 }

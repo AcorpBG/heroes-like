@@ -2528,6 +2528,83 @@
       "source_sha256": "9fdbc83ddea659368a1300f1a5c051165348a0bc2e4db112a87376930d3dbd55",
       "icon_path": "res://art/magic/runtime/spells/spell_mire_brine_frenzy_08.png",
       "icon_sha256": "fd57cab8e98cf083745eca064dbe898582b1515d64b9d7fcc584f069ddf63867"
+    },
+    {
+      "id": "spell_redline",
+      "spell_id": "spell_redline",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_redline",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_redline_overdrive.png",
+      "source_sha256": "76a1300e70b923f40ae14284830a3bf2f27319e3545b6b4f9ef397cdf9007cca",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_redline_overdrive.png",
+      "icon_sha256": "a6ae8122516e1a3bc627a1fea1c54208d76b66b8667a082ef80e7de19d804782"
+    },
+    {
+      "id": "spell_clarion_call",
+      "spell_id": "spell_clarion_call",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_clarion_call",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_crown_signal_19.png",
+      "source_sha256": "e9d235fe30e8845c9fe934aa602116801d971a3094b787e7c8399abd7216e2f8",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_crown_signal_19.png",
+      "icon_sha256": "6fd699bc07d358e24bf098374c64f74c552a7abd06d070ee660464d9cf5a7362"
+    },
+    {
+      "id": "spell_echo",
+      "spell_id": "spell_echo",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_echo",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_array_chorus_22.png",
+      "source_sha256": "fd9db1ff5d1a087a1fc07e3e35eb607ff340c3368a8e07b99d91b748ed195844",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_array_chorus_22.png",
+      "icon_sha256": "e92c1f13a903773598d87570fbab8bc3659ce976603a6baf15df3fcf880a278d"
+    },
+    {
+      "id": "spell_shadow_ranks",
+      "spell_id": "spell_shadow_ranks",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_shadow_ranks",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mist_shroud_10.png",
+      "source_sha256": "aef4b00186f1f08414b44ce92d6d68e640e80f9e2996ea785a163b3c97c9f6f3",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_shroud_10.png",
+      "icon_sha256": "e6c7d876e7e1a7f5ae47953e07f9c98434f7c01ae523dcea40d393747c54436d"
+    },
+    {
+      "id": "spell_elder_grove",
+      "spell_id": "spell_elder_grove",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_elder_grove",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_heartwood_renewal.png",
+      "source_sha256": "011cd8b9e05c99163c98385c752371afd26dd63240421cc078d44dfce20766f1",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_heartwood_renewal.png",
+      "icon_sha256": "ad955208dbfe0ed743e663eae2d5b6c85e666e55d030528f1087840e67e5a7dc"
+    },
+    {
+      "id": "spell_glass_dome",
+      "spell_id": "spell_glass_dome",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_glass_dome",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_mirror_prism_04.png",
+      "source_sha256": "a6e357571f158a7a07b7fdca55492f1d7292d710a22c5d07dda4a1efede36787",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_mirror_prism_04.png",
+      "icon_sha256": "94ce9b2eb91e705836a09437ca506f7dab77437c169e7222b2eb7970c8a57879"
+    },
+    {
+      "id": "spell_green_return",
+      "spell_id": "spell_green_return",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_green_return",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_loam_bloom_26.png",
+      "source_sha256": "34285903fa8c64d96deae8b8329b7adcbdfe36d905b7bfc7f495a7ce05702798",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_loam_bloom_26.png",
+      "icon_sha256": "045372d74422c7a711a13025ef3ece2937c962013889b881d1fa774260d1c6b5"
     }
   ]
 }

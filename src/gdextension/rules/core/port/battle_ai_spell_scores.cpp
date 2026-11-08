@@ -400,6 +400,20 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	if (amount(key::act_next) > 0) {
 		score += 1.0 + _buff_spell_offense_payoff(state, ally);
 	}
+	// Redline: two blows on its next turn for a melee stack that can strike, less the strike-backs it gives up after.
+	if (amount(key::double_strike) > 0) {
+		const bool strikes = engaged || _can_make_melee_attack(state, ally, battle, state.new_dict());
+		score += melee_ally && strikes ? 1.5 + _buff_spell_offense_payoff(state, ally) * 1.5 : -1.0;
+		score -= melee_hostiles > 0 ? 0.3 * static_cast<double>(amount(key::staggered_after)) : 0.0;
+	}
+	// Clarion Call: a whole extra turn.
+	if (amount(key::extra_turn) > 0) {
+		score += 1.5 + _buff_spell_offense_payoff(state, ally);
+	}
+	// Shadow Ranks: a share of its losses back, for a stack in the fight.
+	if (amount(key::loss_return_pct) > 0) {
+		score += (engaged ? 2.0 : (threatened ? 1.0 : -1.0)) * static_cast<double>(amount(key::loss_return_pct)) / 50.0;
+	}
 	if (amount(key::backlash_pct) > 0) {
 		score -= static_cast<double>(amount(key::backlash_pct)) / 100.0 * static_cast<double>(turns) * 4.0;
 	}
@@ -1048,6 +1062,22 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 		const int64_t noon_rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
 		return value * engine_min<double>(2.0, static_cast<double>(noon_rounds) / 2.0) - mana_cost_term(state, spell);
 	}
+	if (kind == key::green_return) {
+		// Green Return: each fallen stack of the side grows back with its share of its starting creatures.
+		if (spell_rules::green_return_used(state, battle, side)) {
+			return -9999.0;
+		}
+		const int64_t pct = spell_rules::green_return_pct(state, enemy_hero, spell);
+		double value = 0.0;
+		for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+			const int64_t base_count = gd::is_dict(stack) ? gd::int_field(state, stack.ref, key::base_count, 0) : 0;
+			if (base_count > 0 && side_of(state, stack.ref) == side && _alive_count(state, stack.ref) <= 0 && !spell_rules::is_conjured(state, stack.ref)
+					&& !gd::bool_field(state, stack.ref, key::green_returned, false)) {
+				value += 1.5 + static_cast<double>(engine_max<int64_t>(1, base_count * pct / 100)) * 0.8;
+			}
+		}
+		return value > 0.0 ? value - mana_cost_term(state, spell) : -9999.0;
+	}
 	// Stacks that are wounded or in a fight will want the heal.
 	int64_t pressed = 0;
 	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
@@ -1510,6 +1540,40 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 		} else if (ground == key::snare) {
 			for (const auto &[stack, one] : snare_values) {
 				value += body_on(state, stack, cells) ? one : 0.0;
+			}
+		} else if (ground == key::grove) {
+			// Elder Grove: heal and defense for the caster's stacks standing in it, for the rest of the battle; more for
+			// a stack in the fight, which stays there.
+			const int64_t heal = gd::int_field(state, sample, key::heal, 0);
+			for (const Value &ally : gd::items(state, array_value(allies))) {
+				if (!gd::is_dict(ally) || !body_on(state, ally.ref, cells) || spell_rules::grove_defense(state, battle, ally.ref) >= defense) {
+					continue;
+				}
+				const bool fighting = _stack_is_engaged(state, ally.ref, battle);
+				const double unit_hp = engine_max<double>(1.0, static_cast<double>(gd::int_field(state, ally.ref, key::unit_hp, 1)));
+				const double room = static_cast<double>(engine_min<int64_t>(gd::mul(heal, 2), _stack_missing_health(state, ally.ref))) / unit_hp;
+				const double later = fighting ? engine_min<double>(static_cast<double>(heal), unit_hp / 2.0) / unit_hp * 2.0 : 0.0;
+				value += (fighting ? 1.5 : 0.5) + static_cast<double>(defense) * (fighting ? 0.5 : 0.2) + (room + later) * 0.6;
+			}
+		} else if (ground == key::dome) {
+			// Glass Dome: stacks under it are out of reach of shots and spells from outside it; worth most against
+			// shooters. The other side's stacks under it count against.
+			const double dome_rounds = engine_min<double>(2.0, static_cast<double>(gd::int_field(state, sample, key::rounds, 1)));
+			for (const bool hostile : { true, false }) {
+				for (const Value &stack : gd::items(state, array_value(hostile ? hostiles : allies))) {
+					if (!gd::is_dict(stack) || spell_rules::in_dome(state, battle, stack.ref) || !body_on(state, stack.ref, cells)) {
+						continue;
+					}
+					double kept = 0.5;
+					for (const Value &other : gd::items(state, array_value(hostile ? allies : hostiles))) {
+						if (!gd::is_dict(other) || !shooter(other.ref) || _stack_is_engaged(state, other.ref, battle)) {
+							continue;
+						}
+						const int64_t damage = _estimate_damage(state, other.ref, stack.ref, battle, true, false, battle_rules::_stack_hex_distance(state, other.ref, stack.ref));
+						kept += engine_min<double>(1.0, static_cast<double>(damage) / engine_max<double>(1.0, stack_health(state, stack.ref))) * damage_weight * 0.25 * dome_rounds;
+					}
+					value += hostile ? -kept : kept;
+				}
 			}
 		} else if (ground == key::mire) {
 			// Half speed for a stack standing in it, worth most to one that must still walk; no bracing there.

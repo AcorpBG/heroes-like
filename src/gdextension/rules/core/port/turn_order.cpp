@@ -148,6 +148,8 @@ void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	}
 	// Watchful Light heals its side's most wounded stack.
 	spell_rules::round_start_auras(state, battle, round_number);
+	// Shadow Ranks: the shadows of the round before come back.
+	spell_rules::shadows_return(state, battle);
 	_sync_occupied_hexes(state, battle);
 	_sync_distance_from_hexes(state, battle);
 	_apply_round_pressure_shifts(state, battle);
@@ -311,6 +313,11 @@ void _advance_turn_without_start(State &state, DictRef battle) {
 	// The ending turn's spell mechanics (backlash, tightening roots, curse), then its effects' turns.
 	spell_rules::end_of_turn_mechanics(state, battle, ending_id);
 	spend_effect_turns(state, battle, ending_id);
+	// Clarion Call: the stack takes another full turn at once (spell_tier45_turns.cpp).
+	if (spell_rules::take_extra_turn(state, battle, ending_id)) {
+		_assign_default_target(state, battle);
+		return;
+	}
 	Value turn_order;
 	const bool has_turn_order = state.lookup(battle, str(key::turn_order), turn_order);
 	// A missing key's default [] is an empty Array.
@@ -407,7 +414,9 @@ bool can_wait(State &state, DictRef battle) {
 	if (gd::is_empty(state, active_stack) || _alive_count(state, active_stack) <= 0) {
 		return false;
 	}
-	return !stack_has_waited(state, battle, gd::string_field(state, active_stack, key::battle_id, key::empty));
+	// Clarion Call's extra turn cannot wait.
+	const Atom active_id = gd::string_field(state, active_stack, key::battle_id, key::empty);
+	return !stack_has_waited(state, battle, active_id) && !spell_rules::in_extra_turn(state, battle, active_id);
 }
 
 void _apply_wait(State &state, DictRef battle) {

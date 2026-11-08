@@ -289,7 +289,7 @@ void second_sun_burns(State &state, DictRef battle, DictRef aura) {
 	state.set(school, str(key::school_id), str(gd::string_field(state, aura, key::school_id, key::empty)));
 	std::vector<Atom> burning;
 	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
-		if (gd::is_dict(stack) && living(state, stack.ref) && gd::string_field(state, stack.ref, key::side, key::empty) != side) {
+		if (gd::is_dict(stack) && living(state, stack.ref) && gd::string_field(state, stack.ref, key::side, key::empty) != side && !in_dome(state, battle, stack.ref)) {
 			burning.push_back(battle_id_of(state, stack.ref));
 		}
 	}
