@@ -2669,6 +2669,294 @@
       ],
       "source_sha256": "ac52a09157d7b95fc60f623d86a4453d1704fa40395c41dc899214b83e9814b3",
       "runtime_sha256": "ca4e51f4945f5bdb5c19dd4645faa9c8bd5fbde91b8aada1ffd1766b87ae449d"
+    },
+    {
+      "spell_id": "spell_flame_furrow",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.3,
+      "prompt_subject": "A burst of flames erupting from a cracked glowing furrow in the ground, orange fire licking upward along the seam, embers flying. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_flame_furrow_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_flame_furrow.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        25,
+        10,
+        1230,
+        1254
+      ],
+      "source_sha256": "c1d15b1789d49fe66eaeb416dbdaa3a52b6a88029a50f43eb80e36c48bb2b9b8",
+      "runtime_sha256": "10dede5651c233dd1e0fbdb2540615c5951087f722f68c61684f914652535104"
+    },
+    {
+      "spell_id": "spell_bramble_patch",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Thorny brambles bursting up out of the ground and lacing together, dark green stems, torn leaves and sharp thorns, clods of earth flying. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bramble_patch_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bramble_patch.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        97,
+        10,
+        1226,
+        1228
+      ],
+      "source_sha256": "7a839836b5e4e72ff810c32145e0a2fe0797ccfe5ad84dc4b77d47f171825366",
+      "runtime_sha256": "36dd607b9ff175a950a1230f3bf589ba6446ba25b7cf6530b3342e7f218ad23f"
+    },
+    {
+      "spell_id": "spell_thorn_seed",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.2,
+      "prompt_subject": "A glowing amber seed plunging into the earth in a small burst of soil, thorny green shoots springing up around it. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thorn_seed_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_thorn_seed.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "source_sha256": "a9afb67cda47d78a78048c38c50968c4dd992a868e0bd37c02cb055bf89f8c2a",
+      "runtime_sha256": "9470cd5c711c994a046dc1f02039f3d50e458ba231f2db242a61e14fe4e4a06b"
+    },
+    {
+      "spell_id": "spell_crystal_pillar",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "A pillar of clear faceted crystal thrusting up out of the ground in a burst of white-gold light and flying crystal shards. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_crystal_pillar_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_crystal_pillar.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1248,
+        1254
+      ],
+      "source_sha256": "f9ed707d96c7e57eedf4585f489b53b37d44b83aefe850ee80e4eeb1421e6575",
+      "runtime_sha256": "33569cd0e579ab6592ecea09e029934e6460401ab03761cd2501cbccc47e54e4"
+    },
+    {
+      "spell_id": "spell_murk",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A bank of grey-violet fog rolling in and settling low, thick wisps curling inward, faint silver moonlight on top. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_murk_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_murk.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "4747d22b2ace6aa1d32f918bbddb021db7f13fc4e48577588d7b439304484587",
+      "runtime_sha256": "4e16ea7b53afa1253cd821fb28910a0054823353c9815846c6c242a36c9f66a7"
+    },
+    {
+      "spell_id": "spell_living_wall",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Young trees shooting up out of the ground with twisting trunks and bursting green crowns, soil and roots spraying. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_living_wall_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_living_wall.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "798fd7a5f93c812e8c1719d3ae1cb803cdbcf5b81ce90d9a45f5d8d2fe2d8839",
+      "runtime_sha256": "d37f6dd65f7220e4e711137ac963d8b2c38a318ae7a55874f0cbe2082126cfe2"
+    },
+    {
+      "spell_id": "spell_boundary_line",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "boundary",
+      "scale": 2.45,
+      "prompt_subject": "Upright posts of white-gold light stamping down into the ground on glowing seals, a rope of light snapping taut between them. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_boundary_line_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_boundary_line.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        4,
+        1254,
+        1254
+      ],
+      "source_sha256": "5acb62641b24869ef4c3bbbcdfbd9a5658bf7d93b206decd71d42e0d516e7cc0",
+      "runtime_sha256": "fe56b486620b260df8fd847f0b5173045fbebb8823c4bdec983dd872a6018320"
+    },
+    {
+      "spell_id": "spell_prism_array",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.3,
+      "prompt_subject": "A standing prism crystal rising out of the ground in a flash of split rainbow light, its white-gold facets glinting. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_prism_array_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_prism_array.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "14c942b0c0880c2ca1b8f35be2cec949ad954f090492db3cff4cc542da64cdd8",
+      "runtime_sha256": "8da94e25728d7956132085596ecefd8785c3d2b71adaa5bcfec0d57cb021b9f7"
+    },
+    {
+      "spell_id": "spell_bog_pool",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "The ground turning to dark sucking mire: black-green water welling up with bubbles and mud splashes, reeds bending, violet mist drifting low. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bog_pool_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bog_pool.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1240,
+        1254
+      ],
+      "source_sha256": "178e05da33e26d71b331d050b685b650062f440917d6a862af71806a4f8b36eb",
+      "runtime_sha256": "13f38b4d885a1c11363b7fce01b0a4cd0e2e1cf3de9558aead38d81e85bd19c4"
+    },
+    {
+      "spell_id": "spell_thicket_snare",
+      "school_id": "root",
+      "tier": 4,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A thicket of thorny branches springing up in a ring and snapping shut around the centre, dark green thorns and amber sap. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thicket_snare_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_thicket_snare.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        23,
+        1240,
+        1254
+      ],
+      "source_sha256": "da6e8aae879d81e334dbbac63cb0045454325a31f1d85ccd6372aa0e2fb14c8c",
+      "runtime_sha256": "ed11c899baf57851484d5c077bc7b006ad0173047e0ad45fdde22c6df38c77e9"
+    },
+    {
+      "spell_id": "spell_elder_grove",
+      "school_id": "root",
+      "tier": 4,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Great gnarled trees rising around the centre with a canopy of deep green leaves and shafts of golden light, roots heaving the earth. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_elder_grove_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_elder_grove.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "56ff9d7167fdff789c49526062edc2853a6a5a7f8a594f17b21b56e6dc9ec886",
+      "runtime_sha256": "a3637a8204f3f0e4b51584c9a57891d50c80480f1f6443043e46fa52c2ae5ee6"
+    },
+    {
+      "spell_id": "spell_glass_dome",
+      "school_id": "beacon",
+      "tier": 5,
+      "effect_type": "ground_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A wide dome of clear crystal glass closing over the centre, bright white-gold reflections along its curve and a few sparkles at its rim. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_glass_dome_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_glass_dome.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "86a1ce08b9580d27810aad2482a889f5f5b4107c5b72514b8be992a9a1cf7e45",
+      "runtime_sha256": "e274e54f9ff0ab9383e269c16201de69a1c0f91408375681630fd9f669d9632c"
     }
   ]
 }

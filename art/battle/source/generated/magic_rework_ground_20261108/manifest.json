@@ -1,0 +1,261 @@
+{
+  "schema": "magic_rework_ground_sources_v1",
+  "content_slice_id": "magic-art-audio-20261107",
+  "generation_mode": "imggen --backend codex (the owner's ChatGPT plan), one transparent painting per ground kind",
+  "prompt_template": "Use case: stylized-concept. Asset type: original transparent 2D game art piece for a hand-painted fantasy strategy battlefield seen from a high three-quarter view, the same painterly look as a lush painted battle map: soft natural light from the upper left, gentle painted shading, rich but natural colour, no hard black outlines. One single centred piece with nothing cut off at the edges, on a fully transparent background. No characters, units, creatures, frame, border, text, UI, hex outline or grid lines, no cast shadow beyond the piece itself. Subject: ",
+  "items": [
+    {
+      "ground": "fire_ground",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_flame_furrow"
+      ],
+      "prompt_subject": "A patch of scorched black earth with short licking orange flames, glowing embers and thin curls of smoke. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/fire_ground_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/fire_ground.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1528,
+        1024
+      ],
+      "source_sha256": "654542b01bc42938b60fdbad14a9ab5eae84d86286266c2876556253a8fc0304",
+      "runtime_sha256": "3598b7c0bee1ea21e604df5efb47accfc5f4ad334710926ee051bf96693ada2c",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "bramble_ground",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_bramble_patch"
+      ],
+      "prompt_subject": "A low dense mat of thorny brambles with dark green leaves, curling stems and a few red berries spreading over a patch of earth. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/bramble_ground_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/bramble_ground.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1518,
+        1024
+      ],
+      "source_sha256": "76e9632e3d7c18a5d7f9b9d7cb47fb527ac4a74dffda2f2bb0a8fa535c712378",
+      "runtime_sha256": "adbf369d460a38dd78f69b639776b611eb680ff80dac1c6739e5d4a43993c9b0",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "murk",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_murk"
+      ],
+      "prompt_subject": "A low dense bank of grey-violet fog lying over the ground, soft and thick at its heart, its edges curling away into wisps, faint silver moonlight on top. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/murk_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/murk.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1522,
+        1024
+      ],
+      "source_sha256": "b4ba09783f7011a1f8ed1645ff4d4fbade347c828f078789b11610016d4fa15f",
+      "runtime_sha256": "7e3111e6220d9261147ea68c0e43b10b43a9c1bf43659663557b93c7f3e76b0f",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "mire",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_bog_pool"
+      ],
+      "prompt_subject": "A pool of dark sucking mire: black-green water and brown mud with bubbles, a few reeds and floating leaves, soft muddy edges. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/mire_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/mire.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1524,
+        1024
+      ],
+      "source_sha256": "c3b70f0b6b2bef93acd137633458bb8e4e856454dc632143138236057d8b2000",
+      "runtime_sha256": "fd4bb31bbf019485702785810014bd2e46f641c080c529214fe1044ea45bf3bf",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "grove",
+      "placement": "area",
+      "spell_ids": [
+        "spell_elder_grove"
+      ],
+      "prompt_subject": "A patch of ancient grove floor: twisting mossy roots, fallen leaves, small ferns and soft shafts of golden light falling onto it, open ground in the middle. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/grove_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/grove.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1535,
+        1024
+      ],
+      "source_sha256": "0b9ae6c961b9f63dddb784aa6888918545687ddeea8fdaf62dc0705b8a6fd6b8",
+      "runtime_sha256": "ec1303bf69a4b3f02d2c97816f7fed5326c779f5ccdb72307b2ea261ad0f071d",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 500x500 and center in a 512x512 RGBA transparent canvas."
+    },
+    {
+      "ground": "barrier",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_boundary_line"
+      ],
+      "prompt_subject": "A short upright post of white-gold light standing on a small glowing seal on the ground, a soft halo around it and a few drifting motes. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/barrier_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/barrier.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1530,
+        1024
+      ],
+      "source_sha256": "e3baa8ad050ab4fe499d135c6f1fcc00b495790751e97b66861ba3161b2e7c79",
+      "runtime_sha256": "6b0916a9e565371f759ea46f2f1cd11595146adcaff1616a1069107d36603f28",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "trap",
+      "placement": "flat",
+      "spell_ids": [
+        "spell_thorn_seed"
+      ],
+      "prompt_subject": "A small mound of freshly turned dark soil with a glowing amber seed half-buried in it and a few thorny green shoots coiled around it. It lies flat on the ground, seen from above at a high three-quarter angle, an irregular patch about as wide as it is deep, low enough that a unit standing on it stays readable.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/trap_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/trap.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1522,
+        1024
+      ],
+      "source_sha256": "0ce40c3ff35b53e1ca0c503b72d97d7636b1825587ba06e056b05afb45ad418e",
+      "runtime_sha256": "85cb70971a41027dcc9140ae0a12f616532f72f170f66b93c09a84122ea17793",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 248x248 and center in a 256x256 RGBA transparent canvas."
+    },
+    {
+      "ground": "pillar",
+      "placement": "standing",
+      "spell_ids": [
+        "spell_crystal_pillar"
+      ],
+      "prompt_subject": "A tall pillar of clear faceted crystal rising from the ground with white-gold light inside it, a few small crystal shards at its foot. It stands upright on its own small patch of ground, seen from a high three-quarter angle, its base at the bottom of the picture.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/pillar_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/pillar.png",
+      "source_dimensions": [
+        1159,
+        1356
+      ],
+      "alpha_bounds": [
+        0,
+        22,
+        1135,
+        1356
+      ],
+      "source_sha256": "f2f5d673538346d8aaaa2e8d3971f5ca1d44e15de55d74d372362ee62c59af58",
+      "runtime_sha256": "ee040c7e41d72f599c004323aba375269d5c1a8c906b7e96da681af6e6acd0ff",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 216x280 and place in the battlefield obstacle canvas (288x352, 216 px per hex) centred, its base at y 280 so its ground sits on the anchor (y 256)."
+    },
+    {
+      "ground": "prism",
+      "placement": "standing",
+      "spell_ids": [
+        "spell_prism_array"
+      ],
+      "prompt_subject": "A standing prism crystal on a small crystal base, faceted and glowing white-gold, a thin beam of split light rising from its tip. It stands upright on its own small patch of ground, seen from a high three-quarter angle, its base at the bottom of the picture.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/prism_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/prism.png",
+      "source_dimensions": [
+        1182,
+        1330
+      ],
+      "alpha_bounds": [
+        33,
+        0,
+        1162,
+        1330
+      ],
+      "source_sha256": "6df2a5f1493e1a493e6deb72f6a1956557166917c083f70be2ae3a1ab66f202a",
+      "runtime_sha256": "28ba9a82fe7421844105af6628918f5ffd6ec906bb3f741725b78b2c9b190b07",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 216x280 and place in the battlefield obstacle canvas (288x352, 216 px per hex) centred, its base at y 280 so its ground sits on the anchor (y 256)."
+    },
+    {
+      "ground": "wall",
+      "placement": "standing",
+      "spell_ids": [
+        "spell_living_wall"
+      ],
+      "prompt_subject": "A young living tree with a twisting trunk and a full crown of green leaves, its roots gripping the ground, fresh soil scattered at its foot as if it just shot up. It stands upright on its own small patch of ground, seen from a high three-quarter angle, its base at the bottom of the picture.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/wall_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/wall.png",
+      "source_dimensions": [
+        1295,
+        1214
+      ],
+      "alpha_bounds": [
+        0,
+        10,
+        1287,
+        1198
+      ],
+      "source_sha256": "14a7e70edc37211417f9e258633fabf3cccc8a48a8d53e7048df42f86d9ef932",
+      "runtime_sha256": "282cabd675d497d41843e78425a46d6277ed390e3820cb6c9a50ce2a493b1d54",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 216x280 and place in the battlefield obstacle canvas (288x352, 216 px per hex) centred, its base at y 280 so its ground sits on the anchor (y 256)."
+    },
+    {
+      "ground": "dome",
+      "placement": "over",
+      "spell_ids": [
+        "spell_glass_dome"
+      ],
+      "prompt_subject": "A wide shallow dome of clear crystal glass seen from a high three-quarter view, its faceted surface catching white-gold light, mostly transparent so the ground under it stays visible.",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/dome_source.png",
+      "runtime_path": "res://art/battle/vfx/ground/dome.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "source_sha256": "ca8e47ec59c9a7f442613b4cbf6bb923588b1017ed23ec1f91aa8e37515e68e7",
+      "runtime_sha256": "4b56286d8ce3ae3b691a2f0e4a40d8f220c99fa13a49d4a9da3e99a13ac3cdd6",
+      "runtime_derivation": "Crop nonzero alpha bounds, proportionally Lanczos-fit within 500x500 and center in a 512x512 RGBA transparent canvas."
+    }
+  ]
+}

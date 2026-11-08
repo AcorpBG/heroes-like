@@ -208,7 +208,19 @@
     "spell_black_tide": "vfx_spell_black_tide",
     "spell_wraith_host": "vfx_spell_wraith_host",
     "spell_drowned_host": "vfx_spell_drowned_host",
-    "spell_hollow_crown": "vfx_spell_hollow_crown"
+    "spell_hollow_crown": "vfx_spell_hollow_crown",
+    "spell_flame_furrow": "vfx_spell_flame_furrow",
+    "spell_bramble_patch": "vfx_spell_bramble_patch",
+    "spell_thorn_seed": "vfx_spell_thorn_seed",
+    "spell_crystal_pillar": "vfx_spell_crystal_pillar",
+    "spell_murk": "vfx_spell_murk",
+    "spell_living_wall": "vfx_spell_living_wall",
+    "spell_boundary_line": "vfx_spell_boundary_line",
+    "spell_prism_array": "vfx_spell_prism_array",
+    "spell_bog_pool": "vfx_spell_bog_pool",
+    "spell_thicket_snare": "vfx_spell_thicket_snare",
+    "spell_elder_grove": "vfx_spell_elder_grove",
+    "spell_glass_dome": "vfx_spell_glass_dome"
   },
   "cues": {
     "vfx_placeholder_projectile_path": {
@@ -2411,6 +2423,269 @@
       "render_mode": "spell_target",
       "scale": 2.2,
       "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_flame_furrow": {
+      "spell_id": "spell_flame_furrow",
+      "texture_path": "res://art/battle/vfx/spell_flame_furrow.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_flame_furrow_source.png",
+      "alt_text": "A burst of flames erupting from a cracked glowing furrow in the ground, orange fire licking upward along the seam, embers flying.",
+      "render_mode": "spell_target",
+      "scale": 2.3,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 0,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_bramble_patch": {
+      "spell_id": "spell_bramble_patch",
+      "texture_path": "res://art/battle/vfx/spell_bramble_patch.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bramble_patch_source.png",
+      "alt_text": "Thorny brambles bursting up out of the ground and lacing together, dark green stems, torn leaves and sharp thorns, clods of earth flying.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_thorn_seed": {
+      "spell_id": "spell_thorn_seed",
+      "texture_path": "res://art/battle/vfx/spell_thorn_seed.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thorn_seed_source.png",
+      "alt_text": "A glowing amber seed plunging into the earth in a small burst of soil, thorny green shoots springing up around it.",
+      "render_mode": "spell_target",
+      "scale": 2.2,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 2,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_crystal_pillar": {
+      "spell_id": "spell_crystal_pillar",
+      "texture_path": "res://art/battle/vfx/spell_crystal_pillar.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_crystal_pillar_source.png",
+      "alt_text": "A pillar of clear faceted crystal thrusting up out of the ground in a burst of white-gold light and flying crystal shards.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 0,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_murk": {
+      "spell_id": "spell_murk",
+      "texture_path": "res://art/battle/vfx/spell_murk.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_murk_source.png",
+      "alt_text": "A bank of grey-violet fog rolling in and settling low, thick wisps curling inward, faint silver moonlight on top.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "fogbind",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_living_wall": {
+      "spell_id": "spell_living_wall",
+      "texture_path": "res://art/battle/vfx/spell_living_wall.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_living_wall_source.png",
+      "alt_text": "Young trees shooting up out of the ground with twisting trunks and bursting green crowns, soil and roots spraying.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 2,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_boundary_line": {
+      "spell_id": "spell_boundary_line",
+      "texture_path": "res://art/battle/vfx/spell_boundary_line.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_boundary_line_source.png",
+      "alt_text": "Upright posts of white-gold light stamping down into the ground on glowing seals, a rope of light snapping taut between them.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "boundary",
+      "visual_variant": 0,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_prism_array": {
+      "spell_id": "spell_prism_array",
+      "texture_path": "res://art/battle/vfx/spell_prism_array.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_prism_array_source.png",
+      "alt_text": "A standing prism crystal rising out of the ground in a flash of split rainbow light, its white-gold facets glinting.",
+      "render_mode": "spell_target",
+      "scale": 2.3,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 1,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_bog_pool": {
+      "spell_id": "spell_bog_pool",
+      "texture_path": "res://art/battle/vfx/spell_bog_pool.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bog_pool_source.png",
+      "alt_text": "The ground turning to dark sucking mire: black-green water welling up with bubbles and mud splashes, reeds bending, violet mist drifting low.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "fogbind",
+      "visual_variant": 2,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_thicket_snare": {
+      "spell_id": "spell_thicket_snare",
+      "texture_path": "res://art/battle/vfx/spell_thicket_snare.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thicket_snare_source.png",
+      "alt_text": "A thicket of thorny branches springing up in a ring and snapping shut around the centre, dark green thorns and amber sap.",
+      "render_mode": "spell_target",
+      "scale": 2.5,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "clamp",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_elder_grove": {
+      "spell_id": "spell_elder_grove",
+      "texture_path": "res://art/battle/vfx/spell_elder_grove.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_elder_grove_source.png",
+      "alt_text": "Great gnarled trees rising around the centre with a canopy of deep green leaves and shafts of golden light, roots heaving the earth.",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "binding",
+      "visual_variant": 1,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_glass_dome": {
+      "spell_id": "spell_glass_dome",
+      "texture_path": "res://art/battle/vfx/spell_glass_dome.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_glass_dome_source.png",
+      "alt_text": "A wide dome of clear crystal glass closing over the centre, bright white-gold reflections along its curve and a few sparkles at its rim.",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "motion_profile": "protection",
+      "visual_variant": 2,
+      "visual_strength": 1.065
+    }
+  },
+  "spell_ground": {
+    "fire_ground": {
+      "texture_path": "res://art/battle/vfx/ground/fire_ground.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/fire_ground_source.png",
+      "placement": "flat",
+      "scale": 1.55,
+      "motion": "flicker",
+      "spell_ids": [
+        "spell_flame_furrow"
+      ],
+      "alt_text": "A patch of scorched black earth with short licking orange flames, glowing embers and thin curls of smoke."
+    },
+    "bramble_ground": {
+      "texture_path": "res://art/battle/vfx/ground/bramble_ground.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/bramble_ground_source.png",
+      "placement": "flat",
+      "scale": 1.55,
+      "spell_ids": [
+        "spell_bramble_patch"
+      ],
+      "alt_text": "A low dense mat of thorny brambles with dark green leaves, curling stems and a few red berries spreading over a patch of earth."
+    },
+    "murk": {
+      "texture_path": "res://art/battle/vfx/ground/murk.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/murk_source.png",
+      "placement": "flat",
+      "scale": 2.0,
+      "motion": "drift",
+      "alpha": 0.82,
+      "spell_ids": [
+        "spell_murk"
+      ],
+      "alt_text": "A low dense bank of grey-violet fog lying over the ground, soft and thick at its heart, its edges curling away into wisps, faint silver moonlight on top."
+    },
+    "mire": {
+      "texture_path": "res://art/battle/vfx/ground/mire.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/mire_source.png",
+      "placement": "flat",
+      "scale": 1.55,
+      "spell_ids": [
+        "spell_bog_pool"
+      ],
+      "alt_text": "A pool of dark sucking mire: black-green water and brown mud with bubbles, a few reeds and floating leaves, soft muddy edges."
+    },
+    "grove": {
+      "texture_path": "res://art/battle/vfx/ground/grove.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/grove_source.png",
+      "placement": "area",
+      "scale": 3.4,
+      "spell_ids": [
+        "spell_elder_grove"
+      ],
+      "alt_text": "A patch of ancient grove floor: twisting mossy roots, fallen leaves, small ferns and soft shafts of golden light falling onto it, open ground in the middle."
+    },
+    "barrier": {
+      "texture_path": "res://art/battle/vfx/ground/barrier.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/barrier_source.png",
+      "placement": "flat",
+      "scale": 1.6,
+      "motion": "breathe",
+      "spell_ids": [
+        "spell_boundary_line"
+      ],
+      "alt_text": "A short upright post of white-gold light standing on a small glowing seal on the ground, a soft halo around it and a few drifting motes."
+    },
+    "trap": {
+      "texture_path": "res://art/battle/vfx/ground/trap.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/trap_source.png",
+      "placement": "flat",
+      "scale": 1.1,
+      "spell_ids": [
+        "spell_thorn_seed"
+      ],
+      "alt_text": "A small mound of freshly turned dark soil with a glowing amber seed half-buried in it and a few thorny green shoots coiled around it."
+    },
+    "pillar": {
+      "texture_path": "res://art/battle/vfx/ground/pillar.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/pillar_source.png",
+      "placement": "standing",
+      "scale": 1.25,
+      "spell_ids": [
+        "spell_crystal_pillar"
+      ],
+      "alt_text": "A tall pillar of clear faceted crystal rising from the ground with white-gold light inside it, a few small crystal shards at its foot."
+    },
+    "prism": {
+      "texture_path": "res://art/battle/vfx/ground/prism.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/prism_source.png",
+      "placement": "standing",
+      "scale": 1.2,
+      "spell_ids": [
+        "spell_prism_array"
+      ],
+      "alt_text": "A standing prism crystal on a small crystal base, faceted and glowing white-gold, a thin beam of split light rising from its tip."
+    },
+    "wall": {
+      "texture_path": "res://art/battle/vfx/ground/wall.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/wall_source.png",
+      "placement": "standing",
+      "scale": 1.4,
+      "spell_ids": [
+        "spell_living_wall"
+      ],
+      "alt_text": "A young living tree with a twisting trunk and a full crown of green leaves, its roots gripping the ground, fresh soil scattered at its foot as if it just shot up."
+    },
+    "dome": {
+      "texture_path": "res://art/battle/vfx/ground/dome.png",
+      "source_path": "res://art/battle/source/generated/magic_rework_ground_20261108/dome_source.png",
+      "placement": "over",
+      "scale": 3.25,
+      "motion": "breathe",
+      "alpha": 0.78,
+      "lift": 0.2,
+      "spell_ids": [
+        "spell_glass_dome"
+      ],
+      "alt_text": "A wide shallow dome of clear crystal glass seen from a high three-quarter view, its faceted surface catching white-gold light, mostly transparent so the ground under it stays visible."
     }
   }
 }

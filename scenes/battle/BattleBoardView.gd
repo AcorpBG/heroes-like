@@ -227,7 +227,7 @@ const TERRAIN_AMBIENT_PROFILES := {
 # tuft halfway across at OBSTACLE_ART_ANCHOR_Y; that point stands on the hex
 # centre, or on the seam of a two-hex obstacle (tools/build_battlefield_art.py).
 const OBSTACLE_ART_ROOT := "res://art/battle/runtime/obstacles"
-# The hex spells' ground until its art (fill, outline).
+# The hex spells' ground without its painting (fill, outline).
 const SPELL_GROUND_TINTS := {
 	"fire_ground": [Color(1.0, 0.42, 0.12, 0.34), Color(1.0, 0.64, 0.22, 0.9)],
 	"bramble_ground": [Color(0.18, 0.36, 0.12, 0.45), Color(0.46, 0.70, 0.26, 0.9)],
@@ -2338,6 +2338,7 @@ func _draw_board() -> void:
 	_draw_order_path(hex_layout)
 	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_stack_tokens(hex_layout, stack_cells)
+	_draw_spell_ground_over(hex_layout)
 	if not _battle.has("playback_event"):
 		for id in _spell_target_candidates:
 			if not stack_cells.has(id): continue
@@ -3045,19 +3046,63 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 		var color := _controller_color(String(objective.get("control_side", "neutral")))
 		_draw_objective_marker(center, objective, color, float(hex_layout.get("radius", 1.0)))
 
-## Ground the hex spells laid (battle.spell_ground), in stand-in tints until
-## its art: burning ground, brambles, murk, a crystal pillar, a seed, living
-## trees, a boundary line, a prism crystal and mire.
-func _draw_spell_ground(hex_layout: Dictionary) -> void:
+## The ground the hex spells laid this round (battle.spell_ground).
+func _live_spell_ground() -> Array:
 	var entries = _battle.get("spell_ground", [])
-	if not (entries is Array) or entries.is_empty():
-		return
+	if not (entries is Array):
+		return []
 	var round_now := int(_battle.get("round", 1))
-	var radius := float(hex_layout.get("radius", 20.0))
+	var live := []
 	for entry in entries:
-		if not (entry is Dictionary) or int(entry.get("until_round", 0)) < round_now:
-			continue
+		if entry is Dictionary and int(entry.get("until_round", 0)) >= round_now:
+			live.append(entry)
+	return live
+
+## A ground kind's painting (battle_vfx_manifest spell_ground) and how it lies:
+## "flat" under the stacks on each of its hexes, "area" under them once over
+## its picked hex and the ring around it, "standing" among them on each hex
+## like an obstacle, "over" above them on its picked hex (Glass Dome). "scale"
+## is its size in hex widths (of an obstacle's canvas when standing), "motion"
+## how it moves while the board's ambient motion runs; "alpha" and "lift" (in
+## hex widths) are optional.
+func _spell_ground_art(kind: String) -> Dictionary:
+	_load_battle_vfx_manifest()
+	var rows: Dictionary = _battle_vfx_manifest.get("spell_ground", {}) if _battle_vfx_manifest.get("spell_ground", {}) is Dictionary else {}
+	return rows.get(kind, {}) if rows.get(kind, {}) is Dictionary else {}
+
+func _spell_ground_texture(kind: String) -> Texture2D:
+	return _battle_vfx_texture_for_path(String(_spell_ground_art(kind).get("texture_path", ""))) as Texture2D
+
+## A ground entry's picked hex: its first cell (an area's middle).
+func _spell_ground_anchor(entry: Dictionary, hex_layout: Dictionary) -> Vector2:
+	for cell in entry.get("cells", []):
+		if cell is Dictionary:
+			return _hex_center(Vector2i(int(cell.get("q", -1)), int(cell.get("r", -1))), hex_layout)
+	return Vector2.ZERO
+
+## Ground the hex spells laid, painted: burning ground, brambles, murk, mire, a
+## boundary line and a seed on each of their hexes, a thicket and a grove over
+## their area, all under the stacks. The standing kinds are drawn with the
+## stacks and Glass Dome over them; a kind without its painting keeps a plain
+## tint.
+func _draw_spell_ground(hex_layout: Dictionary) -> void:
+	var radius := float(hex_layout.get("radius", 20.0))
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * radius))
+	for entry in _live_spell_ground():
 		var kind := String(entry.get("ground", ""))
+		var art := _spell_ground_art(kind)
+		var texture := _spell_ground_texture(kind)
+		if texture != null:
+			match String(art.get("placement", "")):
+				"area":
+					_draw_spell_ground_piece(texture, art, _spell_ground_anchor(entry, hex_layout), hex_width, 0.0, false)
+				"flat":
+					# Neighbouring hexes alternate the painting's facing and move out of step.
+					for cell in entry.get("cells", []):
+						if cell is Dictionary:
+							var hex := Vector2i(int(cell.get("q", -1)), int(cell.get("r", -1)))
+							_draw_spell_ground_piece(texture, art, _hex_center(hex, hex_layout), hex_width, float(hex.x * 3 + hex.y), posmod(hex.x + hex.y, 2) == 1)
+			continue
 		var tint: Array = SPELL_GROUND_TINTS.get(kind, SPELL_GROUND_TINTS["murk"])
 		for cell in entry.get("cells", []):
 			if not (cell is Dictionary):
@@ -3068,6 +3113,66 @@ func _draw_spell_ground(hex_layout: Dictionary) -> void:
 				continue
 			var standing := kind in ["pillar", "wall", "prism"]
 			_draw_hex(center, radius * (0.6 if standing else 0.9), tint[0], tint[1], 2.5 if standing else 1.2)
+
+## One flat, area or over piece of painted ground on a point, mirrored when
+## asked. Burning ground flickers, murk drifts a little, light breathes.
+func _draw_spell_ground_piece(texture: Texture2D, art: Dictionary, center: Vector2, hex_width: float, salt: float, mirrored: bool) -> void:
+	var size := Vector2(hex_width, hex_width * 0.95) * float(art.get("scale", 1.0))
+	var phase := _terrain_ambient_phase + salt
+	var alpha := float(art.get("alpha", 1.0))
+	var offset := Vector2(0.0, -hex_width * float(art.get("lift", 0.0)))
+	match String(art.get("motion", "")):
+		"flicker":
+			alpha *= 0.9 + 0.1 * sin(phase * 3.0)
+		"drift":
+			alpha *= 0.95 + 0.05 * sin(phase * 0.7)
+			offset.x += sin(phase * 0.45) * hex_width * 0.05
+		"breathe":
+			alpha *= 0.9 + 0.1 * sin(phase * 1.5)
+	draw_set_transform(center + offset, 0.0, Vector2(-1.0 if mirrored else 1.0, 1.0))
+	draw_texture_rect(texture, Rect2(-size * 0.5, size), false, Color(1.0, 1.0, 1.0, alpha))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+## The standing pieces of painted spell ground (a crystal pillar, a prism, the
+## living wall's trees), one per hex, for the stacks' row order.
+func _standing_spell_ground_pieces(hex_layout: Dictionary) -> Array:
+	var pieces := []
+	for entry in _live_spell_ground():
+		var kind := String(entry.get("ground", ""))
+		if String(_spell_ground_art(kind).get("placement", "")) != "standing" or _spell_ground_texture(kind) == null:
+			continue
+		for cell in entry.get("cells", []):
+			if cell is Dictionary:
+				var hex := Vector2i(int(cell.get("q", -1)), int(cell.get("r", -1)))
+				pieces.append({"kind": kind, "cells": [{"q": hex.x, "r": hex.y}], "id": "%s_%d_%d" % [kind, hex.x, hex.y], "center": _hex_center(hex, hex_layout)})
+	return pieces
+
+## A standing piece, drawn as the battlefield's props are: its canvas scaled to
+## the hex and its art's scale, its ground anchor on the hex centre, a soft
+## shadow under it.
+func _draw_standing_spell_ground(piece: Dictionary, hex_layout: Dictionary) -> void:
+	var kind := String(piece.get("kind", ""))
+	var texture := _spell_ground_texture(kind)
+	if texture == null:
+		return
+	var piece_scale := float(_spell_ground_art(kind).get("scale", 1.0))
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * float(hex_layout.get("radius", 1.0))))
+	var center: Vector2 = piece.get("center", Vector2.ZERO)
+	var shadow_size := Vector2(hex_width * 1.05, hex_width * 0.42) * piece_scale
+	draw_texture_rect(_soft_glow(), Rect2(center + Vector2(hex_width * 0.05, hex_width * 0.08) - shadow_size * 0.5, shadow_size), false, OBSTACLE_SHADOW_COLOR)
+	var rect := _obstacle_art_rect(piece, hex_layout)
+	draw_texture_rect(texture, Rect2(center + (rect.position - center) * piece_scale, rect.size * piece_scale), false)
+
+## Painted ground over its picked hex and the stacks around it (Glass Dome),
+## light enough that they stay readable.
+func _draw_spell_ground_over(hex_layout: Dictionary) -> void:
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * float(hex_layout.get("radius", 1.0))))
+	for entry in _live_spell_ground():
+		var kind := String(entry.get("ground", ""))
+		var art := _spell_ground_art(kind)
+		var texture := _spell_ground_texture(kind)
+		if texture != null and String(art.get("placement", "")) == "over":
+			_draw_spell_ground_piece(texture, art, _spell_ground_anchor(entry, hex_layout), hex_width, 0.0, false)
 
 func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float, color: Color, width: float) -> void:
 	var stack := BattleRulesScript._get_stack_by_id(_battle, battle_id)
@@ -3317,6 +3422,8 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 	# "!" sorts an obstacle before the stacks of its own row, so they stand in front of it.
 	for obstacle in BattleRulesScript.battle_obstacles(_battle):
 		visual_rows.append({"obstacle": obstacle, "battle_id": "!" + String(obstacle.get("id", "")), "center": _obstacle_center(obstacle, hex_layout)})
+	for piece in _standing_spell_ground_pieces(hex_layout):
+		visual_rows.append({"spell_ground": piece, "battle_id": "!" + String(piece.get("id", "")), "center": piece.get("center", Vector2.ZERO)})
 	var ghost := _strike_ghost(hex_layout)
 	if not ghost.is_empty():
 		visual_rows.append({"ghost": true, "battle_id": "~ghost", "center": ghost.get("center", Vector2.ZERO)})
@@ -3331,6 +3438,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var row: Dictionary = row_value if row_value is Dictionary else {}
 		if row.has("obstacle"):
 			_draw_battle_obstacle(row.get("obstacle", {}), hex_layout)
+			continue
+		if row.has("spell_ground"):
+			_draw_standing_spell_ground(row.get("spell_ground", {}), hex_layout)
 			continue
 		# The ghost is the active stack, faded, where it will stand to strike.
 		var is_ghost := row.has("ghost")
@@ -3390,7 +3500,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 	_draw_combat_vfx_foreground(hex_layout, stack_cells)
 	for row_value in visual_rows:
 		var row: Dictionary = row_value
-		if row.has("obstacle") or row.has("ghost"):
+		if row.has("obstacle") or row.has("spell_ground") or row.has("ghost"):
 			continue
 		var stack: Dictionary = row.stack
 		var battle_id := String(row.battle_id)
