@@ -177,7 +177,7 @@ double _damage_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 	const int64_t heat = gd::int_field(state, spell_effect(state, spell), key::heat, 0);
 	if (heat > 0) {
 		if (gd::add(gd::int_field(state, target, key::spell_heat, 0), heat) >= 3) {
-			const int64_t burst = spell_rules::heat_burst_damage(spell_rules::spell_power_against(state, enemy_hero, battle, target));
+			const int64_t burst = spell_rules::heat_burst_damage(spell_rules::spell_power_against(state, enemy_hero, battle, target, spell));
 			score += variant_min_float(1.0, static_cast<double>(burst) / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, target, key::total_health, 0)))) * _w(state, key::spell_damage_share);
 		} else {
 			score += 0.4;

@@ -209,11 +209,6 @@ void Store::append_spell_scrolls(const Value &root, std::vector<Message> &messag
 		if (spell_id.empty() || tier <= 0) {
 			continue;
 		}
-		// An unreleased spell has no scroll yet (docs/magic-system.md, Build order).
-		Value unreleased;
-		if (data_.lookup(spell.ref, data_.string("unreleased"), unreleased) && unreleased.kind == Kind::Bool && unreleased.b) {
-			continue;
-		}
 		const std::string artifact_id = "artifact_scroll_" + (begins_with(spell_id, "spell_") ? spell_id.substr(6) : spell_id);
 		if (!taken.insert(artifact_id).second) {
 			continue;

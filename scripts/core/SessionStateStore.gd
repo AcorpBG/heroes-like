@@ -3,7 +3,7 @@ extends RefCounted
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 
-const SAVE_VERSION := 9
+const SAVE_VERSION := 10
 const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
 const LAUNCH_MODE_CAMPAIGN := "campaign"
@@ -14,7 +14,7 @@ const GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG := "generated_random_map_materia
 const GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY := "generated_map_runtime_materialization"
 
 class SessionData:
-	const SAVE_VERSION := 9
+	const SAVE_VERSION := 10
 	const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 	const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
 	const LAUNCH_MODE_CAMPAIGN := "campaign"

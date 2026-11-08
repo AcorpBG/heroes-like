@@ -127,7 +127,7 @@ Atom mechanic(State &state, DictRef spell) {
 }
 
 DictRef terms(State &state, DictRef hero, DictRef spell) {
-	return spell_rules::resolve_mechanic(state, dict_value(effect_of(state, spell)), spell_rules::spell_power(state, hero));
+	return spell_rules::resolve_mechanic(state, dict_value(effect_of(state, spell)), spell_rules::spell_power(state, hero, spell));
 }
 
 Atom effect_text(State &state, DictRef hero, DictRef spell, DictRef mine) {
@@ -390,7 +390,7 @@ StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_
 			watch_.push_back(zone);
 		}
 	}
-	rows_ = levels::terrain_rows(state, dict_value(session), mover.level);
+	grid_ = levels::terrain_grid(state, dict_value(session), mover.level);
 	grass_halves_ = terrain_halves(state, key::grass);
 	if (mover.hero != 0) {
 		road_halves_ = gd::int_field(state, mover.hero, key::map_road_until_day, 0) >= mover.day ? 1 : 2;
@@ -421,14 +421,7 @@ bool StepCosts::on_road(Vector2i tile) const {
 }
 
 Atom StepCosts::terrain_at(Vector2i tile) const {
-	if (tile.y < 0 || tile.y >= state_->array_size(rows_)) {
-		return key::rock;
-	}
-	const Value row = state_->at(rows_, tile.y);
-	if (!gd::is_array(row) || tile.x < 0 || tile.x >= state_->array_size(row.ref)) {
-		return key::rock;
-	}
-	return gd::stringify(*state_, state_->at(row.ref, tile.x));
+	return levels::terrain_grid_at(*state_, grid_, tile.x, tile.y);
 }
 
 int64_t StepCosts::ground_halves(Atom terrain_id) const {

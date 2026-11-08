@@ -28,7 +28,7 @@ namespace key = state::key;
 namespace {
 
 constexpr int64_t DEFAULT_STEP_LIMIT = 240; // BattleAutoResolveRules.DEFAULT_STEP_LIMIT
-constexpr int64_t SAVE_VERSION = 9; // SessionStateStore.SAVE_VERSION
+constexpr int64_t SAVE_VERSION = 10; // SessionStateStore.SAVE_VERSION
 
 // d.get(key, {}) where the Dictionary is passed on: the stored one, or a new one.
 Value field_or_new_dict(State &state, DictRef dict, Atom field) {

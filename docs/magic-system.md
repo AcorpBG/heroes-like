@@ -1,6 +1,6 @@
 # Magic system
 
-The owner reworked magic on 2026-11-06 and 2026-11-07, settling it draft by draft on a local plan page (`.artifacts/magic_atlas/magic_plan.html`, built by `.artifacts/magic_atlas/build/plan.py`; magic pages stay local views, never published). This doc holds the rules and the build order. The 139 spells and 138 mechanics are in `docs/magic-system-spells.md`. Slices 1 to 3 of the build order are in the game, on today's spells, and the new spells enter content unreleased slice by slice. Today's spells stay the live ones, described in `docs/magic-system-expansion-foundation.md` and `docs/battle-spell-effects.md`, which this doc replaces at the switch (`magic-switch-20261107`).
+The owner reworked magic on 2026-11-06 and 2026-11-07, settling it draft by draft on a local plan page (`.artifacts/magic_atlas/magic_plan.html`, built by `.artifacts/magic_atlas/build/plan.py`; magic pages stay local views, never published). This doc holds the rules and the build order. The 139 spells and 138 mechanics are in `docs/magic-system-spells.md`. The whole build order is in the game: since the switch (`magic-switch-20261107`, 2026-11-08) the 139 spells are the live ones and the 119 before them are retired. This doc replaces `docs/magic-system-expansion-foundation.md` and `docs/battle-spell-effects.md`, which describe the old magic. Below, "today" and "today's" mean the game before the rework.
 
 ## Why
 
@@ -45,14 +45,14 @@ When the map is made, every town draws its own guild: at each level, a third of 
 | 4 | 4 | 24, 6 per school | 4 | 8 |
 | 5 | 5 | 12, 3 per school | 4 | 4 |
 
-A full guild offers 41 of the 123 guild spells. Each spell of the town faction's preferred school (`preferred_spell_school_id` in `factions.json`) is twice as likely to be drawn as any other. A town keeps its draw (`guild_spell_ids` in its state) through captures and saves; a save from before the draws draws on load, from the game's seed and the town's placement like a new game. Until the switch the draw runs on today's 119 spells and each faction's school today (Lens for Sunvault, Mire for Mireclaw), with the third rounded to the nearest spell: 12, 7, 9, 6 and 5 of 36, 22, 26, 19 and 16. The exact odds of a draw without replacement, as spells of one school per town:
+A full guild offers 41 of the 123 guild spells. Each spell of the town faction's preferred school (`preferred_spell_school_id` in `factions.json`) is twice as likely to be drawn as any other. A town keeps its draw (`guild_spell_ids` in its state) through captures and saves; a save from before the draws, or one whose draw names a retired spell, draws on load, from the game's seed and the town's placement like a new game. The exact odds of a draw without replacement, as spells of one school per town:
 
 | Weight | Level 2 (12 drawn) | Level 3 (12) | Level 4 (8) | Level 5 (4) | Levels 2 to 5 (36) | Level 5 has none of it |
 |---|---|---|---|---|---|---|
 | ×1, no preference | 3.0 | 3.0 | 2.0 | 1.0 | 9.0 | 25% |
 | ×2, the owner's answer | 4.4 | 4.4 | 2.9 | 1.5 | 13.2 | 9% |
 
-Learning stays free: a hero in an own town learns everything its guild offers up to the hero's level, and shrines and other map sites teach guild spells of their tier.
+Learning stays free: a hero in an own town learns everything its guild offers up to the hero's level, and shrines and other map sites teach guild spells of their tier. A site row names the tiers it teaches (`learn_spell_tiers` in `resource_sites.json`, one spell for each entry); each placed site draws its spells once from the tier's guild spells, by its placement, so two sites of one kind teach different spells and a site teaches the same ones every time it is read.
 
 ## Scrolls
 
@@ -235,7 +235,7 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 
 No faction owns a school. Each prefers the school its spells, town library and creatures belong to today, moved to the four:
 
-| Faction | Prefers | Today |
+| Faction | Prefers | Before the rework |
 |---|---|---|
 | Embercourt | Beacon | 24 of its heroes' 35 starting spells, 5 of 8 library spells; 25 of 27 creatures resist Beacon. Next best: Furnace. |
 | Sunvault | Beacon | Its school, Lens, joins Beacon: 32 of 34 starting spells are Lens or Beacon. |
@@ -248,29 +248,25 @@ The bonus, by the owner's answers:
 
 - In the faction's towns each spell of that school is twice as likely to be drawn (the table above).
 - The faction's heroes cast every spell of it, guild or scroll, in battle and on the map, at 1 more spell power.
-- They start with mastery 1 in it, which takes one of the hero's 6 specialty slots like any mastery. Today all 66 heroes start with one specialty and none with a mastery, so a faction hero starts with two and chooses the other 4.
+- They start with mastery 1 in it, which takes one of the hero's 6 specialty slots like any mastery. Before the switch all 66 heroes started with one specialty and none with a mastery, so a faction hero now starts with two and chooses the other 4.
 - A hero's faction is the one it belongs to, whoever hires it.
 
 Together, a faction hero's preferred-school spell does about a fifth to a quarter more than another hero's at spell power 5. It does more against an enemy hero whose Knowledge is close to the caster's power, because the extra point is not resisted: about 37% more damage at power 8 against Knowledge 6.
 
-## What changes
+## What the switch changed
 
-Counted from the content at d6d472702.
+`magic-switch-20261107` made the 139 spells the live ones. Counts are from the content at the switch.
 
-- **Content.**
-  - `spells.json`: today's 119 spells go and the 139 come in, each with a new id.
-  - `heroes.json`: 203 starting spells on 66 heroes get new picks, and each hero gains its faction's mastery. `encounters.json`: 250 starting spells on 116 neutral commanders get new picks.
-  - `towns.json`: the 45 fixed library spells go; guild draws replace them. `factions.json`: each faction names its preferred school.
-  - `resource_sites.json`: 72 taught spells on 36 sites move to tier picks. `random_map_generator_data_model.json` names 38 spell ids and `homm3_re_reward_object_proxy_catalog.json` names 1.
-  - `hero_specialties.json`: seven school masteries become four. `units.json`: 61 creatures' school resistances move. `artifacts.json`: Trailsinger Boots and Choir Tuning Fork name a school.
-  - `spell_icons.json` (119 icons; 51 entries on Lens, Mire or Old Measure), `battle_vfx_manifest.json` (97 spell cues), `audio_production_banks.json` (119 entries) and `animation_event_cues.json` follow the new spells.
-  - Spell scrolls on the map and in rewards become worn items.
-- **Native rules** (`src/gdextension/rules/core/port/`): `spell_rules*.cpp`, `spell_battle.cpp`, `spell_events.cpp`, `battle_ai_spell_choice.cpp`, `battle_ai_spell_scores.cpp`, `commander_payload.cpp`, `content_validate.cpp`, the day's mana in `day_economy.cpp`, guilds in the town rules, scrolls in `artifact_rules.cpp`, `generated_reward_rules.cpp` and `overworld_rules_site_rewards.cpp`, and the screens' data in `human_registry.cpp`. The 112 new battle mechanics include 25 new statuses; there are 14 new map mechanics. `SpellRules.gd` stays a thin wrapper.
-- **Screens.** The spellbook (`SpellbookView.gd`), battle casting and target picking (`BattleShell.gd`, `BattleBoardView.gd`), the town guild (`TownShell.gd`, `TownBuildingPanelView.gd`), map casting (`OverworldShell.gd`), the hero sheet and exchange (worn scrolls, masteries). Spell texts show their numbers at the caster's power.
-- **Computer players.** A battle value for every new mechanic and target choice among all stacks; map values for the map spells; wearing and fetching scrolls.
-- **Art and sound.** An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each, badges for the 25 new statuses; the four school sigils stay.
-- **Saves.** Each learned spell in an old save becomes a new spell of the same tier and kind, from the school its school moves to; towns get their guild draws on load; heroes get their faction's mastery on load.
-- **Tests and docs.** The core case `magic_spell_schema_report` and the content check's spell domains follow the new spells. At the switch this doc replaces `docs/magic-system-expansion-foundation.md` and `docs/battle-spell-effects.md`; `docs/shared-spellbook-and-town-learning.md`, `docs/spell-effect-variety.md`, `docs/spell-system-player-balance-audit.md` and `docs/magic-school-availability-strategic-influence-report.md` describe today's magic and are updated or archived with it.
+- **Spells.** `spells.json` holds the 139 spells and none is marked unreleased; the 119 old ones are gone. `retired_spells.json` names each old spell's replacement: a spell of the same kind from the school its school moved to, of the same tier for 102 of them and a tier off for the 17 with no match at their tier; old tier 1 spells became basic spells. It also maps the merged masteries (Lens and Old Measure to Beacon, Mire to Veil). The content check refuses a retired id that is still a spell and a replacement that is missing or scroll-only.
+- **Starting spells.** 203 starting spells on the 66 heroes and 250 on neutral commanders went through that map, without duplicates. Each hero's `starting_specialties` gained its faction's mastery.
+- **Schools.** Four schools and the basic tier, in the content check and the rules (`SpellRules.gd` keeps the list for screens). `factions.json`: Sunvault prefers Beacon and Mireclaw Veil. `hero_specialties.json`: the Lens, Mire and Old Measure masteries went. `units.json`: 61 creatures' Lens, Mire and Old Measure resistances moved, as above.
+- **Spell power.** A hero casts its own faction's preferred school at 1 more spell power (`preferred_school_power` in `spell_battle.cpp`): every spell power the rules ask for names its spell, in battle, on the map and in the battle AI's estimates. A neutral commander has no faction.
+- **Sites.** The 36 sites that taught fixed spells (60 in all) name their tiers instead (`learn_spell_tiers`), drawn per placed site as Guilds and learning says. Generated maps already placed shrines, vaults and scrolls by tier. The map generator's data model and reward proxy catalog keep their `spell_*` names: they name the map objects H3MapEd places, not spells, and changing them would change generated maps; the catalog's unread `native_spell_id` label went.
+- **Items.** Choir Tuning Fork's Lens bonus is a Beacon bonus. Trailsinger Boots make Beacon map spells cost 1 mana less. 23 artifacts and 2 sets moved their accord label (Lens to Beacon, Mire to Veil); the label only describes them.
+- **Art and sound.** The old spells' rows left `spell_icons.json`, the three merged schools' sigils `spell_school_icons.json`, the old cues `battle_vfx_manifest.json` (its `spell_cues` and 97 `cues`) and the old banks `audio_production_banks.json`.
+- **Saves.** The save version is 10. Loading an older save converts it through `retired_spells.json` (`overworld_state_normalize.cpp`): learned, starting, reward and lesson spells become their replacements, without duplicates; worn and carried scrolls become the replacement's scroll, and a second copy of one is lost as on the map; masteries become their merged school's, at most rank 4; a hero with a free specialty slot gains its faction's mastery; a town whose guild draw names a retired spell draws again. The load marks it legacy, as for any older version.
+- **Left for a cleanup slice.** The old effect types' native code and battle AI scores, the old spells' effects in `BattleBoardView.gd`, their icon and effect textures, the merged schools' sigils and insignia cells, the tests built on the old spells, and the old lists in `tools/generate_spell_icon_assets.py` and the audio generation sheets. Nothing live reads them.
+- **Docs.** The docs on the old magic (`docs/magic-system-expansion-foundation.md`, `docs/battle-spell-effects.md`, `docs/shared-spellbook-and-town-learning.md`, `docs/spell-effect-variety.md`, `docs/spell-system-player-balance-audit.md`, `docs/magic-school-availability-strategic-influence-report.md`) say at the top that this doc replaces them.
 
 ## Build order
 
@@ -287,7 +283,7 @@ Each slice is in `PLAN.md` and `ops/progress.json`. Rule changes go into the nat
 9. `magic-art-audio-20261107`: icons, battle effects, sounds and status badges, before or with the switch.
 10. `magic-switch-20261107`: today's spells go and the new ones go live, with the four schools, masteries, the preference's hero bonuses, moved resistances, new picks in content, save conversion, tests and docs.
 
-Slices 1 to 3 change today's game and stay. Slices 4 to 8 add the new spells to `spells.json` marked unreleased: the content check, the battle simulator and the focused checks use them, while guilds, hero and commander starts, rewards and sites leave them out. The switch removes today's spells and that mark together. A spell enters content in the slice that brings the last mechanic it needs; the Mechanics column of the spells doc says which.
+All ten slices are in the game; the switch came last, on 2026-11-08. Slices 1 to 3 changed the old game and stayed. Slices 4 to 8 added the new spells to `spells.json` marked unreleased, so that the content check, the battle simulator and the focused checks used them while guilds, hero and commander starts, rewards and sites left them out; the switch removed the old spells and that mark together. A spell entered content in the slice that brought the last mechanic it needs; the Mechanics column of the spells doc says which.
 
 ## Owner decisions
 

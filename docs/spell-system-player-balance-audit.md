@@ -1,5 +1,7 @@
 # Spell System Player-Balance Audit
 
+Superseded on 2026-11-08: this describes the magic before the rework. The live rules are in `docs/magic-system.md` and the spells in `docs/magic-system-spells.md`.
+
 Date: 2026-05-27
 Task: #10184
 Status: baseline audit findings; catalog counts were updated by `magic-school-availability-strategic-influence-10184`

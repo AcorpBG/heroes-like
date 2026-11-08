@@ -42,7 +42,7 @@ using state::Value;
 namespace key = state::key;
 
 // SessionStateStore.SAVE_VERSION.
-constexpr int64_t kSaveVersion = 9;
+constexpr int64_t kSaveVersion = 10;
 // NativeSceneryRules.PRESENTATION_VERSION.
 constexpr int64_t kSceneryPresentationVersion = 2;
 

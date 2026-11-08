@@ -32,13 +32,10 @@ constexpr int64_t kMaxControlResistancePct = 80;
 
 // SpellRules.SPELL_SCHOOL_IDS.
 constexpr Atom kSpellSchoolIds[] = {
-	key::beacon,
-	key::mire,
-	key::lens,
-	key::root,
 	key::furnace,
+	key::root,
+	key::beacon,
 	key::veil,
-	key::old_measure,
 };
 
 // BattleDamageRules.HERO_SPECIALTY_BATTLE_KEYS.

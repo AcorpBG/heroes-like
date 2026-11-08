@@ -315,7 +315,7 @@ int64_t pick_count(State &state, DictRef spell, DictRef hero) {
 	if (gd::string_field(state, effect, key::shape, key::single) != key::blob) {
 		return 1;
 	}
-	return engine_max<int64_t>(1, power_count(state, effect, key::count, key::count_power_divisor, gd::is_empty(state, hero) ? 0 : spell_power(state, hero)));
+	return engine_max<int64_t>(1, power_count(state, effect, key::count, key::count_power_divisor, gd::is_empty(state, hero) ? 0 : spell_power(state, hero, spell)));
 }
 
 // The kinds that stand on their hexes and block them like an obstacle.
@@ -406,7 +406,7 @@ ArrayRef ground_shape_cells(State &state, DictRef battle, DictRef spell, DictRef
 DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, ArrayRef cells) {
 	const DictRef effect = effect_of(state, spell);
 	const Atom ground = gd::string_field(state, effect, key::ground, key::empty);
-	const int64_t power = spell_power(state, hero);
+	const int64_t power = spell_power(state, hero, spell);
 	// Damage and the seed's roots grow with power less the other side's Knowledge.
 	const int64_t against = engine_max<int64_t>(0, gd::sub(power, opposing_side_knowledge(state, battle, side)));
 	const DictRef entry = state.new_dict();

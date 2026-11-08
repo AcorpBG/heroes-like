@@ -26,6 +26,8 @@
 #include "aurelion_rules/compat/godot_string.hpp"
 
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace aurelion::rules::port {
 
@@ -87,7 +89,9 @@ bool lacks_dict(State &state, DictRef dict, Atom field) {
 }
 
 // SessionStateStore.SAVE_VERSION (and SessionData.SAVE_VERSION).
-constexpr int64_t kSaveVersion = 9;
+constexpr int64_t kSaveVersion = 10;
+// The first save version after the magic switch (docs/magic-system.md, Saves).
+constexpr int64_t kMagicSwitchSaveVersion = 10;
 
 // OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS and ScenarioFactory's, in order.
 constexpr Atom kLiveStockpileKeys[] = {
@@ -123,6 +127,219 @@ void copy_resource_amounts(State &state, DictRef resources, const Value &value) 
 	}
 }
 
+// The magic switch (docs/magic-system.md, Saves): a save from before it, save
+// version 9 or older, names the spells and masteries retired then. Each
+// becomes its replacement from retired_spells.json, and a faction's heroes get
+// its school's mastery.
+struct RetiredMagic {
+	std::unordered_map<Atom, Atom> spells;
+	std::unordered_map<Atom, Atom> masteries;
+	std::unordered_set<Atom> specialty_ids;
+	int64_t max_rank = 4;
+	int64_t max_specialties = 6;
+};
+
+RetiredMagic retired_magic(State &state) {
+	RetiredMagic retired;
+	const DictRef file = gd::content_file(state, key::retired_spells_path);
+	for (const Value &item : gd::field_items(state, file, str(key::items))) {
+		if (gd::is_dict(item)) {
+			retired.spells[text(state, item.ref, key::id, key::empty)] = text(state, item.ref, key::replacement_spell_id, key::empty);
+		}
+	}
+	const Value masteries = gd::field(state, file, key::masteries);
+	if (gd::is_dict(masteries)) {
+		for (const Value &old_id : gd::items(state, masteries)) {
+			retired.masteries[gd::stringify(state, old_id)] = gd::stringify(state, state.get(masteries.ref, old_id, str(key::empty)));
+		}
+	}
+	const DictRef specialties = gd::content_file(state, key::hero_specialties_path);
+	for (const Value &row : gd::field_items(state, specialties, str(key::items))) {
+		if (gd::is_dict(row)) {
+			retired.specialty_ids.insert(text(state, row.ref, key::id, key::empty));
+		}
+	}
+	retired.max_rank = compat::engine_max<int64_t>(1, gd::int_field(state, specialties, key::max_rank, 4));
+	retired.max_specialties = compat::engine_max<int64_t>(1, gd::int_field(state, specialties, key::max_specialties_per_hero, 6));
+	return retired;
+}
+
+// A list of spell ids with each retired spell replaced, each id once.
+ArrayRef replaced_spell_ids(State &state, const RetiredMagic &retired, const Value &ids) {
+	const ArrayRef result = state.new_array();
+	for (const Value &id_value : gd::items(state, ids)) {
+		Atom spell_id = gd::stringify(state, id_value);
+		const auto found = retired.spells.find(spell_id);
+		if (found != retired.spells.end()) {
+			spell_id = found->second;
+		}
+		if (!gd::array_has(state, result, str(spell_id))) {
+			state.append(result, str(spell_id));
+		}
+	}
+	return result;
+}
+
+// The scroll of a retired spell's replacement, or the artifact as it was.
+Atom replaced_scroll_id(State &state, const RetiredMagic &retired, Atom artifact_id) {
+	static const std::string kScroll = "artifact_scroll_";
+	const std::string id = state.text(artifact_id);
+	if (id.rfind(kScroll, 0) != 0) {
+		return artifact_id;
+	}
+	const auto found = retired.spells.find(state.intern("spell_" + id.substr(kScroll.size())));
+	if (found == retired.spells.end()) {
+		return artifact_id;
+	}
+	const std::string spell_id = state.text(found->second);
+	return state.intern(kScroll + (spell_id.rfind("spell_", 0) == 0 ? spell_id.substr(6) : spell_id));
+}
+
+// A hero's worn and carried scrolls of retired spells become their
+// replacements'; a second copy of a scroll the hero holds is lost
+// (docs/magic-system.md, Scrolls).
+void convert_scrolls(State &state, const RetiredMagic &retired, DictRef artifacts) {
+	std::unordered_set<Atom> held;
+	const Value equipped = gd::field(state, artifacts, key::equipped);
+	if (gd::is_dict(equipped)) {
+		for (const Value &slot : gd::items(state, array_value(gd::keys(state, equipped.ref)))) {
+			const Value worn = state.get(equipped.ref, slot, str(key::empty));
+			if (!gd::is_string(worn)) {
+				continue;
+			}
+			const Atom id = gd::stringify(state, worn);
+			const Atom replaced = replaced_scroll_id(state, retired, id);
+			if (replaced != id) {
+				state.set(equipped.ref, slot, held.count(replaced) != 0 ? str(key::empty) : str(replaced));
+			}
+			held.insert(replaced);
+		}
+	}
+	const Value inventory = gd::field(state, artifacts, key::inventory);
+	if (!gd::is_array(inventory)) {
+		return;
+	}
+	const ArrayRef carried = state.new_array();
+	bool changed = false;
+	for (const Value &item : gd::items(state, inventory)) {
+		if (!gd::is_string(item)) {
+			state.append(carried, item);
+			continue;
+		}
+		const Atom id = gd::stringify(state, item);
+		const Atom replaced = replaced_scroll_id(state, retired, id);
+		if (replaced != id) {
+			changed = true;
+			if (held.count(replaced) != 0) {
+				continue;
+			}
+			held.insert(replaced);
+		}
+		state.append(carried, str(replaced));
+	}
+	if (changed) {
+		state.set(artifacts, str(key::inventory), array_value(carried));
+	}
+}
+
+// The mastery of the hero's own faction's preferred school, or none for a
+// commander that is no hero (docs/magic-system.md, Faction preference).
+Atom faction_mastery_id(State &state, const RetiredMagic &retired, DictRef hero) {
+	for (const Atom field : {key::roster_hero_id, key::hero_id, key::id}) {
+		const DictRef row = gd::content_row(state, ContentTable::Hero, text(state, hero, field, key::empty));
+		if (!gd::is_empty(state, row)) {
+			const DictRef faction = gd::content_row(state, ContentTable::Faction, text(state, row, key::faction_id, key::empty));
+			const Atom school_id = text(state, faction, key::preferred_spell_school_id, key::empty);
+			const Atom mastery = school_id == key::empty ? static_cast<Atom>(key::empty) : state.intern("mastery_" + state.text(school_id));
+			return retired.specialty_ids.count(mastery) != 0 ? mastery : static_cast<Atom>(key::empty);
+		}
+	}
+	return key::empty;
+}
+
+// A hero's specialties: a retired mastery's ranks join the mastery its school
+// joined, up to the highest rank, in their places; a faction's hero with a
+// free slot gets that faction's mastery at rank 1.
+void convert_specialties(State &state, const RetiredMagic &retired, DictRef hero) {
+	const Value specialties = gd::field(state, hero, key::specialties);
+	if (!gd::is_array(specialties)) {
+		return;
+	}
+	const ArrayRef converted = state.new_array();
+	std::unordered_map<Atom, int64_t> ranks;
+	bool changed = false;
+	for (const Value &item : gd::items(state, specialties)) {
+		Atom id = gd::stringify(state, item);
+		const auto found = retired.masteries.find(id);
+		if (found != retired.masteries.end()) {
+			id = found->second;
+			changed = true;
+		}
+		if (ranks[id] >= retired.max_rank) {
+			changed = true;
+			continue;
+		}
+		ranks[id] += 1;
+		state.append(converted, str(id));
+	}
+	const Atom mastery = faction_mastery_id(state, retired, hero);
+	if (mastery != key::empty && ranks.count(mastery) == 0 && static_cast<int64_t>(ranks.size()) < retired.max_specialties) {
+		state.append(converted, str(mastery));
+		changed = true;
+	}
+	if (changed) {
+		state.set(hero, str(key::specialties), array_value(converted));
+	}
+}
+
+// Every hero, commander, site and town the session holds, wherever it is:
+// player and computer heroes, roster commanders, a battle's sides.
+void convert_retired_magic(State &state, const RetiredMagic &retired, const Value &value) {
+	if (gd::is_array(value)) {
+		for (const Value &child : gd::items(state, value)) {
+			if (gd::is_dict(child) || gd::is_array(child)) {
+				convert_retired_magic(state, retired, child);
+			}
+		}
+		return;
+	}
+	if (!gd::is_dict(value)) {
+		return;
+	}
+	const DictRef dict = value.ref;
+	const Value spellbook = gd::field(state, dict, key::spellbook);
+	if (gd::is_dict(spellbook)) {
+		const Value known = gd::field(state, spellbook.ref, key::known_spell_ids);
+		if (gd::is_array(known)) {
+			state.set(spellbook.ref, str(key::known_spell_ids), array_value(replaced_spell_ids(state, retired, known)));
+		}
+	}
+	for (const Atom field : {key::starting_spell_ids, key::payload_spell_ids, key::learn_spell_ids}) {
+		const Value ids = gd::field(state, dict, field);
+		if (gd::is_array(ids)) {
+			state.set(dict, str(field), array_value(replaced_spell_ids(state, retired, ids)));
+		}
+	}
+	const Value artifacts = gd::field(state, dict, key::artifacts);
+	if (gd::is_dict(artifacts)) {
+		convert_scrolls(state, retired, artifacts.ref);
+	}
+	convert_specialties(state, retired, dict);
+	// A guild drawn from today's spells draws again (town_rules::ensure_guild_draws).
+	for (const Value &spell_id : gd::field_items(state, dict, str(key::guild_spell_ids))) {
+		if (gd::is_empty(state, gd::content_row(state, ContentTable::Spell, gd::stringify(state, spell_id)))) {
+			state.erase(dict, str(key::guild_spell_ids));
+			break;
+		}
+	}
+	for (const Value &field : gd::items(state, array_value(gd::keys(state, dict)))) {
+		const Value child = state.get(dict, field, Value());
+		if (gd::is_dict(child) || gd::is_array(child)) {
+			convert_retired_magic(state, retired, child);
+		}
+	}
+}
+
 } // namespace
 
 // OverworldRules.
@@ -135,7 +352,11 @@ void normalize_overworld_state(State &state, DictRef session) {
 			text(state, session, key::session_id, key::empty) == gd::to_string(gd::static_var(state, key::overworld_rules_script, key::_normalized_read_scope_session_id))) {
 		return;
 	}
+	const int64_t loaded_version = gd::int_field(state, session, key::save_version, kSaveVersion);
 	state.set(session, str(key::save_version), int_value(kSaveVersion));
+	if (loaded_version < kMagicSwitchSaveVersion) {
+		convert_retired_magic(state, retired_magic(state), dict_value(session));
+	}
 	difficulty_rules::normalize_session(state, session);
 	player_identity_rules::normalize_compatibility(state, session);
 

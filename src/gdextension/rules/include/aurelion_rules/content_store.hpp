@@ -44,6 +44,7 @@ inline constexpr const char *kMapObjectsPath = "res://content/map_objects.json";
 inline constexpr const char *kNeutralDwellingsPath = "res://content/neutral_dwellings.json";
 inline constexpr const char *kArtifactsPath = "res://content/artifacts.json";
 inline constexpr const char *kSpellsPath = "res://content/spells.json";
+inline constexpr const char *kRetiredSpellsPath = "res://content/retired_spells.json";
 inline constexpr const char *kSpellIconsPath = "res://content/spell_icons.json";
 inline constexpr const char *kSpellSchoolIconsPath = "res://content/spell_school_icons.json";
 inline constexpr const char *kBuildingCategoryIconsPath = "res://content/building_category_icons.json";

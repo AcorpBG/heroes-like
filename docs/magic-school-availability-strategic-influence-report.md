@@ -1,5 +1,7 @@
 # Magic School Availability Strategic Influence Report
 
+Superseded on 2026-11-08: this describes the magic before the rework. The live rules are in `docs/magic-system.md` and the spells in `docs/magic-system-spells.md`.
+
 Task: #10184  
 Slice: `magic-school-availability-strategic-influence-10184`  
 Status: implemented

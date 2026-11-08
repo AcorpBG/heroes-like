@@ -798,7 +798,7 @@ const Function kFunctions[] = {
 	PORT(SpellRules, spell_damage_resistance_pct, 3, false, return int_value(spell::spell_damage_resistance_pct(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(SpellRules, spell_duration_bonus, 1, true, return int_value(spell::spell_duration_bonus(s, D(a, 0)))),
 	PORT(SpellRules, spell_duration_rounds, 4, true, return int_value(spell::spell_duration_rounds(s, D(a, 0), a[1], D(a, 2), S(a, 3)))),
-	PORT(SpellRules, spell_power, 1, true, return int_value(spell::spell_power(s, D(a, 0)))),
+	PORT(SpellRules, spell_power, 1, true, return int_value(spell::spell_power(s, D(a, 0), s.new_dict()))),
 	PORT(SpellRules, spell_primary_role, 1, false, return str(spell::spell_primary_role(s, D(a, 0)))),
 	PORT(SpellRules, spell_role_categories, 1, false, return array_value(spell::spell_role_categories(s, D(a, 0)))),
 	PORT(SpellRules, spell_school_id, 1, false, return str(spell::spell_school_id(s, D(a, 0)))),

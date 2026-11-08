@@ -145,7 +145,7 @@ func _run() -> void:
 	if active_payload_after != active_session_payload or CampaignProgression.ensure_profile() != campaign_before:
 		_fail("Restoring device defaults changed the active session or campaign profile.")
 		return
-	if RuntimeIssueLog.support_bundle_snapshot() != support_before or SessionState.SAVE_VERSION != 9:
+	if RuntimeIssueLog.support_bundle_snapshot() != support_before or SessionState.SAVE_VERSION != 10:
 		_fail("Restoring device defaults changed support diagnostics or the save-version contract.")
 		return
 

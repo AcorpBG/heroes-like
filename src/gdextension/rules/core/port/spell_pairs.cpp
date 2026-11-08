@@ -73,7 +73,7 @@ void remove_grafts(State &state, DictRef stack, Atom partner_id) {
 
 int64_t swap_range(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef enemy_stack) {
 	// Signal Swap reaches {4+P} hexes; Changeling Swap {4+E}, E against the enemy stack's side.
-	const int64_t power = gd::is_empty(state, enemy_stack) ? spell_power(state, hero) : spell_power_against(state, hero, battle, enemy_stack);
+	const int64_t power = gd::is_empty(state, enemy_stack) ? spell_power(state, hero, spell) : spell_power_against(state, hero, battle, enemy_stack, spell);
 	return spell_move_reach(state, spell, power);
 }
 

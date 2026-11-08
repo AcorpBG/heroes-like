@@ -70,8 +70,9 @@ bool one_of(const std::string &text, std::initializer_list<const char *> values)
 	return false;
 }
 
-// The spell schools a spell, a school sigil or a faction's preference names.
-const std::initializer_list<const char *> kSpellSchoolIds = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"};
+// The spell schools a spell, a school sigil or a faction's preference names
+// (docs/magic-system.md, The shape).
+const std::initializer_list<const char *> kSpellSchoolIds = {"furnace", "root", "beacon", "veil"};
 
 bool contains(const std::vector<std::string> &values, const std::string &text) {
 	for (const std::string &value : values) {
@@ -212,6 +213,7 @@ public:
 	void building_art_manifest(const RowIndex &building_index, const RowIndex &art_index);
 	void resources(const RowIndex &resource_index);
 	void spell(const Value &spell);
+	void retired_spells(const Value &items, const RowIndex &spell_index);
 	void map_effect(const std::string &spell_id, const Value &spell, const Value &effect, const std::string &context);
 	void warn(const std::string &text) { out_.push_back({false, text}); }
 
@@ -291,7 +293,6 @@ private:
 	void art_path(const std::string &path, const std::string &label);
 	bool unit_is_neutral(const Value &unit);
 	void recruit_payload(const std::string &label, const Value &recruits, const RowIndex &unit_index, bool require_neutral_units);
-	bool visit_shrine_teaches_spell_tier(const Value &site, const Value &spell);
 
 	State &d_;
 	Files &files_;
@@ -351,19 +352,6 @@ void Check::resources(const RowIndex &resource_index) {
 			art_path(icon_path, std::string("Production resource ") + resource_id + " icon");
 		}
 	}
-}
-
-// A visit-building spell shrine teaches any spell of its tier
-// (docs/visit-buildings.md).
-bool Check::visit_shrine_teaches_spell_tier(const Value &site, const Value &spell) {
-	return ask("_visit_shrine_teaches_spell_tier", [&] {
-		const Value visit = get(site, "visit", empty_dict_);
-		if (text(site, "family") != "visit_building" || !is_dict(visit)) {
-			return false;
-		}
-		const Value effects = get(visit, "effects", empty_dict_);
-		return is_dict(effects) && integer(effects, "spell_tier", 0) > 0 && integer(effects, "spell_tier", 0) == integer(spell, "tier", -1);
-	});
 }
 
 void Check::terrain_grammar(const Value &grammar, const RowIndex &biome_index) {
@@ -749,14 +737,22 @@ void Check::resource_site(const Value &site, const RowIndex &unit_index, const R
 			}
 		}
 	}
-	const std::string lesson_status = text(get(site, "runtime_boundary", empty_dict_), "status");
 	for (const std::string &spell_id : lesson_spell_ids) {
 		if (!spell_index.has(spell_id)) {
 			warn("Resource site " + site_id + " references missing lesson spell " + spell_id + ".");
-		} else if (text(row(spell_index, spell_id), "context") != "overworld"
-				&& !one_of(lesson_status, {"high_arcanum_live", "triune_arcanum_live"})
-				&& !visit_shrine_teaches_spell_tier(site, row(spell_index, spell_id))) {
-			warn("Resource site " + site_id + " lesson spell " + spell_id + " must be an overworld spell.");
+		}
+	}
+	// A site teaches a guild spell of each tier it names, picked where it stands
+	// (docs/magic-system.md, Guilds and learning).
+	const Value lesson_tiers = get(site, "learn_spell_tiers", empty_array_);
+	if (has(site, "learn_spell_tiers") && !is_array(lesson_tiers)) {
+		warn("Resource site " + site_id + " learn_spell_tiers must be an array.");
+	} else if (is_array(lesson_tiers)) {
+		for (const Value &tier_value : each(lesson_tiers)) {
+			const int64_t tier = gd::to_int(d_, tier_value);
+			if (tier < 1 || tier > 5) {
+				warn("Resource site " + site_id + " learn_spell_tiers must hold tiers 1 to 5.");
+			}
 		}
 	}
 
@@ -1249,6 +1245,26 @@ void Check::spell_school_icons(const RowIndex &icon_index) {
 	}
 }
 
+// The spells retired at the magic switch: each gone from spells.json, each
+// replaced by a guild spell an older save's heroes can know.
+void Check::retired_spells(const Value &items, const RowIndex &spell_index) {
+	if (!is_array(items)) {
+		return;
+	}
+	for (const Value &item : each(items)) {
+		const std::string spell_id = text(item, "id");
+		const std::string replacement_id = text(item, "replacement_spell_id");
+		if (spell_index.has(spell_id)) {
+			warn("Retired spell " + spell_id + " is still in spells.json.");
+		}
+		if (!spell_index.has(replacement_id)) {
+			warn("Retired spell " + spell_id + " names missing replacement " + replacement_id + ".");
+		} else if (flag(row(spell_index, replacement_id), "scroll_only")) {
+			warn("Retired spell " + spell_id + " must be replaced by a guild spell, not the scroll-only " + replacement_id + ".");
+		}
+	}
+}
+
 void Check::spell_icons(const RowIndex &spell_index, const RowIndex &icon_index) {
 	for (const std::string &spell_id : icon_index.ids()) {
 		const Value icon = row(icon_index, spell_id);
@@ -1423,10 +1439,6 @@ void Check::spell(const Value &spell) {
 	const Value scroll_only = get(spell, "scroll_only", Value());
 	if (scroll_only.kind != Kind::Nil && scroll_only.kind != Kind::Bool) {
 		warn("Spell " + spell_id + " scroll_only must be true or false.");
-	}
-	const Value unreleased = get(spell, "unreleased", Value());
-	if (unreleased.kind != Kind::Nil && unreleased.kind != Kind::Bool) {
-		warn("Spell " + spell_id + " unreleased must be true or false.");
 	}
 	if (accord_family.empty()) {
 		warn("Spell " + spell_id + " must define accord_family.");
@@ -1934,6 +1946,7 @@ void Store::validate(std::vector<Message> &messages) {
 	});
 	each_row(artifact_index, [&](const Value &row) { check.guard("_validate_artifact", [&] { check.artifact(row, spell_index); }); });
 	each_row(spell_index, [&](const Value &row) { check.guard("_validate_spell", [&] { check.spell(row); }); });
+	check.guard("_validate_retired_spells", [&] { check.retired_spells(list(kRetiredSpellsPath), spell_index); });
 	check.guard("_validate_spell_icons", [&] { check.spell_icons(spell_index, spell_icon_index); });
 	check.guard("_validate_spell_school_icons", [&] { check.spell_school_icons(spell_school_icon_index); });
 	check.guard("_validate_building_category_icons", [&] { check.building_category_icons(building_category_icon_index); });

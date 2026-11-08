@@ -10,6 +10,7 @@
 // ai_hero_rules_turn_day.cpp; each reveals in its own fog.
 
 #include "aurelion_rules/port/gd.hpp"
+#include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 
 #include <cstdint>
@@ -135,7 +136,8 @@ private:
 	State *state_ = nullptr;
 	DictRef session_ = 0;
 	int64_t level_ = 0;
-	ArrayRef rows_ = 0;
+	// Read tile by tile, never filling the rows cache: a route preview must not write.
+	overworld_level_rules::TerrainGrid grid_;
 	int64_t road_halves_ = 2;
 	int64_t grass_halves_ = 2;
 	std::unordered_set<Atom> easy_;

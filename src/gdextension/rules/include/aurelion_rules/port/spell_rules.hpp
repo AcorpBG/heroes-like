@@ -54,10 +54,6 @@ ArrayRef _normalize_spell_ids(State &state, const Value &value);
 int64_t adjusted_spell_mana_cost(State &state, DictRef hero_state, const Value &spell);
 Atom spell_school_id(State &state, DictRef spell);
 int64_t spell_tier(State &state, DictRef spell);
-// A spell marked unreleased in spells.json (the new magic until the switch,
-// docs/magic-system.md) casts where a hero knows it, but no guild, start,
-// reward or scroll hands it out.
-bool spell_is_released(State &state, DictRef spell);
 Atom spell_primary_role(State &state, DictRef spell);
 ArrayRef spell_role_categories(State &state, DictRef spell);
 ArrayRef _normalize_string_array(State &state, const Value &value);
@@ -91,11 +87,18 @@ int64_t spell_duration_bonus(State &state, DictRef hero_state);
 int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind);
 // The rounds at a given spell power: spell_power_against for harmful spells.
 int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind, int64_t power);
-int64_t spell_power(State &state, DictRef hero_state);
+// The hero's spell power for a spell: Power and its bonuses, and 1 more for
+// its faction's preferred school (preferred_school_power). Without a spell
+// (an empty Dictionary), the power alone.
+int64_t spell_power(State &state, DictRef hero_state, DictRef spell);
+// 1 when the spell is of the preferred school of the hero's own faction,
+// whoever hires it; a neutral commander has no faction (docs/magic-system.md,
+// Faction preference).
+int64_t preferred_school_power(State &state, DictRef hero_state, DictRef spell);
 // The Knowledge of the hero leading the target's side, and the caster's power
 // less all of it, never below 0 (docs/magic-system.md).
 int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack);
-int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack);
+int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell);
 int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell);
 DictRef _counted_in_turns(State &state, DictRef effect, int64_t turns);
 DictRef battle_spell_modifiers(State &state, DictRef spell);

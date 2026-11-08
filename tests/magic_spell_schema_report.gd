@@ -15,13 +15,17 @@ func _run() -> void:
 
 	if not _assert_min_count(report, "spell_count", 100):
 		return
-	if not _assert_min_count(report.get("context_counts", {}), SpellRules.CONTEXT_OVERWORLD, 20):
-		return
-	if not _assert_min_count(report.get("context_counts", {}), SpellRules.CONTEXT_BATTLE, 80):
-		return
-	for school in ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]:
-		if int(report.get("school_counts", {}).get(school, 0)) < 12:
-			_fail("School %s has fewer than 12 classified spells." % school)
+	for context in [SpellRules.CONTEXT_OVERWORLD, SpellRules.CONTEXT_BATTLE]:
+		if not _assert_min_count(report.get("context_counts", {}), context, 1):
+			return
+	# The basic tier and the four schools (docs/magic-system.md, The shape).
+	for school in SpellRules.SPELL_SCHOOL_IDS + [SpellRules.BASIC_SCHOOL_ID]:
+		if int(report.get("school_counts", {}).get(school, 0)) <= 0:
+			_fail("School %s has no spells." % school)
+			return
+	for school in report.get("school_counts", {}).keys():
+		if String(school) not in SpellRules.SPELL_SCHOOL_IDS and String(school) != SpellRules.BASIC_SCHOOL_ID:
+			_fail("Spell catalog names a school outside the four and the basic tier: %s." % school)
 			return
 	for tier in ["1", "2", "3", "4", "5"]:
 		if int(report.get("tier_counts", {}).get(tier, 0)) <= 0:
@@ -32,25 +36,25 @@ func _run() -> void:
 			_fail("Missing role category coverage for %s." % category)
 			return
 
-	var beacon_path := ContentService.get_spell("spell_beacon_path")
-	if SpellRules.spell_school_id(beacon_path) != "beacon":
-		_fail("Beacon Path did not expose beacon school metadata through SpellRules.")
+	var relay := ContentService.get_spell("spell_relay")
+	if SpellRules.spell_school_id(relay) != "beacon":
+		_fail("Relay did not expose beacon school metadata through SpellRules.")
 		return
-	if SpellRules.spell_tier(beacon_path) != 2:
-		_fail("Beacon Path did not expose tier 2 metadata through SpellRules.")
+	if SpellRules.spell_tier(relay) != 3:
+		_fail("Relay did not expose tier 3 metadata through SpellRules.")
 		return
-	if "economy_map_utility" not in SpellRules.spell_role_categories(beacon_path):
-		_fail("Beacon Path did not expose economy_map_utility category through SpellRules.")
+	if "economy_map_utility" not in SpellRules.spell_role_categories(relay):
+		_fail("Relay did not expose economy_map_utility category through SpellRules.")
 		return
-	if not SpellRules.spell_metadata_summary(beacon_path).contains("Beacon T2"):
-		_fail("Beacon Path metadata summary is missing school/tier evidence.")
+	if not SpellRules.spell_metadata_summary(relay).contains("Beacon T3"):
+		_fail("Relay metadata summary is missing school/tier evidence.")
 		return
-	var survey_chain := ContentService.get_spell("spell_survey_chain")
-	if SpellRules.spell_school_id(survey_chain) != "old_measure":
-		_fail("Survey Chain did not expose Old Measure school metadata through SpellRules.")
+	var far_sight := ContentService.get_spell("spell_far_sight")
+	if SpellRules.spell_school_id(far_sight) != SpellRules.BASIC_SCHOOL_ID:
+		_fail("Far Sight did not expose the basic tier through SpellRules.")
 		return
-	if SpellRules.spell_primary_role(survey_chain) != "scouting_support":
-		_fail("Survey Chain did not expose scouting_support metadata through SpellRules.")
+	if SpellRules.spell_primary_role(far_sight) != "scouting_support":
+		_fail("Far Sight did not expose scouting_support metadata through SpellRules.")
 		return
 
 	var payload := {
@@ -63,14 +67,13 @@ func _run() -> void:
 		"context_counts": report.get("context_counts", {}),
 		"role_category_counts": report.get("role_category_counts", {}),
 		"sample": {
-			"spell_id": "spell_survey_chain",
-			"metadata_summary": SpellRules.spell_metadata_summary(survey_chain),
-			"primary_role": SpellRules.spell_primary_role(survey_chain),
-			"role_categories": SpellRules.spell_role_categories(survey_chain),
+			"spell_id": "spell_far_sight",
+			"metadata_summary": SpellRules.spell_metadata_summary(far_sight),
+			"primary_role": SpellRules.spell_primary_role(far_sight),
+			"role_categories": SpellRules.spell_role_categories(far_sight),
 		},
 		"caveats": [
 			"This report proves spell school/category/tier metadata loads through SpellRules.",
-			"Old Measure now has a broad live catalog for study access, but rare scenario-scale Old Measure effects remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

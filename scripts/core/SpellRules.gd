@@ -9,7 +9,7 @@ const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
 const RARE_RESOURCE_IDS := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
-const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
+const SPELL_SCHOOL_IDS := ["furnace", "root", "beacon", "veil"]
 # The basic tier's spells: a school of their own, with no sigil and no
 # school resistance.
 const BASIC_SCHOOL_ID := "basic"
@@ -466,20 +466,14 @@ static func _target_mode_label(target_mode: String) -> String:
 
 static func _school_label(school_id: String) -> String:
 	match school_id:
-		"beacon":
-			return "Beacon"
-		"mire":
-			return "Mire"
-		"lens":
-			return "Lens"
-		"root":
-			return "Root"
 		"furnace":
 			return "Furnace"
+		"root":
+			return "Root"
+		"beacon":
+			return "Beacon"
 		"veil":
 			return "Veil"
-		"old_measure":
-			return "Old Measure"
 		"basic":
 			return "Basic"
 		_:

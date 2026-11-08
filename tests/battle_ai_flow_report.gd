@@ -19,7 +19,7 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 const REPORT_ID := "BATTLE_AI_FLOW_REPORT"
 const SEED := "battle-ai-flow-20261010"
-const HASTE_SPELL_ID := "spell_quickmarch_hymn"
+const HASTE_SPELL_ID := "spell_quicken"
 const PLAY_SIZE := Vector2i(1920, 1080)
 const PLAYBACK_WAIT_MSEC := 8000
 
@@ -372,10 +372,11 @@ func _check_clock_pressure() -> void:
 ## lets that stack reach an enemy this turn.
 func _check_buff_timing() -> void:
 	var haste := ContentService.get_spell(HASTE_SPELL_ID)
-	_check(not haste.is_empty() and int(SpellRules.battle_spell_modifiers(haste).get("speed", 0)) == 1, "the haste spell adds one speed")
-	if haste.is_empty():
+	var haste_speed := int(SpellRules.battle_spell_modifiers(haste).get("speed", 0))
+	_check(not haste.is_empty() and haste_speed > 0, "the haste spell adds speed")
+	if haste.is_empty() or haste_speed <= 0:
 		return
-	# Four steps reach a hex beside the target at seven hexes off only with haste.
+	# The runner reaches a hex beside the target seven hexes off only with haste.
 	var board := _board([
 		{"id": "runner", "side": "player", "hex": _cell(1, 4), "speed": 5},
 		{"id": "other", "side": "player", "hex": _cell(0, 0), "speed": 5},
@@ -384,7 +385,7 @@ func _check_buff_timing() -> void:
 	var runner := _stack(board, "runner")
 	var other := _stack(board, "other")
 	var targets := [_stack(board, "target")]
-	_check(not BattleRules.extra_speed_reaches_strike(board, runner, 0) and BattleRules.extra_speed_reaches_strike(board, runner, 1), "one more speed lets the runner reach the target this turn")
+	_check(not BattleRules.extra_speed_reaches_strike(board, runner, 0) and BattleRules.extra_speed_reaches_strike(board, runner, haste_speed), "haste lets the runner reach the target this turn")
 	var acting := BattleAiRules._buff_spell_score(board, runner, runner, targets, haste)
 	var while_other_acts := BattleAiRules._buff_spell_score(board, other, runner, targets, haste)
 	_check(is_equal_approx(acting - while_other_acts, 3.5), "haste on the acting runner is worth 3.5 more than while another stack acts (%.2f, %.2f)" % [acting, while_other_acts])
@@ -394,7 +395,7 @@ func _check_buff_timing() -> void:
 		{"id": "target", "side": "enemy", "hex": _cell(8, 4)},
 	], ["runner", "other", "target"])
 	var near_runner := _stack(reached, "runner")
-	_check(not BattleRules.extra_speed_reaches_strike(reached, near_runner, 1), "haste brings nothing new to a runner already in reach")
+	_check(not BattleRules.extra_speed_reaches_strike(reached, near_runner, haste_speed), "haste brings nothing new to a runner already in reach")
 	var near_targets := [_stack(reached, "target")]
 	var near_acting := BattleAiRules._buff_spell_score(reached, near_runner, near_runner, near_targets, haste)
 	var near_other := BattleAiRules._buff_spell_score(reached, _stack(reached, "other"), near_runner, near_targets, haste)

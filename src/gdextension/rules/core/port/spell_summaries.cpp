@@ -117,16 +117,16 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::damage_enemy) {
 		// Harmful numbers at the caster's power less the target hero's Knowledge
 		// (all of the power without a target).
-		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
+		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack, spell));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		// Black Tide names its share of the creatures.
 		Atom summary = gd::int_field(state, effect, key::creature_pct, 0) > 0
-				? gd::format(state, key::creature_share_summary_text, { str(target_label), int_value(creature_share_pct(state, spell, spell_power_against(state, hero_state, battle, target_stack))) })
+				? gd::format(state, key::creature_share_summary_text, { str(target_label), int_value(creature_share_pct(state, spell, spell_power_against(state, hero_state, battle, target_stack, spell))) })
 				: gd::format(state, key::damage_to_text, { int_value(damage), str(target_label) });
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
 		if (!gd::is_empty(state, status_effect)) {
 			const Atom label = gd::string_field(state, status_effect, key::label, key::effect);
-			const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+			const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack, spell);
 			const Atom terms = harmful_status_terms(state, status_effect, power_against);
 			const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
 			summary = concat(state, summary, gd::format(state, key::leaves_it_for_text, { str(label), str(terms), str(turns) }));
@@ -139,7 +139,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::control_enemy) {
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
 		const Atom label = gd::string_field(state, status_effect, key::label, key::control);
-		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack, spell);
 		const Atom terms = harmful_status_terms(state, status_effect, power_against);
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		const Atom turns = gd::bool_field(state, status_effect, key::battle_long, false)
@@ -168,7 +168,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		return concat(state, summary, clauses_as_phrase(state, spell_extra_clauses(state, hero_state, spell, battle, active_stack)));
 	}
 	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
-		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero_state));
+		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero_state, spell));
 		return gd::format(state, key::removes_harmful_effects_text, { int_value(count), str(plural_s(count)), str(ally_label(state, spell, active_stack)) });
 	}
 	if (effect_type == key::cleanse_ally) {
@@ -198,12 +198,12 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::dispel_enemy) {
 		// At the caster's power less the target hero's Knowledge when a target
 		// is known (a battle without one reads none).
-		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero_state, battle, target_stack, spell));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::removes_helpful_effects_text, { int_value(count), str(plural_s(count)), str(target_label) });
 	}
 	if (effect_type == key::move_ally) {
-		const int64_t reach = spell_move_reach(state, spell, spell_power(state, hero_state));
+		const int64_t reach = spell_move_reach(state, spell, spell_power(state, hero_state, spell));
 		return gd::format(state, key::moves_up_to_hexes_text, { str(ally_label(state, spell, active_stack)), int_value(reach) });
 	}
 	// The two-stack spells (spell_pairs.cpp).
@@ -215,11 +215,11 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		return gd::format(state, key::moves_health_into_text, { int_value(_battle_spell_recovery_amount(state, hero_state, spell)) });
 	}
 	if (effect_type == key::swap_allies) {
-		const int64_t range = spell_move_reach(state, spell, spell_power(state, hero_state));
+		const int64_t range = spell_move_reach(state, spell, spell_power(state, hero_state, spell));
 		return gd::format(state, key::swaps_allies_text, { int_value(range) });
 	}
 	if (effect_type == key::swap_enemy) {
-		const int64_t range = spell_move_reach(state, spell, spell_power_against(state, hero_state, battle, target_stack));
+		const int64_t range = spell_move_reach(state, spell, spell_power_against(state, hero_state, battle, target_stack, spell));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::swaps_enemy_text, { str(target_label), int_value(range) });
 	}
@@ -230,7 +230,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	// The tier-3 kinds (spell_tier3.cpp).
 	if (effect_type == key::sacrifice) {
 		const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
-				gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero_state, battle, target_stack)));
+				gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero_state, battle, target_stack, spell)));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::sacrifice_summary_text, { int_value(gd::int_field(state, effect, key::cost_pct, 0)), str(target_label), int_value(pct) });
 	}
@@ -240,14 +240,14 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 		return gd::format(state, key::deaths_door_summary_text, { str(target_label), int_value(deaths_door_pct(state, hero_state, battle, spell, target_stack)), str(_turns_label(state, turns)) });
 	}
 	if (effect_type == key::doom_enemy) {
-		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
+		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack, spell));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		const int64_t turns = engine_max<int64_t>(1, gd::int_field(state, effect, key::duration_rounds, 2));
 		return gd::format(state, key::doom_summary_text, { str(target_label), int_value(damage), str(_turns_label(state, turns)) });
 	}
 	if (effect_type == key::free_volley) {
 		const int64_t pct = gd::add(gd::int_field(state, effect, key::volley_pct, 0),
-				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero_state)));
+				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero_state, spell)));
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		return gd::format(state, key::volley_summary_text, { str(target_label), int_value(pct) });
 	}
@@ -257,16 +257,16 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	if (effect_type == key::damage_around) {
 		// Harmful numbers at the caster's power less the other side's Knowledge.
 		const Atom caster_side = gd::string_field(state, active_stack, key::side, key::player);
-		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state), opposing_side_knowledge(state, battle, caster_side)));
+		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state, spell), opposing_side_knowledge(state, battle, caster_side)));
 		const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), against);
 		return gd::format(state, key::around_summary_text, { int_value(damage), str(ally_label(state, spell, active_stack)) });
 	}
 	if (effect_type == key::battle_aura) {
-		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
+		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state, spell));
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
 		const Atom aura = gd::string_field(state, effect, key::aura, key::empty);
 		if (aura == key::sun) {
-			const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), spell_power_against(state, hero_state, battle, target_stack));
+			const int64_t damage = _battle_spell_damage_at(state, hero_state, spell, state.new_dict(), spell_power_against(state, hero_state, battle, target_stack, spell));
 			return gd::format(state, key::second_sun_summary_text, { int_value(damage) });
 		}
 		if (aura == key::noon) {
@@ -284,7 +284,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	// Goad and Uproot (spell_tier3_control.cpp).
 	if (effect_type == key::taunt_enemy || effect_type == key::pull_enemy) {
 		const DictRef status_effect = gd::as_dict(get_or_new_dict(state, effect, key::status_effect));
-		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+		const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack, spell);
 		const Atom target_label = gd::string_field(state, target_stack, key::name, key::selected_enemy_text);
 		const Atom turns = _turns_label(state, harmful_status_turns(state, hero_state, spell, status_effect, power_against));
 		if (effect_type == key::taunt_enemy) {
@@ -296,7 +296,7 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 	}
 	// Conjured stacks, Hour Ledger and Puppet Strings (spell_tier3_conjure.cpp).
 	if (effect_type == key::conjure) {
-		const int64_t power = spell_power(state, hero_state);
+		const int64_t power = spell_power(state, hero_state, spell);
 		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, key::buff, power);
 		const Atom rounds_label = rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
 		const Atom kind = gd::string_field(state, effect, key::conjure, key::empty);
@@ -345,10 +345,10 @@ Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spel
 Atom ground_spell_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef target_stack, bool sentence) {
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
 	const Atom ground = gd::string_field(state, effect, key::ground, key::empty);
-	const int64_t power = spell_power(state, hero_state);
+	const int64_t power = spell_power(state, hero_state, spell);
 	// Harmful numbers at the caster's power less the target hero's Knowledge
 	// (all of the power without a target), its rounds at the caster's power.
-	const int64_t against = spell_power_against(state, hero_state, battle, target_stack);
+	const int64_t against = spell_power_against(state, hero_state, battle, target_stack, spell);
 	const auto rounds_label = [&](Atom kind) {
 		const int64_t rounds = spell_effect_turns(state, hero_state, effect, spell, kind, power);
 		return rounds == 1 ? static_cast<Atom>(key::one_round_text) : gd::format(state, key::rounds_count_text, { int_value(rounds) });
@@ -523,7 +523,7 @@ Atom _signed_modifier_label(State &state, int64_t amount) {
 
 int64_t green_return_pct(State &state, DictRef hero_state, DictRef spell) {
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
-	const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero_state)));
+	const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero_state, spell)));
 	return engine_max<int64_t>(1, engine_min<int64_t>(100, pct));
 }
 
@@ -655,7 +655,7 @@ Atom mechanic_terms(State &state, DictRef mechanic) {
 
 Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictRef battle, Atom caster_side) {
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
-	const int64_t power = spell_power(state, hero_state);
+	const int64_t power = spell_power(state, hero_state, spell);
 	std::vector<Atom> parts;
 	const DictRef modifiers = battle_spell_modifiers(state, spell);
 	if (!gd::is_empty(state, modifiers)) {
@@ -676,7 +676,7 @@ Atom helpful_effect_terms(State &state, DictRef hero_state, DictRef spell, DictR
 
 int64_t helpful_effect_turns(State &state, DictRef hero_state, DictRef spell) {
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
-	return spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state));
+	return spell_effect_turns(state, hero_state, effect, spell, key::buff, spell_power(state, hero_state, spell));
 }
 
 Atom lasting_mechanic_terms(State &state, DictRef hero_state, DictRef spell) {
@@ -685,7 +685,7 @@ Atom lasting_mechanic_terms(State &state, DictRef hero_state, DictRef spell) {
 	if (!state.lookup(effect, str(key::mechanic), raw) || !gd::is_dict(raw)) {
 		return key::empty;
 	}
-	return mechanic_terms(state, resolve_mechanic(state, raw, spell_power(state, hero_state)));
+	return mechanic_terms(state, resolve_mechanic(state, raw, spell_power(state, hero_state, spell)));
 }
 
 Atom helpful_effect_turns_label(State &state, DictRef hero_state, DictRef spell) {
@@ -718,7 +718,7 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 	const ArrayRef clauses = state.new_array();
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
 	const Atom effect_type = gd::to_string(state.get(effect, str(key::type), str(key::empty)));
-	const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack);
+	const int64_t power_against = spell_power_against(state, hero_state, battle, target_stack, spell);
 	if (effect_type == key::damage_enemy) {
 		const int64_t heat = gd::int_field(state, effect, key::heat, 0);
 		if (heat > 0 && gd::bool_field(state, effect, key::heat_short_of_burst, false)) {
@@ -793,7 +793,7 @@ ArrayRef spell_extra_clauses(State &state, DictRef hero_state, DictRef spell, Di
 		int64_t sparks = gd::int_field(state, effect, key::random_hits, 0);
 		const int64_t spark_divisor = gd::int_field(state, effect, key::random_hits_power_divisor, 0);
 		if (sparks > 0 && spark_divisor > 0) {
-			sparks = gd::add(sparks, compat::int_div(spell_power(state, hero_state), spark_divisor));
+			sparks = gd::add(sparks, compat::int_div(spell_power(state, hero_state, spell), spark_divisor));
 		}
 		if (sparks > 1) {
 			state.append(clauses, str(gd::format(state, key::sparks_clause_text, { int_value(sparks) })));

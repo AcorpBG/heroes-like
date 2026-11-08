@@ -31,6 +31,9 @@ Atom _nearest_town_faction(State &state, DictRef object, ArrayRef towns);
 int64_t _weighted_tier(State &state, Atom key_text);
 ArrayRef _visit_fallback_sites(State &state);
 Atom _tier_spell_id(State &state, Atom key_text, int64_t tier);
+// The guild spells of one tier, sorted: what shrines and sites of the tier
+// pick from (docs/magic-system.md, Guilds and learning).
+ArrayRef tier_spell_ids(State &state, int64_t tier);
 ArrayRef treasure_chest_choices(State &state, int64_t gold, int64_t experience);
 Atom bank_key(State &state, int64_t type_id, int64_t subtype);
 DictRef _creature_bank(State &state, DictRef object, Atom key_text, Atom bank_id);

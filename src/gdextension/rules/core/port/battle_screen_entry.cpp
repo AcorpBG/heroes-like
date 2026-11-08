@@ -296,7 +296,7 @@ ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, A
 	if (effect_type == key::pull_enemy) {
 		return spell_rules::pull_destinations(state, battle, stack, spell_rules::spell_pull_reach(state, hero_state, battle, spell, stack));
 	}
-	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, hero_state));
+	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, hero_state, spell));
 	return spell_rules::move_destinations(state, battle, stack, reach);
 }
 

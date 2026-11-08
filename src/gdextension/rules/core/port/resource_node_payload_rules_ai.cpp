@@ -4,12 +4,16 @@
 #include "aurelion_rules/port/resource_node_payload_rules_ai.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/generated_reward_rules.hpp"
+
+#include <string>
 
 namespace aurelion::rules::port {
 
 namespace {
 
 using gd::array_value;
+using gd::ArrayRef;
 using gd::Atom;
 using gd::dict_value;
 using gd::DictRef;
@@ -20,6 +24,33 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
+// The guild spells a site that names tiers teaches where it stands: one of each
+// tier it names, never one twice, the same each time for one placement
+// (docs/magic-system.md, Guilds and learning). A generated map's node names
+// its spells instead (payload_spell_ids).
+ArrayRef tier_lesson_spell_ids(State &state, DictRef node, DictRef site) {
+	const ArrayRef spell_ids = state.new_array();
+	Atom placement = ai::string_or_empty(state, node, key::placement_id);
+	if (placement == key::empty) {
+		placement = ai::string_or_empty(state, site, key::id);
+	}
+	int64_t index = 0;
+	for (const Value &tier_value : gd::field_items(state, site, str(key::learn_spell_tiers))) {
+		const ArrayRef open = state.new_array();
+		for (const Value &spell_id : gd::items(state, array_value(generated_reward_rules::tier_spell_ids(state, gd::to_int(state, tier_value))))) {
+			if (!gd::array_has(state, spell_ids, spell_id)) {
+				state.append(open, spell_id);
+			}
+		}
+		const Atom picked = generated_reward_rules::_pick(state, open, placement, state.intern("site_spell_" + std::to_string(index)));
+		if (picked != key::empty) {
+			state.append(spell_ids, str(picked));
+		}
+		++index;
+	}
+	return spell_ids;
+}
+
 } // namespace
 
 namespace resource_node_payload_rules {
@@ -28,10 +59,14 @@ DictRef site_for_node(State &state, DictRef node, DictRef site) {
 	if (gd::is_empty(state, site)) {
 		site = gd::content_row(state, ContentTable::ResourceSite, ai::string_or_empty(state, node, key::site_id));
 	}
-	if (gd::is_empty(state, site) || !_has_node_payload(state, node, site)) {
+	const bool tier_lessons = !gd::is_empty(state, site) && state.has(site, str(key::learn_spell_tiers)) && !state.has(node, str(key::payload_spell_ids));
+	if (gd::is_empty(state, site) || (!tier_lessons && !_has_node_payload(state, node, site))) {
 		return site;
 	}
 	const DictRef effective = gd::deep_duplicate_dict(state, site);
+	if (tier_lessons) {
+		state.set(effective, str(key::learn_spell_ids), array_value(tier_lesson_spell_ids(state, node, site)));
+	}
 	const Value rewards = gd::field(state, node, key::payload_rewards);
 	if (gd::is_dict(rewards)) {
 		state.set(effective, str(key::claim_rewards), dict_value(gd::deep_duplicate_dict(state, rewards.ref)));

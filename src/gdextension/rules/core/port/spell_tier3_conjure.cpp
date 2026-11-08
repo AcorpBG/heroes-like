@@ -239,7 +239,7 @@ DictRef decoy_cell(State &state, DictRef battle, DictRef target) {
 DictRef conjured_stack_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side, DictRef cell, DictRef target) {
 	const DictRef effect = effect_of(state, spell);
 	const Atom kind = conjure_kind(state, spell);
-	const int64_t power = spell_power(state, hero);
+	const int64_t power = spell_power(state, hero, spell);
 	const int64_t round = gd::int_field(state, battle, key::round, 1);
 	const int64_t rounds = spell_effect_turns(state, hero, effect, spell, key::buff, power);
 	DictRef stack = state.new_dict();
@@ -430,7 +430,7 @@ void record_round_ledger(State &state, DictRef battle, int64_t round) {
 }
 
 int64_t rewind_reach(State &state, DictRef hero, DictRef spell) {
-	return power_count(state, effect_of(state, spell), key::rounds_back, key::rounds_back_power_divisor, spell_power(state, hero));
+	return power_count(state, effect_of(state, spell), key::rounds_back, key::rounds_back_power_divisor, spell_power(state, hero, spell));
 }
 
 ArrayRef rewind_destinations(State &state, DictRef battle, DictRef stack, int64_t reach) {
@@ -505,7 +505,7 @@ void rewind_stack(State &state, DictRef battle, Atom battle_id, DictRef snapshot
 int64_t charm_damage_pct(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef puppet) {
 	const DictRef effect = effect_of(state, spell);
 	return engine_max<int64_t>(1, gd::add(gd::int_field(state, effect, key::damage_pct, 0),
-			gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero, battle, puppet))));
+			gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero, battle, puppet, spell))));
 }
 
 bool charm_shoots(State &state, DictRef battle, DictRef puppet, DictRef victim) {

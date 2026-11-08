@@ -182,7 +182,7 @@ func _assert_generated_opening_completion(session) -> Dictionary:
 			"saved_key_count": raw_flags.size(),
 		}))
 		return {}
-	if int(raw_payload.get("save_version", 0)) != 9 or SessionState.SAVE_VERSION != 9:
+	if int(raw_payload.get("save_version", 0)) != 10 or SessionState.SAVE_VERSION != 10:
 		_fail("Generated opening autosave changed the save-version contract: %s" % raw_payload.get("save_version", null))
 		return {}
 	if not _assert_payload_breadth(raw_payload, session.to_dict(), "generated opening"):
@@ -295,7 +295,7 @@ func _assert_ordinary_autosave_control() -> Dictionary:
 		return {}
 	var raw_payload := _read_raw_payload(AUTOSAVE_PATH)
 	var raw_flags: Dictionary = raw_payload.get("flags", {}) if raw_payload.get("flags", {}) is Dictionary else {}
-	if int(raw_payload.get("save_version", 0)) != 9 or SessionState.SAVE_VERSION != 9:
+	if int(raw_payload.get("save_version", 0)) != 10 or SessionState.SAVE_VERSION != 10:
 		_fail("Ordinary autosave changed the save-version contract: %s" % raw_payload.get("save_version", null))
 		return {}
 	var source_marker_value: Variant = source_payload.get("flags", {}).get("ordinary_autosave_breadth_marker", {})

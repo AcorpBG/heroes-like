@@ -1,5 +1,7 @@
 # Magic System Expansion Foundation
 
+Superseded on 2026-11-08: this describes the magic before the rework. The live rules are in `docs/magic-system.md` and the spells in `docs/magic-system-spells.md`.
+
 Status: design source, not implementation proof.
 Date: 2026-04-25.
 Slice: magic-system-expansion-foundation-10184.

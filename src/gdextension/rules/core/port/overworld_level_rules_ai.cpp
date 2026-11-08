@@ -144,6 +144,96 @@ ArrayRef terrain_rows(State &state, const Value &session_value, int64_t requeste
 	return rows;
 }
 
+TerrainGrid terrain_grid(State &state, const Value &session_value, int64_t requested) {
+	TerrainGrid grid;
+	grid.rows = state.new_array();
+	if (session_value.kind == Kind::Nil) {
+		return grid;
+	}
+	if (!gd::is_dict(session_value)) {
+		throw state::NotPorted("OverworldLevelRules.terrain_rows: a session that is not a view");
+	}
+	const DictRef session = session_value.ref;
+	const int64_t level = query_level(state, session, requested);
+	if (level < 0 || level >= level_count(state, session)) {
+		return grid;
+	}
+	if (level == 0) {
+		// The surface's rows are the map itself: terrain_rows keeps no cache for them.
+		grid.rows = terrain_rows(state, session_value, level);
+		return grid;
+	}
+	// The checks of terrain_rows, which reads a failed one as no rows.
+	const DictRef overworld = session_view::overworld(state, session);
+	Value layers_value;
+	if (!state.lookup(overworld, str(key::terrain_layers), layers_value)) {
+		return grid;
+	}
+	const DictRef layers = gd::as_dict(layers_value);
+	Value terrain;
+	if (!state.lookup(layers, str(key::terrain), terrain)) {
+		return grid;
+	}
+	if (!gd::is_dict(terrain)) {
+		throw state::ScriptError(std::string("Invalid call. Nonexistent function 'get' in base '") + gd::type_name(terrain) + "'.");
+	}
+	Value levels_value;
+	if (!state.lookup(terrain.ref, str(key::levels), levels_value)) {
+		return grid;
+	}
+	const ArrayRef levels = ai::typed_array(levels_value, "OverworldLevelRules.terrain_rows");
+	if (level >= state.array_size(levels)) {
+		return grid;
+	}
+	const Value codes = state.at(levels, level);
+	Value ids;
+	if (!state.lookup(layers, str(key::terrain_id_by_code), ids)) {
+		ids = array_value(state.new_array());
+	}
+	if (!(gd::is_array(codes) || codes.kind == Kind::PackedInt32) || !(gd::is_array(ids) || ids.kind == Kind::PackedString)) {
+		return grid;
+	}
+	int64_t width = 0;
+	int64_t height = 0;
+	Value size_value;
+	if (state.lookup(overworld, str(key::map_size), size_value)) {
+		const DictRef size = gd::as_dict(size_value);
+		width = gd::to_int(state, state.get(size, str(key::width), state.get(size, str(key::x), int_value(0))));
+		height = gd::to_int(state, state.get(size, str(key::height), state.get(size, str(key::y), int_value(0))));
+	}
+	if (width <= 0 || height <= 0 || ai::vsize(state, codes) != gd::mul(width, height)) {
+		return grid;
+	}
+	grid.codes = codes;
+	grid.ids = ids;
+	grid.width = width;
+	grid.height = height;
+	grid.coded = true;
+	return grid;
+}
+
+Atom terrain_grid_at(State &state, const TerrainGrid &grid, int64_t x, int64_t y) {
+	if (!grid.coded) {
+		if (y < 0 || y >= state.array_size(grid.rows)) {
+			return key::rock;
+		}
+		const Value row = state.at(grid.rows, y);
+		if (!gd::is_array(row) || x < 0 || x >= state.array_size(row.ref)) {
+			return key::rock;
+		}
+		return gd::stringify(state, state.at(row.ref, x));
+	}
+	if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) {
+		return key::rock;
+	}
+	const int64_t index = y * grid.width + x;
+	const int64_t code = grid.codes.kind == Kind::PackedInt32 ? gd::packed_int(state, grid.codes.ref, index) : gd::to_int(state, state.at(grid.codes.ref, index));
+	if (code < 0 || code >= ai::vsize(state, grid.ids)) {
+		return key::rock;
+	}
+	return grid.ids.kind == Kind::PackedString ? gd::packed_string(state, grid.ids.ref, code) : gd::stringify(state, state.at(grid.ids.ref, code));
+}
+
 } // namespace overworld_level_rules
 
 } // namespace aurelion::rules::port

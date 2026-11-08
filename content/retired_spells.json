@@ -1,0 +1,487 @@
+{
+  "schema": "retired_spells_v1",
+  "summary": "The spells and masteries retired at the magic switch (docs/magic-system.md, Saves). A hero, commander, town or site in an older save gets the replacement in place of each.",
+  "masteries": {
+    "mastery_lens": "mastery_beacon",
+    "mastery_mire": "mastery_veil",
+    "mastery_old_measure": "mastery_beacon"
+  },
+  "items": [
+    {
+      "id": "spell_waystride",
+      "replacement_spell_id": "spell_stride"
+    },
+    {
+      "id": "spell_cinder_burst",
+      "replacement_spell_id": "spell_cinder_spray"
+    },
+    {
+      "id": "spell_stone_veil",
+      "replacement_spell_id": "spell_shell"
+    },
+    {
+      "id": "spell_quickmarch_hymn",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_trailglyph",
+      "replacement_spell_id": "spell_stride"
+    },
+    {
+      "id": "spell_beacon_path",
+      "replacement_spell_id": "spell_relay"
+    },
+    {
+      "id": "spell_rootway_tangle",
+      "replacement_spell_id": "spell_stride"
+    },
+    {
+      "id": "spell_fogline_drift",
+      "replacement_spell_id": "spell_stride"
+    },
+    {
+      "id": "spell_survey_chain",
+      "replacement_spell_id": "spell_far_sight"
+    },
+    {
+      "id": "spell_coal_rain",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_bulwark_litany",
+      "replacement_spell_id": "spell_steady"
+    },
+    {
+      "id": "spell_relay_drum",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_lantern_phalanx",
+      "replacement_spell_id": "spell_call_to_arms"
+    },
+    {
+      "id": "spell_bloodwake_drum",
+      "replacement_spell_id": "spell_hungering"
+    },
+    {
+      "id": "spell_prism_bastion",
+      "replacement_spell_id": "spell_shell"
+    },
+    {
+      "id": "spell_resonant_chorus",
+      "replacement_spell_id": "spell_call_to_arms"
+    },
+    {
+      "id": "spell_sunlance_arc",
+      "replacement_spell_id": "spell_dawn_lance"
+    },
+    {
+      "id": "spell_briar_bind",
+      "replacement_spell_id": "spell_daze"
+    },
+    {
+      "id": "spell_graft_mend",
+      "replacement_spell_id": "spell_mend"
+    },
+    {
+      "id": "spell_heat_rite",
+      "replacement_spell_id": "spell_sharpen"
+    },
+    {
+      "id": "spell_pressure_clause",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_fogwake_step",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_obituary_mark",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_beacon_roadward_signal_07",
+      "replacement_spell_id": "spell_call_to_arms"
+    },
+    {
+      "id": "spell_beacon_bell_ward_09",
+      "replacement_spell_id": "spell_sanctuary"
+    },
+    {
+      "id": "spell_beacon_column_charge_11",
+      "replacement_spell_id": "spell_sharpen"
+    },
+    {
+      "id": "spell_beacon_writ_lance_13",
+      "replacement_spell_id": "spell_prism_bolt"
+    },
+    {
+      "id": "spell_beacon_waymark_road_15",
+      "replacement_spell_id": "spell_relay"
+    },
+    {
+      "id": "spell_beacon_lantern_oath_17",
+      "replacement_spell_id": "spell_prism_ward"
+    },
+    {
+      "id": "spell_beacon_crown_signal_19",
+      "replacement_spell_id": "spell_clarion_call"
+    },
+    {
+      "id": "spell_beacon_dawn_ward_21",
+      "replacement_spell_id": "spell_steady"
+    },
+    {
+      "id": "spell_beacon_roadward_charge_23",
+      "replacement_spell_id": "spell_volley_signal"
+    },
+    {
+      "id": "spell_beacon_bell_lance_25",
+      "replacement_spell_id": "spell_searing_ray"
+    },
+    {
+      "id": "spell_mire_silt_rot_04",
+      "replacement_spell_id": "spell_fever_wind"
+    },
+    {
+      "id": "spell_mire_dusk_drum_06",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_mire_brine_frenzy_08",
+      "replacement_spell_id": "spell_fogwalk"
+    },
+    {
+      "id": "spell_mire_leech_snare_10",
+      "replacement_spell_id": "spell_long_night"
+    },
+    {
+      "id": "spell_mire_flood_fenlight_12",
+      "replacement_spell_id": "spell_mire_stride"
+    },
+    {
+      "id": "spell_mire_sluice_poultice_14",
+      "replacement_spell_id": "spell_last_breath"
+    },
+    {
+      "id": "spell_mire_lowtide_rot_16",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_mire_bog_drum_18",
+      "replacement_spell_id": "spell_fogwalk"
+    },
+    {
+      "id": "spell_mire_silt_frenzy_20",
+      "replacement_spell_id": "spell_grave_edge"
+    },
+    {
+      "id": "spell_mire_dusk_snare_22",
+      "replacement_spell_id": "spell_dread"
+    },
+    {
+      "id": "spell_mire_brine_fenlight_24",
+      "replacement_spell_id": "spell_mist_jump"
+    },
+    {
+      "id": "spell_mire_leech_poultice_26",
+      "replacement_spell_id": "spell_mend"
+    },
+    {
+      "id": "spell_mire_flood_rot_28",
+      "replacement_spell_id": "spell_hollowing"
+    },
+    {
+      "id": "spell_lens_mirror_prism_04",
+      "replacement_spell_id": "spell_sanctuary"
+    },
+    {
+      "id": "spell_lens_array_ray_06",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_lens_glass_facet_08",
+      "replacement_spell_id": "spell_steadfast_halo"
+    },
+    {
+      "id": "spell_lens_aurora_chorus_10",
+      "replacement_spell_id": "spell_daybreak_charge"
+    },
+    {
+      "id": "spell_lens_starlens_survey_12",
+      "replacement_spell_id": "spell_flare"
+    },
+    {
+      "id": "spell_lens_focus_array_14",
+      "replacement_spell_id": "spell_clarion_call"
+    },
+    {
+      "id": "spell_lens_crown_prism_16",
+      "replacement_spell_id": "spell_shell"
+    },
+    {
+      "id": "spell_lens_halo_ray_18",
+      "replacement_spell_id": "spell_prism_bolt"
+    },
+    {
+      "id": "spell_lens_mirror_facet_20",
+      "replacement_spell_id": "spell_glass_dome"
+    },
+    {
+      "id": "spell_lens_array_chorus_22",
+      "replacement_spell_id": "spell_call_to_arms"
+    },
+    {
+      "id": "spell_lens_glass_survey_24",
+      "replacement_spell_id": "spell_watchtower_lens"
+    },
+    {
+      "id": "spell_lens_aurora_array_26",
+      "replacement_spell_id": "spell_sharpen"
+    },
+    {
+      "id": "spell_lens_starlens_prism_28",
+      "replacement_spell_id": "spell_glass_aegis"
+    },
+    {
+      "id": "spell_root_bloom_briar_04",
+      "replacement_spell_id": "spell_thicket_snare"
+    },
+    {
+      "id": "spell_root_canopy_graft_06",
+      "replacement_spell_id": "spell_mend"
+    },
+    {
+      "id": "spell_root_bark_bark_08",
+      "replacement_spell_id": "spell_bark_ring"
+    },
+    {
+      "id": "spell_root_loam_thorn_10",
+      "replacement_spell_id": "spell_spore_cloud"
+    },
+    {
+      "id": "spell_root_green_rootway_12",
+      "replacement_spell_id": "spell_green_path"
+    },
+    {
+      "id": "spell_root_branch_bloom_14",
+      "replacement_spell_id": "spell_budding"
+    },
+    {
+      "id": "spell_root_wild_briar_16",
+      "replacement_spell_id": "spell_hobble"
+    },
+    {
+      "id": "spell_root_graft_graft_18",
+      "replacement_spell_id": "spell_bloomburst"
+    },
+    {
+      "id": "spell_root_bloom_bark_20",
+      "replacement_spell_id": "spell_ironbark"
+    },
+    {
+      "id": "spell_root_canopy_thorn_22",
+      "replacement_spell_id": "spell_thornshot"
+    },
+    {
+      "id": "spell_root_bark_rootway_24",
+      "replacement_spell_id": "spell_rootway"
+    },
+    {
+      "id": "spell_root_loam_bloom_26",
+      "replacement_spell_id": "spell_sharpen"
+    },
+    {
+      "id": "spell_root_green_briar_28",
+      "replacement_spell_id": "spell_uproot"
+    },
+    {
+      "id": "spell_furnace_rivet_clause_05",
+      "replacement_spell_id": "spell_molten_deluge"
+    },
+    {
+      "id": "spell_furnace_brass_rite_07",
+      "replacement_spell_id": "spell_overdrive"
+    },
+    {
+      "id": "spell_furnace_ash_mantle_09",
+      "replacement_spell_id": "spell_crucible_ward"
+    },
+    {
+      "id": "spell_furnace_foundry_bellows_11",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_furnace_hammer_rail_13",
+      "replacement_spell_id": "spell_forge_road"
+    },
+    {
+      "id": "spell_furnace_slag_clamp_15",
+      "replacement_spell_id": "spell_molten_brand"
+    },
+    {
+      "id": "spell_furnace_coal_clause_17",
+      "replacement_spell_id": "spell_ember_lash"
+    },
+    {
+      "id": "spell_furnace_kiln_rite_19",
+      "replacement_spell_id": "spell_redline"
+    },
+    {
+      "id": "spell_furnace_rivet_mantle_21",
+      "replacement_spell_id": "spell_steady"
+    },
+    {
+      "id": "spell_furnace_brass_bellows_23",
+      "replacement_spell_id": "spell_molten_edge"
+    },
+    {
+      "id": "spell_furnace_ash_rail_25",
+      "replacement_spell_id": "spell_forge_road"
+    },
+    {
+      "id": "spell_furnace_foundry_clamp_27",
+      "replacement_spell_id": "spell_cooling_slag"
+    },
+    {
+      "id": "spell_veil_mourning_mark_04",
+      "replacement_spell_id": "spell_fever_wind"
+    },
+    {
+      "id": "spell_veil_salt_step_06",
+      "replacement_spell_id": "spell_quicken"
+    },
+    {
+      "id": "spell_veil_tide_fogbind_08",
+      "replacement_spell_id": "spell_night_terror"
+    },
+    {
+      "id": "spell_veil_mist_shroud_10",
+      "replacement_spell_id": "spell_shadow_ranks"
+    },
+    {
+      "id": "spell_veil_moon_drift_12",
+      "replacement_spell_id": "spell_mire_stride"
+    },
+    {
+      "id": "spell_veil_wraith_duel_14",
+      "replacement_spell_id": "spell_grave_edge"
+    },
+    {
+      "id": "spell_veil_lantern_mark_16",
+      "replacement_spell_id": "spell_bolt"
+    },
+    {
+      "id": "spell_veil_obituary_step_18",
+      "replacement_spell_id": "spell_fogwalk"
+    },
+    {
+      "id": "spell_veil_mourning_fogbind_20",
+      "replacement_spell_id": "spell_long_night"
+    },
+    {
+      "id": "spell_veil_salt_shroud_22",
+      "replacement_spell_id": "spell_mist_cloak"
+    },
+    {
+      "id": "spell_veil_tide_drift_24",
+      "replacement_spell_id": "spell_mist_jump"
+    },
+    {
+      "id": "spell_veil_mist_duel_26",
+      "replacement_spell_id": "spell_sharpen"
+    },
+    {
+      "id": "spell_veil_moon_mark_28",
+      "replacement_spell_id": "spell_tolling_doom"
+    },
+    {
+      "id": "spell_old_measure_survey_survey_02",
+      "replacement_spell_id": "spell_flare"
+    },
+    {
+      "id": "spell_old_measure_tally_axiom_04",
+      "replacement_spell_id": "spell_sanctuary"
+    },
+    {
+      "id": "spell_old_measure_compass_boundary_06",
+      "replacement_spell_id": "spell_snare"
+    },
+    {
+      "id": "spell_old_measure_marker_tally_08",
+      "replacement_spell_id": "spell_prism_bolt"
+    },
+    {
+      "id": "spell_old_measure_index_correction_10",
+      "replacement_spell_id": "spell_glass_dome"
+    },
+    {
+      "id": "spell_old_measure_proof_pace_12",
+      "replacement_spell_id": "spell_relay"
+    },
+    {
+      "id": "spell_old_measure_count_survey_14",
+      "replacement_spell_id": "spell_watchtower_lens"
+    },
+    {
+      "id": "spell_old_measure_measure_axiom_16",
+      "replacement_spell_id": "spell_shell"
+    },
+    {
+      "id": "spell_old_measure_survey_boundary_18",
+      "replacement_spell_id": "spell_boundary_line"
+    },
+    {
+      "id": "spell_old_measure_tally_tally_20",
+      "replacement_spell_id": "spell_searing_ray"
+    },
+    {
+      "id": "spell_old_measure_compass_correction_22",
+      "replacement_spell_id": "spell_prism_ward"
+    },
+    {
+      "id": "spell_old_measure_marker_pace_24",
+      "replacement_spell_id": "spell_relay"
+    },
+    {
+      "id": "spell_old_measure_index_survey_26",
+      "replacement_spell_id": "spell_read_tracks"
+    },
+    {
+      "id": "spell_old_measure_proof_axiom_28",
+      "replacement_spell_id": "spell_steadfast_halo"
+    },
+    {
+      "id": "spell_old_measure_count_boundary_30",
+      "replacement_spell_id": "spell_censure"
+    },
+    {
+      "id": "spell_beacon_lockfire_muster",
+      "replacement_spell_id": "spell_volley_signal"
+    },
+    {
+      "id": "spell_mire_moonfen_dragnet",
+      "replacement_spell_id": "spell_night_terror"
+    },
+    {
+      "id": "spell_lens_seven_facet_refrain",
+      "replacement_spell_id": "spell_glass_aegis"
+    },
+    {
+      "id": "spell_root_heartwood_renewal",
+      "replacement_spell_id": "spell_seed_of_return"
+    },
+    {
+      "id": "spell_furnace_redline_overdrive",
+      "replacement_spell_id": "spell_molten_edge"
+    },
+    {
+      "id": "spell_veil_drowned_bell_verdict",
+      "replacement_spell_id": "spell_hollowing"
+    },
+    {
+      "id": "spell_old_measure_unbroken_meridian",
+      "replacement_spell_id": "spell_steadfast_halo"
+    }
+  ]
+}

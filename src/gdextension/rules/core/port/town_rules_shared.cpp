@@ -110,8 +110,7 @@ ArrayRef draw_guild_spell_ids(State &state, DictRef session, DictRef town) {
 			}
 			const Atom spell_id = text_field(state, spell_value.ref, key::id, key::empty);
 			const int64_t tier = gd::int_field(state, spell_value.ref, key::tier, 0);
-			if (spell_id == key::empty || tier <= 0 || gd::bool_field(state, spell_value.ref, key::scroll_only, false)
-					|| !spell_rules::spell_is_released(state, spell_value.ref)) {
+			if (spell_id == key::empty || tier <= 0 || gd::bool_field(state, spell_value.ref, key::scroll_only, false)) {
 				continue;
 			}
 			const bool preferred = preferred_school != key::empty && text_field(state, spell_value.ref, key::school_id, key::empty) == preferred_school;

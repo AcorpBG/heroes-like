@@ -116,7 +116,7 @@
       "name": "Fenhound Pursuit",
       "identity": "A Mireclaw hunting kit that crosses drowned ground, sounds the pack, and closes on a fresh trail.",
       "faction_affinity_id": "faction_mireclaw",
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "piece_ids": [
         "artifact_reedshadow_waders",
         "artifact_mirechain_hunt_totem",
@@ -162,7 +162,7 @@
       "name": "Meridian Relay",
       "identity": "A Sunvault calibration array that turns prism warding, command timing, and measured resistance into one relay.",
       "faction_affinity_id": "faction_sunvault",
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "piece_ids": [
         "artifact_prismward_mantle",
         "artifact_zenith_prism_pennon",
@@ -1266,7 +1266,7 @@
           "scope": "equipped",
           "school_id": "beacon",
           "context": "overworld",
-          "public_summary": "Improves Beacon route spells."
+          "public_summary": "Beacon map spells cost less."
         }
       ],
       "risk": {
@@ -1320,10 +1320,8 @@
           {
             "school_id": "beacon",
             "context": "overworld",
-            "effect_type": "restore_movement",
             "mana_cost_delta": -1,
-            "effect_amount_delta": 1,
-            "public_summary": "Beacon field route spells cost 1 less mana and restore 1 more movement."
+            "public_summary": "Beacon map spells cost 1 less mana."
           }
         ]
       }
@@ -1853,7 +1851,7 @@
         "magic",
         "economy"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -1962,7 +1960,7 @@
         "resistance",
         "economy"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -2005,8 +2003,8 @@
         {
           "bonus_type": "stat",
           "scope": "equipped",
-          "stat": "battle_school_resistance_pct:lens",
-          "public_summary": "Improves resistance to Lens school magic."
+          "stat": "battle_school_resistance_pct:beacon",
+          "public_summary": "Improves resistance to Beacon school magic."
         },
         {
           "bonus_type": "resource_income",
@@ -2050,7 +2048,7 @@
           "calibrated_scouting",
           "frontline_survival",
           "rare_resource_income",
-          "lens_spell_support"
+          "beacon_spell_support"
         ],
         "preferred_hero_roles": [
           "magic",
@@ -2079,7 +2077,7 @@
         "battle_spell_resistance_pct": 8,
         "battle_control_resistance_pct": 8,
         "battle_school_resistance_pct": {
-          "lens": 10
+          "beacon": 10
         },
         "daily_income": {
           "aetherglass": 1
@@ -2412,7 +2410,7 @@
         "route",
         "combat"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [],
       "source_tags": [
         "guarded_site",
@@ -2500,7 +2498,7 @@
         "movement",
         "route"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [],
       "source_tags": [
         "guarded_site",
@@ -2587,7 +2585,7 @@
         "combat",
         "morale"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [],
       "source_tags": [
         "guarded_site",
@@ -2777,7 +2775,7 @@
         "route",
         "combat"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -2872,7 +2870,7 @@
         "magic",
         "resistance"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -3356,7 +3354,7 @@
         "combat",
         "morale"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -3451,7 +3449,7 @@
         "magic",
         "resistance"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -3925,7 +3923,7 @@
         "scouting",
         "route"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -4020,7 +4018,7 @@
         "magic",
         "resistance"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -4495,7 +4493,7 @@
         "morale",
         "economy"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -4600,7 +4598,7 @@
         "combat",
         "economy"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -5125,7 +5123,7 @@
         "morale",
         "economy"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -5230,7 +5228,7 @@
         "combat",
         "economy"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -5739,7 +5737,7 @@
         "combat",
         "scouting"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -5830,7 +5828,7 @@
         "combat",
         "resistance"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -6281,7 +6279,7 @@
         "combat",
         "morale"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -6372,7 +6370,7 @@
         "combat",
         "resistance"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -7100,7 +7098,7 @@
         "combat",
         "movement"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -7191,7 +7189,7 @@
         "magic",
         "resistance"
       ],
-      "accord_affinity": "mire",
+      "accord_affinity": "veil",
       "faction_affinity": [
         "faction_mireclaw"
       ],
@@ -7282,7 +7280,7 @@
         "defense",
         "morale"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],
@@ -7373,7 +7371,7 @@
         "combat",
         "scouting"
       ],
-      "accord_affinity": "lens",
+      "accord_affinity": "beacon",
       "faction_affinity": [
         "faction_sunvault"
       ],

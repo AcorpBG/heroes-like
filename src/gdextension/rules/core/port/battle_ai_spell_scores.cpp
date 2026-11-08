@@ -294,7 +294,7 @@ double _ally_effect_mechanic_score(State &state, DictRef enemy_hero, DictRef bat
 	if (!state.lookup(effect, str(key::mechanic), raw) || !gd::is_dict(raw)) {
 		return 0.0;
 	}
-	const int64_t power = spell_rules::spell_power(state, enemy_hero);
+	const int64_t power = spell_rules::spell_power(state, enemy_hero, spell);
 	const DictRef mechanic = spell_rules::resolve_mechanic(state, raw, power);
 	const auto amount = [&](Atom field) { return gd::int_field(state, mechanic, field, 0); };
 	const double unit_hp = static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, ally, key::unit_hp, 1)));
@@ -645,7 +645,7 @@ double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, Dic
 
 double _any_harm_cleanse_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell) {
 	// The newest harmful effects, as many as the cast lifts at the hero's power.
-	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power(state, enemy_hero));
+	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power(state, enemy_hero, spell));
 	const int64_t lifted = state.array_size(spell_rules::newest_effect_ids(state, target_stack, battle, false, count));
 	if (lifted <= 0) {
 		return -9999.0;
@@ -664,7 +664,7 @@ double _any_harm_cleanse_score(State &state, DictRef enemy_hero, DictRef battle,
 double _dispel_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell) {
 	// The target's newest helpful spell effects, as many as the cast takes at
 	// the hero's power less the target hero's Knowledge.
-	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power_against(state, enemy_hero, battle, target_stack));
+	const int64_t count = spell_rules::spell_effect_count(state, spell, spell_rules::spell_power_against(state, enemy_hero, battle, target_stack, spell));
 	const int64_t removed = state.array_size(spell_rules::newest_effect_ids(state, target_stack, battle, true, count));
 	if (removed <= 0) {
 		return -9999.0;
@@ -678,7 +678,7 @@ double _dispel_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 }
 
 DictRef _move_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
-	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, enemy_hero));
+	const int64_t reach = spell_rules::spell_move_reach(state, spell, spell_rules::spell_power(state, enemy_hero, spell));
 	const ArrayRef cells = spell_rules::move_destinations(state, battle, ally, reach);
 	if (state.array_size(cells) == 0) {
 		return state.new_dict();
@@ -835,7 +835,7 @@ double sacrifice_value(State &state, DictRef enemy_hero, DictRef battle, DictRef
 		return -9999.0;
 	}
 	const int64_t pct = gd::int_field(state, effect, key::damage_pct, 0)
-			+ gd::int_field(state, effect, key::damage_pct_power_scale, 0) * spell_rules::spell_power_against(state, enemy_hero, battle, enemy);
+			+ gd::int_field(state, effect, key::damage_pct_power_scale, 0) * spell_rules::spell_power_against(state, enemy_hero, battle, enemy, spell);
 	const int64_t resistance = spell_rules::spell_damage_resistance_pct(state, battle, enemy, spell);
 	const double damage = static_cast<double>(cost) * static_cast<double>(pct) / 100.0 * static_cast<double>(100 - resistance) / 100.0;
 	const double dealt = engine_min<double>(1.0, damage / static_cast<double>(engine_max<int64_t>(1, gd::int_field(state, enemy, key::total_health, 0))));
@@ -974,7 +974,7 @@ DictRef _pair_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictR
 
 double _volley_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell) {
 	const DictRef effect = get_base(effect_of(state, spell));
-	const int64_t pct = gd::int_field(state, effect, key::volley_pct, 0) + gd::int_field(state, effect, key::volley_pct_power_scale, 0) * spell_rules::spell_power(state, enemy_hero);
+	const int64_t pct = gd::int_field(state, effect, key::volley_pct, 0) + gd::int_field(state, effect, key::volley_pct_power_scale, 0) * spell_rules::spell_power(state, enemy_hero, spell);
 	int64_t dealt = 0;
 	for (const Value &id : gd::items(state, array_value(spell_rules::volley_shooters(state, battle, side_of(state, active_stack), target)))) {
 		const DictRef shooter = _stack_by_battle_id(state, battle, gd::to_string(id));
@@ -1034,7 +1034,7 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 	const Atom kind = gd::string_field(state, effect, key::aura, key::empty);
 	if (kind == key::sun) {
 		// Second Sun: each round's burn on every enemy stack, as a share of its health, counted for two rounds.
-		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_rules::spell_power(state, enemy_hero), spell_rules::opposing_side_knowledge(state, battle, side)));
+		const int64_t against = engine_max<int64_t>(0, gd::sub(spell_rules::spell_power(state, enemy_hero, spell), spell_rules::opposing_side_knowledge(state, battle, side)));
 		const int64_t raw = spell_rules::_battle_spell_damage_at(state, enemy_hero, spell, state.new_dict(), against);
 		double share = 0.0;
 		for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side))))) {
@@ -1060,7 +1060,7 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 		if (value <= 0.0) {
 			return -9999.0;
 		}
-		const int64_t noon_rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+		const int64_t noon_rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero, spell));
 		return value * engine_min<double>(2.0, static_cast<double>(noon_rounds) / 2.0) - mana_cost_term(state, spell);
 	}
 	if (kind == key::hollow_crown) {
@@ -1092,7 +1092,7 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 	if (pressed == 0) {
 		return -9999.0;
 	}
-	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero, spell));
 	const double score = 1.0 + static_cast<double>(engine_min<int64_t>(rounds, 4)) * 0.9 + engine_min<double>(2.0, static_cast<double>(pressed) * 0.5);
 	return score - mana_cost_term(state, spell);
 }
@@ -1834,7 +1834,7 @@ double _hollow_crown_spell_score(State &state, DictRef enemy_hero, DictRef battl
 	}
 	const double edge = engine_max<double>(0.1, engine_min<double>(0.9, own_health / engine_max<double>(1.0, own_health + their_health)));
 	const int64_t pct = spell_rules::conjure_share_pct(state, enemy_hero, spell);
-	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, get_base(effect_of(state, spell)), spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, get_base(effect_of(state, spell)), spell, key::buff, spell_rules::spell_power(state, enemy_hero, spell));
 	const int64_t round = battle_round(state, battle);
 	double value = 0.0;
 	for (const Value &stack : gd::items(state, array_value(hostiles))) {

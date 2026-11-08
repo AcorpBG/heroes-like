@@ -164,7 +164,7 @@ bool flee_turn(State &state, DictRef battle, Atom battle_id) {
 // --- Uproot ------------------------------------------------------------------
 
 int64_t spell_pull_reach(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target) {
-	return spell_move_reach(state, spell, spell_power_against(state, hero, battle, target));
+	return spell_move_reach(state, spell, spell_power_against(state, hero, battle, target, spell));
 }
 
 ArrayRef pull_destinations(State &state, DictRef battle, DictRef stack, int64_t reach) {

@@ -151,9 +151,10 @@ DictRef risen_of(State &state, DictRef fallen, Atom side, int64_t pct, int64_t u
 	return stack;
 }
 
-// A spell's share at the hero's power, 1 to 100.
-int64_t share_at(State &state, DictRef effect, DictRef hero) {
-	const int64_t pct = gd::add(gd::int_field(state, effect, key::pct, 0), gd::mul(gd::int_field(state, effect, key::pct_power_scale, 0), spell_power(state, hero)));
+// A spell's share at the hero's power for it, 1 to 100.
+int64_t share_at(State &state, DictRef spell, DictRef hero) {
+	const DictRef effect = effect_of(state, spell);
+	const int64_t pct = gd::add(gd::int_field(state, effect, key::pct, 0), gd::mul(gd::int_field(state, effect, key::pct_power_scale, 0), spell_power(state, hero, spell)));
 	return engine_max<int64_t>(1, engine_min<int64_t>(100, pct));
 }
 
@@ -168,7 +169,7 @@ bool conjures_over_battle(State &state, DictRef spell) {
 }
 
 int64_t conjure_share_pct(State &state, DictRef hero, DictRef spell) {
-	return share_at(state, effect_of(state, spell), hero);
+	return share_at(state, spell, hero);
 }
 
 DictRef elder_cell(State &state, DictRef battle, DictRef spell, Atom side) {
@@ -338,8 +339,8 @@ ArrayRef risen_host_for_cast(State &state, DictRef hero, DictRef battle, DictRef
 	}
 	const DictRef effect = effect_of(state, spell);
 	const int64_t round = gd::int_field(state, battle, key::round, 1);
-	const int64_t rounds = spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero));
-	const int64_t pct = share_at(state, effect, hero);
+	const int64_t rounds = spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero, spell));
+	const int64_t pct = share_at(state, spell, hero);
 	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
 	std::vector<DictRef> fallen;
 	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {

@@ -35,7 +35,7 @@ const ARTIFACT_ROLES := [
 	"progression",
 	"objective",
 ]
-const ARTIFACT_ACCORD_AFFINITIES := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure", "neutral", "none"]
+const ARTIFACT_ACCORD_AFFINITIES := ["furnace", "root", "beacon", "veil", "basic", "neutral", "none"]
 const ARTIFACT_SOURCE_TAGS := [
 	"pickup",
 	"guarded_site",

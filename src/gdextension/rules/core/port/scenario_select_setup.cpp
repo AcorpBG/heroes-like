@@ -29,7 +29,7 @@ using state::Value;
 namespace key = state::key;
 
 // SessionStateStore.SAVE_VERSION.
-constexpr int64_t kSaveVersion = 9;
+constexpr int64_t kSaveVersion = 10;
 
 void put(State &state, DictRef dict, Atom name, const Value &value) {
 	state.set(dict, gd::str(name), value);

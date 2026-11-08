@@ -1973,7 +1973,7 @@ func _drive_fen_crown_chapter_to_victory_outcome(overworld, step_prefix: String)
 	current_overworld = final_refit.get("scene", current_overworld)
 
 	if current_overworld.has_method("validation_cast_overworld_spell"):
-		var movement_spell: Dictionary = current_overworld.call("validation_cast_overworld_spell", "spell_waystride")
+		var movement_spell: Dictionary = current_overworld.call("validation_cast_overworld_spell", "spell_stride")
 		await _settle_frames(6)
 		if not _require(bool(movement_spell.get("ok", false)), "Could not cast Lyra's authored Waystride overworld spell before the final Fen Crown march.", movement_spell):
 			return {"ok": false}

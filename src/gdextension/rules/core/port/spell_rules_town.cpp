@@ -39,8 +39,7 @@ Value field_or_new_dict(State &state, DictRef dict, Atom field) {
 
 // x in SPELL_SCHOOL_IDS of a String.
 bool is_spell_school_id(Atom school_id) {
-	return school_id == key::beacon || school_id == key::mire || school_id == key::lens || school_id == key::root ||
-			school_id == key::furnace || school_id == key::veil || school_id == key::old_measure;
+	return school_id == key::furnace || school_id == key::root || school_id == key::beacon || school_id == key::veil;
 }
 
 // value.get(field, {}) read only: false when the field is missing (the empty

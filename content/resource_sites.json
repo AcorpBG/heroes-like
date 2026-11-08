@@ -27,7 +27,7 @@
       "id": "site_beacon_path_scroll",
       "name": "Beacon Path Scroll",
       "family": "one_shot_pickup",
-      "learn_spell_id": "spell_beacon_path",
+      "learn_spell_tiers": [2],
       "gives_spell_scrolls": true,
       "runtime_boundary": {
         "status": "spell_reward_live",
@@ -44,7 +44,7 @@
       "family": "one_shot_pickup",
       "action_label": "Take Scroll",
       "overworld_sprite_asset_id": "beacon_path_scroll",
-      "learn_spell_id": "spell_beacon_path",
+      "learn_spell_tiers": [2],
       "gives_spell_scrolls": true
     },
     {
@@ -853,7 +853,7 @@
       "claim_rewards": {
         "experience": 100
       },
-      "learn_spell_id": "spell_waystride",
+      "learn_spell_tiers": [1],
       "response_profile": {
         "action_label": "Relight Shrine",
         "summary": "Wardens relight the sanctum and reopen blessed road markers for the nearby line.",
@@ -875,7 +875,7 @@
       "claim_rewards": {
         "experience": 100
       },
-      "learn_spell_id": "spell_trailglyph",
+      "learn_spell_tiers": [1],
       "response_profile": {
         "action_label": "Relight Shrine",
         "summary": "Totem scribes relight the shrine so couriers can follow marked reeds through the fog.",
@@ -897,7 +897,7 @@
       "claim_rewards": {
         "experience": 140
       },
-      "learn_spell_id": "spell_beacon_path",
+      "learn_spell_tiers": [2],
       "artifact_reward_contract": {
         "contract_id": "artifact_reward_contract_starlens_sanctum",
         "resource_site_id": "site_starlens_sanctum",
@@ -946,7 +946,7 @@
       "claim_flags": {
         "old_measure_marker_rehung": true
       },
-      "learn_spell_id": "spell_survey_chain",
+      "learn_spell_tiers": [1],
       "response_profile": {
         "action_label": "Rehang Markers",
         "summary": "Surveyors rehang old boundary chains so scouts can read nearby routes before the army commits.",
@@ -972,7 +972,7 @@
       "claim_flags": {
         "rootway_marker_awakened": true
       },
-      "learn_spell_id": "spell_rootway_tangle",
+      "learn_spell_tiers": [1],
       "response_profile": {
         "action_label": "Wake Rootway",
         "summary": "Wardens wake old root paths and keep rough-ground relief lanes open.",
@@ -997,7 +997,7 @@
       "claim_flags": {
         "fogline_marker_charted": true
       },
-      "learn_spell_id": "spell_fogline_drift",
+      "learn_spell_tiers": [1],
       "response_profile": {
         "action_label": "Chart Fogline",
         "summary": "Pilots chart the fogline and reopen hidden march lanes through uncertain country.",
@@ -2996,7 +2996,7 @@
           "spell_tier": 1
         }
       },
-      "learn_spell_id": "spell_relay_drum"
+      "learn_spell_tiers": [1]
     },
     {
       "id": "site_reedscript_vow_shrine",
@@ -3032,7 +3032,7 @@
           "spell_tier": 2
         }
       },
-      "learn_spell_id": "spell_lantern_phalanx"
+      "learn_spell_tiers": [2]
     },
     {
       "id": "site_prism_measure_shrine",
@@ -3068,7 +3068,7 @@
           "spell_tier": 3
         }
       },
-      "learn_spell_id": "spell_lens_glass_facet_08"
+      "learn_spell_tiers": [3]
     },
     {
       "id": "site_root_accord_ring",
@@ -3962,7 +3962,7 @@
         "experience": 140
       },
       "vision_radius": 4,
-      "learn_spell_id": "spell_lens_glass_survey_24",
+      "learn_spell_tiers": [4],
       "claim_flags": {
         "writbound_route_witness_sworn": true
       }
@@ -6020,7 +6020,7 @@
         "ore": 1,
         "experience": 130
       },
-      "learn_spell_id": "spell_survey_chain",
+      "learn_spell_tiers": [1],
       "batch006_role": "minor_guarded_reward",
       "guard_profile": {
         "tier": "standard",
@@ -6494,7 +6494,7 @@
         "ore": 3,
         "experience": 260
       },
-      "learn_spell_id": "spell_lens_glass_survey_24",
+      "learn_spell_tiers": [4],
       "vision_radius": 6,
       "batch006_role": "major_guarded_reward",
       "guard_profile": {
@@ -6827,7 +6827,7 @@
         "ore": 3,
         "experience": 300
       },
-      "learn_spell_id": "spell_lens_starlens_survey_12",
+      "learn_spell_tiers": [2],
       "vision_radius": 5,
       "batch006_role": "major_guarded_reward",
       "guard_profile": {
@@ -6995,7 +6995,7 @@
         "experience": 270
       },
       "persistent_control": true,
-      "learn_spell_id": "spell_survey_chain",
+      "learn_spell_tiers": [1],
       "town_support": {
         "readiness_bonus": 3,
         "recovery_relief": 2,
@@ -8179,7 +8179,7 @@
         "ore": 2,
         "experience": 230
       },
-      "learn_spell_id": "spell_lens_glass_survey_24",
+      "learn_spell_tiers": [4],
       "vision_radius": 4,
       "opens_route_on_claim": true,
       "batch006_role": "guarded_route_reward_hybrid",
@@ -10419,7 +10419,7 @@
       "hero_command_bonus": {
         "attack": 1
       },
-      "learn_spell_id": "spell_beacon_bell_lance_25",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_lastroad_bell_sounded": true
       },
@@ -10452,7 +10452,7 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_mire_silt_frenzy_20",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_siltheart_drum_struck": true
       },
@@ -10485,7 +10485,7 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_lens_mirror_facet_20",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_aurora_facets_aligned": true
       },
@@ -10518,7 +10518,7 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_root_bloom_bark_20",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_bloombark_covenant_bound": true
       },
@@ -10551,7 +10551,7 @@
       "hero_command_bonus": {
         "power": 1
       },
-      "learn_spell_id": "spell_furnace_slag_clamp_15",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_slagbound_clamp_set": true
       },
@@ -10584,7 +10584,7 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_veil_mourning_fogbind_20",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_mourning_tide_rung": true
       },
@@ -10617,7 +10617,7 @@
       "hero_command_bonus": {
         "power": 1
       },
-      "learn_spell_id": "spell_old_measure_tally_tally_20",
+      "learn_spell_tiers": [5],
       "claim_flags": {
         "high_arcanum_sevencount_verdict_rendered": true
       },
@@ -11162,11 +11162,10 @@
       "hero_command_bonus": {
         "attack": 1
       },
-      "learn_spell_id": "spell_beacon_bell_ward_09",
-      "learn_spell_ids": [
-        "spell_beacon_bell_ward_09",
-        "spell_beacon_crown_signal_19",
-        "spell_beacon_lockfire_muster"
+      "learn_spell_tiers": [
+        4,
+        4,
+        3
       ],
       "claim_flags": {
         "lockfiretrial_triune_lesson_completed": true
@@ -11200,11 +11199,10 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_mire_silt_rot_04",
-      "learn_spell_ids": [
-        "spell_mire_silt_rot_04",
-        "spell_mire_sluice_poultice_14",
-        "spell_mire_brine_fenlight_24"
+      "learn_spell_tiers": [
+        4,
+        4,
+        4
       ],
       "claim_flags": {
         "moonfentrial_triune_lesson_completed": true
@@ -11238,11 +11236,10 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_lens_mirror_prism_04",
-      "learn_spell_ids": [
-        "spell_lens_mirror_prism_04",
-        "spell_lens_focus_array_14",
-        "spell_lens_starlens_prism_28"
+      "learn_spell_tiers": [
+        4,
+        4,
+        3
       ],
       "claim_flags": {
         "facettrial_triune_lesson_completed": true
@@ -11276,11 +11273,10 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_root_bloom_briar_04",
-      "learn_spell_ids": [
-        "spell_root_bloom_briar_04",
-        "spell_root_branch_bloom_14",
-        "spell_root_bark_rootway_24"
+      "learn_spell_tiers": [
+        4,
+        4,
+        4
       ],
       "claim_flags": {
         "heartwoodtrial_triune_lesson_completed": true
@@ -11314,11 +11310,10 @@
       "hero_command_bonus": {
         "power": 1
       },
-      "learn_spell_id": "spell_furnace_ash_mantle_09",
-      "learn_spell_ids": [
-        "spell_furnace_ash_mantle_09",
-        "spell_furnace_kiln_rite_19",
-        "spell_furnace_redline_overdrive"
+      "learn_spell_tiers": [
+        4,
+        4,
+        3
       ],
       "claim_flags": {
         "redlinetrial_triune_lesson_completed": true
@@ -11352,11 +11347,10 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_veil_mourning_mark_04",
-      "learn_spell_ids": [
-        "spell_veil_mourning_mark_04",
-        "spell_veil_wraith_duel_14",
-        "spell_veil_tide_drift_24"
+      "learn_spell_tiers": [
+        4,
+        4,
+        4
       ],
       "claim_flags": {
         "drownedbelltrial_triune_lesson_completed": true
@@ -16737,11 +16731,10 @@
       "hero_command_bonus": {
         "attack": 1
       },
-      "learn_spell_id": "spell_beacon_dawn_ward_21",
-      "learn_spell_ids": [
-        "spell_beacon_dawn_ward_21",
-        "spell_beacon_roadward_charge_23",
-        "spell_beacon_bell_lance_25"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "dawnwrit_grand_convocation_claimed": true
@@ -16775,11 +16768,10 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_mire_leech_poultice_26",
-      "learn_spell_ids": [
-        "spell_mire_leech_poultice_26",
-        "spell_mire_flood_rot_28",
-        "spell_mire_silt_frenzy_20"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "leechmoon_grand_convocation_claimed": true
@@ -16813,11 +16805,10 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_lens_aurora_array_26",
-      "learn_spell_ids": [
-        "spell_lens_aurora_array_26",
-        "spell_lens_halo_ray_18",
-        "spell_lens_aurora_chorus_10"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "aurorahalo_grand_convocation_claimed": true
@@ -16851,11 +16842,10 @@
       "hero_command_bonus": {
         "defense": 1
       },
-      "learn_spell_id": "spell_root_loam_bloom_26",
-      "learn_spell_ids": [
-        "spell_root_loam_bloom_26",
-        "spell_root_green_briar_28",
-        "spell_root_bloom_bark_20"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "loambriar_grand_convocation_claimed": true
@@ -16889,11 +16879,10 @@
       "hero_command_bonus": {
         "power": 1
       },
-      "learn_spell_id": "spell_furnace_rivet_mantle_21",
-      "learn_spell_ids": [
-        "spell_furnace_rivet_mantle_21",
-        "spell_furnace_brass_bellows_23",
-        "spell_furnace_ash_rail_25"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "ashrail_grand_convocation_claimed": true
@@ -16927,11 +16916,10 @@
       "hero_command_bonus": {
         "knowledge": 1
       },
-      "learn_spell_id": "spell_veil_mist_duel_26",
-      "learn_spell_ids": [
-        "spell_veil_mist_duel_26",
-        "spell_veil_moon_mark_28",
-        "spell_veil_mourning_fogbind_20"
+      "learn_spell_tiers": [
+        1,
+        3,
+        5
       ],
       "claim_flags": {
         "mistmourning_grand_convocation_claimed": true

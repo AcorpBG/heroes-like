@@ -1,5 +1,7 @@
 # Battle spell effects
 
+Superseded on 2026-11-08: this describes the magic before the rework. The live rules are in `docs/magic-system.md` and the spells in `docs/magic-system-spells.md`.
+
 Slice: `battle-spell-effect-identity-20261009` (owner review, 2026-10-09: buffs and debuffs were "omega confusing" and "it feels like most of the spells do the same thing").
 
 ## What was wrong

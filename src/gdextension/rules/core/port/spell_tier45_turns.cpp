@@ -337,7 +337,7 @@ DictRef echo_target(State &state, DictRef battle, DictRef active_stack, DictRef 
 
 DictRef echo_caster(State &state, DictRef hero, DictRef echo_spell, Atom inner_id) {
 	const DictRef caster = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero), state.new_dict());
-	const int64_t power = spell_power(state, hero);
+	const int64_t power = spell_power(state, hero, echo_spell);
 	const int64_t bonus = power_count(state, effect_of(state, echo_spell), key::power_bonus, key::power_bonus_power_divisor, power);
 	Value command;
 	if (!state.lookup(caster, str(key::command), command) || !gd::is_dict(command)) {
@@ -368,7 +368,7 @@ DictRef echo_caster(State &state, DictRef hero, DictRef echo_spell, Atom inner_i
 }
 
 int64_t echo_power_bonus(State &state, DictRef hero, DictRef echo_spell) {
-	return power_count(state, effect_of(state, echo_spell), key::power_bonus, key::power_bonus_power_divisor, spell_power(state, hero));
+	return power_count(state, effect_of(state, echo_spell), key::power_bonus, key::power_bonus_power_divisor, spell_power(state, hero, echo_spell));
 }
 
 bool echo_scores_inner(State &state, DictRef inner_spell) {

@@ -34,7 +34,7 @@ namespace key = state::key;
 
 namespace {
 
-constexpr int64_t SAVE_VERSION = 9; // SessionStateStore.SAVE_VERSION
+constexpr int64_t SAVE_VERSION = 10; // SessionStateStore.SAVE_VERSION
 constexpr int64_t COHESION_MIN = 0;
 constexpr int64_t COHESION_MAX = 10;
 constexpr int64_t MOMENTUM_MAX = 4;

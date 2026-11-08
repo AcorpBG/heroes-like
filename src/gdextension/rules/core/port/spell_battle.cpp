@@ -542,7 +542,7 @@ int64_t control_resistance_pct(State &state, DictRef battle, DictRef target_stac
 }
 
 DictRef battle_spell_damage_projection(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell) {
-	const int64_t raw_damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack));
+	const int64_t raw_damage = _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power_against(state, hero_state, battle, target_stack, spell));
 	const int64_t resistance_pct = spell_damage_resistance_pct(state, battle, target_stack, spell);
 	const double scaled = static_cast<double>(raw_damage) * static_cast<double>(gd::sub(100, resistance_pct)) / 100.0;
 	// Black Tide never takes a stack's last creature.
@@ -581,11 +581,11 @@ DictRef battle_spell_status_resolution(State &state, DictRef battle, DictRef act
 }
 
 int64_t spell_duration_bonus(State &state, DictRef hero_state) {
-	return duration_bonus_at(spell_power(state, hero_state));
+	return duration_bonus_at(spell_power(state, hero_state, state.new_dict()));
 }
 
 int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind) {
-	return _spell_duration_rounds_at(state, hero_state, base_rounds, spell, kind, spell_power(state, hero_state));
+	return _spell_duration_rounds_at(state, hero_state, base_rounds, spell, kind, spell_power(state, hero_state, spell));
 }
 
 int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind, int64_t power) {
@@ -597,11 +597,28 @@ int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value 
 	return rounds;
 }
 
-int64_t spell_power(State &state, DictRef hero_state) {
+int64_t spell_power(State &state, DictRef hero_state, DictRef spell) {
 	const Value command = get_or_new_dict(state, hero_state, key::command);
 	const int64_t power = gd::is_dict(command) ? engine_max<int64_t>(0, gd::int_field(state, command.ref, key::power, 0)) : 0;
 	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
-	return gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0)));
+	return gd::add(gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0))), preferred_school_power(state, hero_state, spell));
+}
+
+int64_t preferred_school_power(State &state, DictRef hero_state, DictRef spell) {
+	const Atom school_id = gd::is_empty(state, spell) ? static_cast<Atom>(key::empty) : gd::string_field(state, spell, key::school_id, key::empty);
+	if (school_id == key::empty || school_id == key::basic) {
+		return 0;
+	}
+	// The hero's own row: a commander payload names it as roster_hero_id or
+	// hero_id, a hero state as id.
+	for (const Atom field : {key::roster_hero_id, key::hero_id, key::id}) {
+		const DictRef hero = gd::content_row(state, state::ContentTable::Hero, gd::string_field(state, hero_state, field, key::empty));
+		if (!gd::is_empty(state, hero)) {
+			const DictRef faction = gd::content_row(state, state::ContentTable::Faction, gd::string_field(state, hero, key::faction_id, key::empty));
+			return gd::string_field(state, faction, key::preferred_spell_school_id, key::empty) == school_id ? 1 : 0;
+		}
+	}
+	return 0;
 }
 
 int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack) {
@@ -612,8 +629,8 @@ int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack
 	return engine_max<int64_t>(0, gd::int_field(state, hero, key::knowledge, 0));
 }
 
-int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack) {
-	return engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state), target_side_knowledge(state, battle, target_stack)));
+int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell) {
+	return engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state, spell), target_side_knowledge(state, battle, target_stack)));
 }
 
 int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell) {
@@ -703,7 +720,7 @@ DictRef _effect_payload(State &state, DictRef spell, DictRef effect, DictRef bat
 }
 
 DictRef _effect_payload_for(State &state, DictRef spell, DictRef effect, DictRef battle, DictRef hero_state, DictRef target_stack) {
-	const int64_t power = spell_power(state, hero_state);
+	const int64_t power = spell_power(state, hero_state, spell);
 	const DictRef modifiers = scaled_spell_modifiers(state, effect, battle_spell_modifiers(state, spell), power);
 	// build_battle_effect's arguments in their order, then the second duration.
 	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
@@ -828,7 +845,7 @@ DictRef _spell_effect_modifiers(State &state, DictRef effect, Atom default_kind,
 }
 
 DictRef _status_effect_from_spell_effect(State &state, DictRef spell, DictRef battle, DictRef hero_state) {
-	return _status_effect_from_spell_effect_at(state, spell, battle, hero_state, spell_power(state, hero_state));
+	return _status_effect_from_spell_effect_at(state, spell, battle, hero_state, spell_power(state, hero_state, spell));
 }
 
 DictRef _status_effect_from_spell_effect_at(State &state, DictRef spell, DictRef battle, DictRef hero_state, int64_t power) {
@@ -864,7 +881,7 @@ DictRef _status_payload(State &state, DictRef spell, const Value &status_effect,
 }
 
 int64_t _battle_spell_damage(State &state, DictRef hero_state, DictRef spell, DictRef target_stack) {
-	return _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power(state, hero_state));
+	return _battle_spell_damage_at(state, hero_state, spell, target_stack, spell_power(state, hero_state, spell));
 }
 
 int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell, DictRef target_stack, int64_t power) {
@@ -913,7 +930,7 @@ int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef 
 	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
 	const Value amount_fallback = state.get(effect, str(key::amount), int_value(0));
 	const int64_t base_restore = gd::to_int(state, state.get(effect, str(key::base_restore), amount_fallback));
-	const int64_t power = spell_power(state, hero_state);
+	const int64_t power = spell_power(state, hero_state, spell);
 	const int64_t power_scale = gd::int_field(state, effect, key::power_scale, 0);
 	const int64_t amount = engine_max<int64_t>(1, gd::add(base_restore, gd::mul(power, power_scale)));
 	const int64_t potency = _school_bonus(state, hero_progression_rules::aggregate_bonuses(state, hero_state), key::school_potency_pct, spell);
@@ -1005,7 +1022,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	DictRef move_cell = state.new_dict();
 	bool needs_destination = false;
 	if (effect_type == key::move_ally) {
-		move_reach = spell_move_reach(state, spell, spell_power(state, hero));
+		move_reach = spell_move_reach(state, spell, spell_power(state, hero, spell));
 		const ArrayRef cells = move_destinations(state, battle, ally_target, move_reach);
 		if (state.array_size(cells) == 0) {
 			return hero_refusal(state, hero, gd::format(state, key::no_open_hex_text, { str(battle_rules::_stack_label(state, ally_target)) }));
@@ -1192,7 +1209,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	}
 	if (effect_type == key::damage_enemy) {
 		const DictRef damage_projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
-		const DictRef post_damage_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
+		const DictRef post_damage_effect = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack, spell));
 		const DictRef status_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, post_damage_effect);
 		DictRef resolved_post_damage_effect = post_damage_effect;
 		if (gd::bool_field(state, status_resolution, key::blocked, false)) {
@@ -1229,7 +1246,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		const int64_t heat = gd::int_field(state, effect, key::heat, 0);
 		if (heat > 0) {
 			state.set(result, str(key::heat), int_value(heat));
-			state.set(result, str(key::heat_burst_damage), int_value(heat_burst_damage(spell_power_against(state, hero, battle, target_stack))));
+			state.set(result, str(key::heat_burst_damage), int_value(heat_burst_damage(spell_power_against(state, hero, battle, target_stack, spell))));
 			// Molten Deluge's Heat stops short of a burst.
 			if (gd::bool_field(state, effect, key::heat_short_of_burst, false)) {
 				state.set(result, str(key::heat_short_of_burst), bool_value(true));
@@ -1253,7 +1270,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	}
 	if (effect_type == key::control_enemy) {
 		// Grasp of the Deep stuns a stack that is already Rooted.
-		const int64_t control_power = spell_power_against(state, hero, battle, target_stack);
+		const int64_t control_power = spell_power_against(state, hero, battle, target_stack, spell);
 		const DictRef control_effect = grasp_status(state, spell, battle, hero, target_stack, _status_effect_from_spell_effect_at(state, spell, battle, hero, control_power), control_power);
 		const DictRef control_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, control_effect);
 		DictRef resolved_control_effect = control_effect;
@@ -1272,7 +1289,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		Value follow_status;
 		if (!gd::is_empty(state, resolved_control_effect) && state.lookup(effect, str(key::follow_status_effect), follow_status) && gd::is_dict(follow_status)) {
 			const int64_t first_turns = gd::int_field(state, resolved_control_effect, key::turns_left, 1);
-			state.set(result, str(key::follow_effect), dict_value(_status_payload(state, spell, follow_status, battle, hero, spell_power_against(state, hero, battle, target_stack), first_turns)));
+			state.set(result, str(key::follow_effect), dict_value(_status_payload(state, spell, follow_status, battle, hero, spell_power_against(state, hero, battle, target_stack, spell), first_turns)));
 		}
 		state.set(result, str(key::resisted), bool_value(gd::bool_field(state, control_resolution, key::resisted, false)));
 		state.set(result, str(key::immune), bool_value(gd::bool_field(state, control_resolution, key::immune, false)));
@@ -1312,7 +1329,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	}
 	if (effect_type == key::cleanse_ally && cleanse_takes_any_harm(state, effect)) {
 		// Cleanse: the newest harmful effects, one more per 3 spell power.
-		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero));
+		const int64_t count = spell_effect_count(state, spell, spell_power(state, hero, spell));
 		const DictRef result = cast_result(state, hero, key::cleanse_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::cleanse_effect_ids), array_value(newest_effect_ids(state, ally_target, battle, false, count)));
 		state.set(result, str(key::effect), dict_value(state.new_dict()));
@@ -1338,7 +1355,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	if (effect_type == key::dispel_enemy) {
 		// Unweave: the newest helpful spell effects, one more per 3 of the
 		// caster's power less the target hero's Knowledge.
-		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero, battle, target_stack));
+		const int64_t count = spell_effect_count(state, spell, spell_power_against(state, hero, battle, target_stack, spell));
 		const DictRef result = cast_result(state, hero, key::dispel_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
 		state.set(result, str(key::cleanse_effect_ids), array_value(newest_effect_ids(state, target_stack, battle, true, count)));
 		const Atom dispel_message = gd::format(state, key::casts_on_format, {
@@ -1371,7 +1388,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		}
 		state.set(result, str(key::destination), dict_value(move_cell));
 		// The drag always lands; its Staggered can be resisted or kept off.
-		const DictRef stagger = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack));
+		const DictRef stagger = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, target_stack, spell));
 		const DictRef stagger_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, stagger);
 		Atom pull_message = gd::format(state, key::casts_on_format, {
 			str(caster_name),
@@ -1478,7 +1495,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			const int64_t cost = engine_max<int64_t>(0, engine_min<int64_t>(gd::sub(payer_health, 1),
 					engine_max<int64_t>(1, compat::int_div(gd::mul(payer_health, gd::int_field(state, effect, key::cost_pct, 0)), 100))));
 			const int64_t pct = gd::add(gd::int_field(state, effect, key::damage_pct, 0),
-					gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero, battle, first)));
+					gd::mul(gd::int_field(state, effect, key::damage_pct_power_scale, 0), spell_power_against(state, hero, battle, first, spell)));
 			const int64_t raw = engine_max<int64_t>(1, compat::int_div(gd::mul(cost, pct), 100));
 			const int64_t resistance = spell_damage_resistance_pct(state, battle, first, spell);
 			const int64_t final_damage = engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(static_cast<double>(raw) * static_cast<double>(gd::sub(100, resistance)) / 100.0)));
@@ -1498,7 +1515,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		}
 		if (effect_type == key::taunt_enemy) {
 			// Goad: +2 attack and the stack it must attack, unless the target resists.
-			const DictRef goad = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, first));
+			const DictRef goad = _status_effect_from_spell_effect_at(state, spell, battle, hero, spell_power_against(state, hero, battle, first, spell));
 			const DictRef goad_resolution = battle_spell_status_resolution(state, battle, active_stack, first, spell, goad);
 			Atom goad_message = gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, first, key::name, key::the_enemy_text)) });
 			goad_message = _append_status_resolution_message(state, goad_message, first, goad, goad_resolution);
@@ -1577,7 +1594,7 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		// Volley Signal: the caster's shooters fire at the target, at {40+4P}% of their damage.
 		const DictRef result = cast_result(state, hero, key::volley_effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
 		state.set(result, str(key::volley_pct), int_value(gd::add(gd::int_field(state, effect, key::volley_pct, 0),
-				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero)))));
+				gd::mul(gd::int_field(state, effect, key::volley_pct_power_scale, 0), spell_power(state, hero, spell)))));
 		state.set(result, str(key::side), str(acting_side));
 		state.set(result, str(key::message), str(gd::format(state, key::casts_on_format, {
 			str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)) })));
@@ -1597,14 +1614,14 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		state.set(entry, str(key::aura), str(gd::string_field(state, effect, key::aura, key::empty)));
 		state.set(entry, str(key::side), str(acting_side));
 		state.set(entry, str(key::heal), int_value(_battle_spell_recovery_amount(state, hero, spell)));
-		state.set(entry, str(key::until_round), int_value(gd::add(round, spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero)))));
+		state.set(entry, str(key::until_round), int_value(gd::add(round, spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero, spell)))));
 		state.set(entry, str(key::healed_round), int_value(round));
 		state.set(entry, str(key::spell_id), str(spell_id));
 		state.set(entry, str(key::label), str(gd::string_field(state, spell, key::name, spell_id)));
 		const Atom aura_kind = gd::string_field(state, effect, key::aura, key::empty);
 		if (aura_kind == key::sun) {
 			// Second Sun: for the rest of the battle, at the caster's power less the other side's Knowledge.
-			const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero), opposing_side_knowledge(state, battle, acting_side)));
+			const int64_t against = engine_max<int64_t>(0, gd::sub(spell_power(state, hero, spell), opposing_side_knowledge(state, battle, acting_side)));
 			state.set(entry, str(key::damage), int_value(_battle_spell_damage_at(state, hero, spell, state.new_dict(), against)));
 			state.set(entry, str(key::school_id), str(gd::string_field(state, spell, key::school_id, key::empty)));
 			state.set(entry, str(key::until_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
@@ -1618,14 +1635,14 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			state.set(entry, str(key::status_immunity_ids), array_value(kept_off));
 		} else if (aura_kind == key::green_return) {
 			// Green Return: the side's fallen grow back as the next round starts, with their share at the caster's power.
-			const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero)));
+			const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero, spell)));
 			state.set(entry, str(key::pct), int_value(engine_max<int64_t>(1, engine_min<int64_t>(100, pct))));
 			state.set(entry, str(key::until_round), int_value(gd::add(round, 1)));
 		} else if (aura_kind == key::hollow_crown) {
 			// Hollow Crown: for the rest of the battle, the other side's stacks destroyed from the cast on rise for the
 			// side as each next round starts, with their share at the caster's power, for its rounds.
 			state.set(entry, str(key::pct), int_value(conjure_share_pct(state, hero, spell)));
-			state.set(entry, str(key::rounds), int_value(spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero))));
+			state.set(entry, str(key::rounds), int_value(spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero, spell))));
 			state.set(entry, str(key::until_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
 		}
 		const DictRef result = cast_result(state, hero, key::aura_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));

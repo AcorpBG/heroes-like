@@ -209,7 +209,7 @@ void end_of_turn_tier45(State &state, DictRef battle, Atom battle_id) {
 
 int64_t deaths_door_pct(State &state, DictRef hero, DictRef battle, DictRef spell, DictRef target) {
 	const DictRef effect = gd::as_dict(state.get(spell, str(key::effect), dict_value(state.new_dict())));
-	const int64_t power = spell_power_against(state, hero, battle, target);
+	const int64_t power = spell_power_against(state, hero, battle, target, spell);
 	const int64_t pct = gd::add(gd::int_field(state, effect, key::doom_pct, 0), gd::mul(gd::int_field(state, effect, key::doom_pct_power_scale, 0), power));
 	const int64_t resistance = spell_damage_resistance_pct(state, battle, target, spell);
 	return engine_max<int64_t>(1, engine_min<int64_t>(100, compat::int_div(gd::mul(pct, gd::sub(100, resistance)), 100)));

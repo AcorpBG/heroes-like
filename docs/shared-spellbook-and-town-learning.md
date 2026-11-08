@@ -1,5 +1,7 @@
 # Shared Spellbook and Automatic Town Learning
 
+Superseded on 2026-11-08: this describes the magic before the rework. The live rules are in `docs/magic-system.md` and the spells in `docs/magic-system-spells.md`.
+
 Owner-directed Phase 6 slice: `ui-shared-spellbook-and-town-learning-20260917`.
 Strategy: `project.md`; execution: `PLAN.md`.
 

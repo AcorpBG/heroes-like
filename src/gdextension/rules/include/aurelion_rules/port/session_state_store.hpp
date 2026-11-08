@@ -31,7 +31,7 @@ inline Value new_session_data(State &state, Atom session_id, Atom scenario_id, A
 // SessionStateStore.SAVE_VERSION. SUPPORTED_GAME_STATES are "overworld",
 // "town", "battle" and "outcome"; SUPPORTED_SCENARIO_STATUSES "in_progress",
 // "victory" and "defeat".
-constexpr int64_t kSaveVersion = 9;
+constexpr int64_t kSaveVersion = 10;
 
 // The save format's payload (Phase 7, 7.12; save_session_payload.cpp):
 // SessionStateStore.normalize_payload and its helpers, and SessionData's

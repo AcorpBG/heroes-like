@@ -1,3044 +1,6 @@
 {
   "items": [
     {
-      "id": "spell_waystride",
-      "name": "Waystride",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "beacon_path",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Pulls the marching line into a sharp, tireless cadence.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 3
-      }
-    },
-    {
-      "id": "spell_cinder_burst",
-      "name": "Cinder Burst",
-      "school_id": "furnace",
-      "tier": 2,
-      "accord_family": "pressure_clause",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "enemy_selected",
-      "description": "Cinder Burst discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 30,
-        "power_scale": 18,
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 8,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_stone_veil",
-      "name": "Stone Veil",
-      "school_id": "furnace",
-      "tier": 1,
-      "accord_family": "slag_mantle",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Wraps the acting stack in a gravel-thick ward that blunts incoming blows.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_quickmarch_hymn",
-      "name": "Quickmarch Hymn",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "rally_bell",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Quickmarch Hymn passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_trailglyph",
-      "name": "Trailglyph",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "beacon_path",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Trailglyph fixes a bright waymark beyond the column and draws the march farther along the paid road.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 3
-      }
-    },
-    {
-      "id": "spell_beacon_path",
-      "name": "Beacon Path",
-      "school_id": "beacon",
-      "tier": 2,
-      "accord_family": "beacon_path",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Beacon Path fixes a bright waymark beyond the column and draws the march farther along the paid road.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 5
-      }
-    },
-    {
-      "id": "spell_rootway_tangle",
-      "name": "Rootway Tangle",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "rootway_path",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Living roots knot into a short hidden lane and pull the column over broken ground.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 3
-      }
-    },
-    {
-      "id": "spell_fogline_drift",
-      "name": "Fogline Drift",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "fogwake_step",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Fogline Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 3
-      }
-    },
-    {
-      "id": "spell_survey_chain",
-      "name": "Survey Chain",
-      "school_id": "old_measure",
-      "tier": 1,
-      "accord_family": "old_measure_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Old boundary math snaps into a measured ring and exposes nearby routes before the army commits.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 7
-      }
-    },
-    {
-      "id": "spell_coal_rain",
-      "name": "Coal Rain",
-      "school_id": "mire",
-      "tier": 1,
-      "accord_family": "rot_bloom",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Coal Rain casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 14,
-        "power_scale": 10,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_bulwark_litany",
-      "name": "Bulwark Litany",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "rally_bell",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "An ironbound oath that thickens shields and closes the line.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_relay_drum",
-      "name": "Relay Drum",
-      "school_id": "mire",
-      "tier": 1,
-      "accord_family": "wounded_prey_drum",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Relay Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_lantern_phalanx",
-      "name": "Lantern Phalanx",
-      "school_id": "beacon",
-      "tier": 2,
-      "accord_family": "rally_bell",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Signal-lantern commands tighten the acting stack into a pike-backed fighting line.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_bloodwake_drum",
-      "name": "Bloodwake Drum",
-      "school_id": "mire",
-      "tier": 2,
-      "accord_family": "wounded_prey_drum",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Bloodwake Drum wakes the blackwater pulse beneath the chosen company, turning hunger and drumbeat into a violent push.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_prism_bastion",
-      "name": "Prism Bastion",
-      "school_id": "lens",
-      "tier": 1,
-      "accord_family": "prism_ward",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "ally_active",
-      "description": "Facet wards lock around the acting stack, hardening the line and preserving its rhythm.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 1,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_resonant_chorus",
-      "name": "Resonant Chorus",
-      "school_id": "lens",
-      "tier": 2,
-      "accord_family": "resonant_chorus",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Resonant Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_sunlance_arc",
-      "name": "Sunlance Arc",
-      "school_id": "lens",
-      "tier": 2,
-      "accord_family": "sunlance",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "enemy_selected",
-      "description": "Sunlance Arc focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 28,
-        "power_scale": 15,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -1
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 8
-      }
-    },
-    {
-      "id": "spell_briar_bind",
-      "name": "Briar Bind",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "briar_bind",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "enemy_selected",
-      "description": "Root-script thorns lash a chosen stack and pull its formation out of rhythm.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 1,
-          "modifiers": {
-            "defense": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_graft_mend",
-      "name": "Graft Mend",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "graft_mend",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "ally_active",
-      "description": "Living splints and seedglass resin harden the acting stack for a long exchange.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 18,
-        "power_scale": 4,
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_heat_rite",
-      "name": "Heat Rite",
-      "school_id": "furnace",
-      "tier": 1,
-      "accord_family": "heat_rite",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Heat Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_pressure_clause",
-      "name": "Pressure Clause",
-      "school_id": "furnace",
-      "tier": 1,
-      "accord_family": "pressure_clause",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Stamped pressure seals hammer a chosen stack and leave its formation counting broken clauses.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 18,
-        "power_scale": 13,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -1
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 4
-      }
-    },
-    {
-      "id": "spell_fogwake_step",
-      "name": "Fogwake Step",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "fogwake_step",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff",
-        "control"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Fogwake Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_obituary_mark",
-      "name": "Obituary Mark",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "obituary_mark",
-      "primary_role": "isolation_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Ink from an unfinished obituary marks a chosen stack for isolation and faltering answers.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 15,
-        "power_scale": 10,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_roadward_signal_07",
-      "name": "Roadward Signal",
-      "school_id": "beacon",
-      "tier": 2,
-      "accord_family": "beacon_signal",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Roadward Signal passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_bell_ward_09",
-      "name": "Bell Ward",
-      "school_id": "beacon",
-      "tier": 4,
-      "accord_family": "beacon_ward",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Bell Ward locks hooded lanterns along the shield line, hardening the chosen company against the next exchange.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 4,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_column_charge_11",
-      "name": "Column Charge",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "beacon_charge",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Column Charge opens a lantern-marked lane through the melee, sharpening the chosen company for a disciplined advance.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_writ_lance_13",
-      "name": "Writ Lance",
-      "school_id": "beacon",
-      "tier": 3,
-      "accord_family": "beacon_lance",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "Writ Lance drives a charter-bright lance through the chosen enemy line and leaves its orders ringing out of step.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 42,
-        "power_scale": 23,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 2,
-          "modifiers": {
-            "initiative": -2
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 12
-      }
-    },
-    {
-      "id": "spell_beacon_waymark_road_15",
-      "name": "Waymark Road",
-      "school_id": "beacon",
-      "tier": 5,
-      "accord_family": "beacon_road",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 12,
-      "target_mode": "self",
-      "description": "Waymark Road fixes a bright waymark beyond the column and draws the march farther along the paid road.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 14
-      }
-    },
-    {
-      "id": "spell_beacon_lantern_oath_17",
-      "name": "Lantern Oath",
-      "school_id": "beacon",
-      "tier": 2,
-      "accord_family": "beacon_oath",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 6,
-      "target_mode": "ally_active",
-      "description": "Lantern Oath reads the chosen company against a clean signal flame, burning hostile workings out of its formation.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 2,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_beacon_crown_signal_19",
-      "name": "Crown Signal",
-      "school_id": "beacon",
-      "tier": 4,
-      "accord_family": "beacon_signal",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Crown Signal passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "initiative": 4,
-          "speed": 2
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_dawn_ward_21",
-      "name": "Dawn Ward",
-      "school_id": "beacon",
-      "tier": 1,
-      "accord_family": "beacon_ward",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Dawn Ward locks hooded lanterns along the shield line, hardening the chosen company against the next exchange.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_roadward_charge_23",
-      "name": "Roadward Charge",
-      "school_id": "beacon",
-      "tier": 3,
-      "accord_family": "beacon_charge",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Roadward Charge opens a lantern-marked lane through the melee, sharpening the chosen company for a disciplined advance.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 3,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_bell_lance_25",
-      "name": "Bell Lance",
-      "school_id": "beacon",
-      "tier": 5,
-      "accord_family": "beacon_lance",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "enemy_selected",
-      "description": "Drive a resonant lance into one enemy stack, dealing heavy damage and staggering it for its next three turns so it cannot strike back; wounded targets suffer an additional finishing strike.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 77,
-        "power_scale": 38,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 3,
-          "modifiers": {
-            "initiative": -3
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 22
-      }
-    },
-    {
-      "id": "spell_mire_silt_rot_04",
-      "name": "Silt Rot",
-      "school_id": "mire",
-      "tier": 4,
-      "accord_family": "mire_rot",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "enemy_selected",
-      "description": "Silt Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 51,
-        "power_scale": 28,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_mire_dusk_drum_06",
-      "name": "Dusk Drum",
-      "school_id": "mire",
-      "tier": 1,
-      "accord_family": "mire_drum",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Dusk Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_mire_brine_frenzy_08",
-      "name": "Brine Frenzy",
-      "school_id": "mire",
-      "tier": 3,
-      "accord_family": "mire_frenzy",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Brine Frenzy wakes the blackwater pulse beneath the chosen company, turning hunger and drumbeat into a violent push.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 3,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_mire_leech_snare_10",
-      "name": "Leech Snare",
-      "school_id": "mire",
-      "tier": 5,
-      "accord_family": "mire_snare",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 13,
-      "target_mode": "enemy_selected",
-      "description": "Leech Snare knots wet reeds around the enemy formation, stealing its footing and breaking the rhythm of its orders.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 3,
-          "modifiers": {
-            "defense": -3
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_mire_flood_fenlight_12",
-      "name": "Flood Fenlight",
-      "school_id": "mire",
-      "tier": 2,
-      "accord_family": "mire_fenlight",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Flood Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 9
-      }
-    },
-    {
-      "id": "spell_mire_sluice_poultice_14",
-      "name": "Sluice Poultice",
-      "school_id": "mire",
-      "tier": 4,
-      "accord_family": "mire_poultice",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 10,
-      "target_mode": "ally_active",
-      "description": "Sluice Poultice packs peatwax and bitter marsh herbs into fresh wounds, restoring the chosen company for another exchange.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 56,
-        "power_scale": 11,
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 4,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_mire_lowtide_rot_16",
-      "name": "Lowtide Rot",
-      "school_id": "mire",
-      "tier": 1,
-      "accord_family": "mire_rot",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Lowtide Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 14,
-        "power_scale": 10,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_mire_bog_drum_18",
-      "name": "Bog Drum",
-      "school_id": "mire",
-      "tier": 3,
-      "accord_family": "mire_drum",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Bog Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 3,
-          "speed": 2
-        }
-      }
-    },
-    {
-      "id": "spell_mire_silt_frenzy_20",
-      "name": "Silt Frenzy",
-      "school_id": "mire",
-      "tier": 5,
-      "accord_family": "mire_frenzy",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "ally_active",
-      "description": "Wake one allied stack's disciplined mire-fury for its next three turns, sharply increasing attack and driving its momentum.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 5,
-        "duration_rounds": 3,
-        "modifiers": {
-          "attack": 5,
-          "momentum": 3
-        }
-      }
-    },
-    {
-      "id": "spell_mire_dusk_snare_22",
-      "name": "Dusk Snare",
-      "school_id": "mire",
-      "tier": 2,
-      "accord_family": "mire_snare",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 6,
-      "target_mode": "enemy_selected",
-      "description": "Dusk Snare knots wet reeds around the enemy formation, stealing its footing and breaking the rhythm of its orders.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 1,
-          "modifiers": {
-            "defense": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_mire_brine_fenlight_24",
-      "name": "Brine Fenlight",
-      "school_id": "mire",
-      "tier": 4,
-      "accord_family": "mire_fenlight",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Brine Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 14
-      }
-    },
-    {
-      "id": "spell_mire_leech_poultice_26",
-      "name": "Leech Poultice",
-      "school_id": "mire",
-      "tier": 1,
-      "accord_family": "mire_poultice",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "ally_active",
-      "description": "Leech Poultice packs peatwax and bitter marsh herbs into fresh wounds, restoring the chosen company for another exchange.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 18,
-        "power_scale": 4,
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_mire_flood_rot_28",
-      "name": "Flood Rot",
-      "school_id": "mire",
-      "tier": 3,
-      "accord_family": "mire_rot",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "Flood Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 36,
-        "power_scale": 20,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_lens_mirror_prism_04",
-      "name": "Mirror Prism",
-      "school_id": "lens",
-      "tier": 4,
-      "accord_family": "lens_prism",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 10,
-      "target_mode": "ally_active",
-      "description": "Mirror Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 4,
-        "duration_rounds": 3,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 4,
-          "cohesion": 2
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_lens_array_ray_06",
-      "name": "Array Ray",
-      "school_id": "lens",
-      "tier": 1,
-      "accord_family": "lens_ray",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Array Ray focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 14,
-        "power_scale": 10,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_lens_glass_facet_08",
-      "name": "Glass Facet",
-      "school_id": "lens",
-      "tier": 3,
-      "accord_family": "lens_facet",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Glass Facet folds clear facets around the chosen company, catching force before it reaches the line within.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_lens_aurora_chorus_10",
-      "name": "Aurora Chorus",
-      "school_id": "lens",
-      "tier": 5,
-      "accord_family": "lens_chorus",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "ally_active",
-      "description": "Aurora Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 5,
-        "duration_rounds": 3,
-        "modifiers": {
-          "initiative": 5,
-          "speed": 3
-        }
-      }
-    },
-    {
-      "id": "spell_lens_starlens_survey_12",
-      "name": "Starlens Survey",
-      "school_id": "lens",
-      "tier": 2,
-      "accord_family": "lens_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Starlens Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 9
-      }
-    },
-    {
-      "id": "spell_lens_focus_array_14",
-      "name": "Focus Array",
-      "school_id": "lens",
-      "tier": 4,
-      "accord_family": "lens_array",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Focus Array aligns the chosen company with a hard white angle, concentrating every strike along one measured line.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "attack": 4,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_lens_crown_prism_16",
-      "name": "Crown Prism",
-      "school_id": "lens",
-      "tier": 1,
-      "accord_family": "lens_prism",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "ally_active",
-      "description": "Crown Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 1,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_lens_halo_ray_18",
-      "name": "Halo Ray",
-      "school_id": "lens",
-      "tier": 3,
-      "accord_family": "lens_ray",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "Halo Ray focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 37,
-        "power_scale": 20,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_lens_mirror_facet_20",
-      "name": "Mirror Facet",
-      "school_id": "lens",
-      "tier": 5,
-      "accord_family": "lens_facet",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "ally_active",
-      "description": "Turn a prismatic facet around one allied stack for its next three turns, greatly increasing defense while the steady light holds its ranks together.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 5,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 5,
-          "cohesion": 3
-        }
-      }
-    },
-    {
-      "id": "spell_lens_array_chorus_22",
-      "name": "Array Chorus",
-      "school_id": "lens",
-      "tier": 2,
-      "accord_family": "lens_chorus",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Array Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_lens_glass_survey_24",
-      "name": "Glass Survey",
-      "school_id": "lens",
-      "tier": 4,
-      "accord_family": "lens_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Glass Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 14
-      }
-    },
-    {
-      "id": "spell_lens_aurora_array_26",
-      "name": "Aurora Array",
-      "school_id": "lens",
-      "tier": 1,
-      "accord_family": "lens_array",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Aurora Array aligns the chosen company with a hard white angle, concentrating every strike along one measured line.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_lens_starlens_prism_28",
-      "name": "Starlens Prism",
-      "school_id": "lens",
-      "tier": 3,
-      "accord_family": "lens_prism",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "ally_active",
-      "description": "Starlens Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 3,
-        "duration_rounds": 2,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_root_bloom_briar_04",
-      "name": "Bloom Briar",
-      "school_id": "root",
-      "tier": 4,
-      "accord_family": "root_briar",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 10,
-      "target_mode": "enemy_selected",
-      "description": "Bloom Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 2,
-          "modifiers": {
-            "defense": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_root_canopy_graft_06",
-      "name": "Canopy Graft",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "root_graft",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "ally_active",
-      "description": "Canopy Graft seals wounds with warm sap and living splints, returning strength to the chosen company.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 18,
-        "power_scale": 4,
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_root_bark_bark_08",
-      "name": "Bark Mantle",
-      "school_id": "root",
-      "tier": 3,
-      "accord_family": "root_bark",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Bark Mantle grows layered bark around the chosen company, flexing under impact without surrendering the line.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_root_loam_thorn_10",
-      "name": "Loam Thorn",
-      "school_id": "root",
-      "tier": 5,
-      "accord_family": "root_thorn",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "enemy_selected",
-      "description": "Loam Thorn thrusts a hardened thorn through the chosen enemy ranks and leaves their footing tangled in new growth.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 73,
-        "power_scale": 35,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 3,
-          "modifiers": {
-            "cohesion": -3
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 22
-      }
-    },
-    {
-      "id": "spell_root_green_rootway_12",
-      "name": "Green Rootway",
-      "school_id": "root",
-      "tier": 2,
-      "accord_family": "root_rootway",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Green Rootway uncovers an old root road beneath the column and carries the march over broken ground.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 5
-      }
-    },
-    {
-      "id": "spell_root_branch_bloom_14",
-      "name": "Branch Bloom",
-      "school_id": "root",
-      "tier": 4,
-      "accord_family": "root_bloom",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Branch Bloom drives living grain through haft and armor, lending the chosen company the force of a bending bough.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "attack": 4,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_root_wild_briar_16",
-      "name": "Wild Briar",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "root_briar",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "enemy_selected",
-      "description": "Wild Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 1,
-          "modifiers": {
-            "defense": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_root_graft_graft_18",
-      "name": "Graft Ward",
-      "school_id": "root",
-      "tier": 3,
-      "accord_family": "root_graft",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "ally_active",
-      "description": "Graft Ward seals wounds with warm sap and living splints, returning strength to the chosen company.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 40,
-        "power_scale": 8,
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_root_bloom_bark_20",
-      "name": "Bloom Bark",
-      "school_id": "root",
-      "tier": 5,
-      "accord_family": "root_bark",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "ally_active",
-      "description": "Grow flowering armor around one allied stack for its next three turns, greatly increasing defense and keeping its ranks firm under pressure.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 5,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 5,
-          "cohesion": 3
-        }
-      }
-    },
-    {
-      "id": "spell_root_canopy_thorn_22",
-      "name": "Canopy Thorn",
-      "school_id": "root",
-      "tier": 2,
-      "accord_family": "root_thorn",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "enemy_selected",
-      "description": "Canopy Thorn thrusts a hardened thorn through the chosen enemy ranks and leaves their footing tangled in new growth.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 25,
-        "power_scale": 15,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_root_bark_rootway_24",
-      "name": "Bark Rootway",
-      "school_id": "root",
-      "tier": 4,
-      "accord_family": "root_rootway",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Bark Rootway uncovers an old root road beneath the column and carries the march over broken ground.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 10
-      }
-    },
-    {
-      "id": "spell_root_loam_bloom_26",
-      "name": "Loam Bloom",
-      "school_id": "root",
-      "tier": 1,
-      "accord_family": "root_bloom",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Loam Bloom drives living grain through haft and armor, lending the chosen company the force of a bending bough.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_root_green_briar_28",
-      "name": "Green Briar",
-      "school_id": "root",
-      "tier": 3,
-      "accord_family": "root_briar",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "enemy_selected",
-      "description": "Green Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 2,
-          "modifiers": {
-            "defense": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_rivet_clause_05",
-      "name": "Rivet Clause",
-      "school_id": "furnace",
-      "tier": 5,
-      "accord_family": "furnace_clause",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "enemy_selected",
-      "description": "Rivet Clause discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 79,
-        "power_scale": 38,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 3,
-          "modifiers": {
-            "initiative": -3
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 22
-      }
-    },
-    {
-      "id": "spell_furnace_brass_rite_07",
-      "name": "Brass Rite",
-      "school_id": "furnace",
-      "tier": 2,
-      "accord_family": "furnace_rite",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Brass Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_ash_mantle_09",
-      "name": "Ash Mantle",
-      "school_id": "furnace",
-      "tier": 4,
-      "accord_family": "furnace_mantle",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Ash Mantle lays quenched plates across the chosen company, turning the next impact into a measured load.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 4,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_foundry_bellows_11",
-      "name": "Foundry Bellows",
-      "school_id": "furnace",
-      "tier": 1,
-      "accord_family": "furnace_bellows",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Foundry Bellows feeds the bellows in exact sequence, bringing the chosen company to pressure before its rivals are ready.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_hammer_rail_13",
-      "name": "Hammer Rail",
-      "school_id": "furnace",
-      "tier": 3,
-      "accord_family": "furnace_rail",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 7,
-      "target_mode": "self",
-      "description": "Hammer Rail strikes a hot guide rail across the route, carrying the marching host toward the next foundry mark.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 7
-      }
-    },
-    {
-      "id": "spell_furnace_slag_clamp_15",
-      "name": "Slag Clamp",
-      "school_id": "furnace",
-      "tier": 5,
-      "accord_family": "furnace_clamp",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 13,
-      "target_mode": "enemy_selected",
-      "description": "Close an incandescent slag clamp around one enemy stack for its next three turns: it acts later and cannot strike back.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 3,
-          "modifiers": {
-            "initiative": -3
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_coal_clause_17",
-      "name": "Coal Clause",
-      "school_id": "furnace",
-      "tier": 2,
-      "accord_family": "furnace_clause",
-      "primary_role": "priority_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "enemy_selected",
-      "description": "Coal Clause discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 30,
-        "power_scale": 18,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -1
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 8
-      }
-    },
-    {
-      "id": "spell_furnace_kiln_rite_19",
-      "name": "Kiln Rite",
-      "school_id": "furnace",
-      "tier": 4,
-      "accord_family": "furnace_rite",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Kiln Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "attack": 4,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_rivet_mantle_21",
-      "name": "Rivet Mantle",
-      "school_id": "furnace",
-      "tier": 1,
-      "accord_family": "furnace_mantle",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Rivet Mantle lays quenched plates across the chosen company, turning the next impact into a measured load.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_brass_bellows_23",
-      "name": "Brass Bellows",
-      "school_id": "furnace",
-      "tier": 3,
-      "accord_family": "furnace_bellows",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Brass Bellows feeds the bellows in exact sequence, bringing the chosen company to pressure before its rivals are ready.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 3,
-          "speed": 2
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_ash_rail_25",
-      "name": "Ash Rail",
-      "school_id": "furnace",
-      "tier": 5,
-      "accord_family": "furnace_rail",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 12,
-      "target_mode": "self",
-      "description": "Ash Rail strikes a hot guide rail across the route, carrying the marching host toward the next foundry mark.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 14
-      }
-    },
-    {
-      "id": "spell_furnace_foundry_clamp_27",
-      "name": "Foundry Clamp",
-      "school_id": "furnace",
-      "tier": 2,
-      "accord_family": "furnace_clamp",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 6,
-      "target_mode": "enemy_selected",
-      "description": "Foundry Clamp closes a stamped pressure clamp around the enemy formation, slowing every order under the added weight.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_veil_mourning_mark_04",
-      "name": "Mourning Mark",
-      "school_id": "veil",
-      "tier": 4,
-      "accord_family": "veil_mark",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "enemy_selected",
-      "description": "Mourning Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 52,
-        "power_scale": 28,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_veil_salt_step_06",
-      "name": "Salt Step",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "veil_step",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Salt Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "initiative": 2,
-          "speed": 1
-        }
-      }
-    },
-    {
-      "id": "spell_veil_tide_fogbind_08",
-      "name": "Tide Fogbind",
-      "school_id": "veil",
-      "tier": 3,
-      "accord_family": "veil_fogbind",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "enemy_selected",
-      "description": "Tide Fogbind draws mourning fog around the enemy formation, smothering bearings and delaying every command.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 2,
-          "modifiers": {
-            "initiative": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_veil_mist_shroud_10",
-      "name": "Mist Shroud",
-      "school_id": "veil",
-      "tier": 5,
-      "accord_family": "veil_shroud",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "ally_active",
-      "description": "Mist Shroud wraps the chosen company in layered mist and salt shadow, making each hostile blow lose its bearing.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 5,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 5,
-          "cohesion": 3
-        }
-      }
-    },
-    {
-      "id": "spell_veil_moon_drift_12",
-      "name": "Moon Drift",
-      "school_id": "veil",
-      "tier": 2,
-      "accord_family": "veil_drift",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Moon Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 5
-      }
-    },
-    {
-      "id": "spell_veil_wraith_duel_14",
-      "name": "Wraith Duel",
-      "school_id": "veil",
-      "tier": 4,
-      "accord_family": "veil_duel",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Wraith Duel hides the chosen company inside a false tide, letting its real strike arrive from the unanswered side.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "attack": 4,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_veil_lantern_mark_16",
-      "name": "Lantern Mark",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "veil_mark",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "enemy_selected",
-      "description": "Lantern Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 14,
-        "power_scale": 10,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 1,
-          "modifiers": {
-            "cohesion": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_veil_obituary_step_18",
-      "name": "Obituary Step",
-      "school_id": "veil",
-      "tier": 3,
-      "accord_family": "veil_step",
-      "primary_role": "tempo_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Obituary Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
-      "effect": {
-        "type": "initiative_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "initiative": 3,
-          "speed": 2
-        }
-      }
-    },
-    {
-      "id": "spell_veil_mourning_fogbind_20",
-      "name": "Mourning Fogbind",
-      "school_id": "veil",
-      "tier": 5,
-      "accord_family": "veil_fogbind",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 13,
-      "target_mode": "enemy_selected",
-      "description": "Bind one enemy stack in a mourning sea-fog for its next three turns: it loses its place in the order and cannot strike back.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 3,
-          "modifiers": {
-            "initiative": -3
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_veil_salt_shroud_22",
-      "name": "Salt Shroud",
-      "school_id": "veil",
-      "tier": 2,
-      "accord_family": "veil_shroud",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 5,
-      "target_mode": "ally_active",
-      "description": "Salt Shroud wraps the chosen company in layered mist and salt shadow, making each hostile blow lose its bearing.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_veil_tide_drift_24",
-      "name": "Tide Drift",
-      "school_id": "veil",
-      "tier": 4,
-      "accord_family": "veil_drift",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Tide Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 10
-      }
-    },
-    {
-      "id": "spell_veil_mist_duel_26",
-      "name": "Mist Duel",
-      "school_id": "veil",
-      "tier": 1,
-      "accord_family": "veil_duel",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Mist Duel hides the chosen company inside a false tide, letting its real strike arrive from the unanswered side.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "attack": 2,
-          "momentum": 1
-        }
-      }
-    },
-    {
-      "id": "spell_veil_moon_mark_28",
-      "name": "Moon Mark",
-      "school_id": "veil",
-      "tier": 3,
-      "accord_family": "veil_mark",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "Moon Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 37,
-        "power_scale": 20,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_survey_survey_02",
-      "name": "Survey Ring",
-      "school_id": "old_measure",
-      "tier": 2,
-      "accord_family": "old_measure_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Survey Ring lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 9
-      }
-    },
-    {
-      "id": "spell_old_measure_tally_axiom_04",
-      "name": "Tally Axiom",
-      "school_id": "old_measure",
-      "tier": 4,
-      "accord_family": "old_measure_axiom",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 9,
-      "target_mode": "ally_active",
-      "description": "Tally Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 4,
-        "duration_rounds": 3,
-        "modifiers": {
-          "defense": 4,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_compass_boundary_06",
-      "name": "Compass Boundary",
-      "school_id": "old_measure",
-      "tier": 1,
-      "accord_family": "old_measure_boundary",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 4,
-      "target_mode": "enemy_selected",
-      "description": "Compass Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 1,
-          "modifiers": {
-            "defense": -1
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_marker_tally_08",
-      "name": "Marker Tally",
-      "school_id": "old_measure",
-      "tier": 3,
-      "accord_family": "old_measure_tally",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "Marker Tally enters the chosen enemy into a hard tally, exacting force for every broken interval in its line.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 39,
-        "power_scale": 20,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 2,
-          "modifiers": {
-            "cohesion": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_index_correction_10",
-      "name": "Index Correction",
-      "school_id": "old_measure",
-      "tier": 5,
-      "accord_family": "old_measure_correction",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 13,
-      "target_mode": "ally_active",
-      "description": "Index Correction proves the chosen company against an older correction, cancelling hostile marks that fail the measure.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 5,
-        "duration_rounds": 3,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 5,
-          "cohesion": 3
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_old_measure_proof_pace_12",
-      "name": "Proof Pace",
-      "school_id": "old_measure",
-      "tier": 2,
-      "accord_family": "old_measure_pace",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 5,
-      "target_mode": "self",
-      "description": "Proof Pace establishes a verified pace beneath the column, extending the march to the next lawful marker.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 5
-      }
-    },
-    {
-      "id": "spell_old_measure_count_survey_14",
-      "name": "Count Survey",
-      "school_id": "old_measure",
-      "tier": 4,
-      "accord_family": "old_measure_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Count Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 14
-      }
-    },
-    {
-      "id": "spell_old_measure_measure_axiom_16",
-      "name": "Measure Axiom",
-      "school_id": "old_measure",
-      "tier": 1,
-      "accord_family": "old_measure_axiom",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 3,
-      "target_mode": "ally_active",
-      "description": "Measure Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 1,
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_survey_boundary_18",
-      "name": "Survey Boundary",
-      "school_id": "old_measure",
-      "tier": 3,
-      "accord_family": "old_measure_boundary",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "enemy_selected",
-      "description": "Survey Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 2,
-          "modifiers": {
-            "defense": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_tally_tally_20",
-      "name": "Tally Verdict",
-      "school_id": "old_measure",
-      "tier": 5,
-      "accord_family": "old_measure_tally",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 12,
-      "target_mode": "enemy_selected",
-      "description": "Render a measured verdict against one enemy stack, dealing heavy damage and harrying it for its next three turns so its cohesion bleeds away; wounded targets pay an additional tally.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 74,
-        "power_scale": 35,
-        "status_effect": {
-          "effect_id": "status_harried",
-          "label": "Harried",
-          "duration_rounds": 3,
-          "modifiers": {
-            "cohesion": -3
-          }
-        },
-        "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 22
-      }
-    },
-    {
-      "id": "spell_old_measure_compass_correction_22",
-      "name": "Compass Correction",
-      "school_id": "old_measure",
-      "tier": 2,
-      "accord_family": "old_measure_correction",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 6,
-      "target_mode": "ally_active",
-      "description": "Compass Correction proves the chosen company against an older correction, cancelling hostile marks that fail the measure.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 2,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 2,
-          "cohesion": 1
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_old_measure_marker_pace_24",
-      "name": "Marker Pace",
-      "school_id": "old_measure",
-      "tier": 4,
-      "accord_family": "old_measure_pace",
-      "primary_role": "movement_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 9,
-      "target_mode": "self",
-      "description": "Marker Pace establishes a verified pace beneath the column, extending the march to the next lawful marker.",
-      "effect": {
-        "type": "restore_movement",
-        "amount": 10
-      }
-    },
-    {
-      "id": "spell_old_measure_index_survey_26",
-      "name": "Index Survey",
-      "school_id": "old_measure",
-      "tier": 1,
-      "accord_family": "old_measure_survey",
-      "primary_role": "scouting_support",
-      "role_categories": [
-        "economy_map_utility"
-      ],
-      "context": "overworld",
-      "mana_cost": 3,
-      "target_mode": "self",
-      "description": "Index Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
-      "effect": {
-        "type": "reveal_radius",
-        "amount": 7
-      }
-    },
-    {
-      "id": "spell_old_measure_proof_axiom_28",
-      "name": "Proof Axiom",
-      "school_id": "old_measure",
-      "tier": 3,
-      "accord_family": "old_measure_axiom",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Proof Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_count_boundary_30",
-      "name": "Count Boundary",
-      "school_id": "old_measure",
-      "tier": 5,
-      "accord_family": "old_measure_boundary",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 13,
-      "target_mode": "enemy_selected",
-      "description": "Count Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 3,
-          "modifiers": {
-            "defense": -3
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_beacon_lockfire_muster",
-      "name": "Lockfire Muster",
-      "school_id": "beacon",
-      "tier": 3,
-      "accord_family": "beacon_lockfire",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "Seven lock-lanterns answer in sequence, giving the chosen company a bright attack lane and the cadence to hold it.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 3,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_mire_moonfen_dragnet",
-      "name": "Moonfen Dragnet",
-      "school_id": "mire",
-      "tier": 3,
-      "accord_family": "mire_moonfen",
-      "primary_role": "control_enemy",
-      "role_categories": [
-        "control",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "enemy_selected",
-      "description": "Moonlit reed cords rise from the enemy's own footprints, dragging its formation out of pace and opening its weak side.",
-      "effect": {
-        "type": "control_enemy",
-        "status_effect": {
-          "effect_id": "status_rooted",
-          "label": "Rooted",
-          "duration_rounds": 2,
-          "modifiers": {
-            "defense": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_lens_seven_facet_refrain",
-      "name": "Seven-Facet Refrain",
-      "school_id": "lens",
-      "tier": 3,
-      "accord_family": "lens_seven_facet",
-      "primary_role": "countermagic_ward",
-      "role_categories": [
-        "buff",
-        "countermagic"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "ally_active",
-      "description": "A seven-note prism turns hostile workings back through their false angles and leaves the chosen company inside a clean chord.",
-      "effect": {
-        "type": "cleanse_ally",
-        "amount": 3,
-        "duration_rounds": 2,
-        "cleanse_effect_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ],
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        },
-        "status_immunity_ids": [
-          "status_harried",
-          "status_staggered",
-          "status_rooted"
-        ]
-      }
-    },
-    {
-      "id": "spell_root_heartwood_renewal",
-      "name": "Heartwood Renewal",
-      "school_id": "root",
-      "tier": 3,
-      "accord_family": "root_heartwood",
-      "primary_role": "ally_recovery",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 8,
-      "target_mode": "ally_active",
-      "description": "Living grain closes around broken armor and tired limbs, restoring the chosen company beneath a fresh heartwood shell.",
-      "effect": {
-        "type": "recover_ally",
-        "base_restore": 40,
-        "power_scale": 8,
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
-      "id": "spell_furnace_redline_overdrive",
-      "name": "Redline Overdrive",
-      "school_id": "furnace",
-      "tier": 3,
-      "accord_family": "furnace_redline",
-      "primary_role": "assault_buff",
-      "role_categories": [
-        "buff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "The gauges climb to their signed limit as furnace breath drives the chosen company into one controlled, armor-ringing surge.",
-      "effect": {
-        "type": "attack_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "attack": 3,
-          "momentum": 2
-        }
-      }
-    },
-    {
-      "id": "spell_veil_drowned_bell_verdict",
-      "name": "Drowned-Bell Verdict",
-      "school_id": "veil",
-      "tier": 3,
-      "accord_family": "veil_drowned_bell",
-      "primary_role": "harry_damage",
-      "role_categories": [
-        "damage",
-        "debuff"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "enemy_selected",
-      "description": "A bell sounds beneath the enemy line; its returning wave strikes through armor and leaves every order half a beat late.",
-      "effect": {
-        "type": "damage_enemy",
-        "base_damage": 40,
-        "power_scale": 23,
-        "status_effect": {
-          "effect_id": "status_staggered",
-          "label": "Staggered",
-          "duration_rounds": 2,
-          "modifiers": {
-            "initiative": -2
-          }
-        }
-      }
-    },
-    {
-      "id": "spell_old_measure_unbroken_meridian",
-      "name": "Unbroken Meridian",
-      "school_id": "old_measure",
-      "tier": 3,
-      "accord_family": "old_measure_meridian",
-      "primary_role": "ally_defense",
-      "role_categories": [
-        "buff",
-        "recovery"
-      ],
-      "context": "battle",
-      "mana_cost": 7,
-      "target_mode": "ally_active",
-      "description": "An ancient meridian is proved beneath the chosen company, fixing its line where hostile counts and crooked bearings cannot move it.",
-      "effect": {
-        "type": "defense_buff",
-        "amount": 3,
-        "duration_rounds": 2,
-        "modifiers": {
-          "defense": 3,
-          "cohesion": 2
-        }
-      }
-    },
-    {
       "id": "spell_bolt",
       "name": "Bolt",
       "school_id": "basic",
@@ -3051,7 +13,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A plain spark of force thrown at one enemy stack.",
       "effect": {
         "type": "damage_enemy",
@@ -3072,7 +33,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Closes the wounds of one of your stacks; the fallen stay fallen.",
       "effect": {
         "type": "recover_ally",
@@ -3093,7 +53,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Puts an edge on one of your stacks' blows.",
       "effect": {
         "type": "attack_buff",
@@ -3117,7 +76,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Lightens the step of one of your stacks.",
       "effect": {
         "type": "initiative_buff",
@@ -3141,7 +99,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Hardens one of your stacks against the blows that come.",
       "effect": {
         "type": "defense_buff",
@@ -3165,7 +122,6 @@
       "context": "battle",
       "mana_cost": 2,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Holds the ranks of one of your stacks together.",
       "effect": {
         "type": "defense_buff",
@@ -3190,7 +146,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Drags at the feet of one enemy stack.",
       "effect": {
         "type": "control_enemy",
@@ -3217,7 +172,6 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Clouds one enemy stack so that it moves after all others.",
       "effect": {
         "type": "control_enemy",
@@ -3242,7 +196,6 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Binds one enemy stack where it stands.",
       "effect": {
         "type": "control_enemy",
@@ -3270,7 +223,6 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Picks apart the spells that help one enemy stack.",
       "effect": {
         "type": "dispel_enemy",
@@ -3292,7 +244,6 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Washes what harms one of your stacks away.",
       "effect": {
         "type": "cleanse_ally",
@@ -3313,7 +264,6 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Slides one of your stacks across the field without spending its turn.",
       "effect": {
         "type": "move_ally",
@@ -3334,7 +284,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Opens one stack's furnace valves: harder blows, paid for in its own health.",
       "effect": {
         "type": "attack_buff",
@@ -3373,7 +322,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Every blow one stack lands feeds the fire for the next.",
       "effect": {
         "type": "ally_effect",
@@ -3404,7 +352,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Pours slag over one enemy stack's feet; it holds, then drags as it cools.",
       "effect": {
         "type": "control_enemy",
@@ -3446,7 +393,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A whip of embers that leaves heat in what it strikes.",
       "effect": {
         "type": "damage_enemy",
@@ -3468,7 +414,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Sears one stack's wounds shut at once; nothing else can mend them for a while.",
       "effect": {
         "type": "recover_ally",
@@ -3490,7 +435,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Rivets a plate of forged iron over one stack, taking blows until it breaks.",
       "effect": {
         "type": "ally_effect",
@@ -3520,7 +464,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One stack roots its stance and strikes hardest where it stands.",
       "effect": {
         "type": "ally_effect",
@@ -3550,7 +493,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Roots seize one enemy stack and close tighter every turn it stays.",
       "effect": {
         "type": "control_enemy",
@@ -3586,7 +528,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A drift of heavy pollen puts one enemy stack to sleep until something hits it.",
       "effect": {
         "type": "control_enemy",
@@ -3616,7 +557,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A volley of thorns that bites deepest into a stack that cannot move.",
       "effect": {
         "type": "damage_enemy",
@@ -3638,7 +578,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Living growth knits one stack's wounds at the start of each of its turns.",
       "effect": {
         "type": "ally_effect",
@@ -3672,7 +611,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Wraps one stack in thorns that cut whoever strikes it in melee.",
       "effect": {
         "type": "ally_effect",
@@ -3703,7 +641,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A signal flare that sends one stack forward to act next.",
       "effect": {
         "type": "ally_effect",
@@ -3732,7 +669,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A bright mark on one enemy stack that every one of yours can aim for.",
       "effect": {
         "type": "control_enemy",
@@ -3766,7 +702,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A flash that leaves one enemy stack unable to aim and swinging wild.",
       "effect": {
         "type": "control_enemy",
@@ -3797,7 +732,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Clean light that heals one stack and burns away one harmful status.",
       "effect": {
         "type": "recover_ally",
@@ -3825,7 +759,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A prism around one stack turns the next harmful spell aside.",
       "effect": {
         "type": "ally_effect",
@@ -3854,7 +787,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One stack's blows feed it a share of what they take.",
       "effect": {
         "type": "ally_effect",
@@ -3884,7 +816,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Whispers that shake one enemy stack and keep it from closing on yours.",
       "effect": {
         "type": "control_enemy",
@@ -3917,7 +848,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Fills one enemy stack's heads with fog; its blows fall on whoever stands near.",
       "effect": {
         "type": "control_enemy",
@@ -3949,7 +879,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A curse that eats at one enemy stack each turn and seeks a new host if it falls.",
       "effect": {
         "type": "control_enemy",
@@ -3983,7 +912,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Wraps one stack in mist that no archer can find.",
       "effect": {
         "type": "ally_effect",
@@ -4016,7 +944,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A spray of cinders that burns the target and everything around it, friend or foe.",
       "effect": {
         "type": "damage_enemy",
@@ -4038,7 +965,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A swarm of sparks that scatters across the enemy line.",
       "effect": {
         "type": "damage_enemy",
@@ -4062,7 +988,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A lance of dawn light from your edge of the field through every enemy in its path.",
       "effect": {
         "type": "damage_enemy",
@@ -4084,7 +1009,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Morning light falls on every stack of yours and closes its wounds.",
       "effect": {
         "type": "recover_ally",
@@ -4107,7 +1031,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Draws the life out of one enemy stack and pours half of it into one of yours.",
       "effect": {
         "type": "damage_enemy",
@@ -4129,7 +1052,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Grafts two of your stacks together with living bark: a wound to one is shared by both.",
       "effect": {
         "type": "graft_allies",
@@ -4149,7 +1071,6 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Draws life from one of your stacks into another, enough to bring its fallen back.",
       "effect": {
         "type": "transfer_ally",
@@ -4170,7 +1091,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A flash of signal light, and two of your stacks stand in each other's places.",
       "effect": {
         "type": "swap_allies",
@@ -4192,7 +1112,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Mist folds an enemy stack and one of yours into each other's places.",
       "effect": {
         "type": "swap_enemy",
@@ -4214,7 +1133,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A furrow of fire across the field: whatever walks through it or stands in it burns.",
       "effect": {
         "type": "ground_effect",
@@ -4240,7 +1158,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "Brambles burst from the ground; a stack that blunders in is held there and torn.",
       "effect": {
         "type": "ground_effect",
@@ -4266,7 +1183,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A seed waits in the ground for the first enemy to stop beside it.",
       "effect": {
         "type": "ground_effect",
@@ -4299,7 +1215,6 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A pillar of clear crystal rises from an empty hex and shelters your stacks beside it.",
       "effect": {
         "type": "ground_effect",
@@ -4323,7 +1238,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A bank of fog settles over a few hexes; nothing shoots into it or out of it.",
       "effect": {
         "type": "ground_effect",
@@ -4345,7 +1259,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Pours molten metal along one stack's weapons; whatever they strike catches fire.",
       "effect": {
         "type": "ally_effect",
@@ -4377,7 +1290,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Glowing cinders fall on one enemy stack and set it and its neighbours burning.",
       "effect": {
         "type": "damage_enemy",
@@ -4408,7 +1320,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Sets off all the heat a stack carries at once; a cold one only warms.",
       "effect": {
         "type": "damage_enemy",
@@ -4437,7 +1348,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Slow heat mends one stack and leaves it tougher.",
       "effect": {
         "type": "recover_ally",
@@ -4462,7 +1372,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Bolts thick plates onto one stack: hard to hurt, slow to move.",
       "effect": {
         "type": "defense_buff",
@@ -4502,7 +1411,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Tempers one stack like steel: no single blow or spell takes more than a quarter of it.",
       "effect": {
         "type": "ally_effect",
@@ -4525,7 +1433,6 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "One of your stacks feeds the furnace with its own blood, and the flame falls on an enemy stack.",
       "effect": {
         "type": "sacrifice",
@@ -4548,7 +1455,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "New creatures bud from one stack's ranks; they wither when the battle ends.",
       "effect": {
         "type": "temp_creatures",
@@ -4569,7 +1475,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "The ground splits under one enemy stack and throws it back a hex.",
       "effect": {
         "type": "damage_enemy",
@@ -4591,7 +1496,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A burst of blossom heals one stack and, more softly, the stacks beside it.",
       "effect": {
         "type": "recover_ally",
@@ -4615,7 +1519,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Plants a seed in one stack: if it falls, it grows back once.",
       "effect": {
         "type": "ally_effect",
@@ -4639,7 +1542,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A ring of bark closes around one stack and the stacks beside it.",
       "effect": {
         "type": "defense_buff",
@@ -4671,7 +1573,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Rots one enemy stack: nothing heals it again this battle, and healing burns it instead.",
       "effect": {
         "type": "control_enemy",
@@ -4702,7 +1603,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A signal flare: every shooter of yours looses at the stack it marks and keeps its turn.",
       "effect": {
         "type": "free_volley",
@@ -4723,7 +1623,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A bolt of split light strikes one enemy stack and leaps on, weaker each time.",
       "effect": {
         "type": "damage_enemy",
@@ -4754,7 +1653,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Lights the fallen of one stack back to their feet.",
       "effect": {
         "type": "recover_ally",
@@ -4776,7 +1674,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "A light keeps watch over the field and mends whichever stack of yours is worst hurt each round.",
       "effect": {
         "type": "battle_aura",
@@ -4799,7 +1696,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A shell of clear glass: no enemy spell can be aimed at the stack inside.",
       "effect": {
         "type": "ally_effect",
@@ -4829,7 +1725,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A steady light over one stack and its neighbours: nothing harries, staggers or roots them.",
       "effect": {
         "type": "ally_effect",
@@ -4865,7 +1760,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One of your stacks hollows out the enemies pressed against it and drinks what it takes.",
       "effect": {
         "type": "damage_around",
@@ -4887,7 +1781,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A bell only one enemy stack can hear; on its second toll the doom falls.",
       "effect": {
         "type": "doom_enemy",
@@ -4910,7 +1803,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One stack cannot lose its last creature for a while, then catches its breath.",
       "effect": {
         "type": "ally_effect",
@@ -4935,7 +1827,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Goads one enemy stack into a fury: stronger, but it must go for the stack of yours you name.",
       "effect": {
         "type": "taunt_enemy",
@@ -4965,7 +1856,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Roots tear one enemy stack out of its place and drag it where you will, reeling.",
       "effect": {
         "type": "pull_enemy",
@@ -4993,7 +1883,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "Trees shoot up in a row across the field: nothing walks through them, and shots across them lose half their force.",
       "effect": {
         "type": "ground_effect",
@@ -5016,7 +1905,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A line of light the enemy cannot step across.",
       "effect": {
         "type": "ground_effect",
@@ -5040,7 +1928,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A standing crystal that answers each of your hero's damage spells with a bolt of its own.",
       "effect": {
         "type": "ground_effect",
@@ -5065,7 +1952,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Turns one stack to fog: it walks through anything, and its next blow comes from nowhere.",
       "effect": {
         "type": "ally_effect",
@@ -5089,7 +1975,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A waking nightmare: one enemy stack runs from your army and has no heart to strike back.",
       "effect": {
         "type": "control_enemy",
@@ -5122,7 +2007,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "The ground turns to sucking mire for the rest of the battle: slow to cross, and no footing to brace on.",
       "effect": {
         "type": "ground_effect",
@@ -5147,7 +2031,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "Builds a brass sentinel beside one of your stacks. It cannot move, but it strikes whatever comes next to it.",
       "effect": {
         "type": "conjure",
@@ -5175,7 +2058,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "Treants rise beside one of your stacks, slow and sturdy, and fight for you for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -5203,7 +2085,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A stack destroyed in this battle, yours or the enemy's, rises and fights for you for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -5227,7 +2108,6 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A copy of one of your stacks stands beside it and draws the enemy's blows; it vanishes when anything hits it.",
       "effect": {
         "type": "conjure",
@@ -5249,7 +2129,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One of your stacks goes back to the creatures, health and hex it had at the start of an earlier round.",
       "effect": {
         "type": "rewind",
@@ -5272,7 +2151,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "One enemy stack makes an attack now, at part of its strength, against a stack of its own side.",
       "effect": {
         "type": "charm_enemy",
@@ -5295,7 +2173,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Brands one enemy stack with molten iron; every hurt it takes melts its armour further.",
       "effect": {
         "type": "control_enemy",
@@ -5330,7 +2207,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A kiln bursts on one enemy stack and throws its fire over the stacks around it.",
       "effect": {
         "type": "damage_enemy",
@@ -5355,7 +2231,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A crucible's heat takes the next wound meant for one of your stacks, and the stack strikes back hotter.",
       "effect": {
         "type": "ally_effect",
@@ -5380,7 +2255,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A cloud of spores sickens one enemy stack and those beside it; healing barely takes on them.",
       "effect": {
         "type": "control_enemy",
@@ -5409,7 +2283,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A thicket springs up around one hex and holds fast every enemy stack inside it.",
       "effect": {
         "type": "ground_effect",
@@ -5435,7 +2308,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Sap floods one stack's wounds, raises its fallen and keeps on healing it.",
       "effect": {
         "type": "recover_ally",
@@ -5462,7 +2334,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Bark like iron covers one stack; shots and spells glance off it.",
       "effect": {
         "type": "ally_effect",
@@ -5492,7 +2363,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A judgement of light falls on one enemy stack: its gifts fail and its own hero cannot help it.",
       "effect": {
         "type": "control_enemy",
@@ -5516,7 +2386,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A searing ray burns one enemy stack, worst of all one already blinded.",
       "effect": {
         "type": "damage_enemy",
@@ -5538,7 +2407,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A ring of light keeps every hurt off one stack, which can only wait inside it.",
       "effect": {
         "type": "ally_effect",
@@ -5562,7 +2430,6 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Grave-cold edges pass through any armour, blow after blow.",
       "effect": {
         "type": "ally_effect",
@@ -5594,7 +2461,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A heavy stupor drops one enemy stack where it stands; it comes round harried.",
       "effect": {
         "type": "control_enemy",
@@ -5627,7 +2493,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Death knocks for one enemy stack; three turns later a share of it answers.",
       "effect": {
         "type": "doom_enemy",
@@ -5650,7 +2515,6 @@
       "context": "battle",
       "mana_cost": 14,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Every stack of yours runs hot: harder blows, quicker feet, and a first strike that sets its mark burning.",
       "effect": {
         "type": "ally_effect",
@@ -5682,7 +2546,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Molten iron rains on every enemy stack, heating each but never to bursting.",
       "effect": {
         "type": "damage_enemy",
@@ -5706,7 +2569,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Every stack of yours swears the oath of iron: a plate over it, and no stagger, root or stun can take hold.",
       "effect": {
         "type": "ally_effect",
@@ -5736,7 +2598,6 @@
       "context": "battle",
       "mana_cost": 16,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "A second sun climbs over the field and scorches every enemy stack as each round ends, for the rest of the battle.",
       "effect": {
         "type": "battle_aura",
@@ -5759,7 +2620,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "Roots rise under every enemy stack; a stack already held is crushed still for a turn.",
       "effect": {
         "type": "control_enemy",
@@ -5790,7 +2650,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Every stack of yours regrows each turn for a while, and the fallen grow back with what is left over.",
       "effect": {
         "type": "ally_effect",
@@ -5817,7 +2676,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Lanterns kindle over every stack of yours, mending wounds and lifting one harmful status from each.",
       "effect": {
         "type": "recover_ally",
@@ -5840,7 +2698,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Every stack of yours rides with the dawn: harder and quicker, and all of them move before the enemy next round.",
       "effect": {
         "type": "ally_effect",
@@ -5868,7 +2725,6 @@
       "context": "battle",
       "mana_cost": 16,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Dawn breaks over every stack of yours, healing it and bringing back its fallen with what is left over.",
       "effect": {
         "type": "recover_ally",
@@ -5892,7 +2748,6 @@
       "context": "battle",
       "mana_cost": 18,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "The sun stands still over your side: for some rounds your stacks act first and nothing blinds, roots, staggers or stuns them.",
       "effect": {
         "type": "battle_aura",
@@ -5921,7 +2776,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A sick wind blows through every enemy stack, and the fever stays on after it.",
       "effect": {
         "type": "damage_enemy",
@@ -5954,7 +2808,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "The long night falls on every enemy stack: each loses heart, and the smallest runs.",
       "effect": {
         "type": "control_enemy",
@@ -5991,7 +2844,6 @@
       "context": "battle",
       "mana_cost": 16,
       "target_mode": "enemy_selected",
-      "unreleased": true,
       "description": "A black tide washes over every enemy stack and takes a share of each, never its last creature.",
       "effect": {
         "type": "damage_enemy",
@@ -6014,7 +2866,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "One of your stacks runs past the red line: it strikes twice on its next turn, and harder, then cannot strike back for a while.",
       "effect": {
         "type": "ally_effect",
@@ -6043,7 +2894,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "A clarion rings for one of your stacks: it takes another full turn straight after this one, and strikes harder.",
       "effect": {
         "type": "ally_effect",
@@ -6071,7 +2921,6 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "The last spell your hero cast in this battle rings out again at once, stronger, and costs nothing more.",
       "effect": {
         "type": "recast",
@@ -6094,7 +2943,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Shadows stand in the ranks of one of your stacks: many of the creatures it loses come back as the round ends.",
       "effect": {
         "type": "ally_effect",
@@ -6119,7 +2967,6 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "An elder grove rises around one hex for the rest of the battle; your stacks in it heal and stand harder.",
       "effect": {
         "type": "ground_effect",
@@ -6144,7 +2991,6 @@
       "context": "battle",
       "mana_cost": 15,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A crystal dome closes over one hex and the six around it: no shot or spell from outside it hurts the stacks within.",
       "effect": {
         "type": "ground_effect",
@@ -6166,7 +3012,6 @@
       "context": "battle",
       "mana_cost": 18,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "Once a battle, every stack of yours that has fallen grows back with a share of its starting creatures as the next round begins.",
       "effect": {
         "type": "battle_aura",
@@ -6190,7 +3035,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "The foundry pours a brass golem onto an empty hex beside one of your stacks, to fight for you for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -6216,7 +3060,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "ally_selected",
-      "unreleased": true,
       "description": "Clockwork copies one of your stacks beside it, with a share of its creatures, to fight for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -6242,7 +3085,6 @@
       "context": "battle",
       "mana_cost": 16,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "An elder treant wakes beside your stacks, and trees grow around it for the rest of the battle.",
       "effect": {
         "type": "conjure",
@@ -6271,7 +3113,6 @@
       "context": "battle",
       "mana_cost": 11,
       "target_mode": "hex_selected",
-      "unreleased": true,
       "description": "A host of wraiths falls on any empty hex you pick, in two flying stacks, to fight for you for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -6301,7 +3142,6 @@
       "context": "battle",
       "mana_cost": 17,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "Every stack destroyed in this battle, yours or the enemy's, rises from the deep as Risen to fight for you for a few rounds.",
       "effect": {
         "type": "conjure",
@@ -6324,7 +3164,6 @@
       "context": "battle",
       "mana_cost": 18,
       "target_mode": "battle",
-      "unreleased": true,
       "description": "For the rest of the battle, every enemy stack destroyed rises for you as Risen as the next round begins.",
       "effect": {
         "type": "battle_aura",
@@ -6348,7 +3187,6 @@
       "context": "overworld",
       "mana_cost": 2,
       "target_mode": "self",
-      "unreleased": true,
       "description": "The hero's eyes reach farther over the land for the rest of the day.",
       "effect": {
         "type": "map_effect",
@@ -6370,7 +3208,6 @@
       "context": "overworld",
       "mana_cost": 3,
       "target_mode": "self",
-      "unreleased": true,
       "description": "A long, tireless stride carries the army a few tiles farther today.",
       "effect": {
         "type": "map_effect",
@@ -6392,7 +3229,6 @@
       "context": "overworld",
       "mana_cost": 2,
       "target_mode": "self",
-      "unreleased": true,
       "description": "Tracks and trampled ground tell the hero what holds the towns nearby.",
       "effect": {
         "type": "map_effect",
@@ -6414,7 +3250,6 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "unreleased": true,
       "description": "A lens of light shows the hero the land far around, and the deep ground beneath it.",
       "effect": {
         "type": "map_effect",
@@ -6436,7 +3271,6 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "unreleased": true,
       "description": "The mine beside the hero blooms with ore and yields double for days.",
       "effect": {
         "type": "map_effect",
@@ -6458,7 +3292,6 @@
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
-      "unreleased": true,
       "description": "Heat runs ahead of the hero along the roads; the army marches them at twice the pace.",
       "effect": {
         "type": "map_effect",
@@ -6480,7 +3313,6 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "unreleased": true,
       "description": "The ground around the hero smoulders; enemy armies wade through it at half the pace.",
       "effect": {
         "type": "map_effect",
@@ -6503,7 +3335,6 @@
       "context": "overworld",
       "mana_cost": 10,
       "target_mode": "self",
-      "unreleased": true,
       "description": "A watchful tree springs up where the hero stands and holds back enemy armies that come near it.",
       "effect": {
         "type": "map_effect",
@@ -6527,7 +3358,6 @@
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "A bright flare bursts over far ground and lights it for the hero's scouts.",
       "effect": {
         "type": "map_effect",
@@ -6551,7 +3381,6 @@
       "context": "overworld",
       "mana_cost": 6,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "A wall of fire rises beside the hero; no army gets through while it burns.",
       "effect": {
         "type": "map_effect",
@@ -6573,7 +3402,6 @@
       "context": "overworld",
       "mana_cost": 7,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "The roots under the woods carry the army to trees farther off.",
       "effect": {
         "type": "map_effect",
@@ -6595,7 +3423,6 @@
       "context": "overworld",
       "mana_cost": 7,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "A beacon lit in one of the hero's towns calls the army home in a flash of light.",
       "effect": {
         "type": "map_effect",
@@ -6617,7 +3444,6 @@
       "context": "overworld",
       "mana_cost": 7,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "A ferry of mist carries the army over the water to the far shore.",
       "effect": {
         "type": "map_effect",
@@ -6639,7 +3465,6 @@
       "context": "overworld",
       "mana_cost": 10,
       "target_mode": "tile_selected",
-      "unreleased": true,
       "description": "The army steps into the mist and out of it a few tiles away, past any guard.",
       "effect": {
         "type": "map_effect",
@@ -6661,7 +3486,6 @@
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
-      "unreleased": true,
       "description": "Branches part and stones settle before the hero; the army crosses forest and rough ground as easily as open grass.",
       "effect": {
         "type": "map_effect",
@@ -6687,7 +3511,6 @@
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
-      "unreleased": true,
       "description": "A grey film hardens under the army's feet; it walks swamp, mire and sand as if they were meadow.",
       "effect": {
         "type": "map_effect",

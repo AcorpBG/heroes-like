@@ -142,13 +142,13 @@ DictRef drinking_stack(State &state, DictRef battle, Atom caster_side, const Val
 
 void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef effect, DictRef result, const Value &second_pick, ArrayRef extras) {
 	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
-	const int64_t power_against = spell_power_against(state, hero, battle, target);
+	const int64_t power_against = spell_power_against(state, hero, battle, target, spell);
 	int64_t main_damage = gd::int_field(state, result, key::damage, 0);
 	// Spark Swarm: the first spark strikes the target, the others random stacks of its side.
 	int64_t sparks = gd::int_field(state, effect, key::random_hits, 0);
 	const int64_t spark_divisor = gd::int_field(state, effect, key::random_hits_power_divisor, 0);
 	if (sparks > 0 && spark_divisor > 0) {
-		sparks = gd::add(sparks, compat::int_div(spell_power(state, hero), spark_divisor));
+		sparks = gd::add(sparks, compat::int_div(spell_power(state, hero, spell), spark_divisor));
 	}
 	if (sparks > 1) {
 		const std::vector<DictRef> struck = living_stacks(state, battle, side_of(state, target));
@@ -173,7 +173,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 		})));
 		for (size_t index = 0; index < struck.size(); ++index) {
 			if (counts[index] > 0) {
-				const int64_t per_spark = damage_at(state, hero, battle, struck[index], spell, spell_power_against(state, hero, battle, struck[index]));
+				const int64_t per_spark = damage_at(state, hero, battle, struck[index], spell, spell_power_against(state, hero, battle, struck[index], spell));
 				state.append(extras, dict_value(damage_hit(state, struck[index], gd::mul(per_spark, counts[index]))));
 			}
 		}
@@ -195,7 +195,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 		state.set(blast_effect, str(key::power_scale), int_value(gd::int_field(state, effect, key::blast_power_scale, 0)));
 		for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
 			if (battle_id_of(state, stack) != battle_id_of(state, target) && battle_rules::_stack_hex_distance(state, stack, target) <= blast_radius) {
-				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, blast, spell_power_against(state, hero, battle, stack)))));
+				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, blast, spell_power_against(state, hero, battle, stack, spell)))));
 			}
 		}
 	}
@@ -207,7 +207,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			if (battle_id_of(state, stack) == battle_id_of(state, target)) {
 				continue;
 			}
-			const int64_t stack_power = spell_power_against(state, hero, battle, stack);
+			const int64_t stack_power = spell_power_against(state, hero, battle, stack, spell);
 			const int64_t damage = damage_at(state, hero, battle, stack, spell, stack_power);
 			if (damage <= 0) {
 				continue;
@@ -228,7 +228,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 		const int64_t row = gd::int_field(state, battle_rules::_stack_hex(state, target), key::r, -1);
 		for (const DictRef stack : living_stacks(state, battle, side_of(state, target))) {
 			if (battle_id_of(state, stack) != battle_id_of(state, target) && gd::int_field(state, battle_rules::_stack_hex(state, stack), key::r, -2) == row) {
-				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, spell_power_against(state, hero, battle, stack)))));
+				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, spell_power_against(state, hero, battle, stack, spell)))));
 			}
 		}
 	}
@@ -236,7 +236,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 	const Atom status_splash = gd::string_field(state, effect, key::status_splash, key::empty);
 	if (status_splash != key::empty) {
 		for (const DictRef stack : shape_stacks(state, battle, target, status_splash)) {
-			const int64_t stack_power = spell_power_against(state, hero, battle, stack);
+			const int64_t stack_power = spell_power_against(state, hero, battle, stack, spell);
 			const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, stack_power);
 			const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
 			const int64_t resistance = control_resistance_pct(state, battle, stack, spell);
@@ -282,7 +282,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			if (gd::is_empty(state, next)) {
 				break;
 			}
-			const int64_t full = damage_at(state, hero, battle, next, spell, spell_power_against(state, hero, battle, next));
+			const int64_t full = damage_at(state, hero, battle, next, spell, spell_power_against(state, hero, battle, next, spell));
 			state.append(extras, dict_value(damage_hit(state, next, engine_max<int64_t>(1, compat::int_div(gd::mul(full, pct), 100)))));
 			struck.push_back(battle_id_of(state, next));
 			from = next;
@@ -294,7 +294,7 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			if (battle_id_of(state, stack) == battle_id_of(state, target) || gd::int_field(state, stack, key::spell_heat, 0) <= 0) {
 				continue;
 			}
-			const DictRef hit = damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, spell_power_against(state, hero, battle, stack)));
+			const DictRef hit = damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, spell_power_against(state, hero, battle, stack, spell)));
 			state.set(hit, str(key::heat_burst), bool_value(true));
 			state.append(extras, dict_value(hit));
 		}
@@ -319,7 +319,7 @@ void add_control_reach(State &state, DictRef hero, DictRef battle, DictRef targe
 	// The spell's own reach (Spore Cloud's neighbours), widened by mastery.
 	const Atom shape = wider_shape(gd::string_field(state, effect, key::reach, key::empty), mastery_shape(state, hero, spell));
 	for (const DictRef stack : shape_stacks(state, battle, target, shape)) {
-		const int64_t power_against = spell_power_against(state, hero, battle, stack);
+		const int64_t power_against = spell_power_against(state, hero, battle, stack, spell);
 		// Grasp of the Deep stuns a stack that is already Rooted.
 		const DictRef payload = grasp_status(state, spell, battle, hero, stack, _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against), power_against);
 		const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
@@ -398,7 +398,7 @@ void add_flee_smallest(State &state, DictRef hero, DictRef battle, DictRef targe
 		return;
 	}
 	const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
-	const DictRef payload = _status_payload(state, spell, flee, battle, hero, spell_power_against(state, hero, battle, smallest), 0);
+	const DictRef payload = _status_payload(state, spell, flee, battle, hero, spell_power_against(state, hero, battle, smallest, spell), 0);
 	const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
 	const int64_t resistance = control_resistance_pct(state, battle, smallest, spell);
 	const bool resists = target_is_immune_to_status(state, smallest, battle, status_id)
@@ -418,7 +418,7 @@ ArrayRef snare_resolutions(State &state, DictRef hero, DictRef battle, DictRef s
 			continue;
 		}
 		const DictRef stack = caught.ref;
-		const int64_t power_against = spell_power_against(state, hero, battle, stack);
+		const int64_t power_against = spell_power_against(state, hero, battle, stack, spell);
 		const DictRef payload = _status_effect_from_spell_effect_at(state, spell, battle, hero, power_against);
 		const Atom status_id = gd::string_field(state, payload, key::effect_id, key::empty);
 		const int64_t resistance = control_resistance_pct(state, battle, stack, spell);
