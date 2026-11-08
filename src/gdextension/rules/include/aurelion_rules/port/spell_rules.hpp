@@ -95,6 +95,10 @@ int64_t spell_power(State &state, DictRef hero_state, DictRef spell);
 // whoever hires it; a neutral commander has no faction (docs/magic-system.md,
 // Faction preference).
 int64_t preferred_school_power(State &state, DictRef hero_state, DictRef spell);
+// The row of the hero's own faction, whoever hires it: {} for a neutral
+// commander or a hero without a row. A commander payload names the hero's
+// row as roster_hero_id or hero_id, a hero state as id.
+DictRef hero_faction(State &state, DictRef hero_state);
 // The Knowledge of the hero leading the target's side, and the caster's power
 // less all of it, never below 0 (docs/magic-system.md).
 int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack);

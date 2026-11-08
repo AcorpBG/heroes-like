@@ -609,16 +609,18 @@ int64_t preferred_school_power(State &state, DictRef hero_state, DictRef spell) 
 	if (school_id == key::empty || school_id == key::basic) {
 		return 0;
 	}
-	// The hero's own row: a commander payload names it as roster_hero_id or
-	// hero_id, a hero state as id.
+	return gd::string_field(state, hero_faction(state, hero_state), key::preferred_spell_school_id, key::empty) == school_id ? 1 : 0;
+}
+
+DictRef hero_faction(State &state, DictRef hero_state) {
+	// The first of these fields that names a hero row decides.
 	for (const Atom field : {key::roster_hero_id, key::hero_id, key::id}) {
 		const DictRef hero = gd::content_row(state, state::ContentTable::Hero, gd::string_field(state, hero_state, field, key::empty));
 		if (!gd::is_empty(state, hero)) {
-			const DictRef faction = gd::content_row(state, state::ContentTable::Faction, gd::string_field(state, hero, key::faction_id, key::empty));
-			return gd::string_field(state, faction, key::preferred_spell_school_id, key::empty) == school_id ? 1 : 0;
+			return gd::content_row(state, state::ContentTable::Faction, gd::string_field(state, hero, key::faction_id, key::empty));
 		}
 	}
-	return 0;
+	return state.new_dict();
 }
 
 int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack) {

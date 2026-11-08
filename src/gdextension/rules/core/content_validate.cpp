@@ -195,7 +195,7 @@ public:
 	void resource_site(const Value &site, const RowIndex &unit_index, const RowIndex &spell_index, const RowIndex &neutral_dwelling_index, const RowIndex &army_group_index, const RowIndex &encounter_index);
 	void map_object(const Value &map_object, const RowIndex &biome_index, const RowIndex &resource_site_index, const RowIndex &faction_index);
 	void neutral_dwelling(const Value &dwelling, const RowIndex &unit_index, const RowIndex &resource_site_index, const RowIndex &map_object_index, const RowIndex &army_group_index, const RowIndex &encounter_index, const RowIndex &biome_index);
-	void faction(const Value &faction, const RowIndex &town_index, const RowIndex &hero_index);
+	void faction(const Value &faction, const RowIndex &town_index, const RowIndex &hero_index, const Value &terrain_grammar);
 	void hero(const Value &hero, const RowIndex &faction_index, const RowIndex &spell_index);
 	void unit(const Value &unit, const RowIndex &faction_index);
 	void hero_art_manifest(const RowIndex &hero_index, const RowIndex &hero_art_index);
@@ -934,7 +934,7 @@ void Check::neutral_dwelling(const Value &dwelling, const RowIndex &unit_index, 
 	}
 }
 
-void Check::faction(const Value &faction, const RowIndex &town_index, const RowIndex &hero_index) {
+void Check::faction(const Value &faction, const RowIndex &town_index, const RowIndex &hero_index, const Value &terrain_grammar) {
 	const std::string faction_id = text(faction, "id");
 	for (const Value &town_id_value : each(get(faction, "town_ids", empty_array_))) {
 		const std::string town_id = str(town_id_value);
@@ -951,6 +951,24 @@ void Check::faction(const Value &faction, const RowIndex &town_index, const RowI
 	const std::string preferred_school_id = text(faction, "preferred_spell_school_id");
 	if (!one_of(preferred_school_id, kSpellSchoolIds)) {
 		warn("Faction " + faction_id + " must name a spell school as preferred_spell_school_id, not '" + preferred_school_id + "'.");
+	}
+	// The terrains its heroes step on as on grass (docs/overworld-terrain-movement.md), each a terrain class once.
+	const Value home_terrains = get(faction, "home_terrain_ids", empty_array_);
+	if (!is_array(home_terrains)) {
+		warn("Faction " + faction_id + " must give home_terrain_ids as an array of terrain ids.");
+		return;
+	}
+	std::vector<std::string> seen;
+	for (const Value &terrain_value : each(home_terrains)) {
+		const std::string terrain_id = str(terrain_value);
+		bool known = false;
+		for (const Value &terrain_class : each(get(terrain_grammar, "terrain_classes", empty_array_))) {
+			known = known || (is_dict(terrain_class) && text(terrain_class, "id") == terrain_id);
+		}
+		if (!known || contains(seen, terrain_id)) {
+			warn("Faction " + faction_id + " home_terrain_ids must name terrain classes of terrain_grammar.json once each, not '" + terrain_id + "'.");
+		}
+		seen.push_back(terrain_id);
 	}
 }
 
@@ -1930,7 +1948,7 @@ void Store::validate(std::vector<Message> &messages) {
 	each_row(neutral_dwelling_index, [&](const Value &row) {
 		check.guard("_validate_neutral_dwelling", [&] { check.neutral_dwelling(row, unit_index, resource_site_index, map_object_index, army_group_index, encounter_index, biome_index); });
 	});
-	each_row(faction_index, [&](const Value &row) { check.guard("_validate_faction", [&] { check.faction(row, town_index, hero_index); }); });
+	each_row(faction_index, [&](const Value &row) { check.guard("_validate_faction", [&] { check.faction(row, town_index, hero_index, terrain_grammar); }); });
 	check.guard("_validate_faction_crests", [&] { check.faction_crests(faction_index, faction_crest_index); });
 	each_row(hero_index, [&](const Value &row) { check.guard("_validate_hero", [&] { check.hero(row, faction_index, spell_index); }); });
 	check.guard("_validate_hero_art_manifest", [&] { check.hero_art_manifest(hero_index, hero_art_index); });

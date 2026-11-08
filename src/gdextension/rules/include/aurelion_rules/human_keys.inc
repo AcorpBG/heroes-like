@@ -6134,3 +6134,4 @@ AURELION_KEY(map_ground_ways_today_text, "%s cost the hero's army no more than g
 AURELION_KEY(terrain_kind, "terrain_kind")
 AURELION_KEY(road_mask, "road_mask")
 AURELION_KEY(the_next_step_costs_more_movement_text, "The next step costs more movement than the hero has left today.")
+AURELION_KEY(home_terrain_ids, "home_terrain_ids")

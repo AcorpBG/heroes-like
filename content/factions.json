@@ -267,6 +267,10 @@
       ],
       "seed_town_id": "town_duskfen",
       "preferred_spell_school_id": "veil",
+      "home_terrain_ids": [
+        "swamp",
+        "mire"
+      ],
       "design_pillars": {
         "theme": "Predatory bog clans, ferry chains, and drum oaths",
         "economy_style": "Low safe income, high growth, raid spoils, and den replacement",
@@ -430,6 +434,10 @@
       ],
       "seed_town_id": "town_prismhearth",
       "preferred_spell_school_id": "beacon",
+      "home_terrain_ids": [
+        "snow",
+        "frost"
+      ],
       "design_pillars": {
         "theme": "Solar crystals, lens relays, and harmonic command",
         "economy_style": "Ore-heavy quality economy, support buildings, and spell access",
@@ -748,6 +756,9 @@
       ],
       "seed_town_id": "town_brasshollow_orevein_gantry",
       "preferred_spell_school_id": "furnace",
+      "home_terrain_ids": [
+        "rough"
+      ],
       "design_pillars": {
         "theme": "Furnace contracts, pressure rails, and brass debt engines",
         "economy_style": "Ore and capital projects, expensive low growth",

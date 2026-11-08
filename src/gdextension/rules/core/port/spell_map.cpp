@@ -403,6 +403,10 @@ StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_
 				}
 			}
 		}
+		// The home terrains of the hero's own faction, whoever hires it, on every day (factions.json home_terrain_ids).
+		for (const Value &terrain : gd::field_items(state, spell_rules::hero_faction(state, mover.hero), str(key::home_terrain_ids))) {
+			easy_.insert(content_service::normalize_terrain_id(state, gd::stringify(state, terrain)));
+		}
 	}
 }
 

@@ -467,8 +467,19 @@ func _build_specializations(box: VBoxContainer) -> void:
 			choose.pressed.connect(func(): specialty_requested.emit(action_id))
 	var template := Heroes.hero_template(hero)
 	_label(box, String(template.get("identity_summary", "")), 16)
+	var home_terrains: Array = ContentService.get_faction(String(template.get("faction_id", ""))).get("home_terrain_ids", [])
+	if not home_terrains.is_empty():
+		_label(box, "Home ground: %s cost the hero's army no more than grass." % _terrain_names(home_terrains), 14, "muted")
 	var focus := Progression.summarize_specialty_ids(template.get("specialty_focus_ids", []))
 	if focus != "": _label(box, "Development focus (not learned bonuses): " + focus, 14, "muted")
+
+# "swamp and mire"; three or more as "snow, frost and ice".
+func _terrain_names(terrain_ids: Array) -> String:
+	var names := ""
+	for index in range(terrain_ids.size()):
+		if index > 0: names += " and " if index == terrain_ids.size() - 1 else ", "
+		names += String(terrain_ids[index])
+	return names
 
 func _label(parent: Node, text: String, font_size: int, tone: String = "body") -> Label:
 	var label := Label.new()

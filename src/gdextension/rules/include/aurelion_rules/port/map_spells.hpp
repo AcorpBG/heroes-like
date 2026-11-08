@@ -109,7 +109,7 @@ std::vector<Vector2i> road_tiles(State &state, DictRef session, int64_t level);
 
 // What the steps of one walk cost, in half points of movement (docs/overworld-terrain-movement.md). A step between
 // neighbours costs its ground: the terrain_halves of the tile stepped onto, or grass's while the mover's Green Path or
-// Mire Stride covers that ground; from a road tile to a road tile a point on any ground, half a point while the
+// Mire Stride covers that ground or on a home terrain of the hero's own faction; from a road tile to a road tile a point on any ground, half a point while the
 // mover's Forge Road lasts. A step through a portal or gate costs a point. Each costs twice that into an enemy's
 // Scorched Earth. A step from outside into the reach of an enemy's wardwood stops the army there.
 class StepCosts {

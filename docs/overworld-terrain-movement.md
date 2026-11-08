@@ -41,8 +41,22 @@ Movement is counted in half points. A step needs its whole cost: a hero with 1 p
 - A road step stays a road step, so a road through covered ground still costs 1 point, or half a point with Forge Road.
 - Computer players cast whichever of Forge Road, Green Path and Mire Stride takes the hero at least three tiles farther along its plan today, before walking (first values, not measured).
 
+## Faction home terrains
+
+Slice `overworld-faction-ground-20261108`. The owner decided on 2026-11-08 that a faction's heroes cross the faction's own terrains without the extra cost, and that the map generator stays as it is.
+
+| Faction | Home terrains |
+|---|---|
+| Mireclaw | swamp, mire |
+| Sunvault | snow, frost |
+| Brasshollow | rough (with hills, highland and ridge) |
+
+- A step onto a home terrain costs a hero of that faction what a step onto grass costs, on every day, as Green Path and Mire Stride do on their days. The faction is the hero's own, whoever hires it, as for the preferred spell school.
+- Embercourt, Thornwake and Veilmourn list none: the ground of their town types (grass, dirt, underground) already costs 1 point, as does Brasshollow's lava.
+- The terrains are `home_terrain_ids` in `content/factions.json`. The content check refuses an id that is not a terrain class of `content/terrain_grammar.json`, and the hero sheet names them ("Home ground: swamp and mire cost the hero's army no more than grass.").
+- Generated maps do not put a faction on its home terrain. The generator never sees the factions: it rolls each seat's town type and paints the ground from the template, and the factions are given to the seats afterwards. A faction meets its home terrain only where a map happens to have it, and a seat that starts on rough, snow, sand or swamp moves slower around home, whatever its faction.
+
 ## Not in this slice
 
-- No faction walks its home ground for less. Mireclaw's home ground is swamp (2 points), Sunvault's can be snow (1.5) and Brasshollow's can be rough (1.5).
-- No spell eases snow.
+- No spell eases snow; Sunvault's heroes cross it for free.
 - No hero specialty or skill lowers the costs yet; `StepCosts::ground_halves` is where one would go.
