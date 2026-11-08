@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "magic-faction-mastery-magic-heroes-20261108",
- "currentSliceTitle": "Magic: only a faction's magic heroes start with its school mastery",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T19:23:55Z",
+ "currentSliceTitle": "Only a faction's magic heroes (5 of its 11) start with its school mastery: removed from the 36 might heroes in heroes.json; the pre-switch save conversion grants it to magic heroes only; docs.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T19:34:19Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "magic-faction-mastery-magic-heroes-20261108",
-   "title": "Magic: only a faction's magic heroes start with its school mastery",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-08: only a faction's magic heroes (command_path magic in heroes.json, 5 of its 11) start with mastery 1 in its preferred school; its might heroes start without it. heroes.json starting_specialties; the pre-switch save conversion (overworld_state_normalize.cpp) grants it to magic heroes only; docs/magic-system.md.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Only a faction's magic heroes (5 of its 11) start with its school mastery: removed from the 36 might heroes in heroes.json; the pre-switch save conversion grants it to magic heroes only; docs.",
+   "commit": "3d1b53555"
   },
   {
    "id": "overworld-faction-ground-each-20261108",
