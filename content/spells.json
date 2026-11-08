@@ -6334,6 +6334,116 @@
         "duration_rounds": 2
       },
       "scroll_only": true
+    },
+    {
+      "id": "spell_far_sight",
+      "name": "Far Sight",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 2,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "The hero's eyes reach farther over the land for the rest of the day.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_sight",
+        "tiles": 3,
+        "tiles_power_divisor": 2
+      }
+    },
+    {
+      "id": "spell_stride",
+      "name": "Stride",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 3,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "A long, tireless stride carries the army a few tiles farther today.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_move",
+        "tiles": 2,
+        "tiles_power_divisor": 2
+      }
+    },
+    {
+      "id": "spell_read_tracks",
+      "name": "Read Tracks",
+      "school_id": "basic",
+      "tier": 1,
+      "accord_family": "basic",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 2,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "Tracks and trampled ground tell the hero what holds the towns nearby.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_scout",
+        "radius": 6,
+        "radius_power_scale": 1
+      }
+    },
+    {
+      "id": "spell_watchtower_lens",
+      "name": "Watchtower Lens",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_tier4",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 9,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "A lens of light shows the hero the land far around, and the deep ground beneath it.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_lens",
+        "radius": 8,
+        "radius_power_scale": 2
+      }
+    },
+    {
+      "id": "spell_harvest_bloom",
+      "name": "Harvest Bloom",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "economy_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 9,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "The mine beside the hero blooms with ore and yields double for days.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_mine",
+        "days": 3,
+        "days_power_scale": 1
+      }
     }
   ]
 }

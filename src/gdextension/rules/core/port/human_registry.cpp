@@ -20,6 +20,7 @@
 #include "aurelion_rules/port/map_editor.hpp"
 #include "aurelion_rules/port/mine_rules.hpp"
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_scenery_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
@@ -1606,6 +1607,9 @@ const Function kFunctions[] = {
 	NATIVE(OverworldRules, is_tile_explored, 4, true,
 			if (nil(a, 0)) return gd::bool_value(false);
 			return gd::bool_value(overworld_rules::is_tile_explored(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
+	NATIVE(OverworldRules, read_tracks_garrison, 4, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(map_spells::read_tracks_garrison(s, D(a, 0), overworld_rules::Vector2i::of(I(a, 1), I(a, 2)), I(a, 3)))),
 	NATIVE(OverworldRules, fog_for_level, 2, true,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld_rules::fog_for_level(s, D(a, 0), I(a, 1)))),

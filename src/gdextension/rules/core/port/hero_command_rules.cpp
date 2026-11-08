@@ -22,7 +22,9 @@ int64_t scouting_radius_for_hero(State &state, DictRef hero_state) {
 	const DictRef artifact_bonuses = artifact_rules::aggregate_bonuses(state, hero_state);
 	const DictRef specialty_bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
 	const int64_t radius = gd::add(gd::add(kBaseScoutRadius, gd::int_field(state, artifact_bonuses, key::scouting_radius, 0)), gd::int_field(state, specialty_bonuses, key::scouting_radius, 0));
-	return compat::engine_max<int64_t>(1, radius);
+	// Far Sight's tiles until the hero's next day starts (map_spells.hpp).
+	const int64_t far_sight = compat::engine_max<int64_t>(0, gd::int_field(state, hero_state, key::map_sight_tiles, 0));
+	return gd::add(compat::engine_max<int64_t>(1, radius), far_sight);
 }
 
 // Sight covers a round area: a tile is in range when its centre lies within

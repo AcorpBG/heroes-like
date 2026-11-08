@@ -31,6 +31,7 @@
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_context.hpp"
@@ -412,7 +413,11 @@ DictRef controlled_resource_site_income(State &state, DictRef session, Atom cont
 			continue;
 		}
 		const DictRef site_income = _resource_site_control_income_for_day(state, site, resolved_income_day);
-		income = _add_resource_sets(state, dict_value(income), dict_value(site_income));
+		// A mine Harvest Bloom holds yields twice (map_spells.hpp).
+		const int64_t times = map_spells::harvest_factor(state, node.ref, resolved_income_day);
+		for (int64_t time = 0; time < times; ++time) {
+			income = _add_resource_sets(state, dict_value(income), dict_value(site_income));
+		}
 	}
 	return income;
 }
@@ -527,6 +532,8 @@ void _refresh_all_player_heroes_for_new_day(State &state, DictRef session) {
 			// VisitBuildings.WEEK_BONUSES, erased from the roster entry itself.
 			state.erase(hero_value.ref, str(key::week_bonuses));
 		}
+		// The map spells' terms of the day before end with it.
+		map_spells::clear_day_terms(state, hero_value.ref);
 		const DictRef hero = spell_rules::regain_daily_mana(state, hero_value.ref, starts_day_in_guild_town(state, session, hero_value.ref));
 		const int64_t carry_limit = gd::int_field(state, hero_progression_rules::aggregate_bonuses(state, hero), key::movement_carry, 0);
 		// int(hero.get("movement", {}).get("current", 0)) if hero.get("movement", {}) is Dictionary else 0

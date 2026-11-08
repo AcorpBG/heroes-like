@@ -2671,6 +2671,61 @@
       "source_sha256": "7c87cf4ee89d662d8070b4d59888a9cb8c8e470f4d0a6bfc0557ebfe1489629b",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_mourning_mark_04.png",
       "icon_sha256": "0ee2071fa529a3af60b4eced53c61a4c96c1ac4d8e2f2d12bcf54de70d0f7af9"
+    },
+    {
+      "id": "spell_far_sight",
+      "spell_id": "spell_far_sight",
+      "school_id": "basic",
+      "icon_id": "spell_signature_icon_far_sight",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_survey_chain.png",
+      "source_sha256": "fa26717d5d9b76020a7d656f6f95e8b61b534477d92fb43d5801b79bd1ec277d",
+      "icon_path": "res://art/magic/runtime/spells/spell_survey_chain.png",
+      "icon_sha256": "a229536a78a8ebcb4c334b14e1a72583f37cd57d2c7162bba023795a6a3c1d9e"
+    },
+    {
+      "id": "spell_stride",
+      "spell_id": "spell_stride",
+      "school_id": "basic",
+      "icon_id": "spell_signature_icon_stride",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_waystride.png",
+      "source_sha256": "5bb75ddc98152519ec410c8665f4f59f85de2121840ed05d13a415b61044bbc7",
+      "icon_path": "res://art/magic/runtime/spells/spell_waystride.png",
+      "icon_sha256": "a686a101a97306009b83742cdd9a3f0289f321afd21f4a53f712cdd274eb56f4"
+    },
+    {
+      "id": "spell_read_tracks",
+      "spell_id": "spell_read_tracks",
+      "school_id": "basic",
+      "icon_id": "spell_signature_icon_read_tracks",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_index_survey_26.png",
+      "source_sha256": "d2a94d5f19f112e28d1e3db8b9672c24954add43d3ef544cfb34ad23bed60a46",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_index_survey_26.png",
+      "icon_sha256": "d401f14b1259c07e163ff5d9ae51165d63b9bea166815780cca8b8082d157f2d"
+    },
+    {
+      "id": "spell_watchtower_lens",
+      "spell_id": "spell_watchtower_lens",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_watchtower_lens",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_glass_survey_24.png",
+      "source_sha256": "31e336defe5160f931acf008ef3c9a022e5d266828bdfd53836150bbcd49da9f",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_glass_survey_24.png",
+      "icon_sha256": "60393c5ee01d8901efb520563b3760d35cf78c7363c74b186f887b5b9c4dde11"
+    },
+    {
+      "id": "spell_harvest_bloom",
+      "spell_id": "spell_harvest_bloom",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_harvest_bloom",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bark_rootway_24.png",
+      "source_sha256": "626fbb08fa6390bb574800fd5c53dceae8a5f01daeee9d772e929084b255a180",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bark_rootway_24.png",
+      "icon_sha256": "8ae509cf33f808afad07e3d57fa07eba02003b1d291fffd6466efb0e47275504"
     }
   ]
 }

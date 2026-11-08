@@ -5,6 +5,7 @@
 #include "aurelion_rules/port/overworld_rules_spells.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -154,6 +155,34 @@ DictRef approval(State &state) {
 }
 
 // {"ok": false, "hero": hero, "movement": movement, "message": message}.
+// A map spell's preview (map_spells.hpp): the movement and sight it gives and its text at the hero's power.
+DictRef map_spell_preview(State &state, DictRef hero, DictRef movement_state, DictRef spell, int64_t mana_cost) {
+	const int64_t current = gd::int_field(state, movement_state, key::current, 0);
+	const DictRef after_hero = gd::deep_duplicate_dict(state, hero);
+	const DictRef after = gd::deep_duplicate_dict(state, movement_state);
+	map_spells::apply_to_hero(state, after_hero, after, spell);
+	const int64_t moved = gd::int_field(state, after, key::current, current);
+	const int64_t radius = map_spells::reveal_radius(state, hero, spell);
+	const Atom name = text_or(state, spell, key::name, key::spell_word);
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::ok), bool_value(true));
+	state.set(result, str(key::spell_id), str(text_or(state, spell, key::id, key::empty)));
+	state.set(result, str(key::spell_name), str(name));
+	state.set(result, str(key::effect_type), str(key::map_effect));
+	state.set(result, str(key::map_mechanic), str(map_spells::mechanic(state, spell)));
+	state.set(result, str(key::movement_before), int_value(current));
+	state.set(result, str(key::movement_after), int_value(moved));
+	state.set(result, str(key::movement_restored), int_value(compat::engine_max<int64_t>(0, gd::sub(moved, current))));
+	state.set(result, str(key::movement_max), int_value(gd::int_field(state, after, key::max, 0)));
+	state.set(result, str(key::reveal_radius), int_value(radius));
+	state.set(result, str(key::mana_cost), int_value(mana_cost));
+	state.set(result, str(key::public_text), str(gd::format(state, key::map_spell_preview_text, {str(name), str(map_spells::effect_text(state, hero, spell, state.new_dict())), int_value(mana_cost)})));
+	state.set(result, str(key::changes_fog), bool_value(radius > 0));
+	state.set(result, str(key::changes_site_state), bool_value(map_spells::mechanic(state, spell) == key::map_mine));
+	state.set(result, str(key::changes_resources), bool_value(false));
+	return result;
+}
+
 DictRef cast_refusal(State &state, DictRef hero, DictRef movement, Atom message) {
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::ok), bool_value(false));
@@ -175,6 +204,9 @@ Atom spell_category_label(State &state, DictRef spell) {
 	const Atom context = text_or(state, spell, key::context, key::empty);
 	const Atom effect_type = effect_type_of(state, field_or_new_dict(state, spell, key::effect));
 	if (context == key::overworld) {
+		if (map_spells::is_map_spell(state, spell)) {
+			return map_spells::category(state, spell);
+		}
 		if (effect_type == key::restore_movement) {
 			return key::field_route;
 		}
@@ -251,6 +283,9 @@ DictRef adventure_spell_consequence_preview(State &state, DictRef hero_state, Di
 		return result;
 	}
 	const int64_t mana_cost = adjusted_spell_mana_cost(state, hero, dict_value(spell_dict));
+	if (map_spells::is_map_spell(state, spell_dict)) {
+		return map_spell_preview(state, hero, movement_state, spell_dict, mana_cost);
+	}
 	const Value effect = field_or_new_dict(state, spell_dict, key::effect);
 	const Atom effect_type = gd::is_dict(effect) ? effect_type_of(state, effect) : static_cast<Atom>(key::empty);
 	const DictRef preview = _movement_restore_preview(state, movement_state, spell_dict, hero);
@@ -452,6 +487,29 @@ DictRef cast_overworld_spell(State &state, DictRef hero_state, DictRef movement_
 		})));
 		return result;
 	}
+	if (effect_type == key::map_effect) {
+		// The hero's own part here; what the cast leaves on the map is the caller's (map_spells.hpp).
+		const DictRef preview = adventure_spell_consequence_preview(state, hero, movement, dict_value(spell));
+		const DictRef target_contract = adventure_spell_target_contract(state, hero, movement, dict_value(spell));
+		const Atom effect_line = map_spells::effect_text(state, hero, spell, state.new_dict());
+		const int64_t radius = map_spells::reveal_radius(state, hero, spell);
+		map_spells::apply_to_hero(state, hero, movement, spell);
+		hero = _consume_mana(state, hero, mana_cost);
+		const DictRef result = state.new_dict();
+		state.set(result, str(key::ok), bool_value(true));
+		state.set(result, str(key::hero), dict_value(hero));
+		state.set(result, str(key::movement), dict_value(movement));
+		state.set(result, str(key::spell_id), str(spell_id));
+		state.set(result, str(key::spell_name), str(text_or(state, spell, key::name, spell_id)));
+		state.set(result, str(key::map_mechanic), str(map_spells::mechanic(state, spell)));
+		state.set(result, str(key::mana_cost), int_value(mana_cost));
+		state.set(result, str(key::fog_reveal_radius), int_value(radius));
+		state.set(result, str(key::reveals_every_level), bool_value(map_spells::reveals_every_level(state, spell)));
+		state.set(result, str(key::target_contract), dict_value(target_contract));
+		state.set(result, str(key::consequence_preview), dict_value(preview));
+		state.set(result, str(key::message), str(gd::format(state, key::map_spell_cast_text, {str(text_or(state, spell, key::name, spell_id)), str(effect_line), int_value(mana_cost)})));
+		return result;
+	}
 	return cast_refusal(state, hero, movement, key::that_overworld_spell_has_no_supported);
 }
 
@@ -490,6 +548,12 @@ DictRef validate_overworld_spell(State &state, DictRef hero_state, DictRef movem
 		}
 		if (compat::engine_max<int64_t>(0, amount_or_radius(state, effect)) <= 0) {
 			return refusal(state, key::that_scouting_spell_has_no_reveal);
+		}
+		return approval(state);
+	}
+	if (effect_type == key::map_effect) {
+		if (text_or(state, spell_dict, key::target_mode, key::self) != key::self) {
+			return refusal(state, key::that_field_spell_target_is_not);
 		}
 		return approval(state);
 	}
@@ -649,6 +713,9 @@ DictRef _movement_restore_preview(State &state, DictRef movement_state, DictRef 
 }
 
 Atom _overworld_spell_effect_summary(State &state, DictRef spell, DictRef movement_state, DictRef hero_state) {
+	if (map_spells::is_map_spell(state, spell)) {
+		return map_spells::effect_text(state, hero_state, spell, state.new_dict());
+	}
 	const Value effect = field_or_new_dict(state, spell, key::effect);
 	const Atom effect_type = effect_type_of(state, effect);
 	if (effect_type == key::restore_movement) {

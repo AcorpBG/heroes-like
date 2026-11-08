@@ -6,7 +6,10 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
+#include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_move.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
 namespace aurelion::rules::port {
@@ -21,6 +24,7 @@ using gd::dict_value;
 using gd::DictRef;
 using gd::int_value;
 using gd::str;
+using state::ContentTable;
 using state::Kind;
 using state::State;
 using state::Value;
@@ -49,26 +53,95 @@ Value field_or_new_dict(State &state, DictRef dict, Atom field) {
 	return dict_value(state.new_dict());
 }
 
+DictRef refusal_result(State &state, Atom message) {
+	const DictRef refusal = state.new_dict();
+	state.set(refusal, str(key::ok), bool_value(false));
+	state.set(refusal, str(key::message), str(message));
+	return refusal;
+}
+
 } // namespace
 
 namespace overworld_rules {
+
+// The human seat's active hero as the caster of a map spell (map_spells.hpp).
+static map_spells::Caster _map_caster(State &state, DictRef session) {
+	map_spells::Caster caster;
+	caster.hero = gd::as_dict(field_or_new_dict(state, session_view::overworld(state, session), key::hero));
+	caster.controller = key::player;
+	caster.tile = hero_position(state, session);
+	caster.level = overworld_level_rules::hero_level(state, session);
+	return caster;
+}
+
+// A scouting reveal on another level of the map than the hero's (Watchtower Lens): the tiles it newly opens.
+static int64_t _reveal_spell_fog_at(State &state, DictRef session, Vector2i tile, int64_t level, int64_t radius) {
+	if (radius <= 0) {
+		return 0;
+	}
+	if (!_fog_state_ready(state, session)) {
+		_normalize_fog_of_war(state, session);
+	}
+	const Vector2i map_size = derive_map_size(state, session);
+	const DictRef fog = fog_for_level(state, session, level);
+	const int64_t before_count = gd::int_field(state, fog, key::explored_count, 0);
+	Value explored_value;
+	if (!state.lookup(fog, str(key::explored_tiles), explored_value)) {
+		explored_value = array_value(state.new_array());
+	}
+	const ArrayRef explored_tiles = _normalize_visibility_grid(state, explored_value, map_size);
+	const DictRef site = state.new_dict();
+	state.set(site, str(key::x), int_value(tile.x));
+	state.set(site, str(key::y), int_value(tile.y));
+	_apply_site_reveal(state, explored_tiles, site, radius, map_size);
+	_reveal_all_current_fog_sources(state, session, explored_tiles, map_size, level);
+	const DictRef payload = _build_fog_payload(state, _duplicate_visibility_grid(state, explored_tiles), explored_tiles, map_size);
+	_store_level_fog(state, session, payload, level);
+	return compat::engine_max<int64_t>(0, gd::sub(gd::int_field(state, payload, key::explored_count, before_count), before_count));
+}
 
 DictRef cast_overworld_spell(State &state, DictRef session, Atom spell_id) {
 	normalize_overworld_state(state, session);
 	const DictRef overworld = session_view::overworld(state, session);
 	const Value hero = field_or_new_dict(state, overworld, key::hero);
 	const Value movement = field_or_new_dict(state, overworld, key::movement);
-	const DictRef result = spell_rules::cast_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), spell_id, ai::session_int(state, session, key::day));
+	const int64_t day = ai::session_int(state, session, key::day);
+	// A map spell asks of the ground where the hero stands once the spell itself may be cast.
+	const DictRef spell_row = gd::content_row(state, ContentTable::Spell, spell_id);
+	const bool map_spell = map_spells::is_map_spell(state, spell_row);
+	if (map_spell && gd::bool_field(state, spell_rules::validate_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), dict_value(spell_row), day), key::ok, false)) {
+		const Atom refused = map_spells::refusal(state, session, _map_caster(state, session), spell_row);
+		if (refused != key::empty) {
+			return refusal_result(state, refused);
+		}
+	}
+	const DictRef result = spell_rules::cast_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), spell_id, day);
 	if (!gd::bool_field(state, result, key::ok, false)) {
-		const DictRef refusal = state.new_dict();
-		state.set(refusal, str(key::ok), bool_value(false));
-		state.set(refusal, str(key::message), str(string_of(state, state.get(result, str(key::message), str(key::spell_casting_failed_text)))));
-		return refusal;
+		return refusal_result(state, string_of(state, state.get(result, str(key::message), str(key::spell_casting_failed_text))));
 	}
 
 	state.set(overworld, str(key::hero), state.get(result, str(key::hero), hero));
 	state.set(overworld, str(key::movement), state.get(result, str(key::movement), movement));
-	const int64_t revealed_tiles = _reveal_spell_fog(state, session, gd::int_field(state, result, key::fog_reveal_radius, 0));
+	int64_t revealed_tiles = _reveal_spell_fog(state, session, gd::int_field(state, result, key::fog_reveal_radius, 0));
+	if (map_spell) {
+		const map_spells::Caster caster = _map_caster(state, session);
+		const DictRef mine = map_spells::apply_to_map(state, session, caster, spell_row, day);
+		if (!gd::is_empty(state, mine)) {
+			state.set(result, str(key::message), str(gd::format(state, key::map_spell_cast_text, {
+					str(gd::string_field(state, spell_row, key::name, spell_id)),
+					str(map_spells::effect_text(state, caster.hero, spell_row, mine)),
+					int_value(gd::int_field(state, result, key::mana_cost, 0)),
+			})));
+		}
+		if (gd::bool_field(state, result, key::reveals_every_level, false)) {
+			const int64_t level_count = overworld_level_rules::level_count(state, session);
+			for (int64_t level = 0; level < level_count; ++level) {
+				if (level != caster.level) {
+					revealed_tiles = gd::add(revealed_tiles, _reveal_spell_fog_at(state, session, caster.tile, level, gd::int_field(state, result, key::fog_reveal_radius, 0)));
+				}
+			}
+		}
+	}
 	// result.get("consequence_preview", {}) if it is a Dictionary, else a new {}.
 	Value preview_value;
 	const DictRef consequence_preview = state.lookup(result, str(key::consequence_preview), preview_value) && gd::is_dict(preview_value)
@@ -91,7 +164,33 @@ ArrayRef get_spell_actions(State &state, DictRef session) {
 	const DictRef overworld = session_view::overworld(state, session);
 	const Value hero = field_or_new_dict(state, overworld, key::hero);
 	const Value movement = field_or_new_dict(state, overworld, key::movement);
-	return spell_rules::get_overworld_actions(state, gd::as_dict(hero), gd::as_dict(movement), ai::session_int(state, session, key::day));
+	const ArrayRef actions = spell_rules::get_overworld_actions(state, gd::as_dict(hero), gd::as_dict(movement), ai::session_int(state, session, key::day));
+	// A map spell the ground refuses where the hero stands shows why (map_spells.hpp).
+	for (const Value &action : gd::items(state, array_value(actions))) {
+		if (!gd::is_dict(action) || gd::bool_field(state, action.ref, key::disabled, false)) {
+			continue;
+		}
+		const Value contract = gd::field(state, action.ref, key::target_contract);
+		if (!gd::is_dict(contract)) {
+			continue;
+		}
+		const DictRef spell = gd::content_row(state, ContentTable::Spell, gd::string_field(state, contract.ref, key::spell_id, key::empty));
+		if (!map_spells::is_map_spell(state, spell)) {
+			continue;
+		}
+		const Atom refused = map_spells::refusal(state, session, _map_caster(state, session), spell);
+		if (refused == key::empty) {
+			continue;
+		}
+		state.set(action.ref, str(key::disabled), bool_value(true));
+		state.set(action.ref, str(key::readiness), str(gd::format(state, key::blocked_s, {str(refused)})));
+		state.set(action.ref, str(key::availability), str(key::blocked));
+		state.set(action.ref, str(key::invalid_reason), str(refused));
+		state.set(contract.ref, str(key::ok), bool_value(false));
+		state.set(contract.ref, str(key::selectable), bool_value(false));
+		state.set(contract.ref, str(key::blocked_reason), str(refused));
+	}
+	return actions;
 }
 
 int64_t _reveal_spell_fog(State &state, DictRef session, int64_t radius) {

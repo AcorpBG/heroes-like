@@ -62,7 +62,7 @@ Plain spells every hero can learn: one job each, no school, no mastery. They gro
 | Shift | `spell_shift` | field | One of your stacks | 4 | Moves it to an empty hex up to {2+P/3} hexes away; it keeps its turn. | `move_ally` |
 | Far Sight | `spell_far_sight` | map | On the map | 2 | The hero sees {3+P/2} tiles farther until the day ends; what it sees stays scouted. | `map_sight` |
 | Stride | `spell_stride` | map | On the map | 3 | +{2+P/2} tiles of movement today. | `map_move` |
-| Read Tracks | `spell_read_tracks` | map | On the map | 2 | Until the day ends, shows the armies of enemy heroes and the garrisons of enemy towns within {6+P} tiles of the hero; scouting shows neither. | `map_scout` |
+| Read Tracks | `spell_read_tracks` | map | On the map | 2 | Until the day ends, shows the garrisons of the towns that are not yours within {6+P} tiles of the hero; scouting shows a hero's army but no garrison. | `map_scout` |
 
 ### Furnace
 
@@ -389,7 +389,7 @@ Signature: Drain; Curses that spread; Doom that lands later; Fear and flight; Mu
 | `map_mire_ways` | Mire ways | Swamp, mire and coast cost like grass. | yes | 1 |
 | `map_move` | More movement | Extra tiles of movement today. | today | 1 |
 | `map_road` | Fast roads | Roads cost less movement. | yes | 1 |
-| `map_scout` | Read armies | Shows the armies of enemy heroes and the garrisons of enemy towns nearby. | yes | 1 |
+| `map_scout` | Read garrisons | Shows the garrisons of the towns nearby that are not yours. | yes | 1 |
 | `map_sight` | Farther sight | The hero sees farther today; what it sees stays scouted. | today | 1 |
 | `map_slow_zone` | Scorched ground | Enemy armies pay double movement in an area. | yes | 1 |
 | `map_town` | Relay | Jumps the army to one of your towns. | yes | 1 |

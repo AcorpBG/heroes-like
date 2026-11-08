@@ -4,7 +4,9 @@
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
+#include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_spells.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
@@ -198,6 +200,22 @@ static bool _holding_town_tonight(State &state, DictRef session, DictRef context
 	return !gd::is_empty(state, home) && _keeps_town_safe(state, session, context, entry, home);
 }
 
+// A computer hero as the caster of a map spell (map_spells.hpp).
+static map_spells::Caster _map_caster(State &state, DictRef entry) {
+	map_spells::Caster caster;
+	caster.hero = dict_or_new(state, entry, key::enemy_commander_state);
+	caster.controller = player_identity_rules::raid_controller_id(state, entry);
+	caster.tile = Vector2i::of(gd::int_field(state, entry, key::x, 0), gd::int_field(state, entry, key::y, 0));
+	caster.level = level_rules::level_of(state, dict_value(entry));
+	return caster;
+}
+
+// Whether the ground where the hero stands lets it cast a spell (only a map spell can be refused there).
+static bool _ground_allows(State &state, DictRef session, DictRef entry, const Value &spell) {
+	const DictRef spell_dict = gd::as_dict(spell);
+	return !map_spells::is_map_spell(state, spell_dict) || map_spells::refusal(state, session, _map_caster(state, entry), spell_dict) == key::empty;
+}
+
 // Out of steps, a hero casts the movement spell that gives it the most, once a
 // day as a human hero can: mana is full again in the morning.
 static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
@@ -218,6 +236,9 @@ static bool _cast_movement_spell(State &state, DictRef session, DictRef context,
 		}
 		const int64_t restored = gd::int_field(state, spell_rules::adventure_spell_consequence_preview(state, commander, movement, spell), key::movement_restored, 0);
 		const int64_t cost = spell_rules::adjusted_spell_mana_cost(state, commander, spell);
+		if (restored > 0 && !_ground_allows(state, session, entry, spell)) {
+			continue;
+		}
 		if (restored > best_restored || (restored > 0 && restored == best_restored && cost < best_cost)) {
 			best = ai::string_or_empty(state, gd::as_dict(spell), key::id);
 			best_restored = restored;
@@ -262,7 +283,7 @@ static void _cast_scouting_spell(State &state, DictRef session, DictRef context,
 			continue;
 		}
 		const int64_t radius = gd::int_field(state, spell_rules::adventure_spell_consequence_preview(state, commander, movement, spell), key::reveal_radius, 0);
-		if (radius > best_radius) {
+		if (radius > best_radius && _ground_allows(state, session, entry, spell)) {
 			best = ai::string_or_empty(state, gd::as_dict(spell), key::id);
 			best_radius = radius;
 		}
@@ -278,6 +299,57 @@ static void _cast_scouting_spell(State &state, DictRef session, DictRef context,
 	state.set(entry, str(key::ai_hero), dict_value(block));
 	_store_entry(state, session, index, entry);
 	_reveal(state, session, context, level_rules::position(state, entry), best_radius);
+	// Watchtower Lens opens the same ground on every level.
+	if (gd::bool_field(state, cast, key::reveals_every_level, false)) {
+		const int64_t here = level_rules::level_of(state, dict_value(entry));
+		const int64_t level_count = level_rules::level_count(state, session);
+		for (int64_t level = 0; level < level_count; ++level) {
+			if (level == here) {
+				continue;
+			}
+			const DictRef point = level_rules::position(state, entry);
+			state.set(point, str(key::level), int_value(level));
+			_reveal(state, session, context, point, best_radius);
+		}
+	}
+}
+
+// A hero next to a mine of its side spends the day's cast on Harvest Bloom when it knows the spell: the mine's
+// next days yield twice. One holding a town tonight keeps its mana for the fight.
+static bool _cast_harvest_spell(State &state, DictRef session, DictRef context, Atom placement_id) {
+	const int64_t index = _entry_index(state, session, placement_id);
+	if (index < 0 || _is_resolved(state, session, placement_id)) {
+		return false;
+	}
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	Atom best = key::empty;
+	for (const Value &spell : gd::items(state, array_value(spell_rules::known_spells(state, commander, key::overworld)))) {
+		if (map_spells::mechanic(state, gd::as_dict(spell)) == key::map_mine &&
+				gd::bool_field(state, spell_rules::validate_overworld_spell(state, commander, movement, spell, day), key::ok, false)) {
+			best = ai::string_or_empty(state, gd::as_dict(spell), key::id);
+			break;
+		}
+	}
+	if (best == key::empty) {
+		return false;
+	}
+	const DictRef spell_row = gd::content_row(state, state::ContentTable::Spell, best);
+	if (map_spells::refusal(state, session, _map_caster(state, entry), spell_row) != key::empty || _holding_town_tonight(state, session, context, entry)) {
+		return false;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, best, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return false;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+	map_spells::apply_to_map(state, session, _map_caster(state, entry), spell_row, day);
+	return true;
 }
 
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id) {
@@ -366,7 +438,9 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			_avoid_target(state, session, placement_id, target_id, gd::add(ai::session_int(state, session, key::day), tunable_int(state, key::AVOID_DAYS)));
 		}
 	}
-	_cast_scouting_spell(state, session, context, placement_id);
+	if (!_cast_harvest_spell(state, session, context, placement_id)) {
+		_cast_scouting_spell(state, session, context, placement_id);
+	}
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::messages), array_value(messages));
 	state.set(result, str(key::events), array_value(events));

@@ -12,6 +12,7 @@
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
@@ -491,6 +492,8 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 			continue;
 		}
 		const DictRef held_commander = dict_or_new(state, entry.ref, key::enemy_commander_state);
+		// The map spells' terms of the day before end with it.
+		map_spells::clear_day_terms(state, held_commander);
 		if (new_week) {
 			// VisitBuildings.WEEK_BONUSES.
 			state.erase(held_commander, str(key::week_bonuses));

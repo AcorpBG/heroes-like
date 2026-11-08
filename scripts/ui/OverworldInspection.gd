@@ -63,28 +63,50 @@ static func inspect_tile(session, tile: Vector2i, level: int) -> Dictionary:
 		var candidate := Rules.resource_site_blocking_guard(session, node, site)
 		if not candidate.is_empty() and visible_record(session, candidate, level): guard = candidate
 		elif not candidate.is_empty(): result.summary += "\nGuard strength is not scouted."
-	if guard.is_empty(): return result
+	# Read Tracks shows the garrison of a town that is not the player's while a hero reads the ground near it.
+	var tracked := Rules.read_tracks_garrison(session, tile.x, tile.y, level)
+	var garrison: Array = tracked.get("stacks", []) if tracked.get("stacks", []) is Array else []
+	if guard.is_empty():
+		if tracked.is_empty(): return result
+		result.title = String(tracked.get("town_name", "Town"))
+		result.reward = result.title
+		_append_stacks(result, garrison, "")
+		result.strength = _strength_label(session, garrison)
+		result.summary = "Garrison read from the tracks today. Approximate army comparison only; walls and towers are not counted."
+		return result
 	result.title = Rules.encounter_display_name(guard)
 	var encounter_def := ContentService.get_encounter(String(guard.get("encounter_id", guard.get("id", ""))))
 	# BattleRules.create_battle_payload takes terrain from encounter content,
 	# not a generated placement's world-biome metadata.
 	result.terrain = String(encounter_def.get("terrain", "plains")).capitalize()
 	# These exact quantities are already disclosed by the existing selected-tile
-	# scouting text. Never read enemy town garrisons or hidden defender payloads.
+	# scouting text. A town's garrison shows only when the rules read it (Read Tracks).
 	var army := Rules._encounter_army_payload(guard)
-	for stack in army.get("stacks", []):
-		if not stack is Dictionary or int(stack.get("count", 0)) <= 0: continue
-		var unit_id := String(stack.get("unit_id", ""))
-		var unit := ContentService.get_unit(unit_id)
-		result.stacks.append({"unit_id": unit_id, "name": String(unit.get("name", unit_id)), "count": int(stack.get("count", 0))})
-	var player_army: Dictionary = session.overworld.get("hero", {}).get("army", session.overworld.get("army", {}))
-	var own_strength := Rules._army_strength_value(player_army.get("stacks", []))
-	var enemy_strength := Rules._army_strength_value(army.get("stacks", []))
-	if own_strength > 0 and enemy_strength > 0:
-		var ratio := float(enemy_strength) / float(own_strength)
-		result.strength = "Much stronger" if ratio >= 2.0 else ("Stronger" if ratio >= 1.25 else ("Comparable" if ratio >= 0.8 else ("Weaker" if ratio >= 0.5 else "Much weaker")))
+	var stacks: Array = army.get("stacks", []) if army.get("stacks", []) is Array else []
+	_append_stacks(result, stacks, "")
+	_append_stacks(result, garrison, " (garrison)")
+	var known := stacks.duplicate()
+	known.append_array(garrison)
+	result.strength = _strength_label(session, known)
 	result.summary = "Approximate army comparison only. Abilities, spells, terrain and tactics can change the outcome; casualties are not predicted."
+	if not garrison.is_empty(): result.summary += "\nThe town's garrison is read from the tracks today."
 	var reward := Rules._encounter_reward_surface(guard)
 	if not reward.is_empty(): result.reward = reward
 	result.encounter_key = Rules.encounter_key(guard)
 	return result
+
+static func _append_stacks(result: Dictionary, stacks: Array, suffix: String) -> void:
+	for stack in stacks:
+		if not stack is Dictionary or int(stack.get("count", 0)) <= 0: continue
+		var unit_id := String(stack.get("unit_id", ""))
+		var unit := ContentService.get_unit(unit_id)
+		result.stacks.append({"unit_id": unit_id, "name": String(unit.get("name", unit_id)) + suffix, "count": int(stack.get("count", 0))})
+
+## The other army against the active hero's, in words ("Unknown" without an army on either side).
+static func _strength_label(session, stacks: Array) -> String:
+	var player_army: Dictionary = session.overworld.get("hero", {}).get("army", session.overworld.get("army", {}))
+	var own_strength := Rules._army_strength_value(player_army.get("stacks", []))
+	var enemy_strength := Rules._army_strength_value(stacks)
+	if own_strength <= 0 or enemy_strength <= 0: return "Unknown"
+	var ratio := float(enemy_strength) / float(own_strength)
+	return "Much stronger" if ratio >= 2.0 else ("Stronger" if ratio >= 1.25 else ("Comparable" if ratio >= 0.8 else ("Weaker" if ratio >= 0.5 else "Much weaker")))

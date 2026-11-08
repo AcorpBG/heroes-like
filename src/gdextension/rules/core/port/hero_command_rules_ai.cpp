@@ -72,6 +72,8 @@ int64_t movement_max_for_hero(State &state, DictRef hero_state, const Value &mov
 	total = gd::add(total, difficulty_bonus);
 	total = gd::add(total, _week_bonus(state, hero_state, key::movement));
 	total = gd::add(total, compat::engine_max<int64_t>(0, gd::int_field(state, hero_state, key::movement_carry, 0)));
+	// Stride's tiles today (map_spells.hpp).
+	total = gd::add(total, compat::engine_max<int64_t>(0, gd::int_field(state, hero_state, key::map_move_tiles, 0)));
 	return compat::engine_max<int64_t>(1, total);
 }
 

@@ -212,6 +212,7 @@ public:
 	void building_art_manifest(const RowIndex &building_index, const RowIndex &art_index);
 	void resources(const RowIndex &resource_index);
 	void spell(const Value &spell);
+	void map_effect(const std::string &spell_id, const Value &spell, const Value &effect, const std::string &context);
 	void warn(const std::string &text) { out_.push_back({false, text}); }
 
 private:
@@ -1341,6 +1342,55 @@ void Check::building_art_manifest(const RowIndex &building_index, const RowIndex
 	}
 }
 
+// A map spell (docs/magic-system-spells.md, Map): its mechanic, the numbers that mechanic needs (each growing with
+// power by <name>_power_scale and <name>_power_divisor, never below 0), and how it is aimed: at the hero, or at a
+// tile the player picks.
+void Check::map_effect(const std::string &spell_id, const Value &spell, const Value &effect, const std::string &context) {
+	struct MapMechanic {
+		const char *id;
+		std::initializer_list<const char *> terms;
+		const char *target_mode;
+	};
+	static const MapMechanic kMechanics[] = {
+		{ "map_sight", { "tiles" }, "self" },
+		{ "map_move", { "tiles" }, "self" },
+		{ "map_scout", { "radius" }, "self" },
+		{ "map_lens", { "radius" }, "self" },
+		{ "map_mine", { "days" }, "self" },
+		{ "map_road", { "days" }, "self" },
+		{ "map_forest_ways", { "days" }, "self" },
+		{ "map_mire_ways", { "days" }, "self" },
+		{ "map_slow_zone", { "days", "radius" }, "self" },
+		{ "map_watch", { "days", "radius" }, "self" },
+		{ "map_flare", { "radius", "range" }, "tile_selected" },
+		{ "map_block", { "days" }, "tile_selected" },
+		{ "map_jump_forest", { "range" }, "tile_selected" },
+		{ "map_town", { "range" }, "tile_selected" },
+		{ "map_ferry", { "range" }, "tile_selected" },
+		{ "map_jump", { "range" }, "tile_selected" },
+	};
+	if (context != "overworld") {
+		warn("Spell " + spell_id + " map_effect must use overworld context.");
+	}
+	const std::string mechanic = text(effect, "map");
+	for (const MapMechanic &known : kMechanics) {
+		if (mechanic != known.id) {
+			continue;
+		}
+		for (const char *term : known.terms) {
+			const std::string name(term);
+			if (integer(effect, term, 0) <= 0 || integer(effect, (name + "_power_scale").c_str(), 0) < 0 || integer(effect, (name + "_power_divisor").c_str(), 0) < 0) {
+				warn("Spell " + spell_id + " " + mechanic + " must define " + name + " > 0, " + name + "_power_scale >= 0 and " + name + "_power_divisor >= 0.");
+			}
+		}
+		if (text(spell, "target_mode") != known.target_mode) {
+			warn("Spell " + spell_id + " " + mechanic + " must use target_mode " + known.target_mode + ".");
+		}
+		return;
+	}
+	warn("Spell " + spell_id + " uses unsupported map mechanic " + mechanic + ".");
+}
+
 void Check::spell(const Value &spell) {
 	const std::string spell_id = text(spell, "id");
 	const std::string school_id = text(spell, "school_id");
@@ -1672,6 +1722,8 @@ void Check::spell(const Value &spell) {
 		if (integer(effect, "damage_pct", 0) <= 0 || integer(effect, "damage_pct_power_scale", -1) < 0) {
 			warn("Spell " + spell_id + " must define charm damage_pct > 0 and damage_pct_power_scale >= 0.");
 		}
+	} else if (type == "map_effect") {
+		map_effect(spell_id, spell, effect, context);
 	} else {
 		warn("Spell " + spell_id + " uses unsupported effect type " + type + ".");
 	}

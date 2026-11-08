@@ -185,6 +185,11 @@ static func town_vision_radius() -> int:
 static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return HumanEngine.native_writing(&"OverworldRules.is_tile_visible", [session, x, y, level])
 
+## Read Tracks: the garrison of a town not the player's at a tile, while one of the player's heroes reads the
+## ground there today ({town_name, placement_id, stacks}, or {}).
+static func read_tracks_garrison(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	return HumanEngine.native_writing(&"OverworldRules.read_tracks_garrison", [session, x, y, level])
+
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return HumanEngine.native_writing(&"OverworldRules.is_tile_explored", [session, x, y, level])
 

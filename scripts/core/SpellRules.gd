@@ -31,6 +31,7 @@ const SPELL_PRIMARY_ROLES := [
 	"countermagic_ward",
 	"tempo_buff",
 	"assault_buff",
+	"economy_support",
 ]
 
 static func spell_id_for_action(action_id: String) -> String:
@@ -173,6 +174,12 @@ static func adventure_spell_behavior(spell: Dictionary) -> Dictionary:
 			hooks.append("mana_spend")
 			hooks.append("exploration_clamp")
 			public_effect = "active hero scouting reveal"
+		"map_effect":
+			resolution_type = "map_effect"
+			target_policy = "self_hero_map" if String(spell.get("target_mode", "")) == "self" else "map_tile"
+			hooks.append("overworld_map_effect")
+			hooks.append("mana_spend")
+			public_effect = "map spell"
 		_:
 			resolution_type = "unsupported"
 			target_policy = "unsupported"
@@ -190,7 +197,7 @@ static func adventure_spell_behavior(spell: Dictionary) -> Dictionary:
 		"resolution_type": resolution_type,
 		"runtime_hooks": hooks,
 		"public_effect": public_effect,
-		"map_mutation": "movement_only" if effect_type == "restore_movement" else ("fog_exploration" if effect_type == "reveal_radius" else "none"),
+		"map_mutation": "movement_only" if effect_type == "restore_movement" else ("fog_exploration" if effect_type == "reveal_radius" else ("map_effect" if effect_type == "map_effect" else "none")),
 	}
 
 static func adventure_spell_target_contract(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:

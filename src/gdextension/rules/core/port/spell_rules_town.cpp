@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/town_rules_actions.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -151,7 +152,8 @@ Atom _mana_readiness_label(State &state, DictRef hero_state, int64_t mana_cost) 
 Atom _spell_effect_summary(State &state, DictRef spell, DictRef hero_state) {
 	const Atom context = text_or(state, spell, key::context, key::empty);
 	if (context == key::overworld) {
-		return _overworld_spell_effect_summary(state, spell, state.new_dict(), state.new_dict());
+		// A map spell's numbers grow with the hero's power; today's spells show their base.
+		return _overworld_spell_effect_summary(state, spell, state.new_dict(), map_spells::is_map_spell(state, spell) ? hero_state : state.new_dict());
 	}
 	if (context == key::battle) {
 		return _battle_spell_effect_summary(state, hero_state, spell, state.new_dict(), state.new_dict(), state.new_dict());

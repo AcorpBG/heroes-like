@@ -208,6 +208,16 @@ Learning stays free: a hero in an own town learns everything its guild offers up
   - The tier-4 and tier-5 summons score as tier 3's: Foundry Golem's golems, Clockwork Twin's copy, Waking Forest's treant (plus 0.3 a tree) and each of Drowned Host's Risen. Wraith Host adds 1 for its second stack and, landing anywhere, 2 for each enemy shooter it lands beside, less 0.1 a hex to the nearest enemy stack.
   - Hollow Crown counts each enemy stack as the Risen it would become, fighting the other enemy stacks, at the odds it falls: 0.6 times the computer's share of both sides' health (0.1 to 0.9) plus 0.3 times the share of the stack already lost.
 
+`magic-map-spells-20261107` puts the 16 map spells in `spells.json`, unreleased the same way, with effect type `map_effect` and their mechanic as its `map`. In so far: Far Sight, Stride, Read Tracks, Watchtower Lens and Harvest Bloom. A hero casts one map spell a day, as today; a map spell's numbers grow with the hero's spell power like a battle spell's, and the spellbook shows them at the hero's power.
+
+- **The day's terms.** Far Sight's tiles, Stride's movement and Read Tracks' reach stay on the hero until its next day starts, a human hero's at the player's new day and a computer hero's at the start of its turn.
+- **Far Sight** adds its tiles to the hero's scouting radius for the rest of the day and opens the widened sight at once; every step after it opens the widened ring too.
+- **Stride** adds its tiles to the hero's movement and to the day's full movement, so it can be cast on full movement and is not cut back when the hero is next counted.
+- **Read Tracks.** A hero's army already shows when its tile is scouted (since the sight rules of 2026-11-01), so Read Tracks adds what scouting hides: the garrison of each town that is not the player's, rival or neutral, whose entrance lies within its reach of the hero, wherever the hero stands that day. Inspecting such a town shows its garrison, after the army of a hero standing at its gate.
+- **Watchtower Lens** opens the same round area on every level of the map, the hero's first.
+- **Harvest Bloom** takes a persistent site with an income held by the caster's player on the hero's tile or one next to it, the first in the map's order; with none the cast is refused, and the spell shows why in the list. Its income counts twice on each of the next {3+P} days (today's came in at dawn); a second bloom on the same mine runs to the later end.
+- **Computer players.** First values, not measured. Stride is weighed with the movement spells when the hero is out of steps, by the movement it gives; Far Sight and Watchtower Lens with the scouting spells at the day's end, by the radius they open. A hero next to a mine of its side at the day's end casts Harvest Bloom first, unless it holds a town tonight. Read Tracks is never cast: computer players already weigh the garrisons of the towns they know.
+
 ## Faction preference
 
 No faction owns a school. Each prefers the school its spells, town library and creatures belong to today, moved to the four:
