@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "battle-end-checkpoint-hash-20261108",
- "currentSliceTitle": "The resolved-battle checkpoint hashes the saved session fields in place instead of JSON-printing the whole session twice; the owner's last blow to result went from 8.7 s to 4.5-4.7 s.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T19:59:20Z",
+ "currentSliceId": "bugfix-encounter-reward-surface-memo-20261108",
+ "currentSliceTitle": "Guard inspection: reward preview script errors",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T19:45:59Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "bugfix-encounter-reward-surface-memo-20261108",
+   "title": "Guard inspection: reward preview script errors",
+   "status": "in_progress",
+   "goal": "Owner report, 2026-11-08: holding a guard's tile printed 'native wrote into an argument' and a Nil-return SCRIPT ERROR. OverworldRules._encounter_reward_surface was registered as writing nothing, yet its army power fills AiHeroRules' power memos (static vars) while they are cold, as after loading a save. human_registry.cpp marks it writing; its wrapper calls HumanEngine.native_writing; Windows rules libraries rebuilt.",
+   "docs": [],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "battle-end-checkpoint-hash-20261108",
    "status": "completed",

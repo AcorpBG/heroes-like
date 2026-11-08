@@ -600,7 +600,8 @@ const Function kFunctions[] = {
 			return gd::str(overworld::_encounter_army_surface(s, D(a, 0), B(a, 1)))),
 	NATIVE(OverworldRules, _encounter_army_payload, 1, false,
 			return gd::dict_value(overworld::_encounter_army_payload(s, D(a, 0)))),
-	NATIVE(OverworldRules, _encounter_reward_surface, 1, false,
+	// The reward's army power fills AiHeroRules' power memos (static vars).
+	NATIVE(OverworldRules, _encounter_reward_surface, 1, true,
 			return gd::str(overworld::_encounter_reward_surface(s, D(a, 0)))),
 	NATIVE(OverworldRules, _encounter_guard_target_label, 2, true,
 			return gd::str(overworld::_encounter_guard_target_label(s, a[0], D(a, 1)))),

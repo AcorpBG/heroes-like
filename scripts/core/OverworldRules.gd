@@ -875,7 +875,7 @@ static func _encounter_army_payload(encounter: Dictionary) -> Dictionary:
 	return HumanEngine.native(&"OverworldRules._encounter_army_payload", [encounter])
 
 static func _encounter_reward_surface(encounter: Dictionary) -> String:
-	return HumanEngine.native(&"OverworldRules._encounter_reward_surface", [encounter])
+	return HumanEngine.native_writing(&"OverworldRules._encounter_reward_surface", [encounter])
 
 static func _encounter_guard_target_label(session: SessionStateStoreScript.SessionData, guard: Dictionary) -> String:
 	return HumanEngine.native_writing(&"OverworldRules._encounter_guard_target_label", [session, guard])

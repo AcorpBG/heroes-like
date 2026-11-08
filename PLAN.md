@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `bugfix-encounter-reward-surface-memo-20261108` (in progress): Owner report, 2026-11-08: holding a guard's tile printed 'native wrote into an argument' and a Nil-return SCRIPT ERROR. OverworldRules._encounter_reward_surface was registered as writing nothing, yet its army power fills AiHeroRules' power memos (static vars) while they are cold, as after loading a save. human_registry.cpp marks it writing; its wrapper calls HumanEngine.native_writing; Windows rules libraries rebuilt.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
