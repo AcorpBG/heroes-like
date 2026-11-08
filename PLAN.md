@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `save-autosave-end-turn-only-20261108` (in progress): Owner, 2026-11-08: the game autosaves at end turn, on safe quit and on return to the main menu only. Remove the saves on battle entry, the battle briefing, the last blow, the report, Continue, the outcome screen and a new game's first day, with their failure and retry screens and the tests of them. Files: AppRouter.gd, BattleShell.gd, BattleReportShell.gd, ScenarioOutcomeShell.gd, OverworldShell.gd. See `docs/save-test-retirement.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-08 `save-autosave-end-turn-only-20261108` (9e4c555a0): Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.
 - 2026-11-08 `bugfix-encounter-reward-surface-memo-20261108` (18b1f23bb): Guard inspection no longer errors on its reward line: OverworldRules._encounter_reward_surface, whose army power fills AiHeroRules' power memos when cold (as after a save load), is registered as writing.
 - 2026-11-08 `battle-end-checkpoint-hash-20261108` (4316a6e54): The resolved-battle checkpoint hashes the saved session fields in place instead of JSON-printing the whole session twice; the owner's last blow to result went from 8.7 s to 4.5-4.7 s.
 - 2026-11-08 `magic-faction-mastery-magic-heroes-20261108` (3d1b53555): Only a faction's magic heroes (5 of its 11) start with its school mastery: removed from the 36 might heroes in heroes.json; the pre-switch save conversion grants it to magic heroes only; docs.

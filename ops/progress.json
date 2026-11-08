@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "save-autosave-end-turn-only-20261108",
- "currentSliceTitle": "Autosave at end turn only",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T20:49:28Z",
+ "currentSliceTitle": "Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T20:51:44Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "save-autosave-end-turn-only-20261108",
-   "title": "Autosave at end turn only",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-08: the game autosaves at end turn, on safe quit and on return to the main menu only. Remove the saves on battle entry, the battle briefing, the last blow, the report, Continue, the outcome screen and a new game's first day, with their failure and retry screens and the tests of them. Files: AppRouter.gd, BattleShell.gd, BattleReportShell.gd, ScenarioOutcomeShell.gd, OverworldShell.gd.",
-   "docs": [
-    "docs/save-test-retirement.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.",
+   "commit": "9e4c555a0"
   },
   {
    "id": "bugfix-encounter-reward-surface-memo-20261108",
