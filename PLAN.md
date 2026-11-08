@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `save-native-first-save-cleanup-20261108` (in progress): Since 9e4c555a0 nothing sets the first-save or save-reason markers. Remove the native first-save fast path, its marker handling and test switch (save_service_runtime.cpp, save_service.hpp, human_keys.inc) and the matching SaveService.gd constants. Old saves keep the markers as inert data. Windows rules libraries rebuilt. See `docs/save-test-retirement.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

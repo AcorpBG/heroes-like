@@ -23,18 +23,6 @@ constexpr Atom kSlotTypeManual = key::manual;
 constexpr Atom kSlotTypeFile = key::file;
 constexpr Atom kSlotTypeAutosave = key::autosave;
 constexpr int64_t kManualSlotIds[] = { 1, 2, 3 };
-constexpr Atom kTransitionAutosaveIntentFlags[] = {
-	key::runtime_autosave_dirty,
-	key::runtime_autosave_pending_intent,
-	key::runtime_autosave_pending_reason,
-	key::runtime_autosave_pending_route,
-	key::runtime_autosave_pending_game_state,
-	key::runtime_autosave_pending_unix,
-};
-constexpr Atom kGeneratedOpeningAutosaveForceFailureEnv = key::HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE;
-constexpr Atom kGeneratedOpeningAutosavePendingFlag = key::generated_overworld_deferred_autosave_pending;
-constexpr Atom kGeneratedOpeningAutosaveBriefingDeferredFlag = key::generated_overworld_command_briefing_autosave_deferred;
-constexpr Atom kGeneratedOpeningAutosaveCompletedFlag = key::generated_overworld_initial_autosave_completed;
 
 // The fields _owned_payload_from_normalized_detached_session copies, in its
 // literal's order; _runtime_payload_for_save copies the first ten the same way.
@@ -143,14 +131,6 @@ Atom named_save_path(State &state, Atom save_file_name) {
 	return state.intern(joined);
 }
 
-// The generated opening's flags on a payload's or a session's flags: pending
-// and briefing-deferred erased, completed set.
-void mark_generated_opening_autosave_completed(State &state, DictRef flags) {
-	state.erase(flags, gd::str(kGeneratedOpeningAutosavePendingFlag));
-	state.erase(flags, gd::str(kGeneratedOpeningAutosaveBriefingDeferredFlag));
-	put(state, flags, kGeneratedOpeningAutosaveCompletedFlag, gd::bool_value(true));
-}
-
 } // namespace
 
 int64_t profile_begin_usec(State &state) {
@@ -255,9 +235,6 @@ DictRef _save_runtime_session(State &state, const Value &session, Atom slot_type
 		_runtime_save_profile_finish(state, profile);
 		return save_result(state, false, key::empty, state.new_dict(), key::no_active_expedition_is_available_to);
 	}
-	if (_can_fast_save_generated_opening_autosave(state, session, slot_type, include_summary)) {
-		return _save_generated_opening_autosave_fast(state, session, profile);
-	}
 
 	_runtime_save_profile_step(state, profile, key::to_dict_start);
 	const int64_t to_dict_started = profile_begin_usec(state);
@@ -313,20 +290,7 @@ DictRef _save_runtime_session(State &state, const Value &session, Atom slot_type
 	const DictRef saved_payload = state.new_dict();
 	const bool payload_is_prepared = gd::bool_field(state, profile, key::prepared_payload, false)
 			|| gd::bool_field(state, profile, key::trusted_live_payload, false);
-	DictRef write_payload = payload_for_write;
-	if (payload_is_prepared) {
-		_clear_transition_autosave_intent_from_owned_payload(state, write_payload);
-	} else {
-		write_payload = _payload_without_transition_autosave_intent(state, payload_for_write);
-	}
-	const bool generated_opening_pending = _is_generated_opening_autosave_pending(state, session);
-	if (generated_opening_pending) {
-		if (payload_is_prepared) {
-			_apply_generated_opening_autosave_success_to_owned_payload(state, write_payload);
-		} else {
-			write_payload = _generated_opening_autosave_success_payload_from_payload(state, write_payload);
-		}
-	}
+	const DictRef write_payload = payload_for_write;
 	const Atom authoritative_resume_target = _resume_target_for_session(state, sanitized_session);
 	if (slot_type == kSlotTypeAutosave) {
 		_runtime_save_profile_step(state, profile, key::write_payload_start);
@@ -387,11 +351,6 @@ DictRef _save_runtime_session(State &state, const Value &session, Atom slot_type
 	if (path == key::empty) {
 		_runtime_save_profile_finish(state, profile);
 		return save_result(state, false, key::empty, summary, key::save_write_failed);
-	}
-	if (generated_opening_pending) {
-		_apply_generated_opening_autosave_success_to_session(state, session);
-	} else {
-		_clear_transition_autosave_intent_flags(state, session);
 	}
 	if (gd::file_exists(state, path)) {
 		put(state, profile, key::written_bytes, gd::class_call_static(state, key::FileAccess, key::get_size, { gd::str(path) }));
@@ -467,26 +426,6 @@ DictRef _runtime_payload_for_save(State &state, const Value &session) {
 	return payload;
 }
 
-DictRef _payload_without_transition_autosave_intent(State &state, DictRef payload) {
-	// Callers pass an owned save snapshot, so only the branch being modified needs
-	// duplication. Deep-copying the entire Large-map payload here doubled save time.
-	const DictRef cleaned = gd::duplicate_dict(state, payload);
-	Value found;
-	if (!state.lookup(cleaned, gd::str(key::flags), found) || found.kind != Kind::Dict) {
-		// A missing or non-Dictionary flags field gives an empty {}.
-		return cleaned;
-	}
-	const DictRef flags = gd::as_dict(gd::engine_duplicate(state, found, true));
-	if (gd::is_empty(state, flags)) {
-		return cleaned;
-	}
-	for (const Atom flag : kTransitionAutosaveIntentFlags) {
-		state.erase(flags, gd::str(flag));
-	}
-	put(state, cleaned, key::flags, gd::dict_value(flags));
-	return cleaned;
-}
-
 DictRef _owned_payload_from_normalized_detached_session(State &state, const Value &session) {
 	if (session.kind == Kind::Nil) {
 		return state.new_dict();
@@ -497,91 +436,6 @@ DictRef _owned_payload_from_normalized_detached_session(State &state, const Valu
 		put(state, payload, field, session_field(state, view, field));
 	}
 	return payload;
-}
-
-void _clear_transition_autosave_intent_from_owned_payload(State &state, DictRef payload) {
-	const DictRef flags = dict_field_or_new(state, payload, key::flags);
-	for (const Atom flag : kTransitionAutosaveIntentFlags) {
-		state.erase(flags, gd::str(flag));
-	}
-	put(state, payload, key::flags, gd::dict_value(flags));
-}
-
-void _clear_transition_autosave_intent_flags(State &state, const Value &session) {
-	if (session.kind == Kind::Nil) {
-		return;
-	}
-	const DictRef flags = session_flags(state, session);
-	for (const Atom flag : kTransitionAutosaveIntentFlags) {
-		state.erase(flags, gd::str(flag));
-	}
-}
-
-bool _can_fast_save_generated_opening_autosave(State &state, const Value &session, Atom slot_type, bool include_summary) {
-	return _is_generated_opening_autosave_pending(state, session)
-			&& slot_type == kSlotTypeAutosave
-			&& !include_summary;
-}
-
-bool _is_generated_opening_autosave_pending(State &state, const Value &session) {
-	if (session.kind == Kind::Nil) {
-		return false;
-	}
-	const DictRef flags = session_flags(state, session);
-	return gd::bool_field(state, flags, key::generated_random_map, false)
-			&& gd::bool_field(state, flags, kGeneratedOpeningAutosavePendingFlag, false);
-}
-
-DictRef _save_generated_opening_autosave_fast(State &state, const Value &session, DictRef profile) {
-	_runtime_save_profile_step(state, profile, key::generated_opening_payload_start);
-	const int64_t payload_started = profile_begin_usec(state);
-	const DictRef payload = _generated_opening_autosave_success_payload(state, session);
-	_runtime_save_profile_bucket(state, profile, key::to_dict, profile_elapsed_ms(state, payload_started));
-	_runtime_save_profile_step(state, profile, key::generated_opening_payload_done);
-	_runtime_save_profile_step(state, profile, key::write_payload_start);
-	const DictRef saved_payload = state.new_dict();
-	const bool forced_failure = gd::os_environment(state, kGeneratedOpeningAutosaveForceFailureEnv) == key::n1;
-	const Atom path = forced_failure ? Atom(key::empty) : _save_payload(state, payload, _autosave_path(state), kSlotTypeAutosave, saved_payload, profile, false);
-	_runtime_save_profile_step(state, profile, key::write_payload_done);
-	if (path == key::empty) {
-		_runtime_save_profile_finish(state, profile);
-		return save_result(state, false, key::empty, state.new_dict(), key::save_write_failed);
-	}
-	_apply_generated_opening_autosave_success_to_session(state, session);
-	if (gd::file_exists(state, path)) {
-		put(state, profile, key::written_bytes, gd::class_call_static(state, key::FileAccess, key::get_size, { gd::str(path) }));
-		put(state, profile, key::path, gd::str(path));
-	}
-	_runtime_save_profile_step(state, profile, key::summary_cache_deferred);
-	_runtime_save_profile_finish(state, profile);
-	return save_result(state, true, path, state.new_dict(), key::autosave_updated);
-}
-
-DictRef _generated_opening_autosave_success_payload(State &state, const Value &session) {
-	return _generated_opening_autosave_success_payload_from_payload(state, gd::as_dict(gd::call_method(state, session, key::to_dict, {})));
-}
-
-DictRef _generated_opening_autosave_success_payload_from_payload(State &state, DictRef payload) {
-	const DictRef canonical_payload = _payload_without_transition_autosave_intent(state, payload);
-	const DictRef flags = dict_field_or_new(state, canonical_payload, key::flags);
-	mark_generated_opening_autosave_completed(state, flags);
-	put(state, canonical_payload, key::flags, gd::dict_value(flags));
-	return canonical_payload;
-}
-
-void _apply_generated_opening_autosave_success_to_owned_payload(State &state, DictRef payload) {
-	_clear_transition_autosave_intent_from_owned_payload(state, payload);
-	const DictRef flags = dict_field_or_new(state, payload, key::flags);
-	mark_generated_opening_autosave_completed(state, flags);
-	put(state, payload, key::flags, gd::dict_value(flags));
-}
-
-void _apply_generated_opening_autosave_success_to_session(State &state, const Value &session) {
-	if (session.kind == Kind::Nil) {
-		return;
-	}
-	_clear_transition_autosave_intent_flags(state, session);
-	mark_generated_opening_autosave_completed(state, session_flags(state, session));
 }
 
 void _runtime_save_profile_step(State &state, DictRef profile, Atom step_name) {

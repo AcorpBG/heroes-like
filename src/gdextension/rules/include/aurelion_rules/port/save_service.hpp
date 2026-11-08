@@ -127,23 +127,13 @@ DictRef _summary_for_slot_identity(State &state, DictRef identity);
 bool _ensure_save_dir(State &state);
 Atom _save_payload(State &state, DictRef payload, Atom file_path, Atom slot_type, DictRef saved_payload_out, DictRef profile, bool payload_is_prepared = false);
 
-// Saving the running game: receipts, the runtime save, trusted autosaves, the generated opening's autosave, the save profile (save_service_runtime.cpp).
+// Saving the running game: receipts, the runtime save, trusted autosaves, the save profile (save_service_runtime.cpp).
 DictRef _verified_cached_manual_save_recovery(State &state, Atom file_path, Atom slot_type);
 DictRef _verified_receipt_recovery(State &state, Atom file_path);
 DictRef _save_runtime_session(State &state, const Value &session, Atom slot_type, int64_t slot = 1, bool include_summary = true, Atom save_file_name = state::key::empty, bool cache_summary = false);
 bool _can_use_trusted_live_autosave_payload(State &state, const Value &session, DictRef payload, Atom slot_type);
 DictRef _runtime_payload_for_save(State &state, const Value &session);
-DictRef _payload_without_transition_autosave_intent(State &state, DictRef payload);
 DictRef _owned_payload_from_normalized_detached_session(State &state, const Value &session);
-void _clear_transition_autosave_intent_from_owned_payload(State &state, DictRef payload);
-void _clear_transition_autosave_intent_flags(State &state, const Value &session);
-bool _can_fast_save_generated_opening_autosave(State &state, const Value &session, Atom slot_type, bool include_summary);
-bool _is_generated_opening_autosave_pending(State &state, const Value &session);
-DictRef _save_generated_opening_autosave_fast(State &state, const Value &session, DictRef profile);
-DictRef _generated_opening_autosave_success_payload(State &state, const Value &session);
-DictRef _generated_opening_autosave_success_payload_from_payload(State &state, DictRef payload);
-void _apply_generated_opening_autosave_success_to_owned_payload(State &state, DictRef payload);
-void _apply_generated_opening_autosave_success_to_session(State &state, const Value &session);
 void _runtime_save_profile_step(State &state, DictRef profile, Atom step_name);
 void _runtime_save_profile_bucket(State &state, DictRef profile, Atom bucket_name, double elapsed_ms);
 void _runtime_save_profile_finish(State &state, DictRef profile);

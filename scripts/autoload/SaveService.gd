@@ -19,17 +19,6 @@ const SAVE_METADATA_SCENARIO_STATUS_KEY := "saved_from_scenario_status"
 const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
 const SAVE_METADATA_MANUAL_NAME_KEY := "manual_slot_name"
 const MANUAL_SLOT_NAME_MAX_LENGTH := 32
-const TRANSITION_AUTOSAVE_INTENT_FLAGS := [
-	"runtime_autosave_dirty",
-	"runtime_autosave_pending_intent",
-	"runtime_autosave_pending_reason",
-	"runtime_autosave_pending_route",
-	"runtime_autosave_pending_game_state",
-	"runtime_autosave_pending_unix",
-]
-const GENERATED_OPENING_AUTOSAVE_PENDING_FLAG := "generated_overworld_deferred_autosave_pending"
-const GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG := "generated_overworld_command_briefing_autosave_deferred"
-const GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG := "generated_overworld_initial_autosave_completed"
 const SAVE_TRANSACTION_CANDIDATE_SUFFIX := ".candidate"
 const SAVE_TRANSACTION_BACKUP_SUFFIX := ".backup"
 
