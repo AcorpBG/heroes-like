@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "overworld-faction-ground-20261108",
- "currentSliceTitle": "Overworld: factions cross their own ground at no extra cost",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T17:56:18Z",
+ "currentSliceTitle": "Mireclaw (swamp, mire), Sunvault (snow, frost) and Brasshollow (rough) heroes step on their home_terrain_ids at grass cost in map_spells::StepCosts; content check; hero sheet line; no generator change.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T18:18:29Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "overworld-faction-ground-20261108",
-   "title": "Overworld: factions cross their own ground at no extra cost",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-08: no generator change; a faction's heroes step on its own terrains at grass cost: Mireclaw swamp and mire, Sunvault snow and frost, Brasshollow rough (with hills). factions.json home_terrain_ids, map_spells::StepCosts (spell_map.cpp), the content check, a hero sheet line, docs/overworld-terrain-movement.md.",
-   "docs": [
-    "docs/overworld-terrain-movement.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Mireclaw (swamp, mire), Sunvault (snow, frost) and Brasshollow (rough) heroes step on their home_terrain_ids at grass cost in map_spells::StepCosts; content check; hero sheet line; no generator change.",
+   "commit": "53dce319d"
   },
   {
    "id": "overworld-terrain-costs-20261108",
