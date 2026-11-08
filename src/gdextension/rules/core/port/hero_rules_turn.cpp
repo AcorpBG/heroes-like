@@ -453,7 +453,7 @@ int64_t experience_for_level(State &state, int64_t level) {
 	const int64_t end = gd::add(level, 1);
 	for (int64_t reached = 2; reached < end; ++reached) {
 		threshold = next_threshold;
-		next_threshold = gd::add(next_threshold, gd::add(250, gd::mul(reached, 100)));
+		next_threshold = gd::add(next_threshold, level_step_experience(reached));
 	}
 	return threshold;
 }

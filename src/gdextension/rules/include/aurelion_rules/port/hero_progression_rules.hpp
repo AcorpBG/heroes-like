@@ -50,6 +50,9 @@ DictRef _enqueue_choice_group(State &state, DictRef hero_state, int64_t level_nu
 DictRef add_experience(State &state, DictRef hero_state, int64_t amount);
 Atom command_gain_stat(State &state, DictRef hero_state, int64_t level_number);
 int64_t experience_with_bonus(State &state, DictRef hero_state, int64_t amount);
+// The experience from level `level` to the next, for level 2 and up (level 1
+// to 2 costs 250): 250 + 100 x level + 6 x level squared.
+int64_t level_step_experience(int64_t level);
 Atom pending_choice_summary(State &state, DictRef pending_choice);
 
 // A hero's one-line summary for the setup's launch text (Phase 7, 7.11;

@@ -87,7 +87,7 @@ DictRef _add_experience(State &state, DictRef hero_state, int64_t amount) {
 			const Value command = gd::field(state, hero, key::command);
 			const Atom stat = command_gain_stat(state, hero, gd::int_field(state, hero, key::level, 1));
 			state.set(hero, str(key::command), dict_value(_apply_command_gain(state, command, stat)));
-			const int64_t next_level_experience = gd::add(gd::add(gd::int_field(state, hero, key::next_level_experience, 250), 250), gd::mul(gd::int_field(state, hero, key::level, 1), 100));
+			const int64_t next_level_experience = gd::add(gd::int_field(state, hero, key::next_level_experience, 250), level_step_experience(gd::int_field(state, hero, key::level, 1)));
 			state.set(hero, str(key::next_level_experience), int_value(next_level_experience));
 			hero = _enqueue_choice_group(state, hero, gd::int_field(state, hero, key::level, 1));
 			const Atom name = gd::stringify(state, gd::field_or(state, hero, key::name, str(key::Hero)));
@@ -102,6 +102,10 @@ DictRef _add_experience(State &state, DictRef hero_state, int64_t amount) {
 	state.set(result, str(key::hero), dict_value(hero));
 	state.set(result, str(key::messages), array_value(messages));
 	return result;
+}
+
+int64_t level_step_experience(int64_t level) {
+	return gd::add(gd::add(250, gd::mul(level, 100)), gd::mul(gd::mul(level, level), 6));
 }
 
 Atom pending_choice_summary(State &state, DictRef pending_choice) {

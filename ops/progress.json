@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "battle-xp-double-20261108",
- "currentSliceTitle": "Battles pay twice the experience: one point per point of the beaten army's strength instead of half (battle_rewards_for_strength), every battle and reward line; best AI hero by day 70 on six seeds: level 14-23 -> 30-47.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T20:54:57Z",
+ "currentSliceId": "level-curve-steeper-20261108",
+ "currentSliceTitle": "Late levels cost more",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T21:25:31Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "level-curve-steeper-20261108",
+   "title": "Late levels cost more",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-08: with battle experience doubled, late levels came too fast (best AI hero level 30-47 by day 70). Each level step adds 6 x level squared: 250 + 100 x level + 6 x level^2 (HeroProgressionRules.level_step_experience, used by the level-up and experience_for_level for hires). Early levels about as now, level 30 twice the experience. Doc: docs/ai-plays-by-player-rules.md.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "battle-xp-double-20261108",
    "status": "completed",
