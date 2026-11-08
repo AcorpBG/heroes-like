@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `overworld-faction-ground-each-20261108` (in progress): Owner, 2026-11-08: lava, ash and water cost 1.5 a step; one ground per faction: Mireclaw swamp and mire, Sunvault snow and frost, Brasshollow lava and ash, Thornwake rough and forest, Embercourt sand, Veilmourn water. terrain_grammar.json, factions.json, the hero sheet line, docs/overworld-terrain-movement.md. See `docs/overworld-terrain-movement.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-08 `overworld-faction-ground-each-20261108` (63e8bc4ef): Lava, ash and water cost 1.5; each faction crosses its own ground at grass cost: Embercourt sand, Mireclaw swamp/mire, Sunvault snow/frost, Thornwake rough/forest, Brasshollow lava/ash, Veilmourn water; content only.
 - 2026-11-08 `overworld-faction-ground-20261108` (53dce319d): Mireclaw (swamp, mire), Sunvault (snow, frost) and Brasshollow (rough) heroes step on their home_terrain_ids at grass cost in map_spells::StepCosts; content check; hero sheet line; no generator change.
 - 2026-11-08 `magic-switch-20261107` (5430e5d33): The 139 spells live on four schools (Lens, Old Measure into Beacon, Mire into Veil); retired_spells.json maps the 119 old; heroes cast their faction's school at +1 power, start with its mastery; sites teach by tier; v10 saves convert.
 - 2026-11-08 `magic-art-audio-20261107` (7aec23686): Emblem icons for all 139 spells and 19 status badges, painted battle effects and spell ground, school sounds for every spell, painted map marks (also 13eb6155e, f3421b5f1, bdda65b17, da51ce84a, b7cb4a8d0).

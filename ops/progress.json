@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "overworld-faction-ground-each-20261108",
- "currentSliceTitle": "Overworld: one home ground per faction; lava and water slow",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T19:03:25Z",
+ "currentSliceTitle": "Lava, ash and water cost 1.5; each faction crosses its own ground at grass cost: Embercourt sand, Mireclaw swamp/mire, Sunvault snow/frost, Thornwake rough/forest, Brasshollow lava/ash, Veilmourn water; content only.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T19:17:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "overworld-faction-ground-each-20261108",
-   "title": "Overworld: one home ground per faction; lava and water slow",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-08: lava, ash and water cost 1.5 a step; one ground per faction: Mireclaw swamp and mire, Sunvault snow and frost, Brasshollow lava and ash, Thornwake rough and forest, Embercourt sand, Veilmourn water. terrain_grammar.json, factions.json, the hero sheet line, docs/overworld-terrain-movement.md.",
-   "docs": [
-    "docs/overworld-terrain-movement.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Lava, ash and water cost 1.5; each faction crosses its own ground at grass cost: Embercourt sand, Mireclaw swamp/mire, Sunvault snow/frost, Thornwake rough/forest, Brasshollow lava/ash, Veilmourn water; content only.",
+   "commit": "63e8bc4ef"
   },
   {
    "id": "overworld-faction-ground-20261108",
