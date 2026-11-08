@@ -1,0 +1,2674 @@
+{
+  "schema": "magic_rework_vfx_sources_v1",
+  "content_slice_id": "magic-art-audio-20261107",
+  "generation_mode": "imggen --backend codex (the owner's ChatGPT plan), one transparent painting per spell",
+  "shared_final_prompt": "Use case: stylized-concept. Asset type: original transparent 2D tactical battle spell VFX sprite for Aurelion Reach. Hand-painted high-quality fantasy effect, crisp material silhouettes readable when reduced to 96 pixels. One centered effect only, square canvas, all tips contained within the central 75 percent and generous fully transparent margins. Genuinely transparent RGBA background, preserve fine alpha. Keep the central target area substantially open so a unit remains readable beneath it. No characters, landscape, ground plane, solid backdrop, UI icon medallion, decorative frame, lettering, numbers, readable runes, logos, checkerboard or watermark. Original design, no copied game art. Subject: ",
+  "projectile_note": "Horizontal travelling effect pointing right, no ring, no target.",
+  "runtime_derivation": "tools/prepare_spell_variety_assets.runtime_bytes: crop nonzero original alpha bounds, proportionally Lanczos-fit within 320x320 and center in a 384x384 RGBA transparent canvas; no recoloring.",
+  "items": [
+    {
+      "spell_id": "spell_bolt",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_projectile",
+      "motion_profile": "",
+      "scale": 3.2,
+      "prompt_subject": "A single sleek dart of pale blue-white force flying point-first to the right, a short crackling tail of thin silver-blue light behind it, a few tiny sparks; plain and clean, the simplest of spells. Horizontal travelling effect pointing right, no ring, no target.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bolt_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bolt.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        39,
+        47,
+        1488,
+        984
+      ],
+      "source_sha256": "5a24f63b081b49d0a7599814449cf34ea40e402fa2f02dee62388352b08b905f",
+      "runtime_sha256": "5aa9935c199078fcccc24a2e0b4f215f6ccbf4b97c9ff2c731f91999a15d1bcd"
+    },
+    {
+      "spell_id": "spell_mend",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Soft pale blue-white threads of light stitching together in a loose open ring around the centre, a few tiny silver motes drifting upward; gentle and plain.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_mend_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mend.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1254,
+        1254
+      ],
+      "source_sha256": "c3a0e7cd0b6c54e496ec8f31763f3fd6fa2698a60ceabf35b1561ec5b64740f5",
+      "runtime_sha256": "147e07395eb972ae0af8ec5c42b1576e5aa566e8402e92361b4d38b0e7fde67f"
+    },
+    {
+      "spell_id": "spell_sharpen",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "attack_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Three tall upright blade shapes of bright pale silver-blue light rising around the open centre, each edge flashing white along its length, a bold shower of whetstone sparks at their bases. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_sharpen_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_sharpen.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "0c576d11a200052110c36485ec35c0c33966f73d228b1e85fede57210c3afd02",
+      "runtime_sha256": "00d7455a4ddcd1ea6ab505e8f0893254b9ba30c7d6eb3a6c350fceed481367eb"
+    },
+    {
+      "spell_id": "spell_quicken",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "initiative_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "Light pale blue-white speed ribbons sweeping diagonally up and to the right around the open centre like a gust of luminous wind, a few small feathers of light.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_quicken_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_quicken.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1254,
+        1254
+      ],
+      "source_sha256": "9eda2c140b5f58ce79d39d555c2ac0db6aa399b981082188ea954b0342886af1",
+      "runtime_sha256": "3b38c6ad7274ab7321adafef8ac6e8869847815016249a6e6e3f7e3843d18e24"
+    },
+    {
+      "spell_id": "spell_shell",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "defense_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A smooth translucent pale blue-white dome of force, thin and glassy, faint hexagonal facets along its rim, the centre clear and see-through.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_shell_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_shell.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "bc317fbe6fc551cf8683f087f387f31060a1db4ea2b1983e6ab2157276a44304",
+      "runtime_sha256": "e2581d43f6ee7bc7a017a1c0e37d4ee657173c7f5be761ec3bd54a21c06bb314"
+    },
+    {
+      "spell_id": "spell_steady",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "defense_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "Four upright pale silver bars of light standing in a ring around the open centre like a ghostly rank of shields, joined by one level band of blue-white light.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_steady_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_steady.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        19,
+        1254,
+        1254
+      ],
+      "source_sha256": "df8c3fb0d67b961f71c33eb378eed0572521fb9493d39a9156694314cb6a7d4e",
+      "runtime_sha256": "4bb24be40355aaec2c0cb5ea9999bd018ae944008856f2da5a2102b85b2901d0"
+    },
+    {
+      "spell_id": "spell_hobble",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Heavy pale blue-white chains of force with two small weighted balls lying low around the bottom of the open centre, links glowing faintly, dragging on the ground.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hobble_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hobble.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        22,
+        1238,
+        1254
+      ],
+      "source_sha256": "1c2b9a5da782e297b89f392bba3b14c2778c9f7871ceb0309c869154eed46ef9",
+      "runtime_sha256": "b92db4bce7c8683bd6beb26e45080de5009b0cc3dff3a94321306e85b4171def"
+    },
+    {
+      "spell_id": "spell_daze",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A slow lazy ring of small pale blue-white stars and tiny hourglass shapes circling the upper part of the open centre, a soft haze trailing between them.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_daze_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_daze.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        23,
+        1234,
+        1230
+      ],
+      "source_sha256": "3e37e35f4ecbd40f72379d8a1cd4037a8b8c0cb20f1a43fd7bfc458654123e6a",
+      "runtime_sha256": "930e077c496d74fe500343a19c4c1dd653b1c867d6ca6fcc691dde2b123345cb"
+    },
+    {
+      "spell_id": "spell_snare",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "The jaws of a leg-hold trap made of glowing pale blue-white force closing from both sides around the bottom of the open centre, a short chain of light behind them.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_snare_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_snare.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "511753bb9ee14ae6406eed864d479a62015c60ca0b4a935c04a240825a5728fd",
+      "runtime_sha256": "dfb3d183e71293412e4dfece2e635da369db485eb5368536e88646270f0adbe0"
+    },
+    {
+      "spell_id": "spell_unweave",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "dispel_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Loose threads of pale blue-white light unravelling outward from around the open centre, frayed glowing strands and small silver knots coming undone.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_unweave_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_unweave.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "053859a914ca27f531ae774a0dfe04986560c7aa685ebca2a0d6759049857892",
+      "runtime_sha256": "bc6ce4ddbabea3bbbaaefb45b9ee30350209780d142fabb0c8443f23428413ee"
+    },
+    {
+      "spell_id": "spell_cleanse",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "cleanse_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A clear cascade of pale blue-white water-light pouring down around the open centre, bright droplets and a soft rinse of silver foam at the bottom washing dark flecks away.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_cleanse_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_cleanse.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "14f6466e84e227c21d949dee0d489af809660c4992f05f64ead6b226c79df29e",
+      "runtime_sha256": "d8b258e383bf5fd722bb902aeccf5d2b116ec63c42ce257c76142501a5aa229e"
+    },
+    {
+      "spell_id": "spell_shift",
+      "school_id": "basic",
+      "tier": 1,
+      "effect_type": "move_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "A bold sweep of bright pale blue-white light sliding sideways to the right around the open centre: three solid afterimage arcs of force with glowing white leading edges and a short spray of silver sparks. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_shift_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_shift.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "source_sha256": "bb907d30e50a773fac721e07354378f792754255853ff4788a63af36d117de6f",
+      "runtime_sha256": "85847d026820b07c309ed717acb39fdda2ce0e150125f12fd538d070ea7f68b9"
+    },
+    {
+      "spell_id": "spell_overdrive",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "attack_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Brass furnace valves on both sides of the open centre venting upward jets of orange fire and white steam, a red-hot glow at their mouths, small sparks; fierce and rising.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_overdrive_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_overdrive.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "c6d799f720dfc22fd05c4e1d998a132fddb0cf141afaff2506c94286771a5af7",
+      "runtime_sha256": "1aa3e3aee08a861c90d086ebe412a887157d26d85397705dd0e6c6f62a5a9acb"
+    },
+    {
+      "spell_id": "spell_stoke",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Glowing coals and small tongues of flame rising in a loose upward spiral around the open centre, a brass poker of light stirring them, embers drifting up.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_stoke_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_stoke.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "53e144f271c7721aca5a5b8e76810dd4731707476baf14162092f6973be551c9",
+      "runtime_sha256": "23796ecb2db2aefc0ee7139ea1e496a3911999653f77bd7ae3bb732ca231d5e2"
+    },
+    {
+      "spell_id": "spell_cooling_slag",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Heavy molten slag pooling and hardening around the bottom of the open centre, bright orange cracks in a darkening grey crust, wisps of steam rising.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_cooling_slag_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_cooling_slag.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        23,
+        1236,
+        1254
+      ],
+      "source_sha256": "d5864fe298869da329e807edeb25cc98d6cf541785f92b8a2bed2e42dc0aca1e",
+      "runtime_sha256": "f6490ac5cac64461a925854a3d73346a0ea537b87f6fc2fd7ea2d81e03a2eaae"
+    },
+    {
+      "spell_id": "spell_ember_lash",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A whip of molten ember links cracking in one wide curling arc around the open centre, its tip bursting into a small spray of orange embers, thin heat shimmer along the lash. Open sweeping curve, no closed ring.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_ember_lash_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_ember_lash.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        13,
+        1244,
+        1254
+      ],
+      "source_sha256": "06a72acb51725a73c4e2ef295b877910f092586f2042046c55bceb9865d8ce48",
+      "runtime_sha256": "ac66a2e1b56b7f323e1679a445e7d65bd8d94efa75d9c20e1b3e5fabdc6bb396"
+    },
+    {
+      "spell_id": "spell_hot_iron",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Bright orange-hot iron staples searing closed in a ring around the open centre, a curl of white steam rising from each and a few small sparks.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hot_iron_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hot_iron.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1254,
+        1254
+      ],
+      "source_sha256": "5d9ccec2495709fe40680c155e1337cfea0b620ab8e1e045f66fe3d9bd69a099",
+      "runtime_sha256": "d6eb69987f001b8f980f6e336405dca2e20a2d1eef797c2de4d1cda2c304bb01"
+    },
+    {
+      "spell_id": "spell_rivet_plate",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "Curved plates of dark forged iron with glowing orange-hot rivet heads assembling into an open half-shell around the centre, sparks flying where the rivets are struck.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_rivet_plate_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_rivet_plate.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        33,
+        17,
+        1234,
+        1254
+      ],
+      "source_sha256": "11dc3e7e424870ea6dee7607c498fe2b97629823d07e2bc584d7106599265697",
+      "runtime_sha256": "5ce749c9ed993ca6486d0c4bf756d54b6a2bd16ed49eb4a85d4e4f02ba188eee"
+    },
+    {
+      "spell_id": "spell_cinder_spray",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A dense bright fan of glowing orange cinders and burning sparks bursting outward around the open centre in a wide cone, many large glowing embers with small flame tongues and thin grey smoke. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_cinder_spray_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_cinder_spray.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "33db43b6ed9e547e0bcaecb96bf3727f1606fa0052a0a21f4c3fcc7a55f01a9a",
+      "runtime_sha256": "c2440924b6744ca4dee4390871cec6b03ae5875f7bc5ef07f8225656b57cdefa"
+    },
+    {
+      "spell_id": "spell_spark_swarm",
+      "school_id": "furnace",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A dense swarm of many bright orange-yellow sparks with glowing comet tails swirling in a wide ring around the open centre, the sparks large and vivid, a warm glow between them. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_spark_swarm_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_spark_swarm.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "2880e2a989906a6a56948dda3a4edd8d7a748c0ac23794e27b5099468513335d",
+      "runtime_sha256": "950c44e16a2a7f96343c2b3ca7c49d0798ac15567953af16bc8a6a00881ada05"
+    },
+    {
+      "spell_id": "spell_molten_edge",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Molten orange metal running down three upright blade edges rising around the open centre, drips of glowing iron falling and small flames licking from the edges, on a fully transparent background. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_molten_edge_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_molten_edge.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "17aec090bd6e9a9c37787b16ad0f7889f30da4497b9ddffaee18a166f84a3d54",
+      "runtime_sha256": "37b9ae1e0285a59bbd7bdc86f4e1a1b814b9393133b1c93f9b9ed2361672fed9"
+    },
+    {
+      "spell_id": "spell_cinderfall",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A heavy shower of large glowing cinders and burning coals falling from above onto the open centre in bright orange streaks, and a bold ring of flames and embers flaring up at the bottom. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_cinderfall_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_cinderfall.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1253,
+        1254
+      ],
+      "source_sha256": "081e1f4e642ba25a9d277d217b346532900518cefa1d0d22504589068ff63ce0",
+      "runtime_sha256": "58e406092bc25f6f614ea50289716df6acc91132d030cf628b5a5465d53fd9b9"
+    },
+    {
+      "spell_id": "spell_flashpoint",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A sudden ring-shaped blast of white-hot and orange flame tongues bursting outward around a fully transparent centre, bright sparks flying; no dark or black fill anywhere, the middle stays empty and see-through. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_flashpoint_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_flashpoint.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        4,
+        1254,
+        1254
+      ],
+      "source_sha256": "4d62ea61800281d21d1a06b70a90db8f09141b4c7e23a2597a31a4935e339ed7",
+      "runtime_sha256": "5fc2026333af6ff7164c05125639c23348fc29d168527ae797c362db365bbfa6"
+    },
+    {
+      "spell_id": "spell_annealing",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Bright rings of glowing orange-white heat rising around the open centre like hot steel, solid glowing bands cooling to steel-blue at their tops, heat shimmer and a few slow sparks. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_annealing_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_annealing.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "acc65eb01f985acf2e5f898254bc4e1ecee02d4c05b2ce74309d2c2601495aa6",
+      "runtime_sha256": "adcb8d6e6a42db3c54283938fafe38ad8acbed13bd7fbdb29a90e99ff28e3fd9"
+    },
+    {
+      "spell_id": "spell_heavy_plating",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "defense_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "Thick dark iron plates bolted together with big brass bolts into a heavy open shell around the centre, an orange glow in the seams.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_heavy_plating_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_heavy_plating.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        23,
+        23,
+        1232,
+        1220
+      ],
+      "source_sha256": "54051d6b5fe1687e21cf25e39424eff34244d73141b7cd52f02b3bb2c9b40d28",
+      "runtime_sha256": "0e6c8e3846ec360c8dbb1567d3b636ccf189759fac4f977e57a7bf40a59b6b30"
+    },
+    {
+      "spell_id": "spell_tempering",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A burst of quench steam around a tall open shell of rippling tempered steel with a blue-violet temper sheen and glowing orange edges, the centre clear.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_tempering_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_tempering.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "1188fed02b775fa95e8a6d42856b127cddb890635cd0ee2c46ce01d6ae8bf729",
+      "runtime_sha256": "80474a1fd6503c0638c9f2e95caf28d861330ea400ce17971d8bcb5f77f721d8"
+    },
+    {
+      "spell_id": "spell_smelters_bargain",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "sacrifice",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A small brass crucible tipping above the open centre and pouring a column of furnace fire down onto it, dark red at its root and blazing orange where it lands.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_smelters_bargain_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_smelters_bargain.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1253,
+        1254
+      ],
+      "source_sha256": "8fa1718df11e9f868e0ab66daaea72d932271af8dc8227b03eb2a5019f0fa5bd",
+      "runtime_sha256": "eff980d298c1d69208fb5efa5b30df12c8547328acad43250e05a31d38fd26c4"
+    },
+    {
+      "spell_id": "spell_goad",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "taunt_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A burst of hot red-orange fury flaring around the open centre in the outline of a snorting bull's head made of flame and smoke, sparks at the horn tips.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_goad_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_goad.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1254,
+        1254
+      ],
+      "source_sha256": "002da03d4f070a616135955a47d8d8a6bf3969e38246ebc3c969d8062424e73b",
+      "runtime_sha256": "1d28134fce9a456d99de455a1b29133a1136676a315e562ba50b4b1c1e35ea87"
+    },
+    {
+      "spell_id": "spell_molten_brand",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A glowing orange-white branding plate shaped like a hammer-and-anvil seal pressing down over the open centre, molten drips and sizzling smoke.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_molten_brand_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_molten_brand.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "931cc3fb8790d4559277ad89d45c6d6ac60ad4966c54a2122bda6497c1f74d6d",
+      "runtime_sha256": "9e3509a52ddf870b235bf321597b5687617152e496c1f902e644bbb34299c0aa"
+    },
+    {
+      "spell_id": "spell_kiln_burst",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A brick kiln mouth bursting open in a wide dome of orange fire with hot bricks flying outward around the open centre, thick embers and dark smoke at the edges.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_kiln_burst_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_kiln_burst.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1244,
+        1254
+      ],
+      "source_sha256": "341a3e588fbe2b40a4ff19b05f9c3e00fd580bcdb03caddf0cb4c749651d53e8",
+      "runtime_sha256": "45987e32ce9164f3ef1ea1177ec077d54404c4c961850c957d703b3427755ddf"
+    },
+    {
+      "spell_id": "spell_crucible_ward",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "Molten brass rising out of a small floating iron crucible below the centre and spreading upward into a tall open half-shell of glowing liquid metal, edges dripping gold, the protected centre left clear.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_crucible_ward_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_crucible_ward.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        35,
+        1232,
+        1254
+      ],
+      "source_sha256": "261d1a58dc39172ab5ae9c981bd804beaa08ace8fc827f3cc802495d5033adc1",
+      "runtime_sha256": "fd82bab74b735760c33f43be83ec3b926a7ccb07bab006df15393d22ebfe07eb"
+    },
+    {
+      "spell_id": "spell_full_steam",
+      "school_id": "furnace",
+      "tier": 5,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Great plumes of white steam and orange fire rising from a ring of brass pipes and pistons around the open centre, sparks and a deep red glow.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_full_steam_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_full_steam.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "84875713bdf6a08fd3f666d2f110172ede65eaf4537618d87a802067da4f46d0",
+      "runtime_sha256": "d71bc0a6a38d457de59aec76961ac1c5729cdcce137b1c5074a53b57831ae732"
+    },
+    {
+      "spell_id": "spell_molten_deluge",
+      "school_id": "furnace",
+      "tier": 5,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A heavy downpour of large glowing molten iron drops and streams falling onto the open centre from above, bright orange-white splashes and small pools of molten metal spattering at the bottom. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_molten_deluge_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_molten_deluge.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1253,
+        1254
+      ],
+      "source_sha256": "fafac364188551503b407c3fcddf18d58d2eda126bfe9dabeccbd416abebfe2f",
+      "runtime_sha256": "141d6cfab8fc9112c8f414a7a64eb88fff1a9ffd69ea5b0a53eab6bee480c1a0"
+    },
+    {
+      "spell_id": "spell_iron_oath",
+      "school_id": "furnace",
+      "tier": 5,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "Tall riveted iron plates glowing at the seams closing into an open shield-wall around the centre, an anvil seal stamped in orange light on its rim.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_iron_oath_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_iron_oath.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1224,
+        1254
+      ],
+      "source_sha256": "b1d20e3beaa469b98577a908dc5271dcf687a1081d7159117daa8a964c48eb58",
+      "runtime_sha256": "651dd566720763502a0314b9df7f9923feaa64fdbc6776580771578e1eef7ded"
+    },
+    {
+      "spell_id": "spell_second_sun",
+      "school_id": "furnace",
+      "tier": 5,
+      "effect_type": "battle_aura",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A small blazing orange-white second sun with a flaring corona hanging above the open centre, its scorching rays slanting down, heat shimmer below.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_second_sun_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_second_sun.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "6968c9a7575780cab5468fcfe8c0f3d552582e081621526659c6ef02fd2923b5",
+      "runtime_sha256": "0ae86b71eaf5851a4ffc2af7dcd8ab547991dbbdd44766da849224fbd2c218d0"
+    },
+    {
+      "spell_id": "spell_redline",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "A brass pressure gauge above the open centre with its needle swinging into a glowing red zone, jets of red-orange fire and steam bursting upward around it.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_redline_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_redline.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "209d8e730478628ac91a16eef85ad94c33423070e8b215f670261fb121fe155c",
+      "runtime_sha256": "60a73571fff3dd0d325e991065a50790959b5c994a176ef9941dc81a552df91e"
+    },
+    {
+      "spell_id": "spell_foundry_golem",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A tipping foundry ladle above the centre pouring a stream of molten brass that splashes and hisses into a glowing pool, sparks flying outward.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_foundry_golem_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_foundry_golem.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "50fd1a92dee33edc8a1aef04276dd49de7941f6dec82b219b7a786fc3799281a",
+      "runtime_sha256": "90efd40504d8265ff2a4566ce3979a9680c52d74a77e809232b9ea6e12a81483"
+    },
+    {
+      "spell_id": "spell_clockwork_twin",
+      "school_id": "furnace",
+      "tier": 4,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Brass gears, springs and cogwheels whirling and assembling in an open ring around the centre, golden sparks and thin clockwork light lines.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_clockwork_twin_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_clockwork_twin.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        19,
+        1240,
+        1254
+      ],
+      "source_sha256": "e6b5c2466a308eda92933e8104a044a363f4e4caa56c5ea38b147cbb1bc5d3d3",
+      "runtime_sha256": "30a926e54c4816cc88cf0dbae011f0b788721d17f9b6451f4ebfe9ace8543a01"
+    },
+    {
+      "spell_id": "spell_brass_sentinel",
+      "school_id": "furnace",
+      "tier": 3,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Flying brass plates, rivets and gears assembling around the open centre with glowing orange seams and sparks, a sense of something being built.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_brass_sentinel_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_brass_sentinel.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        17,
+        29,
+        1222,
+        1254
+      ],
+      "source_sha256": "00f1809185bd17aa6bf8d21b03e631aeeb60f7b518c785614eb94ef2c47fd79e",
+      "runtime_sha256": "d1f6aba19fbb0e1f80ccc10dc609b99252339cc9a2fb578b0cea69fe732d430f"
+    },
+    {
+      "spell_id": "spell_heartwood_stance",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Thick roots plunging into the ground around the bottom of the open centre while golden-amber heartwood light rises up through them, leaves stirring.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_heartwood_stance_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_heartwood_stance.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "79831e2e03c260f0c85e49e053c73c1ce0dd1a6689b33e0b05b709a867012c01",
+      "runtime_sha256": "7d9158679c5e1b1ef5e80410c1d3a559bfd4329ec897115e1445d3fe099aa6ce"
+    },
+    {
+      "spell_id": "spell_grasping_roots",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Gnarled living roots with thorns rising from below and coiling inward in a tightening open spiral around the empty centre, flecks of dark soil and a few green leaves, amber sap glinting at the knots.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_grasping_roots_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_grasping_roots.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1253,
+        1254
+      ],
+      "source_sha256": "ba39bb1414ccf686153f38e1ddc362d5bd35d97793bc5c1e6c198b3b9e190f79",
+      "runtime_sha256": "e2bf1d67616d958cbca92c9fdad014d772c296e3c53da478db7340000f2147cb"
+    },
+    {
+      "spell_id": "spell_pollen_drift",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A soft drifting cloud of glowing golden pollen and small yellow blossoms curling inward around the open centre, sleepy and slow, a few tiny crescent-moon motes.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_pollen_drift_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_pollen_drift.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1253,
+        1254
+      ],
+      "source_sha256": "f4e0d2b4d8044c22d2702c6eb27a791dc27eb8df742d0f17a68156eecd9b8c0f",
+      "runtime_sha256": "3a3bca7b4065d7e3035653be539e6169fdb1e0d5e0996df206770d754a00b2e1"
+    },
+    {
+      "spell_id": "spell_thornshot",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_projectile",
+      "motion_profile": "",
+      "scale": 3.2,
+      "prompt_subject": "A tight volley of sharp green-brown thorns flying point-first to the right, a few green leaves and amber sap droplets trailing behind. Horizontal travelling effect pointing right, no ring, no target.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thornshot_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_thornshot.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        23,
+        20,
+        1516,
+        1000
+      ],
+      "source_sha256": "4c44675ebacbf44d0e1c8f068f19b747a2935c318be72f72c9a5f1d73b9968e8",
+      "runtime_sha256": "5c90f061784dd632f8d9048b15c3634a33fa95656766d68a3895e4278e97ffab"
+    },
+    {
+      "spell_id": "spell_green_mending",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Green vines with small new leaves knitting together in a loose open ring around the centre, soft green-gold healing light and tiny buds opening.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_green_mending_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_green_mending.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        7,
+        1254,
+        1254
+      ],
+      "source_sha256": "5783c18e406db10481de63b7f8fc8c9982fd55dc8afb99162845ed3ed1d410a8",
+      "runtime_sha256": "cb55c716d94c5b061c9ef3f27f7bf7988742c932a71f67f4d84657fb2b4bdb1d"
+    },
+    {
+      "spell_id": "spell_thornmail",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A wrapping shell of thorny brambles and dark green leaves woven into an open coat around the centre, sharp thorns pointing outward, amber sap glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_thornmail_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_thornmail.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        19,
+        1240,
+        1254
+      ],
+      "source_sha256": "80d2cbc76eb392065fb48fc4431d334efeebc004fc0309600064a8f2293f06a2",
+      "runtime_sha256": "6fde5775ed6237c11ddbc3beb55d562899b28bc894a1b62f2da46b65bae8480c"
+    },
+    {
+      "spell_id": "spell_graft",
+      "school_id": "root",
+      "tier": 2,
+      "effect_type": "graft_allies",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Two strands of living bark and green shoots braiding together around the open centre, small leaves and golden sap seams binding them.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_graft_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_graft.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        20,
+        1198,
+        1254
+      ],
+      "source_sha256": "6486a46ece47bbe80c0a137eafa0d65b31a1025866817c2438b8bfa053d89c5c",
+      "runtime_sha256": "9a18dfe4727d997bef5905120c92a605891226bc5b31e08711b8a62501b2578b"
+    },
+    {
+      "spell_id": "spell_budding",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "temp_creatures",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Many small green buds and new shoots sprouting and swelling into leafy pods in a ring around the open centre, warm golden sap glow.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_budding_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_budding.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "3b9c49fe71d86fcb4a6e162b904710c58ea4fa3a41d3fab4d2697c37231acbd9",
+      "runtime_sha256": "be91395a6afd4e67455e493ab242553b3c2c1ab54d2445a6aafb9ed459892dc1"
+    },
+    {
+      "spell_id": "spell_earthsplit",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "The ground bursting open in a bold jagged crack beneath the open centre, big chunks of earth and stone flung upward and outward with a spray of dust and torn roots. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_earthsplit_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_earthsplit.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1253,
+        1254
+      ],
+      "source_sha256": "345c14b042cf93276793c6ce50abaa890dae4503cf2386e864cb0a1082f10ae7",
+      "runtime_sha256": "4ed45000b9a338910819df3a45c80e4c5340ae5d2fd88b9a696830c02dd1f305"
+    },
+    {
+      "spell_id": "spell_bloomburst",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A burst of pink-white blossoms and green leaves opening outward around the open centre, petals drifting, soft golden pollen light.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bloomburst_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bloomburst.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "3cf6d6d0bd0829098ac607d46f8b52a61cd6afaf51c72a33e86f87d1150105d1",
+      "runtime_sha256": "e7924159f50b61f1ccf36bfa85b83f7fc94952de6b97597dea019dca7d53937b"
+    },
+    {
+      "spell_id": "spell_seed_of_return",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A large glowing golden seed below the open centre sprouting a bold green vine that spirals up around it, unfurling bright leaves in a soft golden glow. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_seed_of_return_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_seed_of_return.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "source_sha256": "3f9d9eb2aa8bf49917843d9fa9f3ed09c0d950279488456a081e0ac536a45c4d",
+      "runtime_sha256": "d8d7b3081dcca52c051c40ec17625ef5bfe159b5d2beb3812faa6103083f79e9"
+    },
+    {
+      "spell_id": "spell_bark_ring",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "defense_buff",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A ring of rough brown bark plates rising and closing into an open shell around the centre, moss and small leaves on its rim, amber sap in the seams.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_bark_ring_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bark_ring.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        19,
+        1248,
+        1254
+      ],
+      "source_sha256": "3e88b33b8cc871ee26dcac120cd9bcf75f0c61b6da85618b935ca67f436a0f61",
+      "runtime_sha256": "c4782099bf3fada96d5e0a25fcf3c8efec841a9b9ad37ee28a6a8fbc087679d9"
+    },
+    {
+      "spell_id": "spell_blight",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Withered black-brown leaves and rotting vines curling around the open centre, sickly yellow-green spores and drops of dark sap, decay creeping inward.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_blight_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_blight.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        21,
+        1254,
+        1254
+      ],
+      "source_sha256": "5879e3a6c27d3a2b44dab98b236b4eb9d8dbdbb199988fdb50ebf6204ccf3b32",
+      "runtime_sha256": "19db2fce0273a51ea9be4d8d9fdfd2b4d8682e09e87c21591d56cb5dc1fb07b7"
+    },
+    {
+      "spell_id": "spell_uproot",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "pull_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.45,
+      "prompt_subject": "Roots tearing up out of the ground and coiling around the open centre, wrenching it sideways to the right, clods of earth and torn grass flying.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_uproot_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_uproot.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1244,
+        1254
+      ],
+      "source_sha256": "4a6944a97f1dc9cf5943d66aac9137924e2a65e38371c4a18bd273a82baba1f5",
+      "runtime_sha256": "928426b5975ec6fbf7226e2478b6991235c773e80ac29ef9c50c4bd049d8b7d9"
+    },
+    {
+      "spell_id": "spell_wake_the_grove",
+      "school_id": "root",
+      "tier": 3,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "Gnarled tree trunks rising out of the ground with leafy crowns unfurling around the open centre, soil and roots spraying, green-gold light.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_wake_the_grove_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_wake_the_grove.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "2a9b17b66e5b19875d3658287fe2adad3a52553202b42452a5ddcb9f600afbd8",
+      "runtime_sha256": "d3e798ff2b01c30bcf335b6081a7f2c733c1f3f4b779c2bb38307d8040f7b647"
+    },
+    {
+      "spell_id": "spell_spore_cloud",
+      "school_id": "root",
+      "tier": 4,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A heavy sickly cloud of yellow-green spores billowing and curling inward around the open centre, small mushroom caps puffing at the bottom.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_spore_cloud_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_spore_cloud.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        27,
+        1234,
+        1254
+      ],
+      "source_sha256": "55b42711a84e3db2b64bfd3a65c9610ed6a43264893d7ab0a1c838e12adda7e6",
+      "runtime_sha256": "686c5610b591b3a8736f851cb8301e55b06287dcabc6ec37f409847f919755e1"
+    },
+    {
+      "spell_id": "spell_sapflood",
+      "school_id": "root",
+      "tier": 4,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Ribbons of luminous amber sap flowing upward around the open centre like a gentle rising flood, new green shoots and small leaves unfurling along them, soft golden droplets.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_sapflood_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_sapflood.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1240,
+        1254
+      ],
+      "source_sha256": "a0dc88c002d0492571d0f6f1f813f3f514584f022d79cda41805e2ae97aca9a1",
+      "runtime_sha256": "64272551634d2fff2520490311a3c8f7d7ddcabcaf4bba417b2b6b4194e06d78"
+    },
+    {
+      "spell_id": "spell_ironbark",
+      "school_id": "root",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A tall open shell of dark grey bark as hard as iron with a metallic sheen and growth rings, small glancing sparks bouncing off its rim.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_ironbark_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_ironbark.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        25,
+        1238,
+        1254
+      ],
+      "source_sha256": "7fbf5f88551f10a9b9b7799b408b532058b0420db0d1935dc63dffdf336d2b5c",
+      "runtime_sha256": "5a2f83a2c0f064c9badc73023c4562a63751a62cb1bc92ca07ee10b6f94328a2"
+    },
+    {
+      "spell_id": "spell_grasp_of_the_deep",
+      "school_id": "root",
+      "tier": 5,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "binding",
+      "scale": 2.5,
+      "prompt_subject": "Enormous dark roots rising from deep below and crushing inward around the open centre, heaving cracked earth, glowing amber veins running through the roots.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_grasp_of_the_deep_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_grasp_of_the_deep.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1240,
+        1254
+      ],
+      "source_sha256": "e21e56ed057cc29c28314c3e3e3df5068a3985890c4fcedc40f546776472fe2d",
+      "runtime_sha256": "2f6fe5703d9e4fcd613ad3db71e7108d53ff6d51f431c7427bb8e3bbb8a8b250"
+    },
+    {
+      "spell_id": "spell_spring_eternal",
+      "school_id": "root",
+      "tier": 5,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A fountain of green-gold spring light rising around the open centre, leaves, buds and blossoms spiralling upward and regrowing as they rise.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_spring_eternal_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_spring_eternal.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "aa09f4648280aa3e199f461f26306d6ef735530a133913537e2a010c2e06f129",
+      "runtime_sha256": "c61089fd3ce4018163689d5a6ef6c3320467d0cbee32595f2a4f0e1e7830eec7"
+    },
+    {
+      "spell_id": "spell_green_return",
+      "school_id": "root",
+      "tier": 5,
+      "effect_type": "battle_aura",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A great spiral of new green leaves and glowing seeds rising from the ground around the open centre, small sprouts bursting into growth.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_green_return_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_green_return.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        8,
+        1251,
+        1254
+      ],
+      "source_sha256": "5e7d4c8ff0a86b3d13ebacff04152d966de108f301cff720d4e2fc896917c974",
+      "runtime_sha256": "cd6c9b5aabcfbd5c170d8e6ad09df2b66ea3683748bc5aecd6d81bf30b0e1f78"
+    },
+    {
+      "spell_id": "spell_waking_forest",
+      "school_id": "root",
+      "tier": 5,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "An elder treant's great antlered crown of branches and leaves rising from the ground behind the open centre, young trees springing up around it, soil spraying.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_waking_forest_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_waking_forest.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "source_sha256": "341a63609e85e2d31deb6dea77c1f28b5130ca4058ca1ada0cc2e2ae392ced72",
+      "runtime_sha256": "1534fe9d58d28f9c577fb78ea8a584d97ea8e4cc54e73703f407af51edcc5c53"
+    },
+    {
+      "spell_id": "spell_call_to_arms",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "A bright white-gold signal flare rocketing upward and forward to the right across the open centre, a bold burst of golden sparks at its head and a thin glowing golden trail behind it, no smoke cloud and no haze. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_call_to_arms_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_call_to_arms.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        39,
+        19,
+        1242,
+        1222
+      ],
+      "source_sha256": "5a4bf532ead441bc368eb81b49909345650e32a665a45606dce8252bd6ca4ba8",
+      "runtime_sha256": "6969a7c2c2a8fa816fa059d1353e01e331fe31f05adc8cebe86b4f9dbb0c95d6"
+    },
+    {
+      "spell_id": "spell_sighting_mark",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A bright white-gold target ring with four crosshair spikes of light floating over the open centre, a small lantern glint at its top.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_sighting_mark_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_sighting_mark.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1232,
+        1254
+      ],
+      "source_sha256": "ef2081444225e135b01dcd9940525b700cd12bfefb98a110f440585581b1d393",
+      "runtime_sha256": "ff22e11759fb16e4b7e19a0c78695b2f64ac140c798bddf4371ab1da3526bd71"
+    },
+    {
+      "spell_id": "spell_dazzle",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A blinding white-gold flash flaring outward in sharp star rays around the open centre, dazzled spots of light swirling inward.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_dazzle_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_dazzle.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "6f5691aa397c222c395271de563bb53f093a5e44949354db331aabef72dba042",
+      "runtime_sha256": "4546d4ab50c6899a146801bb7e640c57b28c986c7991f4119fc8844cf572e620"
+    },
+    {
+      "spell_id": "spell_radiant_mend",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Clean white-gold light pouring down in soft beams around the open centre, dark smoky wisps burning away at the edges, small sparkles.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_radiant_mend_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_radiant_mend.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "7d7a39c313a6d39096788a1811175b4f7b9088a787cd9cddeed496c5311aaf74",
+      "runtime_sha256": "821869bee3db1c44f3a9ffa9be4d3ce44654f53cd947f96c3880a72799fe8565"
+    },
+    {
+      "spell_id": "spell_prism_ward",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A tall open prism of clear crystal facets around the centre, refracting a small rainbow of light, white-gold edges glinting.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_prism_ward_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_prism_ward.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1238,
+        1254
+      ],
+      "source_sha256": "26d4cf983cdb4d031003b792a10a80fb9499b4d110d53f16cb15d135c0a7f023",
+      "runtime_sha256": "1bbf0ffa48441c765b7eac425e9eeed8e373f88a3bc04e604ce32da481c91357"
+    },
+    {
+      "spell_id": "spell_dawn_lance",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_projectile",
+      "motion_profile": "",
+      "scale": 3.2,
+      "prompt_subject": "A long straight lance of white-gold dawn light flying to the right, a bright sunrise flare at its tail and a sharp glowing point, thin warm rays streaming off its length. Horizontal travelling effect pointing right, no ring, no target.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_dawn_lance_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_dawn_lance.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "source_sha256": "e029d675a689307f7097dd38d283162076264c188224ce88e84edbe6ecdf768d",
+      "runtime_sha256": "6947194937b56c983ef5dd8c2076972b5131269f50a4d8c9658fc81ac421e15e"
+    },
+    {
+      "spell_id": "spell_morning_light",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "Warm morning sunlight falling in soft golden rays around the open centre, motes of light and a faint warm halo; gentle.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_morning_light_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_morning_light.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "98eb3e578f57e2a5f941661452db0184a6ff3759d75423796f3027fd2301f37c",
+      "runtime_sha256": "6d9f83d758d17dee803bf3ae62b89b03a42e254ad6e7dea269ada2fbf89cdf82"
+    },
+    {
+      "spell_id": "spell_signal_swap",
+      "school_id": "beacon",
+      "tier": 2,
+      "effect_type": "swap_allies",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "Two curving arcs of white-gold signal light crossing each other in an X around the open centre, small flashes at each end as they trade places.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_signal_swap_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_signal_swap.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        21,
+        1248,
+        1254
+      ],
+      "source_sha256": "98ce527cdf91c268c4adeb5ff10ca0656cb3742c539040ef50881dd40e514390",
+      "runtime_sha256": "ad9af67c362280dbc40a899556e5ea2e641b19ddb10009bd1febb738d621f37e"
+    },
+    {
+      "spell_id": "spell_volley_signal",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "free_volley",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A bright white-gold flare bursting above the open centre in a ring of golden light, and many bold glowing arrows of light raining down toward the centre from above. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_volley_signal_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_volley_signal.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "6a3697f7da334a9b1a88bb4ed75c23e2ac7a4fb0803c03cc92d457f023946cbe",
+      "runtime_sha256": "1afb7d407a45ca441172dff985d6ad45969637f69863ddd2b5f8048c4225c44d"
+    },
+    {
+      "spell_id": "spell_prism_bolt",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_projectile",
+      "motion_profile": "",
+      "scale": 3.2,
+      "prompt_subject": "A bolt of split light flying to the right, a white core at its head splitting into thin rainbow-tinted beams along its tail, a small crystal glint at the point. Horizontal travelling effect pointing right, no ring, no target.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_prism_bolt_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_prism_bolt.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        21,
+        1500,
+        1012
+      ],
+      "source_sha256": "3ba531154c4102d49039e832da9287fad63bf235bbba204491cd1b3e6304050e",
+      "runtime_sha256": "49b9f0d777306d0268675b2bab3484ccdcd64434df2a9aef2dcf35b3e160dfb0"
+    },
+    {
+      "spell_id": "spell_rekindle",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A ring of bold white-gold flames kindling around the open centre, rising like lantern flames with bright sparks lifting upward and a warm glow at their base. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_rekindle_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_rekindle.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1254,
+        1254
+      ],
+      "source_sha256": "e11bccf7151a58ac28930b8d3d2302a23dd4d5ca3823d71b8ceb8240fa51c17f",
+      "runtime_sha256": "2d52781f461ed70499bf2cb543f92bae707c07760e87fa6e66323404194668b4"
+    },
+    {
+      "spell_id": "spell_watchful_light",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "battle_aura",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A large glowing brass lantern of white-gold light hovering above the open centre, casting a broad bold cone of warm light down over it with golden motes in the beam. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_watchful_light_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_watchful_light.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "source_sha256": "44925546b35f547bf084fd841219420bf13dd69d8c592fb291b35e62ac3ad02b",
+      "runtime_sha256": "94f3c1b47e418008b1e91f28cc56105d7f17e92cac96fc7fd1f8d58a8fb4270e"
+    },
+    {
+      "spell_id": "spell_glass_aegis",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A smooth clear glass dome closing over the open centre, bright white-gold reflections along its curve, a few spell sparks glancing off.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_glass_aegis_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_glass_aegis.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1254,
+        1254
+      ],
+      "source_sha256": "cb8f77640a0e77cfc024e1a1108f0de8dca946fdf90e073a369ec3323b094770",
+      "runtime_sha256": "851212d0f6211d7423451f83aa3372940604a1bbc367d5628aa980caaa4ce5a9"
+    },
+    {
+      "spell_id": "spell_steadfast_halo",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A steady wide halo ring of white-gold light hovering above the open centre, soft pillars of light falling from it to the ground.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_steadfast_halo_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_steadfast_halo.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "20f355fb8d5f37266564fc59736a37b6cb99a599dbc13a09c7b2323448a20ab9",
+      "runtime_sha256": "d82f59c94c20d615f7c5828286cb4c446ba9ffd0d048d28ce1dbdb9315c16f79"
+    },
+    {
+      "spell_id": "spell_hour_ledger",
+      "school_id": "beacon",
+      "tier": 3,
+      "effect_type": "rewind",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "An open ledger of white-gold light with its pages flipping backward behind the open centre, a clock face of light turning counter-clockwise.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hour_ledger_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hour_ledger.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "b6ec9e2522c26994efff34118343cd385bcf695510a695d6d23c32c7faa09cdb",
+      "runtime_sha256": "e586723cd17a07c2cd04e517063e229f7e82f2c7fba8a8316f0daf219cadcb30"
+    },
+    {
+      "spell_id": "spell_censure",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A judgement seal of white-gold light descending onto the open centre, a shining padlock and small balance scales in its rim, rays pressing down.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_censure_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_censure.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "3f5fb4ae67aa4fa595c66470b5d835b0e2c247218e14e3f46eb3f8ab307c9060",
+      "runtime_sha256": "8e583a6c61df8a6f62f3afdecf6d66e40eea75b0ee4ac77daa8bb536b640670e"
+    },
+    {
+      "spell_id": "spell_searing_ray",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_projectile",
+      "motion_profile": "",
+      "scale": 3.2,
+      "prompt_subject": "A narrow searing beam of white-hot light flying to the right, its edges burning gold-orange, a bright lens flare at its head. Horizontal travelling effect pointing right, no ring, no target.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_searing_ray_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_searing_ray.png",
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1516,
+        1024
+      ],
+      "source_sha256": "b24ee0513a2efcb1f7a89b5de1c928dcffe026d01d40d140063ec403ba5cbaa0",
+      "runtime_sha256": "a29833e0d8214746f038d5375ff5cc91d8ec7a21b3eef21ea1cc138f37b1f23e"
+    },
+    {
+      "spell_id": "spell_sanctuary",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A ring of tall white-gold light columns around the open centre joined by a soft dome of light, quiet and still, a few slow motes.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_sanctuary_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_sanctuary.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "468ac5cf3f69099d2cf9db825ace5b29d9f1f1301a4bed04128f2136aaf94bff",
+      "runtime_sha256": "8413a8de1932e420fa84f0d8a96875a0708a6cce47b1118353070aab18dbba9f"
+    },
+    {
+      "spell_id": "spell_lantern_vigil",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A ring of six bright hanging lanterns of warm white-gold light floating around the open centre, each glowing strongly with light pooling below it. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_lantern_vigil_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lantern_vigil.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "a841e592d04ceee33eea866692b75bc62ebee0f3f4a8cf87d094fefa4011cf12",
+      "runtime_sha256": "6bca1f9e930d7b56960382d52db1127201db0b401deac247fd13dd28916e13ce"
+    },
+    {
+      "spell_id": "spell_clarion_call",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "A brass clarion of light sounding waves of white-gold rings that sweep forward to the right around the open centre.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_clarion_call_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_clarion_call.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        21,
+        1242,
+        1220
+      ],
+      "source_sha256": "40024e62da1d1b058e18c2661f5a3cbd41d66c27288da3646d30e701d1bc8dbe",
+      "runtime_sha256": "915ee0219c28976576b09be60be35a72017ae3bb8bf760c1bba31fe134a1caa5"
+    },
+    {
+      "spell_id": "spell_echo",
+      "school_id": "beacon",
+      "tier": 4,
+      "effect_type": "recast",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Concentric rings of white-gold light echoing outward like the sound of a struck bell, a faint bell outline above the open centre.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_echo_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_echo.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "28d5d9deec35a869fe67979c2f57994f58da0b0ccc650fdb3bfea709bf25a68c",
+      "runtime_sha256": "28b2b64cada45d4f723ce0ce9128233919f0cbc9175ad94b4c58706bc9c95bb7"
+    },
+    {
+      "spell_id": "spell_daybreak_charge",
+      "school_id": "beacon",
+      "tier": 5,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "A rising sunburst of dawn light behind the open centre with streaming golden rays and pennant-shaped light trails sweeping forward and upward.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_daybreak_charge_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_daybreak_charge.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "4da83ada8e1e95e5843bdb9bf0194ddcfdede74d634c59913780f51ac5cd4d09",
+      "runtime_sha256": "6d5b1a94e7a10400373b1fae2564bcfcee0ffa5f2ddefe954f190dd3e73c6e39"
+    },
+    {
+      "spell_id": "spell_dawn_of_return",
+      "school_id": "beacon",
+      "tier": 5,
+      "effect_type": "recover_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A great dawn breaking behind the open centre, golden-white sun rays fanning upward and motes of light rising from the ground like returning sparks.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_dawn_of_return_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_dawn_of_return.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "10070a7573d728e1a6c9f75da35835d9ea33f98e399e2b66523d26c41f4b12de",
+      "runtime_sha256": "20dc7b7cebfb3edab5acda15e08ca64ddb31a4111717ac54d6207c09cf58d407"
+    },
+    {
+      "spell_id": "spell_eternal_noon",
+      "school_id": "beacon",
+      "tier": 5,
+      "effect_type": "battle_aura",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A blazing white-gold noon sun standing directly above the open centre, a perfect circle with straight vertical rays falling, still and unmoving.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_eternal_noon_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_eternal_noon.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "6ec15a8ea7a1a472d0b4b2b99a90fd363b191017c782254222f51a1182ba7701",
+      "runtime_sha256": "889a2902e2da580f08e57a588913445593fcb580cfec2eb65d91cc6cd085cf8d"
+    },
+    {
+      "spell_id": "spell_hungering",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Dark violet tendrils of hungry shadow rising around the open centre, small crimson motes drawn inward along them, silver mist.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hungering_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hungering.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1234,
+        1254
+      ],
+      "source_sha256": "837fed4d37af93f111dbb41d4d9808d5fb6a300b3a887d9f3b6483c74be9881a",
+      "runtime_sha256": "f3d5353484976498653d6eff32ff178e88e42913496818c6b6b0d2c51b6ee1a0"
+    },
+    {
+      "spell_id": "spell_dread",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "Whispering wisps of violet-black mist with faint pale ghostly faces curling inward around the open centre, cold silver glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_dread_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_dread.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1248,
+        1254
+      ],
+      "source_sha256": "b9f93ceb0ab21452d51a88feed9e4cf393600f2932348686ab77b595a8a9ab67",
+      "runtime_sha256": "00035387c3addb0d3dc089709ce9c039557f5003a82fe0acf17791bf6e80389c"
+    },
+    {
+      "spell_id": "spell_fog_mind",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "Grey-violet fog swirling in confused eddies and spirals around the upper open centre, a faint helmet-shaped outline of mist inside it.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_fog_mind_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_fog_mind.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "af3c3be8ad107d3495d4bc06888199249b9c50a02d41636343a1b00070724ade",
+      "runtime_sha256": "601764ed1bda9de01bd3c0653f412b2399e82223bd6010e4f6dae86ba2b49b67"
+    },
+    {
+      "spell_id": "spell_wasting_curse",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A sickly violet curse sigil of smoke circling the open centre, a small smoking skull shape at its top, dark motes drifting away.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_wasting_curse_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_wasting_curse.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "e9fc8573e5b1df43131efe4f173399537af37327a14e0f0e1530bd1e49656fb3",
+      "runtime_sha256": "ec95274ca0a2991a77b5aee5f6b39991f9925eccf1522a04a69e1d6adac3517a"
+    },
+    {
+      "spell_id": "spell_mist_cloak",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A hooded cloak of soft silver-violet mist wrapping around the open centre, its edges fading into nothing, faint moonlight glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_mist_cloak_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mist_cloak.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        13,
+        1242,
+        1244
+      ],
+      "source_sha256": "304b60a631bc8a1d3c6527c10494bab8d2d6d59b5119d074a644992353132a01",
+      "runtime_sha256": "2cbc4c976692f383d8ca59d10222f72e504fca3459d1a098d10cee29d3e744d6"
+    },
+    {
+      "spell_id": "spell_leech",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "Bold streams of dark crimson and violet life-light pulled out of the open centre and spiralling upward in thick glowing ribbons, bright blood-red motes along them. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_leech_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_leech.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1248,
+        1254
+      ],
+      "source_sha256": "4c9a0382d9b91afd29832bfb621bb7afe9d039af07919d6895497f6502b418ae",
+      "runtime_sha256": "c8d28198faad095885fa1710d87ec19df2e7f21e7b1a7e540f1356b5d36bda9e"
+    },
+    {
+      "spell_id": "spell_blood_tithe",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "transfer_ally",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A stream of dark red light flowing in a curving arc around the open centre into a small silver chalice of mist, crimson motes.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_blood_tithe_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_blood_tithe.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "703cd20c188c7e778ba4c68b316a97c1a7da62adcead94b19cd754233c5fc9d3",
+      "runtime_sha256": "99a3f1585395d7137ea46a9840cd731ff482cc267e980fb5c45198274e789dba"
+    },
+    {
+      "spell_id": "spell_changeling_swap",
+      "school_id": "veil",
+      "tier": 2,
+      "effect_type": "swap_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "Two curling folds of violet mist twisting into each other around the open centre like a turning hourglass, silver moon glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_changeling_swap_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_changeling_swap.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "f8a834f0deaf10108dd5cf3e31dd8782b5f9be1bdcdc34a42d779321b4b21168",
+      "runtime_sha256": "73cb58fbf5e82959f36f36f3fe4a6030b201ce0fe10e0132f091873911f9700d"
+    },
+    {
+      "spell_id": "spell_hollowing",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "damage_around",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A hollow ring of black-violet void opening around the open centre, pulling dark wisps and crimson motes inward from every side.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hollowing_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hollowing.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1240,
+        1254
+      ],
+      "source_sha256": "ce8de5138c81b5231589c843d6970027de3d2d50e2570c5021888d02aafe35e8",
+      "runtime_sha256": "2da39cd48cf66e501db534e91a8eaec2e1c1329d24184c2b1993454d705c98e9"
+    },
+    {
+      "spell_id": "spell_tolling_doom",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "doom_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A dark iron bell of violet shadow hanging above the open centre, rings of sound rippling down from it, cold silver glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_tolling_doom_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_tolling_doom.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        15,
+        1254,
+        1254
+      ],
+      "source_sha256": "e9a992de938785e3b1765762ee06e0b409f58c1c66d6c42fafc192b12d56027b",
+      "runtime_sha256": "40158bfbcc29e7c5aa27269b0321c8e9a42495ef8e0197bd17c68bb25728c79f"
+    },
+    {
+      "spell_id": "spell_last_breath",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "protection",
+      "scale": 2.55,
+      "prompt_subject": "A thin silver thread of spirit light and a pale breath of mist circling the open centre and holding it, a soft violet glow at the edges.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_last_breath_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_last_breath.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "f5371a252287b2e5a72dcc9367eac1b85b852b09de5bb843f7fcc9dfd1fbf8d5",
+      "runtime_sha256": "126a6920ae534718cdf6e8957d798a9caefb9a2f3d380bfd667ba18873af6564"
+    },
+    {
+      "spell_id": "spell_fogwalk",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "haste",
+      "scale": 2.15,
+      "prompt_subject": "Wisps of silver-violet fog streaming forward to the right around the open centre and dissolving into faint trails.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_fogwalk_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_fogwalk.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "53192a9285a682229d7874d3762ea54657ad4c04ac18065df556b81be63a9abb",
+      "runtime_sha256": "26185fceed19e8f80aeed4aee130571ad5abc48cd1ff862e0567658875b208a7"
+    },
+    {
+      "spell_id": "spell_night_terror",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A looming hooded shadow of violet-black mist rising behind the open centre, two pale cold eyes and a gaping dark mouth, wisps of silver mist reaching forward like claws.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_night_terror_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_night_terror.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1244,
+        1254
+      ],
+      "source_sha256": "1d8550947804bad8a260a2bfd8ceb57a4bfc6796dff96e2cecf5dc6fd1598884",
+      "runtime_sha256": "8942a960201a3109a38f538d3322beeff1a0f031c69d9aa65598a1b7bf110a58"
+    },
+    {
+      "spell_id": "spell_raise_the_fallen",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "Pale silver-violet spirits rising out of the ground in a column of mist around the centre, a torn banner of mist drifting above them.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_raise_the_fallen_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_raise_the_fallen.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1254,
+        1254
+      ],
+      "source_sha256": "309b3c27096e8868cc5a94a51ca9d122750d950b5cdae4347a3507f6f414512b",
+      "runtime_sha256": "05a510ac2e16d9f93684ac4f8e9473261b11e54925981aa9139db7407f328bb6"
+    },
+    {
+      "spell_id": "spell_decoy",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.1,
+      "prompt_subject": "A shimmering violet mist copy peeling away from the open centre to one side, a mirror glint of silver light between them.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_decoy_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_decoy.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1253,
+        1254
+      ],
+      "source_sha256": "b8493d9a0cbfae934c1849910c2ea41f6234acd4b100bbc666bff0751c5659a0",
+      "runtime_sha256": "2afa0d2f69cabfa1d191d77b2d0a7ca10ae4524bdbfaaa6864bdca4a49d5cb64"
+    },
+    {
+      "spell_id": "spell_puppet_strings",
+      "school_id": "veil",
+      "tier": 3,
+      "effect_type": "charm_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A dark crossbar of violet shadow above the open centre with bold glowing violet puppet strings hanging down and pulled taut around it, bright violet sparks where they grip. Bold, saturated painted forms, clearly visible at small size.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_puppet_strings_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_puppet_strings.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1254,
+        1254
+      ],
+      "source_sha256": "224ecd612336fb90ef7092817b59d2e2fe3af5eee7525a8bf47c19cdcebea84f",
+      "runtime_sha256": "be36c7e20ae3cb8f0a1ecb3f6742076078f2750887f85662e581bb8ec3ad594d"
+    },
+    {
+      "spell_id": "spell_grave_edge",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Three pale grave-cold blades of silver-blue spectral light rising around the open centre, frosty violet mist trailing from their edges.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_grave_edge_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_grave_edge.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "d05c271fce29b96a59a6703dac756264131b5251ae5d6268417e419d61eeb8fb",
+      "runtime_sha256": "41fa5244ad8dd04e626d359105ca48863d1a13615449876a0c9478060076a0f9"
+    },
+    {
+      "spell_id": "spell_stupor",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A heavy drooping cloud of deep violet sleep-mist sinking down over the open centre, slow swirls and small dim stars.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_stupor_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_stupor.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1253,
+        1254
+      ],
+      "source_sha256": "e04a8c3811d788450729a7a09b7c08de2ab9179ad10c1caa821002852dde3046",
+      "runtime_sha256": "182a2b724072af7b4d48abbef04baf0f7c05d4cda01b2c051ca895436233cefe"
+    },
+    {
+      "spell_id": "spell_deaths_door",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "doom_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "clamp",
+      "scale": 2.5,
+      "prompt_subject": "A dark iron door-knocker ring of violet shadow hanging over the open centre, three cold silver knock-flashes rippling outward from it.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_deaths_door_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_deaths_door.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "ccb230ae8339d3eef676e3bf3d89516dd91d7da5a4614ef70c6d350f68d0c4e8",
+      "runtime_sha256": "147ebf66e8e84ee9b7ebbb64847cd871e678edef18a2503093dc129eea170304"
+    },
+    {
+      "spell_id": "spell_fever_wind",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A sickly green-violet wind gusting across the open centre in curling streaks, fever fumes and small dark motes swirling with it.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_fever_wind_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_fever_wind.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "c0df98e946f8dcca694ed273b8ae6e25a68d3ebf51e2fa07c58fecc11e45e9ac",
+      "runtime_sha256": "2b9c6c42fd0a4b3e0d460b907df2a3536efc8be9dc2da973cdd4c0e0d2472152"
+    },
+    {
+      "spell_id": "spell_shadow_ranks",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "ally_effect",
+      "render_mode": "spell_target",
+      "motion_profile": "empower",
+      "scale": 2.35,
+      "prompt_subject": "Rows of faint shadowy spear tips and helmets of violet mist rising behind the open centre, their edges lit by silver moonlight.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_shadow_ranks_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_shadow_ranks.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "9f7ebb83fc25af5bf6d958d00b7397722fd1a2df025edec3f0cf8da336cbb38c",
+      "runtime_sha256": "505e3aa5d6032f58869e7268472961b07ceabd7ec331ba6f117652d0edf5a691"
+    },
+    {
+      "spell_id": "spell_long_night",
+      "school_id": "veil",
+      "tier": 5,
+      "effect_type": "control_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "fogbind",
+      "scale": 2.45,
+      "prompt_subject": "A deep night of violet-black mist with a thin crescent moon and a few cold stars sinking over the open centre, heavy and quiet.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_long_night_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_long_night.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_sha256": "e5edc66490e5b436308db51b1f3c423c4448ea1cf4d0089714867cc10a1d6f56",
+      "runtime_sha256": "3e091d2b4232cebcde619afd3e5cd2b3467e4a3ced42e41b58524479ff9ef6cf"
+    },
+    {
+      "spell_id": "spell_black_tide",
+      "school_id": "veil",
+      "tier": 5,
+      "effect_type": "damage_enemy",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A dark black-violet wave of water crashing over the open centre, foam edged in cold silver, drowned glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_black_tide_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_black_tide.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        20,
+        1240,
+        1254
+      ],
+      "source_sha256": "294f07f7e2556220698c3c4a64025085f75f17a0d5b3a47bd7f4f3d684e2175d",
+      "runtime_sha256": "1a958e1ef50d26e56eeb1498884c53cf5834f5ad612338b77fbe1ba4de4c9c88"
+    },
+    {
+      "spell_id": "spell_wraith_host",
+      "school_id": "veil",
+      "tier": 4,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "Two pale wraiths of silver-violet mist swooping down in curving trails onto the centre, tattered ghostly shapes in cold moonlight.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_wraith_host_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_wraith_host.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        17,
+        1254,
+        1254
+      ],
+      "source_sha256": "560a8ab520295f5808da438cfb5fb2cbf6a9ce91a02193250b27c72e09bd8dd4",
+      "runtime_sha256": "8bcc92582b9fd8b0511632b14e4ba2b635f2acfe4bb80976a0c8c714a5df0ba8"
+    },
+    {
+      "spell_id": "spell_drowned_host",
+      "school_id": "veil",
+      "tier": 5,
+      "effect_type": "conjure",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "Rusted helmets and spear tips rising out of black water around the centre, violet mist on the surface, cold silver glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_drowned_host_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_drowned_host.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        9,
+        1254,
+        1254
+      ],
+      "source_sha256": "110232b422f135220abfbbd34482111dfa6e965d11bc1887b0077ace8db17222",
+      "runtime_sha256": "80ec95212cf3e6558a7395542b37337451f400643f83c4d4e15756133aa2650e"
+    },
+    {
+      "spell_id": "spell_hollow_crown",
+      "school_id": "veil",
+      "tier": 5,
+      "effect_type": "battle_aura",
+      "render_mode": "spell_target",
+      "motion_profile": "",
+      "scale": 2.2,
+      "prompt_subject": "A hollow crown of dark iron and violet shadow floating above the open centre, ghostly wisps rising up through it, silver glints.",
+      "source_path": "res://art/battle/source/generated/magic_rework_vfx_20261108/spell_hollow_crown_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_hollow_crown.png",
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        0,
+        3,
+        1254,
+        1254
+      ],
+      "source_sha256": "ac52a09157d7b95fc60f623d86a4453d1704fa40395c41dc899214b83e9814b3",
+      "runtime_sha256": "ca4e51f4945f5bdb5c19dd4645faa9c8bd5fbde91b8aada1ffd1766b87ae449d"
+    }
+  ]
+}

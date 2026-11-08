@@ -293,19 +293,33 @@ void _commit_spell_resistance_roll(State &state, DictRef battle, DictRef resolut
 	_commit_damage_rng_roll(state, battle, rng);
 }
 
-void _mark_spell_animation_states(State &state, DictRef battle, DictRef caster_stack, DictRef resolution) {
-	const Atom target_id = gd::strip_edges(state, string_or_empty(state, resolution, key::target_battle_id));
-	const DictRef spell_context = state.new_dict();
-	state.set(spell_context, str(key::spell_id), str(gd::strip_edges(state, string_or_empty(state, resolution, key::spell_id))));
-	state.set(spell_context, str(key::resolution_type), str(gd::strip_edges(state, string_or_empty(state, resolution, key::resolution_type))));
-	if (target_id != key::empty) {
-		state.set(spell_context, str(key::target_battle_id), str(target_id));
+// The stacks a conjure put on the field, by the ids _apply_spell_resolution_on_target wrote into the board's copy.
+ArrayRef _conjured_battle_ids(State &state, DictRef resolution) {
+	const ArrayRef ids = state.new_array();
+	Value one;
+	if (nonempty_dict_field(state, resolution, key::conjured_stack, one)) {
+		const Atom id = gd::strip_edges(state, string_or_empty(state, one.ref, key::battle_id));
+		if (id != key::empty) {
+			state.append(ids, str(id));
+		}
 	}
-	_mark_stack_animation_event(state, battle, string_or_empty(state, caster_stack, key::battle_id), key::battle_unit_cast, spell_context);
-	if (target_id == key::empty) {
-		return;
+	for (const Value &each : gd::field_items(state, resolution, str(key::conjured_stacks))) {
+		if (!gd::is_dict(each)) {
+			continue;
+		}
+		const Atom id = gd::strip_edges(state, string_or_empty(state, each.ref, key::battle_id));
+		if (id != key::empty) {
+			state.append(ids, str(id));
+		}
 	}
+	return ids;
+}
+
+// One stack's share of a cast on the board: the reaction its resolution plays there, with the spell's cue.
+void _mark_spell_target_animation(State &state, DictRef battle, DictRef caster_stack, DictRef resolution, DictRef spell_context, Atom target_id) {
 	const DictRef target_context = gd::deep_duplicate_dict(state, spell_context);
+	state.set(target_context, str(key::target_battle_id), str(target_id));
+	state.set(target_context, str(key::resolution_type), str(gd::strip_edges(state, string_or_empty(state, resolution, key::resolution_type))));
 	state.set(target_context, str(key::source_battle_id), str(string_or_empty(state, caster_stack, key::battle_id)));
 	const Atom resolution_type = string_or_empty(state, resolution, key::resolution_type);
 	if (resolution_type == key::damage) {
@@ -326,6 +340,57 @@ void _mark_spell_animation_states(State &state, DictRef battle, DictRef caster_s
 			state.set(move_context, str(field), int_value(gd::int_field(state, resolution, field, -1)));
 		}
 		_mark_stack_animation_event(state, battle, target_id, key::battle_unit_move, move_context);
+	}
+}
+
+// The board plays a cast's cue where the cast lands: on its target; a summon on the stacks it conjured; a hex spell
+// on the first hex of its ground; and every stack a mass or mastery spell reaches beyond its target on that stack.
+void _mark_spell_animation_states(State &state, DictRef battle, DictRef caster_stack, DictRef resolution) {
+	Atom target_id = gd::strip_edges(state, string_or_empty(state, resolution, key::target_battle_id));
+	const ArrayRef conjured_ids = _conjured_battle_ids(state, resolution);
+	if (target_id == key::empty && state.array_size(conjured_ids) > 0) {
+		target_id = gd::strip_edges(state, gd::to_string(state.at(conjured_ids, 0)));
+	}
+	const DictRef spell_context = state.new_dict();
+	state.set(spell_context, str(key::spell_id), str(gd::strip_edges(state, string_or_empty(state, resolution, key::spell_id))));
+	state.set(spell_context, str(key::resolution_type), str(gd::strip_edges(state, string_or_empty(state, resolution, key::resolution_type))));
+	if (target_id != key::empty) {
+		state.set(spell_context, str(key::target_battle_id), str(target_id));
+	} else {
+		Value entry;
+		if (nonempty_dict_field(state, resolution, key::ground_entry, entry)) {
+			for (const Value &cell : gd::field_items(state, entry.ref, str(key::cells))) {
+				if (!gd::is_dict(cell)) {
+					continue;
+				}
+				const int64_t q = gd::int_field(state, cell.ref, key::q, -1);
+				const int64_t r = gd::int_field(state, cell.ref, key::r, -1);
+				state.set(spell_context, str(key::from_q), int_value(q));
+				state.set(spell_context, str(key::from_r), int_value(r));
+				state.set(spell_context, str(key::to_q), int_value(q));
+				state.set(spell_context, str(key::to_r), int_value(r));
+				break;
+			}
+		}
+	}
+	_mark_stack_animation_event(state, battle, string_or_empty(state, caster_stack, key::battle_id), key::battle_unit_cast, spell_context);
+	if (target_id != key::empty) {
+		_mark_spell_target_animation(state, battle, caster_stack, resolution, spell_context, target_id);
+	}
+	for (const Value &id : gd::items(state, gd::array_value(conjured_ids))) {
+		const DictRef conjured_context = gd::deep_duplicate_dict(state, spell_context);
+		state.set(conjured_context, str(key::target_battle_id), id);
+		state.set(conjured_context, str(key::source_battle_id), str(string_or_empty(state, caster_stack, key::battle_id)));
+		_mark_stack_animation_event(state, battle, gd::to_string(id), key::battle_status_applied, conjured_context);
+	}
+	for (const Value &extra : gd::field_items(state, resolution, str(key::extra_resolutions))) {
+		if (!gd::is_dict(extra)) {
+			continue;
+		}
+		const Atom extra_target = gd::strip_edges(state, string_or_empty(state, extra.ref, key::target_battle_id));
+		if (extra_target != key::empty && extra_target != target_id) {
+			_mark_spell_target_animation(state, battle, caster_stack, extra.ref, spell_context, extra_target);
+		}
 	}
 }
 
@@ -466,14 +531,23 @@ bool _apply_spell_resolution(State &state, DictRef battle, DictRef resolution, D
 	if (!_apply_spell_resolution_on_target(state, battle, resolution, animation_resolution, message, recovered_amount, cleansed_count)) {
 		return false;
 	}
+	// Each reached stack's board copy is its entry in the animation resolution's extra_resolutions (a copy of the
+	// cast's), which _mark_spell_animation_states plays the spell on.
+	const Value animation_extras = gd::field(state, animation_resolution, key::extra_resolutions);
+	int64_t index = -1;
 	for (const Value &extra : gd::field_items(state, resolution, str(key::extra_resolutions))) {
+		index += 1;
 		if (!gd::is_dict(extra)) {
 			continue;
 		}
 		message = concat(state, message, gd::string_field(state, extra.ref, key::message, key::empty));
 		int64_t extra_recovered = 0;
 		int64_t extra_cleansed = 0;
-		_apply_spell_resolution_on_target(state, battle, extra.ref, state.new_dict(), message, extra_recovered, extra_cleansed);
+		DictRef extra_animation = state.new_dict();
+		if (gd::is_array(animation_extras) && index < state.array_size(animation_extras.ref) && gd::is_dict(state.at(animation_extras.ref, index))) {
+			extra_animation = state.at(animation_extras.ref, index).ref;
+		}
+		_apply_spell_resolution_on_target(state, battle, extra.ref, extra_animation, message, extra_recovered, extra_cleansed);
 	}
 	return true;
 }
@@ -703,9 +777,14 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 	// Tier 3: a conjured stack takes the field, a decoy the other side aimed at vanishes, Hour Ledger turns a stack
 	// back and Puppet Strings makes a stack attack one of its own side (spell_tier3_conjure.cpp).
 	if (resolution_type == key::conjure_effect) {
+		// The board's copy of each conjured stack learns the id it took (_mark_spell_animation_states).
 		Value conjured;
 		if (nonempty_dict_field(state, resolution, key::conjured_stack, conjured)) {
 			const Atom id = spell_rules::add_conjured_stack(state, battle, gd::deep_duplicate_dict(state, conjured.ref));
+			Value board_copy;
+			if (nonempty_dict_field(state, animation_resolution, key::conjured_stack, board_copy)) {
+				state.set(board_copy.ref, str(key::battle_id), str(id));
+			}
 			const DictRef stack = _get_stack_by_id(state, battle, id);
 			if (!gd::is_empty(state, stack)) {
 				message = concat(state, message, gd::format(state, key::conjured_stands_suffix_text, { str(_stack_label(state, stack)), str(_hex_label(state, _stack_hex(state, stack))) }));
@@ -713,12 +792,18 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 		}
 		// Wraith Host's two stacks and Drowned Host's Risen, in turn (spell_tier45_summons.cpp).
 		const Value more = gd::field(state, resolution, key::conjured_stacks);
+		const Value board_more = gd::field(state, animation_resolution, key::conjured_stacks);
 		if (gd::is_array(more)) {
+			int64_t index = -1;
 			for (const Value &each : gd::items(state, more)) {
+				index += 1;
 				if (!gd::is_dict(each) || gd::is_empty(state, each.ref)) {
 					continue;
 				}
 				const Atom id = spell_rules::add_conjured_stack(state, battle, gd::deep_duplicate_dict(state, each.ref));
+				if (gd::is_array(board_more) && index < state.array_size(board_more.ref) && gd::is_dict(state.at(board_more.ref, index))) {
+					state.set(state.at(board_more.ref, index).ref, str(key::battle_id), str(id));
+				}
 				const DictRef stack = _get_stack_by_id(state, battle, id);
 				if (!gd::is_empty(state, stack)) {
 					message = concat(state, message, gd::format(state, key::conjured_stands_suffix_text, { str(_stack_label(state, stack)), str(_hex_label(state, _stack_hex(state, stack))) }));
