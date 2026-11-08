@@ -57,6 +57,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-08 `battle-ai-ground-moves-20261108` (23c9e933b): Computer stacks weigh fire on their walk or under them, brambles where it ends and enemy seeds beside it, as a share of the stack in approach, strike, advance and defend scores; the hex spell plan counts its own walkers as steering.
 - 2026-11-08 `magic-tier45-spells-20261107` (9566a5d5b): All 39 tier-4 and tier-5 battle spells unreleased in spells.json (also ed300047e, f7f06ebd6, 2983bf8c5): brands, poison, stuns, whole-battle spells, double blows, extra turns, returns, groves, the dome, echoes and summons; battle AI values.
 - 2026-11-08 `magic-tier3-spells-20261107` (a5546a310): All 36 tier-3 battle spells unreleased in spells.json (also a0a34f651, 7c58ceb8f): Burning, doom, budding, goading, drags, walls, prisms, mire, summons, the Risen, decoys, rewinds and puppets; second-stack and hex picks; battle AI values.
 - 2026-11-07 `magic-tier2-spells-20261107` (8e049e58b): All 36 tier-2 battle spells unreleased in spells.json (also 248f193ff, c6ee768ff): Heat, plates, grafts, swaps, curses, sleep, reflection, ground on picked hexes and more; mastery reach; second-stack and hex picks; battle AI values.

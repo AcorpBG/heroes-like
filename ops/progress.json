@@ -6,7 +6,7 @@
  "currentSliceId": "magic-map-spells-20261107",
  "currentSliceTitle": "Magic: map spells",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T01:44:24Z",
+ "updatedAt": "2026-11-08T05:30:16Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-ai-ground-moves-20261108",
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Computer stacks weigh fire on their walk or under them, brambles where it ends and enemy seeds beside it, as a share of the stack in approach, strike, advance and defend scores; the hex spell plan counts its own walkers as steering.",
+   "commit": "23c9e933b"
+  },
   {
    "id": "magic-system-spec-20261107",
    "status": "completed",
