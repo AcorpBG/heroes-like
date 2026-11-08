@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "magic-switch-20261107",
- "currentSliceTitle": "Magic: the switch to the new spells",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T14:40:22Z",
+ "currentSliceTitle": "The 139 spells live on four schools (Lens, Old Measure into Beacon, Mire into Veil); retired_spells.json maps the 119 old; heroes cast their faction's school at +1 power, start with its mastery; sites teach by tier; v10 saves convert.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T16:16:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -103,13 +103,10 @@
   },
   {
    "id": "magic-switch-20261107",
-   "title": "Magic: the switch to the new spells",
-   "status": "in_progress",
-   "goal": "Today's 119 spells go and the 139 go live, unreleased marks removed. Lens, Mire and Old Measure merge into Beacon and Veil, four masteries. Factions prefer Beacon (Embercourt, Sunvault), Veil (Mireclaw, Veilmourn), Furnace (Brasshollow), Root (Thornwake); their heroes cast it at 1 more spell power and start with mastery 1 in a specialty slot. Resistances move; new picks in heroes, encounters, sites and RMG data; saves convert; core tests and docs follow.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "The 139 spells live on four schools (Lens, Old Measure into Beacon, Mire into Veil); retired_spells.json maps the 119 old; heroes cast their faction's school at +1 power, start with its mastery; sites teach by tier; v10 saves convert.",
+   "commit": "5430e5d33"
   },
   {
    "id": "rmg-setup-choice-templates-20261106",
