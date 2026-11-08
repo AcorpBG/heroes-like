@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-map-spells-20261107",
- "currentSliceTitle": "Magic: map spells",
+ "currentSliceId": "magic-art-audio-20261107",
+ "currentSliceTitle": "Magic: spell art and sound",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T05:30:16Z",
+ "updatedAt": "2026-11-08T05:34:49Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -93,12 +93,12 @@
   {
    "id": "magic-art-audio-20261107",
    "title": "Magic: spell art and sound",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each spell, and badges for the 25 new statuses; the four school sigils stay. spell_icons, battle_vfx_manifest, audio_production_banks and animation_event_cues, in the painted look of the art rules. Lands before or with magic-switch-20261107.",
    "docs": [
     "docs/magic-system.md"
    ],
-   "updatedAt": "2026-11-07"
+   "updatedAt": "2026-11-08"
   },
   {
    "id": "magic-switch-20261107",
