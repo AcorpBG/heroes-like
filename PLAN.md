@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `level-curve-steeper-20261108` (in progress): Owner, 2026-11-08: with battle experience doubled, late levels came too fast (best AI hero level 30-47 by day 70). Each level step adds 6 x level squared: 250 + 100 x level + 6 x level^2 (HeroProgressionRules.level_step_experience, used by the level-up and experience_for_level for hires). Early levels about as now, level 30 twice the experience. Doc: docs/ai-plays-by-player-rules.md. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-08 `level-curve-steeper-20261108` (74338b8ea): A level step from level L costs 250 + 100 x L + 6 x L^2 (level_step_experience: level-up, experience_for_level); level 30 takes 101,974 instead of 50,650; best AI hero by day 70 on six seeds: level 30-47 -> 18-29.
 - 2026-11-08 `battle-xp-double-20261108` (d3221e027): Battles pay twice the experience: one point per point of the beaten army's strength instead of half (battle_rewards_for_strength), every battle and reward line; best AI hero by day 70 on six seeds: level 14-23 -> 30-47.
 - 2026-11-08 `save-autosave-end-turn-only-20261108` (9e4c555a0): Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.
 - 2026-11-08 `bugfix-encounter-reward-surface-memo-20261108` (18b1f23bb): Guard inspection no longer errors on its reward line: OverworldRules._encounter_reward_surface, whose army power fills AiHeroRules' power memos when cold (as after a save load), is registered as writing.
