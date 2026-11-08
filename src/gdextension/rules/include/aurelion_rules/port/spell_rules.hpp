@@ -248,6 +248,26 @@ Atom fire_prisms(State &state, DictRef battle, Atom side, DictRef spell);
 ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps);
 void after_ground_walk(State &state, DictRef battle, Atom battle_id, DictRef start);
 void end_of_turn_ground(State &state, DictRef battle, Atom battle_id);
+// What the ground would cost a stack's walk this turn, read for the battle AI: for each hex it can end on, the damage
+// of one burn of the burning ground its walk crosses or ends in (on its own hex, staying: the ground it stands in), of
+// the brambles it ends in and of the other side's seeds beside the end, each after the stack's resistance, with the
+// statuses those seeds would set where it is not immune. Empty when no fire, brambles or seed of the other side
+// holds, so a board without that ground reads nothing more.
+struct WalkToll {
+	int64_t damage = 0;
+	std::vector<Atom> statuses;
+};
+class GroundTolls {
+public:
+	GroundTolls(State &state, DictRef battle, DictRef stack);
+	bool empty() const { return tolls_.empty(); }
+	// The toll of ending on a hex ({q, r}); nothing off the board or without ground.
+	const WalkToll &at(State &state, const Value &cell) const;
+
+private:
+	std::vector<WalkToll> tolls_;
+	WalkToll none_;
+};
 // A turn's end (backlash, tightening roots, curse) and start (regrowth; true
 // when the stack sleeps through it); begin_active_turn runs the start for the
 // active stack and passes the turns of sleepers on.

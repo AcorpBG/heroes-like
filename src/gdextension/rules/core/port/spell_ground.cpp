@@ -23,6 +23,7 @@
 #include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <string>
@@ -754,17 +755,42 @@ Atom fire_prisms(State &state, DictRef battle, Atom side, DictRef spell) {
 	return message;
 }
 
-ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps) {
-	const ArrayRef path = state.new_array();
-	const int64_t from = cell_id_of(state, dict_value(start));
-	const int64_t to = cell_id_of(state, dict_value(destination));
-	if (from < 0 || to < 0 || max_steps <= 0) {
-		return path;
+namespace {
+
+// A stack's walks from one hex, layered by steps: the fewest burning hexes met on the way to each hex within each
+// step count, and the hex before it there.
+struct WalkLayers {
+	int64_t layers = 0;
+	std::vector<int32_t> best;
+	std::vector<int16_t> parent;
+
+	// The walk to a hex, its start first: the fewest burning hexes, then the fewest steps; empty when the steps
+	// reach none.
+	std::vector<int64_t> walk_to(int64_t to) const {
+		std::vector<int64_t> ids;
+		int64_t best_step = -1;
+		for (int64_t step = 1; step < layers; ++step) {
+			const int32_t cost = best[static_cast<size_t>(step * CELL_COUNT + to)];
+			if (cost < FAR && (best_step < 0 || cost < best[static_cast<size_t>(best_step * CELL_COUNT + to)])) {
+				best_step = step;
+			}
+		}
+		if (best_step < 0) {
+			return ids;
+		}
+		int64_t id = to;
+		for (int64_t step = best_step; step >= 0; --step) {
+			ids.push_back(id);
+			if (step > 0) {
+				id = parent[static_cast<size_t>(step * CELL_COUNT + id)];
+			}
+		}
+		std::reverse(ids.begin(), ids.end());
+		return ids;
 	}
-	if (from == to) {
-		state.append(path, dict_value(battle_rules::_hex_cell(state, from / hex::kRows, from % hex::kRows)));
-		return path;
-	}
+};
+
+WalkLayers walk_layers(State &state, DictRef battle, DictRef stack, int64_t from, int64_t max_steps) {
 	const DictRef occupied = battle_rules::_build_blocking_map(state, battle);
 	uint8_t open[CELL_COUNT];
 	battle_rules::_hex_open_mask(state, stack, occupied, open);
@@ -782,14 +808,15 @@ ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef s
 	uint8_t stop[CELL_COUNT];
 	const bool stops = bramble_stop_mask(state, battle, stack, stop);
 	// Layer by steps: the fewest burning hexes met on the way to each hex.
-	const int64_t layers = engine_min<int64_t>(max_steps, CELL_COUNT) + 1;
-	std::vector<int32_t> best(static_cast<size_t>(layers * CELL_COUNT), FAR);
-	std::vector<int16_t> parent(static_cast<size_t>(layers * CELL_COUNT), -1);
-	best[static_cast<size_t>(from)] = 0;
+	WalkLayers walk;
+	walk.layers = engine_min<int64_t>(engine_max<int64_t>(0, max_steps), CELL_COUNT) + 1;
+	walk.best.assign(static_cast<size_t>(walk.layers * CELL_COUNT), FAR);
+	walk.parent.assign(static_cast<size_t>(walk.layers * CELL_COUNT), -1);
+	walk.best[static_cast<size_t>(from)] = 0;
 	const hex::NeighborList *neighbors = hex::neighbor_table();
-	for (int64_t step = 0; step + 1 < layers; ++step) {
+	for (int64_t step = 0; step + 1 < walk.layers; ++step) {
 		for (int64_t id = 0; id < CELL_COUNT; ++id) {
-			const int32_t cost = best[static_cast<size_t>(step * CELL_COUNT + id)];
+			const int32_t cost = walk.best[static_cast<size_t>(step * CELL_COUNT + id)];
 			if (cost >= FAR || (step > 0 && stops && stop[id] != 0)) {
 				continue;
 			}
@@ -801,35 +828,149 @@ ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef s
 				}
 				const size_t slot = static_cast<size_t>((step + 1) * CELL_COUNT + next);
 				const int32_t next_cost = cost + burn[next];
-				if (next_cost < best[slot]) {
-					best[slot] = next_cost;
-					parent[slot] = static_cast<int16_t>(id);
+				if (next_cost < walk.best[slot]) {
+					walk.best[slot] = next_cost;
+					walk.parent[slot] = static_cast<int16_t>(id);
 				}
 			}
 		}
 	}
-	int64_t best_step = -1;
-	for (int64_t step = 1; step < layers; ++step) {
-		const int32_t cost = best[static_cast<size_t>(step * CELL_COUNT + to)];
-		if (cost < FAR && (best_step < 0 || cost < best[static_cast<size_t>(best_step * CELL_COUNT + to)])) {
-			best_step = step;
+	return walk;
+}
+
+// Per hex: the first of the entries (in the board's order) whose hexes the stack's body standing there covers, or -1.
+std::vector<int32_t> first_under(State &state, const std::vector<DictRef> &entries, hex::Body body) {
+	std::vector<int32_t> under(static_cast<size_t>(CELL_COUNT), -1);
+	uint8_t marked[CELL_COUNT];
+	uint8_t covered[CELL_COUNT];
+	// Last to first, so that the first entry over a hex is the one kept.
+	for (size_t index = entries.size(); index-- > 0;) {
+		mark_cells(state, { entries[index] }, marked);
+		body_mask(marked, body, covered);
+		for (int64_t id = 0; id < CELL_COUNT; ++id) {
+			if (covered[id] != 0) {
+				under[static_cast<size_t>(id)] = static_cast<int32_t>(index);
+			}
 		}
 	}
-	if (best_step < 0) {
+	return under;
+}
+
+} // namespace
+
+ArrayRef ground_walk_path(State &state, DictRef battle, DictRef stack, DictRef start, DictRef destination, int64_t max_steps) {
+	const ArrayRef path = state.new_array();
+	const int64_t from = cell_id_of(state, dict_value(start));
+	const int64_t to = cell_id_of(state, dict_value(destination));
+	if (from < 0 || to < 0 || max_steps <= 0) {
 		return path;
 	}
-	std::vector<int64_t> ids;
-	int64_t id = to;
-	for (int64_t step = best_step; step >= 0; --step) {
-		ids.push_back(id);
-		if (step > 0) {
-			id = parent[static_cast<size_t>(step * CELL_COUNT + id)];
-		}
+	if (from == to) {
+		state.append(path, dict_value(battle_rules::_hex_cell(state, from / hex::kRows, from % hex::kRows)));
+		return path;
 	}
-	for (auto it = ids.rbegin(); it != ids.rend(); ++it) {
-		state.append(path, dict_value(battle_rules::_hex_cell(state, *it / hex::kRows, *it % hex::kRows)));
+	for (const int64_t id : walk_layers(state, battle, stack, from, max_steps).walk_to(to)) {
+		state.append(path, dict_value(battle_rules::_hex_cell(state, id / hex::kRows, id % hex::kRows)));
 	}
 	return path;
+}
+
+GroundTolls::GroundTolls(State &state, DictRef battle, DictRef stack) {
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || raw_entries(state, battle) == NONE || _alive_count(state, stack) <= 0) {
+		return;
+	}
+	const std::vector<DictRef> fire = holding(state, battle, key::fire_ground);
+	const std::vector<DictRef> brambles = holding(state, battle, key::bramble_ground);
+	std::vector<DictRef> seeds;
+	for (const DictRef entry : holding(state, battle, key::trap)) {
+		if (gd::string_field(state, entry, key::side, key::empty) != side_of(state, stack)) {
+			seeds.push_back(entry);
+		}
+	}
+	const int64_t from = cell_id_of(state, dict_value(battle_rules::_stack_hex(state, stack)));
+	if ((fire.empty() && brambles.empty() && seeds.empty()) || from < 0) {
+		return;
+	}
+	const hex::Body body = body_of(state, stack);
+	const std::vector<int32_t> fire_under = first_under(state, fire, body);
+	const std::vector<int32_t> bramble_under = first_under(state, brambles, body);
+	std::vector<int64_t> fire_damage;
+	for (const DictRef entry : fire) {
+		fire_damage.push_back(ground_damage_to(state, battle, entry, stack));
+	}
+	std::vector<int64_t> bramble_damage;
+	for (const DictRef entry : brambles) {
+		bramble_damage.push_back(ground_damage_to(state, battle, entry, stack));
+	}
+	// Each seed: its hexes, its damage and the status it would set.
+	struct Seed {
+		std::vector<hex::PlacedBody> cells;
+		int64_t damage = 0;
+		Atom status = key::empty;
+	};
+	std::vector<Seed> seed_rows;
+	for (const DictRef entry : seeds) {
+		Seed seed;
+		for (const Value &cell : gd::field_items(state, entry, str(key::cells))) {
+			const int64_t id = cell_id_of(state, cell);
+			if (id >= 0) {
+				seed.cells.push_back(hex::PlacedBody{ id / hex::kRows, id % hex::kRows, id / hex::kRows });
+			}
+		}
+		seed.damage = ground_damage_to(state, battle, entry, stack);
+		Value status;
+		if (state.lookup(entry, str(key::status), status) && gd::is_dict(status) && !gd::is_empty(state, status.ref)) {
+			const Atom status_id = gd::string_field(state, status.ref, key::effect_id, key::empty);
+			if (status_id != key::empty && !target_is_immune_to_status(state, stack, battle, status_id)) {
+				seed.status = status_id;
+			}
+		}
+		seed_rows.push_back(seed);
+	}
+	// Fire: the walk the stack would take there, as after_ground_walk reads it.
+	const WalkLayers walk = fire.empty() ? WalkLayers{} : walk_layers(state, battle, stack, from, battle_rules::_stack_movement_points(state, stack, battle));
+	tolls_.assign(static_cast<size_t>(CELL_COUNT), WalkToll{});
+	for (int64_t to = 0; to < CELL_COUNT; ++to) {
+		WalkToll &toll = tolls_[static_cast<size_t>(to)];
+		// Staying is no walk: only the fire it stands in at its turn's end.
+		if (to == from) {
+			if (fire_under[static_cast<size_t>(from)] >= 0) {
+				toll.damage += fire_damage[static_cast<size_t>(fire_under[static_cast<size_t>(from)])];
+			}
+			continue;
+		}
+		if (!fire.empty()) {
+			const std::vector<int64_t> ids = walk.walk_to(to);
+			// With no walk in its steps, the fire it would end in.
+			int32_t burning = ids.empty() ? fire_under[static_cast<size_t>(to)] : -1;
+			for (size_t index = 1; index < ids.size() && burning < 0; ++index) {
+				burning = fire_under[static_cast<size_t>(ids[index])];
+			}
+			if (burning >= 0) {
+				toll.damage += fire_damage[static_cast<size_t>(burning)];
+			}
+		}
+		if (bramble_under[static_cast<size_t>(to)] >= 0) {
+			toll.damage += bramble_damage[static_cast<size_t>(bramble_under[static_cast<size_t>(to)])];
+		}
+		for (const Seed &seed : seed_rows) {
+			bool beside = false;
+			for (const hex::PlacedBody &cell : seed.cells) {
+				beside = beside || hex::body_distance(to, body, cell) <= 1;
+			}
+			if (beside) {
+				toll.damage += seed.damage;
+				if (seed.status != key::empty) {
+					toll.statuses.push_back(seed.status);
+				}
+			}
+		}
+	}
+}
+
+const WalkToll &GroundTolls::at(State &state, const Value &cell) const {
+	const int64_t id = tolls_.empty() ? -1 : cell_id_of(state, cell);
+	return id >= 0 ? tolls_[static_cast<size_t>(id)] : none_;
 }
 
 void after_ground_walk(State &state, DictRef battle, Atom battle_id, DictRef start) {

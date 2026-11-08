@@ -1417,15 +1417,18 @@ DictRef _ground_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Dic
 			// A walker burns once on its way or where it ends beside its
 			// target, and keeps burning while it fights there; brambles stop
 			// a walk that would have struck this turn. The caster's own
-			// walkers count against, and as sure to walk through: the
-			// computer's moves do not weigh ground yet.
+			// walkers count against. Either side's walkers take another way
+			// when one serves, so the hexes on their way count a third; the
+			// computer's own walker ends in a covered hex beside its target
+			// only when the pick covers every free one there.
 			for (const Walker &walker : walkers) {
 				const Meeting meeting = meeting_of(walker, cells);
-				const double on_way = meeting.on_way ? (walker.hostile ? 0.35 : 1.0) : 0.0;
-				const double hit = engine_max<double>(meeting.beside_share * (ground == key::fire_ground ? 1.5 : 1.0), on_way);
+				const double on_way = meeting.on_way ? 0.35 : 0.0;
+				const double beside = walker.hostile || meeting.beside_share >= 1.0 ? meeting.beside_share : 0.0;
+				const double hit = engine_max<double>(beside * (ground == key::fire_ground ? 1.5 : 1.0), on_way);
 				double meets = hit * walker.share * damage_weight * 0.8;
 				if (ground == key::bramble_ground && meeting.on_way) {
-					meets += walker.distance - 1 <= walker.steps ? 1.0 : 0.4;
+					meets += (walker.distance - 1 <= walker.steps ? 1.0 : 0.4) * (walker.hostile ? 1.0 : 0.35);
 				}
 				value += walker.hostile ? meets : -1.5 * meets;
 			}

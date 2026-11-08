@@ -22,6 +22,11 @@
 
 #include <cstdint>
 
+namespace aurelion::rules::port::spell_rules {
+struct WalkToll;
+class GroundTolls;
+} // namespace aurelion::rules::port::spell_rules
+
 namespace aurelion::rules::port::battle_ai_rules {
 
 using gd::ArrayRef;
@@ -185,6 +190,9 @@ bool _stack_has_control_effect(State &state, DictRef stack, DictRef battle);
 bool _stack_is_rooted(State &state, DictRef stack, DictRef battle);
 DictRef _status_effect_from_spell(State &state, DictRef spell);
 double _status_tactical_value(State &state, Atom status_id, DictRef target);
+// The ground a walk would meet (spell_rules::GroundTolls) as a share of the stack, and in the attack score's terms.
+double _ground_toll_share(State &state, DictRef stack, const spell_rules::WalkToll &toll);
+double _ground_toll_score(State &state, DictRef stack, const spell_rules::GroundTolls &tolls, const Value &cell);
 double _buff_spell_offense_payoff(State &state, DictRef stack);
 double _stack_spell_target_value(State &state, DictRef stack, DictRef battle);
 double _allied_status_synergy_score(State &state, DictRef battle, Atom side, Atom status_id);

@@ -149,7 +149,28 @@ DictRef attack_order(State &state, Atom action, Atom target_id, double score) {
 	return order;
 }
 
+// The ground on the walk an advance would take: to the hex _apply_auto_advance_movement picks.
+double advance_ground_score(State &state, DictRef battle, DictRef stack) {
+	const spell_rules::GroundTolls tolls(state, battle, stack);
+	if (tolls.empty() || battle_rules::_advance_stalled_by_obstruction(state, stack, battle)) {
+		return 0.0;
+	}
+	const DictRef target = advance_target(state, battle, stack);
+	const int64_t desired_gap = battle_rules::_advance_desired_gap(state, stack, battle);
+	const DictRef destination = best_advance_destination(state, battle, stack, target, desired_gap);
+	return empty(state, destination) ? 0.0 : _ground_toll_score(state, stack, tolls, dict_value(destination));
+}
+
 } // namespace
+
+double _ground_toll_score(State &state, DictRef stack, const spell_rules::GroundTolls &tolls, const Value &cell) {
+	if (tolls.empty()) {
+		return 0.0;
+	}
+	const double share = _ground_toll_share(state, stack, tolls.at(state, cell));
+	// As many of its creatures as that share holds, each weighed as one a strike-back takes.
+	return share <= 0.0 ? 0.0 : share * static_cast<double>(_alive_count(state, stack)) * _w(state, key::attack_strike_back);
+}
 
 double _w(State &state, Atom weight_key) {
 	// The static is read every call: the arena tool rewrites its declaration.
@@ -204,8 +225,15 @@ DictRef _best_attack_action(State &state, DictRef battle, DictRef active_stack, 
 
 DictRef _strike_candidate(State &state, DictRef battle, DictRef active_stack, DictRef target) {
 	const Atom target_id = gd::string_field(state, target, key::battle_id, key::empty);
+	// The fire, brambles and seeds where it strikes from, the walk there included.
+	const spell_rules::GroundTolls tolls(state, battle, active_stack);
 	if (_can_make_melee_attack(state, active_stack, battle, target)) {
-		const double score = _attack_score(state, active_stack, target, battle, false);
+		double score = _attack_score(state, active_stack, target, battle, false);
+		// It may still step to a better side first (ai_melee_approach), off burning ground for one.
+		if (!tolls.empty()) {
+			const DictRef from = battle_rules::ai_melee_approach(state, battle, active_stack, target);
+			score -= _ground_toll_score(state, active_stack, tolls, dict_value(empty(state, from) ? _stack_hex(state, active_stack) : from));
+		}
 		return attack_order(state, key::strike, target_id, score);
 	}
 	if (!_fights_in_melee(state, active_stack) || _stack_is_rooted(state, active_stack, battle)) {
@@ -216,7 +244,8 @@ DictRef _strike_candidate(State &state, DictRef battle, DictRef active_stack, Di
 		return state.new_dict();
 	}
 	const ArrayRef projection = _projected_on_cell(state, battle, active_stack, approach);
-	const double score = _attack_score(state, gd::as_dict(state.at(projection, 0)), target, gd::as_dict(state.at(projection, 1)), false);
+	const double score = _attack_score(state, gd::as_dict(state.at(projection, 0)), target, gd::as_dict(state.at(projection, 1)), false)
+			- _ground_toll_score(state, active_stack, tolls, dict_value(approach));
 	const DictRef cell = state.new_dict();
 	state.set(cell, str(key::q), int_value(gd::int_field(state, approach, key::q, -1)));
 	state.set(cell, str(key::r), int_value(gd::int_field(state, approach, key::r, -1)));
@@ -515,6 +544,8 @@ double _defend_score(State &state, DictRef battle, DictRef active_stack, ArrayRe
 	if (spell_rules::in_mire(state, battle, active_stack)) {
 		score -= 2.0;
 	}
+	// Burning ground under a stack that holds burns it at its turn's end.
+	score -= _ground_toll_score(state, active_stack, spell_rules::GroundTolls(state, battle, active_stack), dict_value(_stack_hex(state, active_stack)));
 	if ((_brace_available(state, active_stack, battle) || _bramble_ground_available(state, active_stack, battle, state.new_dict())) && contact <= 1) {
 		score += _w(state, key::defend_brace);
 	}
@@ -594,7 +625,7 @@ double _advance_score(State &state, DictRef battle, DictRef active_stack, ArrayR
 			reposition_score += 1.0;
 		}
 		reposition_score += _objective_action_score(state, battle, side, key::advance, active_stack, state.new_dict());
-		return reposition_score;
+		return reposition_score - advance_ground_score(state, battle, active_stack);
 	}
 	const int64_t distance_delta = _advance_distance_delta(state, active_stack, battle);
 	double score = _w(state, key::advance_base);
@@ -653,7 +684,7 @@ double _advance_score(State &state, DictRef battle, DictRef active_stack, ArrayR
 		const double clock_weight = _w(state, key::advance_clock);
 		score += clock_weight * static_cast<double>(_clock_pressure(state, battle));
 	}
-	return score;
+	return score - advance_ground_score(state, battle, active_stack);
 }
 
 bool _should_hold_line(State &state, DictRef battle, DictRef stack) {
@@ -674,13 +705,20 @@ DictRef choose_melee_approach(State &state, DictRef battle, DictRef stack, DictR
 }
 
 DictRef _melee_approach_choice(State &state, DictRef battle, DictRef stack, DictRef target, ArrayRef cells) {
+	// The fire, brambles and seeds where each walk ends count against it as a strike-back does here: the share of the
+	// stack they take, by the blows its creatures deal.
+	const spell_rules::GroundTolls tolls(state, battle, stack);
+	const double blows = tolls.empty() ? 0.0 : static_cast<double>(_alive_count(state, stack)) * _average_unit_damage(state, stack);
 	DictRef best = state.new_dict();
 	double best_score = 0.0;
 	for (const Value &cell : gd::items(state, array_value(cells))) {
 		if (!gd::is_dict(cell)) {
 			continue;
 		}
-		const double score = _melee_approach_score(state, battle, stack, target, cell.ref);
+		double score = _melee_approach_score(state, battle, stack, target, cell.ref);
+		if (!tolls.empty()) {
+			score -= _ground_toll_share(state, stack, tolls.at(state, cell)) * blows;
+		}
 		if (empty(state, best) || score > best_score + 0.001) {
 			best = gd::deep_duplicate_dict(state, cell.ref);
 			best_score = score;

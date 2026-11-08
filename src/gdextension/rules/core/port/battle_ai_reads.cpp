@@ -32,6 +32,8 @@ constexpr int64_t kClockPressureRounds = 3;
 constexpr double kDecisiveAttackTargetSideHealthRatioMax = 0.4;
 constexpr double kDecisiveAttackActingSideHealthRatioMin = 0.5;
 constexpr double kDecisiveAttackMaxDefendScoreGap = 2.0;
+// Where an advance ends, the ground on its walk costing the whole stack weighs as this many steps more left to walk.
+constexpr double kGroundTollSteps = 10.0;
 
 bool empty(const State &state, DictRef dict) {
 	return gd::is_empty(state, dict);
@@ -256,6 +258,7 @@ DictRef best_advance_destination(State &state, DictRef battle, DictRef stack, Di
 		target = advance_target(state, battle, stack);
 	}
 	const DictRef walk_steps = !empty(state, target) ? rules::_walk_steps_to_target(state, battle, stack, target, desired_gap) : state.new_dict();
+	const spell_rules::GroundTolls tolls(state, battle, stack);
 	DictRef best = state.new_dict();
 	int64_t best_score = 0;
 	for (const Value &destination_value : gd::items(state, array_value(destinations))) {
@@ -281,12 +284,31 @@ DictRef best_advance_destination(State &state, DictRef battle, DictRef stack, Di
 		}
 		score = gd::add(score, gd::int_field(state, destination, key::steps, 1));
 		score = gd::add(score, rules::_advance_lateral_penalty(state, stack, destination));
+		// The fire, brambles and seeds on the walk there: a tenth of the stack weighs one step more left to walk.
+		if (!tolls.empty()) {
+			const double share = _ground_toll_share(state, stack, tolls.at(state, destination_value));
+			score = gd::add(score, compat::float_to_int(compat::godot_round(share * kGroundTollSteps * 100.0)));
+		}
 		if (empty(state, best) || score < best_score) {
 			best = destination;
 			best_score = score;
 		}
 	}
 	return best;
+}
+
+double _ground_toll_share(State &state, DictRef stack, const spell_rules::WalkToll &toll) {
+	if (toll.damage <= 0 && toll.statuses.empty()) {
+		return 0.0;
+	}
+	const double health = engine_max<double>(1.0, static_cast<double>(gd::int_field(state, stack, key::total_health, 0)));
+	double share = engine_min<double>(1.0, static_cast<double>(toll.damage) / health);
+	// A status a seed sets counts a twentieth of its tactical value: Rooted a tenth of a melee stack, a fortieth of a
+	// shooter. First values, not measured.
+	for (const Atom status : toll.statuses) {
+		share += _status_tactical_value(state, status, stack) / 20.0;
+	}
+	return share;
 }
 
 double _average_unit_damage(State &state, DictRef stack) {
