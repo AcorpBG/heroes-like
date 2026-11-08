@@ -1,0 +1,179 @@
+{
+  "schema": "status_badge_source_manifest_v1",
+  "generation_mode": "imggen --backend codex --transparent (the owner's ChatGPT plan), one transparent master per status",
+  "derivation": "alpha bounds (alpha > 8) cropped, longest side fitted to 62 px with Lanczos, alpha 250+ snapped to 255, centred on a 64 px transparent canvas",
+  "prompt_template": "A tiny status badge for an original fantasy strategy game's battle screen: {label}, a harmful status (the stack {does}). One finished square image, 1:1.\n\nSubject: {subject}.\nComposition: one single painted object, centred, filling about four fifths of the square, with a bold, simple silhouette that still reads when shown at 16 to 18 pixels; strong contrast between its light and dark parts; nothing else in the picture.\nBackground: fully transparent; no ground, shadow plate, frame, ring, circle or backdrop behind the object.\nStyle: richly painted original fantasy game art, painterly realism with crisp material detail and hand-painted texture, warm directional light, like a painted game item icon.\nConstraints: an original design; no text, letters, numbers, runes that look like letters, watermark or UI elements; no symbols or designs from existing games or franchises.",
+  "items": [
+    {
+      "status_id": "status_slowed",
+      "label": "Slowed",
+      "does": "walks fewer hexes",
+      "silhouette": "mired_snail_shell",
+      "prompt_subject": "a heavy spiral snail shell, dull grey-brown, with a clot of dark mud stuck to its underside",
+      "source_path": "res://art/battle/source/generated/status_effects/status_slowed_mired_snail_shell_source.png",
+      "source_sha256": "8a01a9a66d5218856efc3be3aa0be25a1467de8d1488999a34333daa81da33f7"
+    },
+    {
+      "status_id": "status_dazed",
+      "label": "Dazed",
+      "does": "moves after every other stack",
+      "silhouette": "tipped_hourglass",
+      "prompt_subject": "a small brass hourglass tipped over on its side, pale sand spilling slowly from it",
+      "source_path": "res://art/battle/source/generated/status_effects/status_dazed_tipped_hourglass_source.png",
+      "source_sha256": "264aaa1b7772020c906cc3a799292ebee0f79af3dcc77f539e1dccfcd3f63b68"
+    },
+    {
+      "status_id": "status_asleep",
+      "label": "Asleep",
+      "does": "skips its turns until something hits it",
+      "silhouette": "pollen_crescent_moon",
+      "prompt_subject": "a pale crescent moon resting on a small drifting cloud of golden pollen",
+      "source_path": "res://art/battle/source/generated/status_effects/status_asleep_pollen_crescent_moon_source.png",
+      "source_sha256": "eaf77e5635ca9c4a5d94eaafc0e673e81453a85bb22ee3efc34c2a9ae049b87e"
+    },
+    {
+      "status_id": "status_blinded",
+      "label": "Blinded",
+      "does": "cannot shoot and its blows do less",
+      "silhouette": "scorched_blindfold",
+      "prompt_subject": "a strip of dark cloth blindfold tied in a tight knot, one end scorched by bright light",
+      "source_path": "res://art/battle/source/generated/status_effects/status_blinded_scorched_blindfold_source.png",
+      "source_sha256": "9ffe0477f7f75391cc16f1de3e29a1c1363b64ffd41bc0b7928893eb7f1f34ba"
+    },
+    {
+      "status_id": "status_marked",
+      "label": "Marked",
+      "does": "every enemy stack aims for it and hits it harder",
+      "silhouette": "blazing_target_ring",
+      "prompt_subject": "a thick bronze ring with a blazing white-gold star point burning at its centre",
+      "source_path": "res://art/battle/source/generated/status_effects/status_marked_blazing_target_ring_source.png",
+      "source_sha256": "a95f4712e0c008a3971f74b9f45c7404582f3f4cd6b7d022848dff58ccdae0f1"
+    },
+    {
+      "status_id": "status_afraid",
+      "label": "Afraid",
+      "does": "will not move toward the enemy",
+      "silhouette": "frightened_mask",
+      "prompt_subject": "a pale ceramic mask with wide, frightened eye holes and one thin crack across its brow",
+      "source_path": "res://art/battle/source/generated/status_effects/status_afraid_frightened_mask_source.png",
+      "source_sha256": "2792b53b69e4a00351edd0430e0a5abb662da481ac6a67151f8f8a30acf253dd"
+    },
+    {
+      "status_id": "status_confused",
+      "label": "Confused",
+      "does": "its next blow lands on a random neighbour",
+      "silhouette": "fog_filled_helm",
+      "prompt_subject": "a small open-faced iron helm with grey fog swirling out of it in a loose spiral",
+      "source_path": "res://art/battle/source/generated/status_effects/status_confused_fog_filled_helm_source.png",
+      "source_sha256": "9ae64f6b369f7c3f95bd9298b3e496ee519d98a1a4ba9433e6f7c5fcbf5d0f43"
+    },
+    {
+      "status_id": "status_cursed",
+      "label": "Cursed",
+      "does": "is hurt every turn, and the curse jumps on if it falls",
+      "silhouette": "smoking_skull",
+      "prompt_subject": "a small cracked bone skull wreathed in curling violet smoke",
+      "source_path": "res://art/battle/source/generated/status_effects/status_cursed_smoking_skull_source.png",
+      "source_sha256": "426ff9518c5dfb1328af89bda0ec3a106c2bb7f1ebbfccfca131c952622386a2"
+    },
+    {
+      "status_id": "status_burning",
+      "label": "Burning",
+      "does": "is hurt at the end of each of its turns",
+      "silhouette": "licking_flame",
+      "prompt_subject": "a single bright orange flame licking upward from a small charred ember",
+      "source_path": "res://art/battle/source/generated/status_effects/status_burning_licking_flame_source.png",
+      "source_sha256": "f273850824d427fa6a9dd5c03d44d9907adb3d46cdc70327f55e2ba043d77f42"
+    },
+    {
+      "status_id": "status_blighted",
+      "label": "Blighted",
+      "does": "cannot be healed, and healing hurts it",
+      "silhouette": "withered_leaf",
+      "prompt_subject": "a withered leaf with black rot spots, curling in on itself",
+      "source_path": "res://art/battle/source/generated/status_effects/status_blighted_withered_leaf_source.png",
+      "source_sha256": "d0754f08db55ea97473516eb68ed82610991de2b9996a10b7eb534820377d96a"
+    },
+    {
+      "status_id": "status_doomed",
+      "label": "Doomed",
+      "does": "a heavy blow falls on it a few turns later",
+      "silhouette": "hanging_anvil",
+      "prompt_subject": "a massive black iron anvil hanging from a short fraying rope, about to fall",
+      "source_path": "res://art/battle/source/generated/status_effects/status_doomed_hanging_anvil_source.png",
+      "source_sha256": "3c307f34d5d1fa3e9ab550d5ad1256cdf09775be6b0c03ac03692481c5041158"
+    },
+    {
+      "status_id": "status_deaths_door",
+      "label": "Death's mark",
+      "does": "a share of it dies a few turns later",
+      "silhouette": "iron_ring_knocker",
+      "prompt_subject": "a plain black iron ring door knocker on a small slab of dark weathered door wood, a thin line of violet light at the slab's edge",
+      "source_path": "res://art/battle/source/generated/status_effects/status_deaths_door_iron_ring_knocker_source.png",
+      "source_sha256": "fa1ba91e8bd87e1b0041189ddc1da5f4f7f38557996fc080be6cd782cc572697"
+    },
+    {
+      "status_id": "status_fleeing",
+      "label": "Fleeing",
+      "does": "runs from the enemy and cannot strike back",
+      "silhouette": "fleeing_hare",
+      "prompt_subject": "a grey hare in mid-leap, ears flat back, fleeing",
+      "source_path": "res://art/battle/source/generated/status_effects/status_fleeing_fleeing_hare_source.png",
+      "source_sha256": "a18fb8f8ad93d834950af9e51a5143f0b69935ff1ecf38b6ed03be8757b8d663"
+    },
+    {
+      "status_id": "status_goaded",
+      "label": "Goaded",
+      "does": "must attack the stack it was goaded toward",
+      "silhouette": "snorting_bull_head",
+      "prompt_subject": "a red-brown bull's horned head, lowered to charge, steam snorting from its nostrils",
+      "source_path": "res://art/battle/source/generated/status_effects/status_goaded_snorting_bull_head_source.png",
+      "source_sha256": "3b186a356da2639dc8747d167627cfcf62dcaeef772bd3f2f8c678097197f54a"
+    },
+    {
+      "status_id": "status_branded",
+      "label": "Branded",
+      "does": "loses defense each time it is hit",
+      "silhouette": "glowing_brand_plate",
+      "prompt_subject": "a small square iron armour plate with a glowing orange round brand burned into its middle",
+      "source_path": "res://art/battle/source/generated/status_effects/status_branded_glowing_brand_plate_source.png",
+      "source_sha256": "d1aef0b0f1e197c8f6f3f6f8faa0ed3ac249758a0d74586a1267c553dd1ae466"
+    },
+    {
+      "status_id": "status_poisoned",
+      "label": "Poisoned",
+      "does": "is hurt every turn, and healing on it is halved",
+      "silhouette": "dripping_vial",
+      "prompt_subject": "a small green glass vial, its stopper loose, one drop of green poison dripping from its lip",
+      "source_path": "res://art/battle/source/generated/status_effects/status_poisoned_dripping_vial_source.png",
+      "source_sha256": "6aaded1950754496d5ba8d68beefa76aa629f330141d7905f86a8c805dcf449b"
+    },
+    {
+      "status_id": "status_censured",
+      "label": "Censured",
+      "does": "its abilities fail and its hero's spells cannot help it",
+      "silhouette": "shining_padlock",
+      "prompt_subject": "a heavy golden padlock clamped shut, glowing with stern white-gold light",
+      "source_path": "res://art/battle/source/generated/status_effects/status_censured_shining_padlock_source.png",
+      "source_sha256": "12ee3939ffd9110ff5a6bb96f6bab91a42ae0579c78a11540a253d83342c888d"
+    },
+    {
+      "status_id": "status_stunned",
+      "label": "Stunned",
+      "does": "skips its next turn",
+      "silhouette": "mallet_starburst",
+      "prompt_subject": "a heavy wooden mallet striking down into a bright white starburst of impact",
+      "source_path": "res://art/battle/source/generated/status_effects/status_stunned_mallet_starburst_source.png",
+      "source_sha256": "1a795c701002c2d63a8110d156a39903570341347ce7f64c38ec513ec09e2a45"
+    },
+    {
+      "status_id": "status_fevered",
+      "label": "Fevered",
+      "does": "is hurt every turn by a lingering fever",
+      "silhouette": "fever_fume_bowl",
+      "prompt_subject": "a small pewter bowl giving off a plume of sickly green-violet fever fumes",
+      "source_path": "res://art/battle/source/generated/status_effects/status_fevered_fever_fume_bowl_source.png",
+      "source_sha256": "d1847d6045c56e7d59b0cea495d218226d064dbb7bc846c681fe5c7aab7eea00"
+    }
+  ]
+}

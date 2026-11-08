@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = ROOT / "art" / "magic" / "source" / "spells" / "curated"
 RUNTIME_ROOT = ROOT / "art" / "magic" / "runtime" / "spells"
 MANIFEST_PATH = ROOT / "content" / "spell_icons.json"
+# The new spells' emblem icons (magic-art-audio-20261107): spell, school and prompt of each master.
+EMBLEM_MANIFEST_PATH = SOURCE_ROOT / "emblem_spellbook_manifest.json"
 SOURCE_SIZE = (1254, 1254)
 ICON_SIZE = (128, 128)
 SPELLS = (
@@ -162,9 +164,14 @@ def render_icon(source_path: Path, runtime_path: Path, compact_palette: bool = F
     icon.save(runtime_path, format="PNG", optimize=False, compress_level=9)
 
 
+def emblem_spells() -> tuple[tuple[str, str], ...]:
+    manifest = json.loads(EMBLEM_MANIFEST_PATH.read_text(encoding="utf-8"))
+    return tuple((item["spell_id"], item["school_id"]) for item in manifest["items"])
+
+
 def main() -> int:
     items = []
-    for spell_id, school_id in SPELLS:
+    for spell_id, school_id in SPELLS + emblem_spells():
         source_path = SOURCE_ROOT / f"{spell_id}.png"
         runtime_path = RUNTIME_ROOT / f"{spell_id}.png"
         if not source_path.is_file():

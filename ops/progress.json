@@ -6,7 +6,7 @@
  "currentSliceId": "magic-art-audio-20261107",
  "currentSliceTitle": "Magic: spell art and sound",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T05:34:49Z",
+ "updatedAt": "2026-11-08T11:13:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -94,7 +94,7 @@
    "id": "magic-art-audio-20261107",
    "title": "Magic: spell art and sound",
    "status": "in_progress",
-   "goal": "An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each spell, and badges for the 25 new statuses; the four school sigils stay. spell_icons, battle_vfx_manifest, audio_production_banks and animation_event_cues, in the painted look of the art rules. Lands before or with magic-switch-20261107.",
+   "goal": "An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each spell, and badges for the new statuses; the four school sigils stay. spell_icons, battle_vfx_manifest, audio_production_banks and animation_event_cues, in the painted look of the art rules. Lands before or with magic-switch-20261107. In: emblem icons (owner's pick) for the 137 spells in content, badges for the 19 new statuses. Next: battle effects, sounds; Green Path and Mire Stride icons follow their mechanic.",
    "docs": [
     "docs/magic-system.md"
    ],
