@@ -6444,6 +6444,75 @@
         "days": 3,
         "days_power_scale": 1
       }
+    },
+    {
+      "id": "spell_forge_road",
+      "name": "Forge Road",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_tier2",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "Heat runs ahead of the hero along the roads; the army marches them at twice the pace.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_road",
+        "days": 1,
+        "days_power_divisor": 5
+      }
+    },
+    {
+      "id": "spell_scorched_earth",
+      "name": "Scorched Earth",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 9,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "The ground around the hero smoulders; enemy armies wade through it at half the pace.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_slow_zone",
+        "days": 2,
+        "days_power_divisor": 4,
+        "radius": 3
+      }
+    },
+    {
+      "id": "spell_wardwood",
+      "name": "Wardwood",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_tier4",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 10,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "A watchful tree springs up where the hero stands and holds back enemy armies that come near it.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_watch",
+        "days": 6,
+        "days_power_scale": 1,
+        "radius": 2
+      },
+      "scroll_only": true
     }
   ]
 }

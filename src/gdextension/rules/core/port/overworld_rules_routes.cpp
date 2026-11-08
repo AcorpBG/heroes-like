@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/overworld_rules_human.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
@@ -681,7 +682,54 @@ DictRef route_movement_preview(State &state, const Value &session, const Value &
 	int64_t budget = movement_budget < 0 ? movement_current : movement_budget;
 	budget = std::max<int64_t>(0, budget);
 	const int64_t total_steps = std::max<int64_t>(0, static_cast<int64_t>(path.size()) - 1);
-	const int64_t reachable_steps = std::min(total_steps, budget);
+	int64_t reachable_steps = std::min(total_steps, budget);
+	int64_t total_cost = total_steps;
+	int64_t reachable_cost = reachable_steps;
+	int64_t movement_after = std::max<int64_t>(0, budget - reachable_steps);
+	// The map spells' step costs (map_spells.hpp), when any count for the active hero: half points, a road step under
+	// its Forge Road for one, an enemy's Scorched Earth for twice, a wardwood's reach ending the walk there.
+	bool costed = false;
+	int64_t spent_halves = 0;
+	int64_t half_after = 0;
+	bool watch_stop = false;
+	if (session.kind != Kind::Nil) {
+		map_spells::Mover mover;
+		mover.hero = gd::as_dict(field_or_new_dict(state, session_view::overworld(state, session.ref), key::hero));
+		mover.controller = key::player;
+		mover.level = level_rules::hero_level(state, session.ref);
+		mover.day = ai::session_int(state, session.ref, key::day);
+		const map_spells::StepCosts costs(state, session.ref, mover);
+		if (costs.active()) {
+			costed = true;
+			// The half saved on a road today walks too, unless the walk is held to fewer points than the hero has.
+			const int64_t budget_halves = budget * 2 + (budget >= movement_current ? map_spells::banked_half(state, mover.hero) : 0);
+			int64_t total_halves = 0;
+			bool walking = true;
+			reachable_steps = 0;
+			for (size_t index = 1; index < path.size(); ++index) {
+				const int64_t cost = costs.halves(path[index - 1], path[index]);
+				total_halves += cost;
+				if (!walking) {
+					continue;
+				}
+				if (spent_halves + cost > budget_halves) {
+					walking = false;
+					continue;
+				}
+				spent_halves += cost;
+				reachable_steps = static_cast<int64_t>(index);
+				if (costs.stops(path[index - 1], path[index])) {
+					watch_stop = true;
+					walking = false;
+				}
+			}
+			const int64_t halves_left = watch_stop ? 0 : budget_halves - spent_halves;
+			total_cost = (total_halves + 1) / 2;
+			reachable_cost = (spent_halves + 1) / 2;
+			movement_after = halves_left / 2;
+			half_after = halves_left % 2;
+		}
+	}
 	const ArrayRef reachable_tiles = state.new_array();
 	for (int64_t index = 0; index < reachable_steps + 1; ++index) {
 		if (index >= 0 && index < static_cast<int64_t>(path.size())) {
@@ -698,17 +746,23 @@ DictRef route_movement_preview(State &state, const Value &session, const Value &
 	state.set(preview, str(key::ok), bool_value(!path.empty()));
 	state.set(preview, str(key::route_tiles), array_value(_route_tile_payloads(state, path)));
 	state.set(preview, str(key::total_steps), int_value(total_steps));
-	state.set(preview, str(key::total_cost), int_value(total_steps));
+	state.set(preview, str(key::total_cost), int_value(total_cost));
 	state.set(preview, str(key::movement_budget), int_value(budget));
 	state.set(preview, str(key::reachable_steps), int_value(reachable_steps));
-	state.set(preview, str(key::reachable_cost), int_value(reachable_steps));
+	state.set(preview, str(key::reachable_cost), int_value(reachable_cost));
 	state.set(preview, str(key::unreachable_steps), int_value(std::max<int64_t>(0, total_steps - reachable_steps)));
-	state.set(preview, str(key::movement_after_reachable), int_value(std::max<int64_t>(0, budget - reachable_steps)));
+	state.set(preview, str(key::movement_after_reachable), int_value(movement_after));
 	state.set(preview, str(key::destination_reachable), bool_value(total_steps > 0 && reachable_steps >= total_steps));
 	state.set(preview, str(key::reachable_tiles), array_value(reachable_tiles));
 	state.set(preview, str(key::unreachable_tiles), array_value(unreachable_tiles));
 	state.set(preview, str(key::final_tile), dict_value(_route_tile_payload(state, final_tile)));
 	state.set(preview, str(key::destination_tile), dict_value(_route_tile_payload(state, destination_tile)));
+	if (costed) {
+		state.set(preview, str(key::step_costs_apply), bool_value(true));
+		state.set(preview, str(key::movement_spent_halves), int_value(spent_halves));
+		state.set(preview, str(key::road_half_after), int_value(half_after));
+		state.set(preview, str(key::watch_stop), bool_value(watch_stop));
+	}
 	return preview;
 }
 

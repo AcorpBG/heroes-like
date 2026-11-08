@@ -11,6 +11,7 @@
 #include "aurelion_rules/port/hero_command_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
@@ -258,13 +259,46 @@ void _store_level_fog(State &state, DictRef session, DictRef payload, int64_t le
 	state.set(overworld, str(key::fog), dict_value(active));
 }
 
+// The half point the active hero saved on a road today (Forge Road): it walks one more road step with no point left.
+static int64_t _banked_half(State &state, DictRef session) {
+	return map_spells::banked_half(state, sub_dict(state, session_view::overworld(state, session), key::hero));
+}
+
+// Whether the map spells' step costs count for the active hero now (map_spells.hpp).
+static bool _route_costs_apply(State &state, DictRef session) {
+	map_spells::Mover mover;
+	mover.hero = sub_dict(state, session_view::overworld(state, session), key::hero);
+	mover.controller = key::player;
+	mover.level = hero_level(state, session);
+	mover.day = ai::session_int(state, session, key::day);
+	return map_spells::StepCosts(state, session, mover).active();
+}
+
+// The movement left after a walk: a point a step, or, when the map spells' step costs counted (the preview's
+// step_costs_apply), what the half points spent leave of the hero's points and saved half; the half left over is
+// saved on the hero, and a wardwood's stop is noted there for its next day.
+static int64_t _movement_after_route(State &state, DictRef session, DictRef preview, int64_t movement_left, int64_t reachable_steps) {
+	if (!gd::bool_field(state, preview, key::step_costs_apply, false)) {
+		return compat::engine_max<int64_t>(0, movement_left - reachable_steps);
+	}
+	const DictRef hero = sub_dict(state, session_view::overworld(state, session), key::hero);
+	const bool stopped = gd::bool_field(state, preview, key::watch_stop, false);
+	const int64_t halves = gd::add(gd::mul(movement_left, 2), map_spells::banked_half(state, hero));
+	const int64_t halves_left = stopped ? 0 : compat::engine_max<int64_t>(0, gd::sub(halves, gd::int_field(state, preview, key::movement_spent_halves, 0)));
+	map_spells::set_banked_half(state, hero, halves_left % 2);
+	if (stopped) {
+		map_spells::stop_at_wardwood(state, hero);
+	}
+	return halves_left / 2;
+}
+
 DictRef try_move(State &state, DictRef session, int64_t dx, int64_t dy) {
 	normalize_overworld_state_for_runtime(state, session);
 
 	// var movement = session.overworld.get("movement", {}): read only here.
 	Value movement;
 	const int64_t movement_left = state.lookup(session_view::overworld(state, session), str(key::movement), movement) ? movement_current(state, movement) : 0;
-	if (movement_left <= 0) {
+	if (movement_left <= 0 && _banked_half(state, session) == 0) {
 		return failure(state, key::no_movement_left_today);
 	}
 
@@ -438,7 +472,7 @@ DictRef try_move_along_route(State &state, DictRef session, const Value &route_t
 	const Value movement = field_or_new_dict(state, session_view::overworld(state, session), key::movement);
 	const int64_t movement_left = movement_current(state, movement);
 	const int64_t effective_budget = effective_budget_of(movement_left, movement_budget);
-	if (effective_budget <= 0) {
+	if (effective_budget <= 0 && _banked_half(state, session) == 0) {
 		return route_failure(state, key::no_movement_left_today);
 	}
 	const DictRef preview = route_movement_preview(state, dict_value(session), array_value(path), effective_budget);
@@ -450,7 +484,7 @@ DictRef try_move_along_route(State &state, DictRef session, const Value &route_t
 	const Vector2i final_tile = as_vector2i(state.at(path, reachable_steps));
 	const Vector2i destination_tile = as_vector2i(state.at(path, path_size - 1));
 	_set_active_hero_position(state, session, final_tile, -1);
-	set_movement_current(state, movement, compat::engine_max<int64_t>(0, movement_left - reachable_steps));
+	set_movement_current(state, movement, _movement_after_route(state, session, preview, movement_left, reachable_steps));
 	state.set(session_view::overworld(state, session), str(key::movement), movement);
 	hero_command_rules::commit_active_hero(state, session);
 	const ArrayRef water_messages = _apply_water_route_arrival(state, session, path, reachable_steps);
@@ -459,6 +493,9 @@ DictRef try_move_along_route(State &state, DictRef session, const Value &route_t
 
 	const bool reached_destination = final_tile == destination_tile;
 	const ArrayRef messages = move_messages(state, final_tile, water_messages, reached_destination, path_size - 1 - reachable_steps);
+	if (gd::bool_field(state, preview, key::watch_stop, false)) {
+		state.append(messages, str(key::a_wardwood_stops_the_army_text));
+	}
 	const DictRef target_context = _post_action_tile_context(state, session, final_tile);
 	DictRef interaction_result = open_interaction(state);
 	if (reached_destination && resolve_destination_interaction) {
@@ -521,6 +558,7 @@ ArrayRef _apply_water_route_arrival(State &state, DictRef session, ArrayRef path
 	const DictRef movement = sub_dict(state, session_view::overworld(state, session), key::movement);
 	state.set(movement, str(key::current), int_value(0));
 	state.set(session_view::overworld(state, session), str(key::movement), dict_value(movement));
+	map_spells::set_banked_half(state, sub_dict(state, session_view::overworld(state, session), key::hero), 0);
 	hero_command_rules::commit_active_hero(state, session);
 	return messages;
 }
@@ -569,21 +607,26 @@ DictRef execute_prevalidated_route(State &state, DictRef session, const Value &r
 	const Value movement = field_or_new_dict(state, session_view::overworld(state, session), key::movement);
 	const int64_t movement_left = movement_current(state, movement);
 	const int64_t effective_budget = effective_budget_of(movement_left, movement_budget);
-	if (effective_budget <= 0) {
+	if (effective_budget <= 0 && _banked_half(state, session) == 0) {
 		_rules_profile_finish(state);
 		return cached_route_failure(state, key::no_movement_left_today);
 	}
 
 	route_shape_started_usec = _rules_profile_timer(state);
 	DictRef preview = gd::deep_duplicate_dict(state, route_preview);
+	// A walk the map spells' step costs count for is previewed again: the shell's copy may come from before a cast.
 	if (gd::is_empty(state, preview)
 			|| gd::to_int(state, state.get(preview, str(key::movement_budget), int_value(effective_budget))) != effective_budget
-			|| gd::to_int(state, state.get(preview, str(key::total_steps), int_value(path_size - 1))) != path_size - 1) {
+			|| gd::to_int(state, state.get(preview, str(key::total_steps), int_value(path_size - 1))) != path_size - 1
+			|| _route_costs_apply(state, session)) {
 		preview = route_movement_preview(state, dict_value(session), array_value(path), effective_budget);
 	}
 	_rules_profile_add_ms(state, key::execute_prevalidated_route_shape_ms, route_shape_started_usec);
+	const bool costed = gd::bool_field(state, preview, key::step_costs_apply, false);
 	int64_t reachable_steps = compat::engine_min<int64_t>(compat::engine_max<int64_t>(0, gd::int_field(state, preview, key::reachable_steps, 0)), path_size - 1);
-	reachable_steps = compat::engine_min<int64_t>(reachable_steps, effective_budget);
+	if (!costed) {
+		reachable_steps = compat::engine_min<int64_t>(reachable_steps, effective_budget);
+	}
 	if (reachable_steps <= 0) {
 		_rules_profile_finish(state);
 		return cached_route_failure(state, key::no_movement_left_today);
@@ -593,7 +636,8 @@ DictRef execute_prevalidated_route(State &state, DictRef session, const Value &r
 	const Vector2i final_tile = as_vector2i(state.at(path, reachable_steps));
 	const Vector2i destination_tile = as_vector2i(state.at(path, path_size - 1));
 	_set_active_hero_position(state, session, final_tile, -1);
-	const int64_t movement_after = gd::to_int(state, state.get(preview, str(key::movement_after_reachable), int_value(movement_left - reachable_steps)));
+	const int64_t movement_after = costed ? _movement_after_route(state, session, preview, movement_left, reachable_steps)
+										  : gd::to_int(state, state.get(preview, str(key::movement_after_reachable), int_value(movement_left - reachable_steps)));
 	set_movement_current(state, movement, compat::engine_max<int64_t>(0, movement_after));
 	state.set(session_view::overworld(state, session), str(key::movement), movement);
 	hero_command_rules::commit_active_hero(state, session);
@@ -606,6 +650,9 @@ DictRef execute_prevalidated_route(State &state, DictRef session, const Value &r
 
 	const bool reached_destination = final_tile == destination_tile;
 	const ArrayRef messages = move_messages(state, final_tile, water_messages, reached_destination, path_size - 1 - reachable_steps);
+	if (gd::bool_field(state, preview, key::watch_stop, false)) {
+		state.append(messages, str(key::a_wardwood_stops_the_army_text));
+	}
 	DictRef interaction_result = open_interaction(state);
 	Atom execution_mode = key::open_fast_path;
 	Atom interaction_dispatch_mode = key::none;

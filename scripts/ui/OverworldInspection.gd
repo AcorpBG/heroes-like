@@ -40,6 +40,14 @@ static func _row(record: Dictionary, kind: String, state: String) -> Dictionary:
 	return {"tile": Vector2i(int(record.get("x", -1)), int(record.get("y", -1))), "level": Levels.level_of(record), "placement_id": String(record.get("placement_id", record.get("id", ""))), "kind": kind, "state": state}
 
 static func inspect_tile(session, tile: Vector2i, level: int) -> Dictionary:
+	var result := _inspect_tile(session, tile, level)
+	# Scorched Earth and wardwoods standing over scouted ground show with it.
+	if bool(result.get("disclosed", false)):
+		for line in Rules.map_marks_at(session, tile.x, tile.y, level):
+			result.summary = String(result.summary) + "\n" + String(line)
+	return result
+
+static func _inspect_tile(session, tile: Vector2i, level: int) -> Dictionary:
 	var result := {"title": "Unscouted ground", "summary": "Explore this tile to inspect it.", "stacks": [], "terrain": "Unknown", "strength": "Unknown", "reward": "Unknown", "disclosed": false}
 	if session == null or not Rules.is_tile_visible(session, tile.x, tile.y, level): return result
 	result.disclosed = true

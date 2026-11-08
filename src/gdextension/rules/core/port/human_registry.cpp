@@ -1610,6 +1610,9 @@ const Function kFunctions[] = {
 	NATIVE(OverworldRules, read_tracks_garrison, 4, true,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(map_spells::read_tracks_garrison(s, D(a, 0), overworld_rules::Vector2i::of(I(a, 1), I(a, 2)), I(a, 3)))),
+	NATIVE(OverworldRules, map_marks_at, 4, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(map_spells::marks_at(s, D(a, 0), overworld_rules::Vector2i::of(I(a, 1), I(a, 2)), I(a, 3), -1))),
 	NATIVE(OverworldRules, fog_for_level, 2, true,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld_rules::fog_for_level(s, D(a, 0), I(a, 1)))),

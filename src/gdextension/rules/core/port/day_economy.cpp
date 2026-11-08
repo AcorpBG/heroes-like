@@ -548,7 +548,8 @@ void _refresh_all_player_heroes_for_new_day(State &state, DictRef session) {
 		// _movement_max_from_hero(hero, session).
 		const int64_t movement_max = hero_command_rules::movement_max_for_hero(state, hero, dict_value(session));
 		const DictRef refreshed_movement = state.new_dict();
-		state.set(refreshed_movement, str(key::current), int_value(movement_max));
+		// Half of it after an enemy's wardwood stopped the army yesterday.
+		state.set(refreshed_movement, str(key::current), int_value(map_spells::morning_movement(state, hero, movement_max)));
 		state.set(refreshed_movement, str(key::max), int_value(movement_max));
 		state.set(hero, str(key::movement), dict_value(refreshed_movement));
 		state.set_at(heroes, index, dict_value(hero));

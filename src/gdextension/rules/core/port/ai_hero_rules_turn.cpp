@@ -506,7 +506,8 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 		const DictRef block = dict_or_new(state, entry.ref, key::ai_hero);
 		const int64_t movement_max = _movement_max(state, entry.ref);
 		const DictRef movement = state.new_dict();
-		state.set(movement, str(key::current), int_value(movement_max));
+		// Half of it after an enemy's wardwood stopped the army yesterday.
+		state.set(movement, str(key::current), int_value(map_spells::morning_movement(state, commander, movement_max)));
 		state.set(movement, str(key::max), int_value(movement_max));
 		state.set(block, str(key::movement), dict_value(movement));
 		state.erase(block, str(key::visited_town_day));

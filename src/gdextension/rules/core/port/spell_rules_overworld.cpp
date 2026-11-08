@@ -160,7 +160,7 @@ DictRef map_spell_preview(State &state, DictRef hero, DictRef movement_state, Di
 	const int64_t current = gd::int_field(state, movement_state, key::current, 0);
 	const DictRef after_hero = gd::deep_duplicate_dict(state, hero);
 	const DictRef after = gd::deep_duplicate_dict(state, movement_state);
-	map_spells::apply_to_hero(state, after_hero, after, spell);
+	map_spells::apply_to_hero(state, after_hero, after, spell, 0);
 	const int64_t moved = gd::int_field(state, after, key::current, current);
 	const int64_t radius = map_spells::reveal_radius(state, hero, spell);
 	const Atom name = text_or(state, spell, key::name, key::spell_word);
@@ -493,7 +493,7 @@ DictRef cast_overworld_spell(State &state, DictRef hero_state, DictRef movement_
 		const DictRef target_contract = adventure_spell_target_contract(state, hero, movement, dict_value(spell));
 		const Atom effect_line = map_spells::effect_text(state, hero, spell, state.new_dict());
 		const int64_t radius = map_spells::reveal_radius(state, hero, spell);
-		map_spells::apply_to_hero(state, hero, movement, spell);
+		map_spells::apply_to_hero(state, hero, movement, spell, today);
 		hero = _consume_mana(state, hero, mana_cost);
 		const DictRef result = state.new_dict();
 		state.set(result, str(key::ok), bool_value(true));

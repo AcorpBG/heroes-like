@@ -190,6 +190,10 @@ static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int
 static func read_tracks_garrison(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules.read_tracks_garrison", [session, x, y, level])
 
+## The Scorched Earth and wardwoods standing over a tile today, one line each.
+static func map_marks_at(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Array:
+	return HumanEngine.native_writing(&"OverworldRules.map_marks_at", [session, x, y, level])
+
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return HumanEngine.native_writing(&"OverworldRules.is_tile_explored", [session, x, y, level])
 

@@ -216,6 +216,90 @@ static bool _ground_allows(State &state, DictRef session, DictRef entry, const V
 	return !map_spells::is_map_spell(state, spell_dict) || map_spells::refusal(state, session, _map_caster(state, entry), spell_dict) == key::empty;
 }
 
+// A computer hero as an army walking the map (map_spells.hpp), with the commander state given.
+static map_spells::Mover _mover(State &state, DictRef session, DictRef entry, DictRef commander) {
+	map_spells::Mover mover;
+	mover.hero = commander;
+	mover.controller = player_identity_rules::raid_controller_id(state, entry);
+	mover.level = level_rules::level_of(state, dict_value(entry));
+	mover.day = ai::session_int(state, session, key::day);
+	return mover;
+}
+
+// The steps of a path a hero with these points could walk today at these costs.
+static int64_t _steps_today(const map_spells::StepCosts &costs, Vector2i start, const std::vector<Vector2i> &path, int64_t points) {
+	if (!costs.active()) {
+		return compat::engine_min<int64_t>(points, static_cast<int64_t>(path.size()));
+	}
+	int64_t halves = points * 2;
+	int64_t steps = 0;
+	Vector2i from = start;
+	for (const Vector2i tile : path) {
+		const int64_t cost = costs.halves(from, tile);
+		if (cost > halves) {
+			break;
+		}
+		halves -= cost;
+		steps += 1;
+		if (costs.stops(from, tile)) {
+			break;
+		}
+		from = tile;
+	}
+	return steps;
+}
+
+// The spell of a mechanic the hero knows and may cast today, the first in its book (empty when none).
+static Atom _known_map_spell(State &state, DictRef commander, DictRef movement, int64_t day, Atom mechanic) {
+	for (const Value &spell : gd::items(state, array_value(spell_rules::known_spells(state, commander, key::overworld)))) {
+		if (map_spells::mechanic(state, gd::as_dict(spell)) == mechanic &&
+				gd::bool_field(state, spell_rules::validate_overworld_spell(state, commander, movement, spell, day), key::ok, false)) {
+			return ai::string_or_empty(state, gd::as_dict(spell), key::id);
+		}
+	}
+	return key::empty;
+}
+
+// A hero about to walk a plan with many road steps ahead casts Forge Road first when it knows it, the day's map spell
+// going on it: it must walk three tiles more today than without. First values, not measured.
+static void _cast_road_spell(State &state, DictRef session, int64_t index, DictRef plan) {
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	const int64_t points = gd::int_field(state, movement, key::current, 0);
+	Value path_value;
+	if (points <= 0 || gd::int_field(state, commander, key::map_road_until_day, 0) >= day || !state.lookup(plan, str(key::path), path_value) ||
+			!gd::is_array(path_value) || state.array_size(path_value.ref) < 4) {
+		return;
+	}
+	const Atom spell_id = _known_map_spell(state, commander, movement, day, key::map_road);
+	if (spell_id == key::empty) {
+		return;
+	}
+	std::vector<Vector2i> path;
+	for (const Value &tile : gd::items(state, path_value)) {
+		path.push_back(as_vector2i(tile));
+	}
+	const Vector2i start = Vector2i::of(gd::int_field(state, entry, key::x, 0), gd::int_field(state, entry, key::y, 0));
+	const map_spells::StepCosts plain(state, session, _mover(state, session, entry, commander));
+	const DictRef trial = gd::as_dict(gd::duplicate_value(state, dict_value(commander), false));
+	state.set(trial, str(key::map_road_until_day), int_value(day));
+	const map_spells::StepCosts paved(state, session, _mover(state, session, entry, trial));
+	if (_steps_today(paved, start, path, points) - _steps_today(plain, start, path, points) < 3) {
+		return;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, spell_id, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(block, str(key::movement), gd::index(state, cast, str(key::movement)));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+}
+
 // Out of steps, a hero casts the movement spell that gives it the most, once a
 // day as a human hero can: mana is full again in the morning.
 static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
@@ -352,6 +436,49 @@ static bool _cast_harvest_spell(State &state, DictRef session, DictRef context, 
 	return true;
 }
 
+// A hero holding a town tonight plants a wardwood there, or else Scorched Earth, when it knows one, none of its kind
+// of its side stands there yet, and half its mana stays for the fight after the cast: enemy armies coming at the town
+// stop or pay double. First values, not measured.
+static bool _cast_ward_spell(State &state, DictRef session, DictRef context, Atom placement_id) {
+	const int64_t index = _entry_index(state, session, placement_id);
+	if (index < 0 || _is_resolved(state, session, placement_id)) {
+		return false;
+	}
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	if (!_holding_town_tonight(state, session, context, entry)) {
+		return false;
+	}
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	const DictRef spellbook = dict_or_new(state, commander, key::spellbook);
+	const int64_t mana = gd::int_field(state, dict_or_new(state, spellbook, key::mana), key::current, 0);
+	const int64_t keep = spell_rules::mana_max_from_hero(state, commander) / 2;
+	const map_spells::Caster caster = _map_caster(state, entry);
+	Atom best = key::empty;
+	for (const Atom kind : {key::map_watch, key::map_slow_zone}) {
+		const Atom spell_id = _known_map_spell(state, commander, movement, day, kind);
+		if (spell_id != key::empty && !map_spells::mark_stands_at(state, session, kind, caster.controller, caster.tile, caster.level, day) &&
+				gd::sub(mana, spell_rules::adjusted_spell_mana_cost(state, commander, dict_value(gd::content_row(state, state::ContentTable::Spell, spell_id)))) >= keep) {
+			best = spell_id;
+			break;
+		}
+	}
+	if (best == key::empty) {
+		return false;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, best, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return false;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+	map_spells::apply_to_map(state, session, _map_caster(state, entry), gd::content_row(state, state::ContentTable::Spell, best), day);
+	return true;
+}
+
 DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom placement_id) {
 	const ArrayRef messages = state.new_array();
 	const ArrayRef events = state.new_array();
@@ -402,6 +529,7 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			break;
 		}
 		const int64_t act_started = gd::ticks_usec();
+		_cast_road_spell(state, session, index, plan);
 		const DictRef step = _follow_plan(state, session, context, index, plan);
 		_profile_add(state, context, key::act_ms, act_started);
 		_append_all(state, messages, list_field(state, step, key::messages));
@@ -438,7 +566,7 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			_avoid_target(state, session, placement_id, target_id, gd::add(ai::session_int(state, session, key::day), tunable_int(state, key::AVOID_DAYS)));
 		}
 	}
-	if (!_cast_harvest_spell(state, session, context, placement_id)) {
+	if (!_cast_harvest_spell(state, session, context, placement_id) && !_cast_ward_spell(state, session, context, placement_id)) {
 		_cast_scouting_spell(state, session, context, placement_id);
 	}
 	const DictRef result = state.new_dict();
@@ -966,8 +1094,14 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 	bool arrived = false;
 	bool rerouted = false;
 	bool sailing = water_travel_rules::hero_boat_id(state, dict_value(entry)) != key::empty;
+	// What the steps cost once the map spells count (Forge Road, Scorched Earth, wardwoods): half points, the half
+	// saved on a road kept on the commander. Without them each step is a point, as it always was.
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const map_spells::StepCosts costs(state, session, _mover(state, session, entry, commander));
 	for (int64_t step_index = 0; step_index < path_size; ++step_index) {
-		if (gd::int_field(state, movement, key::current, 0) <= 0) {
+		const int64_t points = gd::int_field(state, movement, key::current, 0);
+		const int64_t banked = costs.active() ? map_spells::banked_half(state, commander) : 0;
+		if (points <= 0 && banked == 0) {
 			break;
 		}
 		const Vector2i tile = as_vector2i(state.at(path, step_index));
@@ -977,7 +1111,18 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 			rerouted = step_index > 0;
 			break;
 		}
-		state.set(movement, str(key::current), int_value(gd::sub(gd::int_field(state, movement, key::current, 0), 1)));
+		const Vector2i from = Vector2i::of(gd::int_field(state, entry, key::x, 0), gd::int_field(state, entry, key::y, 0));
+		if (costs.active()) {
+			const int64_t halves = gd::add(gd::mul(points, 2), banked);
+			const int64_t cost = costs.halves(from, tile);
+			if (cost > halves) {
+				break;
+			}
+			state.set(movement, str(key::current), int_value((halves - cost) / 2));
+			map_spells::set_banked_half(state, commander, (halves - cost) % 2);
+		} else {
+			state.set(movement, str(key::current), int_value(gd::sub(gd::int_field(state, movement, key::current, 0), 1)));
+		}
 		if (step_index == last && _tile_blocked_for_standing(state, session, context, tile, level, ai::string_or_empty(state, entry, key::placement_id))) {
 			arrived = true;
 			break;
@@ -987,7 +1132,12 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 		const bool shore = water_travel_rules::is_water(state, dict_value(session), tile.x, tile.y, level) != sailing;
 		if (shore) {
 			if (!_cross_shore(state, session, context, entry, tile, level)) {
-				state.set(movement, str(key::current), int_value(gd::add(gd::int_field(state, movement, key::current, 0), 1)));
+				if (costs.active()) {
+					state.set(movement, str(key::current), int_value(points));
+					map_spells::set_banked_half(state, commander, banked);
+				} else {
+					state.set(movement, str(key::current), int_value(gd::add(gd::int_field(state, movement, key::current, 0), 1)));
+				}
 				break;
 			}
 			state.erase(plan, str(key::retreat_tile));
@@ -1029,6 +1179,17 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 		if (shore) {
 			sailing = !sailing;
 			state.set(movement, str(key::current), int_value(0));
+			if (costs.active()) {
+				map_spells::set_banked_half(state, commander, 0);
+			}
+			arrived = step_index == last;
+			break;
+		}
+		// An enemy's wardwood stops the army as it comes near; its next day starts with half the movement.
+		if (costs.active() && costs.stops(from, tile)) {
+			state.set(movement, str(key::current), int_value(0));
+			map_spells::set_banked_half(state, commander, 0);
+			map_spells::stop_at_wardwood(state, commander);
 			arrived = step_index == last;
 			break;
 		}
