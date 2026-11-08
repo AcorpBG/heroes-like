@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "bugfix-auto-battle-spell-picks-20261109",
- "currentSliceTitle": "Auto battle casts hex and two-stack spells",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T22:03:25Z",
+ "currentSliceTitle": "Auto battle casts a hex, move, summon or two-stack spell with the hex or second stack its plan picked (BattleShell._auto_spell_order); the human and editor seat checks no longer read the removed autosave flag; all 11 seat seeds pass",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T22:14:28Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "bugfix-auto-battle-spell-picks-20261109",
-   "title": "Auto battle casts hex and two-stack spells",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-09: fix the two bugs the human-seat check found. Auto battle (BattleShell.validation_auto_battle_order) cast the battle AI's spell with its stack only, so a hex, move, summon or two-stack spell (Bramble Patch on h-l4) asked for a hex and Auto stopped; it now passes the plan's hex or second stack. The seat harnesses (tests/human_seat_report.gd, map_editor_seat_report.gd) read AppRouter.AUTOSAVE_PENDING_UNIX_FLAG, which 9e4c555a0 removed.",
-   "docs": [
-    "docs/battle-rework.md"
-   ],
-   "updatedAt": "2026-11-09"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Auto battle casts a hex, move, summon or two-stack spell with the hex or second stack its plan picked (BattleShell._auto_spell_order); the human and editor seat checks no longer read the removed autosave flag; all 11 seat seeds pass",
+   "commit": "7d4071a3d"
   },
   {
    "id": "level-curve-steeper-20261108",

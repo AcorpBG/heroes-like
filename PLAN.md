@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `bugfix-auto-battle-spell-picks-20261109` (in progress): Owner, 2026-11-09: fix the two bugs the human-seat check found. Auto battle (BattleShell.validation_auto_battle_order) cast the battle AI's spell with its stack only, so a hex, move, summon or two-stack spell (Bramble Patch on h-l4) asked for a hex and Auto stopped; it now passes the plan's hex or second stack. The seat harnesses (tests/human_seat_report.gd, map_editor_seat_report.gd) read AppRouter.AUTOSAVE_PENDING_UNIX_FLAG, which 9e4c555a0 removed. See `docs/battle-rework.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `bugfix-auto-battle-spell-picks-20261109` (7d4071a3d): Auto battle casts a hex, move, summon or two-stack spell with the hex or second stack its plan picked (BattleShell._auto_spell_order); the human and editor seat checks no longer read the removed autosave flag; all 11 seat seeds pass
 - 2026-11-08 `level-curve-steeper-20261108` (74338b8ea): A level step from level L costs 250 + 100 x L + 6 x L^2 (level_step_experience: level-up, experience_for_level); level 30 takes 101,974 instead of 50,650; best AI hero by day 70 on six seeds: level 30-47 -> 18-29.
 - 2026-11-08 `battle-xp-double-20261108` (d3221e027): Battles pay twice the experience: one point per point of the beaten army's strength instead of half (battle_rewards_for_strength), every battle and reward line; best AI hero by day 70 on six seeds: level 14-23 -> 30-47.
 - 2026-11-08 `save-autosave-end-turn-only-20261108` (9e4c555a0): Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.
