@@ -1,11 +1,12 @@
 #pragma once
 
-// The map spells (docs/magic-system-spells.md, Map; spell_map.cpp): effect type "map_effect", one mechanic each.
-// Their terms at the caster's spell power, what keeps one from being cast where its hero stands, what a cast leaves
-// on the map, the terms a hero keeps until its next day starts, and what the steps of a walk cost once Forge Road,
-// Scorched Earth and wardwoods count. Today's overworld spells (restore_movement, reveal_radius) stay in
-// spell_rules_overworld.cpp. The human seat casts through overworld_rules_spells.cpp and walks through
-// overworld_rules_move.cpp, a computer hero does both in ai_hero_rules_turn_day.cpp; each reveals in its own fog.
+// The map spells (docs/magic-system-spells.md, Map; spell_map.cpp, spell_map_tiles.cpp): effect type "map_effect",
+// one mechanic each. Their terms at the caster's spell power, what keeps one from being cast where its hero stands,
+// what a cast leaves on the map, the terms a hero keeps until its next day starts, what the steps of a walk cost once
+// Forge Road, Scorched Earth and wardwoods count, and the tiles the spells aimed at a tile reach. Today's overworld
+// spells (restore_movement, reveal_radius) stay in spell_rules_overworld.cpp. The human seat casts through
+// overworld_rules_spells.cpp and walks through overworld_rules_move.cpp, a computer hero does both in
+// ai_hero_rules_turn_day.cpp; each reveals in its own fog.
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
@@ -57,9 +58,31 @@ DictRef harvest_mine(State &state, DictRef session, const Caster &caster);
 // Why the spell cannot be cast where the caster stands (empty when it can).
 Atom refusal(State &state, DictRef session, const Caster &caster, DictRef spell);
 // What a cast leaves on the map once its mana is spent: Harvest Bloom's mine, which it returns ({} for every other
-// spell), or the mark of Scorched Earth or a wardwood on the caster's tile (overworld.map_spell_marks: {map, spell_id,
-// x, y, level, radius, until_day, controller}, kept until the end of its last day).
+// spell), or the mark of Scorched Earth, a wardwood or a Firebreak on the caster's tile (overworld.map_spell_marks:
+// {map, spell_id, x, y, level, radius, until_day, controller}, kept until the end of its last day).
 DictRef apply_to_map(State &state, DictRef session, const Caster &caster, DictRef spell, int64_t day);
+
+// The spells aimed at a tile the player picks (target_mode tile_selected): Flare, Firebreak, Rootway, Relay, Ferry
+// Call and Mist Jump.
+bool needs_tile(State &state, DictRef spell);
+// The tiles the spell reaches from where the caster stands, by rows, by the map alone (what the player has scouted is
+// the caller's): Flare any tile within its range; Firebreak a free tile next to the hero; Rootway a free tile beside
+// trees within range; Relay the gate of a town of the caster's within range with no hero at it; Ferry Call, straight
+// out in each of the eight directions, the first free land across at most its range of water; Mist Jump any free tile
+// within range. A free tile is land an army can stand on with nothing on it and no guard watching it.
+std::vector<Vector2i> target_tiles(State &state, DictRef session, const Caster &caster, DictRef spell);
+// What to pick for the spell, at the hero's power ("Choose a free tile up to 5 tiles away."): the prompt, and the
+// refusal of a tile it does not reach.
+Atom aim_text(State &state, DictRef hero, DictRef spell);
+// What a cast at a tile it reaches does once its mana is spent: Firebreak's mark goes on the tile and the map's
+// blocked tiles are counted again ({}); Flare returns {reveal_radius}; Rootway, Relay, Ferry Call and Mist Jump
+// return {move_to, ends_movement}, the caller moving the army (Relay and Ferry Call end its day's movement).
+DictRef apply_at(State &state, DictRef session, const Caster &caster, DictRef spell, Vector2i tile, int64_t day);
+// The tiles Firebreaks close on a level today, set in a blocked tile index (OverworldRules._build_blocked_tile_index).
+void add_blocked_tiles(State &state, DictRef session, int64_t level, DictRef index);
+// A new day opens: the marks whose last day is over go, and once a Firebreak goes the map's blocked tiles are counted
+// again.
+void open_day(State &state, DictRef session, int64_t day);
 
 // The day's terms a hero keeps until its next day starts, cleared there before its movement is counted.
 void clear_day_terms(State &state, DictRef hero);

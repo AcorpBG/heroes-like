@@ -225,6 +225,7 @@ DictRef _end_turn_open_day(State &state, DictRef session) {
 	}
 	hero_command_rules::commit_active_hero(state, session);
 	state.set(session, str(key::day), int_value(gd::add(session_day(state, session), 1)));
+	map_spells::open_day(state, session, session_day(state, session));
 
 	const ArrayRef occupation_messages = _advance_all_town_occupations(state, session);
 	const ArrayRef recovery_messages = _advance_all_town_recovery(state, session);

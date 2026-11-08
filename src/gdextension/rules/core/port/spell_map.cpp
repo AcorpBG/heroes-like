@@ -4,7 +4,8 @@
 // not the seat's within reach of its heroes until their next day; Watchtower Lens opens every tile within reach of
 // the hero on every level; Harvest Bloom doubles the income of a held mine beside the hero for some days. Forge Road
 // halves the cost of road steps for some days; Scorched Earth doubles enemy steps near where it was cast, and a
-// wardwood stops enemy armies that come near it (StepCosts).
+// wardwood stops enemy armies that come near it (StepCosts). A Firebreak's mark closes its tile to every army. The
+// spells aimed at a tile find their tiles in spell_map_tiles.cpp.
 #include "aurelion_rules/port/map_spells.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -136,6 +137,25 @@ Atom effect_text(State &state, DictRef hero, DictRef spell, DictRef mine) {
 	if (kind == key::map_watch) {
 		return gd::format(state, key::map_watch_text, {int_value(term(state, hero, spell, key::days)), int_value(term(state, hero, spell, key::radius))});
 	}
+	if (kind == key::map_flare) {
+		return gd::format(state, key::map_flare_text, {int_value(term(state, hero, spell, key::radius)), int_value(term(state, hero, spell, key::range))});
+	}
+	if (kind == key::map_block) {
+		const int64_t days = term(state, hero, spell, key::days);
+		return days <= 1 ? key::map_block_day_text : gd::format(state, key::map_block_text, {int_value(days)});
+	}
+	if (kind == key::map_jump_forest) {
+		return gd::format(state, key::map_jump_forest_text, {int_value(term(state, hero, spell, key::range))});
+	}
+	if (kind == key::map_town) {
+		return gd::format(state, key::map_town_text, {int_value(term(state, hero, spell, key::range))});
+	}
+	if (kind == key::map_ferry) {
+		return gd::format(state, key::map_ferry_text, {int_value(term(state, hero, spell, key::range))});
+	}
+	if (kind == key::map_jump) {
+		return gd::format(state, key::map_jump_text, {int_value(term(state, hero, spell, key::range))});
+	}
 	return key::no_supported_overworld_effect;
 }
 
@@ -209,7 +229,7 @@ Atom refusal(State &state, DictRef session, const Caster &caster, DictRef spell)
 
 DictRef apply_to_map(State &state, DictRef session, const Caster &caster, DictRef spell, int64_t day) {
 	const Atom kind = mechanic(state, spell);
-	if (kind == key::map_slow_zone || kind == key::map_watch) {
+	if (kind == key::map_slow_zone || kind == key::map_watch || kind == key::map_block) {
 		add_mark(state, session, caster, spell, day);
 		return state.new_dict();
 	}
@@ -232,6 +252,39 @@ void clear_day_terms(State &state, DictRef hero) {
 		if (state.has(hero, str(field))) {
 			state.erase(hero, str(field));
 		}
+	}
+}
+
+void add_blocked_tiles(State &state, DictRef session, int64_t level, DictRef index) {
+	const int64_t day = ai::session_int(state, session, key::day);
+	for (const Value &mark : gd::field_items(state, session_view::overworld(state, session), str(key::map_spell_marks))) {
+		if (mark_stands(state, mark, day) && gd::string_field(state, mark.ref, key::map, key::empty) == key::map_block &&
+				gd::int_field(state, mark.ref, key::level, 0) == level) {
+			state.set(index, str(overworld_rules::_tile_key(state, tile_of(state, mark.ref))), gd::bool_value(true));
+		}
+	}
+}
+
+void open_day(State &state, DictRef session, int64_t day) {
+	const DictRef overworld = session_view::overworld(state, session);
+	Value found;
+	if (!state.lookup(overworld, str(key::map_spell_marks), found) || !gd::is_array(found)) {
+		return;
+	}
+	const ArrayRef kept = state.new_array();
+	bool block_gone = false;
+	for (const Value &mark : gd::items(state, found)) {
+		if (mark_stands(state, mark, day)) {
+			state.append(kept, mark);
+		} else if (gd::is_dict(mark) && gd::string_field(state, mark.ref, key::map, key::empty) == key::map_block) {
+			block_gone = true;
+		}
+	}
+	if (state.array_size(kept) != state.array_size(found.ref)) {
+		state.set(overworld, str(key::map_spell_marks), array_value(kept));
+	}
+	if (block_gone) {
+		overworld_rules::_refresh_blocked_tile_index(state, session);
 	}
 }
 
@@ -365,6 +418,8 @@ ArrayRef marks_at(State &state, DictRef session, Vector2i tile, int64_t level, i
 			line = own ? key::map_mark_slow_own_text : key::map_mark_slow_rival_text;
 		} else if (kind == key::map_watch) {
 			line = own ? key::map_mark_watch_own_text : key::map_mark_watch_rival_text;
+		} else if (kind == key::map_block) {
+			line = own ? key::map_mark_block_own_text : key::map_mark_block_rival_text;
 		} else {
 			continue;
 		}

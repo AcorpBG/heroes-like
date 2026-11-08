@@ -225,6 +225,10 @@ const ROUTE_WAYPOINT_RADIUS_FACTOR := 0.030
 const ROUTE_DESTINATION_LENGTH_FACTOR := 0.075
 const ROUTE_DESTINATION_DEPTH_FACTOR := 0.045
 const PLACEMENT_DEBUG_BLOCKER_FILL := Color(1.0, 0.06, 0.04, 0.36)
+# The tiles a map spell being aimed reaches: a small soft light on each, larger under the pointer.
+const SPELL_TARGET_FILL := Color(1.0, 0.86, 0.5, 0.22)
+const SPELL_TARGET_RING := Color(1.0, 0.92, 0.66, 0.62)
+const SPELL_TARGET_HOVER_RING := Color(1.0, 0.96, 0.8, 0.95)
 const PLACEMENT_DEBUG_BLOCKER_BORDER := Color(1.0, 0.17, 0.12, 0.86)
 const PLACEMENT_DEBUG_INTERACTABLE_FILL := Color(1.0, 0.86, 0.08, 0.38)
 const PLACEMENT_DEBUG_INTERACTABLE_BORDER := Color(1.0, 0.96, 0.32, 0.88)
@@ -601,6 +605,9 @@ var _map_data: Array = []
 var _map_size := Vector2i.ONE
 var _selected_tile := Vector2i(-1, -1)
 var _hover_tile := Vector2i(-1, -1)
+# The tiles a map spell being aimed reaches (tile -> true), on one level.
+var _spell_targets := {}
+var _spell_targets_level := 0
 var _hero_tile := Vector2i.ZERO
 var _path_tiles: Array = []
 var _route_preview: Dictionary = {}
@@ -1070,6 +1077,15 @@ func set_map_state(
 	_invalidate_terrain_ambient_layer("map_state_updated")
 	_sync_presentation_processing()
 	_profile_end("set_map_state", profile_start)
+
+## The tiles a map spell being aimed reaches, marked on the map; none takes the marks away.
+func set_spell_targets(tiles: Array, level: int = 0) -> void:
+	_spell_targets.clear()
+	for tile in tiles:
+		if tile is Vector2i:
+			_spell_targets[tile] = true
+	_spell_targets_level = level
+	_invalidate_dynamic_layer("spell_targets_changed")
 
 func set_route_preview_enabled(enabled: bool) -> void:
 	_route_preview_enabled = enabled
@@ -2498,6 +2514,7 @@ func _draw_dynamic_layer() -> void:
 	_begin_fog_snapshot()
 	_draw_route(board_rect)
 	_draw_placement_debug_overlay(board_rect, visible_bounds)
+	_draw_spell_targets(board_rect, visible_bounds)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
@@ -2542,6 +2559,18 @@ func _draw_placement_debug_overlay(board_rect: Rect2, visible_bounds: Rect2i) ->
 		if not _tile_in_visible_bounds(tile, visible_bounds):
 			continue
 		_draw_placement_debug_tile(board_rect, tile, PLACEMENT_DEBUG_INTERACTABLE_FILL, PLACEMENT_DEBUG_INTERACTABLE_BORDER)
+
+func _draw_spell_targets(board_rect: Rect2, visible_bounds: Rect2i) -> void:
+	if _spell_targets.is_empty() or _level != _spell_targets_level:
+		return
+	for tile in _spell_targets:
+		if not _tile_in_visible_bounds(tile, visible_bounds):
+			continue
+		var rect := _tile_rect(board_rect, tile)
+		var hovered: bool = tile == _hover_tile
+		var radius := rect.size.x * (0.2 if hovered else 0.12)
+		_canvas_draw_circle(rect.get_center(), radius, SPELL_TARGET_FILL, true, -1.0, true)
+		_canvas_draw_circle(rect.get_center(), radius, SPELL_TARGET_HOVER_RING if hovered else SPELL_TARGET_RING, false, maxf(1.0, rect.size.x * 0.03), true)
 
 func _draw_placement_debug_tile(board_rect: Rect2, tile: Vector2i, fill_color: Color, border_color: Color) -> void:
 	var rect := _tile_rect(board_rect, tile).grow(-1.0)

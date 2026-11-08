@@ -6,11 +6,17 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_human.hpp"
 #include "aurelion_rules/port/overworld_rules_move.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+
+#include <algorithm>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -74,6 +80,28 @@ static map_spells::Caster _map_caster(State &state, DictRef session) {
 	return caster;
 }
 
+// The spells aimed at a tile that move the army; none is cast from a boat.
+static bool _jumps(State &state, DictRef spell) {
+	const Atom kind = map_spells::mechanic(state, spell);
+	return kind == key::map_jump_forest || kind == key::map_town || kind == key::map_ferry || kind == key::map_jump;
+}
+
+// The tiles the human seat's hero can aim a map spell at: those it reaches (map_spells::target_tiles) on ground the
+// player has scouted, Flare's on any ground.
+static std::vector<Vector2i> _human_targets(State &state, DictRef session, const map_spells::Caster &caster, DictRef spell) {
+	std::vector<Vector2i> tiles;
+	if (_jumps(state, spell) && water_travel_rules::is_sailing(state, dict_value(session))) {
+		return tiles;
+	}
+	const bool flare = map_spells::mechanic(state, spell) == key::map_flare;
+	for (const Vector2i tile : map_spells::target_tiles(state, session, caster, spell)) {
+		if (flare || is_tile_explored(state, session, tile.x, tile.y, caster.level)) {
+			tiles.push_back(tile);
+		}
+	}
+	return tiles;
+}
+
 // A scouting reveal on another level of the map than the hero's (Watchtower Lens): the tiles it newly opens.
 static int64_t _reveal_spell_fog_at(State &state, DictRef session, Vector2i tile, int64_t level, int64_t radius) {
 	if (radius <= 0) {
@@ -109,6 +137,9 @@ DictRef cast_overworld_spell(State &state, DictRef session, Atom spell_id) {
 	// A map spell asks of the ground where the hero stands once the spell itself may be cast.
 	const DictRef spell_row = gd::content_row(state, ContentTable::Spell, spell_id);
 	const bool map_spell = map_spells::is_map_spell(state, spell_row);
+	if (map_spell && map_spells::needs_tile(state, spell_row)) {
+		return refusal_result(state, gd::format(state, key::choose_a_tile_for_s_text, {str(gd::string_field(state, spell_row, key::name, spell_id))}));
+	}
 	if (map_spell && gd::bool_field(state, spell_rules::validate_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), dict_value(spell_row), day), key::ok, false)) {
 		const Atom refused = map_spells::refusal(state, session, _map_caster(state, session), spell_row);
 		if (refused != key::empty) {
@@ -159,6 +190,91 @@ DictRef cast_overworld_spell(State &state, DictRef session, Atom spell_id) {
 	return _attach_post_action_recap(state, finalized, session, key::spell, context);
 }
 
+DictRef cast_overworld_spell_at(State &state, DictRef session, Atom spell_id, Vector2i tile) {
+	const DictRef spell_row = gd::content_row(state, ContentTable::Spell, spell_id);
+	if (!map_spells::needs_tile(state, spell_row)) {
+		return cast_overworld_spell(state, session, spell_id);
+	}
+	normalize_overworld_state(state, session);
+	const DictRef overworld = session_view::overworld(state, session);
+	const Value hero = field_or_new_dict(state, overworld, key::hero);
+	const Value movement = field_or_new_dict(state, overworld, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	const DictRef validation = spell_rules::validate_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), dict_value(spell_row), day);
+	if (!gd::bool_field(state, validation, key::ok, false)) {
+		return refusal_result(state, string_of(state, state.get(validation, str(key::message), str(key::spell_casting_failed_text))));
+	}
+	const map_spells::Caster caster = _map_caster(state, session);
+	const std::vector<Vector2i> targets = _human_targets(state, session, caster, spell_row);
+	if (std::find(targets.begin(), targets.end(), tile) == targets.end()) {
+		if (_jumps(state, spell_row) && water_travel_rules::is_sailing(state, dict_value(session))) {
+			return refusal_result(state, key::map_jump_from_boat_text);
+		}
+		const Vector2i size = derive_map_size(state, session);
+		const bool on_map = tile.x >= 0 && tile.y >= 0 && tile.x < size.x && tile.y < size.y;
+		if (on_map && map_spells::mechanic(state, spell_row) != key::map_flare && !is_tile_explored(state, session, tile.x, tile.y, caster.level)) {
+			return refusal_result(state, key::scout_that_ground_first_text);
+		}
+		return refusal_result(state, map_spells::aim_text(state, caster.hero, spell_row));
+	}
+	const DictRef result = spell_rules::cast_overworld_spell(state, gd::as_dict(hero), gd::as_dict(movement), spell_id, day);
+	if (!gd::bool_field(state, result, key::ok, false)) {
+		return refusal_result(state, string_of(state, state.get(result, str(key::message), str(key::spell_casting_failed_text))));
+	}
+	state.set(overworld, str(key::hero), state.get(result, str(key::hero), hero));
+	state.set(overworld, str(key::movement), state.get(result, str(key::movement), movement));
+	const DictRef done = map_spells::apply_at(state, session, caster, spell_row, tile, day);
+	int64_t revealed_tiles = 0;
+	if (state.has(done, str(key::reveal_radius))) {
+		revealed_tiles = _reveal_spell_fog_at(state, session, tile, caster.level, gd::int_field(state, done, key::reveal_radius, 0));
+	}
+	if (state.has(done, str(key::move_to))) {
+		// The army stands on the tile at once, its sight there; Relay and Ferry Call end its day's movement.
+		_set_active_hero_position(state, session, tile, -1);
+		if (gd::bool_field(state, done, key::ends_movement, false)) {
+			const DictRef moved = gd::as_dict(field_or_new_dict(state, overworld, key::movement));
+			state.set(moved, str(key::current), int_value(0));
+			state.set(overworld, str(key::movement), dict_value(moved));
+			map_spells::set_banked_half(state, gd::as_dict(field_or_new_dict(state, overworld, key::hero)), 0);
+		}
+		hero_command_rules::commit_active_hero(state, session);
+		const ArrayRef traversed = state.new_array();
+		state.append(traversed, Value::of_vector2i(tile.x, tile.y));
+		_reveal_route_fog(state, session, traversed);
+	}
+	Value preview_value;
+	const DictRef consequence_preview = state.lookup(result, str(key::consequence_preview), preview_value) && gd::is_dict(preview_value)
+			? preview_value.ref
+			: state.new_dict();
+	if (revealed_tiles > 0) {
+		state.set(consequence_preview, str(key::revealed_tiles), int_value(revealed_tiles));
+	}
+	const DictRef finalized = _finalize_action_result(state, session, true, string_of(state, state.get(result, str(key::message), str(key::empty))), true, false, state.new_dict());
+	const DictRef context = state.new_dict();
+	state.set(context, str(key::spell_id), str(spell_id));
+	state.set(context, str(key::spell_name), str(string_of(state, state.get(result, str(key::spell_name), str(spell_id)))));
+	state.set(context, str(key::target_contract), field_or_new_dict(state, result, key::target_contract));
+	state.set(context, str(key::consequence_preview), dict_value(consequence_preview));
+	return _attach_post_action_recap(state, finalized, session, key::spell, context);
+}
+
+DictRef map_spell_targets(State &state, DictRef session, Atom spell_id) {
+	normalize_overworld_state_for_runtime(state, session);
+	const DictRef spell_row = gd::content_row(state, ContentTable::Spell, spell_id);
+	const map_spells::Caster caster = _map_caster(state, session);
+	const ArrayRef tiles = state.new_array();
+	for (const Vector2i tile : _human_targets(state, session, caster, spell_row)) {
+		state.append(tiles, Value::of_vector2i(tile.x, tile.y));
+	}
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::tiles), array_value(tiles));
+	state.set(result, str(key::level), int_value(caster.level));
+	state.set(result, str(key::aim), str(state.array_size(tiles) > 0
+			? map_spells::aim_text(state, caster.hero, spell_row)
+			: gd::format(state, key::no_tile_in_reach_for_s_text, {str(gd::string_field(state, spell_row, key::name, spell_id))})));
+	return result;
+}
+
 ArrayRef get_spell_actions(State &state, DictRef session) {
 	normalize_overworld_state_for_runtime(state, session);
 	const DictRef overworld = session_view::overworld(state, session);
@@ -178,7 +294,11 @@ ArrayRef get_spell_actions(State &state, DictRef session) {
 		if (!map_spells::is_map_spell(state, spell)) {
 			continue;
 		}
-		const Atom refused = map_spells::refusal(state, session, _map_caster(state, session), spell);
+		Atom refused = map_spells::refusal(state, session, _map_caster(state, session), spell);
+		// A spell aimed at a tile with none in reach here.
+		if (refused == key::empty && map_spells::needs_tile(state, spell) && _human_targets(state, session, _map_caster(state, session), spell).empty()) {
+			refused = gd::format(state, key::no_tile_in_reach_for_s_text, {str(gd::string_field(state, spell, key::name, key::spell_word))});
+		}
 		if (refused == key::empty) {
 			continue;
 		}

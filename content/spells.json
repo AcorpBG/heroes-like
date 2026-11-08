@@ -6513,6 +6513,140 @@
         "radius": 2
       },
       "scroll_only": true
+    },
+    {
+      "id": "spell_flare",
+      "name": "Flare",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_tier2",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "A bright flare bursts over far ground and lights it for the hero's scouts.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_flare",
+        "radius": 5,
+        "radius_power_divisor": 2,
+        "range": 10,
+        "range_power_scale": 2
+      }
+    },
+    {
+      "id": "spell_firebreak",
+      "name": "Firebreak",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_tier3",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 6,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "A wall of fire rises beside the hero; no army gets through while it burns.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_block",
+        "days": 1,
+        "days_power_divisor": 4
+      }
+    },
+    {
+      "id": "spell_rootway",
+      "name": "Rootway",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_tier3",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "The roots under the woods carry the army to trees farther off.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_jump_forest",
+        "range": 4,
+        "range_power_scale": 1
+      }
+    },
+    {
+      "id": "spell_relay",
+      "name": "Relay",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_tier3",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "A beacon lit in one of the hero's towns calls the army home in a flash of light.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_town",
+        "range": 8,
+        "range_power_scale": 2
+      }
+    },
+    {
+      "id": "spell_ferry_call",
+      "name": "Ferry Call",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_tier3",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "A ferry of mist carries the army over the water to the far shore.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_ferry",
+        "range": 4,
+        "range_power_scale": 1
+      }
+    },
+    {
+      "id": "spell_mist_jump",
+      "name": "Mist Jump",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 10,
+      "target_mode": "tile_selected",
+      "unreleased": true,
+      "description": "The army steps into the mist and out of it a few tiles away, past any guard.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_jump",
+        "range": 4,
+        "range_power_divisor": 2
+      }
     }
   ]
 }

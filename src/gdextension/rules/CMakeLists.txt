@@ -339,6 +339,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/scenario_turn_rare.cpp
 	core/port/spell_battle.cpp
 	core/port/spell_map.cpp
+	core/port/spell_map_tiles.cpp
 	core/port/spell_effects.cpp
 	core/port/spell_events.cpp
 	core/port/spell_mechanics.cpp

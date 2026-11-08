@@ -364,6 +364,14 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules.cast_overworld_spell", [session, spell_id])
 
+## A map spell aimed at a tile, cast by the active hero at the tile the player picked.
+static func cast_overworld_spell_at(session: SessionStateStoreScript.SessionData, spell_id: String, x: int, y: int) -> Dictionary:
+	return HumanEngine.native_writing(&"OverworldRules.cast_overworld_spell_at", [session, spell_id, x, y])
+
+## The tiles the active hero can aim a map spell at: {tiles, level, aim}.
+static func map_spell_targets(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
+	return HumanEngine.native_writing(&"OverworldRules.map_spell_targets", [session, spell_id])
+
 static func perform_artifact_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules.perform_artifact_action", [session, action_id])
 

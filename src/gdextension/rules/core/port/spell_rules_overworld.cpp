@@ -251,15 +251,18 @@ DictRef adventure_spell_target_contract(State &state, DictRef hero_state, DictRe
 	const int64_t mana_cost = adjusted_spell_mana_cost(state, hero, dict_value(spell_dict));
 	const DictRef validation = validate_overworld_spell(state, hero, movement_state, dict_value(spell_dict));
 	const Atom target_requirement = _overworld_target_requirement(state, spell_dict);
-	const Atom public_text = gd::format(state, key::s_targets_the_active_hero_s, {
-			str(text_or(state, spell_dict, key::name, key::spell_word)),
-			str(target_requirement),
-	});
+	const Atom target_mode = text_or(state, spell_dict, key::target_mode, key::self);
+	const Atom public_text = target_mode == key::tile_selected
+			? gd::format(state, key::s_is_aimed_at_a_map_tile_text, {str(text_or(state, spell_dict, key::name, key::spell_word))})
+			: gd::format(state, key::s_targets_the_active_hero_s, {
+					  str(text_or(state, spell_dict, key::name, key::spell_word)),
+					  str(target_requirement),
+			  });
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::ok), bool_value(gd::bool_field(state, validation, key::ok, false)));
 	state.set(result, str(key::spell_id), str(text_or(state, spell_dict, key::id, key::empty)));
 	state.set(result, str(key::spell_name), str(text_or(state, spell_dict, key::name, key::spell_word)));
-	state.set(result, str(key::target_kind), str(text_or(state, spell_dict, key::target_mode, key::self) == key::self ? static_cast<Atom>(key::self_hero) : static_cast<Atom>(key::unsupported)));
+	state.set(result, str(key::target_kind), str(target_mode == key::self ? static_cast<Atom>(key::self_hero) : target_mode == key::tile_selected ? static_cast<Atom>(key::map_tile) : static_cast<Atom>(key::unsupported)));
 	state.set(result, str(key::target_mode), str(text_or(state, spell_dict, key::target_mode, key::empty)));
 	state.set(result, str(key::target_requirement), str(target_requirement));
 	state.set(result, str(key::selectable), bool_value(gd::bool_field(state, validation, key::ok, false)));
@@ -552,7 +555,9 @@ DictRef validate_overworld_spell(State &state, DictRef hero_state, DictRef movem
 		return approval(state);
 	}
 	if (effect_type == key::map_effect) {
-		if (text_or(state, spell_dict, key::target_mode, key::self) != key::self) {
+		// A spell aimed at a tile is cast at the one the player picks (map_spells::needs_tile), every other at the hero.
+		const Atom wanted = map_spells::needs_tile(state, spell_dict) ? static_cast<Atom>(key::tile_selected) : static_cast<Atom>(key::self);
+		if (text_or(state, spell_dict, key::target_mode, key::self) != wanted) {
 			return refusal(state, key::that_field_spell_target_is_not);
 		}
 		return approval(state);
@@ -754,6 +759,9 @@ Atom _target_mode_label(State &state, Atom target_mode) {
 	}
 	if (target_mode == key::hex_selected) {
 		return key::a_hex_you_pick_text;
+	}
+	if (target_mode == key::tile_selected) {
+		return key::a_tile_on_the_map_text;
 	}
 	if (target_mode == key::battle) {
 		return key::the_whole_battle_text;

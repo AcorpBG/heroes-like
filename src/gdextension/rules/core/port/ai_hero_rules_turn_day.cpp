@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -14,9 +15,11 @@
 #include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_turn.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <limits>
 #include <string>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -300,6 +303,102 @@ static void _cast_road_spell(State &state, DictRef session, int64_t index, DictR
 	_store_entry(state, session, index, entry);
 }
 
+static bool _steps_beside_stronger(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan, Vector2i tile, int64_t level);
+
+// Whether the side has scouted the tile (its own fog, `_explored`).
+static bool _scouted(State &state, DictRef session, DictRef context, Vector2i tile, int64_t level) {
+	const Vector2i size = as_vector2i(gd::index(state, context, str(key::map_size)));
+	if (tile.x < 0 || tile.y < 0 || tile.x >= size.x || tile.y >= size.y) {
+		return false;
+	}
+	return gd::packed_int(state, _explored(state, session, context, level), static_cast<int64_t>(tile.y) * size.x + tile.x) != 0;
+}
+
+// A hero that cannot reach the end of its plan today jumps ahead when it knows a spell for it, the day's map spell
+// going on it: Relay when the plan ends at the gate of one of its towns in reach; else Mist Jump, or Rootway beside
+// trees, to the farthest scouted tile of the path it can land on, three steps or more ahead and not beside a hostile
+// hero it cannot beat. It walks the rest of the path as before (Relay leaves no movement). Not from a boat. First
+// values, not measured.
+static bool _cast_jump_spell(State &state, DictRef session, DictRef context, int64_t index, DictRef plan) {
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	const int64_t points = gd::int_field(state, movement, key::current, 0);
+	Value path_value;
+	if (points <= 0 || !state.lookup(plan, str(key::path), path_value) || !gd::is_array(path_value) ||
+			water_travel_rules::hero_boat_id(state, dict_value(entry)) != key::empty) {
+		return false;
+	}
+	const int64_t path_size = state.array_size(path_value.ref);
+	if (path_size <= points) {
+		return false;
+	}
+	const map_spells::Caster caster = _map_caster(state, entry);
+	Atom spell_id = key::empty;
+	int64_t landing = -1;
+	if (ai::string_or_empty(state, plan, key::kind) == key::town_own) {
+		const Atom relay = _known_map_spell(state, commander, movement, day, key::map_town);
+		const Vector2i gate = as_vector2i(state.at(path_value.ref, path_size - 1));
+		if (relay != key::empty) {
+			const std::vector<Vector2i> gates = map_spells::target_tiles(state, session, caster, gd::content_row(state, state::ContentTable::Spell, relay));
+			if (std::find(gates.begin(), gates.end(), gate) != gates.end()) {
+				spell_id = relay;
+				landing = path_size - 1;
+			}
+		}
+	}
+	for (const Atom kind : {key::map_jump, key::map_jump_forest}) {
+		if (spell_id != key::empty) {
+			break;
+		}
+		const Atom jump = _known_map_spell(state, commander, movement, day, kind);
+		if (jump == key::empty) {
+			continue;
+		}
+		const std::vector<Vector2i> tiles = map_spells::target_tiles(state, session, caster, gd::content_row(state, state::ContentTable::Spell, jump));
+		for (int64_t step = path_size - 2; step >= 2; --step) {
+			const Vector2i tile = as_vector2i(state.at(path_value.ref, step));
+			if (std::find(tiles.begin(), tiles.end(), tile) == tiles.end() || !_scouted(state, session, context, tile, caster.level) ||
+					_steps_beside_stronger(state, session, context, entry, plan, tile, caster.level)) {
+				continue;
+			}
+			spell_id = jump;
+			landing = step;
+			break;
+		}
+	}
+	if (spell_id == key::empty) {
+		return false;
+	}
+	const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, spell_id, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return false;
+	}
+	const Vector2i tile = as_vector2i(state.at(path_value.ref, landing));
+	const DictRef done = map_spells::apply_at(state, session, caster, spell, tile, day);
+	const DictRef hero_after = gd::as_dict(gd::index(state, cast, str(key::hero)));
+	const DictRef movement_after = gd::as_dict(gd::index(state, cast, str(key::movement)));
+	if (gd::bool_field(state, done, key::ends_movement, false)) {
+		state.set(movement_after, str(key::current), int_value(0));
+		map_spells::set_banked_half(state, hero_after, 0);
+	}
+	const DictRef before = level_rules::position(state, entry);
+	state.set(entry, str(key::enemy_commander_state), dict_value(hero_after));
+	state.set(block, str(key::movement), dict_value(movement_after));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	state.set(entry, str(key::x), int_value(tile.x));
+	state.set(entry, str(key::y), int_value(tile.y));
+	overworld_turn_playback::move(state, dict_value(session), entry, before);
+	_store_entry(state, session, index, entry);
+	_reveal(state, session, context, level_rules::position(state, entry), _sight_radius(state, entry));
+	overworld_rules::invalidate_spatial_lookup(state, session);
+	state.set(plan, str(key::path), array_value(gd::slice(state, path_value.ref, landing + 1, path_size)));
+	return true;
+}
+
 // Out of steps, a hero casts the movement spell that gives it the most, once a
 // day as a human hero can: mana is full again in the morning.
 static bool _cast_movement_spell(State &state, DictRef session, DictRef context, int64_t index, Atom placement_id) {
@@ -343,6 +442,68 @@ static bool _cast_movement_spell(State &state, DictRef session, DictRef context,
 	return true;
 }
 
+// With no scouting spell that shows it more around itself, a hero that knows Flare lights the patch of ground in its
+// reach where the most lies unscouted, when that is 15 tiles or more: the patches tried are a radius apart. First
+// values, not measured.
+static void _cast_flare(State &state, DictRef session, DictRef context, int64_t index) {
+	const DictRef entry = overworld_dict(state, session, key::encounters, index);
+	const DictRef commander = dict_or_new(state, entry, key::enemy_commander_state);
+	const DictRef block = dict_or_new(state, entry, key::ai_hero);
+	const DictRef movement = dict_or_new(state, block, key::movement);
+	const int64_t day = ai::session_int(state, session, key::day);
+	const Atom spell_id = _known_map_spell(state, commander, movement, day, key::map_flare);
+	if (spell_id == key::empty) {
+		return;
+	}
+	const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);
+	const DictRef terms = map_spells::terms(state, commander, spell);
+	const int64_t radius = gd::int_field(state, terms, key::radius, 0);
+	const int64_t range = gd::int_field(state, terms, key::range, 0);
+	if (radius <= 0 || range <= 0) {
+		return;
+	}
+	const map_spells::Caster caster = _map_caster(state, entry);
+	const Vector2i size = as_vector2i(gd::index(state, context, str(key::map_size)));
+	const PackedRef known = _explored(state, session, context, caster.level);
+	Vector2i best = caster.tile;
+	int64_t best_count = 14;
+	for (int64_t dy = -range; dy <= range; dy += radius) {
+		for (int64_t dx = -range; dx <= range; dx += radius) {
+			const int64_t cx = caster.tile.x + dx;
+			const int64_t cy = caster.tile.y + dy;
+			if (cx < 0 || cy < 0 || cx >= size.x || cy >= size.y || !hero_command_rules::within_scout_radius(state, dx, dy, range)) {
+				continue;
+			}
+			int64_t count = 0;
+			for (int64_t y = std::max<int64_t>(0, cy - radius); y <= std::min<int64_t>(size.y - 1, cy + radius); ++y) {
+				for (int64_t x = std::max<int64_t>(0, cx - radius); x <= std::min<int64_t>(size.x - 1, cx + radius); ++x) {
+					if (hero_command_rules::within_scout_radius(state, x - cx, y - cy, radius) && gd::packed_int(state, known, y * size.x + x) == 0) {
+						count += 1;
+					}
+				}
+			}
+			if (count > best_count) {
+				best_count = count;
+				best = Vector2i::of(static_cast<int32_t>(cx), static_cast<int32_t>(cy));
+			}
+		}
+	}
+	if (best_count < 15) {
+		return;
+	}
+	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, spell_id, day);
+	if (!gd::bool_field(state, cast, key::ok, false)) {
+		return;
+	}
+	state.set(entry, str(key::enemy_commander_state), gd::index(state, cast, str(key::hero)));
+	state.set(entry, str(key::ai_hero), dict_value(block));
+	_store_entry(state, session, index, entry);
+	const DictRef point = level_rules::position(state, entry);
+	state.set(point, str(key::x), int_value(best.x));
+	state.set(point, str(key::y), int_value(best.y));
+	_reveal(state, session, context, point, radius);
+}
+
 // A hero that has not spent the day's cast on walking looks around with its
 // scouting spell, if that shows more than it sees. What the spell shows stays
 // explored, and so in sight (`_position_seen`).
@@ -373,6 +534,7 @@ static void _cast_scouting_spell(State &state, DictRef session, DictRef context,
 		}
 	}
 	if (best == key::empty) {
+		_cast_flare(state, session, context, index);
 		return;
 	}
 	const DictRef cast = spell_rules::cast_overworld_spell(state, commander, movement, best, day);
@@ -529,7 +691,9 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			break;
 		}
 		const int64_t act_started = gd::ticks_usec();
-		_cast_road_spell(state, session, index, plan);
+		if (!_cast_jump_spell(state, session, context, index, plan)) {
+			_cast_road_spell(state, session, index, plan);
+		}
 		const DictRef step = _follow_plan(state, session, context, index, plan);
 		_profile_add(state, context, key::act_ms, act_started);
 		_append_all(state, messages, list_field(state, step, key::messages));

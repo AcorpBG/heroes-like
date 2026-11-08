@@ -127,6 +127,10 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 var _empty_town_inspect_button: Button
 var _pointer_order_tile := Vector2i(-999, -999)
 var _pointer_order_signature := ""
+# A map spell being aimed at a tile: its id, and the hero and day it was taken up for (another ends the aim).
+var _map_spell_pick_id := ""
+var _map_spell_pick_hero := ""
+var _map_spell_pick_day := -1
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -679,6 +683,13 @@ func _input(event: InputEvent) -> void:
 				_record_gameplay_movement_input_blocked("keyboard", _overworld_gameplay_movement_blocked_reason(), false)
 		return
 	if _handle_controller_route_action_input(event):
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("ui_cancel") and _map_spell_pick_id != "":
+		_end_map_spell_pick()
+		_last_message = "Spell put away. No mana spent."
+		_record_action_feedback("aim", "Spell put away; no mana spent")
+		_refresh()
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("ui_cancel") and _pointer_order_tile != Vector2i(-999, -999):
@@ -2338,12 +2349,19 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	var spell_id := ""
 	if action_id.begins_with("cast_spell:"):
 		spell_id = action_id.trim_prefix("cast_spell:")
+		# A spell aimed at a tile waits for the player to pick one on the map.
+		if String(ContentService.get_spell(spell_id).get("target_mode", "")) == "tile_selected":
+			_begin_map_spell_pick(spell_id)
+			return
 		var gain_before := GainFeed.snapshot(_session)
 		result = OverworldRules.cast_overworld_spell(_session, spell_id)
 		_float_gains_since(gain_before)
 
 	if result.is_empty():
 		return
+	_finish_spell_cast(result, spell_id)
+
+func _finish_spell_cast(result: Dictionary, spell_id: String) -> void:
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
@@ -2360,8 +2378,65 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	_record_spell_cast_presentation(result, spell_id)
 	_refresh_hero_sheet()
 
+## A map spell aimed at a tile: the map marks the tiles it reaches, a press on one casts it there, Esc puts it away.
+func _begin_map_spell_pick(spell_id: String) -> void:
+	var targets: Dictionary = OverworldRules.map_spell_targets(_session, spell_id)
+	var tiles: Array = targets.get("tiles", []) if targets.get("tiles", []) is Array else []
+	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
+	if tiles.is_empty():
+		_last_message = String(targets.get("aim", ""))
+		_record_action_feedback("blocked", _last_message)
+		_refresh()
+		return
+	_map_spell_pick_id = spell_id
+	_map_spell_pick_hero = String(_session.overworld.get("active_hero_id", ""))
+	_map_spell_pick_day = int(_session.day)
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		_hero_sheet.close_sheet()
+	_map_view.set_spell_targets(tiles, int(targets.get("level", 0)))
+	var spell_name := String(ContentService.get_spell(spell_id).get("name", spell_id))
+	_last_message = "%s: %s Esc puts it away." % [spell_name, String(targets.get("aim", ""))]
+	_record_action_feedback("aim", "%s; Esc puts it away" % spell_name)
+	_refresh()
+
+func _end_map_spell_pick() -> void:
+	if _map_spell_pick_id == "":
+		return
+	_map_spell_pick_id = ""
+	_map_spell_pick_hero = ""
+	_map_spell_pick_day = -1
+	_map_view.set_spell_targets([])
+
+# Another hero or a new day ends the aim.
+func _end_stale_map_spell_pick() -> void:
+	if _map_spell_pick_id == "" or _session == null:
+		return
+	if String(_session.overworld.get("active_hero_id", "")) != _map_spell_pick_hero or int(_session.day) != _map_spell_pick_day:
+		_end_map_spell_pick()
+
+func _cast_map_spell_at(tile: Vector2i) -> void:
+	var spell_id := _map_spell_pick_id
+	var gain_before := GainFeed.snapshot(_session)
+	var result: Dictionary = OverworldRules.cast_overworld_spell_at(_session, spell_id, tile.x, tile.y)
+	_float_gains_since(gain_before)
+	if not bool(result.get("ok", false)):
+		# Still aimed: another tile can be pressed, or Esc puts the spell away.
+		_last_message = String(result.get("message", ""))
+		_last_enemy_activity_text = ""
+		_last_turn_resolution_text = ""
+		_record_action_feedback("blocked", _last_message)
+		_refresh()
+		return
+	_end_map_spell_pick()
+	_finish_spell_cast(result, spell_id)
+
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _overworld_order_input_blocked(): return
+	if _map_spell_pick_id != "":
+		if _viewing_hero_level() and _tile_in_bounds(tile):
+			_cast_map_spell_at(tile)
+		return
 	if not _viewing_hero_level():
 		if _tile_in_bounds(tile):
 			_set_selected_tile(_selection_route_tile(tile))
@@ -2737,6 +2812,7 @@ func _render_state() -> void:
 	_refresh()
 
 func _refresh() -> void:
+	_end_stale_map_spell_pick()
 	_refresh_with_request(_make_refresh_request("full_refresh", REFRESH_ALL_PHASES, true, true))
 
 func _refresh_selected_route_preview(reason: String = "selected_route_preview") -> void:
@@ -8197,6 +8273,8 @@ func _strip_moved_feedback_prefix(message: String) -> String:
 
 func _feedback_kind_label(kind: String) -> String:
 	match kind:
+		"aim":
+			return "Aim"
 		"artifact":
 			return "Artifact"
 		"battle":

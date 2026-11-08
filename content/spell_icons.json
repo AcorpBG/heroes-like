@@ -2759,6 +2759,72 @@
       "source_sha256": "10c3be38fd5066f25d012cf6322769e17f830b632187bef7776874fc6c68515e",
       "icon_path": "res://art/magic/runtime/spells/spell_root_canopy_thorn_22.png",
       "icon_sha256": "134c0c2c4a433728965f8a29b145c5b99c56563ce7b9ba730e0931a28a2184fc"
+    },
+    {
+      "id": "spell_flare",
+      "spell_id": "spell_flare",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_flare",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_trailglyph.png",
+      "source_sha256": "c34372be7aa6ac50c21241fa752062e68f4f1d9c807988d4afd18600d3528f7d",
+      "icon_path": "res://art/magic/runtime/spells/spell_trailglyph.png",
+      "icon_sha256": "6109c02bda64c50e979a08fcd6608f2c9dbeaf7d7ddd8d5362068c6450cd6822"
+    },
+    {
+      "id": "spell_firebreak",
+      "spell_id": "spell_firebreak",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_firebreak",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_ash_mantle_09.png",
+      "source_sha256": "a4a8e08f6203dfe0d2d91ed4135a07a5a357e36e910c10d59dadc05d2148d2be",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_ash_mantle_09.png",
+      "icon_sha256": "efef0accfd4171cfa62035f23c529b0c77c61f89f80ac927ee928fb3a33f9ee6"
+    },
+    {
+      "id": "spell_rootway",
+      "spell_id": "spell_rootway",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_rootway",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_green_rootway_12.png",
+      "source_sha256": "d4a71f0d4dfa31ca17164a8c9ab981293ea5522a679f2478ab1ea9d1d26feeaa",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_green_rootway_12.png",
+      "icon_sha256": "5d00cc05db8abf973106f08672851741471528711268c9c692882925a285c9a7"
+    },
+    {
+      "id": "spell_relay",
+      "spell_id": "spell_relay",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_relay",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_path.png",
+      "source_sha256": "99e7804bb6aca47816263d195bbb3b20e1fc29225b83ec9f28327d31c4b72d1b",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_path.png",
+      "icon_sha256": "e538935931648b3da39ea42d1627d2caf6631977311c02b5d44466075ad6c908"
+    },
+    {
+      "id": "spell_ferry_call",
+      "spell_id": "spell_ferry_call",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_ferry_call",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_tide_drift_24.png",
+      "source_sha256": "191f2d555a49ed5b06d06966b4d9e7aa8d9c2477ad24efe61dc8f421b0657e6a",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_tide_drift_24.png",
+      "icon_sha256": "fb050a1be38053936099de1d2fccf4d52f81874fc815ca685117d408c734dd98"
+    },
+    {
+      "id": "spell_mist_jump",
+      "spell_id": "spell_mist_jump",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_mist_jump",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mist_duel_26.png",
+      "source_sha256": "1d7df14059a53abe37473c139924a5196ba36eb0ef1e246da519dffd8a19ea7e",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_duel_26.png",
+      "icon_sha256": "2804729b7060c5d472e078d8451de11b9e0e4de8e91c069abe98a641cdf21583"
     }
   ]
 }

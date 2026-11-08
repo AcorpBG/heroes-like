@@ -3,6 +3,7 @@
 // metadata caches, resource-node presence and the recruit payload.
 
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 
 #include "aurelion_rules/port/mine_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
@@ -172,6 +173,8 @@ DictRef _build_blocked_tile_index(State &state, DictRef session, int64_t level, 
 			state.set(index, tile_key, own ? str(id) : bool_value(true));
 		}
 	}
+	// A Firebreak closes its tile to every army while it burns.
+	map_spells::add_blocked_tiles(state, session, level, index);
 	return index;
 }
 

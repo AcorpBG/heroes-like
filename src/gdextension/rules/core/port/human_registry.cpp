@@ -818,6 +818,12 @@ const Function kFunctions[] = {
 	NATIVE(OverworldRules, cast_overworld_spell, 2, true,
 			no_null(a, 0);
 			return gd::dict_value(overworld::cast_overworld_spell(s, D(a, 0), S(a, 1)))),
+	NATIVE(OverworldRules, cast_overworld_spell_at, 4, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::cast_overworld_spell_at(s, D(a, 0), S(a, 1), overworld_rules::Vector2i::of(I(a, 2), I(a, 3))))),
+	NATIVE(OverworldRules, map_spell_targets, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::map_spell_targets(s, D(a, 0), S(a, 1)))),
 	NATIVE(OverworldRules, get_spell_actions, 1, true,
 			no_null(a, 0);
 			return gd::array_value(overworld::get_spell_actions(s, D(a, 0)))),

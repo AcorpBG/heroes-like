@@ -20,6 +20,12 @@ using state::Value;
 
 // overworld_rules_spells.cpp.
 DictRef cast_overworld_spell(State &state, DictRef session, Atom spell_id);
+// A map spell aimed at a tile (map_spells::needs_tile), cast by the active hero at the tile the player picked; any
+// other spell is cast as cast_overworld_spell casts it.
+DictRef cast_overworld_spell_at(State &state, DictRef session, Atom spell_id, Vector2i tile);
+// The tiles the active hero can aim a map spell at, on ground the player has scouted (Flare's on any ground), and what
+// to pick: {tiles: [Vector2i], level, aim}, aim saying why there is none when no tile is in reach.
+DictRef map_spell_targets(State &state, DictRef session, Atom spell_id);
 ArrayRef get_spell_actions(State &state, DictRef session);
 int64_t _reveal_spell_fog(State &state, DictRef session, int64_t radius);
 
