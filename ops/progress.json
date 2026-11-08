@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "overworld-faction-ground-20261108",
- "currentSliceTitle": "Mireclaw (swamp, mire), Sunvault (snow, frost) and Brasshollow (rough) heroes step on their home_terrain_ids at grass cost in map_spells::StepCosts; content check; hero sheet line; no generator change.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T18:18:29Z",
+ "currentSliceId": "overworld-faction-ground-each-20261108",
+ "currentSliceTitle": "Overworld: one home ground per faction; lava and water slow",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T19:03:25Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "overworld-faction-ground-each-20261108",
+   "title": "Overworld: one home ground per faction; lava and water slow",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-08: lava, ash and water cost 1.5 a step; one ground per faction: Mireclaw swamp and mire, Sunvault snow and frost, Brasshollow lava and ash, Thornwake rough and forest, Embercourt sand, Veilmourn water. terrain_grammar.json, factions.json, the hero sheet line, docs/overworld-terrain-movement.md.",
+   "docs": [
+    "docs/overworld-terrain-movement.md"
+   ],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "overworld-faction-ground-20261108",
    "status": "completed",

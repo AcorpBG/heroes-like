@@ -428,7 +428,7 @@
     {
       "id": "water",
       "biome_id": "biome_coast_archipelago",
-      "movement_cost": 1,
+      "movement_cost": 1.5,
       "terrain_group": "water",
       "autotile_family": "water",
       "style_id": "deep_water",
@@ -476,7 +476,7 @@
     {
       "id": "coast",
       "biome_id": "biome_coast_archipelago",
-      "movement_cost": 1,
+      "movement_cost": 1.5,
       "terrain_group": "water",
       "autotile_family": "coast",
       "style_id": "coast_shelf",
@@ -500,7 +500,7 @@
     {
       "id": "shore",
       "biome_id": "biome_coast_archipelago",
-      "movement_cost": 1,
+      "movement_cost": 1.5,
       "terrain_group": "water",
       "autotile_family": "coast",
       "style_id": "shoreline",
@@ -574,7 +574,7 @@
     {
       "id": "ash",
       "biome_id": "biome_ash_lava_wastes",
-      "movement_cost": 1,
+      "movement_cost": 1.5,
       "terrain_group": "ash",
       "autotile_family": "ash",
       "style_id": "ash_field",
@@ -599,7 +599,7 @@
     {
       "id": "lava",
       "biome_id": "biome_ash_lava_wastes",
-      "movement_cost": 1,
+      "movement_cost": 1.5,
       "terrain_group": "ash",
       "autotile_family": "ash",
       "style_id": "lava_scars",

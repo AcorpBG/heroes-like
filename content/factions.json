@@ -106,6 +106,9 @@
       ],
       "seed_town_id": "town_riverwatch",
       "preferred_spell_school_id": "beacon",
+      "home_terrain_ids": [
+        "sand"
+      ],
       "design_pillars": {
         "theme": "River charters, lockworks, beacon-fire civic war",
         "economy_style": "Stable civic investment, readiness, and discounted prepared levies",
@@ -602,6 +605,10 @@
       ],
       "seed_town_id": "town_thornwake_graftroot_caravan",
       "preferred_spell_school_id": "root",
+      "home_terrain_ids": [
+        "rough",
+        "forest"
+      ],
       "design_pillars": {
         "theme": "Migratory living orchards, grafted pilgrims, and root law",
         "economy_style": "Site-rooted growth, wood pressure, and slow gold",
@@ -757,7 +764,8 @@
       "seed_town_id": "town_brasshollow_orevein_gantry",
       "preferred_spell_school_id": "furnace",
       "home_terrain_ids": [
-        "rough"
+        "lava",
+        "ash"
       ],
       "design_pillars": {
         "theme": "Furnace contracts, pressure rails, and brass debt engines",
@@ -914,6 +922,9 @@
       ],
       "seed_town_id": "town_veilmourn_bellwake_harbor",
       "preferred_spell_school_id": "veil",
+      "home_terrain_ids": [
+        "water"
+      ],
       "design_pillars": {
         "theme": "Fog-bound funeral fleets, memory piracy, and mirror charts",
         "economy_style": "Salvage, scouting rewards, and uneven income spikes",
