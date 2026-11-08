@@ -276,6 +276,10 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 // ({destination: {battle_id}, score}); each plan is {} when no pick helps.
 DictRef _conjure_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
 double _decoy_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
+double _clone_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
+double _elder_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
+double _risen_host_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
+double _hollow_crown_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell);
 DictRef _rewind_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell);
 DictRef _charm_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef puppet, DictRef spell);
 

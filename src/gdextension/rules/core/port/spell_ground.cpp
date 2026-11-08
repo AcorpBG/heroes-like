@@ -616,7 +616,9 @@ void close_barrier_cells(State &state, DictRef battle, DictRef stack, uint8_t *o
 }
 
 bool phase_pass_mask(State &state, DictRef battle, DictRef stack, uint8_t *pass) {
-	if (gd::is_empty(state, battle) || gd::is_empty(state, stack) || stack_mechanic_int(state, stack, battle, key::phase) <= 0) {
+	// Fogwalk, or a stack that flies (Wraith Host's wraiths).
+	if (gd::is_empty(state, battle) || gd::is_empty(state, stack)
+			|| (!gd::bool_field(state, stack, key::flies, false) && stack_mechanic_int(state, stack, battle, key::phase) <= 0)) {
 		return false;
 	}
 	for (int64_t id = 0; id < CELL_COUNT; ++id) {

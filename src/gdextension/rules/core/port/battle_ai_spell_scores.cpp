@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
+#include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -1062,6 +1063,9 @@ double _aura_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictR
 		const int64_t noon_rounds = spell_rules::spell_effect_turns(state, enemy_hero, effect, spell, key::buff, spell_rules::spell_power(state, enemy_hero));
 		return value * engine_min<double>(2.0, static_cast<double>(noon_rounds) / 2.0) - mana_cost_term(state, spell);
 	}
+	if (kind == key::hollow_crown) {
+		return _hollow_crown_spell_score(state, enemy_hero, battle, active_stack, spell);
+	}
 	if (kind == key::green_return) {
 		// Green Return: each fallen stack of the side grows back with its share of its starting creatures.
 		if (spell_rules::green_return_used(state, battle, side)) {
@@ -1637,13 +1641,67 @@ DictRef hex_destination(State &state, DictRef cell) {
 	return destination;
 }
 
+// A conjured stack's worth: the blows it strikes in its rounds (at most three, each later one worth less) on the
+// hostile stack nearest its hex (one that cannot move strikes only what comes beside it), and the blows meant for
+// the side's stacks it stands in the way of; -9999 with no hostile stack.
+double summon_value(State &state, DictRef battle, DictRef summon, ArrayRef hostiles, int64_t round) {
+	const int64_t rounds = engine_min<int64_t>(3, gd::int_field(state, summon, key::conjured_until_round, round) - round);
+	double blows = 0.0;
+	double worth = 1.0;
+	for (int64_t index = 0; index < rounds; ++index) {
+		worth *= 0.75;
+		blows += worth;
+	}
+	DictRef nearest = state.new_dict();
+	int64_t nearest_distance = hex::kFarDistance;
+	for (const Value &hostile : gd::items(state, array_value(hostiles))) {
+		const int64_t distance = gd::is_dict(hostile) ? battle_footprint::distance(state, summon, hostile.ref, Value()) : hex::kFarDistance;
+		if (distance < nearest_distance) {
+			nearest = hostile.ref;
+			nearest_distance = distance;
+		}
+	}
+	if (empty(state, nearest)) {
+		return -9999.0;
+	}
+	double reach = 1.0;
+	if (gd::bool_field(state, summon, key::immobile, false) && nearest_distance > 1) {
+		reach = nearest_distance <= gd::int_field(state, nearest, key::speed, 1) + 1 ? 0.6 : 0.25;
+	}
+	double value = blows * reach * blow_share(state, battle, summon, nearest) * _w(state, key::spell_damage_share);
+	value += engine_min<double>(1.0, stack_health(state, summon) / engine_max<double>(1.0, stack_health(state, nearest))) * 2.0;
+	return value;
+}
+
+// Where a stack placed anywhere lands: a little less for each hex to the nearest hostile stack, and more beside each
+// hostile shooter with shots left, which cannot shoot while it stands there.
+double landing_value(State &state, DictRef summon, ArrayRef hostiles) {
+	int64_t nearest = hex::kFarDistance;
+	double value = 0.0;
+	for (const Value &hostile : gd::items(state, array_value(hostiles))) {
+		if (!gd::is_dict(hostile)) {
+			continue;
+		}
+		const int64_t distance = battle_footprint::distance(state, summon, hostile.ref, Value());
+		nearest = engine_min<int64_t>(nearest, distance);
+		if (distance == 1 && ranged(state, hostile.ref) && has_shots(state, hostile.ref)) {
+			value += 2.0;
+		}
+	}
+	return nearest == hex::kFarDistance ? value : value - 0.1 * static_cast<double>(nearest);
+}
+
 } // namespace
 
 DictRef _conjure_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
 	const Atom side = side_of(state, active_stack);
 	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
-	const double damage_weight = _w(state, key::spell_damage_share);
 	const int64_t round = battle_round(state, battle);
+	// Wraith Host's second stack stands in the way of more blows; placed anywhere, the host lands near the enemy,
+	// best beside a shooter.
+	const DictRef effect = get_base(effect_of(state, spell));
+	const bool host = gd::int_field(state, effect, key::stacks, 1) >= 2;
+	const bool anywhere = gd::string_field(state, effect, key::place, key::empty) == key::anywhere;
 	DictRef best_cell = state.new_dict();
 	double best = -9999.0;
 	for (const Value &cell : gd::items(state, array_value(spell_rules::conjure_pick_cells(state, battle, spell, side)))) {
@@ -1651,34 +1709,13 @@ DictRef _conjure_spell_plan(State &state, DictRef enemy_hero, DictRef battle, Di
 		if (empty(state, summon)) {
 			continue;
 		}
-		// The blows it strikes in its rounds (at most three), each later one worth less.
-		const int64_t rounds = engine_min<int64_t>(3, gd::int_field(state, summon, key::conjured_until_round, round) - round);
-		double blows = 0.0;
-		double worth = 1.0;
-		for (int64_t index = 0; index < rounds; ++index) {
-			worth *= 0.75;
-			blows += worth;
+		double value = summon_value(state, battle, summon, hostiles, round);
+		if (host && value > -9000.0 && gd::int_field(state, summon, key::total_health, 0) >= 2 * engine_max<int64_t>(1, gd::int_field(state, summon, key::unit_hp, 1))) {
+			value += 1.0;
 		}
-		// On the hostile stack nearest its hex; one that cannot move strikes only what comes beside it.
-		DictRef nearest = state.new_dict();
-		int64_t nearest_distance = hex::kFarDistance;
-		for (const Value &hostile : gd::items(state, array_value(hostiles))) {
-			const int64_t distance = gd::is_dict(hostile) ? battle_footprint::distance(state, summon, hostile.ref, Value()) : hex::kFarDistance;
-			if (distance < nearest_distance) {
-				nearest = hostile.ref;
-				nearest_distance = distance;
-			}
+		if (anywhere && value > -9000.0) {
+			value += landing_value(state, summon, hostiles);
 		}
-		if (empty(state, nearest)) {
-			continue;
-		}
-		double reach = 1.0;
-		if (gd::bool_field(state, summon, key::immobile, false) && nearest_distance > 1) {
-			reach = nearest_distance <= gd::int_field(state, nearest, key::speed, 1) + 1 ? 0.6 : 0.25;
-		}
-		double value = blows * reach * blow_share(state, battle, summon, nearest) * damage_weight;
-		// It also stands in the way of blows meant for the caster's stacks.
-		value += engine_min<double>(1.0, stack_health(state, summon) / engine_max<double>(1.0, stack_health(state, nearest))) * 2.0;
 		if (value > best) {
 			best = value;
 			best_cell = cell.ref;
@@ -1721,6 +1758,112 @@ double _decoy_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dict
 	double score = 1.0 + drawn * _w(state, key::spell_damage_share) * 0.5;
 	score += cast_objective_score(state, battle, active_stack, ally);
 	return score - mana_cost_term(state, spell);
+}
+
+double _clone_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {
+	// Clockwork Twin: the copy's worth as a summon's, on the hex beside its stack.
+	if (spell_rules::is_conjured(state, ally) || _alive_count(state, ally) <= 0) {
+		return -9999.0;
+	}
+	const DictRef cell = spell_rules::decoy_cell(state, battle, ally);
+	if (empty(state, cell)) {
+		return -9999.0;
+	}
+	const Atom side = side_of(state, active_stack);
+	const DictRef twin = spell_rules::conjured_stack_for_cast(state, enemy_hero, battle, spell, side, cell, ally);
+	if (empty(state, twin)) {
+		return -9999.0;
+	}
+	const double value = summon_value(state, battle, twin, _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side)), battle_round(state, battle));
+	return value > -9000.0 ? value - mana_cost_term(state, spell) : -9999.0;
+}
+
+double _elder_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	// Waking Forest: the treant's worth as a summon's, and a little for each tree it grows.
+	const Atom side = side_of(state, active_stack);
+	const DictRef treant = spell_rules::conjured_stack_for_cast(state, enemy_hero, battle, spell, side, spell_rules::elder_cell(state, battle, spell, side), state.new_dict());
+	if (empty(state, treant)) {
+		return -9999.0;
+	}
+	const double value = summon_value(state, battle, treant, _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side)), battle_round(state, battle));
+	if (value <= -9000.0) {
+		return -9999.0;
+	}
+	const int64_t trees = state.array_size(spell_rules::forest_tree_cells(state, battle, treant, gd::int_field(state, get_base(effect_of(state, spell)), key::trees, 0)));
+	return value + 0.3 * static_cast<double>(trees) - mana_cost_term(state, spell);
+}
+
+double _risen_host_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	// Drowned Host: each Risen's worth as a summon's.
+	const Atom side = side_of(state, active_stack);
+	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
+	const int64_t round = battle_round(state, battle);
+	double value = 0.0;
+	bool any = false;
+	for (const Value &risen : gd::items(state, array_value(spell_rules::risen_host_for_cast(state, enemy_hero, battle, spell, side)))) {
+		if (!gd::is_dict(risen)) {
+			continue;
+		}
+		const double worth = summon_value(state, battle, risen.ref, hostiles, round);
+		if (worth > -9000.0) {
+			value += worth;
+			any = true;
+		}
+	}
+	return any ? value - mana_cost_term(state, spell) : -9999.0;
+}
+
+double _hollow_crown_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef spell) {
+	// Hollow Crown: each enemy stack the battle may still destroy, weighed as the Risen it becomes, at the odds it falls
+	// while the crown holds: more as the side's health outweighs the other's, and as the stack has lost more.
+	const Atom side = side_of(state, active_stack);
+	if (spell_rules::hollow_crown_held(state, battle, side)) {
+		return -9999.0;
+	}
+	const ArrayRef hostiles = _alive_stacks_for_side(state, battle, battle_rules::_opposing_side(side));
+	double own_health = 0.0;
+	double their_health = 0.0;
+	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
+		own_health += gd::is_dict(stack) ? stack_health(state, stack.ref) : 0.0;
+	}
+	for (const Value &stack : gd::items(state, array_value(hostiles))) {
+		their_health += gd::is_dict(stack) ? stack_health(state, stack.ref) : 0.0;
+	}
+	const double edge = engine_max<double>(0.1, engine_min<double>(0.9, own_health / engine_max<double>(1.0, own_health + their_health)));
+	const int64_t pct = spell_rules::conjure_share_pct(state, enemy_hero, spell);
+	const int64_t rounds = spell_rules::spell_effect_turns(state, enemy_hero, get_base(effect_of(state, spell)), spell, key::buff, spell_rules::spell_power(state, enemy_hero));
+	const int64_t round = battle_round(state, battle);
+	double value = 0.0;
+	for (const Value &stack : gd::items(state, array_value(hostiles))) {
+		if (!gd::is_dict(stack) || spell_rules::is_conjured(state, stack.ref) || gd::bool_field(state, stack.ref, key::raised, false)) {
+			continue;
+		}
+		const int64_t base_count = gd::int_field(state, stack.ref, key::base_count, 0);
+		if (base_count <= 0) {
+			continue;
+		}
+		const DictRef risen = battle_rules::_build_battle_stack(state, gd::string_field(state, stack.ref, key::unit_id, key::empty), engine_max<int64_t>(1, base_count * pct / 100), side, 0, state.new_dict(), -1);
+		if (empty(state, risen)) {
+			continue;
+		}
+		state.set(risen, str(key::hex), dict_value(battle_rules::_stack_hex(state, stack.ref)));
+		state.set(risen, str(key::conjured_until_round), gd::int_value(round + rounds));
+		// It fights the other enemy stacks, not the one it rose from.
+		const Atom stack_id = gd::string_field(state, stack.ref, key::battle_id, key::empty);
+		const ArrayRef others = state.new_array();
+		for (const Value &other : gd::items(state, array_value(hostiles))) {
+			if (gd::is_dict(other) && gd::string_field(state, other.ref, key::battle_id, key::empty) != stack_id) {
+				state.append(others, other);
+			}
+		}
+		const double worth = summon_value(state, battle, risen, others, round);
+		if (worth <= -9000.0) {
+			continue;
+		}
+		const double lost = engine_max<double>(0.0, engine_min<double>(1.0, 1.0 - static_cast<double>(_alive_count(state, stack.ref)) / static_cast<double>(base_count)));
+		value += (edge * 0.6 + lost * 0.3) * worth;
+	}
+	return value > 0.0 ? value - mana_cost_term(state, spell) : -9999.0;
 }
 
 DictRef _rewind_spell_plan(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef ally, DictRef spell) {

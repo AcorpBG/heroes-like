@@ -319,7 +319,8 @@ void record_last_cast(State &state, DictRef battle, Atom side, Atom spell_id, Di
 bool echo_names_stack(State &state, DictRef inner_spell) {
 	const DictRef effect = effect_of(state, inner_spell);
 	const Atom type = gd::string_field(state, effect, key::type, key::empty);
-	return !(type == key::ground_effect || type == key::battle_aura || (type == key::conjure && conjures_on_hex(state, inner_spell)));
+	return !(type == key::ground_effect || type == key::battle_aura
+			|| (type == key::conjure && (conjures_on_hex(state, inner_spell) || conjures_over_battle(state, inner_spell))));
 }
 
 DictRef echo_target(State &state, DictRef battle, DictRef active_stack, DictRef inner_spell, DictRef last) {

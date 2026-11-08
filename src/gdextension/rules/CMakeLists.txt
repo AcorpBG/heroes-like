@@ -351,6 +351,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_tier3_conjure.cpp
 	core/port/spell_tier45.cpp
 	core/port/spell_tier45_turns.cpp
+	core/port/spell_tier45_summons.cpp
 	core/port/spell_rules_ai.cpp
 	core/port/spell_rules_overworld.cpp
 	core/port/spell_rules_panels.cpp

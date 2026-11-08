@@ -6043,3 +6043,8 @@ AURELION_KEY(raise_dome_sentence, "Raise a crystal dome over the hex and the six
 AURELION_KEY(green_return_sentence, "Once a battle, every stack of yours that has fallen grows back with %d%% of its starting creatures as the next round starts.")
 AURELION_KEY(echo_sentence, "Cast your hero's last spell of the battle again at once, with +%d spell power, for no more mana.")
 AURELION_KEY(echo_last_sentence, "Cast %s again at once, with +%d spell power, for no more mana.")
+AURELION_KEY(clone_sentence, "Build a clockwork copy of %s with %d%% of its creatures beside it, to fight for you for %s.")
+AURELION_KEY(host_sentence, "Call %s worth %d health in all onto any empty hex, in two flying stacks, to fight for you for %s.")
+AURELION_KEY(elder_sentence, "Wake %s worth %d health beside one of your stacks for %s, and grow trees on up to %d empty hexes beside it for the rest of the battle.")
+AURELION_KEY(risen_all_sentence, "Raise every stack destroyed in this battle, yours or the enemy's, as Risen with %d%% of its starting creatures, to fight for you for %s.")
+AURELION_KEY(hollow_crown_sentence, "For the rest of the battle, every enemy stack destroyed rises for you as Risen with %d%% of its starting creatures as the next round starts, and fights for %s.")

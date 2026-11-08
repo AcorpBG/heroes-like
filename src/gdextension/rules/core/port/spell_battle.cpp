@@ -323,7 +323,7 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 			|| effect_type == key::taunt_enemy || effect_type == key::pull_enemy || effect_type == key::charm_enemy;
 	// A decoy takes no spell of its own side's (a hex spell or one over the battle names no stack).
 	const bool names_no_stack = effect_type == key::ground_effect || effect_type == key::battle_aura || effect_type == key::recast
-			|| (effect_type == key::conjure && conjures_on_hex(state, spell_dict));
+			|| (effect_type == key::conjure && (conjures_on_hex(state, spell_dict) || conjures_over_battle(state, spell_dict)));
 	if (!names_no_stack && !gd::is_empty(state, target_stack) && side_of(state, target_stack) == acting_side && is_decoy(state, target_stack)) {
 		return refusal(state, gd::format(state, key::decoy_takes_no_spell_text, { str(battle_rules::_stack_label(state, target_stack)) }));
 	}
@@ -361,11 +361,16 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		}
 		return accepted(state);
 	}
-	// A summon or a raise takes a hex, checked when the cast names it; a decoy copies, and Hour Ledger turns back, a
-	// stack of the caster's that was not conjured.
+	// A summon or a raise takes a hex, checked when the cast names it; a decoy or a clockwork twin copies, and Hour
+	// Ledger turns back, a stack of the caster's that was not conjured. Waking Forest needs room beside the side's
+	// stacks, Drowned Host a stack fallen in the battle.
 	if (effect_type == key::conjure || effect_type == key::rewind) {
 		if (effect_type == key::conjure && conjures_on_hex(state, spell_dict)) {
 			return accepted(state);
+		}
+		if (effect_type == key::conjure && conjures_over_battle(state, spell_dict)) {
+			const Atom refused = battle_conjure_refusal(state, battle, spell_dict, acting_side);
+			return refused == key::empty ? accepted(state) : refusal(state, refused);
 		}
 		const DictRef own = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
 		if (gd::is_empty(state, own) || side_of(state, own) != acting_side || _alive_count(state, own) <= 0 || is_conjured(state, own)) {
@@ -394,6 +399,11 @@ DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_s
 		if (effect_type == key::battle_aura && gd::string_field(state, two_argument_get_target(effect), key::aura, key::empty) == key::green_return
 				&& green_return_used(state, battle, acting_side)) {
 			return refusal(state, key::green_return_used_text);
+		}
+		// Hollow Crown holds for the rest of the battle: a second is not cast.
+		if (effect_type == key::battle_aura && gd::string_field(state, two_argument_get_target(effect), key::aura, key::empty) == key::hollow_crown
+				&& hollow_crown_held(state, battle, acting_side)) {
+			return refusal(state, key::hollow_crown_held_text);
 		}
 		return accepted(state);
 	}
@@ -1068,11 +1078,32 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 		}
 	}
 	// A conjured stack finds its hex before the mana is spent: a summon or a raise names one (or none yet), a decoy
-	// takes the hex beside its stack nearest the closest enemy stack.
+	// or a clockwork twin takes the hex beside its stack nearest the closest enemy stack. Waking Forest's treant takes
+	// the hex beside the side's stacks nearest the closest enemy stack and its trees the hexes beside it, Wraith Host's
+	// second stack the hex nearest its first, and Drowned Host's Risen their fallen's hexes.
 	DictRef conjured = state.new_dict();
+	Value conjured_more;
+	Value forest_cells;
 	if (effect_type == key::conjure) {
 		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
-		if (!conjures_on_hex(state, spell)) {
+		if (conjures_over_battle(state, spell)) {
+			const Atom refused = battle_conjure_refusal(state, battle, spell, acting_side);
+			if (refused != key::empty) {
+				return hero_refusal(state, hero, refused);
+			}
+			if (gd::string_field(state, effect, key::conjure, key::empty) == key::elder) {
+				conjured = conjured_stack_for_cast(state, hero, battle, spell, acting_side, elder_cell(state, battle, spell, acting_side), state.new_dict());
+				if (gd::is_empty(state, conjured)) {
+					return hero_refusal(state, hero, gd::format(state, key::no_hex_for_spell_text, { str(spell_name) }));
+				}
+				forest_cells = array_value(forest_tree_cells(state, battle, conjured, gd::int_field(state, effect, key::trees, 0)));
+			} else {
+				conjured_more = array_value(risen_host_for_cast(state, hero, battle, spell, acting_side));
+				if (state.array_size(conjured_more.ref) == 0) {
+					return hero_refusal(state, hero, key::nothing_fallen_text);
+				}
+			}
+		} else if (!conjures_on_hex(state, spell)) {
 			const DictRef cell = decoy_cell(state, battle, ally_target);
 			conjured = gd::is_empty(state, cell) ? state.new_dict() : conjured_stack_for_cast(state, hero, battle, spell, acting_side, cell, ally_target);
 			if (gd::is_empty(state, conjured)) {
@@ -1088,6 +1119,10 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 				conjured = conjured_stack_for_cast(state, hero, battle, spell, acting_side, center, state.new_dict());
 				if (gd::is_empty(state, conjured)) {
 					return hero_refusal(state, hero, gd::format(state, key::hex_refused_for_spell_text, { str(spell_name) }));
+				}
+				// Wraith Host: the host in two stacks when there is room.
+				if (gd::int_field(state, effect, key::stacks, 1) >= 2) {
+					conjured_more = array_value(conjured_host(state, battle, conjured, spell, acting_side));
 				}
 			}
 		}
@@ -1369,15 +1404,25 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 	}
 	if (effect_type == key::conjure) {
 		const Atom spell_name = gd::string_field(state, spell, key::name, spell_id);
-		const bool decoy = !conjures_on_hex(state, spell);
-		const DictRef result = cast_result(state, hero, key::conjure_effect, decoy ? gd::string_field(state, ally_target, key::battle_id, key::empty) : static_cast<Atom>(key::empty));
+		// A decoy or a clockwork twin names the stack it copies; a spell over the battle, as Watchful Light does, the
+		// stack it is cast with.
+		const bool copies = !conjures_on_hex(state, spell) && !conjures_over_battle(state, spell);
+		const DictRef result = cast_result(state, hero, key::conjure_effect,
+				conjures_on_hex(state, spell) ? static_cast<Atom>(key::empty) : gd::string_field(state, ally_target, key::battle_id, key::empty));
 		if (needs_hex) {
 			state.set(result, str(key::needs_destination), bool_value(true));
 			state.set(result, str(key::message), str(gd::format(state, key::choose_hex_for_spell_text, { str(spell_name) })));
 			return result;
 		}
-		state.set(result, str(key::conjured_stack), dict_value(conjured));
-		state.set(result, str(key::message), str(decoy ? ally_cast_message(state, caster_name, spell, spell_id, ally_target)
+		if (gd::is_array(conjured_more)) {
+			state.set(result, str(key::conjured_stacks), conjured_more);
+		} else {
+			state.set(result, str(key::conjured_stack), dict_value(conjured));
+		}
+		if (gd::is_array(forest_cells)) {
+			state.set(result, str(key::tree_cells), forest_cells);
+		}
+		state.set(result, str(key::message), str(copies ? ally_cast_message(state, caster_name, spell, spell_id, ally_target)
 				: gd::format(state, key::s_casts_s, { str(caster_name), str(spell_name) })));
 		return result;
 	}
@@ -1576,6 +1621,12 @@ DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, D
 			const int64_t pct = gd::add(gd::int_field(state, effect, key::return_pct, 0), gd::mul(gd::int_field(state, effect, key::return_pct_power_scale, 0), spell_power(state, hero)));
 			state.set(entry, str(key::pct), int_value(engine_max<int64_t>(1, engine_min<int64_t>(100, pct))));
 			state.set(entry, str(key::until_round), int_value(gd::add(round, 1)));
+		} else if (aura_kind == key::hollow_crown) {
+			// Hollow Crown: for the rest of the battle, the other side's stacks destroyed from the cast on rise for the
+			// side as each next round starts, with their share at the caster's power, for its rounds.
+			state.set(entry, str(key::pct), int_value(conjure_share_pct(state, hero, spell)));
+			state.set(entry, str(key::rounds), int_value(spell_effect_turns(state, hero, effect, spell, key::buff, spell_power(state, hero))));
+			state.set(entry, str(key::until_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
 		}
 		const DictRef result = cast_result(state, hero, key::aura_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
 		state.set(result, str(key::aura_entry), dict_value(entry));

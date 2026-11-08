@@ -163,15 +163,21 @@ ArrayRef conjure_pick_cells(State &state, DictRef battle, DictRef spell, Atom si
 		}
 		return cells;
 	}
-	// A summon: the empty hexes its body fits on next to a living stack of the side (a decoy aside).
+	// A summon: the empty hexes its body fits on next to a living stack of the side (a decoy aside), or, placed
+	// anywhere (Wraith Host), every empty hex it fits on.
 	const DictRef body = conjured_body(state, gd::string_field(state, effect_of(state, spell), key::unit_id, key::empty), side, 1);
 	if (gd::is_empty(state, body)) {
 		return cells;
 	}
+	const bool anywhere = gd::string_field(state, effect_of(state, spell), key::place, key::empty) == key::anywhere;
 	for (int64_t q = 0; q < hex::kColumns; ++q) {
 		for (int64_t r = 0; r < hex::kRows; ++r) {
 			const DictRef cell = battle_rules::_hex_cell(state, q, r);
 			if (!body_fits(state, body, cell, occupied)) {
+				continue;
+			}
+			if (anywhere) {
+				state.append(cells, dict_value(cell));
 				continue;
 			}
 			for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
@@ -251,13 +257,32 @@ DictRef conjured_stack_for_cast(State &state, DictRef hero, DictRef battle, Dict
 		state.set(stack, str(key::name), str(gd::string_field(state, target, key::name, key::empty)));
 		state.set(stack, str(key::decoy_of), str(battle_id_of(state, target)));
 		state.set(stack, str(key::conjured_until_round), int_value(gd::sub(gd::add(round, rounds), 1)));
-	} else {
-		if (!conjures_on_hex(state, spell)) {
+	} else if (kind == key::clone) {
+		// Clockwork Twin: the stack's unit with its share of the stack's living creatures, whole. It acts from the
+		// next round, for its rounds.
+		if (!alive(state, target) || gd::is_empty(state, cell)) {
 			return stack;
 		}
-		bool listed = false;
-		for (const Value &pick : gd::items(state, array_value(conjure_pick_cells(state, battle, spell, side)))) {
-			listed = listed || same_cell(state, pick.ref, cell);
+		const int64_t count = engine_max<int64_t>(1, compat::int_div(gd::mul(_alive_count(state, target), conjure_share_pct(state, hero, spell)), 100));
+		stack = conjured_body(state, gd::string_field(state, target, key::unit_id, key::empty), side, count);
+		if (gd::is_empty(state, stack)) {
+			return stack;
+		}
+		health = gd::mul(count, engine_max<int64_t>(1, gd::int_field(state, stack, key::unit_hp, 1)));
+		state.set(stack, str(key::name), str(gd::format(state, key::clockwork_name_text, { str(gd::string_field(state, target, key::name, gd::string_field(state, stack, key::name, key::empty))) })));
+		state.set(stack, str(key::conjured_until_round), int_value(gd::add(round, rounds)));
+	} else {
+		// A summon or a raise on a hex the side picks; Waking Forest's treant on the hex elder_cell found.
+		if ((!conjures_on_hex(state, spell) && kind != key::elder) || gd::is_empty(state, cell)) {
+			return stack;
+		}
+		bool listed = kind == key::elder;
+		if (!listed && kind == key::summon && gd::string_field(state, effect, key::place, key::empty) == key::anywhere) {
+			listed = body_fits(state, conjured_body(state, gd::string_field(state, effect, key::unit_id, key::empty), side, 1), cell, battle_rules::_build_blocking_map(state, battle));
+		} else if (!listed) {
+			for (const Value &pick : gd::items(state, array_value(conjure_pick_cells(state, battle, spell, side)))) {
+				listed = listed || same_cell(state, pick.ref, cell);
+			}
 		}
 		if (!listed) {
 			return stack;
@@ -291,6 +316,10 @@ DictRef conjured_stack_for_cast(State &state, DictRef hero, DictRef battle, Dict
 			const int64_t speed = gd::int_field(state, effect, key::speed, 0);
 			if (speed > 0) {
 				state.set(stack, str(key::speed), int_value(speed));
+			}
+			// Wraith Host's wraiths fly: their walk passes stacks and obstacles.
+			if (gd::bool_field(state, effect, key::flies, false)) {
+				state.set(stack, str(key::flies), bool_value(true));
 			}
 		}
 		// It acts from the next round, for its rounds.

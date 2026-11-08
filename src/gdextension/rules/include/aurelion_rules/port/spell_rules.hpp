@@ -395,6 +395,23 @@ DictRef echo_target(State &state, DictRef battle, DictRef active_stack, DictRef 
 DictRef echo_caster(State &state, DictRef hero, DictRef echo_spell, Atom inner_id);
 int64_t echo_power_bonus(State &state, DictRef hero, DictRef echo_spell);
 bool echo_scores_inner(State &state, DictRef inner_spell);
+// Tier 4 and 5, summons (spell_tier45_summons.cpp). Waking Forest and Drowned Host conjure over the whole battle; a
+// share at the hero's power (Clockwork Twin's copy, Drowned Host's and Hollow Crown's Risen); Waking Forest's treant's
+// hex (beside one of the side's stacks, nearest the closest enemy stack; empty when none), the hexes its trees take
+// (beside it, where the field stays open) and the trees grown; Wraith Host's second stack beside the first, the
+// health shared out; Drowned Host's Risen; why a spell over the battle cannot be cast (empty when it can); Hollow
+// Crown held by a side, the other side's fallen it passes over at the cast, and its Risen as a round starts.
+bool conjures_over_battle(State &state, DictRef spell);
+int64_t conjure_share_pct(State &state, DictRef hero, DictRef spell);
+DictRef elder_cell(State &state, DictRef battle, DictRef spell, Atom side);
+ArrayRef forest_tree_cells(State &state, DictRef battle, DictRef treant, int64_t count);
+void grow_trees(State &state, DictRef battle, ArrayRef cells);
+ArrayRef conjured_host(State &state, DictRef battle, DictRef first, DictRef spell, Atom side);
+ArrayRef risen_host_for_cast(State &state, DictRef hero, DictRef battle, DictRef spell, Atom side);
+Atom battle_conjure_refusal(State &state, DictRef battle, DictRef spell, Atom side);
+bool hollow_crown_held(State &state, DictRef battle, Atom side);
+void crown_marks(State &state, DictRef battle, Atom side);
+void crown_rises(State &state, DictRef battle, DictRef aura);
 // Thicket Snare (spell_ground.cpp, spell_reach.cpp): a hex spell that lays no ground; the enemy stacks its area
 // catches, and their statuses, each on its own resistance draw.
 bool snare_ground(State &state, DictRef spell);

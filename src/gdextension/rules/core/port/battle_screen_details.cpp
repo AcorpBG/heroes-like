@@ -770,6 +770,9 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		if (aura == key::green_return) {
 			return with_timing(gd::format(state, key::green_return_sentence, {int_value(green_return_pct(state, hero_state, spell))}));
 		}
+		if (aura == key::hollow_crown) {
+			return with_timing(gd::format(state, key::hollow_crown_sentence, {int_value(conjure_share_pct(state, hero_state, spell)), str(rounds_label)}));
+		}
 		return with_timing(gd::format(state, key::watch_sentence, {str(rounds_label), int_value(_battle_spell_recovery_amount(state, hero_state, spell))}));
 	}
 	// Goad and Uproot: a status the target may resist, Uproot's after the drag it always makes.
@@ -802,11 +805,24 @@ Atom _battle_spell_action_summary(State &state, DictRef hero_state, DictRef batt
 		if (kind == key::decoy) {
 			return with_timing(gd::format(state, key::decoy_sentence, {str(ally_name), str(rounds_label)}));
 		}
+		// Tier 4 and 5 (spell_tier45_summons.cpp).
+		if (kind == key::clone) {
+			return with_timing(gd::format(state, key::clone_sentence, {str(ally_name), int_value(conjure_share_pct(state, hero_state, spell)), str(rounds_label)}));
+		}
+		if (kind == key::risen_all) {
+			return with_timing(gd::format(state, key::risen_all_sentence, {int_value(conjure_share_pct(state, hero_state, spell)), str(rounds_label)}));
+		}
 		const int64_t health = gd::add(gd::int_field(state, effect, key::base_health, 0), gd::mul(gd::int_field(state, effect, key::power_scale, 0), power));
 		if (kind == key::risen) {
 			return with_timing(gd::format(state, key::risen_sentence, {int_value(health), str(rounds_label)}));
 		}
 		const Atom name = text_or(state, effect, key::name, text_or(state, spell, key::name, key::empty));
+		if (kind == key::elder) {
+			return with_timing(gd::format(state, key::elder_sentence, {str(name), int_value(health), str(rounds_label), int_value(gd::int_field(state, effect, key::trees, 0))}));
+		}
+		if (gd::int_field(state, effect, key::stacks, 1) >= 2) {
+			return with_timing(gd::format(state, key::host_sentence, {str(name), int_value(health), str(rounds_label)}));
+		}
 		return with_timing(gd::format(state, gd::bool_field(state, effect, key::immobile, false) ? key::sentinel_sentence : key::summon_sentence,
 				{str(name), int_value(health), str(rounds_label)}));
 	}

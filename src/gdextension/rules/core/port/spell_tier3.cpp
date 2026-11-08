@@ -345,6 +345,10 @@ void add_battle_aura(State &state, DictRef battle, DictRef entry) {
 	if (gd::string_field(state, entry, key::aura, key::empty) == key::green_return) {
 		mark_green_return(state, battle, gd::string_field(state, entry, key::side, key::empty));
 	}
+	// Hollow Crown passes over the other side's stacks already fallen.
+	if (gd::string_field(state, entry, key::aura, key::empty) == key::hollow_crown) {
+		crown_marks(state, battle, gd::string_field(state, entry, key::side, key::empty));
+	}
 }
 
 DictRef most_wounded_stack(State &state, DictRef battle, Atom side) {
@@ -391,6 +395,11 @@ void round_start_auras(State &state, DictRef battle, int64_t round) {
 		// Green Return: the side's fallen grow back (spell_tier45_turns.cpp).
 		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::green_return) {
 			green_return_rises(state, battle, aura.ref);
+			continue;
+		}
+		// Hollow Crown: the other side's stacks destroyed since rise for the side (spell_tier45_summons.cpp).
+		if (gd::string_field(state, aura.ref, key::aura, key::empty) == key::hollow_crown) {
+			crown_rises(state, battle, aura.ref);
 			continue;
 		}
 		// Watchful Light: its side's most wounded stack heals.

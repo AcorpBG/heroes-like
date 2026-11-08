@@ -2605,6 +2605,72 @@
       "source_sha256": "34285903fa8c64d96deae8b8329b7adcbdfe36d905b7bfc7f495a7ce05702798",
       "icon_path": "res://art/magic/runtime/spells/spell_root_loam_bloom_26.png",
       "icon_sha256": "045372d74422c7a711a13025ef3ece2937c962013889b881d1fa774260d1c6b5"
+    },
+    {
+      "id": "spell_foundry_golem",
+      "spell_id": "spell_foundry_golem",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_foundry_golem",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_brass_bellows_23.png",
+      "source_sha256": "fe83be49da00f60272ad3a8bef2bc50bb4768212ae15baf01e059f93ad9aca25",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_brass_bellows_23.png",
+      "icon_sha256": "66278142a779b76c9a014eca999a5ec8fc5167a965d99b8c0f0bb468e2efd7ad"
+    },
+    {
+      "id": "spell_clockwork_twin",
+      "spell_id": "spell_clockwork_twin",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_clockwork_twin",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_brass_rite_07.png",
+      "source_sha256": "c124269f454f63cb7386520fb9307b805af9624d137cc8e7eb864401d12abeba",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_brass_rite_07.png",
+      "icon_sha256": "010236efa015bfd6693c98c306f7ca8a04e6ae7e98f5e5f8e67d4e059942d84b"
+    },
+    {
+      "id": "spell_waking_forest",
+      "spell_id": "spell_waking_forest",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_waking_forest",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_canopy_thorn_22.png",
+      "source_sha256": "10c3be38fd5066f25d012cf6322769e17f830b632187bef7776874fc6c68515e",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_canopy_thorn_22.png",
+      "icon_sha256": "134c0c2c4a433728965f8a29b145c5b99c56563ce7b9ba730e0931a28a2184fc"
+    },
+    {
+      "id": "spell_wraith_host",
+      "spell_id": "spell_wraith_host",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_wraith_host",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_wraith_duel_14.png",
+      "source_sha256": "1b3a92698a29fda67df59600bfb2b136982679af15f61cd469567182d2efb41f",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_wraith_duel_14.png",
+      "icon_sha256": "73a09d7f741894f660b8264d9a5d3900bdc9f63d0d3d5bb4684b376be5491152"
+    },
+    {
+      "id": "spell_drowned_host",
+      "spell_id": "spell_drowned_host",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_drowned_host",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_drowned_bell_verdict.png",
+      "source_sha256": "ee2130adcf4ae8ec04cfddbff823e61a122c4cec08a2f9c4cb4d99ad3eb1e371",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png",
+      "icon_sha256": "6978a504a17a3a1e59f50f7494c7e34dbf583f0932c8c887c4ae905837a27c47"
+    },
+    {
+      "id": "spell_hollow_crown",
+      "spell_id": "spell_hollow_crown",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_hollow_crown",
+      "source_kind": "stand_in_borrowed_spell_icon",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mourning_mark_04.png",
+      "source_sha256": "7c87cf4ee89d662d8070b4d59888a9cb8c8e470f4d0a6bfc0557ebfe1489629b",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mourning_mark_04.png",
+      "icon_sha256": "0ee2071fa529a3af60b4eced53c61a4c96c1ac4d8e2f2d12bcf54de70d0f7af9"
     }
   ]
 }

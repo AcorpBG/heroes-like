@@ -250,9 +250,16 @@ double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, 
 		const DictRef plan = _ground_spell_plan(state, enemy_hero, battle, active_stack, spell);
 		score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
 	} else if (effect_type == key::conjure) {
+		const Atom kind = gd::string_field(state, spell_effect(state, spell), key::conjure, key::empty);
 		if (spell_rules::conjures_on_hex(state, spell)) {
 			const DictRef plan = _conjure_spell_plan(state, enemy_hero, battle, active_stack, spell);
 			score = empty(state, plan) ? -9999.0 : gd::float_field(state, plan, key::score, -9999.0);
+		} else if (kind == key::clone) {
+			score = _clone_spell_score(state, enemy_hero, battle, active_stack, target, spell);
+		} else if (kind == key::elder) {
+			score = _elder_spell_score(state, enemy_hero, battle, active_stack, spell);
+		} else if (kind == key::risen_all) {
+			score = _risen_host_spell_score(state, enemy_hero, battle, active_stack, spell);
 		} else {
 			score = _decoy_spell_score(state, enemy_hero, battle, active_stack, target, spell);
 		}
@@ -551,6 +558,13 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				const DictRef candidate = cast_candidate(state, spell_id, target_id, score);
 				state.set(candidate, str(key::destination), state.get(plan, str(key::destination), dict_value(state.new_dict())));
 				state.append(candidates, dict_value(candidate));
+				state.append(lethal_flags, bool_value(false));
+			}
+		} else if (effect_type == key::conjure && spell_rules::conjures_over_battle(state, spell)) {
+			// Waking Forest and Drowned Host: the whole battle, cast with the acting stack as a spell over the battle is.
+			if (check_ok(state, spell_rules::battle_spell_target_check(state, battle, active_stack, active_stack, spell, acting_side))) {
+				const double score = _spell_candidate_score(state, enemy_hero, battle, active_stack, active_stack, spell, behavior, hostiles, role_modifier, state.new_dict());
+				state.append(candidates, dict_value(cast_candidate(state, gd::string_field(state, spell, key::id, key::empty), gd::string_field(state, active_stack, key::battle_id, key::empty), score)));
 				state.append(lethal_flags, bool_value(false));
 			}
 		} else if (effect_type == key::conjure && spell_rules::conjures_on_hex(state, spell)) {

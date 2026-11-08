@@ -1580,7 +1580,7 @@ void Check::spell(const Value &spell) {
 		}
 		// Watchful Light heals; Second Sun burns the other side for the battle; Eternal Noon keeps statuses off.
 		const std::string aura = text(effect, "aura");
-		if (!one_of(aura, {"triage", "sun", "noon", "green_return"})) {
+		if (!one_of(aura, {"triage", "sun", "noon", "green_return", "hollow_crown"})) {
 			warn("Spell " + spell_id + " uses unsupported aura " + aura + ".");
 		}
 		if (aura == "triage" && (integer(effect, "base_restore", 0) <= 0 || integer(effect, "duration_rounds", 0) <= 0)) {
@@ -1597,24 +1597,49 @@ void Check::spell(const Value &spell) {
 		if (aura == "green_return" && (return_pct <= 0 || return_pct > 100 || integer(effect, "return_pct_power_scale", 0) < 0)) {
 			warn("Spell " + spell_id + " must define green_return return_pct 1 to 100 and return_pct_power_scale >= 0.");
 		}
+		// Hollow Crown: the share of a fallen stack's starting creatures its Risen rise with, for their rounds.
+		const int64_t crown_pct = integer(effect, "pct", 0);
+		if (aura == "hollow_crown" && (crown_pct <= 0 || crown_pct > 100 || integer(effect, "pct_power_scale", 0) < 0 || integer(effect, "duration_rounds", 0) <= 0)) {
+			warn("Spell " + spell_id + " must define hollow_crown pct 1 to 100, pct_power_scale >= 0 and duration_rounds > 0.");
+		}
 	} else if (type == "conjure") {
-		// A stack on the field for some rounds: summoned creatures or the Risen on a hex, or a decoy of a stack.
+		// A stack on the field for some rounds: summoned creatures or the Risen on a hex, a decoy or a clockwork copy of
+		// a stack, an elder treant with its trees, or the Risen of every fallen stack.
 		const std::string kind = text(effect, "conjure");
-		if (!one_of(kind, {"summon", "risen", "decoy"})) {
+		if (!one_of(kind, {"summon", "risen", "decoy", "clone", "elder", "risen_all"})) {
 			warn("Spell " + spell_id + " uses unsupported conjure " + kind + ".");
 		}
-		const std::string wanted_mode = kind == "decoy" ? "ally_selected" : "hex_selected";
+		const std::string wanted_mode = (kind == "decoy" || kind == "clone") ? "ally_selected" : (kind == "elder" || kind == "risen_all") ? "battle" : "hex_selected";
 		if (text(spell, "target_mode") != wanted_mode) {
 			warn("Spell " + spell_id + " conjure " + kind + " must use target_mode " + wanted_mode + ".");
 		}
 		if (integer(effect, "duration_rounds", 0) <= 0) {
 			warn("Spell " + spell_id + " must define duration_rounds > 0.");
 		}
-		if (kind != "decoy" && (integer(effect, "base_health", 0) <= 0 || integer(effect, "power_scale", -1) < 0)) {
+		if (one_of(kind, {"summon", "risen", "elder"}) && (integer(effect, "base_health", 0) <= 0 || integer(effect, "power_scale", -1) < 0)) {
 			warn("Spell " + spell_id + " must define conjure base_health > 0 and power_scale >= 0.");
 		}
-		if (kind == "summon" && text(effect, "unit_id").empty()) {
+		if ((kind == "summon" || kind == "elder") && text(effect, "unit_id").empty()) {
 			warn("Spell " + spell_id + " must define the summoned unit_id.");
+		}
+		// A share of a stack's creatures: Clockwork Twin's of the living, Drowned Host's of the starting ones.
+		const int64_t share_pct = integer(effect, "pct", 0);
+		if ((kind == "clone" || kind == "risen_all") && (share_pct <= 0 || share_pct > 100 || integer(effect, "pct_power_scale", 0) < 0)) {
+			warn("Spell " + spell_id + " must define conjure pct 1 to 100 and pct_power_scale >= 0.");
+		}
+		if (integer(effect, "trees", 0) < 0) {
+			warn("Spell " + spell_id + " conjure trees must be 0 or more.");
+		}
+		if (integer(effect, "stacks", 1) < 1) {
+			warn("Spell " + spell_id + " conjure stacks must be 1 or more.");
+		}
+		const std::string place = text(effect, "place");
+		if (!place.empty() && !one_of(place, {"beside_own", "anywhere", "fallen", "beside_target"})) {
+			warn("Spell " + spell_id + " uses unsupported conjure place " + place + ".");
+		}
+		const Value flies = get(effect, "flies", Value());
+		if (flies.kind != Kind::Nil && flies.kind != Kind::Bool) {
+			warn("Spell " + spell_id + " flies must be true or false.");
 		}
 		if (integer(effect, "speed", 0) < 0) {
 			warn("Spell " + spell_id + " conjure speed must be 0 or more.");

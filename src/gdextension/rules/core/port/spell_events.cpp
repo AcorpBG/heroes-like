@@ -711,6 +711,27 @@ bool _apply_spell_resolution_on_target(State &state, DictRef battle, DictRef res
 				message = concat(state, message, gd::format(state, key::conjured_stands_suffix_text, { str(_stack_label(state, stack)), str(_hex_label(state, _stack_hex(state, stack))) }));
 			}
 		}
+		// Wraith Host's two stacks and Drowned Host's Risen, in turn (spell_tier45_summons.cpp).
+		const Value more = gd::field(state, resolution, key::conjured_stacks);
+		if (gd::is_array(more)) {
+			for (const Value &each : gd::items(state, more)) {
+				if (!gd::is_dict(each) || gd::is_empty(state, each.ref)) {
+					continue;
+				}
+				const Atom id = spell_rules::add_conjured_stack(state, battle, gd::deep_duplicate_dict(state, each.ref));
+				const DictRef stack = _get_stack_by_id(state, battle, id);
+				if (!gd::is_empty(state, stack)) {
+					message = concat(state, message, gd::format(state, key::conjured_stands_suffix_text, { str(_stack_label(state, stack)), str(_hex_label(state, _stack_hex(state, stack))) }));
+				}
+			}
+		}
+		// Waking Forest's trees.
+		const Value trees = gd::field(state, resolution, key::tree_cells);
+		if (gd::is_array(trees) && state.array_size(trees.ref) > 0) {
+			spell_rules::grow_trees(state, battle, trees.ref);
+			const int64_t grown = state.array_size(trees.ref);
+			message = concat(state, message, grown == 1 ? static_cast<Atom>(key::tree_grows_suffix_text) : gd::format(state, key::trees_grow_suffix_text, { int_value(grown) }));
+		}
 		return true;
 	}
 	if (resolution_type == key::vanish_effect) {

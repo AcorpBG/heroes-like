@@ -6175,6 +6175,165 @@
         "return_pct_power_scale": 4
       },
       "scroll_only": true
+    },
+    {
+      "id": "spell_foundry_golem",
+      "name": "Foundry Golem",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "The foundry pours a brass golem onto an empty hex beside one of your stacks, to fight for you for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "summon",
+        "unit_id": "unit_neutral_deepforge_vaultwyrms",
+        "name": "Brass Golems",
+        "base_health": 90,
+        "power_scale": 20,
+        "duration_rounds": 3,
+        "place": "beside_own"
+      }
+    },
+    {
+      "id": "spell_clockwork_twin",
+      "name": "Clockwork Twin",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_tier4",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "ally_selected",
+      "unreleased": true,
+      "description": "Clockwork copies one of your stacks beside it, with a share of its creatures, to fight for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "clone",
+        "pct": 30,
+        "pct_power_scale": 4,
+        "duration_rounds": 2,
+        "place": "beside_target"
+      },
+      "scroll_only": true
+    },
+    {
+      "id": "spell_waking_forest",
+      "name": "Waking Forest",
+      "school_id": "root",
+      "tier": 5,
+      "accord_family": "root_tier5",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 16,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "An elder treant wakes beside your stacks, and trees grow around it for the rest of the battle.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "elder",
+        "unit_id": "unit_neutral_rootcrown_knotstags",
+        "name": "Elder Treant",
+        "base_health": 150,
+        "power_scale": 30,
+        "duration_rounds": 4,
+        "speed": 3,
+        "trees": 4,
+        "place": "beside_own"
+      }
+    },
+    {
+      "id": "spell_wraith_host",
+      "name": "Wraith Host",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_tier4",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "damage"
+      ],
+      "context": "battle",
+      "mana_cost": 11,
+      "target_mode": "hex_selected",
+      "unreleased": true,
+      "description": "A host of wraiths falls on any empty hex you pick, in two flying stacks, to fight for you for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "summon",
+        "unit_id": "unit_neutral_tidepool_cutters",
+        "name": "Wraiths",
+        "base_health": 90,
+        "power_scale": 20,
+        "duration_rounds": 2,
+        "speed": 8,
+        "flies": true,
+        "stacks": 2,
+        "place": "anywhere"
+      }
+    },
+    {
+      "id": "spell_drowned_host",
+      "name": "Drowned Host",
+      "school_id": "veil",
+      "tier": 5,
+      "accord_family": "veil_tier5",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 17,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "Every stack destroyed in this battle, yours or the enemy's, rises from the deep as Risen to fight for you for a few rounds.",
+      "effect": {
+        "type": "conjure",
+        "conjure": "risen_all",
+        "pct": 25,
+        "pct_power_scale": 2,
+        "duration_rounds": 2
+      }
+    },
+    {
+      "id": "spell_hollow_crown",
+      "name": "Hollow Crown",
+      "school_id": "veil",
+      "tier": 5,
+      "accord_family": "veil_tier5",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 18,
+      "target_mode": "battle",
+      "unreleased": true,
+      "description": "For the rest of the battle, every enemy stack destroyed rises for you as Risen as the next round begins.",
+      "effect": {
+        "type": "battle_aura",
+        "aura": "hollow_crown",
+        "pct": 20,
+        "pct_power_scale": 2,
+        "duration_rounds": 2
+      },
+      "scroll_only": true
     }
   ]
 }
