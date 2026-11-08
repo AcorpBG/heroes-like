@@ -129,8 +129,8 @@ void copy_resource_amounts(State &state, DictRef resources, const Value &value) 
 
 // The magic switch (docs/magic-system.md, Saves): a save from before it, save
 // version 9 or older, names the spells and masteries retired then. Each
-// becomes its replacement from retired_spells.json, and a faction's heroes get
-// its school's mastery.
+// becomes its replacement from retired_spells.json, and a faction's magic
+// heroes get its school's mastery.
 struct RetiredMagic {
 	std::unordered_map<Atom, Atom> spells;
 	std::unordered_map<Atom, Atom> masteries;
@@ -242,12 +242,16 @@ void convert_scrolls(State &state, const RetiredMagic &retired, DictRef artifact
 	}
 }
 
-// The mastery of the hero's own faction's preferred school, or none for a
-// commander that is no hero (docs/magic-system.md, Faction preference).
+// The mastery of the hero's own faction's preferred school for a magic hero
+// (command_path in heroes.json), or none for a might hero or a commander that
+// is no hero (docs/magic-system.md, Faction preference).
 Atom faction_mastery_id(State &state, const RetiredMagic &retired, DictRef hero) {
 	for (const Atom field : {key::roster_hero_id, key::hero_id, key::id}) {
 		const DictRef row = gd::content_row(state, ContentTable::Hero, text(state, hero, field, key::empty));
 		if (!gd::is_empty(state, row)) {
+			if (text(state, row, key::command_path, key::empty) != key::magic) {
+				return key::empty;
+			}
 			const DictRef faction = gd::content_row(state, ContentTable::Faction, text(state, row, key::faction_id, key::empty));
 			const Atom school_id = text(state, faction, key::preferred_spell_school_id, key::empty);
 			const Atom mastery = school_id == key::empty ? static_cast<Atom>(key::empty) : state.intern("mastery_" + state.text(school_id));
@@ -258,8 +262,8 @@ Atom faction_mastery_id(State &state, const RetiredMagic &retired, DictRef hero)
 }
 
 // A hero's specialties: a retired mastery's ranks join the mastery its school
-// joined, up to the highest rank, in their places; a faction's hero with a
-// free slot gets that faction's mastery at rank 1.
+// joined, up to the highest rank, in their places; a faction's magic hero with
+// a free slot gets that faction's mastery at rank 1.
 void convert_specialties(State &state, const RetiredMagic &retired, DictRef hero) {
 	const Value specialties = gd::field(state, hero, key::specialties);
 	if (!gd::is_array(specialties)) {

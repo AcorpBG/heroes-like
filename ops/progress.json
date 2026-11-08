@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "overworld-faction-ground-each-20261108",
- "currentSliceTitle": "Lava, ash and water cost 1.5; each faction crosses its own ground at grass cost: Embercourt sand, Mireclaw swamp/mire, Sunvault snow/frost, Thornwake rough/forest, Brasshollow lava/ash, Veilmourn water; content only.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T19:17:02Z",
+ "currentSliceId": "magic-faction-mastery-magic-heroes-20261108",
+ "currentSliceTitle": "Magic: only a faction's magic heroes start with its school mastery",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T19:23:55Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "magic-faction-mastery-magic-heroes-20261108",
+   "title": "Magic: only a faction's magic heroes start with its school mastery",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-08: only a faction's magic heroes (command_path magic in heroes.json, 5 of its 11) start with mastery 1 in its preferred school; its might heroes start without it. heroes.json starting_specialties; the pre-switch save conversion (overworld_state_normalize.cpp) grants it to magic heroes only; docs/magic-system.md.",
+   "docs": [
+    "docs/magic-system.md"
+   ],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "overworld-faction-ground-each-20261108",
    "status": "completed",

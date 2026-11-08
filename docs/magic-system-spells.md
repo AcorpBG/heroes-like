@@ -7,7 +7,7 @@ The 139 spells and 138 mechanics of the magic system in `docs/magic-system.md`, 
 - `{a+bP}`: a + b × spell power. Helpful numbers. `{a+P}` means b = 1.
 - `{a+bE}`: a + b × E, where E is spell power less all of the enemy hero's Knowledge, never below 0. Against a neutral army, which has no hero, E is the spell power. Harmful numbers and the turns of effects on enemy stacks.
 - `{a+P/d}` and `{a+E/d}`: a + spell power (or E) ÷ d, rounded down: turns, rounds, tiles and counts. A lasting effect gets one more turn per 4 spell power, with no limit.
-- A faction's heroes cast its preferred school at 1 more spell power, and start with mastery 1 in it.
+- A faction's heroes cast its preferred school at 1 more spell power, and its magic heroes start with mastery 1 in it.
 - Mana is the cost per cast before mastery discounts. Mastery: from the mastery rank named, the spell also reaches the stacks the column says.
 - Creatures keep their own school resistances on top of Knowledge; basic spells meet only general spell resistance.
 
