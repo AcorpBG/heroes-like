@@ -7226,7 +7226,7 @@
     "spell_cinder_burst": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_impact",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_stone_veil": {
@@ -7274,7 +7274,7 @@
     "spell_coal_rain": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_impact",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_bulwark_litany": {
@@ -7316,13 +7316,13 @@
     "spell_sunlance_arc": {
       "cast": "magic_lens_cast",
       "effect": "magic_lens_impact",
-      "expire": "",
+      "expire": "magic_lens_expire",
       "context": "battle"
     },
     "spell_briar_bind": {
       "cast": "magic_root_cast",
       "effect": "magic_root_bind",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_graft_mend": {
@@ -7340,7 +7340,7 @@
     "spell_pressure_clause": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_impact",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_fogwake_step": {
@@ -7352,7 +7352,7 @@
     "spell_obituary_mark": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_impact",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_beacon_roadward_signal_07": {
@@ -7376,7 +7376,7 @@
     "spell_beacon_writ_lance_13": {
       "cast": "magic_beacon_cast",
       "effect": "magic_beacon_impact",
-      "expire": "",
+      "expire": "magic_beacon_expire",
       "context": "battle"
     },
     "spell_beacon_waymark_road_15": {
@@ -7412,13 +7412,13 @@
     "spell_beacon_bell_lance_25": {
       "cast": "magic_beacon_cast",
       "effect": "magic_beacon_impact",
-      "expire": "",
+      "expire": "magic_beacon_expire",
       "context": "battle"
     },
     "spell_mire_silt_rot_04": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_impact",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_mire_dusk_drum_06": {
@@ -7436,7 +7436,7 @@
     "spell_mire_leech_snare_10": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_bind",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_mire_flood_fenlight_12": {
@@ -7454,7 +7454,7 @@
     "spell_mire_lowtide_rot_16": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_impact",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_mire_bog_drum_18": {
@@ -7472,7 +7472,7 @@
     "spell_mire_dusk_snare_22": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_bind",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_mire_brine_fenlight_24": {
@@ -7490,7 +7490,7 @@
     "spell_mire_flood_rot_28": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_impact",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_lens_mirror_prism_04": {
@@ -7502,7 +7502,7 @@
     "spell_lens_array_ray_06": {
       "cast": "magic_lens_cast",
       "effect": "magic_lens_impact",
-      "expire": "",
+      "expire": "magic_lens_expire",
       "context": "battle"
     },
     "spell_lens_glass_facet_08": {
@@ -7538,7 +7538,7 @@
     "spell_lens_halo_ray_18": {
       "cast": "magic_lens_cast",
       "effect": "magic_lens_impact",
-      "expire": "",
+      "expire": "magic_lens_expire",
       "context": "battle"
     },
     "spell_lens_mirror_facet_20": {
@@ -7574,7 +7574,7 @@
     "spell_root_bloom_briar_04": {
       "cast": "magic_root_cast",
       "effect": "magic_root_bind",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_root_canopy_graft_06": {
@@ -7592,7 +7592,7 @@
     "spell_root_loam_thorn_10": {
       "cast": "magic_root_cast",
       "effect": "magic_root_impact",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_root_green_rootway_12": {
@@ -7610,7 +7610,7 @@
     "spell_root_wild_briar_16": {
       "cast": "magic_root_cast",
       "effect": "magic_root_bind",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_root_graft_graft_18": {
@@ -7628,7 +7628,7 @@
     "spell_root_canopy_thorn_22": {
       "cast": "magic_root_cast",
       "effect": "magic_root_impact",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_root_bark_rootway_24": {
@@ -7646,13 +7646,13 @@
     "spell_root_green_briar_28": {
       "cast": "magic_root_cast",
       "effect": "magic_root_bind",
-      "expire": "",
+      "expire": "magic_root_expire",
       "context": "battle"
     },
     "spell_furnace_rivet_clause_05": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_impact",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_furnace_brass_rite_07": {
@@ -7682,13 +7682,13 @@
     "spell_furnace_slag_clamp_15": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_bind",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_furnace_coal_clause_17": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_impact",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_furnace_kiln_rite_19": {
@@ -7718,13 +7718,13 @@
     "spell_furnace_foundry_clamp_27": {
       "cast": "magic_furnace_cast",
       "effect": "magic_furnace_bind",
-      "expire": "",
+      "expire": "magic_furnace_expire",
       "context": "battle"
     },
     "spell_veil_mourning_mark_04": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_impact",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_veil_salt_step_06": {
@@ -7736,7 +7736,7 @@
     "spell_veil_tide_fogbind_08": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_bind",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_veil_mist_shroud_10": {
@@ -7760,7 +7760,7 @@
     "spell_veil_lantern_mark_16": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_impact",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_veil_obituary_step_18": {
@@ -7772,7 +7772,7 @@
     "spell_veil_mourning_fogbind_20": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_bind",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_veil_salt_shroud_22": {
@@ -7796,7 +7796,7 @@
     "spell_veil_moon_mark_28": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_impact",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_old_measure_survey_survey_02": {
@@ -7814,13 +7814,13 @@
     "spell_old_measure_compass_boundary_06": {
       "cast": "magic_old_measure_cast",
       "effect": "magic_old_measure_bind",
-      "expire": "",
+      "expire": "magic_old_measure_expire",
       "context": "battle"
     },
     "spell_old_measure_marker_tally_08": {
       "cast": "magic_old_measure_cast",
       "effect": "magic_old_measure_impact",
-      "expire": "",
+      "expire": "magic_old_measure_expire",
       "context": "battle"
     },
     "spell_old_measure_index_correction_10": {
@@ -7850,13 +7850,13 @@
     "spell_old_measure_survey_boundary_18": {
       "cast": "magic_old_measure_cast",
       "effect": "magic_old_measure_bind",
-      "expire": "",
+      "expire": "magic_old_measure_expire",
       "context": "battle"
     },
     "spell_old_measure_tally_tally_20": {
       "cast": "magic_old_measure_cast",
       "effect": "magic_old_measure_impact",
-      "expire": "",
+      "expire": "magic_old_measure_expire",
       "context": "battle"
     },
     "spell_old_measure_compass_correction_22": {
@@ -7886,7 +7886,7 @@
     "spell_old_measure_count_boundary_30": {
       "cast": "magic_old_measure_cast",
       "effect": "magic_old_measure_bind",
-      "expire": "",
+      "expire": "magic_old_measure_expire",
       "context": "battle"
     },
     "spell_beacon_lockfire_muster": {
@@ -7898,7 +7898,7 @@
     "spell_mire_moonfen_dragnet": {
       "cast": "magic_mire_cast",
       "effect": "magic_mire_bind",
-      "expire": "",
+      "expire": "magic_mire_expire",
       "context": "battle"
     },
     "spell_lens_seven_facet_refrain": {
@@ -7922,7 +7922,7 @@
     "spell_veil_drowned_bell_verdict": {
       "cast": "magic_veil_cast",
       "effect": "magic_veil_impact",
-      "expire": "",
+      "expire": "magic_veil_expire",
       "context": "battle"
     },
     "spell_old_measure_unbroken_meridian": {
@@ -7930,6 +7930,828 @@
       "effect": "magic_old_measure_ward",
       "expire": "magic_old_measure_expire",
       "context": "battle"
+    },
+    "spell_bolt": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_mend": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_sharpen": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_empower",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_quicken": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_haste",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_shell": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_ward",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_steady": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_ward",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_hobble": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_daze": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_snare": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_lens_expire",
+      "context": "battle"
+    },
+    "spell_unweave": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_cleanse": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_cleanse",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_shift": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_haste",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_overdrive": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_stoke": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_cooling_slag": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_bind",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_ember_lash": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_hot_iron": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_rivet_plate": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_heartwood_stance": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_empower",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_grasping_roots": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_pollen_drift": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_thornshot": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_green_mending": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_thornmail": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_ward",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_call_to_arms": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_haste",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_sighting_mark": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_dazzle": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_radiant_mend": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_prism_ward": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_cleanse",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_hungering": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_dread": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_fog_mind": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_wasting_curse": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_mist_cloak": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_ward",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_cinder_spray": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_spark_swarm": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_dawn_lance": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_morning_light": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_leech": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_graft": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_ward",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_blood_tithe": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_mire_heal",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_signal_swap": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_haste",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_changeling_swap": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_flame_furrow": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_bramble_patch": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_thorn_seed": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_crystal_pillar": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_murk": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_molten_edge": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_cinderfall": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_flashpoint": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_annealing": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_heavy_plating": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_tempering": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_smelters_bargain": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_budding": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_empower",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_earthsplit": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_bloomburst": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_seed_of_return": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_bark_ring": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_ward",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_blight": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_volley_signal": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_prism_bolt": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_rekindle": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_watchful_light": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_glass_aegis": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_cleanse",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_steadfast_halo": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_hollowing": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_tolling_doom": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_last_breath": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_mire_heal",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_goad": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_bind",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_uproot": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_living_wall": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_ward",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_boundary_line": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_prism_array": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_impact",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_fogwalk": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_haste",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_night_terror": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_bog_pool": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_brass_sentinel": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_wake_the_grove": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_empower",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_raise_the_fallen": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_decoy": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_ward",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_hour_ledger": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_puppet_strings": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_molten_brand": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_bind",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_kiln_burst": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_crucible_ward": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_spore_cloud": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_impact",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_thicket_snare": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_sapflood": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_ironbark": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_ward",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_censure": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_old_measure_bind",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_searing_ray": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_sanctuary": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_grave_edge": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_stupor": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_deaths_door": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_full_steam": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_molten_deluge": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_iron_oath": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_ward",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_second_sun": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_grasp_of_the_deep": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_bind",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_spring_eternal": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_lantern_vigil": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_daybreak_charge": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_empower",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_dawn_of_return": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_eternal_noon": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_fever_wind": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_long_night": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_bind",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_black_tide": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_impact",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_redline": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_clarion_call": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_haste",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_echo": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_haste",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_shadow_ranks": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_ward",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_elder_grove": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_glass_dome": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_ward",
+      "expire": "magic_beacon_expire",
+      "context": "battle"
+    },
+    "spell_green_return": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_heal",
+      "expire": "",
+      "context": "battle"
+    },
+    "spell_foundry_golem": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_clockwork_twin": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_empower",
+      "expire": "magic_furnace_expire",
+      "context": "battle"
+    },
+    "spell_waking_forest": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_empower",
+      "expire": "magic_root_expire",
+      "context": "battle"
+    },
+    "spell_wraith_host": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_drowned_host": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_hollow_crown": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_empower",
+      "expire": "magic_veil_expire",
+      "context": "battle"
+    },
+    "spell_far_sight": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_field_reveal",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_stride": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_old_measure_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_read_tracks": {
+      "cast": "magic_lens_cast",
+      "effect": "magic_lens_field_reveal",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_watchtower_lens": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_lens_field_reveal",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_harvest_bloom": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_forge_road": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_scorched_earth": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_wardwood": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_flare": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_lens_field_reveal",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_firebreak": {
+      "cast": "magic_furnace_cast",
+      "effect": "magic_furnace_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_rootway": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_relay": {
+      "cast": "magic_beacon_cast",
+      "effect": "magic_beacon_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_ferry_call": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_mist_jump": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_field_march",
+      "expire": "",
+      "context": "overworld"
     }
   }
 }

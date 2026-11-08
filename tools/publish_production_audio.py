@@ -60,8 +60,42 @@ def profiles():
             'review':'Inspected all 160 standees in four contact sheets, 2026-09-13; shared body/material design, not species-specific dialogue.'}
     return result
 
+# A spell sounds with its school's cast, the effect of its role's kind and, when it lasts, its school's expire.
+# Lens and Old Measure join Beacon and Mire joins Veil at the magic switch, so their banks fill a kind the new
+# school lacks; Basic, with no banks of its own, sounds like Lens and Old Measure. A kind no bank of the school has falls back
+# to a near one. Map spells sound as field casts.
+SPELL_KINDS={'assault_buff':'empower','ally_defense':'ward','countermagic_ward':'cleanse','ally_recovery':'heal',
+    'tempo_buff':'haste','control_enemy':'bind','harry_damage':'impact','priority_damage':'impact','isolation_damage':'impact',
+    'movement_support':'field_march','economy_support':'field_march','scouting_support':'field_reveal'}
+SPELL_SCHOOL_BANKS={'beacon':['beacon','lens','old_measure'],'veil':['veil','mire'],'basic':['lens','old_measure']}
+SPELL_KIND_FALLBACKS={'heal':['ward'],'cleanse':['ward'],'haste':['empower'],'bind':['impact'],
+    'field_reveal':['field_march'],'field_march':['field_reveal']}
+
+def spell_bank_rows(banks):
+    rows={}
+    for s in load(ROOT/'content/spells.json')['items']:
+        kind=SPELL_KINDS[s['primary_role']]
+        if s['context']=='overworld' and not kind.startswith('field_'):kind='field_march'
+        schools=SPELL_SCHOOL_BANKS.get(s['school_id'],[s['school_id']])
+        def bank(kinds):
+            return next(('magic_'+school+'_'+k for k in kinds for school in schools if 'magic_'+school+'_'+k in banks),'')
+        effect=s['effect'];status=effect.get('status_effect') or {}
+        lasting=effect.get('duration_rounds',0)>0 or status.get('duration_rounds',0)>0
+        rows[s['id']]={'cast':bank(['cast']),'effect':bank([kind]+SPELL_KIND_FALLBACKS.get(kind,[])),
+            'expire':bank(['expire']) if lasting else '','context':s['context']}
+        assert rows[s['id']]['cast'] and rows[s['id']]['effect'],s['id']
+    return rows
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--partial',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--partial',action='store_true')
+    parser.add_argument('--spell-banks',action='store_true',help='only remap spell_banks in audio_production_banks.json to the spells in spells.json')
+    args=parser.parse_args()
+    if args.spell_banks:
+        palette=load(ROOT/'content/audio_production_banks.json')
+        palette['spell_banks']=spell_bank_rows(set(palette['banks']))
+        save(ROOT/'content/audio_production_banks.json',palette)
+        print('Mapped',len(palette['spell_banks']),'spells to',len(palette['banks']),'banks')
+        return
     jobs=load(SOURCE/'jobs.json')['jobs']
     records={}
     for job in jobs:
@@ -115,12 +149,7 @@ def main():
         manifest.update(production_source='stable_audio_3_v1',production_status='generation_in_progress' if args.partial else ('accepted' if accepted else 'technical_checks_passed_listening_review_pending'),
             generation_pipeline='tools/generate_production_audio.py',legacy_regeneration_protected=True)
         save(ROOT/'content'/(name+'_manifest.json'),manifest)
-    spell_banks={}
-    effect_names={'damage_enemy':'impact','attack_buff':'empower','defense_buff':'ward','initiative_buff':'haste','control_enemy':'bind','cleanse_ally':'cleanse','recover_ally':'heal','restore_movement':'field_march','reveal_radius':'field_reveal'}
-    for s in load(ROOT/'content/spells.json')['items']:
-        base='magic_'+s['school_id']+'_'
-        spell_banks[s['id']]={'cast':base+'cast','effect':base+effect_names[s['effect']['type']],
-            'expire':base+'expire' if s['effect'].get('duration_rounds',0)>0 else '', 'context':s['context']}
+    spell_banks=spell_bank_rows(banks)
     save(ROOT/'content/audio_production_banks.json',{'schema':'audio_production_banks_v1','banks':dict(banks),'cues':cues,'unit_profiles':profiles(),'spell_banks':spell_banks})
     print('Published',len(records),'of',len(jobs),'checked jobs;',len(banks),'banks;',len(cues),'bank variants')
 
