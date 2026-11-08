@@ -440,9 +440,6 @@ func _session_parts(session) -> Array:
 	if session == null:
 		return [{}, {}, {}]
 	var flags: Dictionary = session.flags
-	if flags.has(AppRouter.AUTOSAVE_PENDING_UNIX_FLAG):
-		flags = flags.duplicate()
-		flags[AppRouter.AUTOSAVE_PENDING_UNIX_FLAG] = 0
 	var header := {
 		"day": session.day,
 		"session_id": session.session_id,

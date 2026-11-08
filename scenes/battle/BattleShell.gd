@@ -1940,7 +1940,7 @@ func validation_auto_battle_order() -> Dictionary:
 	var action := String(decision.get("action", ""))
 	var result := {}
 	if action == "cast_spell":
-		result = _perform_action("cast_spell:%s" % String(decision.get("spell_id", "")), {"target_id": String(decision.get("target_battle_id", ""))})
+		result = _perform_action("cast_spell:%s" % String(decision.get("spell_id", "")), _auto_spell_order(decision))
 	elif action == "strike":
 		result = _perform_action("strike", BattleRules.ai_melee_approach(
 			_session.battle,
@@ -1951,6 +1951,22 @@ func validation_auto_battle_order() -> Dictionary:
 		result = _perform_action(action)
 	var ok := String(result.get("state", "invalid")) != "invalid"
 	return {"ok": ok, "action": action, "decision": decision.duplicate(true), "result": result, "message": String(result.get("message", ""))}
+
+
+## The cast order of an auto battle spell: its stack, and what the spell's plan
+## picked, as the clicks would give it: the hex of a hex, move or summon spell,
+## or the second stack of a two-stack spell.
+func _auto_spell_order(decision: Dictionary) -> Dictionary:
+	var order := {"target_id": String(decision.get("target_battle_id", ""))}
+	var destination = decision.get("destination", {})
+	if not (destination is Dictionary):
+		return order
+	if destination.has("battle_id"):
+		order["second_target_id"] = String(destination.battle_id)
+	elif destination.has("q") and destination.has("r"):
+		order["q"] = int(destination.q)
+		order["r"] = int(destination.r)
+	return order
 
 
 # --- Popovers ------------------------------------------------------------------

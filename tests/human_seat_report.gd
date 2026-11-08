@@ -580,13 +580,10 @@ func _stable_name(node: Node) -> String:
 			index += 1
 	return "@%s#%d" % [node.get_class(), index]
 
-## As the AI match runner's, and the autosave's wall-clock stamp set to 0.
+## As the AI match runner's.
 func _state_parts(session) -> Array:
 	var overworld: Dictionary = session.overworld
 	var flags: Dictionary = session.flags
-	if flags.has(AppRouter.AUTOSAVE_PENDING_UNIX_FLAG):
-		flags = flags.duplicate()
-		flags[AppRouter.AUTOSAVE_PENDING_UNIX_FLAG] = 0
 	if not _blank_scopes.is_empty():
 		overworld = overworld.duplicate()
 		flags = flags.duplicate()

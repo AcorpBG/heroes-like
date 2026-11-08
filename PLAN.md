@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `bugfix-auto-battle-spell-picks-20261109` (in progress): Owner, 2026-11-09: fix the two bugs the human-seat check found. Auto battle (BattleShell.validation_auto_battle_order) cast the battle AI's spell with its stack only, so a hex, move, summon or two-stack spell (Bramble Patch on h-l4) asked for a hex and Auto stopped; it now passes the plan's hex or second stack. The seat harnesses (tests/human_seat_report.gd, map_editor_seat_report.gd) read AppRouter.AUTOSAVE_PENDING_UNIX_FLAG, which 9e4c555a0 removed. See `docs/battle-rework.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
