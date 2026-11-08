@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `battle-end-checkpoint-hash-20261108` (in progress): Owner, 2026-11-08: after a battle's last blow the result took long to show. The resolved-battle checkpoint fingerprinted the session as JSON.stringify(session.to_dict()).sha256_text(), twice around the last blow, about 1.9 s each on a 20 MB session. Hash the saved fields in place instead. scripts/autoload/AppRouter.gd.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

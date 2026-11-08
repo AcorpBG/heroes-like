@@ -942,8 +942,18 @@ func _battle_resolution_checkpoint_session_identity(session: SessionStateStoreSc
 		"scenario_status": String(session.scenario_status).left(32),
 		"day": int(session.day),
 		"battle_outcome": String(session.flags.get("last_battle_outcome", "")).left(48),
-		"payload_hash": JSON.stringify(session.to_dict()).sha256_text(),
+		"payload_hash": _session_payload_hash(session),
 	}
+
+## Everything to_dict() saves, hashed in place by the engine. A large map's
+## session is tens of megabytes: copying it and printing it as JSON took about
+## 1.9 s each time, twice around a battle's last blow; this takes about 0.1 s.
+func _session_payload_hash(session: SessionStateStoreScript.SessionData) -> int:
+	return [
+		session.save_version, session.session_id, session.scenario_id, session.hero_id, session.day,
+		session.difficulty, session.launch_mode, session.game_state, session.scenario_status,
+		session.scenario_summary, session.overworld, session.battle, session.flags,
+	].hash()
 
 func _battle_resolution_checkpoint_identity_matches(session: SessionStateStoreScript.SessionData) -> bool:
 	return (

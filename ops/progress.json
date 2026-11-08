@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-faction-mastery-magic-heroes-20261108",
- "currentSliceTitle": "Only a faction's magic heroes (5 of its 11) start with its school mastery: removed from the 36 might heroes in heroes.json; the pre-switch save conversion grants it to magic heroes only; docs.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T19:34:19Z",
+ "currentSliceId": "battle-end-checkpoint-hash-20261108",
+ "currentSliceTitle": "Battle end: fingerprint the session in place, not as JSON",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T19:58:37Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-end-checkpoint-hash-20261108",
+   "title": "Battle end: fingerprint the session in place, not as JSON",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-08: after a battle's last blow the result took long to show. The resolved-battle checkpoint fingerprinted the session as JSON.stringify(session.to_dict()).sha256_text(), twice around the last blow, about 1.9 s each on a 20 MB session. Hash the saved fields in place instead. scripts/autoload/AppRouter.gd.",
+   "docs": [],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "magic-faction-mastery-magic-heroes-20261108",
    "status": "completed",
