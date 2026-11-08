@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-art-audio-20261107",
- "currentSliceTitle": "Magic: spell art and sound",
+ "currentSliceId": "magic-switch-20261107",
+ "currentSliceTitle": "Magic: the switch to the new spells",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T11:55:27Z",
+ "updatedAt": "2026-11-08T14:40:22Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "overworld-terrain-costs-20261108",
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Ground costs movement by terrain class (terrain_grammar.json): rough, forest, sand and snow 1.5 points a tile, swamp and mire 2, other ground 1, a road step 1; human routes and the computer players' walk take the cheapest route.",
+   "commit": "7aec23686"
+  },
   {
    "id": "battle-ai-ground-moves-20261108",
    "status": "completed",
@@ -82,33 +89,27 @@
   },
   {
    "id": "magic-map-spells-20261107",
-   "title": "Magic: map spells",
-   "status": "in_progress",
-   "goal": "The 16 map spells of every tier, marked unreleased, with the 16 map mechanics (more movement, farther sight, reading armies, fast roads, firebreaks, scorched ground, forest and mire ways, rootways, harvest, the wardwood, flares, Relay, the lens, the ferry, mist jumps); one map spell per hero per day; computer players' map values. Native map rules and the overworld screen.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "All 16 map spells unreleased in spells.json (also 6d0f08c88, 74c46152e, 3e2283ef3): sight, movement, fast roads, firebreaks, scorched ground, rootways, the wardwood, flares, the ferry, mist jumps, Green Path and Mire Stride; computer map values.",
+   "commit": "7aec23686"
   },
   {
    "id": "magic-art-audio-20261107",
-   "title": "Magic: spell art and sound",
-   "status": "in_progress",
-   "goal": "An icon for each of the 139 spells (none of today's reused), battle effects and sounds for each spell, and badges for the new statuses; the four school sigils stay. spell_icons, battle_vfx_manifest, audio_production_banks and animation_event_cues, in the painted look of the art rules. Lands before or with magic-switch-20261107. In: emblem icons (137), status badges (19), battle effects (123), spell ground, school sounds, map marks. Next: Green Path and Mire Stride icons follow their mechanic.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "Emblem icons for all 139 spells and 19 status badges, painted battle effects and spell ground, school sounds for every spell, painted map marks (also 13eb6155e, f3421b5f1, bdda65b17, da51ce84a, b7cb4a8d0).",
+   "commit": "7aec23686"
   },
   {
    "id": "magic-switch-20261107",
    "title": "Magic: the switch to the new spells",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "Today's 119 spells go and the 139 go live, unreleased marks removed. Lens, Mire and Old Measure merge into Beacon and Veil, four masteries. Factions prefer Beacon (Embercourt, Sunvault), Veil (Mireclaw, Veilmourn), Furnace (Brasshollow), Root (Thornwake); their heroes cast it at 1 more spell power and start with mastery 1 in a specialty slot. Resistances move; new picks in heroes, encounters, sites and RMG data; saves convert; core tests and docs follow.",
    "docs": [
     "docs/magic-system.md"
    ],
-   "updatedAt": "2026-11-07"
+   "updatedAt": "2026-11-08"
   },
   {
    "id": "rmg-setup-choice-templates-20261106",
