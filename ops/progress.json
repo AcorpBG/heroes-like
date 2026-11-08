@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "save-native-first-save-cleanup-20261108",
- "currentSliceTitle": "Native save: drop the unused first-save fast path",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T21:28:36Z",
+ "currentSliceTitle": "Removed the native first-save fast path, its first-save and save-reason marker handling, the force-failure switch, 12 keys and the SaveService.gd constants; old saves keep the markers as inert data. Human parity identical.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T22:19:11Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "save-native-first-save-cleanup-20261108",
-   "title": "Native save: drop the unused first-save fast path",
-   "status": "in_progress",
-   "goal": "Since 9e4c555a0 nothing sets the first-save or save-reason markers. Remove the native first-save fast path, its marker handling and test switch (save_service_runtime.cpp, save_service.hpp, human_keys.inc) and the matching SaveService.gd constants. Old saves keep the markers as inert data. Windows rules libraries rebuilt.",
-   "docs": [
-    "docs/save-test-retirement.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Removed the native first-save fast path, its first-save and save-reason marker handling, the force-failure switch, 12 keys and the SaveService.gd constants; old saves keep the markers as inert data. Human parity identical.",
+   "commit": "2d56888f2"
   },
   {
    "id": "bugfix-auto-battle-spell-picks-20261109",
