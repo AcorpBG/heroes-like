@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `battle-xp-double-20261108` (in progress): Owner, 2026-11-08: double battle experience, no taper, so a fight feels meaningful: 1 instead of 0.5 per point of the beaten army's strength (BattleRules.battle_rewards_for_strength, battle_rules_ai.cpp), for every battle, the computer players' too, and the reward previews. Sites, chests and the level curve stay. Doc: docs/ai-plays-by-player-rules.md. See `docs/ai-plays-by-player-rules.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

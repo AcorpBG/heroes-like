@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "save-autosave-end-turn-only-20261108",
- "currentSliceTitle": "Autosave only at end turn, quit and the menu return; battle entry and end, report, Continue, outcome and a new game's first day save nothing; their retry screens, tests gone. Large map: battle end 3.9 -> 0.19 s, Continue 6.3 -> 2.4 s.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-08T20:51:44Z",
+ "currentSliceId": "battle-xp-double-20261108",
+ "currentSliceTitle": "Battles pay twice the experience",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-08T20:44:30Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-xp-double-20261108",
+   "title": "Battles pay twice the experience",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-08: double battle experience, no taper, so a fight feels meaningful: 1 instead of 0.5 per point of the beaten army's strength (BattleRules.battle_rewards_for_strength, battle_rules_ai.cpp), for every battle, the computer players' too, and the reward previews. Sites, chests and the level curve stay. Doc: docs/ai-plays-by-player-rules.md.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-08"
+  },
   {
    "id": "save-autosave-end-turn-only-20261108",
    "status": "completed",

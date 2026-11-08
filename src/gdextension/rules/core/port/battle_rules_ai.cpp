@@ -18,6 +18,10 @@ using state::ContentTable;
 using state::State;
 namespace key = state::key;
 
+// Experience a won battle pays per point of the beaten army's strength
+// (AiHeroRules.army_power), for every battle (docs/ai-plays-by-player-rules.md).
+constexpr double kExperiencePerStrength = 1.0;
+
 } // namespace
 
 namespace battle_rules {
@@ -62,7 +66,7 @@ DictRef battle_rewards_for_strength(State &state, DictRef encounter, const Value
 			}
 		}
 	}
-	const int64_t experience = compat::float_to_int(compat::godot_round(strength * 0.5));
+	const int64_t experience = compat::float_to_int(compat::godot_round(strength * kExperiencePerStrength));
 	if (experience > 0) {
 		state.set(rewards, str(key::experience), int_value(experience));
 	}
