@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "magic-tier45-spells-20261107",
- "currentSliceTitle": "Magic: tier 4 and 5 battle spells",
+ "currentSliceId": "magic-map-spells-20261107",
+ "currentSliceTitle": "Magic: map spells",
  "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-07T22:20:59Z",
+ "updatedAt": "2026-11-08T01:44:24Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -68,23 +68,20 @@
   },
   {
    "id": "magic-tier45-spells-20261107",
-   "title": "Magic: tier 4 and 5 battle spells",
-   "status": "in_progress",
-   "goal": "The 39 tier-4 and tier-5 battle spells, marked unreleased, with their 36 new mechanics (blasts, double strikes, constructs, copies, groves, poison, extra turns, sanctuary, stuns, wraiths, echoes, whole-battle effects, the elder, return of the destroyed, the dome, the Risen host and more) and battle AI values; battle_sim_cli rebuilt; six-seed native check.",
-   "docs": [
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "All 39 tier-4 and tier-5 battle spells unreleased in spells.json (also ed300047e, f7f06ebd6, 2983bf8c5): brands, poison, stuns, whole-battle spells, double blows, extra turns, returns, groves, the dome, echoes and summons; battle AI values.",
+   "commit": "9566a5d5b"
   },
   {
    "id": "magic-map-spells-20261107",
    "title": "Magic: map spells",
-   "status": "pending",
+   "status": "in_progress",
    "goal": "The 16 map spells of every tier, marked unreleased, with the 16 map mechanics (more movement, farther sight, reading armies, fast roads, firebreaks, scorched ground, forest and mire ways, rootways, harvest, the wardwood, flares, Relay, the lens, the ferry, mist jumps); one map spell per hero per day; computer players' map values. Native map rules and the overworld screen.",
    "docs": [
     "docs/magic-system.md"
    ],
-   "updatedAt": "2026-11-07"
+   "updatedAt": "2026-11-08"
   },
   {
    "id": "magic-art-audio-20261107",
