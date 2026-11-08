@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/ai_search.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
@@ -218,8 +219,8 @@ ArrayRef search_masks(State &state, int64_t width, int64_t height, PackedRef sur
 }
 
 // NativeRules.api().ai_search_walk(...): [dist, parent, order, order_count,
-// capped, phase, reached].
-ArrayRef search_walk(State &state, int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, PackedRef blocked, PackedRef stop_mask, PackedRef pass_mask, PackedRef hero_zone, PackedRef portals, PackedRef seen, PackedRef water, PackedRef sea_open, PackedRef boats, PackedRef docks, int64_t shore_cost, int64_t dock_cost) {
+// capped, phase, reached]. enter and road: the step costs (ai_search::Board).
+ArrayRef search_walk(State &state, int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, PackedRef blocked, PackedRef stop_mask, PackedRef pass_mask, PackedRef hero_zone, PackedRef portals, PackedRef seen, PackedRef water, PackedRef sea_open, PackedRef boats, PackedRef docks, int64_t shore_cost, int64_t dock_cost, const uint8_t *enter, const uint8_t *road) {
 	const char *method = "ai_search_walk";
 	check_map(width, height, method);
 	const int64_t count = width * height;
@@ -251,6 +252,8 @@ ArrayRef search_walk(State &state, int64_t width, int64_t height, int64_t start,
 	}
 	board.shore_cost = shore_cost;
 	board.dock_cost = dock_cost;
+	board.enter = enter;
+	board.road = road;
 	const PackedRef dist = new_tile_ints(state, count);
 	const PackedRef parent = new_tile_ints(state, count);
 	const PackedRef order = new_tile_ints(state, count);
@@ -615,8 +618,22 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 	const PackedRef seen_map = has_portals ? _explored(state, session, context, level) : gd::new_bytes(state);
 	const PackedRef portal_list = gd::as_ints(gd::index(state, tables, str(key::portals)));
 	const PackedRef walk_water = has_water ? water : gd::new_bytes(state);
+	// What the hero's steps cost (map_spells::StepCosts): the ground by tile, roads, its map spells and the enemy's marks.
+	map_spells::Mover mover;
+	mover.hero = gd::as_dict(gd::field_or(state, entry, key::enemy_commander_state, dict_value(state.new_dict())));
+	mover.controller = controller;
+	mover.level = level;
+	mover.day = ai::session_int(state, session, key::day);
+	std::vector<Atom> terrains;
+	for (const Value &terrain : gd::items(state, gd::index(state, surface, str(key::terrain_ids)))) {
+		terrains.push_back(gd::stringify(state, terrain));
+	}
+	std::vector<uint8_t> enter(static_cast<size_t>(count), 2);
+	std::vector<uint8_t> road(static_cast<size_t>(count), 0);
+	map_spells::StepCosts(state, session, mover).fill(width, size.y, gd::packed_bytes(state, gd::as_bytes(gd::index(state, surface, str(key::terrain_kind)))), terrains,
+			gd::packed_bytes(state, gd::as_bytes(gd::index(state, surface, str(key::road_mask)))), enter.data(), road.data());
 	const ArrayRef walk = search_walk(state, width, size.y, start_index, start_phase, radius, native_corners, blocked, stop_mask, pass_mask, hero_zone,
-			portal_list, seen_map, walk_water, sea_open, boat_tiles, docks, shore_cost, dock_cost);
+			portal_list, seen_map, walk_water, sea_open, boat_tiles, docks, shore_cost, dock_cost, enter.data(), road.data());
 	// Every route-ending tile reached, the hero's own included, with what ends
 	// the route there: the level's objects, the neutral armies whose zone holds
 	// it, then the armies and heroes.

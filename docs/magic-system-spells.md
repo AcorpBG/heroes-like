@@ -138,7 +138,7 @@ Signature: Rooted that tightens; Regrowth; Grafts between stacks; Seeds that wai
 | Bramble Patch | `spell_bramble_patch` | field | Hexes you pick | 5 | Up to 3 empty hexes grow brambles for {2+P/4} rounds: a stack that enters one stops there and takes {10+5E}. | `bramble_ground` |  |
 | Graft | `spell_graft` | healing | Two of your stacks | 6 | Joins two of your stacks for {2+P/4} rounds: damage either one takes is split evenly between them. | `graft` |  |
 | Green Mending | `spell_green_mending` | healing | One of your stacks | 5 | Regrowth: heals {14+3P} at the start of each of its next {2+P/4} turns. | `regrowth` | 2: also lands on your stacks next to it; 3: lands on every stack of yours |
-| Green Path | `spell_green_path` | map | On the map | 4 | Forest, rough and hills cost the hero's army no more than grass for {1+P/5} days. | `map_forest_ways` |  |
+| Green Path | `spell_green_path` | map | On the map | 4 | Forest and rough cost the hero's army no more than grass for {1+P/5} days. | `map_forest_ways` |  |
 | Thornmail | `spell_thornmail` | ward | One of your stacks | 5 | For its next {2+P/4} turns any stack that strikes it in melee takes {8+3E}. | `thorns` | 3: also lands on your stacks next to it |
 | Thorn Seed (scroll-only) | `spell_thorn_seed` | field | Hexes you pick | 5 | Plants a seed on an empty hex: the first enemy stack that ends a move next to it is Rooted for its next {1+E/4} turns and takes {20+10E}. | `trap` |  |
 
@@ -252,7 +252,7 @@ Signature: Drain; Curses that spread; Doom that lands later; Fear and flight; Mu
 | Wasting Curse | `spell_wasting_curse` | damage | One enemy stack | 6 | Cursed: it takes {10+6E} at the end of each of its next {2+E/4} turns; if it is destroyed while cursed, the curse jumps to the nearest enemy stack. | `curse` | 3: also lands on the enemy stacks next to the target |
 | Murk | `spell_murk` | field | Hexes you pick | 6 | Fog covers up to 3 hexes for {2+P/4} rounds: stacks inside cannot be shot and cannot shoot. | `murk` |  |
 | Blood Tithe | `spell_blood_tithe` | healing | Two of your stacks | 4 | Moves up to {40+8P} health from one of your stacks to another; fallen creatures can come back this way. | `transfer` |  |
-| Mire Stride | `spell_mire_stride` | map | On the map | 4 | Swamp, mire and coast cost the hero's army no more than grass for {1+P/5} days. | `map_mire_ways` |  |
+| Mire Stride | `spell_mire_stride` | map | On the map | 4 | Swamp, mire and sand cost the hero's army no more than grass for {1+P/5} days. | `map_mire_ways` |  |
 | Mist Cloak | `spell_mist_cloak` | ward | One of your stacks | 5 | Shots cannot target it for its next {1+P/4} turns. | `shot_shield` | 2: also lands on your stacks next to it; 3: lands on every stack of yours |
 | Changeling Swap (scroll-only) | `spell_changeling_swap` | field | One of yours and one enemy stack | 5 | One of your stacks and an enemy stack up to {4+E} hexes apart swap places. | `swap_enemy` |  |
 
@@ -381,12 +381,12 @@ Signature: Drain; Curses that spread; Doom that lands later; Fear and flight; Mu
 | `map_block` | Firebreak | Closes a tile to every army for a while. | yes | 1 |
 | `map_ferry` | Ferry | Crosses water without a boat. | yes | 1 |
 | `map_flare` | Flare | Scouts a distant area at once. | yes | 1 |
-| `map_forest_ways` | Forest ways | Forest, rough and hills cost like grass. | yes | 1 |
+| `map_forest_ways` | Forest ways | Forest and rough cost like grass. | yes | 1 |
 | `map_jump` | Mist jump | Jumps the army a few tiles, past guards. | yes | 1 |
 | `map_jump_forest` | Rootway | Steps to a forest tile at a distance. | yes | 1 |
 | `map_lens` | Lens | Scouts a wide area around the hero at once, underground too. | yes | 1 |
 | `map_mine` | Harvest | A mine yields double for a while. | yes | 1 |
-| `map_mire_ways` | Mire ways | Swamp, mire and coast cost like grass. | yes | 1 |
+| `map_mire_ways` | Mire ways | Swamp, mire and sand cost like grass. | yes | 1 |
 | `map_move` | More movement | Extra tiles of movement today. | today | 1 |
 | `map_road` | Fast roads | Roads cost less movement. | yes | 1 |
 | `map_scout` | Read garrisons | Shows the garrisons of the towns nearby that are not yours. | yes | 1 |

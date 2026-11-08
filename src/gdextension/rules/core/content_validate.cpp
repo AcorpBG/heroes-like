@@ -413,6 +413,12 @@ void Check::terrain_grammar(const Value &grammar, const RowIndex &biome_index) {
 		if (integer(terrain_class, "transition_priority", -1) < 0) {
 			warn("Terrain grammar " + terrain_id + " must define transition_priority >= 0.");
 		}
+		// The movement points a step onto the ground costs, in half points (docs/overworld-terrain-movement.md).
+		const Value movement_cost = get(terrain_class, "movement_cost", Value());
+		const double points = movement_cost.kind == Kind::Int || movement_cost.kind == Kind::Float ? gd::to_float(movement_cost) : 0.0;
+		if (!(points >= 0.5 && points <= 100.0) || points * 2.0 != static_cast<double>(static_cast<int64_t>(points * 2.0))) {
+			warn("Terrain grammar " + terrain_id + " must define movement_cost as a number of half points from 0.5 to 100.");
+		}
 		const Value supports = get(terrain_class, "supports", empty_array_);
 		if (!is_array(supports) || !in("edge_transitions", supports)) {
 			warn("Terrain grammar " + terrain_id + " must support edge_transitions.");
@@ -611,9 +617,6 @@ void Check::biome(const Value &biome) {
 				warn("Biome " + biome_id + " cannot contain an empty map_tile_id.");
 			}
 		}
-	}
-	if (integer(biome, "movement_cost", 0) <= 0) {
-		warn("Biome " + biome_id + " must define movement_cost > 0.");
 	}
 	if (!has(biome, "passable")) {
 		warn("Biome " + biome_id + " must explicitly define passable.");
@@ -1385,6 +1388,17 @@ void Check::map_effect(const std::string &spell_id, const Value &spell, const Va
 		}
 		if (text(spell, "target_mode") != known.target_mode) {
 			warn("Spell " + spell_id + " " + mechanic + " must use target_mode " + known.target_mode + ".");
+		}
+		// The ground ways name the terrain classes they make cost like grass.
+		if (mechanic == "map_forest_ways" || mechanic == "map_mire_ways") {
+			const Value terrains = get(effect, "terrains", empty_array_);
+			bool named = is_array(terrains) && !empty(terrains);
+			for (const Value &terrain : each(terrains)) {
+				named = named && !str(terrain).empty();
+			}
+			if (!named) {
+				warn("Spell " + spell_id + " " + mechanic + " must name its terrains.");
+			}
 		}
 		return;
 	}

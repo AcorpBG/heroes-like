@@ -2,9 +2,10 @@
 
 // The map spells (docs/magic-system-spells.md, Map; spell_map.cpp, spell_map_tiles.cpp): effect type "map_effect",
 // one mechanic each. Their terms at the caster's spell power, what keeps one from being cast where its hero stands,
-// what a cast leaves on the map, the terms a hero keeps until its next day starts, what the steps of a walk cost once
-// Forge Road, Scorched Earth and wardwoods count, and the tiles the spells aimed at a tile reach. Today's overworld
-// spells (restore_movement, reveal_radius) stay in spell_rules_overworld.cpp. The human seat casts through
+// what a cast leaves on the map, the terms a hero keeps until its next day starts, what the steps of a walk cost (the
+// ground, roads, Forge Road, Green Path and Mire Stride, Scorched Earth and wardwoods; docs/overworld-terrain-
+// movement.md), and the tiles the spells aimed at a tile reach. Today's overworld spells (restore_movement,
+// reveal_radius) stay in spell_rules_overworld.cpp. The human seat casts through
 // overworld_rules_spells.cpp and walks through overworld_rules_move.cpp, a computer hero does both in
 // ai_hero_rules_turn_day.cpp; each reveals in its own fog.
 
@@ -12,6 +13,7 @@
 #include "aurelion_rules/port/overworld_rules.hpp"
 
 #include <cstdint>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -46,7 +48,8 @@ Atom effect_text(State &state, DictRef hero, DictRef spell, DictRef mine);
 Atom category(State &state, DictRef spell);
 
 // What a cast on the given day does to the hero alone (Far Sight's sight, Stride's movement, Read Tracks' reach,
-// Forge Road's days): the hero's state and movement are changed in place. The fog a cast opens around the hero: the
+// Forge Road's days, the ground Green Path and Mire Stride ease and their days): the hero's state and movement are
+// changed in place. The fog a cast opens around the hero: the
 // radius on its level, and whether every level opens too.
 void apply_to_hero(State &state, DictRef hero, DictRef movement, DictRef spell, int64_t day);
 int64_t reveal_radius(State &state, DictRef hero, DictRef spell);
@@ -96,16 +99,30 @@ struct Mover {
 	int64_t day = 0;
 };
 
-// What the steps of one walk cost once the map spells count, in half points of movement (a point walks a tile): 2 a
-// step, 1 from a road tile to a road tile while the mover's Forge Road lasts, and twice that into an enemy's Scorched
-// Earth. A step from outside into the reach of an enemy's wardwood stops the army there. Without a Forge Road on the
-// mover or an enemy's mark on its level, active() is false: every step costs a point and the walk is the plain one.
+// The half points of movement a step onto ground of this terrain costs before roads and the map spells: twice its
+// terrain class's movement_cost in content/terrain_grammar.json (docs/overworld-terrain-movement.md), 2 for a terrain
+// without one. The id is normalized as passability normalizes it (hills are rough, coast is water).
+int64_t terrain_halves(State &state, Atom terrain_id);
+// The road tiles of a level (overworld.terrain_layers.roads, as the map view draws them).
+std::vector<Vector2i> road_tiles(State &state, DictRef session, int64_t level);
+
+// What the steps of one walk cost, in half points of movement (docs/overworld-terrain-movement.md). A step between
+// neighbours costs its ground: the terrain_halves of the tile stepped onto, or grass's while the mover's Green Path or
+// Mire Stride covers that ground; from a road tile to a road tile a point on any ground, half a point while the
+// mover's Forge Road lasts. A step through a portal or gate costs a point. Each costs twice that into an enemy's
+// Scorched Earth. A step from outside into the reach of an enemy's wardwood stops the army there.
 class StepCosts {
 public:
 	StepCosts(State &state, DictRef session, const Mover &mover);
-	bool active() const { return active_; }
 	int64_t halves(Vector2i from, Vector2i to) const;
 	bool stops(Vector2i from, Vector2i to) const;
+	// A step onto ground of this terrain, before Scorched Earth.
+	int64_t ground_halves(Atom terrain_id) const;
+	// The same costs as tables over the mover's level for a search (width x height tiles): what a step onto each tile
+	// costs (enter), and on a road tile what a step to it from a road tile costs (road; 0 off the roads), so a step
+	// between neighbours costs road[from] and road[to] ? road[to] : enter[to]. kinds gives each tile's terrain as an
+	// index into terrains (past its end: no ground), roads is nonzero on the road tiles. Costs stop at 255.
+	void fill(int64_t width, int64_t height, const uint8_t *kinds, const std::vector<Atom> &terrains, const uint8_t *roads, uint8_t *enter, uint8_t *road) const;
 
 private:
 	struct Zone {
@@ -113,15 +130,23 @@ private:
 		int64_t radius = 0;
 	};
 	bool inside(const Zone &zone, Vector2i tile) const;
+	bool on_road(Vector2i tile) const;
+	Atom terrain_at(Vector2i tile) const;
 	State *state_ = nullptr;
-	bool active_ = false;
-	bool roads_ = false;
-	std::unordered_set<uint64_t> road_tiles_;
+	DictRef session_ = 0;
+	int64_t level_ = 0;
+	ArrayRef rows_ = 0;
+	int64_t road_halves_ = 2;
+	int64_t grass_halves_ = 2;
+	std::unordered_set<Atom> easy_;
+	mutable std::unordered_map<Atom, int64_t> ground_;
+	mutable bool roads_read_ = false;
+	mutable std::unordered_set<uint64_t> road_tiles_;
 	std::vector<Zone> slow_;
 	std::vector<Zone> watch_;
 };
 
-// The half point a hero saved on a road today (0 or 1; the walk spends it before a new point), and setting it.
+// The half point left over from the hero's walk today (0 or 1; the walk spends it before a new point), and setting it.
 int64_t banked_half(State &state, DictRef hero);
 void set_banked_half(State &state, DictRef hero, int64_t half);
 // A wardwood stopped the hero's army: it starts its next day with half its movement.

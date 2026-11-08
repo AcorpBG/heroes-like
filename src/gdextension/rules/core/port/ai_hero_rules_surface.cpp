@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
+#include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
@@ -223,8 +224,14 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 	const PackedRef water = gd::new_bytes(state);
 	gd::packed_resize(state, water, width * height);
 	int64_t water_count = 0;
-	// Per terrain id: [passable, water].
+	// Per terrain id: [passable, water]; and each tile's terrain as its place in terrain_ids (255: no ground), the
+	// searches' step costs (map_spells::StepCosts::fill).
 	std::unordered_map<Atom, std::pair<bool, bool>> terrain_kinds;
+	std::unordered_map<Atom, uint8_t> terrain_places;
+	const ArrayRef terrain_ids = state.new_array();
+	const PackedRef terrain_kind = gd::new_bytes(state);
+	gd::packed_resize(state, terrain_kind, width * height);
+	gd::packed_fill(state, terrain_kind, 255);
 	const ArrayRef rows = level_rules::terrain_rows(state, dict_value(session), level);
 	for (int64_t y = 0; y < height; ++y) {
 		ArrayRef row = 0;
@@ -255,6 +262,21 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 				gd::packed_set(state, water, y * width + x, 1);
 				water_count += 1;
 			}
+			auto place = terrain_places.find(terrain);
+			if (place == terrain_places.end() && terrain_places.size() < 255) {
+				place = terrain_places.emplace(terrain, static_cast<uint8_t>(terrain_places.size())).first;
+				state.append(terrain_ids, str(terrain));
+			}
+			if (place != terrain_places.end()) {
+				gd::packed_set(state, terrain_kind, y * width + x, place->second);
+			}
+		}
+	}
+	const PackedRef road_mask = gd::new_bytes(state);
+	gd::packed_resize(state, road_mask, width * height);
+	for (const Vector2i road : map_spells::road_tiles(state, session, level)) {
+		if (road.x >= 0 && road.y >= 0 && road.x < width && road.y < height) {
+			gd::packed_set(state, road_mask, static_cast<int64_t>(road.y) * width + road.x, 1);
 		}
 	}
 	// Open water a boat sails over: water without an object's body on it.
@@ -531,6 +553,9 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 	state.set(surface, str(key::water_count), int_value(water_count));
 	state.set(surface, str(key::sea), gd::bytes_value(sea));
 	state.set(surface, str(key::shipyards), dict_value(shipyards));
+	state.set(surface, str(key::terrain_kind), gd::bytes_value(terrain_kind));
+	state.set(surface, str(key::terrain_ids), array_value(terrain_ids));
+	state.set(surface, str(key::road_mask), gd::bytes_value(road_mask));
 	const DictRef shipyard_site = gd::content_row(state, ContentTable::ResourceSite, key::site_shipyard);
 	state.set(surface, str(key::boat_cost), dict_value(visit_building_rules::cost(state, shipyard_site, key::build_boat)));
 	state.set(levels, int_value(level), dict_value(surface));

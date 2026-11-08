@@ -8752,6 +8752,18 @@
       "effect": "magic_veil_field_march",
       "expire": "",
       "context": "overworld"
+    },
+    "spell_green_path": {
+      "cast": "magic_root_cast",
+      "effect": "magic_root_field_march",
+      "expire": "",
+      "context": "overworld"
+    },
+    "spell_mire_stride": {
+      "cast": "magic_veil_cast",
+      "effect": "magic_veil_field_march",
+      "expire": "",
+      "context": "overworld"
     }
   }
 }

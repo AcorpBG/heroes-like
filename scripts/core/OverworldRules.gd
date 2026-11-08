@@ -435,9 +435,10 @@ static func hero_route_destination(session: SessionStateStoreScript.SessionData,
 	return HumanEngine.native_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
 
 ## The active hero's route from start to goal, both included, or [] when there
-## is none: the first route a breadth-first search finds, stepping in the eight
-## directions without cutting a blocked corner, through tiles the hero may
-## cross that hold no interaction, and along the active linked transit edges.
+## is none: the cheapest in movement (docs/overworld-terrain-movement.md), the
+## first found among equals, stepping in the eight directions without cutting
+## a blocked corner, through tiles the hero may cross that hold no
+## interaction, and along the active linked transit edges.
 ## A blocked goal ends a route when it is a route destination (a free boat to
 ## board, a site on an object body). `plain` is the map view's own search for
 ## a screen without the overworld's route: no blocked goal ends a route, no
@@ -446,7 +447,7 @@ static func hero_route_path(session: SessionStateStoreScript.SessionData, start:
 	return HumanEngine.native_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
 
 ## Route lengths in tiles (start included) to several goals from one
-## breadth-first flood, by goal. Each length equals hero_route_path(session,
+## cheapest-first flood, by goal. Each length equals hero_route_path(session,
 ## start, goal).size(): a goal is recorded where that search would first reach
 ## it, while the flood itself only crosses tiles an ordinary route may cross,
 ## so no goal changes the path to another. Unreachable goals are left out.

@@ -28,7 +28,7 @@ DOMAINS = {
     'neutral_dwellings': ('Neutral dwellings', 'Independent companies and their recruitment sites.'),
     'army_groups': ('Armies', 'Authored troop compositions and their commanders.'),
     'encounters': ('Encounters', 'Enemy forces, battle objectives and victory rewards.'),
-    'biomes': ('Biomes', 'Movement, terrain and the character of each landscape.'),
+    'biomes': ('Biomes', 'Terrain and the character of each landscape.'),
     'terrain': ('Terrain & roads', 'The surfaces, transitions and overlays of the world map.'),
     'campaigns': ('Campaigns', 'Linked chapters, starting positions and campaign stories.'),
     'scenarios': ('Scenarios', 'Authored maps, opening forces and win conditions.'),
@@ -127,7 +127,10 @@ def main():
             text = f"A {words(d.get('terrain', 'field')).lower()} battle against {labels.get(d.get('enemy_group_id'), 'the listed enemy force')}."
             if d.get('rewards'): text += ' Victory rewards: ' + quantities(d['rewards']) + '.'
         elif cat == 'biomes':
-            text = f"{e['name']} landscape. Base movement cost: {d.get('movement_cost', 1)}. " + ('Traversable terrain.' if d.get('passable') else 'Not normally traversable.')
+            text = f"{e['name']} landscape. " + ('Traversable terrain.' if d.get('passable') else 'Not normally traversable.')
+        elif cat == 'terrain' and 'movement_cost' in d and d.get('terrain_group') not in ('rock', 'water'):
+            cost = d['movement_cost']
+            text = (text[:1].upper() + text[1:] + '. ' if text else '') + f"A step onto it costs {cost:g} movement point{'' if cost == 1 else 's'}; a road step costs 1 on any ground."
         elif cat == 'sounds':
             kind = 'Full musical composition' if d.get('playback_mode') == 'full_mix' else 'Music layer' if 'music_' in e['source'] else 'Ambient sound bed' if 'ambient_' in e['source'] else 'Action sound'
             text = f"{kind} for {words(d.get('role', d.get('cue_id', 'game feedback'))).lower()}."

@@ -3,9 +3,9 @@
 // 1. Golden vectors (ai_search_vectors.inc): native inputs captured from the
 //    six parity seeds in shadow mode, where every whole _search answer equalled
 //    the GDScript one, with a digest of the native answer.
-// 2. A sweep over generated boards (water, boats, docks, portals, armies and
-//    heroes), digested; the digest must be the same under every compiler and
-//    from one run to the next.
+// 2. A sweep over generated boards (water, boats, docks, portals, armies,
+//    heroes and, on half of them, step costs and roads), digested; the digest
+//    must be the same under every compiler and from one run to the next.
 
 #include "ai_search_selftest.hpp"
 
@@ -23,7 +23,7 @@ namespace {
 #include "ai_search_vectors.inc"
 
 // The sweep's digest on every compiler (FNV-1a 64 over every answer).
-constexpr uint64_t kSweepDigest = 0xc8fccb0644678708ULL;
+constexpr uint64_t kSweepDigest = 0x9e23711a04efa5d3ULL;
 constexpr int64_t kSweepBoards = 3000;
 
 struct Fnv {
@@ -267,6 +267,8 @@ struct WalkCase {
 	std::vector<int32_t> portals, docks;
 	int64_t shore_cost = 0;
 	int64_t dock_cost = 0;
+	// The step costs in half points (Board::enter, Board::road); empty: a point a step.
+	std::vector<uint8_t> enter, road;
 };
 
 void run_walk(const WalkCase &c, Fnv &digest) {
@@ -298,6 +300,13 @@ void run_walk(const WalkCase &c, Fnv &digest) {
 	}
 	board.shore_cost = c.shore_cost;
 	board.dock_cost = c.dock_cost;
+	if (!c.enter.empty()) {
+		if (static_cast<int64_t>(c.enter.size()) != count || static_cast<int64_t>(c.road.size()) != count) {
+			throw std::invalid_argument("step costs do not fit the map");
+		}
+		board.enter = c.enter.data();
+		board.road = c.road.data();
+	}
 	std::vector<int32_t> dist(static_cast<size_t>(count));
 	std::vector<int32_t> parent(static_cast<size_t>(count));
 	std::vector<int32_t> order(static_cast<size_t>(count));
@@ -548,6 +557,18 @@ uint64_t sweep_digest() {
 		w.start = random.below(count);
 		w.start_phase = has_water && p.water[static_cast<size_t>(w.start)] != 0 && random.chance(70) ? 1 : 0;
 		w.radius = random.below(70);
+		// Ground of one to two points a step (two to four half points), roads of a
+		// point or half a point.
+		if (random.chance(50)) {
+			w.enter.assign(static_cast<size_t>(count), 2);
+			w.road.assign(static_cast<size_t>(count), 0);
+			for (int64_t tile = 0; tile < count; ++tile) {
+				w.enter[static_cast<size_t>(tile)] = static_cast<uint8_t>(2 + random.below(3));
+				if (random.chance(15)) {
+					w.road[static_cast<size_t>(tile)] = static_cast<uint8_t>(1 + random.below(2));
+				}
+			}
+		}
 		// A portal list that names one tile twice keeps the last entry, as the
 		// GDScript Dictionary would; the sweep allows it.
 		run_walk(w, digest);

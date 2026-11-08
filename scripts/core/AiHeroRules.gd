@@ -650,9 +650,10 @@ static var _site_pass_sources := []
 ## decision. Kept with the level's site list it was made for.
 const SITE_PASS_DECISION_KEY := "decision_site_pass"
 
-## Breadth-first search over the hero's level. Object entrances, armies,
+## Cheapest-first search over the hero's level. Object entrances, armies,
 ## guard zones and heroes end a route: they can be the destination, never a
-## tile to walk through. Each step costs one movement point, as for the human.
+## tile to walk through. Each step costs what its ground, a road and the map
+## spells make it cost, as for the human (map_spells::StepCosts).
 ## The player's own heroes inside its towns stand in no one's way. With
 ## `past_own_heroes` the player's other heroes do not count at all: the search
 ## then shows what the hero could reach if they stepped aside. The masks and

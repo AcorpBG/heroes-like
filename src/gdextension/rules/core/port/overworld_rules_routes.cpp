@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/overworld_rules_human.hpp"
 
+#include "aurelion_rules/ai_search.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/map_spells.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
@@ -106,13 +107,82 @@ void count_pathing(State &state, Atom counter) {
 }
 
 // _blocked_tile_index(session, level).has(_tile_key(tile)).
+// The active hero as an army walking a level of the map (map_spells.hpp).
+map_spells::Mover _route_mover(State &state, DictRef session, int64_t level) {
+	map_spells::Mover mover;
+	mover.hero = sub_dict(state, session_view::overworld(state, session), key::hero);
+	mover.controller = key::player;
+	mover.level = level_rules::query_level(state, session, level);
+	mover.day = ai::session_int(state, session, key::day);
+	return mover;
+}
+
+// A route search over the map's tiles by the half points of movement a route spends (ai_search::CostQueue): each
+// tile takes its cheapest route, the first found among equals, and comes out of next() in that order.
+class RouteWalk {
+public:
+	explicit RouteWalk(Vector2i size)
+			: width_(size.x), best_(static_cast<size_t>(size.x) * static_cast<size_t>(size.y), -1), from_(best_.size(), -1), tiles_(best_.size(), 0), done_(best_.size(), 0) {}
+	void start(Vector2i tile) {
+		const int64_t at = index(tile);
+		best_[static_cast<size_t>(at)] = 0;
+		tiles_[static_cast<size_t>(at)] = 1;
+		queue_.push(0, at);
+	}
+	bool done(Vector2i tile) const { return done_[static_cast<size_t>(index(tile))] != 0; }
+	// A route reaches the tile from a neighbour for this many half points in all: true when it is the tile's
+	// cheapest so far.
+	bool reach(Vector2i tile, int64_t cost, Vector2i from) {
+		const size_t at = static_cast<size_t>(index(tile));
+		if (done_[at] != 0 || (best_[at] >= 0 && best_[at] <= cost)) {
+			return false;
+		}
+		const size_t before = static_cast<size_t>(index(from));
+		best_[at] = static_cast<int32_t>(cost);
+		from_[at] = static_cast<int32_t>(before);
+		tiles_[at] = tiles_[before] + 1;
+		queue_.push(cost, static_cast<int64_t>(at));
+		return true;
+	}
+	// The next tile whose cheapest route is known, and that route's half points; false when none is left.
+	bool next(int64_t &cost, Vector2i &tile) {
+		int64_t at = 0;
+		while (queue_.pop(cost, at)) {
+			if (done_[static_cast<size_t>(at)] != 0 || best_[static_cast<size_t>(at)] != cost) {
+				continue;
+			}
+			done_[static_cast<size_t>(at)] = 1;
+			tile = Vector2i::of(at % width_, at / width_);
+			return true;
+		}
+		return false;
+	}
+	// The tiles of the tile's route, the start's included.
+	int64_t tiles(Vector2i tile) const { return tiles_[static_cast<size_t>(index(tile))]; }
+	// The route to the tile from the start, in walk order, appended as tiles.
+	void path_to(State &state, ArrayRef path, Vector2i tile) const {
+		std::vector<int64_t> walked;
+		for (int64_t at = index(tile); at >= 0; at = from_[static_cast<size_t>(at)]) {
+			walked.push_back(at);
+		}
+		for (auto at = walked.rbegin(); at != walked.rend(); ++at) {
+			state.append(path, tile_value(Vector2i::of(*at % width_, *at / width_)));
+		}
+	}
+
+private:
+	int64_t index(Vector2i tile) const { return static_cast<int64_t>(tile.y) * width_ + tile.x; }
+	int64_t width_;
+	std::vector<int32_t> best_;
+	std::vector<int32_t> from_;
+	std::vector<int32_t> tiles_;
+	std::vector<uint8_t> done_;
+	ai_search::CostQueue queue_;
+};
+
 bool blocked_index_has(State &state, DictRef session, Vector2i tile, int64_t level) {
 	return state.has(overworld_rules::_blocked_tile_index(state, session, level), str(overworld_rules::_tile_key(state, tile)));
 }
-
-// The breadth-first search's predecessors and path sizes, by tile.
-template <typename T>
-using TileMap = std::unordered_map<uint64_t, T>;
 
 } // namespace
 
@@ -260,7 +330,7 @@ bool hero_route_destination(State &state, DictRef session, int64_t x, int64_t y,
 ArrayRef hero_route_path(State &state, DictRef session, Vector2i start, Vector2i goal, int64_t level, bool plain) {
 	const ArrayRef path = state.new_array();
 	const Vector2i size = derive_map_size(state, session);
-	if (goal.x < 0 || goal.y < 0 || goal.x >= size.x || goal.y >= size.y) {
+	if (goal.x < 0 || goal.y < 0 || goal.x >= size.x || goal.y >= size.y || start.x < 0 || start.y < 0 || start.x >= size.x || start.y >= size.y) {
 		return path;
 	}
 	if (start == goal) {
@@ -273,27 +343,20 @@ ArrayRef hero_route_path(State &state, DictRef session, Vector2i start, Vector2i
 	const Vector2i *directions = plain ? kPlainRouteDirections : kRouteDirections;
 	const ArrayRef transit_edges = plain ? state.new_array() : active_linked_transit_edges(state, session, level);
 	const bool has_transit = state.array_size(transit_edges) != 0;
-	std::vector<Vector2i> queue{start};
-	size_t queue_index = 0;
-	TileMap<Vector2i> came_from{{tile_id(start), start}};
-	while (queue_index < queue.size()) {
-		const Vector2i current = queue[queue_index];
-		queue_index += 1;
+	// The route that costs the least movement (map_spells::StepCosts), the first found among equals.
+	const map_spells::StepCosts costs(state, session, _route_mover(state, session, level));
+	RouteWalk walk(size);
+	walk.start(start);
+	int64_t at = 0;
+	Vector2i current;
+	while (walk.next(at, current)) {
 		if (current == goal) {
-			std::vector<Vector2i> walked{goal};
-			Vector2i walker = goal;
-			while (!(walker == start)) {
-				walker = came_from.at(tile_id(walker));
-				walked.push_back(walker);
-			}
-			for (auto tile = walked.rbegin(); tile != walked.rend(); ++tile) {
-				state.append(path, tile_value(*tile));
-			}
+			walk.path_to(state, path, goal);
 			return path;
 		}
 		for (size_t index = 0; index < 8; ++index) {
 			const Vector2i next = current + directions[index];
-			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y || came_from.count(tile_id(next)) != 0) {
+			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y || walk.done(next)) {
 				continue;
 			}
 			if (tile_step_cuts_blocked_corner(state, session, current, next, level)) {
@@ -305,8 +368,7 @@ ArrayRef hero_route_path(State &state, DictRef session, Vector2i start, Vector2i
 			if (!(next == goal) && tile_has_route_interaction(state, session, next.x, next.y, level)) {
 				continue;
 			}
-			came_from.emplace(tile_id(next), current);
-			queue.push_back(next);
+			walk.reach(next, at + costs.halves(current, next), current);
 		}
 		if (!has_transit) {
 			continue;
@@ -316,11 +378,10 @@ ArrayRef hero_route_path(State &state, DictRef session, Vector2i start, Vector2i
 				continue;
 			}
 			const Vector2i linked = {linked_next.vx(), linked_next.vy()};
-			if (came_from.count(tile_id(linked)) != 0) {
+			if (linked.x < 0 || linked.y < 0 || linked.x >= size.x || linked.y >= size.y || walk.done(linked)) {
 				continue;
 			}
-			came_from.emplace(tile_id(linked), current);
-			queue.push_back(linked);
+			walk.reach(linked, at + costs.halves(current, linked), current);
 		}
 	}
 	return path;
@@ -341,41 +402,45 @@ DictRef hero_route_path_lengths(State &state, DictRef session, Vector2i start, c
 			pending.insert(tile_id(goal));
 		}
 	}
-	if (pending.empty()) {
+	if (pending.empty() || start.x < 0 || start.y < 0 || start.x >= size.x || start.y >= size.y) {
 		return lengths;
 	}
-	std::vector<Vector2i> queue{start};
-	size_t queue_index = 0;
-	TileMap<int64_t> path_sizes{{tile_id(start), 1}};
+	// The cheapest route to each goal, as hero_route_path finds it: its tiles, the start's included.
+	const map_spells::StepCosts costs(state, session, _route_mover(state, session, -1));
 	const ArrayRef transit_edges = active_linked_transit_edges(state, session);
 	const bool has_transit = state.array_size(transit_edges) != 0;
-	while (queue_index < queue.size() && !pending.empty()) {
-		const Vector2i current = queue[queue_index];
-		queue_index += 1;
-		const int64_t next_size = path_sizes.at(tile_id(current)) + 1;
+	RouteWalk walk(size);
+	walk.start(start);
+	// The goals the walk only ends on (blocked, or with something to do there): those whose cheapest route steps onto
+	// them; one a linked transit edge leads to is walked on from, as in hero_route_path.
+	std::unordered_set<uint64_t> ends;
+	int64_t at = 0;
+	Vector2i current;
+	while (!pending.empty() && walk.next(at, current)) {
+		const uint64_t id = tile_id(current);
+		if (pending.count(id) != 0) {
+			state.set(lengths, tile_value(current), int_value(walk.tiles(current)));
+			pending.erase(id);
+		}
+		if (ends.count(id) != 0) {
+			continue;
+		}
 		for (const Vector2i direction : kRouteDirections) {
 			const Vector2i next = current + direction;
-			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y) {
-				continue;
-			}
-			const uint64_t id = tile_id(next);
-			const bool is_pending_goal = pending.count(id) != 0;
-			if (path_sizes.count(id) != 0 && !is_pending_goal) {
+			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y || walk.done(next)) {
 				continue;
 			}
 			if (tile_step_cuts_blocked_corner(state, session, current, next)) {
 				continue;
 			}
 			const bool blocked = hero_route_tile_blocked(state, session, next.x, next.y);
-			if (is_pending_goal && (!blocked || hero_route_destination(state, session, next.x, next.y))) {
-				state.set(lengths, tile_value(next), int_value(next_size));
-				pending.erase(id);
-			}
-			if (path_sizes.count(id) != 0 || blocked || tile_has_route_interaction(state, session, next.x, next.y)) {
+			const bool end = blocked || tile_has_route_interaction(state, session, next.x, next.y);
+			if (end && (pending.count(tile_id(next)) == 0 || (blocked && !hero_route_destination(state, session, next.x, next.y)))) {
 				continue;
 			}
-			path_sizes.emplace(id, next_size);
-			queue.push_back(next);
+			if (walk.reach(next, at + costs.halves(current, next), current) && end) {
+				ends.insert(tile_id(next));
+			}
 		}
 		if (!has_transit) {
 			continue;
@@ -385,16 +450,12 @@ DictRef hero_route_path_lengths(State &state, DictRef session, Vector2i start, c
 				continue;
 			}
 			const Vector2i linked = {linked_next.vx(), linked_next.vy()};
-			const uint64_t id = tile_id(linked);
-			if (pending.count(id) != 0) {
-				state.set(lengths, linked_next, int_value(next_size));
-				pending.erase(id);
-			}
-			if (path_sizes.count(id) != 0) {
+			if (linked.x < 0 || linked.y < 0 || linked.x >= size.x || linked.y >= size.y || walk.done(linked)) {
 				continue;
 			}
-			path_sizes.emplace(id, next_size);
-			queue.push_back(linked);
+			if (walk.reach(linked, at + costs.halves(current, linked), current)) {
+				ends.erase(tile_id(linked));
+			}
 		}
 	}
 	return lengths;
@@ -686,8 +747,8 @@ DictRef route_movement_preview(State &state, const Value &session, const Value &
 	int64_t total_cost = total_steps;
 	int64_t reachable_cost = reachable_steps;
 	int64_t movement_after = std::max<int64_t>(0, budget - reachable_steps);
-	// The map spells' step costs (map_spells.hpp), when any count for the active hero: half points, a road step under
-	// its Forge Road for one, an enemy's Scorched Earth for twice, a wardwood's reach ending the walk there.
+	// What the steps cost (map_spells::StepCosts), in half points: the ground, roads, the hero's map spells and the
+	// enemy's marks; a wardwood's reach ends the walk there. Without a session every step costs a point.
 	bool costed = false;
 	int64_t spent_halves = 0;
 	int64_t half_after = 0;
@@ -699,36 +760,34 @@ DictRef route_movement_preview(State &state, const Value &session, const Value &
 		mover.level = level_rules::hero_level(state, session.ref);
 		mover.day = ai::session_int(state, session.ref, key::day);
 		const map_spells::StepCosts costs(state, session.ref, mover);
-		if (costs.active()) {
-			costed = true;
-			// The half saved on a road today walks too, unless the walk is held to fewer points than the hero has.
-			const int64_t budget_halves = budget * 2 + (budget >= movement_current ? map_spells::banked_half(state, mover.hero) : 0);
-			int64_t total_halves = 0;
-			bool walking = true;
-			reachable_steps = 0;
-			for (size_t index = 1; index < path.size(); ++index) {
-				const int64_t cost = costs.halves(path[index - 1], path[index]);
-				total_halves += cost;
-				if (!walking) {
-					continue;
-				}
-				if (spent_halves + cost > budget_halves) {
-					walking = false;
-					continue;
-				}
-				spent_halves += cost;
-				reachable_steps = static_cast<int64_t>(index);
-				if (costs.stops(path[index - 1], path[index])) {
-					watch_stop = true;
-					walking = false;
-				}
+		costed = true;
+		// The half point left over today walks too, unless the walk is held to fewer points than the hero has.
+		const int64_t budget_halves = budget * 2 + (budget >= movement_current ? map_spells::banked_half(state, mover.hero) : 0);
+		int64_t total_halves = 0;
+		bool walking = true;
+		reachable_steps = 0;
+		for (size_t index = 1; index < path.size(); ++index) {
+			const int64_t cost = costs.halves(path[index - 1], path[index]);
+			total_halves += cost;
+			if (!walking) {
+				continue;
 			}
-			const int64_t halves_left = watch_stop ? 0 : budget_halves - spent_halves;
-			total_cost = (total_halves + 1) / 2;
-			reachable_cost = (spent_halves + 1) / 2;
-			movement_after = halves_left / 2;
-			half_after = halves_left % 2;
+			if (spent_halves + cost > budget_halves) {
+				walking = false;
+				continue;
+			}
+			spent_halves += cost;
+			reachable_steps = static_cast<int64_t>(index);
+			if (costs.stops(path[index - 1], path[index])) {
+				watch_stop = true;
+				walking = false;
+			}
 		}
+		const int64_t halves_left = watch_stop ? 0 : budget_halves - spent_halves;
+		total_cost = (total_halves + 1) / 2;
+		reachable_cost = (spent_halves + 1) / 2;
+		movement_after = halves_left / 2;
+		half_after = halves_left % 2;
 	}
 	const ArrayRef reachable_tiles = state.new_array();
 	for (int64_t index = 0; index < reachable_steps + 1; ++index) {
@@ -803,24 +862,26 @@ ArrayRef guard_engagement_approach_route(State &state, DictRef session, DictRef 
 		return state.new_array();
 	}
 	const Vector2i size = derive_map_size(state, session);
-	std::vector<Vector2i> queue{start};
-	TileMap<Vector2i> parents{{tile_id(start), start}};
-	size_t cursor = 0;
-	Vector2i destination = Vector2i::of(-1, -1);
+	const ArrayRef path = state.new_array();
+	if (start.x < 0 || start.y < 0 || start.x >= size.x || start.y >= size.y) {
+		return path;
+	}
+	// The nearest legal entry in movement (map_spells::StepCosts), the first found among equals.
+	const map_spells::StepCosts costs(state, session, _route_mover(state, session, level));
 	const ArrayRef links = active_linked_transit_edges(state, session);
 	const bool has_links = state.array_size(links) != 0;
-	std::vector<Vector2i> neighbors;
-	while (cursor < queue.size()) {
-		const Vector2i current = queue[cursor];
-		cursor += 1;
+	RouteWalk walk(size);
+	walk.start(start);
+	int64_t at = 0;
+	Vector2i current;
+	while (walk.next(at, current)) {
 		if (targets.count(tile_id(current)) != 0) {
-			destination = current;
-			break;
+			walk.path_to(state, path, current);
+			return path;
 		}
-		neighbors.clear();
 		for (const Vector2i offset : kRouteDirections) {
 			const Vector2i next = current + offset;
-			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y || parents.count(tile_id(next)) != 0) {
+			if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y || walk.done(next)) {
 				continue;
 			}
 			if (tile_step_cuts_blocked_corner(state, session, current, next, level)) {
@@ -832,31 +893,17 @@ ArrayRef guard_engagement_approach_route(State &state, DictRef session, DictRef 
 			if (tile_has_route_interaction(state, session, next.x, next.y, level) && targets.count(tile_id(next)) == 0) {
 				continue;
 			}
-			neighbors.push_back(next);
+			walk.reach(next, at + costs.halves(current, next), current);
 		}
 		if (has_links) {
-			for (const Value &linked : gd::items(state, array_value(linked_transit_neighbors_from_edges(state, array_value(links), current)))) {
-				neighbors.push_back(as_vector2i(linked));
+			for (const Value &linked_value : gd::items(state, array_value(linked_transit_neighbors_from_edges(state, array_value(links), current)))) {
+				const Vector2i linked = as_vector2i(linked_value);
+				if (linked.x < 0 || linked.y < 0 || linked.x >= size.x || linked.y >= size.y || walk.done(linked)) {
+					continue;
+				}
+				walk.reach(linked, at + costs.halves(current, linked), current);
 			}
 		}
-		for (const Vector2i next : neighbors) {
-			if (parents.count(tile_id(next)) != 0) {
-				continue;
-			}
-			parents.emplace(tile_id(next), current);
-			queue.push_back(next);
-		}
-	}
-	const ArrayRef path = state.new_array();
-	if (destination == Vector2i::of(-1, -1)) {
-		return path;
-	}
-	std::vector<Vector2i> walked{destination};
-	while (!(walked.back() == start)) {
-		walked.push_back(parents.at(tile_id(walked.back())));
-	}
-	for (auto tile = walked.rbegin(); tile != walked.rend(); ++tile) {
-		state.append(path, tile_value(*tile));
 	}
 	return path;
 }

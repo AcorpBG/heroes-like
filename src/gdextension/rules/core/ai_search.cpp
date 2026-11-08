@@ -1,5 +1,6 @@
 #include "aurelion_rules/ai_search.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <stdexcept>
@@ -14,23 +15,6 @@ constexpr int64_t kDy[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
 
 constexpr uint8_t kSailing = 1;
 constexpr uint8_t kAshore = 2;
-
-// A boarding or landing step held back until the walk reaches its distance.
-struct Held {
-	int64_t distance;
-	int64_t tile;
-	int64_t parent;
-	int64_t phase;
-};
-
-// AiHeroRules._hold_step: in distance order, after the steps of equal distance.
-void hold_step(std::vector<Held> &deferred, const Held &step) {
-	size_t at = deferred.size();
-	while (at > 0 && deferred[at - 1].distance > step.distance) {
-		at -= 1;
-	}
-	deferred.insert(deferred.begin() + static_cast<std::ptrdiff_t>(at), step);
-}
 
 int64_t map_count(int64_t width, int64_t height) {
 	// Tiles are int32 in the queue, parents and lists.
@@ -242,90 +226,110 @@ void search(const Board &board, int64_t start, int64_t start_phase, int64_t radi
 	const bool has_portals = !portal_at.empty();
 	const bool has_docks = !dock_at.empty();
 
-	int64_t tail = 0;
-	const auto enqueue = [&](int64_t tile) {
-		if (tail >= count) {
-			throw std::logic_error("search queue overflow");
+	// Half points of movement, two to a plain step: dist holds them while the
+	// walk runs and the points, rounded up, once it ends.
+	const int64_t limit = radius > (INT32_MAX / 8) ? (INT32_MAX / 8) * 2 : radius * 2;
+	const int64_t shore = board.shore_cost * 2;
+	const int64_t dock_extra = board.dock_cost * 2;
+	const uint8_t *enter = board.enter;
+	const uint8_t *road = board.road;
+	const auto step_cost = [&](int64_t from, int64_t to) -> int64_t {
+		if (enter == nullptr) {
+			return 2;
 		}
-		order[tail] = static_cast<int32_t>(tile);
-		tail += 1;
+		const int64_t cost = road != nullptr && road[from] != 0 && road[to] != 0 ? road[to] : enter[to];
+		return cost < 1 ? 1 : cost;
+	};
+	std::vector<uint8_t> done(static_cast<size_t>(count), 0);
+	// How the tile's cheapest route so far comes to it: a step on land, out of a portal there, or afloat (sailing,
+	// boarding, going ashore, a bought boat). A route goes through a portal only from a step on land onto it.
+	constexpr uint8_t kByLand = 0;
+	constexpr uint8_t kByPortal = 1;
+	constexpr uint8_t kAfloat = 2;
+	std::vector<uint8_t> came(static_cast<size_t>(count), kByLand);
+	CostQueue queue;
+	queue.reserve(count);
+	// A route reaches the tile at this distance: it takes it when that is
+	// cheaper than any route before it, the first among equals.
+	const auto relax = [&](int64_t tile, int64_t distance, int64_t from, int64_t tile_phase, uint8_t how) {
+		if (done[static_cast<size_t>(tile)] != 0 || (dist[tile] >= 0 && dist[tile] <= distance)) {
+			return;
+		}
+		dist[tile] = static_cast<int32_t>(distance);
+		parent[tile] = static_cast<int32_t>(from);
+		if (has_water) {
+			phase[tile] = static_cast<uint8_t>(tile_phase);
+		}
+		came[static_cast<size_t>(tile)] = how;
+		queue.push(distance, tile);
+	};
+	const auto portal_exits_of = [&](int64_t tile, int64_t distance, int64_t tile_phase) {
+		const int64_t first = portal_at[static_cast<size_t>(tile)];
+		const int64_t exits = portal_exits[static_cast<size_t>(first)];
+		for (int64_t i = 0; i < exits; ++i) {
+			relax(portal_exits[static_cast<size_t>(first + 1 + i)], distance + 2, tile, tile_phase, kByPortal);
+		}
 	};
 
 	if (has_water && start_phase == kSailing) {
 		phase[start] = kSailing;
 	}
 	dist[start] = 0;
-	enqueue(start);
-	int64_t head = 0;
-	const bool native_corners = board.native_corners;
+	queue.push(0, start);
 	// A hero that stopped on a portal goes through it first thing.
 	if (has_portals && portal_at[static_cast<size_t>(start)] >= 0) {
-		const int64_t first = portal_at[static_cast<size_t>(start)];
-		const int64_t exits = portal_exits[static_cast<size_t>(first)];
-		for (int64_t i = 0; i < exits; ++i) {
-			const int64_t exit = portal_exits[static_cast<size_t>(first + 1 + i)];
-			if (dist[exit] < 0) {
-				dist[exit] = 1;
-				parent[exit] = static_cast<int32_t>(start);
-				// An exit beside a hostile hero is as far as the hero gets.
-				if (hero_zone[exit] != 0) {
-					reached.push_back(static_cast<int32_t>(exit));
-					continue;
-				}
-				enqueue(exit);
-			}
-		}
+		portal_exits_of(start, 0, 0);
 	}
+	const bool native_corners = board.native_corners;
 	bool capped = false;
-	std::vector<Held> deferred;
-	size_t deferred_head = 0;
-	while (head < tail || deferred_head < deferred.size()) {
-		if (deferred_head < deferred.size()) {
-			// A held-back step joins the queue once the walk has come within one
-			// step of its distance, which keeps the queue in distance order.
-			const int64_t limit = head < tail ? static_cast<int64_t>(dist[order[head]]) + 1 : deferred[deferred_head].distance;
-			while (deferred_head < deferred.size() && deferred[deferred_head].distance <= limit) {
-				const Held held = deferred[deferred_head];
-				deferred_head += 1;
-				const int64_t at = held.tile;
-				if (dist[at] >= 0) {
+	int64_t tail = 0;
+	int64_t here = 0;
+	int64_t current = 0;
+	while (queue.pop(here, current)) {
+		if (done[static_cast<size_t>(current)] != 0 || dist[current] != here) {
+			continue;
+		}
+		done[static_cast<size_t>(current)] = 1;
+		const int64_t here_phase = has_water ? phase[current] : 0;
+		if (current != start) {
+			if (came[static_cast<size_t>(current)] == kByPortal) {
+				// An exit beside a hostile hero is as far as the hero gets.
+				if (hero_zone[current] != 0) {
+					reached.push_back(static_cast<int32_t>(current));
 					continue;
 				}
-				dist[at] = static_cast<int32_t>(held.distance);
-				parent[at] = static_cast<int32_t>(held.parent);
-				phase[at] = static_cast<uint8_t>(held.phase);
-				if (stop_mask[at] != 0) {
-					reached.push_back(static_cast<int32_t>(at));
-					if (pass_mask[at] == 0) {
-						continue;
+			} else if (stop_mask[current] != 0) {
+				reached.push_back(static_cast<int32_t>(current));
+				if (pass_mask[current] == 0) {
+					if (came[static_cast<size_t>(current)] == kByLand && has_portals && portal_at[static_cast<size_t>(current)] >= 0 && hero_zone[current] == 0) {
+						// Through the portal: the hero comes out standing on an exit
+						// and the route goes on from there.
+						portal_exits_of(current, here, here_phase);
 					}
+					continue;
 				}
-				enqueue(at);
-			}
-			if (head >= tail) {
-				continue;
 			}
 		}
-		const int64_t current = order[head];
-		head += 1;
-		const int64_t here = dist[current];
-		const int64_t next_distance = here + 1;
-		if (next_distance > radius) {
+		order[tail] = static_cast<int32_t>(current);
+		tail += 1;
+		if (here + 2 > limit) {
 			capped = true;
-			continue;
 		}
 		const int64_t cx = current % width;
 		const int64_t cy = current / width;
 		// Only a tile on the map's edge has neighbours off the map.
 		const bool on_edge = cx == 0 || cy == 0 || cx == width - 1 || cy == height - 1;
-		const int64_t here_phase = has_water ? phase[current] : 0;
 		const int64_t mode = here_phase & 3;
-		if (here_phase == 0 && has_docks && dock_at[static_cast<size_t>(current)] >= 0 && dist[dock_at[static_cast<size_t>(current)]] < 0) {
+		if (here_phase == 0 && has_docks && dock_at[static_cast<size_t>(current)] >= 0) {
 			// The shipyard here builds a boat at its dock and the hero boards it.
-			if (here + 1 + board.dock_cost <= radius) {
-				hold_step(deferred, Held{ here + 1 + board.dock_cost, dock_at[static_cast<size_t>(current)], current, kSailing | kBoughtBoat });
-			} else {
-				capped = true;
+			const int64_t dock = dock_at[static_cast<size_t>(current)];
+			if (done[static_cast<size_t>(dock)] == 0) {
+				const int64_t at = here + (enter != nullptr ? std::max<int64_t>(1, enter[dock]) : 2) + dock_extra;
+				if (at <= limit) {
+					relax(dock, at, current, kSailing | kBoughtBoat, kAfloat);
+				} else if (dist[dock] < 0) {
+					capped = true;
+				}
 			}
 		}
 		for (int64_t direction = 0; direction < 8; ++direction) {
@@ -335,98 +339,63 @@ void search(const Board &board, int64_t start, int64_t start_phase, int64_t radi
 				continue;
 			}
 			const int64_t next = current + dy * width + dx;
-			if (dist[next] >= 0) {
+			if (done[static_cast<size_t>(next)] != 0) {
 				continue;
 			}
-			if (has_water) {
-				if (water[next] != 0) {
-					if (mode == kSailing) {
-						if (dx != 0 && dy != 0 && !native_corners && sea_open[current + dx] == 0 && sea_open[current + dy * width] == 0) {
-							continue;
-						}
-						if (stop_mask[next] != 0) {
-							dist[next] = static_cast<int32_t>(next_distance);
-							parent[next] = static_cast<int32_t>(current);
-							phase[next] = static_cast<uint8_t>(here_phase);
-							reached.push_back(static_cast<int32_t>(next));
-							if (pass_mask[next] != 0) {
-								enqueue(next);
-							}
-						} else if (sea_open[next] != 0) {
-							dist[next] = static_cast<int32_t>(next_distance);
-							parent[next] = static_cast<int32_t>(current);
-							phase[next] = static_cast<uint8_t>(here_phase);
-							enqueue(next);
-						}
-					} else if (here_phase == 0 && boats[next] != 0) {
-						if (next_distance + board.shore_cost <= radius) {
-							hold_step(deferred, Held{ next_distance + board.shore_cost, next, current, kSailing });
-						} else {
-							capped = true;
-						}
-					}
-					continue;
-				}
+			int64_t at = 0;
+			int64_t next_phase = here_phase;
+			uint8_t how = kAfloat;
+			if (has_water && water[next] != 0) {
 				if (mode == kSailing) {
-					if (stop_mask[next] != 0 || blocked[next] == 0) {
-						if (next_distance + board.shore_cost <= radius) {
-							hold_step(deferred, Held{ next_distance + board.shore_cost, next, current, kAshore | (here_phase & kBoughtBoat) });
-						} else {
-							capped = true;
-						}
+					if (dx != 0 && dy != 0 && !native_corners && sea_open[current + dx] == 0 && sea_open[current + dy * width] == 0) {
+						continue;
 					}
+					if (stop_mask[next] == 0 && sea_open[next] == 0) {
+						continue;
+					}
+					at = here + step_cost(current, next);
+				} else if (here_phase == 0 && boats[next] != 0) {
+					// Boarding a boat: the step and the shore's cost.
+					at = here + step_cost(current, next) + shore;
+					next_phase = kSailing;
+				} else {
 					continue;
 				}
-			}
-			if (dx != 0 && dy != 0 && !native_corners && blocked[current + dx] != 0 && blocked[current + dy * width] != 0) {
-				continue;
-			}
-			if (stop_mask[next] != 0) {
-				dist[next] = static_cast<int32_t>(next_distance);
-				parent[next] = static_cast<int32_t>(current);
-				if (has_water) {
-					phase[next] = static_cast<uint8_t>(here_phase);
+			} else if (has_water && mode == kSailing) {
+				// Going ashore: the step and the shore's cost.
+				if (stop_mask[next] == 0 && blocked[next] != 0) {
+					continue;
 				}
-				reached.push_back(static_cast<int32_t>(next));
-				if (pass_mask[next] != 0) {
-					enqueue(next);
-				} else if (has_portals && portal_at[static_cast<size_t>(next)] >= 0 && hero_zone[next] == 0) {
-					// Through the portal: the hero comes out standing on an exit
-					// and the route goes on from there.
-					const int64_t first = portal_at[static_cast<size_t>(next)];
-					const int64_t exits = portal_exits[static_cast<size_t>(first)];
-					for (int64_t i = 0; i < exits; ++i) {
-						const int64_t exit = portal_exits[static_cast<size_t>(first + 1 + i)];
-						if (dist[exit] < 0) {
-							dist[exit] = static_cast<int32_t>(next_distance + 1);
-							parent[exit] = static_cast<int32_t>(next);
-							if (has_water) {
-								phase[exit] = static_cast<uint8_t>(here_phase);
-							}
-							if (hero_zone[exit] != 0) {
-								reached.push_back(static_cast<int32_t>(exit));
-								continue;
-							}
-							enqueue(exit);
-						}
-					}
+				at = here + step_cost(current, next) + shore;
+				next_phase = kAshore | (here_phase & kBoughtBoat);
+			} else {
+				if (dx != 0 && dy != 0 && !native_corners && blocked[current + dx] != 0 && blocked[current + dy * width] != 0) {
+					continue;
+				}
+				if (stop_mask[next] == 0 && blocked[next] != 0) {
+					continue;
+				}
+				at = here + step_cost(current, next);
+				how = kByLand;
+			}
+			// Past the radius: the walk is cut short there, unless the tile is reached already.
+			if (at > limit) {
+				if (dist[next] < 0) {
+					capped = true;
 				}
 				continue;
 			}
-			if (blocked[next] != 0) {
-				continue;
-			}
-			dist[next] = static_cast<int32_t>(next_distance);
-			parent[next] = static_cast<int32_t>(current);
-			if (has_water) {
-				phase[next] = static_cast<uint8_t>(here_phase);
-			}
-			enqueue(next);
+			relax(next, at, current, next_phase, how);
 		}
 	}
 	// The hero's own tile counts as reached at distance zero.
 	if (stop_mask[start] != 0) {
 		reached.push_back(static_cast<int32_t>(start));
+	}
+	for (int64_t tile = 0; tile < count; ++tile) {
+		if (dist[tile] > 0) {
+			dist[tile] = (dist[tile] + 1) / 2;
+		}
 	}
 	out.order_count = tail;
 	out.capped = capped;

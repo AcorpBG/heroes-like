@@ -2,21 +2,27 @@
 // with the caster's spell power. Far Sight widens the hero's sight until its next day starts and opens it at once;
 // Stride adds movement today, past the day's full movement; Read Tracks shows the garrisons of the towns that are
 // not the seat's within reach of its heroes until their next day; Watchtower Lens opens every tile within reach of
-// the hero on every level; Harvest Bloom doubles the income of a held mine beside the hero for some days. Forge Road
-// halves the cost of road steps for some days; Scorched Earth doubles enemy steps near where it was cast, and a
-// wardwood stops enemy armies that come near it (StepCosts). A Firebreak's mark closes its tile to every army. The
-// spells aimed at a tile find their tiles in spell_map_tiles.cpp.
+// the hero on every level; Harvest Bloom doubles the income of a held mine beside the hero for some days. What a
+// step costs is its ground's (docs/overworld-terrain-movement.md), a road step's a point: Forge Road halves road steps
+// for some days, Green Path and Mire Stride make their ground cost no more than grass for some days, Scorched Earth
+// doubles enemy steps near where it was cast, and a wardwood stops enemy armies that come near it (StepCosts). A
+// Firebreak's mark closes its tile to every army. The spells aimed at a tile find their tiles in spell_map_tiles.cpp.
 #include "aurelion_rules/port/map_spells.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
+#include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
+
+#include <algorithm>
+#include <string>
 
 namespace aurelion::rules::port::map_spells {
 
@@ -58,6 +64,22 @@ bool site_has_income(State &state, DictRef site) {
 Atom mine_name(State &state, DictRef node) {
 	const DictRef site = gd::content_row(state, ContentTable::ResourceSite, gd::string_field(state, node, key::site_id, key::empty));
 	return gd::string_field(state, site, key::name, key::resource_cache);
+}
+
+// The ground a Green Path or Mire Stride covers, as its text names it: "Forest and rough", "Swamp, mire and sand".
+Atom ground_names(State &state, DictRef spell) {
+	std::vector<Atom> names;
+	for (const Value &terrain : gd::field_items(state, effect_of(state, spell), str(key::terrains))) {
+		names.push_back(gd::stringify(state, terrain));
+	}
+	std::string text;
+	for (size_t at = 0; at < names.size(); ++at) {
+		if (at > 0) {
+			text += state.text(at + 1 == names.size() ? key::and_ : key::comma_space);
+		}
+		text += state.text(at == 0 ? gd::capitalize(state, names[at]) : names[at]);
+	}
+	return state.intern(text);
 }
 
 uint64_t tile_key(Vector2i tile) {
@@ -131,6 +153,11 @@ Atom effect_text(State &state, DictRef hero, DictRef spell, DictRef mine) {
 		const int64_t days = term(state, hero, spell, key::days);
 		return days <= 1 ? key::map_road_today_text : gd::format(state, key::map_road_text, {int_value(days)});
 	}
+	if (kind == key::map_forest_ways || kind == key::map_mire_ways) {
+		const int64_t days = term(state, hero, spell, key::days);
+		const Atom names = ground_names(state, spell);
+		return days <= 1 ? gd::format(state, key::map_ground_ways_today_text, {str(names)}) : gd::format(state, key::map_ground_ways_text, {str(names), int_value(days)});
+	}
 	if (kind == key::map_slow_zone) {
 		return gd::format(state, key::map_slow_zone_text, {int_value(term(state, hero, spell, key::days)), int_value(term(state, hero, spell, key::radius))});
 	}
@@ -186,6 +213,25 @@ void apply_to_hero(State &state, DictRef hero, DictRef movement, DictRef spell, 
 		// Today is the first of its days; a second Forge Road runs to the later end.
 		const int64_t until = gd::add(day, gd::sub(engine_max<int64_t>(1, term(state, hero, spell, key::days)), 1));
 		state.set(hero, str(key::map_road_until_day), int_value(engine_max<int64_t>(until, gd::int_field(state, hero, key::map_road_until_day, 0))));
+	} else if (kind == key::map_forest_ways || kind == key::map_mire_ways) {
+		// Green Path and Mire Stride: map_ground_ways {terrain: last day}, from today for its days; a second cast runs
+		// each terrain to the later end. The ground whose days are over goes.
+		const int64_t until = gd::add(day, gd::sub(engine_max<int64_t>(1, term(state, hero, spell, key::days)), 1));
+		const DictRef ways = state.new_dict();
+		const Value before = gd::field(state, hero, key::map_ground_ways);
+		if (gd::is_dict(before)) {
+			for (const Value &terrain : gd::items(state, before)) {
+				const Value last = state.get(before.ref, terrain, int_value(0));
+				if (gd::to_int(state, last) >= day) {
+					state.set(ways, terrain, last);
+				}
+			}
+		}
+		for (const Value &terrain : gd::field_items(state, effect_of(state, spell), str(key::terrains))) {
+			const Value normalized = str(content_service::normalize_terrain_id(state, gd::stringify(state, terrain)));
+			state.set(ways, normalized, int_value(engine_max<int64_t>(until, gd::to_int(state, state.get(ways, normalized, int_value(0))))));
+		}
+		state.set(hero, str(key::map_ground_ways), dict_value(ways));
 	}
 }
 
@@ -293,7 +339,43 @@ int64_t harvest_factor(State &state, DictRef node, int64_t day) {
 	return from > 0 && day >= from && day <= gd::int_field(state, node, key::harvest_until_day, 0) ? 2 : 1;
 }
 
-StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_(&state) {
+int64_t terrain_halves(State &state, Atom terrain_id) {
+	const Atom normalized = content_service::normalize_terrain_id(state, terrain_id);
+	for (const Value &terrain_class : gd::field_items(state, gd::content_file(state, key::terrain_grammar_path), str(key::terrain_classes))) {
+		if (!gd::is_dict(terrain_class) || gd::string_field(state, terrain_class.ref, key::id, key::empty) != normalized) {
+			continue;
+		}
+		const Value cost = gd::field(state, terrain_class.ref, key::movement_cost);
+		if (cost.kind != state::Kind::Int && cost.kind != state::Kind::Float) {
+			return 2;
+		}
+		return compat::engine_clamp<int64_t>(compat::float_to_int(compat::godot_round(gd::to_float(cost) * 2.0)), 1, 200);
+	}
+	return 2;
+}
+
+std::vector<Vector2i> road_tiles(State &state, DictRef session, int64_t level) {
+	// terrain_layers.roads: [{level, tiles: [{x, y, level}]}].
+	std::vector<Vector2i> tiles;
+	const Value layers = gd::field(state, session_view::overworld(state, session), key::terrain_layers);
+	if (!gd::is_dict(layers)) {
+		return tiles;
+	}
+	for (const Value &road : gd::field_items(state, layers.ref, str(key::roads))) {
+		if (!gd::is_dict(road)) {
+			continue;
+		}
+		const int64_t road_level = gd::int_field(state, road.ref, key::level, 0);
+		for (const Value &tile : gd::field_items(state, road.ref, str(key::tiles))) {
+			if (gd::is_dict(tile) && gd::int_field(state, tile.ref, key::level, road_level) == level) {
+				tiles.push_back(tile_of(state, tile.ref));
+			}
+		}
+	}
+	return tiles;
+}
+
+StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_(&state), session_(session), level_(mover.level) {
 	const DictRef overworld = session_view::overworld(state, session);
 	for (const Value &mark : gd::field_items(state, overworld, str(key::map_spell_marks))) {
 		if (!mark_stands(state, mark, mover.day) || gd::int_field(state, mark.ref, key::level, 0) != mover.level ||
@@ -308,35 +390,64 @@ StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_
 			watch_.push_back(zone);
 		}
 	}
-	roads_ = mover.hero != 0 && gd::int_field(state, mover.hero, key::map_road_until_day, 0) >= mover.day;
-	if (roads_) {
-		// terrain_layers.roads: [{level, tiles: [{x, y, level}]}], as the map view draws them.
-		const Value layers = gd::field(state, overworld, key::terrain_layers);
-		if (gd::is_dict(layers)) {
-			for (const Value &road : gd::field_items(state, layers.ref, str(key::roads))) {
-				if (!gd::is_dict(road)) {
-					continue;
-				}
-				const int64_t road_level = gd::int_field(state, road.ref, key::level, 0);
-				for (const Value &tile : gd::field_items(state, road.ref, str(key::tiles))) {
-					if (gd::is_dict(tile) && gd::int_field(state, tile.ref, key::level, road_level) == mover.level) {
-						road_tiles_.insert(tile_key(tile_of(state, tile.ref)));
-					}
+	rows_ = levels::terrain_rows(state, dict_value(session), mover.level);
+	grass_halves_ = terrain_halves(state, key::grass);
+	if (mover.hero != 0) {
+		road_halves_ = gd::int_field(state, mover.hero, key::map_road_until_day, 0) >= mover.day ? 1 : 2;
+		// Green Path and Mire Stride: the ground the mover walks like grass, by terrain until its last day.
+		const Value ways = gd::field(state, mover.hero, key::map_ground_ways);
+		if (gd::is_dict(ways)) {
+			for (const Value &terrain : gd::items(state, ways)) {
+				if (gd::to_int(state, state.get(ways.ref, terrain, int_value(0))) >= mover.day) {
+					easy_.insert(content_service::normalize_terrain_id(state, gd::stringify(state, terrain)));
 				}
 			}
 		}
 	}
-	active_ = roads_ || !slow_.empty() || !watch_.empty();
 }
 
 bool StepCosts::inside(const Zone &zone, Vector2i tile) const {
 	return hero_command_rules::within_scout_radius(*state_, static_cast<int64_t>(tile.x) - zone.tile.x, static_cast<int64_t>(tile.y) - zone.tile.y, zone.radius);
 }
 
+bool StepCosts::on_road(Vector2i tile) const {
+	if (!roads_read_) {
+		roads_read_ = true;
+		for (const Vector2i road : road_tiles(*state_, session_, level_)) {
+			road_tiles_.insert(tile_key(road));
+		}
+	}
+	return road_tiles_.count(tile_key(tile)) != 0;
+}
+
+Atom StepCosts::terrain_at(Vector2i tile) const {
+	if (tile.y < 0 || tile.y >= state_->array_size(rows_)) {
+		return key::rock;
+	}
+	const Value row = state_->at(rows_, tile.y);
+	if (!gd::is_array(row) || tile.x < 0 || tile.x >= state_->array_size(row.ref)) {
+		return key::rock;
+	}
+	return gd::stringify(*state_, state_->at(row.ref, tile.x));
+}
+
+int64_t StepCosts::ground_halves(Atom terrain_id) const {
+	const auto found = ground_.find(terrain_id);
+	if (found != ground_.end()) {
+		return found->second;
+	}
+	int64_t cost = terrain_halves(*state_, terrain_id);
+	if (!easy_.empty() && easy_.count(content_service::normalize_terrain_id(*state_, terrain_id)) != 0) {
+		cost = std::min(cost, grass_halves_);
+	}
+	ground_.emplace(terrain_id, cost);
+	return cost;
+}
+
 int64_t StepCosts::halves(Vector2i from, Vector2i to) const {
 	int64_t cost = 2;
-	if (roads_ && chebyshev(from, to) == 1 && road_tiles_.count(tile_key(from)) != 0 && road_tiles_.count(tile_key(to)) != 0) {
-		cost = 1;
+	if (chebyshev(from, to) == 1) {
+		cost = on_road(from) && on_road(to) ? road_halves_ : ground_halves(terrain_at(to));
 	}
 	for (const Zone &zone : slow_) {
 		if (inside(zone, to)) {
@@ -353,6 +464,39 @@ bool StepCosts::stops(Vector2i from, Vector2i to) const {
 		}
 	}
 	return false;
+}
+
+void StepCosts::fill(int64_t width, int64_t height, const uint8_t *kinds, const std::vector<Atom> &terrains, const uint8_t *roads, uint8_t *enter, uint8_t *road) const {
+	std::vector<uint8_t> by_kind(terrains.size(), 2);
+	for (size_t kind = 0; kind < terrains.size(); ++kind) {
+		by_kind[kind] = static_cast<uint8_t>(compat::engine_clamp<int64_t>(ground_halves(terrains[kind]), 1, 255));
+	}
+	const uint8_t road_cost = static_cast<uint8_t>(road_halves_);
+	const int64_t count = width * height;
+	for (int64_t tile = 0; tile < count; ++tile) {
+		enter[tile] = kinds[tile] < by_kind.size() ? by_kind[kinds[tile]] : 2;
+		road[tile] = roads[tile] != 0 ? road_cost : 0;
+	}
+	// Scorched Earth doubles both within its reach, once where several reach.
+	if (slow_.empty()) {
+		return;
+	}
+	std::vector<uint8_t> slowed(static_cast<size_t>(count), 0);
+	for (const Zone &zone : slow_) {
+		for (int64_t y = engine_max<int64_t>(0, zone.tile.y - zone.radius); y <= std::min<int64_t>(height - 1, zone.tile.y + zone.radius); ++y) {
+			for (int64_t x = engine_max<int64_t>(0, zone.tile.x - zone.radius); x <= std::min<int64_t>(width - 1, zone.tile.x + zone.radius); ++x) {
+				if (inside(zone, Vector2i::of(x, y))) {
+					slowed[static_cast<size_t>(y * width + x)] = 1;
+				}
+			}
+		}
+	}
+	for (int64_t tile = 0; tile < count; ++tile) {
+		if (slowed[static_cast<size_t>(tile)] != 0) {
+			enter[tile] = static_cast<uint8_t>(std::min<int64_t>(255, int64_t(enter[tile]) * 2));
+			road[tile] = static_cast<uint8_t>(std::min<int64_t>(255, int64_t(road[tile]) * 2));
+		}
+	}
 }
 
 int64_t banked_half(State &state, DictRef hero) {

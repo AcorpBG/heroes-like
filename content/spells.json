@@ -6647,6 +6647,59 @@
         "range": 4,
         "range_power_divisor": 2
       }
+    },
+    {
+      "id": "spell_green_path",
+      "name": "Green Path",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_tier2",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "Branches part and stones settle before the hero; the army crosses forest and rough ground as easily as open grass.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_forest_ways",
+        "days": 1,
+        "days_power_divisor": 5,
+        "terrains": [
+          "forest",
+          "rough"
+        ]
+      }
+    },
+    {
+      "id": "spell_mire_stride",
+      "name": "Mire Stride",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_tier2",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "unreleased": true,
+      "description": "A grey film hardens under the army's feet; it walks swamp, mire and sand as if they were meadow.",
+      "effect": {
+        "type": "map_effect",
+        "map": "map_mire_ways",
+        "days": 1,
+        "days_power_divisor": 5,
+        "terrains": [
+          "swamp",
+          "mire",
+          "sand"
+        ]
+      }
     }
   ]
 }

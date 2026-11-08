@@ -2825,6 +2825,28 @@
       "source_sha256": "e6a4b28dee73dca5a70804256ccf2715932de821ff9ae515c8da115f11fb789b",
       "icon_path": "res://art/magic/runtime/spells/spell_mist_jump.png",
       "icon_sha256": "bc9b5af1dd77252b3f41fb13a118001505603cbf35f2fb6f4fa94ac04270263c"
+    },
+    {
+      "id": "spell_green_path",
+      "spell_id": "spell_green_path",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_green_path",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_green_path.png",
+      "source_sha256": "d05650860d793d79593eb620b0e42e3c34da70f4e09bb105e0bd69e0fff41b17",
+      "icon_path": "res://art/magic/runtime/spells/spell_green_path.png",
+      "icon_sha256": "595af9a296d4e6b55b84832e05d95d8ffc013b0bfc4b10b007726b3542a09110"
+    },
+    {
+      "id": "spell_mire_stride",
+      "spell_id": "spell_mire_stride",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_mire_stride",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_stride.png",
+      "source_sha256": "472166e3207591b322a16ca639f95a36a28d649065239b6772fe387bbfd52fe1",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_stride.png",
+      "icon_sha256": "69c6d1d1d9c39f6b98ebada0fd46f9d6c46550c686abb7aa018639c90149aa50"
     }
   ]
 }

@@ -6125,3 +6125,12 @@ AURELION_KEY(no_tile_in_reach_for_s_text, "No tile in reach for %s here.")
 AURELION_KEY(s_is_aimed_at_a_map_tile_text, "%s is aimed at a tile on the map.")
 AURELION_KEY(scout_that_ground_first_text, "Scout that ground first.")
 AURELION_KEY(tile_selected, "tile_selected")
+
+// Overworld terrain costs and the ground ways (overworld-terrain-costs-20261108).
+AURELION_KEY(terrains, "terrains")
+AURELION_KEY(map_ground_ways, "map_ground_ways")
+AURELION_KEY(map_ground_ways_text, "%s cost the hero's army no more than grass for %d days")
+AURELION_KEY(map_ground_ways_today_text, "%s cost the hero's army no more than grass today")
+AURELION_KEY(terrain_kind, "terrain_kind")
+AURELION_KEY(road_mask, "road_mask")
+AURELION_KEY(the_next_step_costs_more_movement_text, "The next step costs more movement than the hero has left today.")

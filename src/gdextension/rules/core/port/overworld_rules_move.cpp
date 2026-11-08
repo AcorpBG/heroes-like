@@ -259,24 +259,14 @@ void _store_level_fog(State &state, DictRef session, DictRef payload, int64_t le
 	state.set(overworld, str(key::fog), dict_value(active));
 }
 
-// The half point the active hero saved on a road today (Forge Road): it walks one more road step with no point left.
+// The half point left over from the active hero's walk today: it pays half a step with no point left.
 static int64_t _banked_half(State &state, DictRef session) {
 	return map_spells::banked_half(state, sub_dict(state, session_view::overworld(state, session), key::hero));
 }
 
-// Whether the map spells' step costs count for the active hero now (map_spells.hpp).
-static bool _route_costs_apply(State &state, DictRef session) {
-	map_spells::Mover mover;
-	mover.hero = sub_dict(state, session_view::overworld(state, session), key::hero);
-	mover.controller = key::player;
-	mover.level = hero_level(state, session);
-	mover.day = ai::session_int(state, session, key::day);
-	return map_spells::StepCosts(state, session, mover).active();
-}
-
-// The movement left after a walk: a point a step, or, when the map spells' step costs counted (the preview's
-// step_costs_apply), what the half points spent leave of the hero's points and saved half; the half left over is
-// saved on the hero, and a wardwood's stop is noted there for its next day.
+// The movement left after a walk: what the half points spent leave of the hero's points and saved half (the
+// preview's step_costs_apply; a point a step without it); the half left over is saved on the hero, and a wardwood's
+// stop is noted there for its next day.
 static int64_t _movement_after_route(State &state, DictRef session, DictRef preview, int64_t movement_left, int64_t reachable_steps) {
 	if (!gd::bool_field(state, preview, key::step_costs_apply, false)) {
 		return compat::engine_max<int64_t>(0, movement_left - reachable_steps);
@@ -478,7 +468,7 @@ DictRef try_move_along_route(State &state, DictRef session, const Value &route_t
 	const DictRef preview = route_movement_preview(state, dict_value(session), array_value(path), effective_budget);
 	const int64_t reachable_steps = gd::int_field(state, preview, key::reachable_steps, 0);
 	if (reachable_steps <= 0) {
-		return route_failure(state, key::no_movement_left_today);
+		return route_failure(state, key::the_next_step_costs_more_movement_text);
 	}
 
 	const Vector2i final_tile = as_vector2i(state.at(path, reachable_steps));
@@ -613,14 +603,10 @@ DictRef execute_prevalidated_route(State &state, DictRef session, const Value &r
 	}
 
 	route_shape_started_usec = _rules_profile_timer(state);
-	DictRef preview = gd::deep_duplicate_dict(state, route_preview);
-	// A walk the map spells' step costs count for is previewed again: the shell's copy may come from before a cast.
-	if (gd::is_empty(state, preview)
-			|| gd::to_int(state, state.get(preview, str(key::movement_budget), int_value(effective_budget))) != effective_budget
-			|| gd::to_int(state, state.get(preview, str(key::total_steps), int_value(path_size - 1))) != path_size - 1
-			|| _route_costs_apply(state, session)) {
-		preview = route_movement_preview(state, dict_value(session), array_value(path), effective_budget);
-	}
+	// The walk is previewed again here, the shell's route_preview aside: what its steps cost (the ground, roads and the
+	// map spells) is counted as the hero stands now, after any cast since the shell's copy.
+	(void)route_preview;
+	const DictRef preview = route_movement_preview(state, dict_value(session), array_value(path), effective_budget);
 	_rules_profile_add_ms(state, key::execute_prevalidated_route_shape_ms, route_shape_started_usec);
 	const bool costed = gd::bool_field(state, preview, key::step_costs_apply, false);
 	int64_t reachable_steps = compat::engine_min<int64_t>(compat::engine_max<int64_t>(0, gd::int_field(state, preview, key::reachable_steps, 0)), path_size - 1);
@@ -629,7 +615,7 @@ DictRef execute_prevalidated_route(State &state, DictRef session, const Value &r
 	}
 	if (reachable_steps <= 0) {
 		_rules_profile_finish(state);
-		return cached_route_failure(state, key::no_movement_left_today);
+		return cached_route_failure(state, key::the_next_step_costs_more_movement_text);
 	}
 
 	const int64_t apply_started_usec = _rules_profile_timer(state);
