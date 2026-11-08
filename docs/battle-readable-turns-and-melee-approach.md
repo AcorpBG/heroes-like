@@ -21,7 +21,7 @@ The old `board_click_attack_intent_for_target` offered Strike only if `_can_make
 
 BattleShell plays those views in order for player actions, enemy responses and enemy-first battle entry. The board shows a compact, readable action strip with actor/target and damage/casualties, and the header no longer claims a stale active stack during playback. Movement follows a BFS-derived free-hex visual path using the same neighbor/occupancy conventions; no simulation path rules were changed. Fast mode shortens playback while retaining motion; Instant skips the queue, and reduced-motion keeps the existing static-motion policy and readable captions. Normal-play inputs and manual Save/Menu actions cannot race pending playback. Controller-origin results are announced after the live session and command focus are restored, with the existing session/turn/focus guards.
 
-Terminal resolution still reaches its existing durable autosave checkpoint before visual exit playback; a failed checkpoint shows the existing retry surface and cannot route. Playback completion uses the already-authorized route rather than reapplying combat or the checkpoint. The existing validation-only routing-disable mode retains synchronous controls, consistent with its prior exit-animation behavior.
+Terminal resolution prepares the overworld state before visual exit playback; since 2026-11-08 nothing is saved there (the game autosaves at end turn), and a refused checkpoint shows a hint and cannot route. Playback completion uses the already-authorized route rather than reapplying combat or the checkpoint. The existing validation-only routing-disable mode retains synchronous controls, consistent with its prior exit-animation behavior.
 
 ## Validation (completed 2026-09-10)
 

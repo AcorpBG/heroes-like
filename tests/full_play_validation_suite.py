@@ -25,20 +25,17 @@ SCENES = [
     "fog_of_war_homm_style_regression",
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
-    "application_battle_entry_autosave_failure_regression",
     "overworld_end_turn_autosave_failure_regression",
     "application_safe_close_autosave_regression",
     "campaign_replay_progress_preservation_regression",
     "campaign_progression_semantic_storage_fail_closed_regression",
     "scenario_outcome_new_session_confirmation_safe_cancel_regression",
     "scenario_outcome_normal_entry_focus_regression",
-    "application_scenario_outcome_autosave_failure_recovery_regression",
     "town_development_save_resume_report",
     "runtime_audio_cache_fallback_report",
     "music_audio_runtime_report",
     "overworld_ambient_audio_runtime_report",
     "settings_transactional_persistence_regression",
-    "generated_opening_autosave_failure_retry_regression",
     "active_play_save_written_cue_playback_report",
     "active_play_load_resumed_cue_playback_report",
     "town_screen_layout_and_dialog_controls_report",
@@ -72,11 +69,8 @@ RMG_SCENES = [
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
 # a failed test marker, any script error or any other native error still fails.
 EXPECTED_INJECTED_ISSUES = {
-    "application_scenario_outcome_autosave_failure_recovery_regression": ("ERROR: scenario_outcome_autosave_failed:", "ERROR: active_play_return_autosave_failed:"),
     "scenario_outcome_normal_entry_focus_regression": "ERROR: scenario_outcome_autosave_failed:",
     "scenario_outcome_new_session_confirmation_safe_cancel_regression": "ERROR: scenario_outcome_autosave_failed:",
-    "generated_opening_autosave_failure_retry_regression": ("ERROR: generated_opening_autosave_failed:", "ERROR: end_turn_autosave_failed:"),
-    "application_battle_entry_autosave_failure_regression": "ERROR: battle_entry_autosave_failed:",
     "overworld_end_turn_autosave_failure_regression": "ERROR: end_turn_autosave_failed:",
     "application_safe_close_autosave_regression": "ERROR: safe_quit_autosave_failed:",
     "settings_transactional_persistence_regression": "ERROR: ConfigFile parse error at user://config/settings.cfg:0: Unexpected EOF while parsing simple tag.",
@@ -99,9 +93,6 @@ def report_scene(name: str, source: str, out: Path):
         # tabs. Keep the exact holder/capacity and real keyboard assertions.
         anchor = '\tvar tabs = shell.get_node_or_null("%ManagementTabs")\n\tif tabs != null:\n\t\ttabs.current_tab = 4\n'
         setup = '\tshell.call("_open_town_catalog", "log")\n'
-    elif name == "generated_opening_autosave_failure_retry_regression":
-        anchor = '\tsession.flags["generated_random_map"] = true\n'
-        setup = anchor + '\tOverworldRules.normalize_overworld_state(session)\n'
     elif name == "active_play_load_resumed_cue_playback_report":
         anchor = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait _settle()\n'
         setup = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait get_tree().scene_changed\n\tawait RenderingServer.frame_post_draw\n'

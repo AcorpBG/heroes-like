@@ -55,7 +55,7 @@ func _ready() -> void:
 
 func _route_missing_report() -> void:
 	if _session != null and _session.scenario_status != "in_progress":
-		AppRouter.go_to_scenario_outcome(true)
+		AppRouter.go_to_scenario_outcome()
 	else:
 		AppRouter.go_to_overworld()
 
@@ -105,15 +105,10 @@ func _refresh() -> void:
 		aftermath_lines.append("No additional rewards or field consequences were recorded.")
 	_aftermath_label.text = "\n".join(aftermath_lines)
 	_aftermath_label.tooltip_text = _aftermath_label.text
-	var entry_snapshot := AppRouter.validation_battle_report_snapshot()
-	var entry_result: Dictionary = entry_snapshot.get("last_entry_result", {}) if entry_snapshot.get("last_entry_result", {}) is Dictionary else {}
-	if String(entry_result.get("reason", "")) == "autosave_failed":
-		_status_label.text = String(entry_result.get("message", "The report is not saved yet. Continue will retry."))
-	else:
-		_status_label.text = "Review both casualty ledgers, then continue."
+	_status_label.text = "Review both casualty ledgers, then continue."
 	_continue_button.disabled = false
 	_continue_button.text = "Continue"
-	_continue_button.tooltip_text = "Acknowledge this report, save the result, and continue to %s." % (
+	_continue_button.tooltip_text = "Acknowledge this report and continue to %s." % (
 		"Scenario Outcome" if _session.scenario_status != "in_progress" else "the Adventure Map"
 	)
 	_continue_button.accessibility_name = "Continue from battle report"
@@ -190,14 +185,11 @@ func _on_continue_pressed() -> void:
 		return
 	_continue_in_progress = true
 	_continue_button.disabled = true
-	_continue_button.text = "Saving…"
-	_status_label.text = "Saving the acknowledged battle report…"
 	_last_continue_result = AppRouter.complete_battle_report()
 	if not bool(_last_continue_result.get("ok", false)):
 		_continue_in_progress = false
 		_continue_button.disabled = false
-		_continue_button.text = "Retry Continue"
-		_status_label.text = String(_last_continue_result.get("message", "The report could not be saved. Try again."))
+		_status_label.text = String(_last_continue_result.get("message", "The report could not continue. Try again."))
 		_continue_button.call_deferred("grab_focus")
 
 
@@ -243,8 +235,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_status_label, "muted", 12)
 
 
-func validation_press_continue(skip_required_save: bool = true) -> Dictionary:
-	_last_continue_result = AppRouter.complete_battle_report(skip_required_save)
+func validation_press_continue() -> Dictionary:
+	_last_continue_result = AppRouter.complete_battle_report()
 	return _last_continue_result.duplicate(true)
 
 

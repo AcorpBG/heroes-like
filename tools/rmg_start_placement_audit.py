@@ -119,7 +119,6 @@ func run() -> void:
 				get_window().size = Vector2i(int(requested_size[0]), int(requested_size[1]))
 				for frame in range(4):
 					await get_tree().process_frame
-				result["briefing_autosave"] = shell._last_briefing_consumption_autosave_result.duplicate(true)
 				await RenderingServer.frame_post_draw
 				get_viewport().get_texture().get_image().save_png(out.path_join(String(case.id) + ".png"))
 				if OS.get_environment("HEROES_RMG_AUDIT_LEVELS") == "1":

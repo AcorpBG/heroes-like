@@ -34,21 +34,10 @@ const BACKGROUND_LOADED_SCENES := [
 	SCENARIO_OUTCOME_SCENE,
 	MAP_EDITOR_SCENE,
 ]
-const AUTOSAVE_DIRTY_FLAG := "runtime_autosave_dirty"
-const AUTOSAVE_PENDING_INTENT_FLAG := "runtime_autosave_pending_intent"
-const AUTOSAVE_PENDING_REASON_FLAG := "runtime_autosave_pending_reason"
-const AUTOSAVE_PENDING_ROUTE_FLAG := "runtime_autosave_pending_route"
-const AUTOSAVE_PENDING_GAME_STATE_FLAG := "runtime_autosave_pending_game_state"
-const AUTOSAVE_PENDING_COUNT_FLAG := "runtime_autosave_pending_count"
-const AUTOSAVE_PENDING_UNIX_FLAG := "runtime_autosave_pending_unix"
 const SAFE_QUIT_FAILURE_TITLE := "Unable to close safely"
 const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, so the game will remain open. Try saving again or export a support bundle from Settings if the problem continues."
 const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
-const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
-const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Use Save Battle now to protect the result."
-const BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE := "The battle report could not be saved. Review it, then press Continue to retry."
-const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
 var _pending_load_resumed_presentation: Dictionary = {}
@@ -90,37 +79,20 @@ var _active_play_return_last_route := {}
 var _active_play_return_last_runtime_issue := {}
 var _validation_active_play_return_routing_suppressed := false
 var _battle_entry_request_count := 0
-var _battle_entry_save_attempt_count := 0
-var _battle_entry_save_failure_count := 0
 var _battle_entry_route_attempt_count := 0
 var _battle_entry_suppressed_route_count := 0
-var _battle_entry_skipped_durable_route_count := 0
-var _battle_entry_runtime_issue_count := 0
 var _battle_entry_last_result := {}
 var _battle_entry_last_route := {}
-var _battle_entry_last_runtime_issue := {}
 var _validation_battle_entry_routing_suppressed := false
 var _battle_resolution_checkpoint_request_count := 0
-var _battle_resolution_checkpoint_save_attempt_count := 0
-var _battle_resolution_checkpoint_save_failure_count := 0
-var _battle_resolution_checkpoint_already_durable_count := 0
 var _battle_resolution_checkpoint_route_request_count := 0
 var _battle_resolution_checkpoint_route_attempt_count := 0
 var _battle_resolution_checkpoint_suppressed_route_count := 0
-var _battle_resolution_checkpoint_skipped_durable_route_count := 0
-var _battle_resolution_checkpoint_runtime_issue_count := 0
-var _battle_resolution_checkpoint_durable := false
-var _battle_resolution_checkpoint_identity := {}
 var _battle_resolution_checkpoint_last_result := {}
 var _battle_resolution_checkpoint_last_route := {}
-var _battle_resolution_checkpoint_last_runtime_issue := {}
 var _validation_battle_resolution_checkpoint_routing_suppressed := false
 var _battle_report_entry_request_count := 0
-var _battle_report_entry_save_attempt_count := 0
-var _battle_report_entry_save_failure_count := 0
 var _battle_report_continue_request_count := 0
-var _battle_report_continue_save_attempt_count := 0
-var _battle_report_continue_save_failure_count := 0
 var _battle_report_route_attempt_count := 0
 var _battle_report_suppressed_route_count := 0
 var _battle_report_last_entry_result: Dictionary = {}
@@ -128,19 +100,10 @@ var _battle_report_last_continue_result: Dictionary = {}
 var _battle_report_last_route: Dictionary = {}
 var _validation_battle_report_routing_suppressed := false
 var _scenario_outcome_request_count := 0
-var _scenario_outcome_save_attempt_count := 0
-var _scenario_outcome_save_failure_count := 0
-var _scenario_outcome_retry_attempt_count := 0
-var _scenario_outcome_retry_success_count := 0
-var _scenario_outcome_retry_failure_count := 0
 var _scenario_outcome_route_attempt_count := 0
 var _scenario_outcome_suppressed_route_count := 0
-var _scenario_outcome_skipped_durable_route_count := 0
-var _scenario_outcome_runtime_issue_count := 0
-var _scenario_outcome_recovery := {}
 var _scenario_outcome_last_result := {}
 var _scenario_outcome_last_route := {}
-var _scenario_outcome_last_runtime_issue := {}
 var _validation_scenario_outcome_routing_suppressed := false
 var _transition_cover = null
 # Screens are not preloaded: a preload here compiled every screen and the rules
@@ -273,9 +236,7 @@ func request_safe_quit(source: String = "application") -> Dictionary:
 			"message": "Expedition saved. Closing game.",
 			"path": String(save_result.get("path", "")),
 		}
-		_clear_scenario_outcome_recovery()
 	else:
-		_clear_scenario_outcome_recovery()
 		_safe_quit_last_result = {
 			"ok": true,
 			"saved": false,
@@ -487,7 +448,6 @@ func go_to_main_menu() -> void:
 func return_to_main_menu_from_active_play() -> Dictionary:
 	_active_play_return_request_count += 1
 	if SessionState.request_editor_return_from_active_play():
-		_clear_scenario_outcome_recovery()
 		_menu_notice = ""
 		_route_active_play_return(MAP_EDITOR_SCENE, "editor_return")
 		_active_play_return_last_result = _active_play_return_result(
@@ -502,7 +462,6 @@ func return_to_main_menu_from_active_play() -> Dictionary:
 		return _active_play_return_last_result.duplicate(true)
 
 	if not SessionState.has_playable_session():
-		_clear_scenario_outcome_recovery()
 		_menu_notice = ""
 		_route_active_play_return(MAIN_MENU_SCENE, "no_active_session")
 		_active_play_return_last_result = _active_play_return_result(
@@ -544,7 +503,6 @@ func return_to_main_menu_from_active_play() -> Dictionary:
 		)
 		return _active_play_return_last_result.duplicate(true)
 
-	_clear_scenario_outcome_recovery()
 	_menu_notice = String(save_result.get("message", ""))
 	_route_active_play_return(MAIN_MENU_SCENE, "saved")
 	_active_play_return_last_result = _active_play_return_result(
@@ -633,7 +591,7 @@ func go_to_overworld() -> void:
 
 	var session := SessionState.ensure_active_session()
 	if not BattleRulesScript.pending_battle_report(session).is_empty():
-		go_to_battle_report(true)
+		go_to_battle_report()
 		return
 	if session.scenario_status != "in_progress":
 		_note_overworld_handoff_step("go_to_overworld_outcome_redirect")
@@ -649,14 +607,8 @@ func go_to_overworld() -> void:
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
 	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
-	var autosave_intent := {}
-	if _should_defer_initial_generated_overworld_autosave(session):
-		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
-		session.flags["generated_overworld_deferred_autosave_pending"] = true
-		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
-	else:
-		autosave_intent = _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
-		_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
+	var autosave_intent := _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
+	_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
 	buckets["save_before_transition"] = 0.0
 	_note_overworld_handoff_step("go_to_overworld_change_scene_start")
 	var scene_started := ProfileLogScript.begin_usec()
@@ -665,125 +617,55 @@ func go_to_overworld() -> void:
 	_note_overworld_handoff_step("go_to_overworld_change_scene_requested")
 	var metadata := {
 		"target_scene": OVERWORLD_SCENE,
-		"generated_autosave_deferred": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
 		"save_before_transition_skipped": true,
 	}
 	metadata.merge(autosave_intent, true)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
-func checkpoint_battle_resolution_for_overworld(route_after_checkpoint: bool = false) -> Dictionary:
+## The last blow hands the resolved battle over to the overworld: the session
+## becomes an overworld state, ready for the result over the field. Nothing is
+## saved here or on the way back: the game autosaves at end turn (owner, 2026-11-08).
+func checkpoint_battle_resolution_for_overworld() -> Dictionary:
 	_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_request_count += 1
 	if not SessionState.has_playable_session():
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
 			false,
 			false,
-			false,
 			"missing_session",
-			"Cannot checkpoint a resolved battle without an active expedition.",
-			"",
-			false,
-			{}
+			"Cannot resolve a battle without an active expedition.",
+			false
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
 			false,
 			false,
 			"scenario_terminal",
-			"Resolved expeditions must use the outcome checkpoint.",
-			"",
-			true,
-			{}
+			"Resolved expeditions open their outcome instead.",
+			true
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 	if not session.battle.is_empty():
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
 			false,
 			false,
 			"battle_still_active",
-			"The active battle must resolve before its return checkpoint can be saved.",
-			"",
-			false,
-			{}
+			"The active battle must resolve before it can return to the field.",
+			false
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 
-	if _battle_resolution_checkpoint_durable:
-		if _battle_resolution_checkpoint_identity_matches(session):
-			_battle_resolution_checkpoint_already_durable_count += 1
-			_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-				true,
-				true,
-				false,
-				"already_saved",
-				"Battle result checkpoint is already saved.",
-				"",
-				true,
-				_battle_resolution_checkpoint_last_result.get("save_result", {})
-			)
-			if route_after_checkpoint:
-				return _battle_resolution_checkpoint_route_after_save(_battle_resolution_checkpoint_last_result)
-			return _battle_resolution_checkpoint_last_result.duplicate(true)
-		_clear_battle_resolution_checkpoint_authority()
-
-	var pre_route_snapshot: Dictionary = session.to_dict()
 	_prepare_battle_resolution_overworld_state(session)
-	_battle_resolution_checkpoint_save_attempt_count += 1
-	var save_result: Dictionary = SaveService.save_runtime_autosave_session(session)
-	if not bool(save_result.get("ok", false)):
-		session.from_dict(pre_route_snapshot)
-		_clear_battle_resolution_checkpoint_authority()
-		_battle_resolution_checkpoint_save_failure_count += 1
-		_battle_resolution_checkpoint_runtime_issue_count += 1
-		_battle_resolution_checkpoint_last_runtime_issue = RuntimeIssueLog.emit_error(
-			"battle",
-			"battle_resolution_autosave_failed",
-			BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE,
-			{
-				"save_reason": String(save_result.get("reason", "unknown")).left(80),
-				"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(180),
-				"scenario_id": String(session.scenario_id).left(96),
-				"scenario_status": String(session.scenario_status).left(32),
-				"game_state": String(session.game_state).left(40),
-				"battle_active": not session.battle.is_empty(),
-				"battle_outcome": String(session.flags.get("last_battle_outcome", "")).left(48),
-			},
-			session
-		)
-		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
-			false,
-			false,
-			"autosave_failed",
-			BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE,
-			"manual_save",
-			true,
-			save_result
-		)
-		return _battle_resolution_checkpoint_last_result.duplicate(true)
-
-	_battle_resolution_checkpoint_durable = true
-	_battle_resolution_checkpoint_identity = _battle_resolution_checkpoint_session_identity(session)
 	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
 		true,
-		true,
 		false,
-		"saved",
-		"Battle result checkpoint saved.",
-		"",
-		true,
-		save_result
+		"resolved",
+		"Battle resolved.",
+		true
 	)
-	if route_after_checkpoint:
-		return _battle_resolution_checkpoint_route_after_save(_battle_resolution_checkpoint_last_result)
 	return _battle_resolution_checkpoint_last_result.duplicate(true)
 
 ## in_place keeps the battle scene open: it shows the result over the field
@@ -791,76 +673,35 @@ func checkpoint_battle_resolution_for_overworld(route_after_checkpoint: bool = f
 func route_checkpointed_battle_resolution(in_place: bool = false) -> Dictionary:
 	_battle_resolution_checkpoint_route_request_count += 1
 	if not SessionState.has_playable_session():
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
 			false,
 			false,
 			"missing_session",
 			"Cannot route a resolved battle without an active expedition.",
-			"",
-			false,
-			{}
+			false
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
 			false,
 			false,
 			"scenario_terminal",
 			"Resolved expeditions must use the outcome route.",
-			"",
-			true,
-			{}
+			true
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 	if not session.battle.is_empty():
-		_clear_battle_resolution_checkpoint_authority()
 		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
 			false,
 			false,
 			"battle_still_active",
 			"The battle is still active and cannot return to the field.",
-			"",
-			false,
-			{}
-		)
-		return _battle_resolution_checkpoint_last_result.duplicate(true)
-	if not _battle_resolution_checkpoint_durable:
-		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
-			false,
-			false,
-			"checkpoint_required",
-			"Save the resolved battle checkpoint before returning to the field.",
-			"manual_save",
-			true,
-			{}
-		)
-		return _battle_resolution_checkpoint_last_result.duplicate(true)
-	if not _battle_resolution_checkpoint_identity_matches(session):
-		_clear_battle_resolution_checkpoint_authority()
-		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
-			false,
-			false,
-			false,
-			"stale_checkpoint",
-			"The resolved battle changed after its checkpoint; save it again before returning.",
-			"manual_save",
-			true,
-			{}
+			false
 		)
 		return _battle_resolution_checkpoint_last_result.duplicate(true)
 
-	var save_result_value: Variant = _battle_resolution_checkpoint_last_result.get("save_result", {})
-	var save_result: Dictionary = save_result_value if save_result_value is Dictionary else {}
-	_clear_battle_resolution_checkpoint_authority()
-	_battle_resolution_checkpoint_skipped_durable_route_count += 1
-	var routed := _record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved", in_place)
+	var routed := _record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "resolved", in_place)
 	if routed:
 		if not in_place:
 			_change_scene(BATTLE_REPORT_SCENE)
@@ -869,23 +710,11 @@ func route_checkpointed_battle_resolution(in_place: bool = false) -> Dictionary:
 	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
 		true,
 		true,
-		true,
-		"already_saved",
-		"Battle result saved. Opening battle report.",
-		"",
-		true,
-		save_result
+		"resolved",
+		"Battle resolved. Opening battle report.",
+		true
 	)
 	return _battle_resolution_checkpoint_last_result.duplicate(true)
-
-func _battle_resolution_checkpoint_route_after_save(checkpoint_result: Dictionary) -> Dictionary:
-	var routed_result := route_checkpointed_battle_resolution()
-	if bool(routed_result.get("ok", false)):
-		routed_result["reason"] = "saved"
-		routed_result["message"] = "Battle result saved. Opening battle report."
-		routed_result["save_result"] = checkpoint_result.get("save_result", {}).duplicate(true)
-		_battle_resolution_checkpoint_last_result = routed_result.duplicate(true)
-	return routed_result
 
 func _prepare_battle_resolution_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
 	session.game_state = "overworld"
@@ -894,29 +723,22 @@ func _prepare_battle_resolution_overworld_state(session: SessionStateStoreScript
 
 func _battle_resolution_checkpoint_result(
 	ok: bool,
-	saved: bool,
 	routed: bool,
 	reason: String,
 	message: String,
-	retry_action: String,
-	battle_resolved: bool,
-	save_result: Dictionary
+	battle_resolved: bool
 ) -> Dictionary:
 	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
 	return {
 		"ok": ok,
-		"saved": saved,
 		"routed": routed,
 		"reason": reason,
-		"retry_action": retry_action,
 		"battle_resolved": battle_resolved,
 		"battle_active": not session.battle.is_empty() if session != null else false,
 		"battle_pending": not session.battle.is_empty() if session != null else false,
 		"scenario_status": String(session.scenario_status) if session != null else "",
 		"game_state": String(session.game_state) if session != null else "",
-		"checkpoint_durable": _battle_resolution_checkpoint_durable,
 		"message": message,
-		"save_result": save_result.duplicate(true),
 	}
 
 func _record_battle_resolution_checkpoint_route(scene_path: String, reason: String, in_place: bool = false) -> bool:
@@ -933,80 +755,32 @@ func _record_battle_resolution_checkpoint_route(scene_path: String, reason: Stri
 		return false
 	return true
 
-func _battle_resolution_checkpoint_session_identity(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if session == null:
-		return {}
-	return {
-		"session_id_hash": String(session.session_id).sha256_text(),
-		"scenario_id": String(session.scenario_id).left(128),
-		"scenario_status": String(session.scenario_status).left(32),
-		"day": int(session.day),
-		"battle_outcome": String(session.flags.get("last_battle_outcome", "")).left(48),
-		"payload_hash": _session_payload_hash(session),
-	}
-
-## Everything to_dict() saves, hashed in place by the engine. A large map's
-## session is tens of megabytes: copying it and printing it as JSON took about
-## 1.9 s each time, twice around a battle's last blow; this takes about 0.1 s.
-func _session_payload_hash(session: SessionStateStoreScript.SessionData) -> int:
-	return [
-		session.save_version, session.session_id, session.scenario_id, session.hero_id, session.day,
-		session.difficulty, session.launch_mode, session.game_state, session.scenario_status,
-		session.scenario_summary, session.overworld, session.battle, session.flags,
-	].hash()
-
-func _battle_resolution_checkpoint_identity_matches(session: SessionStateStoreScript.SessionData) -> bool:
-	return (
-		_battle_resolution_checkpoint_durable
-		and not _battle_resolution_checkpoint_identity.is_empty()
-		and _battle_resolution_checkpoint_identity == _battle_resolution_checkpoint_session_identity(session)
-	)
-
-func _clear_battle_resolution_checkpoint_authority() -> void:
-	_battle_resolution_checkpoint_durable = false
-	_battle_resolution_checkpoint_identity = {}
-
 func validation_set_battle_resolution_checkpoint_routing_suppressed(suppressed: bool) -> void:
 	_validation_battle_resolution_checkpoint_routing_suppressed = suppressed
 
 func validation_reset_battle_resolution_checkpoint_state() -> void:
 	_battle_resolution_checkpoint_request_count = 0
-	_battle_resolution_checkpoint_save_attempt_count = 0
-	_battle_resolution_checkpoint_save_failure_count = 0
-	_battle_resolution_checkpoint_already_durable_count = 0
 	_battle_resolution_checkpoint_route_request_count = 0
 	_battle_resolution_checkpoint_route_attempt_count = 0
 	_battle_resolution_checkpoint_suppressed_route_count = 0
-	_battle_resolution_checkpoint_skipped_durable_route_count = 0
-	_battle_resolution_checkpoint_runtime_issue_count = 0
-	_clear_battle_resolution_checkpoint_authority()
 	_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_last_result = {}
 	_battle_resolution_checkpoint_last_route = {}
-	_battle_resolution_checkpoint_last_runtime_issue = {}
 
 func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
 	return {
 		"request_count": _battle_resolution_checkpoint_request_count,
-		"save_attempt_count": _battle_resolution_checkpoint_save_attempt_count,
-		"save_failure_count": _battle_resolution_checkpoint_save_failure_count,
-		"already_durable_count": _battle_resolution_checkpoint_already_durable_count,
 		"route_request_count": _battle_resolution_checkpoint_route_request_count,
 		"route_attempt_count": _battle_resolution_checkpoint_route_attempt_count,
 		"suppressed_route_count": _battle_resolution_checkpoint_suppressed_route_count,
-		"skipped_durable_route_count": _battle_resolution_checkpoint_skipped_durable_route_count,
-		"runtime_issue_count": _battle_resolution_checkpoint_runtime_issue_count,
 		"routing_suppressed": _validation_battle_resolution_checkpoint_routing_suppressed,
-		"checkpoint_durable": _battle_resolution_checkpoint_durable,
-		"checkpoint_identity": _battle_resolution_checkpoint_identity.duplicate(true),
 		"battle_active": not session.battle.is_empty() if session != null else false,
 		"battle_pending": not session.battle.is_empty() if session != null else false,
 		"scenario_status": String(session.scenario_status) if session != null else "",
 		"game_state": String(session.game_state) if session != null else "",
 		"last_result": _battle_resolution_checkpoint_last_result.duplicate(true),
 		"last_route": _battle_resolution_checkpoint_last_route.duplicate(true),
-		"last_runtime_issue": _battle_resolution_checkpoint_last_runtime_issue.duplicate(true),
 		"pending_overworld_presentation": _pending_battle_resolution_overworld_presentation.duplicate(true),
 	}
 
@@ -1241,7 +1015,7 @@ func go_to_town() -> void:
 	metadata.merge(autosave_intent, true)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_town", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
-func go_to_battle(skip_required_save: bool = false) -> Dictionary:
+func go_to_battle() -> Dictionary:
 	_battle_entry_request_count += 1
 	var started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -1254,13 +1028,10 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_missing_session", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": MAIN_MENU_SCENE}, null)
 		_battle_entry_last_result = _battle_entry_result(
 			false,
-			false,
 			true,
 			"missing_session",
 			"Cannot enter battle without an active scenario session.",
-			"",
-			false,
-			{}
+			false
 		)
 		return _battle_entry_last_result.duplicate(true)
 	if not SessionState.has_battle_state():
@@ -1270,13 +1041,10 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 			go_to_overworld()
 		_battle_entry_last_result = _battle_entry_result(
 			false,
-			false,
 			true,
 			"missing_battle_payload",
 			"Cannot enter battle without an active battle payload.",
-			"",
-			false,
-			{}
+			false
 		)
 		return _battle_entry_last_result.duplicate(true)
 
@@ -1287,122 +1055,61 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 			go_to_scenario_outcome()
 		_battle_entry_last_result = _battle_entry_result(
 			true,
-			false,
 			true,
 			"terminal_redirect",
 			"The resolved expedition is opening its outcome review.",
-			"",
-			true,
-			{}
+			true
 		)
 		return _battle_entry_last_result.duplicate(true)
 
-	# Board art decodes on worker threads while the checkpoint is written.
+	# Board art decodes on worker threads while the battle scene loads.
 	var prewarm_started := ProfileLogScript.begin_usec()
 	BattleArtPrewarmScript.request_for_battle(session.battle)
 	buckets["art_prewarm_request"] = ProfileLogScript.elapsed_ms(prewarm_started)
-	var pre_route_game_state := String(session.game_state)
 	var state_started := ProfileLogScript.begin_usec()
 	# Only the game state changes here, so an overworld normalized before the
-	# handoff stays normalized: the checkpoint and battle shell can trust it.
+	# handoff stays normalized: the battle shell can trust it.
 	var normalized_before_handoff: bool = OverworldRulesScript.is_runtime_session_normalized(session)
 	session.game_state = "battle"
 	if normalized_before_handoff:
 		OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
-	var autosave_result := {}
-	if skip_required_save:
-		_battle_entry_skipped_durable_route_count += 1
-		buckets["save_before_transition"] = 0.0
-	else:
-		_battle_entry_save_attempt_count += 1
-		var save_started := ProfileLogScript.begin_usec()
-		# Cache the checkpoint's summary from the written payload, so the battle
-		# save bar does not parse the file it just wrote.
-		autosave_result = _autosave_active_session(session, false, true)
-		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
-		if not bool(autosave_result.get("ok", false)):
-			session.game_state = pre_route_game_state
-			if normalized_before_handoff:
-				OverworldRulesScript.mark_runtime_normalized_transition_state(session)
-			_battle_entry_save_failure_count += 1
-			_battle_entry_runtime_issue_count += 1
-			_battle_entry_last_runtime_issue = RuntimeIssueLog.emit_error(
-				"router",
-				"battle_entry_autosave_failed",
-				BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE,
-				{
-					"save_reason": String(autosave_result.get("reason", "unknown")).left(80),
-					"save_message": String(autosave_result.get("message", "Save write failed.")).strip_edges().left(180),
-					"game_state": pre_route_game_state.left(40),
-					"battle_pending": not session.battle.is_empty(),
-				},
-				session
-			)
-			_battle_entry_last_result = _battle_entry_result(
-				false,
-				false,
-				false,
-				"autosave_failed",
-				BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE,
-				"manual_save",
-				not session.battle.is_empty(),
-				autosave_result
-			)
-			ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_autosave_failed", ProfileLogScript.elapsed_ms(started), buckets, {
-				"target_scene": BATTLE_SCENE,
-				"battle_stack_count": _battle_stack_count(session),
-				"autosave_deferred_or_skipped_reason": "forced_save_required_battle",
-				"autosave_forced": true,
-				"autosave_ok": false,
-				"routed": false,
-			}, session)
-			return _battle_entry_last_result.duplicate(true)
-
+	var autosave_intent := _record_transition_autosave_skip(session, "go_to_battle", "manual_or_end_turn_only")
+	buckets["save_before_transition"] = 0.0
 	var scene_started := ProfileLogScript.begin_usec()
-	var route_reason := "already_saved" if skip_required_save else "saved"
-	if _record_battle_entry_route(BATTLE_SCENE, route_reason):
+	if _record_battle_entry_route(BATTLE_SCENE, "entering"):
 		_change_scene(BATTLE_SCENE)
 	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
-	ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle", ProfileLogScript.elapsed_ms(started), buckets, {
+	var metadata := {
 		"target_scene": BATTLE_SCENE,
 		"battle_stack_count": _battle_stack_count(session),
-		"autosave_deferred_or_skipped_reason": "durable_checkpoint_already_saved" if skip_required_save else "forced_save_required_battle",
-		"autosave_forced": not skip_required_save,
-		"autosave_ok": true,
+		"save_before_transition_skipped": true,
 		"routed": true,
-	}, session)
+	}
+	metadata.merge(autosave_intent, true)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 	_battle_entry_last_result = _battle_entry_result(
 		true,
 		true,
-		true,
-		route_reason,
-		"Battle checkpoint already saved. Entering battle." if skip_required_save else "Battle checkpoint saved. Entering battle.",
-		"",
-		true,
-		autosave_result
+		"entering",
+		"Entering battle.",
+		true
 	)
 	return _battle_entry_last_result.duplicate(true)
 
 func _battle_entry_result(
 	ok: bool,
-	saved: bool,
 	routed: bool,
 	reason: String,
 	message: String,
-	retry_action: String,
-	battle_pending: bool,
-	save_result: Dictionary
+	battle_pending: bool
 ) -> Dictionary:
 	return {
 		"ok": ok,
-		"saved": saved,
 		"routed": routed,
 		"reason": reason,
-		"retry_action": retry_action,
 		"battle_pending": battle_pending,
 		"message": message,
-		"save_result": save_result.duplicate(true),
 	}
 
 func _record_battle_entry_route(scene_path: String, reason: String) -> bool:
@@ -1422,38 +1129,28 @@ func validation_set_battle_entry_routing_suppressed(suppressed: bool) -> void:
 
 func validation_reset_battle_entry_state() -> void:
 	_battle_entry_request_count = 0
-	_battle_entry_save_attempt_count = 0
-	_battle_entry_save_failure_count = 0
 	_battle_entry_route_attempt_count = 0
 	_battle_entry_suppressed_route_count = 0
-	_battle_entry_skipped_durable_route_count = 0
-	_battle_entry_runtime_issue_count = 0
 	_battle_entry_last_result = {}
 	_battle_entry_last_route = {}
-	_battle_entry_last_runtime_issue = {}
 
 func validation_battle_entry_snapshot() -> Dictionary:
 	return {
 		"request_count": _battle_entry_request_count,
-		"save_attempt_count": _battle_entry_save_attempt_count,
-		"save_failure_count": _battle_entry_save_failure_count,
 		"route_attempt_count": _battle_entry_route_attempt_count,
 		"suppressed_route_count": _battle_entry_suppressed_route_count,
-		"skipped_durable_route_count": _battle_entry_skipped_durable_route_count,
-		"runtime_issue_count": _battle_entry_runtime_issue_count,
 		"routing_suppressed": _validation_battle_entry_routing_suppressed,
 		"last_result": _battle_entry_last_result.duplicate(true),
 		"last_route": _battle_entry_last_route.duplicate(true),
-		"last_runtime_issue": _battle_entry_last_runtime_issue.duplicate(true),
 	}
 
 ## in_place keeps the battle scene open to show the report over the field
 ## (BattleShell). A load with a pending report still opens the report scene.
-func go_to_battle_report(skip_required_save: bool = false, in_place: bool = false) -> Dictionary:
+func go_to_battle_report(in_place: bool = false) -> Dictionary:
 	_battle_report_entry_request_count += 1
 	if not SessionState.has_playable_session():
 		_battle_report_last_entry_result = _battle_report_result(
-			false, false, false, "missing_session", "No resolved battle report is available.", "main_menu", ""
+			false, false, "missing_session", "No resolved battle report is available.", "main_menu", ""
 		)
 		_route_battle_report(MAIN_MENU_SCENE, "missing_session")
 		return _battle_report_last_entry_result.duplicate(true)
@@ -1463,7 +1160,7 @@ func go_to_battle_report(skip_required_save: bool = false, in_place: bool = fals
 		var fallback_scene := SCENARIO_OUTCOME_SCENE if session.scenario_status != "in_progress" else OVERWORLD_SCENE
 		var fallback_target := "scenario_outcome" if session.scenario_status != "in_progress" else "overworld"
 		_battle_report_last_entry_result = _battle_report_result(
-			false, false, false, "missing_pending_report", "No pending battle report remains.", fallback_target, ""
+			false, false, "missing_pending_report", "No pending battle report remains.", fallback_target, ""
 		)
 		_route_battle_report(fallback_scene, "missing_pending_report")
 		return _battle_report_last_entry_result.duplicate(true)
@@ -1471,48 +1168,35 @@ func go_to_battle_report(skip_required_save: bool = false, in_place: bool = fals
 		session.game_state = "outcome"
 	else:
 		_prepare_battle_resolution_overworld_state(session)
-	var save_result: Dictionary = {}
-	var saved := skip_required_save
-	if skip_required_save:
-		saved = true
-	else:
-		_battle_report_entry_save_attempt_count += 1
-		save_result = SaveService.save_runtime_autosave_session(session)
-		saved = bool(save_result.get("ok", false))
-		if not saved:
-			_battle_report_entry_save_failure_count += 1
-	var routed := _route_battle_report(BATTLE_REPORT_SCENE, "saved" if saved else "autosave_failed", in_place)
+	var routed := _route_battle_report(BATTLE_REPORT_SCENE, "ready", in_place)
 	_battle_report_last_entry_result = _battle_report_result(
-		saved,
-		saved,
+		true,
 		routed,
-		"saved" if saved else "autosave_failed",
-		"Battle report ready." if saved else BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE,
+		"ready",
+		"Battle report ready.",
 		"battle_report",
 		String(report.get("report_id", ""))
 	)
-	_battle_report_last_entry_result["save_result"] = save_result.duplicate(true)
 	return _battle_report_last_entry_result.duplicate(true)
 
-func complete_battle_report(skip_required_save: bool = false) -> Dictionary:
+func complete_battle_report() -> Dictionary:
 	_battle_report_continue_request_count += 1
 	if not SessionState.has_playable_session():
 		_battle_report_last_continue_result = _battle_report_result(
-			false, false, false, "missing_session", "No expedition is available for this report.", "stay", ""
+			false, false, "missing_session", "No expedition is available for this report.", "stay", ""
 		)
 		return _battle_report_last_continue_result.duplicate(true)
 	var session := SessionState.ensure_active_session()
 	var report: Dictionary = BattleRulesScript.pending_battle_report(session)
 	if report.is_empty():
 		_battle_report_last_continue_result = _battle_report_result(
-			false, false, false, "missing_pending_report", "This battle report is no longer pending.", "stay", ""
+			false, false, "missing_pending_report", "This battle report is no longer pending.", "stay", ""
 		)
 		return _battle_report_last_continue_result.duplicate(true)
-	var snapshot := session.to_dict()
 	var acknowledgement: Dictionary = BattleRulesScript.acknowledge_pending_battle_report(session)
 	if not bool(acknowledgement.get("ok", false)):
 		_battle_report_last_continue_result = _battle_report_result(
-			false, false, false, "acknowledgement_failed", "The battle report could not be acknowledged.", "stay", String(report.get("report_id", ""))
+			false, false, "acknowledgement_failed", "The battle report could not be acknowledged.", "stay", String(report.get("report_id", ""))
 		)
 		return _battle_report_last_continue_result.duplicate(true)
 	var terminal := session.scenario_status != "in_progress"
@@ -1522,30 +1206,14 @@ func complete_battle_report(skip_required_save: bool = false) -> Dictionary:
 		session.game_state = "outcome"
 	else:
 		_prepare_battle_resolution_overworld_state(session)
-	var save_result: Dictionary = {}
-	var saved := skip_required_save
-	if not skip_required_save:
-		_battle_report_continue_save_attempt_count += 1
-		save_result = SaveService.save_runtime_autosave_session(session)
-		saved = bool(save_result.get("ok", false))
-	if not saved:
-		session.from_dict(snapshot)
-		_battle_report_continue_save_failure_count += 1
-		_battle_report_last_continue_result = _battle_report_result(
-			false, false, false, "autosave_failed", BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE, "stay", String(report.get("report_id", ""))
-		)
-		_battle_report_last_continue_result["save_result"] = save_result.duplicate(true)
-		return _battle_report_last_continue_result.duplicate(true)
 	var routed := _route_battle_report(target_scene, "acknowledged")
 	_battle_report_last_continue_result = _battle_report_result(
-		true, true, routed, "acknowledged", "Battle report acknowledged.", target, String(report.get("report_id", ""))
+		true, routed, "acknowledged", "Battle report acknowledged.", target, String(report.get("report_id", ""))
 	)
-	_battle_report_last_continue_result["save_result"] = save_result.duplicate(true)
 	return _battle_report_last_continue_result.duplicate(true)
 
 func _battle_report_result(
 	ok: bool,
-	saved: bool,
 	routed: bool,
 	reason: String,
 	message: String,
@@ -1554,7 +1222,6 @@ func _battle_report_result(
 ) -> Dictionary:
 	return {
 		"ok": ok,
-		"saved": saved,
 		"routed": routed,
 		"reason": reason,
 		"message": message,
@@ -1583,11 +1250,7 @@ func validation_set_battle_report_routing_suppressed(suppressed: bool) -> void:
 
 func validation_reset_battle_report_state() -> void:
 	_battle_report_entry_request_count = 0
-	_battle_report_entry_save_attempt_count = 0
-	_battle_report_entry_save_failure_count = 0
 	_battle_report_continue_request_count = 0
-	_battle_report_continue_save_attempt_count = 0
-	_battle_report_continue_save_failure_count = 0
 	_battle_report_route_attempt_count = 0
 	_battle_report_suppressed_route_count = 0
 	_battle_report_last_entry_result = {}
@@ -1598,11 +1261,7 @@ func validation_battle_report_snapshot() -> Dictionary:
 	var report: Dictionary = BattleRulesScript.pending_battle_report(SessionState.ensure_active_session()) if SessionState.has_playable_session() else {}
 	return {
 		"entry_request_count": _battle_report_entry_request_count,
-		"entry_save_attempt_count": _battle_report_entry_save_attempt_count,
-		"entry_save_failure_count": _battle_report_entry_save_failure_count,
 		"continue_request_count": _battle_report_continue_request_count,
-		"continue_save_attempt_count": _battle_report_continue_save_attempt_count,
-		"continue_save_failure_count": _battle_report_continue_save_failure_count,
 		"route_attempt_count": _battle_report_route_attempt_count,
 		"suppressed_route_count": _battle_report_suppressed_route_count,
 		"routing_suppressed": _validation_battle_report_routing_suppressed,
@@ -1613,20 +1272,15 @@ func validation_battle_report_snapshot() -> Dictionary:
 		"last_route": _battle_report_last_route.duplicate(true),
 	}
 
-func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
+func go_to_scenario_outcome() -> Dictionary:
 	_scenario_outcome_request_count += 1
 	if not SessionState.has_playable_session():
-		_clear_scenario_outcome_recovery()
 		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
 			false,
 			true,
 			"missing_session",
 			"Cannot open an outcome without an active expedition.",
-			"",
-			false,
-			false,
-			{}
+			false
 		)
 		if _record_scenario_outcome_route(MAIN_MENU_SCENE, "missing_session"):
 			_change_scene(MAIN_MENU_SCENE)
@@ -1634,242 +1288,65 @@ func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
 
 	var session := SessionState.ensure_active_session()
 	if not BattleRulesScript.pending_battle_report(session).is_empty():
-		var report_redirect := go_to_battle_report(true)
+		var report_redirect := go_to_battle_report()
 		return report_redirect
 	if session.scenario_status == "in_progress":
-		_clear_scenario_outcome_recovery()
 		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
 			false,
 			true,
 			"scenario_in_progress",
 			"The active expedition is returning to the field.",
-			"",
-			false,
-			false,
-			{}
+			false
 		)
 		if _record_scenario_outcome_route(OVERWORLD_SCENE, "in_progress_redirect"):
 			go_to_overworld()
 		return _scenario_outcome_last_result.duplicate(true)
 
 	session.game_state = "outcome"
-	var save_result := {}
-	var reason := "already_saved" if skip_required_save else "saved"
-	if skip_required_save:
-		_scenario_outcome_skipped_durable_route_count += 1
-		_clear_scenario_outcome_recovery()
-	else:
-		_scenario_outcome_save_attempt_count += 1
-		save_result = SaveService.save_runtime_autosave_session(session)
-		if not bool(save_result.get("ok", false)):
-			_scenario_outcome_save_failure_count += 1
-			_scenario_outcome_runtime_issue_count += 1
-			var identity := _scenario_outcome_session_identity(session)
-			_scenario_outcome_last_runtime_issue = RuntimeIssueLog.emit_error(
-				"router",
-				"scenario_outcome_autosave_failed",
-				SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
-				{
-					"save_reason": String(save_result.get("reason", "unknown")).left(80),
-					"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(180),
-					"scenario_id": String(identity.get("scenario_id", "")).left(96),
-					"scenario_status": String(identity.get("scenario_status", "")).left(32),
-					"day": int(identity.get("day", 0)),
-				},
-				session
-			)
-			_scenario_outcome_last_result = _scenario_outcome_result(
-				false,
-				false,
-				true,
-				"autosave_failed",
-				SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
-				"retry_outcome_autosave",
-				true,
-				true,
-				save_result
-			)
-			_scenario_outcome_recovery = {
-				"pending": true,
-				"message": SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
-				"identity": identity,
-				"last_result": _scenario_outcome_last_result.duplicate(true),
-			}
-			if _record_scenario_outcome_route(SCENARIO_OUTCOME_SCENE, "autosave_failed_recovery"):
-				_change_scene(SCENARIO_OUTCOME_SCENE)
-			return _scenario_outcome_last_result.duplicate(true)
-		_clear_scenario_outcome_recovery()
-
 	_scenario_outcome_last_result = _scenario_outcome_result(
 		true,
 		true,
-		true,
-		reason,
-		"Outcome checkpoint already saved. Opening outcome review." if skip_required_save else "Outcome checkpoint saved. Opening outcome review.",
-		"",
-		false,
-		false,
-		save_result
+		"opening",
+		"Opening outcome review.",
+		false
 	)
-	if _record_scenario_outcome_route(SCENARIO_OUTCOME_SCENE, reason):
+	if _record_scenario_outcome_route(SCENARIO_OUTCOME_SCENE, "opening"):
 		_change_scene(SCENARIO_OUTCOME_SCENE)
 	return _scenario_outcome_last_result.duplicate(true)
-
-func retry_scenario_outcome_autosave() -> Dictionary:
-	_scenario_outcome_retry_attempt_count += 1
-	if _scenario_outcome_recovery.is_empty() or not bool(_scenario_outcome_recovery.get("pending", false)):
-		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
-			false,
-			false,
-			"no_recovery_pending",
-			"No outcome autosave recovery is pending.",
-			"",
-			false,
-			false,
-			{}
-		)
-		return _scenario_outcome_last_result.duplicate(true)
-	if not SessionState.has_playable_session():
-		_clear_scenario_outcome_recovery()
-		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
-			false,
-			false,
-			"stale_session",
-			"The pending outcome belongs to another expedition.",
-			"",
-			false,
-			false,
-			{}
-		)
-		return _scenario_outcome_last_result.duplicate(true)
-
-	var session := SessionState.ensure_active_session()
-	var pending_identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
-	if session.scenario_status == "in_progress" or not _scenario_outcome_identity_matches(session, pending_identity):
-		_clear_scenario_outcome_recovery()
-		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
-			false,
-			false,
-			"stale_session",
-			"The pending outcome belongs to another expedition.",
-			"",
-			false,
-			false,
-			{}
-		)
-		return _scenario_outcome_last_result.duplicate(true)
-
-	session.game_state = "outcome"
-	_scenario_outcome_save_attempt_count += 1
-	var save_result: Dictionary = SaveService.save_runtime_autosave_session(session)
-	if not bool(save_result.get("ok", false)):
-		_scenario_outcome_save_failure_count += 1
-		_scenario_outcome_retry_failure_count += 1
-		_scenario_outcome_last_result = _scenario_outcome_result(
-			false,
-			false,
-			false,
-			"autosave_failed",
-			SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
-			"retry_outcome_autosave",
-			true,
-			true,
-			save_result
-		)
-		_scenario_outcome_recovery["message"] = SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE
-		_scenario_outcome_recovery["last_result"] = _scenario_outcome_last_result.duplicate(true)
-		return _scenario_outcome_last_result.duplicate(true)
-
-	_scenario_outcome_retry_success_count += 1
-	_scenario_outcome_last_result = _scenario_outcome_result(
-		true,
-		true,
-		false,
-		"saved",
-		"Outcome checkpoint saved.",
-		"",
-		false,
-		false,
-		save_result
-	)
-	_clear_scenario_outcome_recovery()
-	return _scenario_outcome_last_result.duplicate(true)
-
-func scenario_outcome_recovery_state() -> Dictionary:
-	return scenario_outcome_recovery_snapshot()
-
-func scenario_outcome_recovery_snapshot() -> Dictionary:
-	_reconcile_scenario_outcome_recovery()
-	var pending := not _scenario_outcome_recovery.is_empty() and bool(_scenario_outcome_recovery.get("pending", false))
-	var identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
-	return {
-		"pending": pending,
-		"recovery_pending": pending,
-		"message": String(_scenario_outcome_recovery.get("message", "")) if pending else "",
-		"identity": identity.duplicate(true),
-		"last_result": _scenario_outcome_last_result.duplicate(true),
-		"request_count": _scenario_outcome_request_count,
-		"save_attempt_count": _scenario_outcome_save_attempt_count,
-		"save_failure_count": _scenario_outcome_save_failure_count,
-		"retry_attempt_count": _scenario_outcome_retry_attempt_count,
-		"retry_success_count": _scenario_outcome_retry_success_count,
-		"retry_failure_count": _scenario_outcome_retry_failure_count,
-		"route_attempt_count": _scenario_outcome_route_attempt_count,
-		"suppressed_route_count": _scenario_outcome_suppressed_route_count,
-		"skipped_durable_route_count": _scenario_outcome_skipped_durable_route_count,
-		"runtime_issue_count": _scenario_outcome_runtime_issue_count,
-		"routing_suppressed": _validation_scenario_outcome_routing_suppressed,
-		"last_route": _scenario_outcome_last_route.duplicate(true),
-		"last_runtime_issue": _scenario_outcome_last_runtime_issue.duplicate(true),
-	}
 
 func validation_set_scenario_outcome_routing_suppressed(suppressed: bool) -> void:
 	_validation_scenario_outcome_routing_suppressed = suppressed
 
 func validation_reset_scenario_outcome_route_state() -> void:
 	_scenario_outcome_request_count = 0
-	_scenario_outcome_save_attempt_count = 0
-	_scenario_outcome_save_failure_count = 0
-	_scenario_outcome_retry_attempt_count = 0
-	_scenario_outcome_retry_success_count = 0
-	_scenario_outcome_retry_failure_count = 0
 	_scenario_outcome_route_attempt_count = 0
 	_scenario_outcome_suppressed_route_count = 0
-	_scenario_outcome_skipped_durable_route_count = 0
-	_scenario_outcome_runtime_issue_count = 0
-	_scenario_outcome_recovery = {}
 	_scenario_outcome_last_result = {}
 	_scenario_outcome_last_route = {}
-	_scenario_outcome_last_runtime_issue = {}
 
 func validation_scenario_outcome_route_snapshot() -> Dictionary:
-	return scenario_outcome_recovery_snapshot()
+	return {
+		"request_count": _scenario_outcome_request_count,
+		"route_attempt_count": _scenario_outcome_route_attempt_count,
+		"suppressed_route_count": _scenario_outcome_suppressed_route_count,
+		"routing_suppressed": _validation_scenario_outcome_routing_suppressed,
+		"last_result": _scenario_outcome_last_result.duplicate(true),
+		"last_route": _scenario_outcome_last_route.duplicate(true),
+	}
 
 func _scenario_outcome_result(
 	ok: bool,
-	saved: bool,
 	routed: bool,
 	reason: String,
 	message: String,
-	retry_action: String,
-	outcome_pending: bool,
-	recovery_pending: bool,
-	save_result: Dictionary
+	outcome_pending: bool
 ) -> Dictionary:
 	return {
 		"ok": ok,
-		"saved": saved,
 		"routed": routed,
 		"reason": reason,
-		"retry_action": retry_action,
 		"outcome_pending": outcome_pending,
-		"recovery_pending": recovery_pending,
 		"message": message,
-		"save_result": save_result.duplicate(true),
 	}
 
 func _record_scenario_outcome_route(scene_path: String, reason: String) -> bool:
@@ -1883,36 +1360,6 @@ func _record_scenario_outcome_route(scene_path: String, reason: String) -> bool:
 		_scenario_outcome_suppressed_route_count += 1
 		return false
 	return true
-
-func _scenario_outcome_session_identity(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if session == null:
-		return {}
-	return {
-		"session_id": String(session.session_id).left(128),
-		"session_id_hash": String(session.session_id).sha256_text(),
-		"scenario_id": String(session.scenario_id).left(128),
-		"scenario_id_hash": String(session.scenario_id).sha256_text(),
-		"launch_mode": String(session.launch_mode).left(32),
-		"scenario_status": String(session.scenario_status).left(32),
-		"day": int(session.day),
-		"summary_hash": String(session.scenario_summary).sha256_text(),
-	}
-
-func _scenario_outcome_identity_matches(session: SessionStateStoreScript.SessionData, identity: Dictionary) -> bool:
-	return not identity.is_empty() and _scenario_outcome_session_identity(session) == identity
-
-func _reconcile_scenario_outcome_recovery() -> void:
-	if _scenario_outcome_recovery.is_empty() or not bool(_scenario_outcome_recovery.get("pending", false)):
-		return
-	if not SessionState.has_playable_session():
-		_clear_scenario_outcome_recovery()
-		return
-	var identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
-	if not _scenario_outcome_identity_matches(SessionState.ensure_active_session(), identity):
-		_clear_scenario_outcome_recovery()
-
-func _clear_scenario_outcome_recovery() -> void:
-	_scenario_outcome_recovery = {}
 
 func go_to_map_editor() -> void:
 	_change_scene(MAP_EDITOR_SCENE)
@@ -1936,19 +1383,19 @@ func resume_active_session() -> void:
 
 	var session := SessionState.ensure_active_session()
 	if not BattleRulesScript.pending_battle_report(session).is_empty():
-		go_to_battle_report(true)
+		go_to_battle_report()
 		return
 	if session.scenario_status != "in_progress":
-		go_to_scenario_outcome(true)
+		go_to_scenario_outcome()
 		return
 
 	match SaveService.resume_target_for_session(session):
 		"battle":
-			go_to_battle(true)
+			go_to_battle()
 		"town":
 			go_to_town()
 		"outcome":
-			go_to_scenario_outcome(true)
+			go_to_scenario_outcome()
 		_:
 			go_to_overworld()
 
@@ -2173,19 +1620,11 @@ func validation_prepare_overworld_handoff_without_scene_change() -> Dictionary:
 	OverworldRulesScript.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
 	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
-	var autosave_intent := {}
-	if _should_defer_initial_generated_overworld_autosave(session):
-		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
-		session.flags["generated_overworld_deferred_autosave_pending"] = true
-		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
-	else:
-		autosave_intent = _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
-		_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
+	var autosave_intent := _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
+	_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
 	_note_overworld_handoff_step("go_to_overworld_scene_change_skipped_for_validation")
 	return {
 		"ok": true,
-		"deferred_autosave": bool(autosave_intent.get("autosave_deferred", false)),
-		"generated_deferred_autosave": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
 		"save_before_transition_skipped": true,
 		"autosave_intent": autosave_intent,
 	}
@@ -2332,37 +1771,12 @@ func _packed_scene_for_route(scene_path: String) -> PackedScene:
 		_packed_scenes[scene_path] = packed_scene
 	return packed_scene
 
-func _autosave_active_session(
-	session: SessionStateStoreScript.SessionData,
-	include_summary: bool = true,
-	cache_summary: bool = false
-) -> Dictionary:
+## Leaving a game for the main menu saves it; otherwise the game autosaves at
+## end turn only (owner, 2026-11-08).
+func _autosave_active_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "message": "", "summary": {}}
-	return SaveService.save_runtime_autosave_session(session, include_summary, cache_summary)
-
-func _record_transition_autosave_intent(
-	session: SessionStateStoreScript.SessionData,
-	route: String,
-	reason: String
-) -> Dictionary:
-	if session == null:
-		return {}
-	session.flags[AUTOSAVE_DIRTY_FLAG] = true
-	session.flags[AUTOSAVE_PENDING_INTENT_FLAG] = true
-	session.flags[AUTOSAVE_PENDING_REASON_FLAG] = reason
-	session.flags[AUTOSAVE_PENDING_ROUTE_FLAG] = route
-	session.flags[AUTOSAVE_PENDING_GAME_STATE_FLAG] = String(session.game_state)
-	session.flags[AUTOSAVE_PENDING_UNIX_FLAG] = Time.get_unix_time_from_system()
-	session.flags[AUTOSAVE_PENDING_COUNT_FLAG] = int(session.flags.get(AUTOSAVE_PENDING_COUNT_FLAG, 0)) + 1
-	return {
-		"autosave_deferred_or_skipped_reason": reason,
-		"autosave_deferred": true,
-		"autosave_pending_intent": true,
-		"autosave_pending_route": route,
-		"autosave_pending_game_state": String(session.game_state),
-		"autosave_pending_count": int(session.flags.get(AUTOSAVE_PENDING_COUNT_FLAG, 0)),
-	}
+	return SaveService.save_runtime_autosave_session(session)
 
 func _record_transition_autosave_skip(
 	session: SessionStateStoreScript.SessionData,
@@ -2371,7 +1785,6 @@ func _record_transition_autosave_skip(
 ) -> Dictionary:
 	if session == null:
 		return {}
-	_clear_transition_autosave_intent(session)
 	return {
 		"autosave_deferred_or_skipped_reason": reason,
 		"autosave_skipped_reason": reason,
@@ -2380,25 +1793,6 @@ func _record_transition_autosave_skip(
 		"transition_route": route,
 		"transition_game_state": String(session.game_state),
 	}
-
-func _clear_transition_autosave_intent(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null:
-		return
-	session.flags.erase(AUTOSAVE_DIRTY_FLAG)
-	session.flags.erase(AUTOSAVE_PENDING_INTENT_FLAG)
-	session.flags.erase(AUTOSAVE_PENDING_REASON_FLAG)
-	session.flags.erase(AUTOSAVE_PENDING_ROUTE_FLAG)
-	session.flags.erase(AUTOSAVE_PENDING_GAME_STATE_FLAG)
-	session.flags.erase(AUTOSAVE_PENDING_UNIX_FLAG)
-
-func _should_defer_initial_generated_overworld_autosave(session: SessionStateStoreScript.SessionData) -> bool:
-	if session == null:
-		return false
-	if not bool(session.flags.get("generated_random_map", false)):
-		return false
-	if bool(session.flags.get("generated_overworld_initial_autosave_completed", false)):
-		return false
-	return true
 
 func _note_overworld_handoff_step(step_name: String, details: Dictionary = {}) -> void:
 	if _active_overworld_handoff_profile.is_empty():

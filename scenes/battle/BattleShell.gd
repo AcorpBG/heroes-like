@@ -23,8 +23,6 @@ const BattleCommandButtonScript = preload("res://scripts/ui/BattleCommandButton.
 const BattleDetailsCardScript = preload("res://scripts/ui/BattleDetailsCard.gd")
 
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
-const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
-const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
 const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. Previous speed restored."
 const WON_OUTCOMES := ["victory", "enemy_retreat", "enemy_surrender"]
 
@@ -196,22 +194,13 @@ var _last_withdrawal_confirmation_result := {}
 var _validation_perform_action_counts := {}
 var _validation_battle_resolution_attempt_count := 0
 var _validation_last_battle_resolution_route := {}
-var _battle_resolution_checkpoint_pending := {}
 var _last_battle_resolution_checkpoint_result := {}
-var _last_battle_resolution_checkpoint_retry_result := {}
 var _last_battle_resolution_route_result := {}
 var _last_battle_resolution_routed := false
 var _validation_battle_resolution_checkpoint_request_count := 0
 var _validation_battle_resolution_checkpoint_success_count := 0
 var _validation_battle_resolution_checkpoint_failure_count := 0
-var _validation_battle_resolution_checkpoint_retry_count := 0
 var _validation_battle_resolution_durable_route_count := 0
-var _briefing_consumption_autosave_failure_pending := false
-var _last_briefing_consumption_autosave_result := {}
-var _last_briefing_consumption_runtime_issue := {}
-var _validation_briefing_consumption_save_attempt_count := 0
-var _validation_briefing_consumption_save_success_count := 0
-var _validation_briefing_consumption_save_failure_count := 0
 var _last_battle_playback_speed_result := {}
 var _validation_battle_playback_speed_request_count := 0
 var _validation_battle_playback_speed_success_count := 0
@@ -345,9 +334,6 @@ func _ready() -> void:
 	_tactical_briefing_text = BattleRules.consume_tactical_briefing(_session)
 	buckets["consume_payload_briefing"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _tactical_briefing_text != "":
-		phase_started = ProfileLogScript.begin_usec()
-		_checkpoint_consumed_tactical_briefing()
-		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
 		_publish_briefing()
 	phase_started = ProfileLogScript.begin_usec()
 	AppRouter.call_after_scene_presented(_release_entry_art_prewarm)
@@ -439,64 +425,8 @@ func _publish_briefing() -> void:
 		if first_line == "":
 			first_line = line
 		_message_log.append_message(line)
-	if first_line != "" and not _briefing_consumption_autosave_failure_pending:
+	if first_line != "":
 		_set_command_hint(first_line, HINT_SECONDS * 1.5)
-
-
-func _checkpoint_consumed_tactical_briefing() -> Dictionary:
-	_validation_briefing_consumption_save_attempt_count += 1
-	var save_value: Variant = SaveService.save_runtime_autosave_session(_session)
-	var save_result: Dictionary = save_value if save_value is Dictionary else {}
-	if bool(save_result.get("ok", false)):
-		_validation_briefing_consumption_save_success_count += 1
-		_briefing_consumption_autosave_failure_pending = false
-		_last_briefing_consumption_autosave_result = {
-			"ok": true,
-			"saved": true,
-			"reason": "saved",
-			"retry_action": "",
-			"briefing_shown": _tactical_briefing_is_shown(),
-			"message": String(save_result.get("message", "Autosave updated.")).strip_edges().left(220),
-			"save_result": save_result.duplicate(true),
-		}
-		return _last_briefing_consumption_autosave_result.duplicate(true)
-
-	_validation_briefing_consumption_save_failure_count += 1
-	_briefing_consumption_autosave_failure_pending = true
-	_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	_last_briefing_consumption_runtime_issue = RuntimeIssueLog.emit_error(
-		"battle",
-		"briefing_consumption_autosave_failed",
-		BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE,
-		{
-			"scenario_id": _session.scenario_id.left(100),
-			"encounter_id": String(_session.battle.get("encounter_id", "")).left(100),
-			"round": int(_session.battle.get("round", 0)),
-			"briefing_shown": _tactical_briefing_is_shown(),
-			"save_reason": String(save_result.get("reason", "write_failed")).strip_edges().left(80),
-			"retry_action": "manual_save",
-		},
-		_session
-	)
-	_last_briefing_consumption_autosave_result = {
-		"ok": false,
-		"saved": false,
-		"routed": false,
-		"reason": "autosave_failed",
-		"retry_action": "manual_save",
-		"briefing_shown": _tactical_briefing_is_shown(),
-		"briefing_visible": _tactical_briefing_text.strip_edges() != "",
-		"message": BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE,
-		"save_result": save_result.duplicate(true),
-	}
-	return _last_briefing_consumption_autosave_result.duplicate(true)
-
-
-func _tactical_briefing_is_shown() -> bool:
-	if _session == null or _session.battle.is_empty():
-		return false
-	var state_value: Variant = _session.battle.get(BattleRules.TACTICAL_BRIEFING_KEY, {})
-	return state_value is Dictionary and bool(state_value.get("shown", false))
 
 
 # --- Keys ----------------------------------------------------------------------
@@ -684,7 +614,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
-	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
+	if _session == null or _session.battle.is_empty():
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
 	if _spell_targeting_id != "":
 		return _cast_targeted_spell(battle_id)
@@ -698,7 +628,7 @@ func _on_board_stack_order_requested(battle_id: String, order: Dictionary) -> Di
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
-	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
+	if _session == null or _session.battle.is_empty():
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
 	if _spell_targeting_id != "":
 		return _cast_targeted_spell(battle_id)
@@ -884,8 +814,6 @@ func _reject_order(message: String, extra_fields: Dictionary = {}) -> Dictionary
 ## click takes the board's default order for that enemy.
 func _commit_board_stack_focus_requested(battle_id: String, order: Dictionary = {}) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_target"))
 	if _session == null or _session.battle.is_empty() or battle_id == "":
 		return _reject_board_stack_click(battle_id, "No battle target was clicked.")
 	var active_stack := BattleRules.get_active_stack(_session.battle)
@@ -1035,7 +963,7 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
-	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
+	if _session == null or _session.battle.is_empty():
 		return _return_board_cursor_action_result({"ok": false, "committed": false})
 	if _spell_targeting_id != "":
 		if _spell_destination_stack_id != "":
@@ -1058,8 +986,6 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 
 func _commit_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_move"))
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
 	var recap_context := BattleRules.post_action_recap_context(_session, "move")
 	var result := BattleRules.perform_presented_action(_session, "move", {"q": q, "r": r})
@@ -1352,17 +1278,6 @@ func _on_quick_resolve_confirmed() -> void:
 	_quick_resolve_confirmation_focus_origin = null
 	_validation_quick_resolve_confirmation_confirm_count += 1
 	FrontierVisualKit.hide_exclusive_dialog(_quick_resolve_confirmation_dialog)
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		_last_quick_resolve_confirmation_result = {
-			"ok": false,
-			"confirmed": true,
-			"pending": false,
-			"performed": false,
-			"routed": false,
-			"reason": "battle_resolution_checkpoint_pending",
-		}
-		_apply_battle_resolution_checkpoint_failure_surface()
-		return
 	var profile_started := ProfileLogScript.begin_usec()
 	_validation_quick_resolve_confirmation_perform_count += 1
 	var result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(_session)
@@ -1623,7 +1538,7 @@ func _battle_exit_order_cue_surface(action_surface: Dictionary) -> Dictionary:
 	var retreat_state := _battle_exit_order_state(retreat)
 	var surrender_state := _battle_exit_order_state(surrender)
 	var route_line := "Route: resolving either exit order leaves this battle and returns to the field after the outcome handoff."
-	var save_line := "Save: use Save Battle first to preserve this exact tactical state."
+	var save_line := "Save: save the game first to keep this exact tactical state."
 	return {
 		"visible_text": "Exit cue: Retreat %s; Surrender %s." % [retreat_state, surrender_state],
 		"route": route_line,
@@ -1861,9 +1776,6 @@ func _begin_spell_targeting(spell_id: String) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
 		return {"ok": false, "state": "invalid"}
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		_apply_battle_resolution_checkpoint_failure_surface()
-		return {"ok": false, "state": "invalid"}
 	if String(ContentService.get_spell(spell_id).get("target_mode", "")) == "hex_selected":
 		var hexes := BattleRules.spell_ground_hexes(_session, spell_id)
 		if hexes.is_empty():
@@ -2007,7 +1919,7 @@ func _run_auto_battle_turn(serial: int) -> void:
 		return
 	if _battle_over or _action_playback_in_progress or _battle_exit_handoff_in_progress or _modal_window_open():
 		return
-	if not _battle_resolution_checkpoint_pending.is_empty() or _session == null or _session.battle.is_empty():
+	if _session == null or _session.battle.is_empty():
 		return
 	var active := BattleRules.get_active_stack(_session.battle)
 	if active.is_empty() or String(active.get("side", "")) != "player":
@@ -2311,8 +2223,6 @@ func _refresh_grid_buttons() -> void:
 
 func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _retry_battle_resolution_checkpoint()
 	if not legacy_slot:
 		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
 		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
@@ -2335,24 +2245,15 @@ func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary
 func _commit_manual_save(manual_slot: int, file_name: String = "", expected_sha256: String = "") -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
-	var briefing_checkpoint_pending := _briefing_consumption_autosave_failure_pending
 	var save_started := ProfileLogScript.begin_usec()
 	var result := AppRouter.save_active_session_to_file(file_name, expected_sha256) if file_name != "" else AppRouter.save_active_session_to_manual_slot(manual_slot)
 	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
-	if briefing_checkpoint_pending and bool(result.get("ok", false)):
-		_briefing_consumption_autosave_failure_pending = false
-		_last_message = String(result.get("message", ""))
-	elif briefing_checkpoint_pending:
-		_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	else:
-		_last_message = String(result.get("message", ""))
+	_last_message = String(result.get("message", ""))
 	_set_command_hint(_last_message)
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	if bool(result.get("ok", false)):
 		_save_written_cue_presenter.present(result, manual_slot)
-	if briefing_checkpoint_pending and not bool(result.get("ok", false)):
-		_save_button.call_deferred("grab_focus")
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("battle", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	return result
@@ -2443,8 +2344,6 @@ func _on_active_play_setting_changed(setting_id: String) -> void:
 func _perform_action(action: String, order_parameters: Dictionary = {}) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return {"ok": false, "committed": false}
-	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _battle_resolution_checkpoint_block_result(action)
 	_validation_perform_action_counts[action] = int(_validation_perform_action_counts.get(action, 0)) + 1
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -2499,7 +2398,7 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 			if not _validation_battle_resolution_routing_enabled:
 				_last_battle_resolution_routed = true
 				return true
-			return _checkpoint_battle_resolution_for_overworld(result, false)
+			return _checkpoint_battle_resolution_for_overworld(result)
 		"defeat":
 			_record_validation_battle_resolution_attempt(result, "battle_report")
 			_last_battle_resolution_routed = true
@@ -2659,56 +2558,24 @@ func _publish_completed_action_feedback() -> void:
 		_battle_board_view.publish_controller_action_result(feedback, true)
 
 
-func _checkpoint_battle_resolution_for_overworld(result: Dictionary, retry: bool) -> bool:
+## The resolved battle hands over to the overworld (AppRouter), then its result
+## shows over the field. Nothing is saved on the way: the game autosaves at end
+## turn.
+func _checkpoint_battle_resolution_for_overworld(result: Dictionary) -> bool:
 	_validation_battle_resolution_checkpoint_request_count += 1
-	if retry:
-		_validation_battle_resolution_checkpoint_retry_count += 1
-	var checkpoint_value: Variant = AppRouter.checkpoint_battle_resolution_for_overworld(false)
+	var checkpoint_value: Variant = AppRouter.checkpoint_battle_resolution_for_overworld()
 	var checkpoint: Dictionary = checkpoint_value if checkpoint_value is Dictionary else {}
 	_last_battle_resolution_checkpoint_result = checkpoint.duplicate(true)
-	if not bool(checkpoint.get("ok", false)) or not bool(checkpoint.get("saved", false)):
+	if not bool(checkpoint.get("ok", false)):
 		_validation_battle_resolution_checkpoint_failure_count += 1
-		_battle_resolution_checkpoint_pending = {
-			"result": result.duplicate(true),
-			"state": String(result.get("state", "")),
-			"route_target": "overworld",
-		}
 		result.erase("playback_frames")
 		_last_battle_resolution_routed = false
-		_apply_battle_resolution_checkpoint_failure_surface()
+		_show_battle_resolution_route_failure(String(checkpoint.get("message", "")))
 		return true
 	_validation_battle_resolution_checkpoint_success_count += 1
-	_battle_resolution_checkpoint_pending = {}
 	AppRouter.arm_battle_resolution_overworld_presentation(result)
 	_resume_checkpointed_battle_resolution(result, "overworld")
 	return true
-
-
-func _retry_battle_resolution_checkpoint() -> Dictionary:
-	if _battle_resolution_checkpoint_pending.is_empty():
-		_last_battle_resolution_checkpoint_retry_result = {
-			"ok": false,
-			"saved": false,
-			"routed": false,
-			"reason": "no_battle_resolution_checkpoint_pending",
-			"message": "No resolved-battle checkpoint retry is pending.",
-		}
-		return _last_battle_resolution_checkpoint_retry_result.duplicate(true)
-	var pending := _battle_resolution_checkpoint_pending.duplicate(true)
-	var result_value: Variant = pending.get("result", {})
-	var result: Dictionary = result_value if result_value is Dictionary else {}
-	_checkpoint_battle_resolution_for_overworld(result, true)
-	_last_battle_resolution_checkpoint_retry_result = {
-		"ok": bool(_last_battle_resolution_checkpoint_result.get("ok", false)),
-		"saved": bool(_last_battle_resolution_checkpoint_result.get("saved", false)),
-		"routed": _last_battle_resolution_routed,
-		"pending": not _battle_resolution_checkpoint_pending.is_empty(),
-		"reason": String(_last_battle_resolution_checkpoint_result.get("reason", "")),
-		"message": String(_last_battle_resolution_checkpoint_result.get("message", _last_message)),
-		"checkpoint_result": _last_battle_resolution_checkpoint_result.duplicate(true),
-		"route_result": _last_battle_resolution_route_result.duplicate(true),
-	}
-	return _last_battle_resolution_checkpoint_retry_result.duplicate(true)
 
 
 func _resume_checkpointed_battle_resolution(result: Dictionary, route_target: String) -> void:
@@ -2718,7 +2585,7 @@ func _resume_checkpointed_battle_resolution(result: Dictionary, route_target: St
 	_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
 
-## The resolved battle is saved: its result shows over the field.
+## The resolved battle's result shows over the field.
 func _route_checkpointed_battle_resolution() -> bool:
 	_validation_battle_resolution_durable_route_count += 1
 	var route_value: Variant = AppRouter.route_checkpointed_battle_resolution(true)
@@ -2727,60 +2594,27 @@ func _route_checkpointed_battle_resolution() -> bool:
 	if bool(route_result.get("ok", false)):
 		_show_result_overlay(route_result)
 		return true
-	_last_message = String(route_result.get("message", "The resolved battle is saved, but the Overworld could not open.")).strip_edges().left(220)
-	_apply_battle_resolution_checkpoint_failure_surface(false, _last_message)
+	_show_battle_resolution_route_failure(String(route_result.get("message", "")))
 	return false
 
 
-## A battle that ended the scenario, or a defeat: its report is saved and
-## shows over the field. Without a pending report the router opens the next
-## screen itself.
+## A battle that ended the scenario, or a defeat: its report shows over the
+## field. Without a pending report the router opens the next screen itself.
 func _open_battle_report_in_place() -> void:
-	var entry_value: Variant = AppRouter.go_to_battle_report(false, true)
+	var entry_value: Variant = AppRouter.go_to_battle_report(true)
 	var entry_result: Dictionary = entry_value if entry_value is Dictionary else {}
 	if String(entry_result.get("target", "")) == "battle_report":
 		_show_result_overlay(entry_result)
 
 
-func _apply_battle_resolution_checkpoint_failure_surface(
-	focus_save: bool = true,
-	message: String = BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE
-) -> void:
+## The router refused to hand the resolved battle back (no expedition, or the
+## battle still active): a broken state, shown on the hint line.
+func _show_battle_resolution_route_failure(message: String) -> void:
 	_last_message = message.strip_edges().left(220)
 	if _last_message == "":
-		_last_message = BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE
+		_last_message = "The resolved battle could not return to the field."
 	_set_command_hint(_last_message, 0.0)
-	_disable_battle_exit_handoff_inputs()
-	if not _options_popover.visible:
-		_open_popover(_options_popover)
-	_system_body_label.visible = true
-	_system_body_label.text = _last_message
-	_system_body_label.tooltip_text = _last_message
-	_save_button.text = "Save Battle"
-	_save_button.tooltip_text = "Retry the resolved battle checkpoint, then continue to the Overworld."
-	_save_button.disabled = false
-	_save_slot_picker.disabled = true
-	if focus_save:
-		_save_button.call_deferred("grab_focus")
-
-
-func _apply_briefing_consumption_autosave_failure_surface(focus_save: bool = true) -> void:
-	_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	var visible_surface := BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	if _tactical_briefing_text.strip_edges() != "":
-		visible_surface = "%s\n%s" % [visible_surface, _tactical_briefing_text.strip_edges()]
-	_set_command_hint(BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE, 0.0)
-	_log_line.tooltip_text = visible_surface
-	_system_body_label.visible = true
-	_system_body_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	_system_body_label.tooltip_text = visible_surface
-	_save_button.text = "Save Battle"
-	_save_button.tooltip_text = "Create a named save file for the shown tactical briefing checkpoint."
-	_save_button.disabled = false
-	if focus_save:
-		if not _options_popover.visible:
-			_open_popover(_options_popover)
-		_save_button.call_deferred("grab_focus")
+	push_error("Battle resolution route refused: %s" % _last_message)
 
 
 func _record_validation_battle_resolution_attempt(result: Dictionary, target: String) -> void:
@@ -2795,8 +2629,7 @@ func _record_validation_battle_resolution_attempt(result: Dictionary, target: St
 func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: String) -> bool:
 	if _battle_exit_handoff_in_progress or not _validation_battle_resolution_routing_enabled:
 		return false
-	# Terminal outcomes reach this hook only after their existing durable
-	# checkpoint. Play the complete exchange before the already-authorized route.
+	# Play the complete exchange before the route.
 	if _begin_action_playback(result, route_target):
 		return true
 	var snapshot_value: Variant = result.get("battle_exit_animation_snapshot", {})
@@ -2824,23 +2657,9 @@ func _disable_battle_exit_handoff_inputs() -> void:
 	_battle_board_view.focus_mode = Control.FOCUS_NONE
 
 
-## The buttons that give orders; playback and a pending checkpoint disable them.
+## The buttons that give orders; playback disables them.
 func _combat_input_buttons() -> Array:
 	return [_wait_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button, _spellbook_button]
-
-
-func _battle_resolution_checkpoint_block_result(action: String) -> Dictionary:
-	_apply_battle_resolution_checkpoint_failure_surface()
-	return {
-		"ok": false,
-		"saved": false,
-		"routed": false,
-		"state": "resolved",
-		"reason": "battle_resolution_checkpoint_pending",
-		"retry_action": "save_battle",
-		"action": action,
-		"message": BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE,
-	}
 
 
 func _complete_battle_exit_animation_handoff(route_target: String) -> void:
@@ -2901,8 +2720,6 @@ func _refresh() -> void:
 	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
 	_refresh_log_line()
 	_announce_round()
-	if _briefing_consumption_autosave_failure_pending:
-		_apply_briefing_consumption_autosave_failure_surface(false)
 	_refresh_details()
 	_layout_hud()
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
@@ -3497,11 +3314,7 @@ func _populate_result() -> void:
 	_result_aftermath.text = "\n".join(aftermath_lines)
 	_result_aftermath.visible = not aftermath_lines.is_empty()
 	var terminal := _session != null and _session.scenario_status != "in_progress"
-	if String(_result_entry_result.get("reason", "")) == "autosave_failed":
-		_result_status.text = String(_result_entry_result.get("message", "The result is not saved yet. Continue will retry."))
-		_result_status.show()
-	else:
-		_result_status.hide()
+	_result_status.hide()
 	_continue_button.disabled = false
 	_continue_button.text = "Continue"
 	_continue_button.tooltip_text = "Save the result and continue to %s." % ("the scenario outcome" if terminal else "the adventure map")
@@ -3629,8 +3442,7 @@ func _on_result_continue_pressed() -> Dictionary:
 	if bool(result.get("ok", false)):
 		return result
 	_continue_button.disabled = false
-	_continue_button.text = "Retry Continue"
-	_result_status.text = String(result.get("message", "The result could not be saved. Continue will retry."))
+	_result_status.text = String(result.get("message", "The result could not continue. Try again."))
 	_result_status.show()
 	_layout_hud()
 	_continue_button.grab_focus()
@@ -3687,8 +3499,6 @@ func _preferred_battle_keyboard_focus() -> Control:
 	if _battle_over:
 		return _show_result_button
 	if _options_popover.visible:
-		if _briefing_consumption_autosave_failure_pending or not _battle_resolution_checkpoint_pending.is_empty():
-			return _save_button
 		return _first_enabled_speed_button()
 	if _spellbook_popover.visible:
 		for row in _spell_list.get_children():
@@ -3793,24 +3603,21 @@ func _apply_save_bar_status(surface: Dictionary, selected_slot: int) -> void:
 ## Every refresh: the visible save rows without copying the session. Their
 ## tooltips come from _refresh_save_slot_picker() when a save control shows.
 func _refresh_save_bar_status() -> void:
-	if _save_slot_picker.get_item_count() <= 0 or not _battle_resolution_checkpoint_pending.is_empty():
+	if _save_slot_picker.get_item_count() <= 0:
 		return
 	var selected_slot := SaveService.get_selected_manual_slot()
 	_apply_save_bar_status(SaveService.in_session_save_bar_status(_session, selected_slot), selected_slot)
 
 
-## Builds the save tooltips when they are stale. A failed battle checkpoint
-## owns the save rows until it is retried.
+## Builds the save tooltips when they are stale.
 func _build_save_details() -> void:
 	if not _save_details_stale or not is_inside_tree() or _session == null or _session.battle.is_empty():
 		return
-	if _action_playback_in_progress or _battle_exit_handoff_in_progress or not _battle_resolution_checkpoint_pending.is_empty():
+	if _action_playback_in_progress or _battle_exit_handoff_in_progress:
 		return
 	var profile_started := ProfileLogScript.begin_usec()
 	_save_details_build_count += 1
 	_refresh_save_slot_picker()
-	if _briefing_consumption_autosave_failure_pending:
-		_apply_briefing_consumption_autosave_failure_surface(false)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_lazy_surfaces", ProfileLogScript.elapsed_ms(profile_started), {"save_bar_details": ProfileLogScript.elapsed_ms(profile_started)}, _battle_profile_metadata(false), _session)
 
 
@@ -4000,7 +3807,6 @@ func validation_snapshot() -> Dictionary:
 		"quick_resolve_confirmation": validation_quick_resolve_confirmation_snapshot(),
 		"battle_playback_speed": validation_battle_playback_speed_snapshot(),
 		"battle_resolution_checkpoint": validation_battle_resolution_checkpoint_snapshot(),
-		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
 		"return_to_menu_visible_message": _last_message,
@@ -4271,60 +4077,13 @@ func validation_result_pending() -> bool:
 	return _battle_over and not _result_report.is_empty() and not bool(_last_continue_result.get("ok", false))
 
 
-func validation_press_continue(skip_required_save: bool = true) -> Dictionary:
-	_last_continue_result = AppRouter.complete_battle_report(skip_required_save)
+func validation_press_continue() -> Dictionary:
+	_last_continue_result = AppRouter.complete_battle_report()
 	return _last_continue_result.duplicate(true)
 
 
 func validation_begin_spell_targeting(spell_id: String) -> Dictionary:
 	return _begin_spell_targeting(spell_id)
-
-
-func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
-	var viewport := get_viewport()
-	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
-	var briefing_first_line := ""
-	for raw_line in _tactical_briefing_text.split("\n", false):
-		var line := String(raw_line).strip_edges()
-		if line != "":
-			briefing_first_line = line
-			break
-	var visible_surface := "%s\n%s\n%s" % [_log_line.text, _log_line.tooltip_text, "\n".join(_message_log.entries)]
-	var raw_autosave_result := {}
-	var raw_result_value: Variant = _last_briefing_consumption_autosave_result.get("save_result", {})
-	if raw_result_value is Dictionary:
-		raw_autosave_result = raw_result_value.duplicate(true)
-	return {
-		"briefing_consumed": _validation_briefing_consumption_save_attempt_count > 0,
-		"failure_pending": _briefing_consumption_autosave_failure_pending,
-		"briefing_shown": _tactical_briefing_is_shown(),
-		"briefing_active": _tactical_briefing_text.strip_edges() != "",
-		"briefing_visible": briefing_first_line != "" and briefing_first_line in visible_surface,
-		"briefing_title": "Briefing",
-		"briefing_text": _tactical_briefing_text.strip_edges().left(800),
-		"visible_message": _last_message.strip_edges().left(220),
-		"visible_action_feedback": _system_body_label.text.left(800),
-		"event_visible_text": _log_line.text.left(800),
-		"save_button_text": _save_button.text,
-		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
-		"consumption_count": _validation_briefing_consumption_save_attempt_count,
-		"autosave_attempt_count": _validation_briefing_consumption_save_attempt_count,
-		"autosave_success_count": _validation_briefing_consumption_save_success_count,
-		"autosave_failure_count": _validation_briefing_consumption_save_failure_count,
-		"save_attempt_count": _validation_briefing_consumption_save_attempt_count,
-		"save_success_count": _validation_briefing_consumption_save_success_count,
-		"save_failure_count": _validation_briefing_consumption_save_failure_count,
-		"generated_defer_count": 0,
-		"last_autosave_result": raw_autosave_result,
-		"last_result": _last_briefing_consumption_autosave_result.duplicate(true),
-		"last_runtime_issue": _last_briefing_consumption_runtime_issue.duplicate(true),
-		"resolution_route_attempt_count": _validation_battle_resolution_attempt_count,
-		"last_resolution_route": _validation_last_battle_resolution_route.duplicate(true),
-		"scenario_status": _session.scenario_status if _session != null else "",
-		"game_state": _session.game_state if _session != null else "",
-		"day": _session.day if _session != null else 0,
-		"generated_random_map": bool(_session.flags.get("generated_random_map", false)) if _session != null else false,
-	}
 
 
 func validation_set_battle_presentation_speed(speed: String) -> Dictionary:
@@ -4433,29 +4192,18 @@ func validation_battle_playback_speed_snapshot() -> Dictionary:
 
 
 func validation_reset_battle_resolution_checkpoint_state() -> void:
-	_battle_resolution_checkpoint_pending = {}
 	_last_battle_resolution_checkpoint_result = {}
-	_last_battle_resolution_checkpoint_retry_result = {}
 	_last_battle_resolution_route_result = {}
 	_last_battle_resolution_routed = false
 	_validation_battle_resolution_checkpoint_request_count = 0
 	_validation_battle_resolution_checkpoint_success_count = 0
 	_validation_battle_resolution_checkpoint_failure_count = 0
-	_validation_battle_resolution_checkpoint_retry_count = 0
 	_validation_battle_resolution_durable_route_count = 0
 	if AppRouter.has_method("validation_reset_battle_resolution_checkpoint_state"):
 		AppRouter.validation_reset_battle_resolution_checkpoint_state()
 
 
-func validation_retry_battle_resolution_save() -> Dictionary:
-	return _on_save_pressed(true)
-
-
 func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
-	var pending_result := {}
-	var pending_value: Variant = _battle_resolution_checkpoint_pending.get("result", {})
-	if pending_value is Dictionary:
-		pending_result = pending_value.duplicate(true)
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	var router_snapshot := {}
 	if AppRouter.has_method("validation_battle_resolution_checkpoint_snapshot"):
@@ -4463,18 +4211,13 @@ func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 		if router_value is Dictionary:
 			router_snapshot = router_value.duplicate(true)
 	return {
-		"pending": not _battle_resolution_checkpoint_pending.is_empty(),
 		"battle_resolved": _session != null and _session.battle.is_empty(),
-		"pending_state": String(_battle_resolution_checkpoint_pending.get("state", "")),
-		"pending_route_target": String(_battle_resolution_checkpoint_pending.get("route_target", "")),
-		"pending_result": pending_result,
 		"route_scheduled": _battle_exit_handoff_in_progress or (_action_playback_in_progress and String(_action_playback_result.get("playback_route_target", "")) != ""),
 		"routed": _last_battle_resolution_routed,
 		"result_shown": _battle_over,
 		"checkpoint_request_count": _validation_battle_resolution_checkpoint_request_count,
 		"checkpoint_success_count": _validation_battle_resolution_checkpoint_success_count,
 		"checkpoint_failure_count": _validation_battle_resolution_checkpoint_failure_count,
-		"checkpoint_retry_count": _validation_battle_resolution_checkpoint_retry_count,
 		"durable_route_count": _validation_battle_resolution_durable_route_count,
 		"visible_message": _last_message,
 		"save_button_text": _save_button.text,
@@ -4482,7 +4225,6 @@ func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
 		"combat_inputs_disabled": _battle_resolution_combat_inputs_disabled(),
 		"last_checkpoint_result": _last_battle_resolution_checkpoint_result.duplicate(true),
-		"last_retry_result": _last_battle_resolution_checkpoint_retry_result.duplicate(true),
 		"last_route_result": _last_battle_resolution_route_result.duplicate(true),
 		"router_snapshot": router_snapshot,
 	}

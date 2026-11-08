@@ -586,7 +586,7 @@ func exercise_town_journeys(source) -> Dictionary:
 					row["error"] = "journey_battle_not_won"
 					break
 				SessionState.active_session = session
-				var checkpoint: Dictionary = AppRouter.checkpoint_battle_resolution_for_overworld(false)
+				var checkpoint: Dictionary = AppRouter.checkpoint_battle_resolution_for_overworld()
 				battle["overworld_checkpoint"] = bool(checkpoint.get("ok", false)) and session.game_state == "overworld"
 				if not bool(battle.overworld_checkpoint):
 					row["error"] = "battle_return_checkpoint_failed"

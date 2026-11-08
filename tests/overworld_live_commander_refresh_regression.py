@@ -57,7 +57,7 @@ func hud(shell, label: String) -> void:
 	var movement: Dictionary = session.overworld.movement
 	var move := "Move %d/%d" % [int(movement.current),int(movement.max)]
 	var pos := OverworldRules.hero_position(session)
-	var compact: bool = shell._use_generated_compact_refresh() or shell._generated_initial_open_pending()
+	var compact: bool = shell._use_generated_compact_refresh()
 	var hero_text := String(shell._hero_label.text)
 	var hero_tooltip := String(shell._hero_label.tooltip_text)
 	var hero_fresh := move in hero_text if compact else move in hero_tooltip

@@ -20,6 +20,10 @@ A deleted private function: `generated_large_town_explicit_save_surface_regressi
 
 `tests/full_play_validation_suite.py` no longer lists `generated_large_town_explicit_save_surface_regression`, and its adapter for that test is gone.
 
+## Retired 2026-11-08 (5 tests)
+
+Owner decision, 2026-11-08: the game autosaves at end turn, on safe quit and on return to the main menu only. These tests covered the saves that went away and their failure screens: `application_battle_entry_autosave_failure_regression` (battle entry), `briefing_consumption_autosave_failure_safety_regression` (the battle briefing), `application_scenario_outcome_autosave_failure_recovery_regression` (the outcome screen and its retry), `generated_opening_autosave_failure_retry_regression` and `random_map_post_open_tail_timing_report` (a new game's first-day save). `tests/full_play_validation_suite.py` no longer lists the three it ran, and its adapter for the opening test is gone. The quarantined authored-scenario test `scenario_outcome_normal_entry_focus_regression` still expects the outcome save's recovery; it stays quarantined.
+
 ## Kept
 
 - `ai_hero_task_state_normalizer_preservation_report` still reads `SaveService.gd` to check that the save layer holds no AI task rules; the wrappers hold none.

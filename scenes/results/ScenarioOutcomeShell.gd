@@ -5,7 +5,6 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
-const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
 const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the outcome and try again."
 const OUTCOME_PRESENTATION_MODEL := "scenery_first_edge_docks"
@@ -109,14 +108,6 @@ var _model: Dictionary = {}
 var _last_action_message := ""
 var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
-var _outcome_recovery_pending := false
-var _outcome_recovery_entry_result: Dictionary = {}
-var _last_outcome_recovery_retry_result: Dictionary = {}
-var _validation_outcome_recovery_request_count := 0
-var _validation_outcome_recovery_retry_attempt_count := 0
-var _validation_outcome_recovery_retry_failure_count := 0
-var _validation_outcome_recovery_retry_success_count := 0
-var _validation_outcome_recovery_blocked_action_count := 0
 var _validation_outcome_focus_accept_count := 0
 var _validation_outcome_focus_action_execution_suppressed := false
 var _last_outcome_focus_accept_result: Dictionary = {}
@@ -179,7 +170,6 @@ func _ready() -> void:
 		AppRouter.resume_active_session()
 		return
 	_configure_save_slot_picker()
-	_sync_outcome_recovery_state(true)
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	if _session.launch_mode == "campaign" and _session.scenario_status == "victory":
 		var audio_recap := CampaignProgression.outcome_recap(_session)
@@ -606,17 +596,11 @@ func _rebuild_actions() -> void:
 		if not (action is Dictionary):
 			continue
 		var action_id := String(action.get("id", ""))
-		var recovery_blocked := _outcome_recovery_pending and _outcome_action_starts_new_session(action_id)
 		var button := Button.new()
 		button.set_meta("outcome_action_id", action_id)
 		button.text = String(action.get("label", action_id if action_id != "" else "Action"))
-		button.disabled = bool(action.get("disabled", false)) or recovery_blocked
+		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = _outcome_action_tooltip(action)
-		if recovery_blocked:
-			button.tooltip_text = _join_tooltip_sections([
-				OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
-				button.tooltip_text,
-			])
 		FrontierVisualKit.apply_button(button, "primary", 172.0, 36.0)
 		button.pressed.connect(_on_action_pressed.bind(action_id))
 		_actions_bar.add_child(button)
@@ -681,20 +665,17 @@ func _configure_outcome_keyboard_focus(
 			})
 	var preferred: Control = null
 	_last_outcome_focus_preferred_action_id = ""
-	if _outcome_recovery_pending:
-		preferred = _save_button
-	else:
-		var action_id := preferred_action_id
-		if action_id == "":
-			action_id = _primary_outcome_action_id()
+	var action_id := preferred_action_id
+	if action_id == "":
+		action_id = _primary_outcome_action_id()
+	preferred = _outcome_action_button(action_id)
+	if not FrontierVisualKit.is_keyboard_focusable(preferred):
+		action_id = _primary_outcome_action_id()
 		preferred = _outcome_action_button(action_id)
-		if not FrontierVisualKit.is_keyboard_focusable(preferred):
-			action_id = _primary_outcome_action_id()
-			preferred = _outcome_action_button(action_id)
-		if FrontierVisualKit.is_keyboard_focusable(preferred):
-			_last_outcome_focus_preferred_action_id = action_id
-		else:
-			preferred = _save_button if FrontierVisualKit.is_keyboard_focusable(_save_button) else _menu_button
+	if FrontierVisualKit.is_keyboard_focusable(preferred):
+		_last_outcome_focus_preferred_action_id = action_id
+	else:
+		preferred = _save_button if FrontierVisualKit.is_keyboard_focusable(_save_button) else _menu_button
 	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
 
 func _focused_outcome_action_id() -> String:
@@ -729,22 +710,6 @@ func _request_outcome_new_session_confirmation(action_id: String, focus_origin: 
 		}
 		_last_outcome_new_session_confirmation_result = duplicate_result.duplicate(true)
 		return duplicate_result
-
-	_sync_outcome_recovery_state(false, true)
-	if _outcome_recovery_pending:
-		var recovery_result := {
-			"ok": false,
-			"pending": false,
-			"confirmation_required": false,
-			"performed": false,
-			"routed": false,
-			"reason": "outcome_autosave_recovery_pending",
-			"action_id": action_id,
-			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
-		}
-		_last_outcome_new_session_confirmation_result = recovery_result.duplicate(true)
-		_save_button.call_deferred("grab_focus")
-		return recovery_result
 
 	var action := _outcome_action_record(action_id)
 	if action.is_empty() or bool(action.get("disabled", false)) or not _outcome_action_starts_new_session(action_id):
@@ -896,25 +861,6 @@ func _on_outcome_new_session_confirmation_confirmed() -> Dictionary:
 	var source_session := _outcome_new_session_source_session
 	var return_focus := _outcome_new_session_return_focus
 	var action_id := String(pending.get("action_id", ""))
-	_sync_outcome_recovery_state(false, false)
-	if _outcome_recovery_pending:
-		_clear_outcome_new_session_confirmation()
-		_new_session_confirmation_dialog.hide()
-		var recovery_result := {
-			"ok": false,
-			"confirmed": false,
-			"pending": false,
-			"confirmation_required": false,
-			"performed": false,
-			"routed": false,
-			"reason": "outcome_autosave_recovery_pending",
-			"action_id": action_id,
-			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
-		}
-		_last_outcome_new_session_confirmation_result = recovery_result.duplicate(true)
-		_save_button.call_deferred("grab_focus")
-		return recovery_result
-
 	var stale_fields := _outcome_new_session_stale_fields(pending, source_session)
 	if not stale_fields.is_empty():
 		_clear_outcome_new_session_confirmation()
@@ -1012,21 +958,6 @@ func _outcome_action_record(action_id: String) -> Dictionary:
 	return {}
 
 func _perform_outcome_action(action_id: String) -> Dictionary:
-	_sync_outcome_recovery_state(false, true)
-	if _outcome_recovery_pending and _outcome_action_starts_new_session(action_id):
-		_validation_outcome_recovery_blocked_action_count += 1
-		var blocked_result := {
-			"ok": false,
-			"routed": false,
-			"reason": "outcome_autosave_recovery_pending",
-			"retry_action": "retry_outcome_autosave",
-			"action_id": action_id,
-			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
-		}
-		_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE
-		_refresh()
-		_save_button.call_deferred("grab_focus")
-		return blocked_result
 	if action_id == "return_to_menu":
 		var return_result := _on_menu_pressed()
 		return_result["action_id"] = action_id
@@ -1052,25 +983,6 @@ func _perform_outcome_action(action_id: String) -> Dictionary:
 	return result
 
 func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
-	_sync_outcome_recovery_state(false, true)
-	var recovery_result: Dictionary = {}
-	if _outcome_recovery_pending:
-		_validation_outcome_recovery_request_count += 1
-		_validation_outcome_recovery_retry_attempt_count += 1
-		recovery_result = AppRouter.retry_scenario_outcome_autosave()
-		_last_outcome_recovery_retry_result = recovery_result.duplicate(true)
-		_sync_outcome_recovery_state()
-		if not bool(recovery_result.get("ok", false)) or _outcome_recovery_pending:
-			_validation_outcome_recovery_retry_failure_count += 1
-			_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE if _outcome_recovery_pending else String(
-				recovery_result.get("message", "Outcome autosave recovery is no longer available.")
-			).strip_edges().left(180)
-			_refresh()
-			_save_button.call_deferred("grab_focus")
-			return _outcome_recovery_shell_result(recovery_result, false, false)
-		_validation_outcome_recovery_retry_success_count += 1
-		_last_action_message = ""
-		_refresh()
 	if not legacy_slot:
 		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
 		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
@@ -1078,12 +990,12 @@ func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	if bool(action.get("disabled", true)):
 		_last_action_message = String(action.get("summary", "The outcome could not be saved."))
 		_refresh()
-		return _outcome_recovery_shell_result(action, false, false, recovery_result)
+		return _manual_save_shell_result(action, false, false)
 	if bool(action.get("requires_confirmation", false)):
 		_manual_save_overwrite_dialog.open_action(action)
-		return _outcome_recovery_shell_result(action, false, true, recovery_result)
+		return _manual_save_shell_result(action, false, true)
 	var manual_result := _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
-	return _outcome_recovery_shell_result(manual_result, bool(manual_result.get("ok", false)), false, recovery_result)
+	return _manual_save_shell_result(manual_result, bool(manual_result.get("ok", false)), false)
 
 func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary:
 	return _commit_manual_save(SaveService.get_selected_manual_slot(), file_name, expected_sha256)
@@ -1131,54 +1043,21 @@ func _on_menu_pressed() -> Dictionary:
 	if message == "":
 		message = RETURN_TO_MENU_FAILURE_MESSAGE
 	_last_return_to_menu_result["message"] = message
-	_sync_outcome_recovery_state()
-	_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE if _outcome_recovery_pending else message
+	_last_action_message = message
 	_refresh()
 	_menu_button.call_deferred("grab_focus")
 	return _last_return_to_menu_result.duplicate(true)
-
-func _sync_outcome_recovery_state(capture_entry: bool = false, refresh_on_clear: bool = false) -> Dictionary:
-	var was_pending := _outcome_recovery_pending
-	var snapshot: Dictionary = AppRouter.scenario_outcome_recovery_snapshot()
-	_outcome_recovery_pending = bool(snapshot.get("recovery_pending", snapshot.get("pending", false)))
-	var entry_value: Variant = snapshot.get("last_result", snapshot.get("entry_result", {}))
-	if capture_entry and entry_value is Dictionary:
-		_outcome_recovery_entry_result = (entry_value as Dictionary).duplicate(true)
-	if _outcome_recovery_pending:
-		_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE
-	elif was_pending and _last_action_message == OUTCOME_AUTOSAVE_RECOVERY_MESSAGE:
-		_last_action_message = ""
-		if refresh_on_clear:
-			_refresh()
-	return snapshot
 
 func _outcome_action_starts_new_session(action_id: String) -> bool:
 	return action_id.begins_with("campaign_start:") or action_id.begins_with("skirmish_start:")
 
 func _outcome_action_effectively_disabled(action: Dictionary) -> bool:
-	return bool(action.get("disabled", false)) or (
-		_outcome_recovery_pending
-		and _outcome_action_starts_new_session(String(action.get("id", "")))
-	)
+	return bool(action.get("disabled", false))
 
-func _outcome_recovery_blocked_action_ids() -> Array[String]:
-	var blocked_ids: Array[String] = []
-	if not _outcome_recovery_pending:
-		return blocked_ids
-	var actions: Variant = _model.get("actions", [])
-	if actions is Array:
-		for action in actions:
-			if action is Dictionary:
-				var action_id := String(action.get("id", ""))
-				if _outcome_action_starts_new_session(action_id):
-					blocked_ids.append(action_id)
-	return blocked_ids
-
-func _outcome_recovery_shell_result(
+func _manual_save_shell_result(
 	result: Dictionary,
 	manual_saved: bool,
-	confirmation_required: bool,
-	recovery_result: Dictionary = {}
+	confirmation_required: bool
 ) -> Dictionary:
 	var result_ok := bool(result.get("ok", false)) or confirmation_required
 	var reason := String(result.get("reason", ""))
@@ -1188,11 +1067,9 @@ func _outcome_recovery_shell_result(
 		"ok": result_ok,
 		"saved": manual_saved,
 		"confirmation_required": confirmation_required,
-		"recovery_pending": _outcome_recovery_pending,
 		"reason": reason,
 		"message": _last_action_message,
 		"result": result.duplicate(true),
-		"recovery_result": recovery_result.duplicate(true),
 	}
 
 func _on_guide_pressed() -> void:
@@ -1209,7 +1086,6 @@ func validation_snapshot() -> Dictionary:
 				action_ids.append(String(action.get("id", "")))
 				action_payloads.append(action.duplicate(true))
 	var save_surface := AppRouter.active_save_surface()
-	var outcome_recovery_router_snapshot := _sync_outcome_recovery_state(false, true)
 	return {
 		"scene_path": scene_file_path,
 		"scenic_epilogue": validation_scenic_epilogue_summary(),
@@ -1221,18 +1097,6 @@ func validation_snapshot() -> Dictionary:
 		"return_to_menu_visible_message": _last_action_message,
 		"return_to_menu_focus_owner": _return_to_menu_focus_owner_name(),
 		"return_to_menu_request_count": _validation_return_to_menu_request_count,
-		"outcome_recovery_pending": _outcome_recovery_pending,
-		"outcome_recovery_message": _last_action_message if _outcome_recovery_pending else "",
-		"outcome_recovery_focus_owner": _outcome_recovery_focus_owner_name(),
-		"outcome_recovery_entry_result": _outcome_recovery_entry_result.duplicate(true),
-		"outcome_recovery_last_retry_result": _last_outcome_recovery_retry_result.duplicate(true),
-		"outcome_recovery_request_count": _validation_outcome_recovery_request_count,
-		"outcome_recovery_retry_attempt_count": _validation_outcome_recovery_retry_attempt_count,
-		"outcome_recovery_retry_failure_count": _validation_outcome_recovery_retry_failure_count,
-		"outcome_recovery_retry_success_count": _validation_outcome_recovery_retry_success_count,
-		"outcome_recovery_blocked_action_count": _validation_outcome_recovery_blocked_action_count,
-		"outcome_recovery_blocked_action_ids": _outcome_recovery_blocked_action_ids(),
-		"outcome_recovery_router_snapshot": outcome_recovery_router_snapshot,
 		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"hero_portrait": _hero_portrait.validation_snapshot(),
@@ -1553,41 +1417,11 @@ func validation_outcome_focus_snapshot() -> Dictionary:
 		"accept_count": _validation_outcome_focus_accept_count,
 		"last_accept_result": _last_outcome_focus_accept_result.duplicate(true),
 		"action_execution_suppressed": _validation_outcome_focus_action_execution_suppressed,
-		"recovery_pending": _outcome_recovery_pending,
 		"manual_overwrite_visible": _manual_save_overwrite_dialog.visible,
 		"save_button_name": String(_save_button.name),
 		"menu_button_name": String(_menu_button.name),
 		"guide_button_name": String(_guide_button.name),
 	}
-
-func validation_reset_outcome_recovery_state() -> void:
-	_validation_outcome_recovery_request_count = 0
-	_validation_outcome_recovery_retry_attempt_count = 0
-	_validation_outcome_recovery_retry_failure_count = 0
-	_validation_outcome_recovery_retry_success_count = 0
-	_validation_outcome_recovery_blocked_action_count = 0
-	_last_outcome_recovery_retry_result = {}
-
-func validation_outcome_recovery_snapshot() -> Dictionary:
-	var router_snapshot := _sync_outcome_recovery_state(false, true)
-	return {
-		"pending": _outcome_recovery_pending,
-		"message": _last_action_message if _outcome_recovery_pending else "",
-		"focus_owner": _outcome_recovery_focus_owner_name(),
-		"entry_result": _outcome_recovery_entry_result.duplicate(true),
-		"last_retry_result": _last_outcome_recovery_retry_result.duplicate(true),
-		"request_count": _validation_outcome_recovery_request_count,
-		"retry_attempt_count": _validation_outcome_recovery_retry_attempt_count,
-		"retry_failure_count": _validation_outcome_recovery_retry_failure_count,
-		"retry_success_count": _validation_outcome_recovery_retry_success_count,
-		"blocked_action_count": _validation_outcome_recovery_blocked_action_count,
-		"blocked_action_ids": _outcome_recovery_blocked_action_ids(),
-		"router_snapshot": router_snapshot,
-	}
-
-func _outcome_recovery_focus_owner_name() -> String:
-	var focus_owner := get_viewport().gui_get_focus_owner()
-	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_request_manual_save() -> Dictionary:
 	_on_save_pressed(true)

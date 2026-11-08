@@ -75,15 +75,6 @@ func run() -> void:
 	check(normalized(session.to_dict())==before,"opening named-file browser mutated gameplay")
 	dialog.hide()
 	await settle()
-	# Presentation-only control: the actual failure surface retains its action.
-	# Real transactional failures are covered by the separate named-save suite.
-	shell._set_generated_opening_autosave_failure_surface()
-	await settle()
-	footer(shell,"save_failure")
-	check(shell.get_node("%SaveStatus").text.to_lower().contains("failed"),"save failure disappeared from the footer")
-	check(shell.get_node("%Save").tooltip_text==shell.GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE,"save failure lost its explanation/retry instructions")
-	check(normalized(session.to_dict())==before,"save failure presentation mutated gameplay")
-	await capture("save_failure")
 	var town: Dictionary=session.overworld.towns.filter(func(t):return t.owner=="player")[0]
 	check(OverworldRules.set_active_town_visit(session,town.placement_id).get("ok",false),"opening hero cannot enter its own town")
 	AppRouter.go_to_town()
