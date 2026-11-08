@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "battle-end-checkpoint-hash-20261108",
- "currentSliceTitle": "Battle end: fingerprint the session in place, not as JSON",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-08T19:58:37Z",
+ "currentSliceTitle": "The resolved-battle checkpoint hashes the saved session fields in place instead of JSON-printing the whole session twice; the owner's last blow to result went from 8.7 s to 4.5-4.7 s.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-08T19:59:20Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "battle-end-checkpoint-hash-20261108",
-   "title": "Battle end: fingerprint the session in place, not as JSON",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-08: after a battle's last blow the result took long to show. The resolved-battle checkpoint fingerprinted the session as JSON.stringify(session.to_dict()).sha256_text(), twice around the last blow, about 1.9 s each on a 20 MB session. Hash the saved fields in place instead. scripts/autoload/AppRouter.gd.",
-   "docs": [],
-   "updatedAt": "2026-11-08"
+   "status": "completed",
+   "completedAt": "2026-11-08",
+   "summary": "The resolved-battle checkpoint hashes the saved session fields in place instead of JSON-printing the whole session twice; the owner's last blow to result went from 8.7 s to 4.5-4.7 s.",
+   "commit": "4316a6e54"
   },
   {
    "id": "magic-faction-mastery-magic-heroes-20261108",

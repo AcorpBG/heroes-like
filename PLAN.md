@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `battle-end-checkpoint-hash-20261108` (in progress): Owner, 2026-11-08: after a battle's last blow the result took long to show. The resolved-battle checkpoint fingerprinted the session as JSON.stringify(session.to_dict()).sha256_text(), twice around the last blow, about 1.9 s each on a 20 MB session. Hash the saved fields in place instead. scripts/autoload/AppRouter.gd.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-08 `battle-end-checkpoint-hash-20261108` (4316a6e54): The resolved-battle checkpoint hashes the saved session fields in place instead of JSON-printing the whole session twice; the owner's last blow to result went from 8.7 s to 4.5-4.7 s.
 - 2026-11-08 `magic-faction-mastery-magic-heroes-20261108` (3d1b53555): Only a faction's magic heroes (5 of its 11) start with its school mastery: removed from the 36 might heroes in heroes.json; the pre-switch save conversion grants it to magic heroes only; docs.
 - 2026-11-08 `overworld-faction-ground-each-20261108` (63e8bc4ef): Lava, ash and water cost 1.5; each faction crosses its own ground at grass cost: Embercourt sand, Mireclaw swamp/mire, Sunvault snow/frost, Thornwake rough/forest, Brasshollow lava/ash, Veilmourn water; content only.
 - 2026-11-08 `overworld-faction-ground-20261108` (53dce319d): Mireclaw (swamp, mire), Sunvault (snow, frost) and Brasshollow (rough) heroes step on their home_terrain_ids at grass cost in map_spells::StepCosts; content check; hero sheet line; no generator change.
