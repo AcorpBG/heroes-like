@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "balance-speed-backline-hunters-20261109",
- "currentSliceTitle": "Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.",
+ "currentSliceId": "town-art-brasshollow-slag-canyon-20261109",
+ "currentSliceTitle": "Brasshollow's town is an empty slag canyon with its 51 buildings painted in place (imggen sunburst 2.6, $4.68), cut by tools/package_town_plot_layers.py; layers draw under the stage light and click on the building outline.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T09:59:51Z",
+ "updatedAt": "2026-11-09T10:32:24Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-brasshollow-slag-canyon-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Brasshollow's town is an empty slag canyon with its 51 buildings painted in place (imggen sunburst 2.6, $4.68), cut by tools/package_town_plot_layers.py; layers draw under the stage light and click on the building outline.",
+   "commit": "b06b77959"
+  },
   {
    "id": "balance-speed-backline-hunters-20261109",
    "status": "completed",

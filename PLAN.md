@@ -54,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `town-art-brasshollow-slag-canyon-20261109` (b06b77959): Brasshollow's town is an empty slag canyon with its 51 buildings painted in place (imggen sunburst 2.6, $4.68), cut by tools/package_town_plot_layers.py; layers draw under the stage light and click on the building outline.
 - 2026-11-09 `balance-speed-backline-hunters-20261109` (4d8e5368c): Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.
 - 2026-11-09 `battle-full-speed-20261109` (a863a9bf6): Battle movement counts a creature's full speed instead of holding it at 6; spell speed adds on top and the stack card shows the full speed. Speed 9-10 stacks now strike across the board on their first move.
 - 2026-11-09 `bugfix-editor-guild-draws-20261109` (df0a73a88): The editor names a loaded package's working copy after the package hashes, not the clock, so its guild draws repeat on every load; players' maps-folder games keep a clock id. Editor parity replays identically.
