@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "battle-ai-shaken-under-fire-20261109",
- "currentSliceTitle": "A shaken melee stack out of reach of a side that out-shoots it advances instead of holding to rally (battle_ai_attack_scores.cpp): the owner's Roadwardens guard walks at the shooters instead of defending until it fell; arena even.",
+ "currentSliceId": "town-art-veilmourn-bell-fjord-20261109",
+ "currentSliceTitle": "Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T15:53:54Z",
+ "updatedAt": "2026-11-09T19:07:45Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-veilmourn-bell-fjord-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.",
+   "commit": "5dd9dc629"
+  },
   {
    "id": "battle-ai-shaken-under-fire-20261109",
    "status": "completed",

@@ -54,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `town-art-veilmourn-bell-fjord-20261109` (5dd9dc629): Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.
 - 2026-11-09 `battle-ai-shaken-under-fire-20261109` (df34b2b02): A shaken melee stack out of reach of a side that out-shoots it advances instead of holding to rally (battle_ai_attack_scores.cpp): the owner's Roadwardens guard walks at the shooters instead of defending until it fell; arena even.
 - 2026-11-09 `town-stage-effects-brasshollow-20261109` (30fc04cfd): Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.
 - 2026-11-09 `town-art-brasshollow-built-town-picture-20261109` (51d50dbc7): Brasshollow's town picture (town list, town switcher, build screen) is now the slag-canyon town fully built, drawn by tools/package_town_plot_layers.py as the town screen draws it, not the old quarry painting.
