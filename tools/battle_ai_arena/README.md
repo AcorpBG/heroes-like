@@ -95,6 +95,7 @@ side assignment when testing a mechanic.
 python tools/battle_ai_arena/tune.py                     # 30 generations, a few hours
 python tools/battle_ai_arena/tune.py --resume .artifacts/battle_ai_arena/tune-<time>
 python tools/battle_ai_arena/tune.py --base-weights <earlier run>/weights.json --seed 2   # search on from a run
+python tools/battle_ai_arena/tune.py --only spell_            # search only the weights whose names start so
 python tools/battle_ai_arena/arena.py --b-weights .artifacts/battle_ai_arena/tune-<time>/weights.json --suite holdout
 ```
 
@@ -139,7 +140,8 @@ picks one dwelling of each tier's two (balanced, ranged wherever a tier offers i
 tiers, or massed low tiers), dwellings open over the weeks, upgrades come with time, a
 second town adds the other dwelling, a neutral stack joins now and then, and the gold of the
 week buys top tier first. Heroes are any of the faction's, at the level, guild spells and
-mana of the week (weeks 1 to 10, early weeks most often).
+mana of the week (weeks 1 to 10, early weeks most often); the guild's tiers come by the week,
+the fourth from week 6 and the fifth from week 8.
 
 Nothing is evened out: a mismatched battle is part of a game. Both sides of every battle
 play, so the armies cancel; a battle the armies decide still moves the score through the

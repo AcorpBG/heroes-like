@@ -170,7 +170,8 @@ def guild_draw(content: Content, faction: str, rng: random.Random) -> dict[int, 
 
 def hero_spec(content: Content, faction: str, week: int, rng: random.Random, hero_id: str = "") -> dict:
     faction_row = next(f for f in content.factions if f["id"] == faction)
-    spell_tier = 1 if week <= 1 else (2 if week <= 3 else 3)
+    # The guild's tiers by the week: the fourth (4,000 gold) and fifth (5,000) stand about when the top dwellings do.
+    spell_tier = 1 if week <= 1 else (2 if week <= 3 else (3 if week <= 5 else (4 if week <= 7 else 5)))
     guild = guild_draw(content, faction, rng)
     spells = [s for tier, ids in guild.items() if tier <= spell_tier for s in ids if rng.random() < 0.85]
     return {

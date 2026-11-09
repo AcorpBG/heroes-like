@@ -222,6 +222,7 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before a generation's setup or games are stopped")
     parser.add_argument("--keep-logs", action="store_true", help="keep each generation's jobs, logs and raw results")
     parser.add_argument("--threads", type=int, default=0, help="battle_sim_cli's threads (default: one per core)")
+    parser.add_argument("--only", help="search only the weights whose names start with one of these comma-separated prefixes, e.g. spell_; the others keep their values (default: every weight)")
     args = parser.parse_args()
 
     base = arena.load_weights(args.base_weights)
@@ -235,7 +236,12 @@ def main() -> int:
         run_dir = Path(args.out) if args.out else arena.ROOT / ".artifacts" / "battle_ai_arena" / f"tune-{datetime.now():%Y%m%d-%H%M%S}"
         run_dir.mkdir(parents=True, exist_ok=True)
         keys = sorted(base)
-        settings = {"population": args.population, "sigma": args.sigma, "maps": args.maps, "battles": args.battles, "odds": args.odds, "seed": args.seed}
+        if args.only:
+            prefixes = tuple(prefix.strip() for prefix in args.only.split(",") if prefix.strip())
+            keys = [key for key in keys if key.startswith(prefixes)]
+            if not keys:
+                sys.exit(f"--only {args.only} names no weight")
+        settings = {"population": args.population, "sigma": args.sigma, "maps": args.maps, "battles": args.battles, "odds": args.odds, "seed": args.seed, "only": args.only or ""}
         cma = SepCMA(len(keys), args.sigma, args.population)
         rng = np.random.default_rng([args.seed, 0])
     values = arena.unit_values()

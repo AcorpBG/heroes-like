@@ -9,6 +9,8 @@
 
 #include <initializer_list>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace aurelion::rules::port::battle_ai_rules {
 
@@ -640,25 +642,55 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 	return candidates;
 }
 
-DictRef _best_spell_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets) {
+// The spell the hero casts now, or {} to keep its mana. Only a cast that clears its own kind's bar may be made
+// (_hero_cast_worthwhile; a lethal damage spell always does). A lethal one comes first, the best scored of them.
+// Otherwise each spell's best scored target stands for it, and of those the hero casts the one that moves the largest
+// share of the two armies' fighting power (_most_valuable_cast): every kind of spell in the same unit, so a summon, a
+// heal or a boost is cast when it is worth more than a damage spell.
+DictRef _best_spell_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets, DictRef best_attack, bool lethal_attack_available, bool support_needs_pressure) {
 	if (_commander_spell_cast_this_round(state, battle, side_of(state, active_stack))) {
 		return state.new_dict();
 	}
-	DictRef best = state.new_dict();
-	bool best_lethal = false;
+	DictRef lethal_best = state.new_dict();
+	double lethal_score = 0.0;
+	const ArrayRef finalists = state.new_array();
+	std::vector<std::pair<Atom, double>> finalist_scores;
 	const ArrayRef lethal_flags = state.new_array();
 	const ArrayRef candidates = _battle_spell_candidates(state, battle, active_stack, enemy_hero, targets, lethal_flags);
-	// _spell_candidate_beats, with each candidate's lethality worked out once.
 	const int64_t count = state.array_size(candidates);
 	for (int64_t index = 0; index < count; ++index) {
 		const DictRef candidate = gd::as_dict(state.at(candidates, index));
 		const bool lethal = gd::to_bool(state.at(lethal_flags, index));
-		if (empty(state, best) || (lethal && !best_lethal) || (lethal == best_lethal && _candidate_beats(state, candidate, best))) {
-			best = candidate;
-			best_lethal = lethal;
+		if (!_hero_cast_worthwhile(state, candidate, best_attack, battle, active_stack, targets, enemy_hero, lethal, lethal_attack_available, support_needs_pressure)) {
+			continue;
+		}
+		const double score = gd::float_field(state, candidate, key::score, 0.0);
+		// Of equal scores the first stays, as _candidate_beats keeps it.
+		const auto beats = [&](double current) { return score > current && !gd::is_equal_approx(score, current); };
+		if (lethal) {
+			if (empty(state, lethal_best) || beats(lethal_score)) {
+				lethal_best = candidate;
+				lethal_score = score;
+			}
+			continue;
+		}
+		const Atom spell_id = gd::string_field(state, candidate, key::spell_id, key::empty);
+		size_t slot = 0;
+		while (slot < finalist_scores.size() && finalist_scores[slot].first != spell_id) {
+			++slot;
+		}
+		if (slot == finalist_scores.size()) {
+			finalist_scores.emplace_back(spell_id, score);
+			state.append(finalists, dict_value(candidate));
+		} else if (beats(finalist_scores[slot].second)) {
+			finalist_scores[slot].second = score;
+			state.set_at(finalists, static_cast<int64_t>(slot), dict_value(candidate));
 		}
 	}
-	return best;
+	if (!empty(state, lethal_best)) {
+		return lethal_best;
+	}
+	return _most_valuable_cast(state, battle, active_stack, enemy_hero, finalists);
 }
 
 bool _hero_cast_worthwhile(State &state, DictRef best_spell, DictRef best_attack, DictRef battle, DictRef active_stack, ArrayRef hostile_targets, DictRef commander_payload, bool lethal_spell_available, bool lethal_attack_available, bool support_needs_pressure) {

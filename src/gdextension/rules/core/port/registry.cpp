@@ -119,7 +119,7 @@ const Function kFunctions[] = {
 	PORT(BattleAiRules, _battle_with_side_hero_payload, 3, true, return dict_value(ai::_battle_with_side_hero_payload(s, D(a, 0), S(a, 1), D(a, 2)))),
 	PORT(BattleAiRules, _best_attack_action, 3, true, return dict_value(ai::_best_attack_action(s, D(a, 0), D(a, 1), A(a, 2)))),
 	PORT(BattleAiRules, _best_reachable_strike, 2, true, return dict_value(ai::_best_reachable_strike(s, D(a, 0), D(a, 1)))),
-	PORT(BattleAiRules, _best_spell_action, 4, true, return dict_value(ai::_best_spell_action(s, D(a, 0), D(a, 1), D(a, 2), A(a, 3)))),
+	PORT(BattleAiRules, _best_spell_action, 7, true, return dict_value(ai::_best_spell_action(s, D(a, 0), D(a, 1), D(a, 2), A(a, 3), D(a, 4), B(a, 5), B(a, 6)))),
 	PORT(BattleAiRules, _brace_available, 2, false, return bool_value(ai::_brace_available(s, D(a, 0), D(a, 1)))),
 	PORT(BattleAiRules, _brace_has_held_objective, 3, false, return bool_value(ai::_brace_has_held_objective(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleAiRules, _bramble_ground_ability, 1, false, return dict_value(ai::_bramble_ground_ability(s, D(a, 0)))),

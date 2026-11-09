@@ -311,9 +311,12 @@ double _damage_spell_score(State &state, DictRef enemy_hero, DictRef battle, Dic
 double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior, ArrayRef hostiles, double role_modifier, DictRef damage_projection);
 double _control_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell);
 ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets, ArrayRef lethal_flags);
-DictRef _best_spell_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets);
+DictRef _best_spell_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets, DictRef best_attack, bool lethal_attack_available, bool support_needs_pressure);
 bool _hero_cast_worthwhile(State &state, DictRef best_spell, DictRef best_attack, DictRef battle, DictRef active_stack, ArrayRef hostile_targets, DictRef commander_payload, bool lethal_spell_available, bool lethal_attack_available, bool support_needs_pressure);
 double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef hostile_targets, DictRef commander_payload, DictRef behavior, bool support_needs_pressure);
+// Of these casts, the one that moves the largest share of the two armies' fighting power, or {}
+// when none moves the battle the caster's way (battle_ai_spell_values.cpp).
+DictRef _most_valuable_cast(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef candidates);
 
 // Slice 09: the decisions, an enemy stack's action, a stack's tactical order,
 // the advance plan and the reachable strike (battle_ai_decisions.cpp).

@@ -101,11 +101,12 @@ DictRef _enemy_action_choice(State &state, DictRef battle, DictRef active_stack,
 		return state.new_dict();
 	}
 
-	const DictRef best_spell = allow_hero_cast ? _best_spell_action(state, scoring_battle, active_stack, resolved_enemy_hero, targets) : state.new_dict();
 	const DictRef choice = _stack_order_choice(state, scoring_battle, active_stack, targets);
 	DictRef best = typed_dict_field(state, choice, key::best);
 	const DictRef best_attack = typed_dict_field(state, choice, key::best_attack);
 	const bool lethal_attack_available = gd::bool_field(state, choice, key::lethal_attack_available, false);
+	// The spell the hero would cast, already held to its bar (_best_spell_action).
+	const DictRef best_spell = allow_hero_cast ? _best_spell_action(state, scoring_battle, active_stack, resolved_enemy_hero, targets, best_attack, lethal_attack_available, false) : state.new_dict();
 	const bool lethal_spell_available = _candidate_is_lethal_damage_spell(state, best_spell, scoring_battle, resolved_enemy_hero);
 	const double defend_score = gd::float_field(state, choice, key::defend_score, 0.0);
 	const double advance_score = gd::float_field(state, choice, key::advance_score, 0.0);
@@ -124,8 +125,7 @@ DictRef _enemy_action_choice(State &state, DictRef battle, DictRef active_stack,
 	if (!empty(state, withdrawal_candidate)) {
 		add_candidate_score(state, candidate_scores, withdrawal_candidate, key::withdraw);
 	}
-	if ((!preservation_exit_selected || lethal_spell_available)
-			&& _hero_cast_worthwhile(state, best_spell, best_attack, scoring_battle, active_stack, targets, resolved_enemy_hero, lethal_spell_available, lethal_attack_available, false)) {
+	if ((!preservation_exit_selected || lethal_spell_available) && !empty(state, best_spell)) {
 		best = best_spell;
 	}
 	const DictRef report = gd::deep_duplicate_dict(state, best);
@@ -270,15 +270,16 @@ DictRef _stack_tactical_order(State &state, DictRef battle, DictRef active_stack
 		return state.new_dict();
 	}
 
-	const DictRef best_spell = allow_hero_cast ? _best_spell_action(state, scoring_battle, active_stack, resolved_commander_payload, targets) : state.new_dict();
 	const DictRef choice = _stack_order_choice(state, scoring_battle, active_stack, targets);
 	DictRef best = typed_dict_field(state, choice, key::best);
 	const DictRef best_attack = typed_dict_field(state, choice, key::best_attack);
 	const bool lethal_attack_available = gd::bool_field(state, choice, key::lethal_attack_available, false);
-	const bool lethal_spell_available = _candidate_is_lethal_damage_spell(state, best_spell, scoring_battle, resolved_commander_payload);
+	// The spell the hero would cast, already held to its bar (_best_spell_action); a buff only on a stack under
+	// pressure.
+	const DictRef best_spell = allow_hero_cast ? _best_spell_action(state, scoring_battle, active_stack, resolved_commander_payload, targets, best_attack, lethal_attack_available, true) : state.new_dict();
 	const double defend_score = gd::float_field(state, choice, key::defend_score, 0.0);
 	const double advance_score = gd::float_field(state, choice, key::advance_score, 0.0);
-	if (_hero_cast_worthwhile(state, best_spell, best_attack, scoring_battle, active_stack, targets, resolved_commander_payload, lethal_spell_available, lethal_attack_available, true)) {
+	if (!empty(state, best_spell)) {
 		best = best_spell;
 	}
 

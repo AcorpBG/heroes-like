@@ -45,6 +45,7 @@ None open.
 
 ## Open work
 
+- `battle-ai-spell-values-20261109` (in progress): Computer heroes choose between their spells by the share of the two armies' fighting power each moves (battle_ai_spell_values.cpp, battle_ai_spell_choice.cpp): damage, curses, summons, heals, buffs, ally effects and ground spells in one unit; a lethal spell first, each spell still held to its bar, the plan-scored kinds through spell_value_plan; arena guild tiers 4-5. Owner (2026-11-09): rework the scores before the 1,200-game batch. See `docs/battle-rework.md`, `docs/magic-system.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

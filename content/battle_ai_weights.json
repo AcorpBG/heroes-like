@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "about": "Battle AI weights (scripts/core/BattleAiRules.gd, _w): what each consideration adds to an order's score. attack_* score shots and strikes, defend_*, advance_* and reposition_* the other orders, spell_bar_* the score a hero spell must reach before mana is spent. Tuned with tools/battle_ai_arena/tune.py.",
+  "about": "Battle AI weights (src/gdextension/rules/core/port/battle_ai_*.cpp, _w): what each consideration adds to an order's score. attack_* score shots and strikes, defend_*, advance_* and reposition_* the other orders, spell_bar_* the score a hero spell must reach before mana is spent. The hero then casts the spell that moves the largest share of the two armies' fighting power (battle_ai_spell_values.cpp): spell_value_plan scales the hex, swap and move spells still valued by their plan's score. Tuned with tools/battle_ai_arena/tune.py.",
   "weights": {
     "attack_kills": 12.433,
     "attack_damage_share": 6.587,
@@ -49,6 +49,7 @@
     "spell_bar_buff": 0.481,
     "spell_bar_caster_discount": 0.08,
     "spell_damage_share": 49.275,
+    "spell_value_plan": 1.0,
     "approach_next_to_shooter": 0.056,
     "hold_ranged_ratio": 1.237
   }

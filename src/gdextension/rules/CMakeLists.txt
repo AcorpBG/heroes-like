@@ -176,6 +176,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_ai_reads.cpp
 	core/port/battle_ai_rules.cpp
 	core/port/battle_ai_spell_choice.cpp
+	core/port/battle_ai_spell_values.cpp
 	core/port/battle_ai_spell_scores.cpp
 	core/port/battle_auto_resolve.cpp
 	core/port/battle_commanders.cpp
