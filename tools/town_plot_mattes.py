@@ -9,6 +9,11 @@ inside it. Each matte is saved as a greyscale PNG next to its painting (an untra
 source, like the painting) and recorded in the packet with its window;
 package_town_plot_layers.py cuts the layers from it.
 
+BiRefNet marks one object. A building it sees as several, such as an open sea pen with
+a creature inside, sets matte_passes in its packet entry: BiRefNet then looks that many
+times, each time with what it found painted back to the empty backdrop, and the matte is
+the union. Without it, one look.
+
 Runs in the matting environment of the unit pipeline (torch, transformers, safetensors,
 timm, scipy, Pillow): the network code is the BiRefNet checkout under
 HEROES_MATTING_ROOT, and the weights are BiRefNet's general model (MIT),
@@ -48,6 +53,7 @@ GROW = 0.25           # how far a window grows on a side the building touches
 EDGE_SHARE = 0.02     # share of a window edge the building must cover to grow it
 PASSES = 4            # at most this many windows per building
 SEED_CHANGE = 70      # paint change that marks the building's extent
+PEEL = 6              # pixels around a found object also painted back before the next look
 
 
 def digest(path):
@@ -121,6 +127,20 @@ def predict(net, image, device):
     return alpha[0, 0].cpu().numpy()
 
 
+def look(net, scene, master, window, passes, device):
+    """BiRefNet's mask of the building in a window: the union of passes looks, each with
+    the objects found before painted back to the empty backdrop."""
+    image = np.asarray(scene.crop(window)).copy()
+    alpha = predict(net, Image.fromarray(image), device)
+    if passes > 1:
+        empty = np.asarray(master.crop(window))
+        for _ in range(passes - 1):
+            found = ndimage.binary_dilation(alpha > 0.5, iterations=PEEL)
+            image[found] = empty[found]
+            alpha = np.maximum(alpha, predict(net, Image.fromarray(image), device))
+    return alpha
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     parser.add_argument('packet')
@@ -150,13 +170,14 @@ def main():
         # change the paint, and a window that cuts the building off finds something smaller.
         scout = int(SCOUT * max(x1 - x0, y1 - y0))
         window = (max(lx0, x0 - scout), max(ly0, y0 - scout), min(lx1, x1 + scout), min(ly1, y1 + scout))
-        found = building_extent(predict(net, scene.crop(window), device) > 0.5, window, item['box'])
+        passes = int(item.get('matte_passes', 1))
+        found = building_extent(look(net, scene, master, window, passes, device) > 0.5, window, item['box'])
         if found:
             x0, y0, x1, y1 = found
         margin = int(MARGIN * max(x1 - x0, y1 - y0))
         window = (max(lx0, x0 - margin), max(ly0, y0 - margin), min(lx1, x1 + margin), min(ly1, y1 + margin))
         for attempt in range(PASSES):
-            alpha = predict(net, scene.crop(window), device)
+            alpha = look(net, scene, master, window, passes, device)
             solid = alpha > 0.5
             wx0, wy0, wx1, wy1 = window
             step_x, step_y = int(GROW * (wx1 - wx0)), int(GROW * (wy1 - wy0))
@@ -182,6 +203,8 @@ def main():
         'window': f'the building BiRefNet finds touching the plot in a first look (plot box and paint change over '
                   f'{SEED_CHANGE}, margin {SCOUT}), then margin {MARGIN}, grown by {GROW} on a side the building '
                   f'covers over {EDGE_SHARE} of, at most {PASSES} windows',
+        'passes': f'a building with matte_passes is looked at that many times, each time with what was found (grown by '
+                  f'{PEEL} px) painted back to the empty backdrop, and its matte is the union',
     }
     packet_path.write_bytes((json.dumps(packet, indent=2) + '\n').encode('utf-8'))
 

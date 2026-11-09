@@ -116,9 +116,10 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.24, 0.84), "radius": 0.090, "color": Color(1.0, 0.30, 0.05), "strength": 0.94},
 	],
 	"faction_veilmourn": [
-		{"position": Vector2(0.34, 0.19), "radius": 0.110, "color": Color(0.60, 0.75, 1.0), "strength": 0.68},
-		{"position": Vector2(0.72, 0.58), "radius": 0.065, "color": Color(0.72, 0.83, 1.0), "strength": 0.70},
-		{"position": Vector2(0.82, 0.48), "radius": 0.060, "color": Color(1.0, 0.68, 0.24), "strength": 0.78},
+		# On the lights of the bell fjord: the sunset on the channel, the falls, a moored ship's lanterns.
+		{"position": Vector2(0.092, 0.19), "radius": 0.075, "color": Color(1.0, 0.60, 0.28), "strength": 0.72},
+		{"position": Vector2(0.55, 0.49), "radius": 0.075, "color": Color(0.66, 0.80, 1.0), "strength": 0.66},
+		{"position": Vector2(0.156, 0.664), "radius": 0.055, "color": Color(1.0, 0.66, 0.24), "strength": 0.78},
 	],
 }
 const STATUS_ACCENT_WIDTH := 5.0
@@ -195,7 +196,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png",
 	},
 	"faction_veilmourn": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_veilmourn_cleared_harbor.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_veilmourn_bell_fjord.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png",
 	},

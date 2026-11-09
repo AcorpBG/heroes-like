@@ -1,0 +1,1876 @@
+{
+  "schema_id": "town_plot_layer_packet_v1",
+  "faction_id": "faction_veilmourn",
+  "scene_id": "bell_fjord",
+  "stage": "village",
+  "owner_decision": "2026-11-09: the owner had the 23 plots planned before the painting, chose the planned fjord (concept B) and approved painting the full Veilmourn set into it.",
+  "generation": {
+    "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+    "date": "2026-11-09"
+  },
+  "method": "Each building is a masked edit of the empty fjord (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the fjord around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the fjord was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records. Two buildings the model painted wider than their plot were repainted into a narrower box, which box records; their earlier stages scale from it.",
+  "backdrop": {
+    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+    "source_sha256": "6d997eec4f4ee3e294d5387dde1354d0f92cb6a0ec670274b268cc3ce4ca6c85",
+    "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.prompt.txt",
+    "reference_inputs": [
+      "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.png",
+      "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/stack_hint.png"
+    ],
+    "concept": {
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/plan_sketch.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/first_concept.png"
+      ],
+      "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the first fjord concept (first_concept.png, prompt bell_fjord_first_concept.prompt.txt), used for style and building designs only."
+    }
+  },
+  "cut": {
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
+  },
+  "grounding": "Painted into the empty fjord on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+  "curation": "Owner-approved bell-fjord set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
+  "plots": {
+    "fort": [
+      20,
+      120,
+      410,
+      130
+    ],
+    "hall": [
+      180,
+      238,
+      310,
+      322
+    ],
+    "building_dev_veilmourn_unique_2": [
+      640,
+      112,
+      175,
+      145
+    ],
+    "guild": [
+      840,
+      40,
+      180,
+      228
+    ],
+    "building_wayfarers_hall": [
+      585,
+      285,
+      200,
+      175
+    ],
+    "building_dev_training_experience": [
+      960,
+      232,
+      160,
+      153
+    ],
+    "building_dev_artifact_exchange": [
+      780,
+      415,
+      165,
+      150
+    ],
+    "building_dev_veilmourn_unique_1": [
+      565,
+      510,
+      200,
+      180
+    ],
+    "veilmourn_t1": [
+      895,
+      590,
+      225,
+      165
+    ],
+    "veilmourn_t6_1": [
+      450,
+      690,
+      440,
+      240
+    ],
+    "veilmourn_t7_1": [
+      915,
+      840,
+      420,
+      255
+    ],
+    "veilmourn_t2": [
+      1345,
+      905,
+      300,
+      190
+    ],
+    "veilmourn_t4": [
+      1690,
+      850,
+      330,
+      225
+    ],
+    "market": [
+      1480,
+      655,
+      300,
+      155
+    ],
+    "building_dev_growth_2": [
+      1785,
+      600,
+      245,
+      170
+    ],
+    "building_dev_training_attack": [
+      1150,
+      680,
+      175,
+      125
+    ],
+    "building_dev_growth_1": [
+      1285,
+      545,
+      170,
+      130
+    ],
+    "storehouse": [
+      1205,
+      350,
+      300,
+      160
+    ],
+    "veilmourn_t3": [
+      1505,
+      435,
+      280,
+      185
+    ],
+    "building_dev_veilmourn_unique_3": [
+      1800,
+      355,
+      230,
+      205
+    ],
+    "building_dev_training_defense": [
+      1855,
+      142,
+      185,
+      165
+    ],
+    "building_dev_growth_3": [
+      1595,
+      215,
+      210,
+      170
+    ],
+    "veilmourn_t5": [
+      1320,
+      112,
+      265,
+      210
+    ]
+  },
+  "buildings": [
+    {
+      "id": "building_dev_hall_4",
+      "plot_id": "hall",
+      "box": [
+        180,
+        238,
+        310,
+        322
+      ],
+      "crop": [
+        0,
+        0,
+        861,
+        894
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4_fjord.png",
+      "source_sha256": "f61da7d20c4898fcffa137903f80b6eeefe6e7589f04c8dd5e18d5123df0f059",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_hall.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4_fjord_matte.png",
+        "sha256": "538b79247b2e611083bf5abf86011a11d77a52fd0bf7dea17fbbe75f0c57c03c",
+        "window": [
+          135,
+          165,
+          415,
+          546
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_3",
+      "plot_id": "hall",
+      "box": [
+        192,
+        277,
+        285,
+        283
+      ],
+      "crop": [
+        0,
+        26,
+        730,
+        786
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3_fjord.png",
+      "source_sha256": "374e1703431f3b63c50a0895fa138eda9081d412b2b11a284ce5f71d1f830960",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_hall_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3_fjord_matte.png",
+        "sha256": "d99db29013a35a7269f3756e00313455007bc948410607a4450a9e4f9a6f96c0",
+        "window": [
+          113,
+          188,
+          548,
+          551
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_2",
+      "plot_id": "hall",
+      "box": [
+        211,
+        322,
+        248,
+        238
+      ],
+      "crop": [
+        0,
+        110,
+        679,
+        661
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2_fjord.png",
+      "source_sha256": "a29c9fccd76902bcafa51d86970e3618f737a357f4e435beaffb4a5ca84c7c14",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_hall_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2_fjord_matte.png",
+        "sha256": "65acac792df897c897c2527fc015052eb95c910a2b4e81ea10fdab217cb3e6ac",
+        "window": [
+          182,
+          286,
+          306,
+          303
+        ]
+      }
+    },
+    {
+      "id": "building_town_hall",
+      "plot_id": "hall",
+      "box": [
+        230,
+        373,
+        211,
+        187
+      ],
+      "crop": [
+        42,
+        207,
+        586,
+        519
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall_fjord.png",
+      "source_sha256": "c8ce430163a6c41fb7a928fc6cc1cb725a30116770a404b5351b06ff0078e43d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_hall_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall_fjord_matte.png",
+        "sha256": "c78de29127a92479e44f9c0f9c78cc27fdd0d5d4db6dc52407f22d4f159cd772",
+        "window": [
+          202,
+          292,
+          267,
+          296
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "box": [
+        20,
+        120,
+        410,
+        130
+      ],
+      "crop": [
+        0,
+        0,
+        1139,
+        599
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3_fjord.png",
+      "source_sha256": "739fa6a1fdd76caa1d7701ee5cb92126e1fb9474d3c9058490201d8693c08767",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_fort.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3_fjord_matte.png",
+        "sha256": "ec3dbaaa2ba291bbddae722c50f188e5b511ac70f4d3a1f3ac8779db6b3b95e8",
+        "window": [
+          0,
+          71,
+          479,
+          228
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "box": [
+        20,
+        141,
+        410,
+        109
+      ],
+      "crop": [
+        0,
+        0,
+        795,
+        495
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2_fjord.png",
+      "source_sha256": "5e0424b6a75025f0370fc533cc18a96785b8151b9ddddecf05728cec85550d7b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_fort_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2_fjord_matte.png",
+        "sha256": "f164691ebbead2362512fcb1078211c847e0795e79e9782e4ddbb96dbade8eab",
+        "window": [
+          0,
+          92,
+          479,
+          207
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "box": [
+        20,
+        167,
+        410,
+        83
+      ],
+      "crop": [
+        0,
+        0,
+        795,
+        508
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1_fjord.png",
+      "source_sha256": "d38084645b75f32be096e71aa09acc6197ac3f8bb2f2bc210d273baf1cd4b6ca",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_fort_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1_fjord_matte.png",
+        "sha256": "b3ed233b0067d14d236e6a1a5dc0effbc5b4f7c918cffbe4bdc62ca371320abc",
+        "window": [
+          0,
+          118,
+          479,
+          181
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "box": [
+        840,
+        40,
+        180,
+        228
+      ],
+      "crop": [
+        680,
+        0,
+        500,
+        633
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5_fjord.png",
+      "source_sha256": "e486e129c1f20ffa64aafcc7fb22696893b8b9b8bdbe7163897bfd1801e2d5e5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_guild.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5_fjord_matte.png",
+        "sha256": "9bb76be75622c5bd4edca7370fa993577ed3d1240eda460d9b9c61ea923d2440",
+        "window": [
+          813,
+          13,
+          234,
+          282
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "box": [
+        844,
+        74,
+        171,
+        194
+      ],
+      "crop": [
+        692,
+        0,
+        475,
+        441
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4_fjord.png",
+      "source_sha256": "961e341560bc4acccff6a747d0b735023a7fb73223ff8cbb94a78c2b06c9aebc",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_guild_5_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4_fjord_matte.png",
+        "sha256": "905a1905a816325ca87b644d081eb935c0f02ce6a10ba40165309cc7650f1c61",
+        "window": [
+          821,
+          51,
+          217,
+          240
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "box": [
+        849,
+        108,
+        162,
+        160
+      ],
+      "crop": [
+        705,
+        0,
+        450,
+        410
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3_fjord.png",
+      "source_sha256": "2678d63e662d3ee0ef02f7f56cb57ccb6924434263cb1c4123fce89cef2eb0ee",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_guild_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3_fjord_matte.png",
+        "sha256": "6892fa5987198fc36fa5210cdb55cd0af33374a18a0ad352407b7c485d82a082",
+        "window": [
+          830,
+          89,
+          200,
+          198
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "box": [
+        854,
+        140,
+        153,
+        128
+      ],
+      "crop": [
+        718,
+        26,
+        425,
+        356
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2_fjord.png",
+      "source_sha256": "e26396e7c16d9b796675bda60f8d817c95edf8dd844b171b125a6639da9c720b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_guild_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2_fjord_matte.png",
+        "sha256": "a015403f6b6e27321f45288d864411251e734fd587f1e771e26ac65d691a5953",
+        "window": [
+          836,
+          122,
+          189,
+          164
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "box": [
+        858,
+        168,
+        144,
+        100
+      ],
+      "crop": [
+        730,
+        79,
+        400,
+        278
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1_fjord.png",
+      "source_sha256": "eca6dc23fbe3032c8a463130dfdf478fac94256f0974fe513032e89a8f229e61",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_guild_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1_fjord_matte.png",
+        "sha256": "37367e8b8fb9823d245f80e812e815f7cb3d1fd535bc3385918698b58c6c97be",
+        "window": [
+          841,
+          151,
+          178,
+          134
+        ]
+      }
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "box": [
+        1480,
+        655,
+        300,
+        155
+      ],
+      "crop": [
+        1214,
+        513,
+        833,
+        439
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange_fjord.png",
+      "source_sha256": "e3e79f8790192a7e00a9f83d689984fcb6cf631e4c9f938d60fe630584ac02b2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_market.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange_fjord_matte.png",
+        "sha256": "3de02a1ab2055eb3de2d401e1ac9852c5d9b510f309f8a0f3d93eb162c273b7d",
+        "window": [
+          1420,
+          586,
+          452,
+          267
+        ]
+      }
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "box": [
+        1495,
+        686,
+        270,
+        124
+      ],
+      "crop": [
+        1255,
+        550,
+        750,
+        395
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square_fjord.png",
+      "source_sha256": "04ab11df484ed7a9235021fbcdee66482f54d6d0c52b4a664fd074988adad4b9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_trade_exchange_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square_fjord_matte.png",
+        "sha256": "ac28d6ed3673965051d96557d7b969c5b1e1208bff0ac0b89ae2544e683a6b2f",
+        "window": [
+          1438,
+          648,
+          397,
+          200
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "box": [
+        1205,
+        350,
+        300,
+        160
+      ],
+      "crop": [
+        938,
+        208,
+        833,
+        444
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2_fjord.png",
+      "source_sha256": "5fc0a0b32882797250ee0f32cf5e39dd58ae2c0edef9ee1b733f2663f11a6d24",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2_fjord_matte.png",
+        "sha256": "099d3b13fd9a8c209fa118f4117e2a8982923a50f6265e1131071f1d401d2f42",
+        "window": [
+          1143,
+          285,
+          491,
+          272
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "box": [
+        1226,
+        379,
+        258,
+        131
+      ],
+      "crop": [
+        996,
+        256,
+        717,
+        377
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1_fjord.png",
+      "source_sha256": "e4c1c0d4c49b020d2c5d6388c2c4dec9d76e5e3f0fe7138307950ee2a508dc12",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_storehouse_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1_fjord_matte.png",
+        "sha256": "ee6633a68c6f8defb0fb528f0997c437f92cf58803fee33dbaeb70c2705697fd",
+        "window": [
+          1195,
+          348,
+          327,
+          193
+        ]
+      }
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "plot_id": "building_wayfarers_hall",
+      "box": [
+        585,
+        285,
+        200,
+        175
+      ],
+      "crop": [
+        407,
+        130,
+        556,
+        486
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_wayfarers_hall_fjord.png",
+      "source_sha256": "aa351b8e58165d5cad83dc25bcbbfd12e5ace795f1fa35ceea24200a5407e133",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_wayfarers_hall_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_wayfarers_hall_fjord_matte.png",
+        "sha256": "4f74ab67d3149b07ffb85719dbf13f4644af697cf2bb30fbfe4fac76c7c7f268",
+        "window": [
+          515,
+          250,
+          365,
+          245
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_1",
+      "plot_id": "building_dev_growth_1",
+      "box": [
+        1285,
+        545,
+        170,
+        130
+      ],
+      "crop": [
+        1134,
+        430,
+        472,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_1_fjord.png",
+      "source_sha256": "34bd2db4a17186d24e0e8adcd109334c68cd84c3bbdbfa9e68c812e4deb61aa5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_1_fjord_matte.png",
+        "sha256": "e2d4ea1338048bf7a6eaa188f36aa6bfd21c89fd42e0d20b3f21c2b179fbaab1",
+        "window": [
+          1222,
+          510,
+          307,
+          198
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_2",
+      "plot_id": "building_dev_growth_2",
+      "box": [
+        1785,
+        600,
+        245,
+        170
+      ],
+      "crop": [
+        1367,
+        449,
+        681,
+        472
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_2_fjord.png",
+      "source_sha256": "03a8cdb147f47cfa28fa735235ff9ca6fb60d7f09755b2e496342bed6fbe0950",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_2_fjord_matte.png",
+        "sha256": "634b01fc43bc784e5ae6eff2ab74daa8b5dafa59a37d7d04b07eeb9df4210ee0",
+        "window": [
+          1693,
+          547,
+          355,
+          269
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_3",
+      "plot_id": "building_dev_growth_3",
+      "box": [
+        1595,
+        215,
+        210,
+        170
+      ],
+      "crop": [
+        1408,
+        64,
+        583,
+        472
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_3_fjord.png",
+      "source_sha256": "c0bfacbcf79e84f88277b68e530f70868b5e4403cf841a2144bfba2712bc4084",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_3_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_3_fjord_matte.png",
+        "sha256": "329ccefb3d803eb778bb44c9ac7e9268ba2a60af209e415ffbaf8538273698c0",
+        "window": [
+          1556,
+          188,
+          283,
+          224
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_attack",
+      "plot_id": "building_dev_training_attack",
+      "box": [
+        1150,
+        680,
+        175,
+        125
+      ],
+      "crop": [
+        994,
+        569,
+        486,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_attack_fjord.png",
+      "source_sha256": "c9a98cc54e4d5e16f23acc2924f164acc0d79fd1880319e1761e00b917821ed7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_attack_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_attack_fjord_matte.png",
+        "sha256": "dbd835d5ed0260ca624b86fe557fbe27023d2bcb1e55dc20b3f913d5f25ddbb0",
+        "window": [
+          1118,
+          636,
+          240,
+          207
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_defense",
+      "plot_id": "building_dev_training_defense",
+      "box": [
+        1855,
+        142,
+        185,
+        165
+      ],
+      "crop": [
+        1690,
+        0,
+        358,
+        454
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_defense_fjord.png",
+      "source_sha256": "8b423c4e2ce5e56fd8649f08b74a2b0ece0abdc4a96bb4af138c3c5b90457ffc",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_defense_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_defense_fjord_matte.png",
+        "sha256": "b0e6d58cb4903e2d9b7752deb11cd037820edc27a1e20103afd0960387a8e1a5",
+        "window": [
+          1822,
+          88,
+          226,
+          243
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_experience",
+      "plot_id": "building_dev_training_experience",
+      "box": [
+        960,
+        232,
+        160,
+        153
+      ],
+      "crop": [
+        818,
+        96,
+        444,
+        425
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_experience_fjord.png",
+      "source_sha256": "051ec95cc7d2ee4c531e5a9f8c4d2b3ddbd57ac3070ed13ca47669ad9eadd06b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_experience_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_experience_fjord_matte.png",
+        "sha256": "46a665f2ae81fbd37fd4c5541aba3f3630173a6958892d5f88ae30c1187cc710",
+        "window": [
+          937,
+          168,
+          239,
+          240
+        ]
+      }
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "plot_id": "building_dev_artifact_exchange",
+      "box": [
+        780,
+        415,
+        165,
+        150
+      ],
+      "crop": [
+        634,
+        282,
+        458,
+        417
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_artifact_exchange_fjord.png",
+      "source_sha256": "7097b263968526f86bbc5f0b87467d63a30237d0c7fc79e3408fadf6bb8e535e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_artifact_exchange_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_artifact_exchange_fjord_matte.png",
+        "sha256": "81d1e4273da9d1436de0a13ee4e85143573b096ba046e4837a5304941c834cc8",
+        "window": [
+          727,
+          366,
+          266,
+          226
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_unique_1",
+      "plot_id": "building_dev_veilmourn_unique_1",
+      "box": [
+        565,
+        510,
+        200,
+        180
+      ],
+      "crop": [
+        387,
+        350,
+        556,
+        500
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_1_fjord.png",
+      "source_sha256": "30db9206fe9a78cac5fd46c117c0152a85a575c6aa73a9bb918fc8b2a4433495",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_vault.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_1_fjord_matte.png",
+        "sha256": "40a645fa64df471467a20ec3eb0e801a2ae2b10eb4d05ddb1428afa0abc73674",
+        "window": [
+          521,
+          466,
+          326,
+          255
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_unique_2",
+      "plot_id": "building_dev_veilmourn_unique_2",
+      "box": [
+        640,
+        112,
+        175,
+        145
+      ],
+      "crop": [
+        484,
+        0,
+        486,
+        403
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_2_fjord.png",
+      "source_sha256": "aa7d5add78b4e450029301cc775db7be6ca8c017e9bc4699328fc2c982b10014",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_chart.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_2_fjord_matte.png",
+        "sha256": "40585e7eab758005b4e86714efee542a4c09fc7f3b0f85c4bf89937b4277d8fd",
+        "window": [
+          619,
+          91,
+          217,
+          187
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_unique_3",
+      "plot_id": "building_dev_veilmourn_unique_3",
+      "box": [
+        1800,
+        355,
+        230,
+        205
+      ],
+      "crop": [
+        1409,
+        173,
+        639,
+        569
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_3_fjord.png",
+      "source_sha256": "ed4b593e8e827290a6f8a824a6d8160a7266358e8b8e2827ec48496935da9da4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_3_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_3_fjord_matte.png",
+        "sha256": "0b3eb2e0a80d3e3afe87ec87b822a0227c0034c1b15dcae0cc84b4e3388fa37a",
+        "window": [
+          1737,
+          278,
+          311,
+          313
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1_upgrade",
+      "plot_id": "veilmourn_t1",
+      "box": [
+        935,
+        590,
+        185,
+        165
+      ],
+      "crop": [
+        770,
+        444,
+        514,
+        458
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_upgrade_fjord.png",
+      "source_sha256": "17e7b21c5f9664a54258d081bcaba482dac4f6a7be62dd0b6885c2f918441378",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_upgrade_fjord_matte.png",
+        "sha256": "fc0177c98e494a9177f37c2336dedae49188261f8d409ed8da1fab0ca62e8572",
+        "window": [
+          873,
+          545,
+          287,
+          237
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1",
+      "plot_id": "veilmourn_t1",
+      "box": [
+        946,
+        613,
+        163,
+        142
+      ],
+      "crop": [
+        801,
+        487,
+        453,
+        394
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_fjord.png",
+      "source_sha256": "563b9edaa40baa718cea8ffbe181e83f0ef5b48ee5daf7f10c2a2b6902c51a6f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t1_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_fjord_matte.png",
+        "sha256": "0da5ec8af13191adda7db23d301fada0eb7c0c0ac456d81425552879ad6c848b",
+        "window": [
+          906,
+          582,
+          241,
+          196
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2_upgrade",
+      "plot_id": "veilmourn_t1",
+      "box": [
+        895,
+        590,
+        225,
+        165
+      ],
+      "crop": [
+        695,
+        444,
+        625,
+        458
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_upgrade_fjord.png",
+      "source_sha256": "e3a459df1dd9965232e3c4dbe5c8649661cf444ba8d4b643ab64ab804c4badee",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_upgrade_fjord_matte.png",
+        "sha256": "9810ca46fbd9fca0e68eb0da00f7c2f1840905ea0f79d92e720326c0aed7ba9c",
+        "window": [
+          795,
+          454,
+          386,
+          338
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2",
+      "plot_id": "veilmourn_t1",
+      "box": [
+        908,
+        613,
+        198,
+        142
+      ],
+      "crop": [
+        732,
+        487,
+        550,
+        394
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_fjord.png",
+      "source_sha256": "d55f19634a244935370fa199c348350b85ae1b37f9f5633a8c76b0335fa3c8eb",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t1_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_fjord_matte.png",
+        "sha256": "0d0a22e281580c6cfbdf33af8372635188804aef3f3a52cef3a0b52897d6471d",
+        "window": [
+          863,
+          566,
+          282,
+          216
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1_upgrade",
+      "plot_id": "veilmourn_t2",
+      "box": [
+        1345,
+        905,
+        300,
+        190
+      ],
+      "crop": [
+        1078,
+        736,
+        833,
+        416
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_upgrade_fjord.png",
+      "source_sha256": "4769f7fe2f166aaae5e5e9b0c8403a3c2ac5e9f61e11f543661fcad427b880ea",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_upgrade_fjord_matte.png",
+        "sha256": "6a7516a166607bed0b241e335636a224f30cb5fa96bbefa51228c337a29d0064",
+        "window": [
+          1306,
+          748,
+          400,
+          385
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1",
+      "plot_id": "veilmourn_t2",
+      "box": [
+        1363,
+        932,
+        264,
+        163
+      ],
+      "crop": [
+        1128,
+        787,
+        733,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_fjord.png",
+      "source_sha256": "7fa318a9adc76186a680a9401adb2ecc16b3be73a00b2adbb924f4fdd3364938",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t2_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_fjord_matte.png",
+        "sha256": "02e278eca42c7ad3c712d462ff2e54227342bdad82478f2cda35abf4f5a2acd8",
+        "window": [
+          1297,
+          848,
+          429,
+          291
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2_upgrade",
+      "plot_id": "veilmourn_t2",
+      "box": [
+        1345,
+        905,
+        300,
+        190
+      ],
+      "crop": [
+        1078,
+        624,
+        833,
+        528
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_upgrade_fjord.png",
+      "source_sha256": "98acd0aa18c7a3693d00fc337ee474103831fbc92570e1ac8051408bdad7ffae",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_upgrade_fjord_matte.png",
+        "sha256": "400ba9b83d63e328bb1eb134159a46354e0c318586758e30b07db5884020c36e",
+        "window": [
+          1256,
+          754,
+          499,
+          389
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2",
+      "plot_id": "veilmourn_t2",
+      "box": [
+        1363,
+        932,
+        264,
+        163
+      ],
+      "crop": [
+        1128,
+        787,
+        733,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_fjord.png",
+      "source_sha256": "4a8effd2e7a5e1e530f7d80fd5b397dc635073ab518ce867a9c7924210ecfc3a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t2_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_fjord_matte.png",
+        "sha256": "8cda0dff80aac3efb75713420524ec9f7af3b9c1cb5fd79e0bffa2e6e6439b0d",
+        "window": [
+          1290,
+          864,
+          447,
+          274
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1_upgrade",
+      "plot_id": "veilmourn_t3",
+      "box": [
+        1505,
+        435,
+        280,
+        185
+      ],
+      "crop": [
+        1256,
+        270,
+        778,
+        514
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_upgrade_fjord.png",
+      "source_sha256": "b0948cc30ee4c1bd2cff0b314bae86172f85cb351a0ee45970f5e150c3f5dd88",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_upgrade_fjord_matte.png",
+        "sha256": "bbb110fd3a6cc4b96cc55679e277eaea439997396f54b3160d6e2a9c811794fe",
+        "window": [
+          1425,
+          325,
+          415,
+          338
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1",
+      "plot_id": "veilmourn_t3",
+      "box": [
+        1522,
+        461,
+        246,
+        159
+      ],
+      "crop": [
+        1304,
+        320,
+        683,
+        442
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_fjord.png",
+      "source_sha256": "8fd8a2c684a936354c7de925951c20f060d4e8ad2b219c40f1e2060a049696e2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t3_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_fjord_matte.png",
+        "sha256": "5f45ae5f7e36447639cca18e8a7f7b820192b9dd2caa177dd74558f2d12fc456",
+        "window": [
+          1471,
+          399,
+          366,
+          256
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2_upgrade",
+      "plot_id": "veilmourn_t3",
+      "box": [
+        1505,
+        435,
+        280,
+        185
+      ],
+      "crop": [
+        1256,
+        270,
+        778,
+        514
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_upgrade_fjord.png",
+      "source_sha256": "1003f546e7abbda3c8f0fda848d6296b6dd8845201d81b6e4690bb4a91d46874",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_upgrade_fjord_matte.png",
+        "sha256": "74a9dbbc9d627f8209e77273321530a1ba1050fd447d1f54849d9789bd4374e1",
+        "window": [
+          1426,
+          312,
+          435,
+          362
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2",
+      "plot_id": "veilmourn_t3",
+      "box": [
+        1522,
+        461,
+        246,
+        159
+      ],
+      "crop": [
+        1304,
+        320,
+        683,
+        442
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_fjord.png",
+      "source_sha256": "826561f64448e85231836b212c944207566385a2e1435431880dbf7ed4238c6b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t3_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_fjord_matte.png",
+        "sha256": "509fd92b18c0ec0d93743bf2a38968482bbafc9a5e742308fb807c350f5524a0",
+        "window": [
+          1492,
+          412,
+          315,
+          238
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1_upgrade",
+      "plot_id": "veilmourn_t4",
+      "box": [
+        1683,
+        860,
+        264,
+        215
+      ],
+      "crop": [
+        1448,
+        669,
+        600,
+        483
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_upgrade_fjord.png",
+      "source_sha256": "8a2f7c3359a3a401f41e827f9a88dbe2d4ec8ebeee8d9796a0b3e5e00fadf340",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_upgrade_fjord_matte.png",
+        "sha256": "72777e6133ed5b57837cc8da5181bd6103fcfb24b8f80d028e9531297ab263f7",
+        "window": [
+          1605,
+          779,
+          419,
+          339
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1",
+      "plot_id": "veilmourn_t4",
+      "box": [
+        1699,
+        890,
+        232,
+        185
+      ],
+      "crop": [
+        1493,
+        726,
+        555,
+        426
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_fjord.png",
+      "source_sha256": "a9e0c27947ca557a717f8bcb9d1ad69ad060c4b261fcbee70956452fc9eea3f2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t4_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_fjord_matte.png",
+        "sha256": "845fbf74904930c8fc5e301dc873f02f88b8567bae2802627f06e01e70a1c688",
+        "window": [
+          1635,
+          836,
+          384,
+          276
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2_upgrade",
+      "plot_id": "veilmourn_t4",
+      "box": [
+        1690,
+        850,
+        330,
+        225
+      ],
+      "crop": [
+        1396,
+        650,
+        652,
+        502
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_upgrade_fjord.png",
+      "source_sha256": "b9b9ada4e6a417ccec94f67acfa4661ede08cb00c155c58fd4c189c5f4ce4cf5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_upgrade_fjord_matte.png",
+        "sha256": "404cad81fb0dff28d77ec9edf1cc7fb8b878d2dd08d6ba2984534366f1bae14f",
+        "window": [
+          1576,
+          741,
+          472,
+          391
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2",
+      "plot_id": "veilmourn_t4",
+      "box": [
+        1710,
+        881,
+        290,
+        194
+      ],
+      "crop": [
+        1452,
+        708,
+        596,
+        444
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_fjord.png",
+      "source_sha256": "48f5d2c8985f5ea42f271a813df765412074279b1988ff75402eeb594ba4ba48",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t4_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_fjord_matte.png",
+        "sha256": "302e7e097bc1b4c47b6696ea9c8134e60dfe8714583459b75b357ee7d9bb9220",
+        "window": [
+          1613,
+          832,
+          435,
+          289
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1_upgrade",
+      "plot_id": "veilmourn_t5",
+      "box": [
+        1320,
+        112,
+        265,
+        210
+      ],
+      "crop": [
+        1084,
+        0,
+        736,
+        583
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_upgrade_fjord.png",
+      "source_sha256": "e6f0648b8866ab92a302dcf18373c04be2966abff0ead0d49caeefce698ad69b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_upgrade_fjord_matte.png",
+        "sha256": "d532df09b9d3951d912f89536e19061b6568d46668e4b5bec508b3b636851583",
+        "window": [
+          1249,
+          65,
+          429,
+          298
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1",
+      "plot_id": "veilmourn_t5",
+      "box": [
+        1336,
+        141,
+        233,
+        181
+      ],
+      "crop": [
+        1129,
+        0,
+        647,
+        483
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_fjord.png",
+      "source_sha256": "e0a1436760df0fcd5aee90380ad5d28aa7553d3d79f736390e255b5b39221070",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t5_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_fjord_matte.png",
+        "sha256": "f2e767a57ea6988d9186341fbdd62fdd2075b6b04770785c52d599b2625c77b2",
+        "window": [
+          1303,
+          112,
+          304,
+          239
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2_upgrade",
+      "plot_id": "veilmourn_t5",
+      "box": [
+        1320,
+        112,
+        265,
+        210
+      ],
+      "crop": [
+        1084,
+        0,
+        736,
+        583
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_upgrade_fjord.png",
+      "source_sha256": "d1d05e8b4ffc5c920ea84d6a34a6482b8e3012829574b196a548c8426e846e84",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_upgrade_fjord_matte.png",
+        "sha256": "02d6b788d7e2d64fec19ae3a1cbc93057f2be93018c29ac7dee84f1172aae276",
+        "window": [
+          1284,
+          56,
+          358,
+          300
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2",
+      "plot_id": "veilmourn_t5",
+      "box": [
+        1336,
+        141,
+        233,
+        181
+      ],
+      "crop": [
+        1129,
+        0,
+        647,
+        483
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_fjord.png",
+      "source_sha256": "ec7a6964a4836a06a55b7a18d555687f675a831a7df4358c0d7d2b11f3ba1951",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t5_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_fjord_matte.png",
+        "sha256": "1078596b35b57d270ce63e7bf5d49455f984d39f9840c3ae18d20b50948751ad",
+        "window": [
+          1308,
+          113,
+          296,
+          237
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1_upgrade",
+      "plot_id": "veilmourn_t6_1",
+      "box": [
+        450,
+        690,
+        440,
+        240
+      ],
+      "crop": [
+        59,
+        476,
+        1222,
+        667
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade_fjord.png",
+      "source_sha256": "91750d1486f1c5ee74b38c9d35a5a9269b3c1934a1a8fe0bb4bf4bd6e398e46c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_slipway.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade_fjord_matte.png",
+        "sha256": "5e7ac66afadd29b0c099de9f966279f561182b4e29e75dc182607d28e09a3340",
+        "window": [
+          294,
+          592,
+          700,
+          508
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1",
+      "plot_id": "veilmourn_t6_1",
+      "box": [
+        476,
+        724,
+        387,
+        206
+      ],
+      "crop": [
+        132,
+        541,
+        1075,
+        572
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_fjord.png",
+      "source_sha256": "7d2b5a4ef43e30cdf9a6399d3c08cddb323708e1f1544e4ad7e3e471d615cf45",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t6_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_fjord_matte.png",
+        "sha256": "a2e4c3d87c6b61975dd81d7d49b4a2445ded358df02e28f6e50b3bf808b72548",
+        "window": [
+          297,
+          638,
+          676,
+          475
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1_upgrade",
+      "plot_id": "veilmourn_t7_1",
+      "box": [
+        915,
+        840,
+        420,
+        255
+      ],
+      "crop": [
+        542,
+        614,
+        1167,
+        538
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_upgrade_fjord.png",
+      "source_sha256": "4927e8dd3818aad6ef5b7ace413ed2a733247b9ef85432820a7a1f8b3cf58887",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_upgrade_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/ref_pen.png"
+      ],
+      "matte_passes": 2,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_upgrade_fjord_matte.png",
+        "sha256": "f1cd44660f7e3f363bc01eb2288eda8744f69711eb2a3818bf76418c84a9b6ba",
+        "window": [
+          795,
+          745,
+          648,
+          407
+        ]
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1",
+      "plot_id": "veilmourn_t7_1",
+      "box": [
+        940,
+        876,
+        370,
+        219
+      ],
+      "crop": [
+        611,
+        682,
+        1028,
+        470
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_fjord.png",
+      "source_sha256": "c40d6de316f9270ae9fd8f8d2c24f6c2a1bf1538492858ffa2022bc014e5558c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_veilmourn_t7_1_upgrade_crop.png"
+      ],
+      "matte_passes": 2,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_fjord_matte.png",
+        "sha256": "90cd361dd7767758d44be6aaae58e633a543ccd4a2bcfe6c99e6600151928c3b",
+        "window": [
+          865,
+          792,
+          520,
+          353
+        ]
+      }
+    }
+  ],
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
+  }
+}

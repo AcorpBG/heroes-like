@@ -1,0 +1,32 @@
+The empty fjord was painted in three masked edits (gpt-image-2.6-sunburst through the imggen skill, 2048x1152, quality medium). Each edit was pasted back onto the picture before it inside its own boxes only, with feathered edges, so everything outside them keeps the concept's paint.
+
+1. Image 1: bell_fjord_concept.png (the owner's concept B). Complexity high. Mask boxes (x,y,w,h): every plot box with a 14 px margin, and the built things outside the plots: 6,106,438,158; 166,224,338,350; 626,98,203,173; 826,26,208,256; 571,271,228,203; 946,218,188,181; 766,401,193,178; 551,496,228,208; 881,576,253,193; 436,676,468,268; 901,826,448,283; 1331,891,328,218; 1676,836,358,253; 1466,641,328,183; 1771,586,273,198; 1136,666,203,153; 1271,531,198,158; 1191,336,328,188; 1491,421,308,213; 1786,341,258,233; 1841,128,207,193; 1581,201,238,198; 1306,98,293,238; 460,180,180,80; 755,330,130,120; 455,425,150,100; 1050,135,155,90; 1580,165,110,55; 1095,1060,80,50; 0,1060,200,92. Pasted back inside the same boxes, feathered by 10 px.
+
+Prompt:
+Image 1 is a painting of a fog-bound harbor town on a fjord at blue dusk: a sea channel with moored black-sailed ships runs up the left side past a tall sea stack to the open sea and the setting sun, and on the right a rugged hillside of dark rock rises to cliffs, split by a ravine with a waterfall that runs down into a small cove. Inside the masked areas only, take the town away: paint the bare land, water and sky that were there before the town was built. Outside the masked areas, change nothing.
+
+Remove, inside the masked areas: the bell hall on top of the sea stack and the arched bridge to it, the two towers on the rocky islets at the fjord mouth and the great chain between them, the domed chart house and its mirror dish, the lighthouse with its ring of mirrors, every hall, house, chapel, tower, shed and lodge on the hillside and on the far slopes, the vault with the round door, the market tents and stalls, the long slipway shed and the silvered ship inside it, and in the cove the ring of whale ribs, the walls of the pen, its lanterns and stairs, and the pale leviathan.
+
+Where each of them stood, paint the natural ground that would be there: bare ledges, spurs and outcrops of dark weathered rock with moss and tufts of coarse grass, scree and boulders, continuing the rock around each masked area. The sea stack keeps its height and ends in a bare, rough, fairly flat rock top where the bell hall stood, with the channel water, the far islets and the misty far shore behind it. The two rocky islets at the fjord mouth stay, bare, with open sea and the sunset between them. Under the slipway shed, the long wooden quay stays. The cove is open dark water with rocks along its edges and the waterfall running into it. Nothing may look like a prepared plot: no paving, no foundations, no outlines, no markers, no stakes, no stacked materials.
+
+Match the camera, the perspective, the colours, the light, the fog and the painted brushwork of image 1 exactly, so no masked area shows a seam. Paint out the small scribbled signature in the bottom left corner. No text, no lettering, no signature, no people.
+
+2. Image 1: the result of step 1, with the sea stack's upper part filled with the channel's colours as a hint (bell_fjord_refs/stack_hint.png), because the model rebuilt the stack up to the bell hall's height. Complexity low. Mask boxes: 140,220,398,345; 905,0,80,48. Pasted back inside 196,262,336,298; 158,436,42,94; 911,0,68,42, feathered by 6 px.
+
+Prompt:
+Image 1 is a painting of a wild fjord at blue dusk: moored black-sailed ships lie in a sea channel on the left, a tall sea stack of dark rock stands in the channel, and a bare rocky hillside rises on the right.
+
+Inside the large masked area only, paint the top of the sea stack and what lies behind it: the stack ends at the lower edge of the masked area in a bare, rough, broad and fairly flat rock top with patches of moss, seen from above at the same angle as the rest of the picture; above and behind that top lies the calm channel water with low drifting fog and the warm glitter of the low sun reflected on it, continuing the water, the fog and the reflection around the masked area, up to the foot of the rocky hillside on the right. Nothing stands on the sea stack, and nothing floats on the water inside the masked area.
+
+Inside the small masked area at the top, paint only the misty mountain ridge and the dusk sky around it.
+
+Keep everything outside the masked areas exactly as it is, and match its colours, light, fog and painted brushwork so no seam shows. No text, no lettering, no people, no buildings, no ships inside the masked areas.
+
+3. Image 1: the result of step 2. Complexity low. Mask boxes: 1000,36,64,60; 980,530,60,68; 1320,764,160,48; 542,288,44,54. Pasted back inside the same boxes less 4 px, feathered by 4 px.
+
+Prompt:
+Image 1 is a painting of a wild, empty fjord at blue dusk: a sea channel with moored black-sailed ships on the left and a bare, rugged hillside of dark rock on the right, with stairs cut into the rock and a ravine with a waterfall.
+
+Inside the masked areas only, remove the small leftover structures and paint the bare land that continues around each masked area: near the top, a faint ghost of a tower crown and a thin post in the fog, which become misty mountain ridge and dusk sky; beside the waterfall, a small roofed lantern shrine, which becomes weathered rock and moss; on the slope at the lower right, a row of posts, stakes, a railing and a lantern around a small yard, which become uneven rocky ground with moss and coarse grass; on the cliff top at the upper left, a post and a stone pillar, which become the rough rock of the cliff edge.
+
+Outside the masked areas, change nothing. Match the colours, light, fog and painted brushwork around each masked area so no seam shows. No text, no lettering, no people, no buildings, no posts, no lanterns inside the masked areas.
