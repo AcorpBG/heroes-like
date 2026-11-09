@@ -13,6 +13,8 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/town_development_rules_turn.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
+#include "aurelion_rules/port/water_travel_rules_turn.hpp"
 
 #include <string>
 #include <vector>
@@ -121,6 +123,19 @@ int64_t session_day(State &state, DictRef session) {
 	return gd::to_int(state, gd::index(state, session, str(key::day)));
 }
 
+// A price as the building panels print it: "1,000 gold, 10 wood".
+Atom price_text(State &state, DictRef cost) {
+	std::string joined;
+	for (const Value &resource : gd::items(state, dict_value(cost))) {
+		if (!joined.empty()) {
+			joined += state.text(key::comma_space);
+		}
+		joined += state.text(town_construction_board::format_amount(state, gd::to_int(state, gd::index(state, cost, resource))));
+		joined += state.text(key::space) + state.text(town_construction_board::resource_name(state, gd::stringify(state, resource)));
+	}
+	return state.intern(joined);
+}
+
 } // namespace
 
 namespace town_development_rules {
@@ -211,6 +226,17 @@ ArrayRef service_actions(State &state, const Value &session, DictRef town) {
 				state.set(action, str(key::disabled), bool_value(!can_pay(state, resources, cost)));
 				state.append(actions, dict_value(action));
 			}
+		}
+		// The Shipyard launches a boat on the town's harbour, hero or no hero.
+		if (gd::bool_field(state, b, key::shipyard, false) && water_travel_rules::town_has_harbor(state, town)) {
+			const DictRef cost = gd::as_dict(field_or_new_dict(state, b, key::boat_cost));
+			const Atom blocker = water_travel_rules::dock_blocker(state, session, town);
+			const DictRef action = state.new_dict();
+			state.set(action, str(key::id), str(concat(state, key::town_boat_2, building_id)));
+			state.set(action, str(key::label), str(gd::format(state, key::build_a_boat_s, {str(price_text(state, cost))})));
+			state.set(action, str(key::summary), str(blocker != key::empty ? blocker : water_travel_rules::harbor_line(state, town, key::the_boat_waits_on_the_shore, key::the_boat_waits_beside_the_gate)));
+			state.set(action, str(key::disabled), bool_value(blocker != key::empty || !can_pay(state, resources, cost)));
+			state.append(actions, dict_value(action));
 		}
 		if (gd::bool_field(state, b, key::artifact_exchange, false) && present) {
 			const int64_t day = session_day(state, view);
@@ -334,8 +360,18 @@ DictRef perform_service(State &state, const Value &session, DictRef town, Atom a
 		hero = gd::as_dict(gd::index(state, result, str(key::hero)));
 		const Atom name = text_or(state, gd::content_row(state, ContentTable::Artifact, part_at(parts, 1)), key::name, part_at(parts, 1));
 		message = concat(state, concat(state, key::sold_2, name), key::period);
+	} else if (kind == key::town_boat) {
+		const DictRef cost = gd::as_dict(field_or_new_dict(state, gd::content_row(state, ContentTable::Building, part_at(parts, 1)), key::boat_cost));
+		const Atom blocker = water_travel_rules::build_boat(state, session, town);
+		if (blocker != key::empty) {
+			return refusal(state, blocker);
+		}
+		for (const Value &resource : gd::items(state, dict_value(cost))) {
+			state.set(resources, resource, int_value(gd::sub(gd::to_int(state, state.get(resources, resource, int_value(0))), gd::to_int(state, gd::index(state, cost, resource)))));
+		}
+		message = water_travel_rules::harbor_line(state, town, key::shipwrights_launch_a_boat_s, key::shipwrights_launch_a_boat_beside);
 	}
-	if (kind != key::town_upgrade) {
+	if (kind != key::town_upgrade && kind != key::town_boat) {
 		state.set(overworld, str(key::hero), dict_value(hero));
 	}
 	state.set(overworld, str(key::resources), dict_value(resources));

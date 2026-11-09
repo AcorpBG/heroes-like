@@ -9,6 +9,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <string>
 
@@ -194,6 +195,10 @@ DictRef _town_build_status_in(State &state, DictRef context, DictRef town, Atom 
 		const DictRef faction = gd::content_row(state, ContentTable::Faction, building_faction_id);
 		const Atom faction_name = gd::stringify(state, state.get(faction, str(key::name), str(building_faction_id)));
 		state.append(blockers, str(gd::format(state, key::belongs_to_s_towns, {str(faction_name)})));
+	}
+	// The Shipyard: only where open sea lies a short walk from the gate.
+	if (water_travel_rules::needs_missing_harbor(state, town, building)) {
+		state.append(blockers, str(key::no_open_sea_within_reach_of));
 	}
 
 	const DictRef status = state.new_dict();

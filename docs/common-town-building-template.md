@@ -20,6 +20,7 @@ Implemented owner direction, 2026-09-21. All six factions use one town template,
 | Wardens School | Visiting hero gains +1 defense once. |
 | Hall of Chronicles | Visiting hero gains 1,000 XP once, including normal level-up choices. |
 | Artifact Exchange | Three weekly artifact offers; buy and sell unequipped artifacts. |
+| Shipyard | Harbour towns only: open sea within 6 steps of the gate (`docs/water-travel.md`). 2,000 gold and 20 wood, needs the Town Hall. Launches a boat on the harbour for 1,000 gold and 10 wood, with or without a hero in town. |
 
 Hero training is once per hero per building type across all towns, preventing repeated capture/visit farming. A different hero can receive their own benefit. Growth buildings only improve an existing chosen dwelling; they never create an unbuilt troop line. Workshop is omitted until its equipment gameplay is defined.
 

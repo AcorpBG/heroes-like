@@ -447,6 +447,7 @@ void normalize_overworld_state(State &state, DictRef session) {
 		state.set(session_view::overworld(state, session), str(key::hero_position), scenario_start);
 	}
 	_refresh_blocked_tile_index(state, session);
+	water_travel_rules::ensure_harbors(state, session);
 	_normalize_fog_of_war(state, session);
 	_normalize_command_briefing(state, session);
 	// The forecast normalizes the enemy states first; the scenario rules reuse them.

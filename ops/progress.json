@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-stage-effects-veilmourn-20261109",
- "currentSliceTitle": "Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T21:08:21Z",
+ "currentSliceId": "feature-town-shipyards-20261109",
+ "currentSliceTitle": "Town shipyards",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-09T20:42:47Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "feature-town-shipyards-20261109",
+   "title": "Town shipyards",
+   "status": "in_progress",
+   "goal": "A town with open sea within 6 steps of its gate (its harbour) can build a Shipyard and launch boats there for the neutral shipyard's price; the boat waits on the harbour's shore. Native rules (water_travel_rules, town build status and services, AI build scoring and boat launch), content/buildings.json, towns.json, the construction board. Owner 2026-11-09: reach is a short walk, 6 steps; painted shipyard art waits for the town art rework, a plain town-screen entry for now.",
+   "docs": [
+    "docs/water-travel.md"
+   ],
+   "updatedAt": "2026-11-09"
+  },
   {
    "id": "town-stage-effects-veilmourn-20261109",
    "status": "completed",

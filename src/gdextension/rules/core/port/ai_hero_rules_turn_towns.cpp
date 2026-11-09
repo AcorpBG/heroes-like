@@ -57,6 +57,10 @@ using state::Value;
 namespace key = state::key;
 
 constexpr Atom kScript = key::ai_hero_rules_script;
+// What a Shipyard is worth to a player whose army is stuck on its island
+// (_build_choice): its cost counts 10,000, so it outscores any dwelling or
+// income building and is the town's next build.
+constexpr double kWantedShipyardValue = 60000.0;
 // HeroCommandRules.TAVERN_OFFER_SIZE.
 
 // d.get(k, {}) / d.get(k, []) whose result is kept: a new container when the
@@ -435,7 +439,9 @@ DictRef _build_in_towns(State &state, DictRef session, DictRef context) {
 		if (gd::int_field(state, town, key::last_build_day, 0) == ai::session_int(state, session, key::day)) {
 			continue;
 		}
-		const DictRef choice = _build_choice(state, session, town, treasury, state.new_dict());
+		const int64_t harbor_day = gd::to_int(state, ai::vget(state, gd::index(state, context, str(key::state)), key::ai_harbor_wanted_day, int_value(-1000)));
+		const bool wants_shipyard = harbor_day >= gd::sub(ai::session_int(state, session, key::day), ai::static_int(state, kScript, key::BOAT_SAVING_DAYS));
+		const DictRef choice = _build_choice(state, session, town, treasury, state.new_dict(), wants_shipyard);
 		if (gd::is_empty(state, choice)) {
 			continue;
 		}
@@ -449,7 +455,7 @@ DictRef _build_in_towns(State &state, DictRef session, DictRef context) {
 	return messages_events(state, messages, events);
 }
 
-DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values) {
+DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values, bool wants_shipyard) {
 	const DictRef income_before = _trial_income(state, town);
 	const DictRef growth_before = _trial_growth(state, town);
 	const double weekly_troops_before = _recruit_set_value(state, growth_before);
@@ -463,7 +469,8 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 	for (int64_t at = 0; at < state.array_size(options); ++at) {
 		const DictRef row = gd::content_row(state, ContentTable::Building, gd::stringify(state, state.at(options, at)));
 		Value listed_value;
-		if (!state.lookup(row, str(key::cost), listed_value)) {
+		// A Shipyard nobody wants is not something the town is short for.
+		if (!state.lookup(row, str(key::cost), listed_value) || (!wants_shipyard && gd::bool_field(state, row, key::shipyard, false))) {
 			continue;
 		}
 		const DictRef listed = gd::as_dict(listed_value);
@@ -478,6 +485,9 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 		// Buildable today, so buildable on any day too; the town is not changed
 		// here, so its status would only hand back the building record.
 		const DictRef building = gd::content_row(state, ContentTable::Building, building_id);
+		if (!wants_shipyard && gd::bool_field(state, building, key::shipyard, false)) {
+			continue;
+		}
 		const DictRef cost = gd::as_dict(field_or_new_dict(state, building, key::cost));
 		if (!_market_cover(state, session, town, treasury, cost, false, dict_value(market_memo))) {
 			continue;
@@ -534,6 +544,12 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 		}
 		const double opens_value = ai::static_float(state, kScript, key::OPENS_BUILDING_VALUE);
 		value += opens_value * static_cast<double>(_opens_count(state, town, building_id, trial_built));
+		// A Shipyard is worth nothing until an army has run out of things to do
+		// with no shipyard in reach (_note_boat_need); then it is what frees it.
+		if (wants_shipyard && gd::bool_field(state, building, key::shipyard, false)) {
+			value += kWantedShipyardValue;
+			reason = key::shipyard;
+		}
 		const double cost_value = compat::engine_max(1.0, _build_value(state, cost));
 		const double score = value / cost_value;
 		state.set(values, str(building_id), float_value(value));

@@ -41,6 +41,14 @@
       ]
     },
     {
+      "id": "harbor",
+      "title": "Harbor",
+      "subtitle": "",
+      "slots": [
+        {"id": "shipyard", "building_id": "building_dev_shipyard", "blurb": "Builds boats"}
+      ]
+    },
+    {
       "id": "training",
       "title": "Hero training",
       "subtitle": "Once per hero, across all towns",

@@ -7,6 +7,7 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/town_development_rules_turn.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <string>
 #include <vector>
@@ -159,7 +160,13 @@ DictRef build_for_active_town(State &state, const Value &session) {
 DictRef build(State &state, DictRef town, int64_t day, DictRef resources, DictRef catalog_by_building) {
 	const DictRef town_template = gd::content_row(state, ContentTable::Town, ai::string_or_empty(state, town, key::town_id));
 	const Atom faction_id = ai::string_or_empty(state, town_template, key::faction_id);
-	const ArrayRef town_ids = town_building_ids(state, town_template);
+	// A town without a harbour shows no Shipyard slot.
+	const ArrayRef town_ids = state.new_array();
+	for (const Value &building_id : gd::items(state, array_value(town_building_ids(state, town_template)))) {
+		if (!water_travel_rules::needs_missing_harbor(state, town, gd::content_row(state, ContentTable::Building, gd::stringify(state, building_id)))) {
+			state.append(town_ids, building_id);
+		}
+	}
 	ArrayRef active = 0;
 	if (town_development_rules::is_current(state, town)) {
 		active = town_development_rules::active_buildings(state, town);

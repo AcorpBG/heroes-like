@@ -13,6 +13,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/visit_building_rules_ai.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
@@ -147,6 +148,30 @@ DictRef _boat_market(State &state, DictRef session, DictRef context, DictRef cos
 	state.set(cache, cache_key, dict_value(result));
 	state.set(context, str(key::boat_market), dict_value(cache));
 	return result;
+}
+
+DictRef _yard_place(State &state, DictRef session, Atom controller, const Value &yard) {
+	if (!gd::is_dict(yard)) {
+		return state.new_dict();
+	}
+	const DictRef overworld = session_view::overworld(state, session);
+	Value town_index;
+	if (state.lookup(yard.ref, str(key::town), town_index)) {
+		ArrayRef towns;
+		const int64_t count = array_field(state, overworld, key::towns, towns);
+		const int64_t index = gd::to_int(state, town_index);
+		const Value town = index >= 0 && index < count ? state.at(towns, index) : Value();
+		if (!gd::is_dict(town) || gd::stringify_or_fallback(state, state.get(town.ref, str(key::owner), str(key::neutral))) != key::enemy ||
+				enemy_turn_rules::_town_controller_faction_id(state, town.ref) != controller || water_travel_rules::town_shipyard_id(state, town.ref) == key::empty) {
+			return state.new_dict();
+		}
+		return town.ref;
+	}
+	ArrayRef nodes;
+	const int64_t count = array_field(state, overworld, key::resource_nodes, nodes);
+	const int64_t index = gd::int_field(state, yard.ref, key::node, -1);
+	const Value node = index >= 0 && index < count ? state.at(nodes, index) : Value();
+	return gd::is_dict(node) ? node.ref : state.new_dict();
 }
 
 ArrayRef _hero_guards(State &state, DictRef session, DictRef context, int64_t level) {
@@ -537,6 +562,40 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 					const int64_t dock_x = gd::to_int(state, gd::index(state, dock, str(key::x)));
 					state.set(yard, str(key::dock), int_value(gd::add(gd::mul(dock_y, width), dock_x)));
 					state.set(shipyards, int_value(tile_index_of(tile, size)), dict_value(yard));
+				}
+			}
+		}
+		// A town with a Shipyard launches at its harbour (docs/water-travel.md);
+		// the boat is boarded from any open ground beside it. The surface is
+		// shared, so whose town it is is asked when a route uses it (_yard_place).
+		ArrayRef all_towns;
+		const int64_t all_town_count = array_field(state, session_view::overworld(state, session), key::towns, all_towns);
+		for (int64_t index = 0; index < all_town_count; ++index) {
+			const Value town = state.at(all_towns, index);
+			if (!gd::is_dict(town) || level_rules::level_of(state, town) != level || water_travel_rules::town_shipyard_id(state, town.ref) == key::empty) {
+				continue;
+			}
+			const DictRef dock = water_travel_rules::dock_tile(state, dict_value(session), town.ref);
+			if (gd::is_empty(state, dock)) {
+				continue;
+			}
+			const int64_t dock_x = gd::to_int(state, gd::index(state, dock, str(key::x)));
+			const int64_t dock_y = gd::to_int(state, gd::index(state, dock, str(key::y)));
+			for (int64_t dy = -1; dy <= 1; ++dy) {
+				for (int64_t dx = -1; dx <= 1; ++dx) {
+					const int64_t x = dock_x + dx;
+					const int64_t y = dock_y + dy;
+					if ((dx == 0 && dy == 0) || x < 0 || y < 0 || x >= width || y >= height) {
+						continue;
+					}
+					const int64_t shore = y * width + x;
+					if (gd::packed_int(state, blocked, shore) != 0 || state.has(shipyards, int_value(shore))) {
+						continue;
+					}
+					const DictRef yard = state.new_dict();
+					state.set(yard, str(key::town), int_value(index));
+					state.set(yard, str(key::dock), int_value(gd::add(gd::mul(dock_y, width), dock_x)));
+					state.set(shipyards, int_value(shore), dict_value(yard));
 				}
 			}
 		}

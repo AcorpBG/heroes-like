@@ -234,6 +234,10 @@ bool _town_seen(State &state, PackedRef known, DictRef town, Vector2i size);
 
 // The level surface, hero zones and site stops (ai_hero_rules_surface.cpp).
 DictRef _boat_market(State &state, DictRef session, DictRef context, DictRef cost);
+// What a shipyard entry of a level surface builds its boat at, for this player:
+// the neutral shipyard's node, or the player's own town with a Shipyard; {}
+// when the entry is another player's town or is gone.
+DictRef _yard_place(State &state, DictRef session, Atom controller, const Value &yard);
 ArrayRef _hero_guards(State &state, DictRef session, DictRef context, int64_t level);
 ArrayRef _hero_zone_tiles(State &state, DictRef session, DictRef context, Vector2i tile, int64_t level);
 DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t level);

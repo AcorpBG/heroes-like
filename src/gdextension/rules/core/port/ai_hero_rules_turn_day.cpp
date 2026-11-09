@@ -684,7 +684,7 @@ DictRef _run_hero_day(State &state, DictRef session, DictRef context, Atom place
 			state.erase(context, str(key::decision_alternatives));
 		}
 		if (gd::is_empty(state, plan) || ai::string_or_empty(state, plan, key::kind) == key::wait) {
-			_note_boat_need(state, session, context, entry);
+			_note_boat_need(state, session, context, entry, gd::bool_field(state, context, key::nothing_in_reach, false));
 		}
 		if (gd::is_empty(state, plan)) {
 			break;
@@ -770,6 +770,7 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 	const int64_t min_radius = tunable_int(state, key::MIN_SEARCH_RADIUS);
 	const int64_t radius = compat::engine_max<int64_t>(min_radius, gd::mul(movement_max, tunable_int(state, key::SEARCH_DAYS)));
 	state.set(context, str(key::decision), dict_value(state.new_dict()));
+	state.erase(context, str(key::nothing_in_reach));
 	int64_t started = gd::ticks_usec();
 	DictRef search = _search(state, session, context, entry, radius);
 	_profile_add(state, context, key::search_ms, started);
@@ -870,6 +871,9 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 		_profile_add(state, context, key::gate_ms, started);
 	}
 	if (gd::is_empty(state, best)) {
+		// Nothing worth doing within a week's travel, here or past a gate: what
+		// follows only keeps the hero safe and out of the way (_note_boat_need).
+		state.set(context, str(key::nothing_in_reach), bool_value(true));
 		best = _evade(state, session, context, entry, search);
 	}
 	if (gd::is_empty(state, best)) {

@@ -10,6 +10,7 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules_ai.hpp"
 #include "aurelion_rules/port/town_rules.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <algorithm>
 #include <initializer_list>
@@ -205,6 +206,9 @@ Atom building_kind(State &state, DictRef building) {
 	if (gd::bool_field(state, building, key::artifact_exchange, false)) {
 		return key::artifact_exchange;
 	}
+	if (gd::bool_field(state, building, key::shipyard, false)) {
+		return key::shipyard;
+	}
 	if (state.has(building, str(key::hero_visit_reward)) || state.has(building, str(key::faction_service))) {
 		return key::training;
 	}
@@ -280,6 +284,16 @@ ArrayRef effect_lines(State &state, DictRef building, DictRef town, const Value 
 	}
 	if (gd::bool_field(state, building, key::artifact_exchange, false)) {
 		append_text(state, lines, key::artifact_trade_offers_refresh_weekly);
+	}
+	if (gd::bool_field(state, building, key::shipyard, false)) {
+		Value boat_cost;
+		if (!state.lookup(building, str(key::boat_cost), boat_cost)) {
+			boat_cost = dict_value(state.new_dict());
+		}
+		append_text(state, lines, gd::format(state, key::s_s_11, {str(key::builds_boats), str(_resource_text(state, boat_cost))}));
+		if (water_travel_rules::town_has_harbor(state, town)) {
+			append_text(state, lines, water_travel_rules::harbor_line(state, town, key::harbor_s_from_the_gate, key::harbor_beside_the_gate));
+		}
 	}
 	if (text_of(state, building, key::id) == key::building_wayfarers_hall) {
 		append_text(state, lines, key::hire_heroes_for_your_command);
@@ -657,7 +671,7 @@ ArrayRef _building_services(State &state, const Value &session, Atom building_id
 		if (parts.size() < 2) {
 			continue;
 		}
-		const bool own = (parts[0] == state.text(key::town_train) || parts[0] == state.text(key::town_faction)) && parts[1] == state.text(building_id);
+		const bool own = (parts[0] == state.text(key::town_train) || parts[0] == state.text(key::town_faction) || parts[0] == state.text(key::town_boat)) && parts[1] == state.text(building_id);
 		const bool exchange = kind == key::artifact_exchange && (parts[0] == state.text(key::town_buy) || parts[0] == state.text(key::town_sell));
 		if (own || exchange) {
 			state.append(services, dict_value(_action_entry(state, gd::as_dict(action))));

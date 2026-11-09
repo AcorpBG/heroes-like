@@ -15,6 +15,7 @@
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_rules_actions.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <cstddef>
 #include <string>
@@ -505,6 +506,9 @@ Atom _build_order_ledger_line(State &state, DictRef session, DictRef town) {
 			continue;
 		}
 		const DictRef building = gd::content_row(state, ContentTable::Building, building_id);
+		if (water_travel_rules::needs_missing_harbor(state, town, building)) {
+			continue;
+		}
 		return gd::format(state, key::s_stays_deferred_s, {
 			str(text_or(state, building, key::name, str(building_id))),
 			str(text_or(state, build_status, key::blocked_message, str(key::no_opening_order_is_available))),

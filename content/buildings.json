@@ -4693,6 +4693,25 @@
       "description": "Buy stocked artifacts or sell unequipped artifacts at half price. Three offers refresh each week; purchases exhaust that offer until refresh."
     },
     {
+      "id": "building_dev_shipyard",
+      "name": "Shipyard",
+      "category": "economy",
+      "cost": {
+        "gold": 2000,
+        "wood": 20
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "shipyard": true,
+      "boat_cost": {
+        "gold": 1000,
+        "wood": 10
+      },
+      "description": "Builds boats and launches them at the town's harbor, the nearest shore of open sea. Only a town with open sea a short walk from its gate can raise one."
+    },
+    {
       "id": "building_dev_embercourt_t1_1",
       "name": "River Guard Dwelling",
       "category": "dwelling",

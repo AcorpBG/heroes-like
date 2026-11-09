@@ -14,6 +14,7 @@
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_turn.hpp"
 
 #include <cstddef>
@@ -958,17 +959,22 @@ DictRef _launch_boat(State &state, DictRef session, DictRef context, DictRef ent
 	if (gd::is_empty(state, yard) || gd::to_int(state, gd::index(state, yard, str(key::dock))) != index_of(tile.x, tile.y, size)) {
 		return state.new_dict();
 	}
-	const DictRef cost = dict_or_new(state, surface, key::boat_cost);
+	// A neutral shipyard, or the player's own town with a Shipyard, which sets
+	// its own price (the same one today).
+	const Atom controller = context_controller(state, context);
+	const DictRef dock_node = _yard_place(state, session, controller, dict_value(yard));
+	if (gd::is_empty(state, dock_node)) {
+		return state.new_dict();
+	}
+	const bool town_yard = state.has(yard, str(key::town));
+	const DictRef cost = town_yard
+			? dict_or_new(state, gd::content_row(state, state::ContentTable::Building, water_travel_rules::town_shipyard_id(state, dock_node)), key::boat_cost)
+			: dict_or_new(state, surface, key::boat_cost);
 	const DictRef treasury = gd::as_dict(context_treasury(state, context));
 	const DictRef market = _boat_market(state, session, context, cost);
 	if (gd::is_empty(state, market)) {
 		return state.new_dict();
 	}
-	const ArrayRef nodes = array_or_new(state, session_view::overworld(state, session), key::resource_nodes);
-	if (gd::to_int(state, gd::index(state, yard, str(key::node))) >= state.array_size(nodes)) {
-		return state.new_dict();
-	}
-	const DictRef dock_node = gd::as_dict(state.at(nodes, gd::to_int(state, gd::index(state, yard, str(key::node)))));
 	if (water_travel_rules::dock_blocker(state, dict_value(session), dock_node) != key::empty) {
 		return state.new_dict();
 	}
@@ -983,17 +989,17 @@ DictRef _launch_boat(State &state, DictRef session, DictRef context, DictRef ent
 		state.set_at(towns, gd::to_int(state, gd::index(state, market, str(key::town_index))), dict_value(town));
 		state.set(overworld, str(key::towns), array_value(towns));
 	}
-	const DictRef yard_node = gd::as_dict(state.at(nodes, gd::to_int(state, gd::index(state, yard, str(key::node)))));
-	if (water_travel_rules::build_boat(state, dict_value(session), yard_node) != key::empty) {
+	const DictRef yard_node = _yard_place(state, session, controller, dict_value(yard));
+	if (gd::is_empty(state, yard_node) || water_travel_rules::build_boat(state, dict_value(session), yard_node) != key::empty) {
 		return state.new_dict();
 	}
 	enemy_turn_rules::_spend_from_pool(state, treasury, dict_value(cost));
-	_economy_add(state, session, context_controller(state, context), key::boat_gold, gd::float_field(state, cost, key::gold, 0.0));
+	_economy_add(state, session, controller, key::boat_gold, gd::float_field(state, cost, key::gold, 0.0));
 	overworld_turn_playback::action(state, dict_value(session), entry, key::builds_a_boat);
 	return water_travel_rules::free_boat_at(state, dict_value(session), tile, level);
 }
 
-void _note_boat_need(State &state, DictRef session, DictRef context, DictRef entry) {
+void _note_boat_need(State &state, DictRef session, DictRef context, DictRef entry, bool nothing_in_reach) {
 	const int64_t wanted_day = gd::to_int(state, ai::vget(state, context_state(state, context), key::ai_boat_wanted_day, int_value(-1000)));
 	if (wanted_day == ai::session_int(state, session, key::day) || water_travel_rules::hero_boat_id(state, dict_value(entry)) != key::empty) {
 		return;
@@ -1003,15 +1009,35 @@ void _note_boat_need(State &state, DictRef session, DictRef context, DictRef ent
 	}
 	const DictRef surface = _level_surface(state, session, context, level_rules::level_of(state, dict_value(entry)));
 	const DictRef shipyards = dict_or_new(state, surface, key::shipyards);
-	if (gd::is_empty(state, shipyards) || !gd::is_empty(state, _boat_market(state, session, context, dict_or_new(state, surface, key::boat_cost)))) {
+	const bool can_pay = !gd::is_empty(state, shipyards) && !gd::is_empty(state, _boat_market(state, session, context, dict_or_new(state, surface, key::boat_cost)));
+	// One of the player's harbour towns has no Shipyard yet (docs/water-travel.md).
+	const Atom controller = context_controller(state, context);
+	const int64_t harbor_day = gd::to_int(state, ai::vget(state, context_state(state, context), key::ai_harbor_wanted_day, int_value(-1000)));
+	bool open_harbor = false;
+	if (nothing_in_reach && harbor_day != ai::session_int(state, session, key::day)) {
+		for (const Value &owned : gd::items(state, array_value(enemy_turn_rules::_owned_town_entries(state, session, controller)))) {
+			const Value town = ai::vget(state, owned, key::town, Value());
+			if (gd::is_dict(town) && water_travel_rules::town_has_harbor(state, town.ref) && water_travel_rules::town_shipyard_id(state, town.ref) == key::empty) {
+				open_harbor = true;
+				break;
+			}
+		}
+	}
+	if ((gd::is_empty(state, shipyards) || can_pay) && !open_harbor) {
 		return;
 	}
 	const DictRef search = _search(state, session, context, entry, gd::mul(_movement_max(state, entry), tunable_int(state, key::FAR_SEARCH_DAYS)));
 	for (const Value &visit_index : gd::items(state, array_value(gd::keys(state, shipyards)))) {
-		if (dist_at(state, search, gd::to_int(state, visit_index)) >= 0) {
-			state.set(gd::as_dict(context_state(state, context)), str(key::ai_boat_wanted_day), int_value(ai::session_int(state, session, key::day)));
+		if (dist_at(state, search, gd::to_int(state, visit_index)) >= 0 && !gd::is_empty(state, _yard_place(state, session, controller, gd::index(state, shipyards, visit_index)))) {
+			if (!can_pay) {
+				state.set(gd::as_dict(context_state(state, context)), str(key::ai_boat_wanted_day), int_value(ai::session_int(state, session, key::day)));
+			}
 			return;
 		}
+	}
+	// No shipyard in reach: the towns weigh a Shipyard of their own (_build_choice).
+	if (open_harbor) {
+		state.set(gd::as_dict(context_state(state, context)), str(key::ai_harbor_wanted_day), int_value(ai::session_int(state, session, key::day)));
 	}
 }
 

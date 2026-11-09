@@ -24,6 +24,7 @@ const KIND_TAVERN := "tavern"
 const KIND_MARKET := "market"
 const KIND_ARTIFACTS := "artifact_exchange"
 const KIND_TRAINING := "training"
+const KIND_SHIPYARD := "shipyard"
 const KIND_BUILDING := "building"
 
 ## `options.market_need` is a cost the player opened the market to cover; the

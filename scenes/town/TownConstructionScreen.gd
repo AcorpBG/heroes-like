@@ -10,6 +10,8 @@ const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 signal build_requested(building_id: String)
 signal trade_requested(building_id: String)
 signal view_in_town_requested(building_id: String)
+## A built building that has no painted plot yet opens from its slot.
+signal open_requested(building_id: String)
 signal close_requested
 signal selection_changed(building_id: String)
 
@@ -424,9 +426,12 @@ func _build_body() -> void:
 			label_row.add_theme_constant_override("separation", int(GAP))
 			_board_column.add_child(label_row)
 			_row_labels["growth"] = _row_header(label_row, "growth")
-			var gap_label := Control.new()
+			# The column between growth and training holds a harbour town's
+			# Shipyard; other towns keep the divider there.
+			var gap_label := HBoxContainer.new()
 			gap_label.name = "GrowthTrainingLabelGap"
 			label_row.add_child(gap_label)
+			_row_labels["harbor"] = _row_header(gap_label, "harbor")
 			_row_labels["training"] = _row_header(label_row, "training")
 			var tiles_row := HBoxContainer.new()
 			tiles_row.name = "GrowthTrainingTiles"
@@ -443,6 +448,11 @@ func _build_body() -> void:
 			divider.custom_minimum_size = Vector2(1, 120)
 			divider.color = Color(0.88, 0.72, 0.40, 0.25)
 			divider_holder.add_child(divider)
+			var harbor_box := HBoxContainer.new()
+			harbor_box.name = "HarborTiles"
+			harbor_box.visible = false
+			tiles_row.add_child(harbor_box)
+			_row_boxes["harbor"] = harbor_box
 			var training_box := HBoxContainer.new()
 			training_box.name = "TrainingTiles"
 			training_box.add_theme_constant_override("separation", int(GAP))
@@ -625,6 +635,16 @@ func _rebuild_board() -> void:
 			var tile := _make_tile(slot, row_id == "signature")
 			box.add_child(tile)
 			_tiles[String(slot.get("id", ""))] = tile
+	var harbor_box: HBoxContainer = _row_boxes.get("harbor")
+	if harbor_box != null:
+		var has_harbor := harbor_box.get_child_count() > 0
+		harbor_box.visible = has_harbor
+		var harbor_header: Control = _row_labels.get("harbor")
+		if harbor_header != null:
+			harbor_header.visible = has_harbor
+		var harbor_divider := _board_column.find_child("GrowthTrainingDivider", true, false) as Control
+		if harbor_divider != null:
+			harbor_divider.visible = not has_harbor
 	for cell in _legend_row.get_children():
 		for swatch in cell.get_children():
 			if swatch is PanelContainer and swatch.has_meta("status"):
@@ -1086,9 +1106,10 @@ func _refresh_buttons(slot: Dictionary) -> void:
 	_trade_button.visible = status_id == Board.STATUS_TRADE
 	if String(slot.get("next_id", "")) == "":
 		_primary_button.visible = true
-		_primary_button.disabled = true
-		_primary_button.text = "Fully built"
-		_primary_button.tooltip_text = "Every stage of this slot stands in this town."
+		var open_id := _open_building_id(slot)
+		_primary_button.disabled = open_id == ""
+		_primary_button.text = "Open the %s" % _building_name(open_id) if open_id != "" else "Fully built"
+		_primary_button.tooltip_text = "Build boats here." if open_id != "" else "Every stage of this slot stands in this town."
 		return
 	_primary_button.visible = true
 	var building_id := selected_building_id()
@@ -1123,10 +1144,24 @@ func _refresh_buttons(slot: Dictionary) -> void:
 			_primary_button.text = String(slot.get("status_text", "Resources missing"))
 			_primary_button.tooltip_text = String(slot.get("status_detail", ""))
 
+## The built Shipyard of a finished slot: its window opens from the board
+## until the town paintings give it a plot to click.
+func _open_building_id(slot: Dictionary) -> String:
+	if String(slot.get("next_id", "")) != "":
+		return ""
+	for building_id in slot.get("building_ids", []):
+		if bool(ContentService.get_building(String(building_id)).get("shipyard", false)):
+			return String(building_id)
+	return ""
+
 func _on_primary_pressed() -> void:
 	var slot := selected_slot()
 	var status_id := String(slot.get("status", ""))
 	var building_id := selected_building_id()
+	var open_id := _open_building_id(slot)
+	if open_id != "":
+		open_requested.emit(open_id)
+		return
 	if status_id == Board.STATUS_TRADE:
 		trade_requested.emit(String(slot.get("next_id", "")))
 		return
@@ -1165,7 +1200,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 ## screen; Tab cycles tiles and the decision controls, Close last.
 func _wire_focus() -> void:
 	var grid_rows := []
-	for row_ids in [["town"], ["army"], ["growth", "training"], ["signature"]]:
+	for row_ids in [["town"], ["army"], ["growth", "harbor", "training"], ["signature"]]:
 		var row := []
 		for row_id in row_ids:
 			row.append_array(_row_tiles(row_id))
@@ -1208,6 +1243,8 @@ func _column_center(tile: Control) -> float:
 	match row_id:
 		"signature":
 			return (float(index) + 0.5) * 7.0 / 3.0
+		"harbor":
+			return 3.5
 		"training":
 			return float(index) + 4.5
 		_:
@@ -1559,7 +1596,7 @@ func _layout() -> void:
 	# Rows share the height that labels, gaps and the legend leave free.
 	var fixed := LABEL_HEIGHT * 4.0 + ROW_GAP * 9.0 + 24.0
 	var scale := clampf((body_height - fixed) / 796.0, 0.62, 1.18)
-	var heights := {"town": 212.0 * scale, "army": 246.0 * scale, "growth": 212.0 * scale, "training": 212.0 * scale, "signature": 126.0 * scale}
+	var heights := {"town": 212.0 * scale, "army": 246.0 * scale, "growth": 212.0 * scale, "harbor": 212.0 * scale, "training": 212.0 * scale, "signature": 126.0 * scale}
 	for row_id in _row_boxes.keys():
 		var box: HBoxContainer = _row_boxes[row_id]
 		for tile in box.get_children():

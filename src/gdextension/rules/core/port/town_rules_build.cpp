@@ -8,6 +8,7 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/town_development_rules_turn.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <string>
 #include <string_view>
@@ -263,7 +264,7 @@ ArrayRef get_build_catalog(State &state, DictRef session) {
 		if (gd::is_empty(state, building)) {
 			continue;
 		}
-		if (town_development_rules::choice_blocked(state, town, building)) {
+		if (town_development_rules::choice_blocked(state, town, building) || water_travel_rules::needs_missing_harbor(state, town, building)) {
 			continue;
 		}
 		const bool built = gd::array_has(state, built_buildings, str(building_id));

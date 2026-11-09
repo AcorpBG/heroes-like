@@ -851,7 +851,7 @@ func _build_services() -> void:
 	var kind := String(_model.get("kind", ""))
 	if services.is_empty() and kind not in ["training", "artifact_exchange"]:
 		return
-	var title := "Artifact exchange" if kind == "artifact_exchange" else ("Market" if kind == "market" else "Visit")
+	var title := "Artifact exchange" if kind == "artifact_exchange" else ("Market" if kind == "market" else ("Harbor" if kind == "shipyard" else "Visit"))
 	var section := _section(title)
 	section.name = "Services"
 	if services.is_empty():

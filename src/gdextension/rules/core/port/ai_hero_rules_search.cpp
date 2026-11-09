@@ -597,6 +597,9 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 					for (const Value &visit_index : gd::items(state, shipyards)) {
 						const Value yard = ai::vindex(state, gd::index(state, surface, str(key::shipyards)), visit_index);
 						const int64_t dock = gd::to_int(state, ai::vmember(state, yard, key::dock));
+						if (gd::is_empty(state, _yard_place(state, session, controller, yard))) {
+							continue;
+						}
 						if (gd::packed_int(state, sea_open, dock) != 0 && gd::packed_int(state, guard_mask, dock) == 0 && !state.has(dynamic_stops, int_value(dock))) {
 							gd::packed_append(state, docks, gd::to_int(state, visit_index));
 							gd::packed_append(state, docks, dock);

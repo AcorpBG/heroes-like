@@ -162,6 +162,7 @@ constexpr Atom kAiPlayerStateKeys[] = {
 	key::ai_hero_counter,
 	key::ai_explored,
 	key::ai_boat_wanted_day,
+	key::ai_harbor_wanted_day,
 	key::ai_sightings,
 	key::ai_weight_set,
 };

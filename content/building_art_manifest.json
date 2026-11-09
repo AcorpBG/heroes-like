@@ -1661,6 +1661,16 @@
       "shared_art_from": "building_market_square"
     },
     {
+      "id": "building_dev_shipyard",
+      "building_id": "building_dev_shipyard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mirror_drydock.png",
+      "source_sha256": "9d884692f48c6f699af9bc64301debd749fb08874b3b6746b0bb3f6eef0bb87c",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mirror_drydock.png",
+      "icon_sha256": "0b097f071e090afc9d63f791bc2a3093092dfeda08b2654a7337cd75255e7248",
+      "shared_art_from": "building_veilmourn_mirror_drydock"
+    },
+    {
       "id": "building_dev_embercourt_t1_1",
       "building_id": "building_dev_embercourt_t1_1",
       "source_kind": "curated_original_building",

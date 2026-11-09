@@ -16,6 +16,7 @@
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules_ai.hpp"
 #include "aurelion_rules/port/town_rules.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -579,7 +580,7 @@ Atom describe_buildings(State &state, DictRef session) {
 			continue;
 		}
 		const DictRef build_status = overworld_rules::get_town_build_status(state, town, building_id, day);
-		if (gd::bool_field(state, build_status, key::buildable, false)) {
+		if (gd::bool_field(state, build_status, key::buildable, false) || water_travel_rules::needs_missing_harbor(state, town, gd::content_row(state, ContentTable::Building, building_id))) {
 			continue;
 		}
 		locked_lines.push_back(gd::format(state, key::dash_space_s, {str(_building_line(state, building_id, key::locked, build_status))}));
@@ -859,7 +860,8 @@ int64_t _locked_building_count(State &state, DictRef town) {
 		if (building_id == key::empty || gd::in(state, str(building_id), built_buildings)) {
 			continue;
 		}
-		if (!gd::bool_field(state, overworld_rules::get_town_build_status(state, town, building_id, -1), key::buildable, false)) {
+		if (!gd::bool_field(state, overworld_rules::get_town_build_status(state, town, building_id, -1), key::buildable, false) &&
+				!water_travel_rules::needs_missing_harbor(state, town, gd::content_row(state, ContentTable::Building, building_id))) {
 			locked_count += 1;
 		}
 	}

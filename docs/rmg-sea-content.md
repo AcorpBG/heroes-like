@@ -26,7 +26,9 @@ seas no shipyard or boat reaches are unchanged.
 - **Free water**: water tiles no object stands or acts on.
 - **Launch tiles**: each shipyard's dock, the water tile nearest its visit tile
   among the neighbours of the visit tile and its body (the same rule as `dock_tile`
-  in `water_travel_rules_ai.cpp`), and the free water around a boat.
+  in `water_travel_rules_ai.cpp`), and the free water around a boat. A town's
+  harbour (`docs/water-travel.md`, "Town shipyard") is not a launch tile: the
+  generator does not know which towns will build a Shipyard.
 - **Served**: free water a boat reaches from a launch tile, eight ways, a diagonal
   step closed when both tiles beside it are (the AI route search's corner rule).
 - **Open**: served water more than two tiles from every launch tile, so boats are

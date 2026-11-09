@@ -161,6 +161,7 @@ func _configure_construction_screen() -> void:
 	_construction_screen.build_requested.connect(_on_construction_build_requested)
 	_construction_screen.trade_requested.connect(_on_construction_trade_requested)
 	_construction_screen.view_in_town_requested.connect(_on_construction_view_in_town)
+	_construction_screen.open_requested.connect(_on_construction_open_requested)
 	_construction_screen.close_requested.connect(_on_town_catalog_close_pressed)
 	_construction_screen.selection_changed.connect(_on_construction_selection_changed)
 
@@ -215,6 +216,11 @@ func _on_construction_selection_changed(building_id: String) -> void:
 func _on_construction_build_requested(building_id: String) -> void:
 	_selected_build_action_id = "build:%s" % building_id
 	_on_confirm_build_pressed()
+
+func _on_construction_open_requested(building_id: String) -> void:
+	if _town_catalog_is_open():
+		_close_town_catalog(false)
+	_on_town_building_activated(building_id)
 
 func _on_construction_trade_requested(building_id: String) -> void:
 	var need: Dictionary = ContentService.get_building(building_id).get("cost", {}) if building_id != "" else {}
@@ -4355,7 +4361,7 @@ func _rebuild_response_actions(actions_override: Variant = null) -> void:
 	elif _town_catalog_mode == "log":
 		actions = actions.filter(func(a):
 			var id := String(a.get("id", ""))
-			return not id.begins_with("town_") or id.begins_with("town_train:") or id.begins_with("town_faction:"))
+			return not id.begins_with("town_") or id.begins_with("town_train:") or id.begins_with("town_faction:") or id.begins_with("town_boat:"))
 	if actions.is_empty():
 		_response_actions.add_child(_make_placeholder_label("Build an upgraded dwelling to train its stationed troops." if _town_catalog_mode == "muster" else "No town services ready"))
 		return

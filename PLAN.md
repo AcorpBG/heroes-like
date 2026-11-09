@@ -39,6 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
+- 2026-11-09: A town may build a Shipyard when open sea lies within 6 steps of its gate; the boat waits on that shore. Painted shipyard art waits for the town art rework (`docs/water-travel.md`).
 
 ## Questions for the owner
 
@@ -46,6 +47,7 @@ None open.
 
 ## Open work
 
+- `feature-town-shipyards-20261109` (in progress): A town with open sea within 6 steps of its gate (its harbour) can build a Shipyard and launch boats there for the neutral shipyard's price; the boat waits on the harbour's shore. Native rules (water_travel_rules, town build status and services, AI build scoring and boat launch), content/buildings.json, towns.json, the construction board. Owner 2026-11-09: reach is a short walk, 6 steps; painted shipyard art waits for the town art rework, a plain town-screen entry for now. See `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
