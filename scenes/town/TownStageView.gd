@@ -15,11 +15,18 @@ const TOWN_FX_SHADERS := {
 	&"buildings": preload("res://scenes/town/town_building_fx.gdshader"),
 	&"heat": preload("res://scenes/town/town_heat_fx.gdshader"),
 }
+# Each effect a faction layout may name in stage_effects: the layers and strengths it sets.
 const TOWN_FX_PARAMETERS := {
-	"slag": [&"backdrop", &"slag_strength"],
-	"windows": [&"buildings", &"window_strength"],
-	"haze": [&"heat", &"haze_strength"],
-	"embers": [&"heat", &"ember_strength"],
+	"slag": [[&"backdrop", &"slag_strength"]],
+	"windows": [[&"buildings", &"window_strength"]],
+	"haze": [[&"heat", &"haze_strength"]],
+	"embers": [[&"heat", &"ember_strength"]],
+	# These act where the layout's stage_effects_mask puts water, falls and land.
+	"water": [[&"backdrop", &"water_strength"]],
+	"falls": [[&"backdrop", &"falls_strength"]],
+	"mist": [[&"backdrop", &"mist_strength"]],
+	"lanterns": [[&"backdrop", &"lantern_strength"], [&"buildings", &"lantern_strength"]],
+	"wisps": [[&"heat", &"wisp_strength"]],
 }
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
@@ -262,10 +269,12 @@ var _construction_preview_id := ""
 # on every frame the ambient light pulse redraws the stage.
 var _status_plaque_cache: Array = []
 var _status_plaque_cache_valid := false
-# Stage effect layers (TOWN_FX_SHADERS) and the strengths last given to them.
+# Stage effect layers (TOWN_FX_SHADERS) and the strengths and mask last given to them.
 var _town_fx_items: Dictionary = {}
 var _town_fx_materials: Dictionary = {}
 var _town_fx_applied: Dictionary = {}
+var _town_fx_applied_mask := ""
+var _town_fx_mask_textures: Dictionary = {}
 
 func set_construction_preview(building_id: String) -> void:
 	# A drawing-only candidate. Never add it to the town or hotspot entries.
@@ -292,7 +301,7 @@ func _ready() -> void:
 	_sync_processing_state()
 
 func _town_fx_strengths() -> Dictionary:
-	# The faction layout's stage_effects: slag, haze, windows and embers, each a strength.
+	# The faction layout's stage_effects: effects of TOWN_FX_PARAMETERS, each a strength.
 	var strengths := {}
 	var configured: Variant = _building_scene_faction_layout().get("stage_effects", {})
 	if configured is Dictionary:
@@ -307,17 +316,44 @@ func _town_fx_active() -> bool:
 	return _scenic_backdrop_texture() != null and _building_layers_under_stage_light() \
 		and not FrontierVisualKitScript.high_contrast_enabled() and not _town_fx_strengths().is_empty()
 
+func _town_fx_mask_path() -> String:
+	# The layout's stage_effects_mask: where its backdrop has water, falls and land.
+	return String(_building_scene_faction_layout().get("stage_effects_mask", ""))
+
+func _town_fx_mask(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if not _town_fx_mask_textures.has(path):
+		var texture: Texture2D = load(path) as Texture2D if ResourceLoader.exists(path, "Texture2D") else null
+		if texture == null:
+			push_error("Town stage effect mask is missing: %s" % path)
+		_town_fx_mask_textures[path] = texture
+	return _town_fx_mask_textures[path]
+
+func _town_fx_uses_layer(strengths: Dictionary, layer: StringName) -> bool:
+	for fx_name in strengths:
+		if float(strengths[fx_name]) > 0.0:
+			for target in TOWN_FX_PARAMETERS[fx_name]:
+				if target[0] == layer:
+					return true
+	return false
+
 func _apply_town_fx_parameters(strengths: Dictionary) -> void:
 	# Reduced motion holds every effect still: the painting as it is.
 	_town_fx_applied = strengths
+	_town_fx_applied_mask = _town_fx_mask_path()
+	var mask := _town_fx_mask(_town_fx_applied_mask)
 	var motion := not SettingsService.reduced_motion_enabled()
 	for layer in _town_fx_materials:
-		(_town_fx_materials[layer] as ShaderMaterial).set_shader_parameter(&"motion_enabled", motion)
+		var material: ShaderMaterial = _town_fx_materials[layer]
+		material.set_shader_parameter(&"motion_enabled", motion)
+		if layer != &"buildings":
+			material.set_shader_parameter(&"fx_mask", mask)
 	for fx_name in TOWN_FX_PARAMETERS:
-		var target: Array = TOWN_FX_PARAMETERS[fx_name]
-		var material: ShaderMaterial = _town_fx_materials.get(target[0], null)
-		if material != null:
-			material.set_shader_parameter(target[1], float(strengths.get(fx_name, 0.0)))
+		for target in TOWN_FX_PARAMETERS[fx_name]:
+			var material: ShaderMaterial = _town_fx_materials.get(target[0], null)
+			if material != null:
+				material.set_shader_parameter(target[1], float(strengths.get(fx_name, 0.0)))
 
 func _ensure_town_fx_items() -> void:
 	if not _town_fx_items.is_empty():
@@ -343,13 +379,14 @@ func _free_town_fx_items() -> void:
 	_town_fx_items.clear()
 	_town_fx_materials.clear()
 	_town_fx_applied = {}
+	_town_fx_applied_mask = ""
 
 func _draw_town_fx(scene_rect: Rect2) -> void:
 	# The frame, backdrop and buildings go to shader layers drawn behind this stage;
 	# the stage itself then adds its tint, light and plaques on top as before.
 	_ensure_town_fx_items()
 	var strengths := _town_fx_strengths()
-	if strengths != _town_fx_applied:
+	if strengths != _town_fx_applied or _town_fx_mask_path() != _town_fx_applied_mask:
 		_apply_town_fx_parameters(strengths)
 	for layer in _town_fx_items:
 		RenderingServer.canvas_item_clear(_town_fx_items[layer])
@@ -358,7 +395,7 @@ func _draw_town_fx(scene_rect: Rect2) -> void:
 	RenderingServer.canvas_item_add_rect(_town_fx_items[&"backdrop"], Rect2(Vector2.ZERO, size), FRAME_FILL)
 	backdrop.draw_rect_region(_town_fx_items[&"backdrop"], scene_rect, source_rect)
 	_draw_integrated_buildings(scene_rect, _town_fx_items[&"buildings"])
-	if float(strengths.get("haze", 0.0)) > 0.0 or float(strengths.get("embers", 0.0)) > 0.0:
+	if _town_fx_uses_layer(strengths, &"heat"):
 		backdrop.draw_rect_region(_town_fx_items[&"heat"], scene_rect, source_rect)
 
 func _process(delta: float) -> void:

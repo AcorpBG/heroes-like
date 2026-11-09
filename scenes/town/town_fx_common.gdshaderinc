@@ -35,3 +35,23 @@ float town_slag(vec3 c) {
 float town_fire_light(vec3 c) {
 	return smoothstep(0.35, 0.60, c.r - c.b) * smoothstep(0.14, 0.30, c.r - c.g) * smoothstep(0.62, 0.90, c.r);
 }
+
+// Lamp light painted paler than fire: warm amber to cream, in windows, lanterns and their reflections.
+float town_lantern_light(vec3 c) {
+	return smoothstep(0.18, 0.34, c.r - c.b) * smoothstep(0.04, 0.12, c.r - c.g) * smoothstep(0.50, 0.80, c.r);
+}
+
+// Painted mist and cloud: light, cool and nearly grey.
+float town_mist(vec3 c) {
+	float spread = max(max(c.r, c.g), c.b) - min(min(c.r, c.g), c.b);
+	return smoothstep(0.26, 0.44, dot(c, vec3(0.3, 0.59, 0.11))) * (1.0 - smoothstep(0.10, 0.22, spread))
+			* smoothstep(-0.06, 0.02, c.b - c.r);
+}
+
+// A lamp's flicker, -1 to 1: slow swells and quick tremors, apart from one cell of the screen to the next.
+float town_flicker(vec2 frag, float t, float cell_px) {
+	vec2 cell = frag / cell_px;
+	float slow = town_noise(cell + vec2(t * 0.55, -t * 0.40));
+	float quick = town_noise(cell * 1.7 + vec2(-t * 2.4, t * 2.0));
+	return (slow - 0.5) * 1.3 + (quick - 0.5) * 0.7;
+}
