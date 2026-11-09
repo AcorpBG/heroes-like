@@ -54,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `town-stage-effects-brasshollow-20261109` (30fc04cfd): Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.
 - 2026-11-09 `town-art-brasshollow-built-town-picture-20261109` (51d50dbc7): Brasshollow's town picture (town list, town switcher, build screen) is now the slag-canyon town fully built, drawn by tools/package_town_plot_layers.py as the town screen draws it, not the old quarry painting.
 - 2026-11-09 `town-art-brasshollow-birefnet-recut-20261109` (bfc17f7f5): Brasshollow's 51 buildings are cut along BiRefNet mattes (tools/town_plot_mattes.py), not GrabCut: walls, wings and windows stay whole; the t2_2 lodge upgrade is repainted with its tank under its roof ($0.04).
 - 2026-11-09 `battle-ai-spell-values-20261109` (b59b8a320): Heroes pick between their spells by the share of both armies' fighting power each moves (battle_ai_spell_values.cpp): in 1,000 arena battles damage drops from 88% to 46% of casts, 75 of 91 other spells cast (28 before); arena even.

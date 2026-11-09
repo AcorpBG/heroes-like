@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-brasshollow-built-town-picture-20261109",
- "currentSliceTitle": "Brasshollow's town picture (town list, town switcher, build screen) is now the slag-canyon town fully built, drawn by tools/package_town_plot_layers.py as the town screen draws it, not the old quarry painting.",
+ "currentSliceId": "town-stage-effects-brasshollow-20261109",
+ "currentSliceTitle": "Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T14:48:28Z",
+ "updatedAt": "2026-11-09T15:42:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-stage-effects-brasshollow-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.",
+   "commit": "30fc04cfd"
+  },
   {
    "id": "town-art-brasshollow-built-town-picture-20261109",
    "status": "completed",
