@@ -44,7 +44,6 @@ None open.
 
 ## Open work
 
-- `bugfix-editor-guild-draws-20261109` (in progress): The map editor names a loaded package's working copy after the package's content hashes, not the engine clock, so the towns' guild draws (seeded by the session id) come out the same on every load and the editor parity seeds replay. Players' maps-folder games keep a new id per game. Files: map_editor_working_copy.cpp, scenario_select_maps_folder.cpp, human_keys.inc, tests/map_editor_seat_report.gd.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -54,6 +53,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `bugfix-editor-guild-draws-20261109` (df0a73a88): The editor names a loaded package's working copy after the package hashes, not the clock, so its guild draws repeat on every load; players' maps-folder games keep a clock id. Editor parity replays identically.
 - 2026-11-09 `save-native-first-save-cleanup-20261108` (2d56888f2): Removed the native first-save fast path, its first-save and save-reason marker handling, the force-failure switch, 12 keys and the SaveService.gd constants; old saves keep the markers as inert data. Human parity identical.
 - 2026-11-09 `bugfix-auto-battle-spell-picks-20261109` (7d4071a3d): Auto battle casts a hex, move, summon or two-stack spell with the hex or second stack its plan picked (BattleShell._auto_spell_order); the human and editor seat checks no longer read the removed autosave flag; all 11 seat seeds pass
 - 2026-11-08 `level-curve-steeper-20261108` (74338b8ea): A level step from level L costs 250 + 100 x L + 6 x L^2 (level_step_experience: level-up, experience_for_level); level 30 takes 101,974 instead of 50,650; best AI hero by day 70 on six seeds: level 30-47 -> 18-29.
