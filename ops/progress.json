@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "rmg-sea-content-20261109",
- "currentSliceTitle": "Sea content on generated water maps",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-09T19:08:44Z",
+ "currentSliceTitle": "Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-09T20:05:27Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,14 +19,10 @@
  "plannedSlices": [
   {
    "id": "rmg-sea-content-20261109",
-   "title": "Sea content on generated water maps",
-   "status": "in_progress",
-   "goal": "Owner 2026-11-09: generated water maps get sea content after H3MapEd's finished map, a deliberate departure: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpool pairs on open sea a shipyard serves; water sites and sprites; computer players collect them by boat. Files: h3maped_rmg_core, map_generation.cpp, generated_reward_rules.cpp, content, art. Strict mode keeps H3MapEd's map.",
-   "docs": [
-    "docs/rmg-sea-content.md",
-    "docs/water-travel.md"
-   ],
-   "updatedAt": "2026-11-09"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.",
+   "commit": "2059d752b"
   },
   {
    "id": "town-art-veilmourn-bell-fjord-20261109",

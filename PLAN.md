@@ -46,7 +46,6 @@ None open.
 
 ## Open work
 
-- `rmg-sea-content-20261109` (in progress): Owner 2026-11-09: generated water maps get sea content after H3MapEd's finished map, a deliberate departure: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpool pairs on open sea a shipyard serves; water sites and sprites; computer players collect them by boat. Files: h3maped_rmg_core, map_generation.cpp, generated_reward_rules.cpp, content, art. Strict mode keeps H3MapEd's map. See `docs/rmg-sea-content.md`, `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -56,6 +55,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `rmg-sea-content-20261109` (2059d752b): Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.
 - 2026-11-09 `town-art-veilmourn-bell-fjord-20261109` (5dd9dc629): Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.
 - 2026-11-09 `battle-ai-shaken-under-fire-20261109` (df34b2b02): A shaken melee stack out of reach of a side that out-shoots it advances instead of holding to rally (battle_ai_attack_scores.cpp): the owner's Roadwardens guard walks at the shooters instead of defending until it fell; arena even.
 - 2026-11-09 `town-stage-effects-brasshollow-20261109` (30fc04cfd): Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.
