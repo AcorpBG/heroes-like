@@ -39,7 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
-- 2026-11-09: A town may build a Shipyard when open sea lies within 6 steps of its gate; the boat waits on that shore. Painted shipyard art waits for the town art rework (`docs/water-travel.md`).
+- 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 
 ## Questions for the owner
 
@@ -47,7 +47,6 @@ None open.
 
 ## Open work
 
-- `feature-town-shipyards-20261109` (in progress): A town with open sea within 6 steps of its gate (its harbour) can build a Shipyard and launch boats there for the neutral shipyard's price; the boat waits on the harbour's shore. Native rules (water_travel_rules, town build status and services, AI build scoring and boat launch), content/buildings.json, towns.json, the construction board. Owner 2026-11-09: reach is a short walk, 6 steps; painted shipyard art waits for the town art rework, a plain town-screen entry for now. See `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -57,6 +56,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `feature-town-shipyards-20261109` (bc92c5fa9): Harbour towns (open sea within 6 steps of the gate) build a Shipyard and launch boats there for 1,000 gold and 10 wood; computer players sail from theirs and build one when an army is stuck. Opens from its board slot until the art rework.
 - 2026-11-09 `town-stage-effects-veilmourn-20261109` (6cbb8b52e): Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.
 - 2026-11-09 `rmg-sea-content-20261109` (2059d752b): Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.
 - 2026-11-09 `town-art-veilmourn-bell-fjord-20261109` (5dd9dc629): Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.
