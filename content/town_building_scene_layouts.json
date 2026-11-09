@@ -1599,7 +1599,13 @@
           "embedded_in_base": false
         }
       ],
-      "layers_under_stage_light": true
+      "layers_under_stage_light": true,
+      "stage_effects": {
+        "slag": 1.0,
+        "haze": 1.0,
+        "windows": 1.0,
+        "embers": 1.0
+      }
     },
     "faction_veilmourn": {
       "base_stage": "village",

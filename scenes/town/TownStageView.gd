@@ -9,6 +9,18 @@ const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const TownBuildingHotspotScript = preload("res://scenes/town/TownBuildingHotspot.gd")
+# Stage effects: shader layers drawn behind the stage (backdrop, buildings, heat over both).
+const TOWN_FX_SHADERS := {
+	&"backdrop": preload("res://scenes/town/town_backdrop_fx.gdshader"),
+	&"buildings": preload("res://scenes/town/town_building_fx.gdshader"),
+	&"heat": preload("res://scenes/town/town_heat_fx.gdshader"),
+}
+const TOWN_FX_PARAMETERS := {
+	"slag": [&"backdrop", &"slag_strength"],
+	"windows": [&"buildings", &"window_strength"],
+	"haze": [&"heat", &"haze_strength"],
+	"embers": [&"heat", &"ember_strength"],
+}
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
 const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"
@@ -249,6 +261,10 @@ var _construction_preview_id := ""
 # on every frame the ambient light pulse redraws the stage.
 var _status_plaque_cache: Array = []
 var _status_plaque_cache_valid := false
+# Stage effect layers (TOWN_FX_SHADERS) and the strengths last given to them.
+var _town_fx_items: Dictionary = {}
+var _town_fx_materials: Dictionary = {}
+var _town_fx_applied: Dictionary = {}
 
 func set_construction_preview(building_id: String) -> void:
 	# A drawing-only candidate. Never add it to the town or hotspot entries.
@@ -274,6 +290,76 @@ func _ready() -> void:
 		SettingsService.settings_changed.connect(_on_settings_changed)
 	_sync_processing_state()
 
+func _town_fx_strengths() -> Dictionary:
+	# The faction layout's stage_effects: slag, haze, windows and embers, each a strength.
+	var strengths := {}
+	var configured: Variant = _building_scene_faction_layout().get("stage_effects", {})
+	if configured is Dictionary:
+		for fx_name in configured:
+			if TOWN_FX_PARAMETERS.has(String(fx_name)):
+				strengths[String(fx_name)] = float(configured[fx_name])
+	return strengths
+
+func _town_fx_active() -> bool:
+	# Layers cut with their own ground only; high contrast keeps the plain painting,
+	# as it does for the ambient light.
+	return _scenic_backdrop_texture() != null and _building_layers_under_stage_light() \
+		and not FrontierVisualKitScript.high_contrast_enabled() and not _town_fx_strengths().is_empty()
+
+func _apply_town_fx_parameters(strengths: Dictionary) -> void:
+	# Reduced motion holds every effect still: the painting as it is.
+	_town_fx_applied = strengths
+	var motion := not SettingsService.reduced_motion_enabled()
+	for layer in _town_fx_materials:
+		(_town_fx_materials[layer] as ShaderMaterial).set_shader_parameter(&"motion_enabled", motion)
+	for fx_name in TOWN_FX_PARAMETERS:
+		var target: Array = TOWN_FX_PARAMETERS[fx_name]
+		var material: ShaderMaterial = _town_fx_materials.get(target[0], null)
+		if material != null:
+			material.set_shader_parameter(target[1], float(strengths.get(fx_name, 0.0)))
+
+func _ensure_town_fx_items() -> void:
+	if not _town_fx_items.is_empty():
+		return
+	var index := 0
+	for layer in [&"backdrop", &"buildings", &"heat"]:
+		var material := ShaderMaterial.new()
+		material.shader = TOWN_FX_SHADERS[layer]
+		var item := RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(item, get_canvas_item())
+		RenderingServer.canvas_item_set_draw_behind_parent(item, true)
+		RenderingServer.canvas_item_set_draw_index(item, index)
+		RenderingServer.canvas_item_set_default_texture_filter(item, RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS)
+		RenderingServer.canvas_item_set_material(item, material.get_rid())
+		_town_fx_items[layer] = item
+		_town_fx_materials[layer] = material
+		index += 1
+	_apply_town_fx_parameters(_town_fx_strengths())
+
+func _free_town_fx_items() -> void:
+	for layer in _town_fx_items:
+		RenderingServer.free_rid(_town_fx_items[layer])
+	_town_fx_items.clear()
+	_town_fx_materials.clear()
+	_town_fx_applied = {}
+
+func _draw_town_fx(scene_rect: Rect2) -> void:
+	# The frame, backdrop and buildings go to shader layers drawn behind this stage;
+	# the stage itself then adds its tint, light and plaques on top as before.
+	_ensure_town_fx_items()
+	var strengths := _town_fx_strengths()
+	if strengths != _town_fx_applied:
+		_apply_town_fx_parameters(strengths)
+	for layer in _town_fx_items:
+		RenderingServer.canvas_item_clear(_town_fx_items[layer])
+	var backdrop := _scenic_backdrop_texture()
+	var source_rect := _cover_source_rect(backdrop.get_size(), scene_rect.size)
+	RenderingServer.canvas_item_add_rect(_town_fx_items[&"backdrop"], Rect2(Vector2.ZERO, size), FRAME_FILL)
+	backdrop.draw_rect_region(_town_fx_items[&"backdrop"], scene_rect, source_rect)
+	_draw_integrated_buildings(scene_rect, _town_fx_items[&"buildings"])
+	if float(strengths.get("haze", 0.0)) > 0.0 or float(strengths.get("embers", 0.0)) > 0.0:
+		backdrop.draw_rect_region(_town_fx_items[&"heat"], scene_rect, source_rect)
+
 func _process(delta: float) -> void:
 	var redraw_needed := false
 	if _scenic_ambient_light_should_animate():
@@ -294,6 +380,8 @@ func _notification(what: int) -> void:
 		_sync_main_building_hotspot()
 		_sync_building_hotspots()
 		queue_redraw()
+	elif what == NOTIFICATION_PREDELETE:
+		_free_town_fx_items()
 
 func set_town_state(session) -> void:
 	_clear_town_state(session)
@@ -381,12 +469,19 @@ func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	var fx := not _town.is_empty() and _town_fx_active()
+	if not fx:
+		_free_town_fx_items()
+		draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
 	if _town.is_empty():
 		return
 
 	var scene_rect := _town_scene_rect()
-	if not _draw_scenic_backdrop(scene_rect):
+	if fx:
+		_draw_town_fx(scene_rect)
+		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
+		_draw_scenic_ambient_light(scene_rect)
+	elif not _draw_scenic_backdrop(scene_rect):
 		_draw_procedural_stage(scene_rect)
 	else:
 		# Layers cut with their own painted ground take the stage tint and light
@@ -1521,7 +1616,7 @@ func _project_normalized_source_rect(normalized_rect: Rect2, scene_rect: Rect2) 
 		),
 	}
 
-func _draw_integrated_buildings(scene_rect: Rect2) -> void:
+func _draw_integrated_buildings(scene_rect: Rect2, canvas := RID()) -> void:
 	for entry_value in _town_building_scene_entries(scene_rect, true):
 		var entry: Dictionary = entry_value
 		var building_id := String(entry.get("visible_building_id", ""))
@@ -1538,7 +1633,10 @@ func _draw_integrated_buildings(scene_rect: Rect2) -> void:
 		var texture_region := Rect2(region_ratio.position * texture_size, region_ratio.size * texture_size)
 		var tint: Color = entry.get("modulate", Color.WHITE)
 		tint.a *= 0.62 if bool(entry.get("construction_preview", false)) else _town_building_reveal_alpha(building_id)
-		draw_texture_rect_region(texture, destination_rect, texture_region, tint)
+		if canvas.is_valid():
+			texture.draw_rect_region(canvas, destination_rect, texture_region, tint)
+		else:
+			draw_texture_rect_region(texture, destination_rect, texture_region, tint)
 
 func _town_building_texture(building_id: String) -> Texture2D:
 	var texture_path := _town_building_texture_path(building_id)
@@ -1832,6 +1930,8 @@ func _sync_processing_state() -> void:
 
 func _on_settings_changed(_settings: Dictionary) -> void:
 	_sync_processing_state()
+	_apply_town_fx_parameters(_town_fx_applied)
+	queue_redraw()
 
 func _scenic_backdrop_texture() -> Texture2D:
 	return _resolved_scenic_backdrop_texture
