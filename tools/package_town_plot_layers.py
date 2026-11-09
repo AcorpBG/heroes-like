@@ -100,12 +100,13 @@ def write_import(path, mipmaps):
     if sidecar.is_file():
         return
     res = uri(path)
-    # A stable uid from the path, in Godot's text form (base 36, a-z then 0-9).
+    # A stable uid from the path, spelled as Godot spells it: base 34, letters
+    # a-y then digits 0-8. Godot re-spells anything else ('z', '9') on import.
     value = int(hashlib.sha256(res.encode()).hexdigest()[:16], 16) & 0x7FFFFFFFFFFFFFFF
     text = ''
     while value:
-        value, digit = divmod(value, 36)
-        text = (chr(97 + digit) if digit < 26 else str(digit - 26)) + text
+        value, digit = divmod(value, 34)
+        text = (chr(97 + digit) if digit < 25 else str(digit - 25)) + text
     sidecar.write_bytes(IMPORT_TEMPLATE.format(uid='uid://' + text, name=path.name, hash=hashlib.md5(res.encode()).hexdigest(),
                                                res=res, mipmaps=str(mipmaps).lower()).encode('utf-8'))
 
