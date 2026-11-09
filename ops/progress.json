@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rmg-sea-content-20261109",
- "currentSliceTitle": "Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.",
+ "currentSliceId": "town-stage-effects-veilmourn-20261109",
+ "currentSliceTitle": "Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T20:05:27Z",
+ "updatedAt": "2026-11-09T21:08:21Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-stage-effects-veilmourn-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.",
+   "commit": "6cbb8b52e"
+  },
   {
    "id": "rmg-sea-content-20261109",
    "status": "completed",

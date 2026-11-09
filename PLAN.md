@@ -55,6 +55,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `town-stage-effects-veilmourn-20261109` (6cbb8b52e): Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.
 - 2026-11-09 `rmg-sea-content-20261109` (2059d752b): Water maps get sea content after H3MapEd's map, a departure off in strict mode: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpools where shipyard boats reach; computer players take them by boat.
 - 2026-11-09 `town-art-veilmourn-bell-fjord-20261109` (5dd9dc629): Veilmourn's town is an empty bell fjord (owner's planned concept B) with its 51 buildings painted in place (imggen sunburst 2.6, $3.17), cut along BiRefNet mattes; its town picture is the fjord town fully built.
 - 2026-11-09 `battle-ai-shaken-under-fire-20261109` (df34b2b02): A shaken melee stack out of reach of a side that out-shoots it advances instead of holding to rally (battle_ai_attack_scores.cpp): the owner's Roadwardens guard walks at the shooters instead of defending until it fell; arena even.
