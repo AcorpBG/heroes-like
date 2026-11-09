@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "battle-ai-spell-values-20261109",
- "currentSliceTitle": "Battle AI: spells chosen by the fighting power they move",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-09T13:16:34Z",
+ "currentSliceTitle": "Heroes pick between their spells by the share of both armies' fighting power each moves (battle_ai_spell_values.cpp): in 1,000 arena battles damage drops from 88% to 46% of casts, 75 of 91 other spells cast (28 before); arena even.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-09T13:24:03Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,14 +19,10 @@
  "plannedSlices": [
   {
    "id": "battle-ai-spell-values-20261109",
-   "title": "Battle AI: spells chosen by the fighting power they move",
-   "status": "in_progress",
-   "goal": "Computer heroes choose between their spells by the share of the two armies' fighting power each moves (battle_ai_spell_values.cpp, battle_ai_spell_choice.cpp): damage, curses, summons, heals, buffs, ally effects and ground spells in one unit; a lethal spell first, each spell still held to its bar, the plan-scored kinds through spell_value_plan; arena guild tiers 4-5. Owner (2026-11-09): rework the scores before the 1,200-game batch.",
-   "docs": [
-    "docs/battle-rework.md",
-    "docs/magic-system.md"
-   ],
-   "updatedAt": "2026-11-09"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Heroes pick between their spells by the share of both armies' fighting power each moves (battle_ai_spell_values.cpp): in 1,000 arena battles damage drops from 88% to 46% of casts, 75 of 91 other spells cast (28 before); arena even.",
+   "commit": "b59b8a320"
   },
   {
    "id": "town-art-brasshollow-slag-canyon-20261109",
