@@ -1,0 +1,490 @@
+{
+ "plannedSlices": [
+  {
+   "id": "ux-town-command-block-tavern-intel-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Town command block: Tavern and Intelligence Report squares, Close in the bottom right corner."
+  },
+  {
+   "id": "ux-overworld-hero-sheet-orders-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Retire the overworld Command/Frontier drawers; hero orders on the hero sheet; one overworld spell per day; built/cast-today badges."
+  },
+  {
+   "id": "ux-overworld-gain-floaters-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Floating gain text over the map."
+  },
+  {
+   "id": "ux-generated-skirmish-fronts-monster-strength-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Generated maps in Skirmish Fronts; Map Forge monster strength."
+  },
+  {
+   "id": "rmg-h3maped-parity-basis-windows-wine-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "H3MapEd parity basis: Windows vs Wine, seeds 137 and 211."
+  },
+  {
+   "id": "rmg-h3maped-desktop-input-divergence-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Recover the input that changes desktop-controlled H3MapEd reward selection."
+  },
+  {
+   "id": "native-rmg-owner-success-and-entry-occupant-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check."
+  },
+  {
+   "id": "heroes-guard-adjacent-tiles-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Heroes guard their adjacent tiles: stepping next to a hostile hero starts the battle."
+  },
+  {
+   "id": "content-homm3-guarded-objects-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Every HoMM3 guarded object keeps its levels and reward: creature banks, Dragon Utopia, Pyramid, Crypt, Shipwreck, Derelict Ship, Pandora's Box and Warrior's Tomb."
+  },
+  {
+   "id": "content-generated-guard-companies-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Budget-sized generated guards and 790 guard companies."
+  },
+  {
+   "id": "content-creature-bank-levels-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "HoMM3 creature banks keep their levels: the Crypt becomes a levelled Glassbound Eyrie with gold, a random artifact and a Crypt-strength guard."
+  },
+  {
+   "id": "bugfix-spell-rules-battle-stack-count-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Spell rules and battle screen count living creatures from battle stack health."
+  },
+  {
+   "id": "bugfix-rooted-tactical-order-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Tactical scoring never orders a rooted stack to advance."
+  },
+  {
+   "id": "bugfix-quick-resolve-spell-check-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Quick Resolve checks a scored spell against the hero's real spellbook."
+  },
+  {
+   "id": "bugfix-quick-resolve-focus-target-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Quick Resolve fallback orders target the weakest living enemy."
+  },
+  {
+   "id": "bugfix-battle-stack-health-normalize-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle normalization keeps Hardened Ranks creature health."
+  },
+  {
+   "id": "battle-spell-effect-identity-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "One job per battle spell family; real status rules; effects counted in turns."
+  },
+  {
+   "id": "battle-rework-wait-turn-order-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Wait command and a live turn order across this round, waiting stacks and the next round."
+  },
+  {
+   "id": "battle-rework-melee-approach-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Player-chosen melee approach hex."
+  },
+  {
+   "id": "battle-rework-hero-casting-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "The hero casts battle spells as a free action once per round; the stack keeps its turn."
+  },
+  {
+   "id": "battle-rework-fullscreen-screen-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Full-screen battle screen with heroes on the field, top ribbon and bottom command bar."
+  },
+  {
+   "id": "battle-rework-design-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle screen and battle flow rework: plan and iterated mockup."
+  },
+  {
+   "id": "battle-rework-board-obstacles-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Battle board: 11x9 hexes, edge deployment, blocking obstacles, no distance bands."
+  },
+  {
+   "id": "balance-town-growth-fortifications-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "Town creature growth rebalance and fortification growth."
+  },
+  {
+   "id": "ai-long-range-portals-elimination-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI long-range planning, random portal travel, townless elimination, starting hero loss not fatal, always-on match tracing."
+  },
+  {
+   "id": "ai-garrison-room-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI towns make room in a full garrison to recruit."
+  },
+  {
+   "id": "ai-field-armies-town-value-20261009",
+   "status": "completed",
+   "completedAt": "2026-10-09",
+   "summary": "AI field armies, defences, town and elimination value, portal routes."
+  },
+  {
+   "id": "ux-town-garrison-rows-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "HoMM-style town garrison and visiting rows, resource bar and town list."
+  },
+  {
+   "id": "ux-town-construction-close-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Construction board: drop the header resource strip, Close replaces View in town."
+  },
+  {
+   "id": "ux-scenery-pickup-readability-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Blocked scenery always shows art; pickups larger, never hidden, with a glint."
+  },
+  {
+   "id": "ux-resource-bar-daily-income-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Resource bar shows each resource's daily income."
+  },
+  {
+   "id": "ux-overworld-road-junctions-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Road junctions draw as a T or a cross, not ladders and loops."
+  },
+  {
+   "id": "ux-hero-level-up-roll-display-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Level-up popup shows the rolled command stat."
+  },
+  {
+   "id": "ux-generated-site-footprint-dressing-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Dress bare blocked site tiles; keep claimed sites that remain after their visit."
+  },
+  {
+   "id": "ux-generated-object-sprite-footprint-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Generated site sprites stand on their real footprint."
+  },
+  {
+   "id": "ux-generated-object-placement-scan-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Scan every generated object's placement; centre site art on its entrance."
+  },
+  {
+   "id": "perf-battle-refresh-read-scope-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Battle refresh reads each board state once; hidden battle surfaces build when shown."
+  },
+  {
+   "id": "gameplay-site-recruit-overflow-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Full-army site claims: claim, keep what fits, dismiss a stack or leave the rest."
+  },
+  {
+   "id": "feature-portal-networks-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Readable portal networks with HoMM3 random exits."
+  },
+  {
+   "id": "content-hero-specialty-catalog-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "35 hero specialties with four ranks, six per hero."
+  },
+  {
+   "id": "content-authored-scenarios-archived-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Archive the authored scenarios and campaigns."
+  },
+  {
+   "id": "battle-stat-scaling-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Battle stat scaling: uncapped attack/defense, spell power that grows and matters, cohesion loss by share."
+  },
+  {
+   "id": "art-overworld-terrain-decals-v4-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Rework ground decals: one set per ground, scattered by the ground shader."
+  },
+  {
+   "id": "art-overworld-organic-ground-borders-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Organic ground borders: bent, height-and-priority blended biome edges."
+  },
+  {
+   "id": "ai-versus-ai-match-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI against AI matches; computer players start like the human; doubled market limits; market-priced town planning."
+  },
+  {
+   "id": "ai-town-defense-recapture-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI town defense and recapture."
+  },
+  {
+   "id": "ai-strength-battle-scaling-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI strength estimate for the battle stat scaling."
+  },
+  {
+   "id": "ai-match-series-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "AI match series on ten random maps, reproducible AI level-ups."
+  },
+  {
+   "id": "ai-market-parking-fight-rewards-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards."
+  },
+  {
+   "id": "ai-even-musters-danger-20261008",
+   "status": "completed",
+   "completedAt": "2026-10-08",
+   "summary": "Even faction starting musters; AI heroes avoid much stronger hostile heroes."
+  },
+  {
+   "id": "ux-town-popouts-no-scroll-tavern-rotation-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Town popouts without scrolling and weekly tavern heroes."
+  },
+  {
+   "id": "ux-town-market-popout-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Market and magic guild live only in their building popouts; resource conversion; gold-only market."
+  },
+  {
+   "id": "ux-overworld-movement-feedback-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Portrait bar movement refresh and walked attack orders."
+  },
+  {
+   "id": "ux-muster-hall-recruit-cards-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Muster Hall uses dwelling recruit cards."
+  },
+  {
+   "id": "ux-hero-exchange-screen-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "HoMM-style hero meeting screen replaces the rendezvous drop-down."
+  },
+  {
+   "id": "tests-rmg-retirement-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Retire random-map tests written for the pre-rewrite generator."
+  },
+  {
+   "id": "perf-town-recruit-responsiveness-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Town recruit clicks are fast (Muster Hall, popouts, orders)."
+  },
+  {
+   "id": "perf-battle-entry-transition-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "No gray frame on scene changes; battles open about 4x faster."
+  },
+  {
+   "id": "feature-water-travel-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Water travel (boats, shipyards, whirlpools) and pay-to-open random-map gates."
+  },
+  {
+   "id": "feature-hero-hire-army-level-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Hired heroes come with a starting army and a weekly level."
+  },
+  {
+   "id": "content-rare-resources-fully-tradeable-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Rare resources fully tradeable at every town market."
+  },
+  {
+   "id": "balance-embercourt-convoy-rate-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Embercourt supply convoy beats the market sell rate."
+  },
+  {
+   "id": "ai-raid-director-removal-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Remove the unused raid director and rewrite its harness cases for AI heroes."
+  },
+  {
+   "id": "ai-plays-by-player-rules-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "Computer players act through real heroes and towns under the human's rules."
+  },
+  {
+   "id": "ai-hero-expansion-20261007",
+   "status": "completed",
+   "completedAt": "2026-10-07",
+   "summary": "AI heroes clear guards and leave their starting zone."
+  },
+  {
+   "id": "ux-town-building-popouts-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Town building popouts."
+  },
+  {
+   "id": "content-visit-buildings-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM-style visit buildings (Phases 1 and 2)."
+  },
+  {
+   "id": "content-homm-pickups-income-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM-style pickups and income sites."
+  },
+  {
+   "id": "content-gold-only-unit-costs-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Gold-only unit recruitment costs."
+  },
+  {
+   "id": "content-creature-dwellings-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "HoMM3-style creature dwellings (all phases)."
+  },
+  {
+   "id": "balance-dwelling-pairs-20261006",
+   "status": "completed",
+   "completedAt": "2026-10-06",
+   "summary": "Dwelling pair balance."
+  },
+  {
+   "id": "ux-town-construction-board-20261005",
+   "status": "completed",
+   "completedAt": "2026-10-05",
+   "summary": "Full-screen Town construction board."
+  },
+  {
+   "id": "tooling-validate-repo-archived-sources-20261004",
+   "status": "completed",
+   "completedAt": "2026-10-04",
+   "summary": "Make the repository validator usable with archived sources."
+  },
+  {
+   "id": "tooling-repo-hygiene-20261004",
+   "status": "completed",
+   "completedAt": "2026-10-04",
+   "summary": "Repair post-cleanup working tree, native binaries and source-test workflow."
+  },
+  {
+   "id": "tooling-source-material-map-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Map source material storage and archive eligibility."
+  },
+  {
+   "id": "tooling-source-material-local-cleanup-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Reclaim local space from verified archived source media."
+  },
+  {
+   "id": "tooling-source-material-history-migration-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Remove archived production media from Git history while preserving development history."
+  },
+  {
+   "id": "tooling-source-material-archive-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Archive mapped art sources on N drive with full payload verification."
+  },
+  {
+   "id": "tooling-rmg-evidence-restore-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Restore ignored RMG reverse-engineering evidence from the Linux server."
+  },
+  {
+   "id": "tooling-rmg-evidence-consolidation-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Consolidate RMG evidence and remove disposable restore/export outputs."
+  },
+  {
+   "id": "tooling-audio-ci-disable-20261003",
+   "status": "completed",
+   "completedAt": "2026-10-03",
+   "summary": "Disable the retired audio workflow across historical GitHub refs."
+  }
+ ]
+}
