@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "balance-speed-backline-hunters-20261109",
- "currentSliceTitle": "Speeds: three back-line hunters faster, flying neutral shooters at 6",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-09T09:58:29Z",
+ "currentSliceTitle": "Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-09T09:59:51Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "balance-speed-backline-hunters-20261109",
-   "title": "Speeds: three back-line hunters faster, flying neutral shooters at 6",
-   "status": "in_progress",
-   "goal": "Owner decision 2026-11-09 (fast units are the counter to ranged armies): Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8, base and upgraded forms; the five neutral shooters faster than 6 (Prismwake Raylings, Cindervane Censerwings, Noonshard Prism Kites, Tideglass Skyrays, Gloambell Wake-Mantas) go to 6. File: content/units.json.",
-   "docs": [],
-   "updatedAt": "2026-11-09"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.",
+   "commit": "4d8e5368c"
   },
   {
    "id": "battle-full-speed-20261109",

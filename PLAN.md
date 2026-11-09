@@ -45,7 +45,6 @@ None open.
 
 ## Open work
 
-- `balance-speed-backline-hunters-20261109` (in progress): Owner decision 2026-11-09 (fast units are the counter to ranged armies): Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8, base and upgraded forms; the five neutral shooters faster than 6 (Prismwake Raylings, Cindervane Censerwings, Noonshard Prism Kites, Tideglass Skyrays, Gloambell Wake-Mantas) go to 6. File: content/units.json.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -55,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `balance-speed-backline-hunters-20261109` (4d8e5368c): Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.
 - 2026-11-09 `battle-full-speed-20261109` (a863a9bf6): Battle movement counts a creature's full speed instead of holding it at 6; spell speed adds on top and the stack card shows the full speed. Speed 9-10 stacks now strike across the board on their first move.
 - 2026-11-09 `bugfix-editor-guild-draws-20261109` (df0a73a88): The editor names a loaded package's working copy after the package hashes, not the clock, so its guild draws repeat on every load; players' maps-folder games keep a clock id. Editor parity replays identically.
 - 2026-11-09 `save-native-first-save-cleanup-20261108` (2d56888f2): Removed the native first-save fast path, its first-save and save-reason marker handling, the force-failure switch, 12 keys and the SaveService.gd constants; old saves keep the markers as inert data. Human parity identical.
