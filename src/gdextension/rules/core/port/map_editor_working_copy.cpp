@@ -127,7 +127,13 @@ bool _open_maps_folder_package_entry(State &state, const Value &editor, DictRef 
 	const Atom package_id = string_get(state, entry, key::package_id, gd::str(key::empty));
 	const DictRef options = state.new_dict();
 	put(state, options, key::startup_source, gd::str(key::map_editor_maps_folder));
-	put(state, options, key::session_id_prefix, gd::str(key::editor_maps_folder_package));
+	// The working copy is named after the package's contents, not the clock: the same package opens with the same
+	// rolls (its towns' guild spells) on every load.
+	const Atom package_hashes = gd::format(state, key::s_s, {
+			gd::str(string_get(state, dict_field_or_new(state, entry, key::map_ref), key::package_hash, gd::str(key::empty))),
+			gd::str(string_get(state, dict_field_or_new(state, entry, key::scenario_ref), key::package_hash, gd::str(key::empty))) });
+	put(state, options, key::session_id, gd::str(gd::format(state, key::s_d_5,
+			{ gd::str(key::editor_maps_folder_package), gd::int_value(gd::hash(state, gd::str(package_hashes))) })));
 	put(state, options, key::consumer, gd::str(key::map_editor));
 	const Value loaded = scenario_select_rules::load_maps_folder_package_session_from_entry(state, entry, key::normal, options);
 	if (loaded.kind == Kind::Nil || scenario_id_of(state, loaded) == key::empty) {

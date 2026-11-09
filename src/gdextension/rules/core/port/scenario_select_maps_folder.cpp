@@ -605,9 +605,11 @@ Value _load_maps_folder_package_session_from_entry(State &state, DictRef entry, 
 	}
 	const DictRef boundary = state.new_dict();
 	put(state, boundary, key::scenario_id, gd::str(text_of(state, scenario_ref, key::scenario_id)));
-	const Atom session_id_prefix = string_of(state, options, key::session_id_prefix, gd::str(key::maps_folder_package_session));
-	put(state, boundary, key::session_id,
-			gd::str(gd::format(state, key::s_d_5, { gd::str(session_id_prefix), gd::int_value(gd::engine_ticks_msec(state)) })));
+	// A caller may name the session (the editor names its working copy after the package); a new game is named
+	// after the clock, so its rolls differ from game to game.
+	const Atom named_session_id = string_of(state, options, key::session_id, gd::str(key::empty));
+	put(state, boundary, key::session_id, gd::str(named_session_id != key::empty ? named_session_id
+			: gd::format(state, key::s_d_5, { gd::str(key::maps_folder_package_session), gd::int_value(gd::engine_ticks_msec(state)) })));
 	put(state, boundary, key::hero_id, gd::str(key::hero_lyra));
 	put(state, boundary, key::feature_gate, gd::str(key::native_rmg_generated_map_package_startup));
 	put(state, boundary, key::map_package_ref, gd::dict_value(map_ref));

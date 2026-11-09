@@ -44,6 +44,7 @@ None open.
 
 ## Open work
 
+- `bugfix-editor-guild-draws-20261109` (in progress): The map editor names a loaded package's working copy after the package's content hashes, not the engine clock, so the towns' guild draws (seeded by the session id) come out the same on every load and the editor parity seeds replay. Players' maps-folder games keep a new id per game. Files: map_editor_working_copy.cpp, scenario_select_maps_folder.cpp, human_keys.inc, tests/map_editor_seat_report.gd.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

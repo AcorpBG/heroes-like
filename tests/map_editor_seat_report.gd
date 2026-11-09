@@ -71,10 +71,9 @@ const SNAPSHOT_NESTED_LEFT_OUT := [
 # Nodes whose texts are left out: the package picker lists the side's maps folder; the cursor's live text follows
 # a timer.
 const TEXTS_LEFT_OUT := ["MapPackagePicker", "EditorMapCursorLive"]
-# The clock in the record: a loaded session's id ends in the engine's ticks, a package entry keeps its files' times,
-# the play copy its start time.
+# The clock in the record: a package entry keeps its files' times, the play copy its start time. (The working copy
+# is named after its package, not the clock.)
 const TIMED := [
-	["(editor_maps_folder_package|maps_folder_package_session)-[0-9]+", "$1-0"],
 	["\"modified_time\":[0-9]+", "\"modified_time\":0"],
 	["[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}", "T"],
 ]
