@@ -54,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `town-art-brasshollow-birefnet-recut-20261109` (bfc17f7f5): Brasshollow's 51 buildings are cut along BiRefNet mattes (tools/town_plot_mattes.py), not GrabCut: walls, wings and windows stay whole; the t2_2 lodge upgrade is repainted with its tank under its roof ($0.04).
 - 2026-11-09 `battle-ai-spell-values-20261109` (b59b8a320): Heroes pick between their spells by the share of both armies' fighting power each moves (battle_ai_spell_values.cpp): in 1,000 arena battles damage drops from 88% to 46% of casts, 75 of 91 other spells cast (28 before); arena even.
 - 2026-11-09 `town-art-brasshollow-slag-canyon-20261109` (b06b77959): Brasshollow's town is an empty slag canyon with its 51 buildings painted in place (imggen sunburst 2.6, $4.68), cut by tools/package_town_plot_layers.py; layers draw under the stage light and click on the building outline.
 - 2026-11-09 `balance-speed-backline-hunters-20261109` (4d8e5368c): Stag-Knot Runners 6 to 8, Mirror-Keel Reavers 4 to 7 and Gorefen Ripper 7 to 8 (both forms) reach shooters sooner; the five neutral shooters faster than 6 go to 6. Guards of them change head count.

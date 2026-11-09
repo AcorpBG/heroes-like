@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "battle-ai-spell-values-20261109",
- "currentSliceTitle": "Heroes pick between their spells by the share of both armies' fighting power each moves (battle_ai_spell_values.cpp): in 1,000 arena battles damage drops from 88% to 46% of casts, 75 of 91 other spells cast (28 before); arena even.",
+ "currentSliceId": "town-art-brasshollow-birefnet-recut-20261109",
+ "currentSliceTitle": "Brasshollow's 51 buildings are cut along BiRefNet mattes (tools/town_plot_mattes.py), not GrabCut: walls, wings and windows stay whole; the t2_2 lodge upgrade is repainted with its tank under its roof ($0.04).",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T13:24:03Z",
+ "updatedAt": "2026-11-09T14:18:54Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-brasshollow-birefnet-recut-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Brasshollow's 51 buildings are cut along BiRefNet mattes (tools/town_plot_mattes.py), not GrabCut: walls, wings and windows stay whole; the t2_2 lodge upgrade is repainted with its tank under its roof ($0.04).",
+   "commit": "bfc17f7f5"
+  },
   {
    "id": "battle-ai-spell-values-20261109",
    "status": "completed",
