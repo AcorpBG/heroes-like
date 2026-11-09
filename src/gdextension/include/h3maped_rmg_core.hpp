@@ -3416,6 +3416,9 @@ struct GeneratorObjectPrivateState {
 	// AURELION_RMG_H3MAPED_STRICT=1: the connection tail records each link's
 	// guard for the guard-free route seal after the final writeout.
 	bool route_seal_departure_enabled = false;
+	// Departure (docs/rmg-sea-content.md), off under AURELION_RMG_H3MAPED_STRICT=1:
+	// sea content on open water a shipyard serves, after the final writeout.
+	bool sea_content_departure_enabled = false;
 	std::vector<ZoneLinkGuardRecordDeparture> zone_link_guard_records_departure;
 	std::vector<int64_t> route_join_protected_cells;
 	// Repair pass: 1 on every cell a link passage (0x4a61bc chains) stamped.
@@ -3872,6 +3875,11 @@ struct H3MapedRmgWorkflowConfig {
 	// holds nothing moves into a gap that is the only way in. It applies with
 	// repair_cut_off_towns; AURELION_RMG_H3MAPED_STRICT=1 turns it off.
 	bool seal_guard_free_routes = true;
+	// Departure from H3MapEd (docs/rmg-sea-content.md): open water that a shipyard
+	// serves gets flotsam, sea chests, survivors, wrecks, buoys and whirlpools after
+	// the final writeout and the route seal. H3MapEd places nothing on water. It
+	// applies with repair_cut_off_towns; AURELION_RMG_H3MAPED_STRICT=1 turns it off.
+	bool sea_content = true;
 	// Departure from H3MapEd (docs/rmg-setup-choice-templates.md): set when the
 	// setup chose a template; 0x4ac552 then builds from it instead of its catalog.
 	std::shared_ptr<const ChosenTemplateRecords> chosen_template;
@@ -4179,6 +4187,13 @@ struct H3MapedRmgWorkflowResult {
 	int32_t guard_free_route_obstacles = 0;
 	int32_t guard_free_route_pickups_moved = 0;
 	int32_t guard_free_route_guards_moved = 0;
+	// The sea content (docs/rmg-sea-content.md): the open water tiles a shipyard
+	// serves, and the objects placed there.
+	int32_t sea_content_water_tiles = 0;
+	int32_t sea_content_pickups = 0;
+	int32_t sea_content_wrecks = 0;
+	int32_t sea_content_buoys = 0;
+	int32_t sea_content_whirlpools = 0;
 	bool supported_scope = false;
 	bool executed = false;
 	bool final_payload_owned = false;

@@ -38,6 +38,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-05: A neutral town starts with a garrison of two weeks of its own tier 1-3 growth, so it is not free to take on day 1.
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
+- 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
 
 ## Questions for the owner
 
@@ -45,6 +46,7 @@ None open.
 
 ## Open work
 
+- `rmg-sea-content-20261109` (in progress): Owner 2026-11-09: generated water maps get sea content after H3MapEd's finished map, a deliberate departure: drift wreckage, sea coffers, castaway rafts, guarded wrecks, tide bells and whirlpool pairs on open sea a shipyard serves; water sites and sprites; computer players collect them by boat. Files: h3maped_rmg_core, map_generation.cpp, generated_reward_rules.cpp, content, art. Strict mode keeps H3MapEd's map. See `docs/rmg-sea-content.md`, `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

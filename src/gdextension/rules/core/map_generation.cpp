@@ -51,6 +51,11 @@ struct GeneratorCache::Core {
 	int32_t guard_free_route_obstacles = 0;
 	int32_t guard_free_route_pickups_moved = 0;
 	int32_t guard_free_route_guards_moved = 0;
+	int32_t sea_content_water_tiles = 0;
+	int32_t sea_content_pickups = 0;
+	int32_t sea_content_wrecks = 0;
+	int32_t sea_content_buoys = 0;
+	int32_t sea_content_whirlpools = 0;
 };
 
 GeneratorCache::GeneratorCache() = default;
@@ -2566,6 +2571,11 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 		fresh->guard_free_route_obstacles = workflow->guard_free_route_obstacles;
 		fresh->guard_free_route_pickups_moved = workflow->guard_free_route_pickups_moved;
 		fresh->guard_free_route_guards_moved = workflow->guard_free_route_guards_moved;
+		fresh->sea_content_water_tiles = workflow->sea_content_water_tiles;
+		fresh->sea_content_pickups = workflow->sea_content_pickups;
+		fresh->sea_content_wrecks = workflow->sea_content_wrecks;
+		fresh->sea_content_buoys = workflow->sea_content_buoys;
+		fresh->sea_content_whirlpools = workflow->sea_content_whirlpools;
 		if (workflow->template_selection_0x4ac552.split_link_graph_repicked) {
 			fresh->split_template_repicked_from = workflow->template_selection_0x4ac552.split_link_graph_rolled_template_name;
 		}
@@ -2590,6 +2600,13 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, guard_free_route_seal, "obstacles", integer(core->guard_free_route_obstacles));
 	put(state, guard_free_route_seal, "pickups_moved", integer(core->guard_free_route_pickups_moved));
 	put(state, guard_free_route_seal, "guards_moved", integer(core->guard_free_route_guards_moved));
+	// docs/rmg-sea-content.md
+	const Value sea_content = new_dict(state);
+	put(state, sea_content, "water_tiles", integer(core->sea_content_water_tiles));
+	put(state, sea_content, "pickups", integer(core->sea_content_pickups));
+	put(state, sea_content, "wrecks", integer(core->sea_content_wrecks));
+	put(state, sea_content, "buoys", integer(core->sea_content_buoys));
+	put(state, sea_content, "whirlpools", integer(core->sea_content_whirlpools));
 	if (!projection.applied) {
 		const Value result = new_dict(state);
 		put(state, result, "ok", boolean(false));
@@ -2657,6 +2674,7 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	put(state, metadata, "full_generation_status", text(state, "native_runtime_ready"));
 	put(state, metadata, "cut_off_town_repair", cut_off_town_repair);
 	put(state, metadata, "guard_free_route_seal", guard_free_route_seal);
+	put(state, metadata, "sea_content", sea_content);
 	put(state, metadata, "validation_status", text(state, "pass"));
 	put(state, metadata, "native_runtime_authoritative", boolean(true));
 	// A chosen template has no H3MapEd map to match.

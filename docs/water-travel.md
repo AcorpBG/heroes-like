@@ -10,7 +10,7 @@ A playtest found an "Ash Sluice Lock" standing in open grass by the sea, marked 
 
 - **Boats** sit on water tiles (`overworld.boats`: id, tile, level, the hero aboard). A sailing hero carries `boat_id`.
 - **Boarding.** A walking hero may end a route on a free boat. Boarding ends the hero's movement for the day, as in HoMM3.
-- **Sailing.** A sailing hero moves only on open water (one point per tile, like land), may end a route on a water site (whirlpool, flotsam, sea chest), and cannot pass another boat.
+- **Sailing.** A sailing hero moves only on open water (1.5 points a tile since 2026-11-08; water is Veilmourn's home ground, at grass cost), may end a route on a water site (a sea pickup, a wreck, a tide bell, a whirlpool), and cannot pass another boat.
 - **Going ashore.** A sailing hero may end a route on open shore or a shore site (a town entrance, a pickup). Stepping off ends the day's movement; the boat stays moored on the last water tile for anyone to take.
 - **Shipyard.** A neutral visit building on the coast. Any visiting hero may build a boat for 1,000 gold and 10 wood (the HoMM3 price). The boat appears on the dock: the open water tile next to the visit tile, or next to the body, nearest the visit tile. A full dock refuses before anything is paid.
 - **Whirlpool.** A water site. Sailing into it throws the boat out on a free water tile beside another whirlpool on the same level, picked by a stable hash of the source, day and hero. The weakest stack (by total health) loses half its creatures, rounded down, never the army's last creature. A lone whirlpool spins the boat back where it entered.
@@ -21,7 +21,7 @@ Saves keep `overworld.boats` and each hero's `boat_id`; normalization keeps them
 
 ## Random maps
 
-`scripts/persistence/GeneratedRewardRules.gd` translates HoMM3 transit objects by meaning:
+`GeneratedRewardRules` (native, `generated_reward_rules.cpp`) translates HoMM3 transit and water objects by meaning:
 
 | HoMM3 object | Becomes |
 | --- | --- |
@@ -32,8 +32,11 @@ Saves keep `overworld.boats` and each hero's `boat_id`; normalization keeps them
 | Keymaster's Tent (10) | Left off: gates open by payment, so no key is needed |
 | Monoliths (43, 44, 45) | Wayring (two-way), Waygate (one-way entrance) and Wayfall (one-way exit), each network in its own colour; see `docs/portal-networks.md` |
 | Subterranean Gate (103) | Keeps its native passage with the Basalt Undergate art |
+| Flotsam (29), Sea Chest (82), Shipwreck Survivor (86) | Drift Wreckage, Sea Coffer, Castaway Raft: one-time pickups on the water |
+| Shipwreck (85), Derelict Ship (24) | Wreck Locker and Storm-Bell Wreck, creature banks; their fights use the coast battlefield |
+| Buoy (11) | Tide Bell |
 
-Shipyards and whirlpools only appear where the source map had one. The random-map object table never uses them as stand-ins for other HoMM3 sites: their `water_travel_live` status is excluded from the interactable pool (`water_travel_meaning_placement` in `content/random_map_object_eligibility.json`). Otherwise an inland service could become a shipyard with no water.
+Shipyards appear only where the source map had one. H3MapEd places nothing on the water itself; since 2026-11-09 generated maps add whirlpools, wrecks, buoys and pickups on open water that a shipyard serves, a deliberate departure (`docs/rmg-sea-content.md`). The random-map object table never uses shipyards or whirlpools as stand-ins for other HoMM3 sites: their `water_travel_live` status is excluded from the interactable pool (`water_travel_meaning_placement` in `content/random_map_object_eligibility.json`). Otherwise an inland service could become a shipyard with no water.
 
 Gates now ask before they take payment: visiting one opens a prompt with the gate's story, the price and an Open button; leaving it keeps the passage closed. An opened gate stays open for everyone.
 
@@ -43,6 +46,7 @@ Saves from older random maps are migrated once on load (`overworld.generated_tra
 
 - `site_shipyard` / `object_shipyard` (visit building, `mapobj_shipyard`), `site_whirlpool` / `object_whirlpool` (visit building on water, `mapobj_whirlpool`), and the boat sprite `mapobj_water_boat`.
 - The three sprites are original image-generation art; prompts and references are in `art/overworld/source/generated/resource_sites/water_travel_20261007/provenance.json`.
+- The sea pickups `site_drift_wreckage`, `site_sea_coffer` and `site_castaway_raft` (with `object_*` map objects and `mapobj_*` sprites; prompts in `art/overworld/source/generated/resource_sites/sea_content_20261109/provenance.json`).
 
 ## Not yet
 

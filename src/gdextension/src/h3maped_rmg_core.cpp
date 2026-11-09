@@ -42646,6 +42646,7 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 	// And each link's guard, for the guard-free route seal after the final writeout.
 	result.generator_object_private_state.route_seal_departure_enabled =
 			departures && config.seal_guard_free_routes;
+	result.generator_object_private_state.sea_content_departure_enabled = departures && config.sea_content;
 		if (!result.generator_object_private_state.generated_cell_buffer_owned) {
 			result.current_phase_id = "generator_object_private_state";
 			result.status = "blocked";
@@ -45741,6 +45742,492 @@ static bool route_seal_departure(H3MapedRmgWorkflowResult &result, RuntimeMapPay
 	return true;
 }
 
+// The sea content (docs/rmg-sea-content.md), a departure from H3MapEd, which places
+// nothing on water. After the final writeout and the route seal, open water that a
+// shipyard serves gets HoMM3 water objects: Whirlpools (111) in pairs, Shipwrecks (85)
+// and Derelict Ships (24), Buoys (11), and Flotsam (29), Sea Chests (82) and Shipwreck
+// Survivors (86). They are committed as generic records the way 0x49e700 commits a
+// decoration; picks use a hash of seed, kind and tile, so no generator RNG is drawn.
+// Every object stands in free water with a ring of free water around it, away from
+// the docks, so no sea route closes and every visit tile is reached by boat.
+
+struct SeaContentKind {
+	SourceObjectRecord0x4c record;
+	int32_t offset_x = 0;
+	int32_t offset_y = 0;
+	// Descriptor-local cells, blocked or visited; the map tile is the anchor minus them.
+	std::vector<std::pair<int32_t, int32_t>> occupied;
+};
+
+struct SeaContentPlacement {
+	const SeaContentKind *kind = nullptr;
+	int32_t group = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+enum SeaContentGroup : int32_t {
+	SEA_CONTENT_WHIRLPOOL = 0,
+	SEA_CONTENT_WRECK = 1,
+	SEA_CONTENT_BUOY = 2,
+	SEA_CONTENT_PICKUP = 3,
+};
+
+static bool sea_content_trace() {
+	return rmg_trace_env("AURELION_RMG_TRACE_SEA_CONTENT") != nullptr;
+}
+
+static uint64_t sea_content_hash(uint32_t seed, uint32_t salt, int64_t cell) {
+	uint64_t z = (uint64_t(seed) << 32) ^ (uint64_t(salt) * 0x9e3779b97f4a7c15ULL) ^ uint64_t(cell);
+	z += 0x9e3779b97f4a7c15ULL;
+	z = (z ^ (z >> 30U)) * 0xbf58476d1ce4e5b9ULL;
+	z = (z ^ (z >> 27U)) * 0x94d049bb133111ebULL;
+	return z ^ (z >> 31U);
+}
+
+// The object's tiles as the final writeout writes them (0x4ad3eb): the objects.txt
+// passability and action masks, not the DEF/MSK qwords, whose second mask is empty
+// for Flotsam, Survivors and Whirlpools. The source cell (+0x2c/+0x30) is the action
+// origin, the first action cell, as for visitable objects (0x49d471).
+static bool sea_content_kind(int32_t type_id, const char *def_name, SeaContentKind &kind) {
+	for (const SourceObjectRecord0x4c &record : source_object_records_by_type_0x49da08(type_id)) {
+		if (record.def_name != def_name || record.passability_mask.size() < 48U || record.action_mask.size() < 48U) {
+			continue;
+		}
+		kind.record = record;
+		kind.occupied.clear();
+		bool acts = false;
+		for (int32_t local_y = 0; local_y < 6; ++local_y) {
+			for (int32_t local_x = 0; local_x < 8; ++local_x) {
+				const bool action = source_object_text_mask_bit_0x490f3f(record.action_mask, local_x, local_y);
+				if (action || !source_object_text_mask_bit_0x490f3f(record.passability_mask, local_x, local_y)) {
+					kind.occupied.emplace_back(local_x, local_y);
+				}
+				if (action && !acts) {
+					kind.offset_x = local_x;
+					kind.offset_y = local_y;
+				}
+				acts = acts || action;
+			}
+		}
+		return acts;
+	}
+	return false;
+}
+
+struct SeaContentMap {
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t levels = 0;
+	int64_t plane = 0;
+	// Open water a shipyard serves, away from its dock: where objects may stand.
+	std::vector<char> open;
+	// Tiles new objects stand on, and the rings around them.
+	std::vector<char> taken;
+	std::vector<char> halo;
+
+	int64_t flat(int32_t x, int32_t y, int32_t level) const {
+		if (x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= levels) {
+			return -1;
+		}
+		return int64_t(level) * plane + int64_t(y) * width + x;
+	}
+};
+
+// The object's own tiles and every tile within `ring` of them are open and free,
+// and none of its tiles lies in another new object's ring.
+static bool sea_content_fits(const SeaContentMap &map, const SeaContentKind &kind, int32_t x, int32_t y, int32_t level, int32_t ring) {
+	for (const auto &local : kind.occupied) {
+		const int64_t cell = map.flat(x - local.first, y - local.second, level);
+		if (cell < 0 || map.halo[size_t(cell)]) {
+			return false;
+		}
+		for (int32_t dy = -ring; dy <= ring; ++dy) {
+			for (int32_t dx = -ring; dx <= ring; ++dx) {
+				const int64_t around = map.flat(x - local.first + dx, y - local.second + dy, level);
+				if (around < 0 || !map.open[size_t(around)] || map.taken[size_t(around)]) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+static void sea_content_take(SeaContentMap &map, const SeaContentKind &kind, int32_t x, int32_t y, int32_t level, int32_t ring) {
+	for (const auto &local : kind.occupied) {
+		const int64_t cell = map.flat(x - local.first, y - local.second, level);
+		map.taken[size_t(cell)] = 1;
+		for (int32_t dy = -ring; dy <= ring; ++dy) {
+			for (int32_t dx = -ring; dx <= ring; ++dx) {
+				const int64_t around = map.flat(x - local.first + dx, y - local.second + dy, level);
+				if (around >= 0) {
+					map.halo[size_t(around)] = 1;
+				}
+			}
+		}
+	}
+}
+
+static int32_t sea_content_distance(const SeaContentPlacement &a, int32_t x, int32_t y) {
+	return std::max(std::abs(a.x - x), std::abs(a.y - y));
+}
+
+static bool sea_content_departure(H3MapedRmgWorkflowResult &result, RuntimeMapPayloadProjection &projection) {
+	GeneratorObjectPrivateState &state = result.generator_object_private_state;
+	// Nothing to place: the map stays as it is.
+	const auto skip = [](const char *reason) {
+		if (sea_content_trace()) {
+			std::fprintf(stderr, "RMG_TRACE_SEA_CONTENT_SKIP reason=%s\n", reason);
+		}
+		return true;
+	};
+	if (!projection.applied) {
+		return skip("no_projection");
+	}
+	if (!state.sea_content_departure_enabled) {
+		return skip("disabled");
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		return skip("no_record_keys");
+	}
+	SeaContentMap map;
+	map.width = projection.width;
+	map.height = projection.height;
+	map.levels = projection.level_count;
+	map.plane = int64_t(map.width) * map.height;
+	const int64_t cells = map.plane * map.levels;
+	if (map.width <= 0 || map.height <= 0 || map.levels <= 0 || int64_t(projection.terrain_type_codes.size()) < cells) {
+		return skip("no_terrain");
+	}
+	// Free water: water no object stands or acts on.
+	std::vector<char> free_water(size_t(cells), 0);
+	bool any_water = false;
+	for (int64_t cell = 0; cell < cells; ++cell) {
+		free_water[size_t(cell)] = projection.terrain_type_codes[size_t(cell)] == 8 ? 1 : 0;
+		any_water = any_water || free_water[size_t(cell)] != 0;
+	}
+	if (!any_water) {
+		return skip("no_water");
+	}
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		for (const std::vector<RuntimeMapTilePoint> *tiles : { &object.body_tiles, &object.action_tiles }) {
+			for (const RuntimeMapTilePoint &tile : *tiles) {
+				const int64_t cell = map.flat(tile.x, tile.y, tile.level);
+				if (cell >= 0) {
+					free_water[size_t(cell)] = 0;
+				}
+			}
+		}
+	}
+	// Where boats start: a shipyard's dock, the water tile nearest its visit tile
+	// around it and its body (dock_tile in water_travel_rules_ai.cpp), and the free
+	// water around a boat.
+	static constexpr int32_t DOCK_DX[8] = { 0, -1, 1, 0, -1, 1, -1, 1 };
+	static constexpr int32_t DOCK_DY[8] = { 1, 0, 0, -1, 1, 1, -1, -1 };
+	std::vector<int64_t> launches;
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		if (object.type_id != 8 && object.type_id != 87) {
+			continue;
+		}
+		const RuntimeMapTilePoint origin = object.action_tiles.empty()
+				? RuntimeMapTilePoint { object.x, object.y, object.level }
+				: object.action_tiles.front();
+		if (object.type_id == 8) {
+			for (int32_t direction = 0; direction < 8; ++direction) {
+				const int64_t cell = map.flat(origin.x + DOCK_DX[direction], origin.y + DOCK_DY[direction], origin.level);
+				if (cell >= 0 && free_water[size_t(cell)]) {
+					launches.push_back(cell);
+				}
+			}
+			continue;
+		}
+		std::vector<RuntimeMapTilePoint> sources { origin };
+		sources.insert(sources.end(), object.body_tiles.begin(), object.body_tiles.end());
+		int64_t dock = -1;
+		int64_t dock_distance = int64_t(1) << 30;
+		for (const RuntimeMapTilePoint &source : sources) {
+			for (int32_t direction = 0; direction < 8; ++direction) {
+				const int32_t x = source.x + DOCK_DX[direction];
+				const int32_t y = source.y + DOCK_DY[direction];
+				const int64_t cell = map.flat(x, y, origin.level);
+				if (cell < 0 || projection.terrain_type_codes[size_t(cell)] != 8) {
+					continue;
+				}
+				const int64_t distance = int64_t(x - origin.x) * (x - origin.x) + int64_t(y - origin.y) * (y - origin.y);
+				if (distance < dock_distance) {
+					dock_distance = distance;
+					dock = cell;
+				}
+			}
+		}
+		if (dock >= 0 && free_water[size_t(dock)]) {
+			launches.push_back(dock);
+		}
+	}
+	if (launches.empty()) {
+		return skip("no_launch");
+	}
+	// The free water a boat sails from a launch tile, eight ways, a diagonal step
+	// closed when both tiles beside it are (ai_search.cpp).
+	std::vector<char> served(size_t(cells), 0);
+	std::vector<int64_t> stack;
+	for (const int64_t launch : launches) {
+		if (served[size_t(launch)]) {
+			continue;
+		}
+		served[size_t(launch)] = 1;
+		stack.push_back(launch);
+		while (!stack.empty()) {
+			const int64_t cell = stack.back();
+			stack.pop_back();
+			const int32_t level = int32_t(cell / map.plane);
+			const int32_t x = int32_t(cell % map.plane) % map.width;
+			const int32_t y = int32_t(cell % map.plane) / map.width;
+			for (int32_t dy = -1; dy <= 1; ++dy) {
+				for (int32_t dx = -1; dx <= 1; ++dx) {
+					const int64_t next = map.flat(x + dx, y + dy, level);
+					if ((dx == 0 && dy == 0) || next < 0 || !free_water[size_t(next)] || served[size_t(next)]) {
+						continue;
+					}
+					if (dx != 0 && dy != 0) {
+						const int64_t side_a = map.flat(x + dx, y, level);
+						const int64_t side_b = map.flat(x, y + dy, level);
+						if (!free_water[size_t(side_a)] && !free_water[size_t(side_b)]) {
+							continue;
+						}
+					}
+					served[size_t(next)] = 1;
+					stack.push_back(next);
+				}
+			}
+		}
+	}
+	// Open: served water more than two tiles from every launch tile, where boats are
+	// built and turn.
+	map.open = served;
+	for (const int64_t launch : launches) {
+		const int32_t level = int32_t(launch / map.plane);
+		const int32_t x = int32_t(launch % map.plane) % map.width;
+		const int32_t y = int32_t(launch % map.plane) / map.width;
+		for (int32_t dy = -2; dy <= 2; ++dy) {
+			for (int32_t dx = -2; dx <= 2; ++dx) {
+				const int64_t cell = map.flat(x + dx, y + dy, level);
+				if (cell >= 0) {
+					map.open[size_t(cell)] = 0;
+				}
+			}
+		}
+	}
+	map.taken.assign(size_t(cells), 0);
+	map.halo.assign(size_t(cells), 0);
+	SeaContentKind whirlpool;
+	SeaContentKind derelict;
+	SeaContentKind wreck_a;
+	SeaContentKind wreck_b;
+	SeaContentKind buoy;
+	SeaContentKind flotsam;
+	SeaContentKind chest;
+	SeaContentKind survivor;
+	if (!sea_content_kind(111, "AVXwhrl0.def", whirlpool) || !sea_content_kind(24, "AVAdlic0.def", derelict)
+			|| !sea_content_kind(85, "AVAwrek0.def", wreck_a) || !sea_content_kind(85, "AVAwre20.def", wreck_b)
+			|| !sea_content_kind(11, "AVSbuoy0.def", buoy) || !sea_content_kind(29, "AVAflot0.def", flotsam)
+			|| !sea_content_kind(82, "AVXccht0.def", chest) || !sea_content_kind(86, "AVAsurv0.def", survivor)) {
+		return skip("no_catalog_record");
+	}
+	const uint32_t seed = result.config.seed;
+	std::vector<SeaContentPlacement> placements;
+	int32_t water_tiles = 0;
+	for (int32_t level = 0; level < map.levels; ++level) {
+		std::vector<std::pair<uint64_t, int64_t>> order[4];
+		int32_t open_tiles = 0;
+		for (int64_t cell = int64_t(level) * map.plane; cell < int64_t(level + 1) * map.plane; ++cell) {
+			if (!map.open[size_t(cell)]) {
+				continue;
+			}
+			open_tiles += 1;
+			for (int32_t group = 0; group < 4; ++group) {
+				order[group].emplace_back(sea_content_hash(seed, uint32_t(group + 1), cell), cell);
+			}
+		}
+		water_tiles += open_tiles;
+		for (auto &entries : order) {
+			std::sort(entries.begin(), entries.end());
+		}
+		// A small sea (a Small islands map) still gets a wreck and a few pickups.
+		const int32_t wanted[4] = {
+			open_tiles >= 5000 ? 4 : (open_tiles >= 1200 ? 2 : 0),
+			std::max(open_tiles >= 300 ? 1 : 0, open_tiles / 900),
+			open_tiles / 1500,
+			std::max(open_tiles >= 150 ? 3 : 0, open_tiles / 180),
+		};
+		// Rings around each object, and the distance kept from the same kind.
+		static constexpr int32_t RING[4] = { 1, 2, 1, 1 };
+		static constexpr int32_t SPACING[4] = { 0, 12, 10, 5 };
+		auto kind_of = [&](int32_t group, int64_t cell) -> const SeaContentKind * {
+			const uint64_t roll = sea_content_hash(seed, 101U + uint32_t(group), cell) % 100U;
+			switch (group) {
+				case SEA_CONTENT_WHIRLPOOL:
+					return &whirlpool;
+				case SEA_CONTENT_WRECK:
+					return roll < 35U ? &derelict : (roll < 68U ? &wreck_a : &wreck_b);
+				case SEA_CONTENT_BUOY:
+					return &buoy;
+				default:
+					return roll < 45U ? &flotsam : (roll < 80U ? &chest : &survivor);
+			}
+		};
+		// Whirlpools in pairs, each as far as it can be from the others on the level.
+		std::vector<SeaContentPlacement> pools;
+		while (int32_t(pools.size()) < wanted[SEA_CONTENT_WHIRLPOOL]) {
+			int64_t best = -1;
+			int32_t best_distance = -1;
+			for (const auto &entry : order[SEA_CONTENT_WHIRLPOOL]) {
+				const int32_t x = int32_t(entry.second % map.plane) % map.width;
+				const int32_t y = int32_t(entry.second % map.plane) / map.width;
+				int32_t distance = std::numeric_limits<int32_t>::max();
+				for (const SeaContentPlacement &placed : pools) {
+					distance = std::min(distance, sea_content_distance(placed, x, y));
+				}
+				if (distance <= best_distance || !sea_content_fits(map, whirlpool, x, y, level, RING[SEA_CONTENT_WHIRLPOOL])) {
+					continue;
+				}
+				best = entry.second;
+				best_distance = distance;
+				if (pools.empty()) {
+					break;
+				}
+			}
+			if (best < 0) {
+				break;
+			}
+			SeaContentPlacement placement { &whirlpool, SEA_CONTENT_WHIRLPOOL, int32_t(best % map.plane) % map.width, int32_t(best % map.plane) / map.width, level };
+			sea_content_take(map, whirlpool, placement.x, placement.y, level, RING[SEA_CONTENT_WHIRLPOOL]);
+			pools.push_back(placement);
+		}
+		if (pools.size() % 2U == 1U) {
+			// A lone whirlpool leads nowhere: its tiles stay taken, it is not placed.
+			pools.pop_back();
+		}
+		placements.insert(placements.end(), pools.begin(), pools.end());
+		for (int32_t group = SEA_CONTENT_WRECK; group <= SEA_CONTENT_PICKUP; ++group) {
+			std::vector<SeaContentPlacement> kept;
+			for (const auto &entry : order[group]) {
+				if (int32_t(kept.size()) >= wanted[group]) {
+					break;
+				}
+				const int32_t x = int32_t(entry.second % map.plane) % map.width;
+				const int32_t y = int32_t(entry.second % map.plane) / map.width;
+				bool spaced = true;
+				for (const SeaContentPlacement &placed : kept) {
+					spaced = spaced && sea_content_distance(placed, x, y) >= SPACING[group];
+				}
+				const SeaContentKind *kind = kind_of(group, entry.second);
+				if (!spaced || !sea_content_fits(map, *kind, x, y, level, RING[group])) {
+					continue;
+				}
+				sea_content_take(map, *kind, x, y, level, RING[group]);
+				kept.push_back({ kind, group, x, y, level });
+			}
+			placements.insert(placements.end(), kept.begin(), kept.end());
+		}
+	}
+	result.sea_content_water_tiles = water_tiles;
+	if (placements.empty()) {
+		return skip("no_room");
+	}
+	const int32_t cut_off_before = cut_off_town_count_departure(projection);
+	const size_t first_record = state.object_records_0xec4_ecc.size();
+	for (const SeaContentPlacement &placement : placements) {
+		const SeaContentKind &kind = *placement.kind;
+		const uint32_t key = state.next_native_object_record_key_0x4a93a2++;
+		const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+				state,
+				key,
+				kind.record.type_id_0x1c,
+				placement.x,
+				placement.y,
+				placement.level,
+				false,
+				kind.offset_x,
+				kind.offset_y,
+				&kind.record,
+				true,
+				0,
+				-1,
+				true);
+		if (!commit.object_vector_appended || state.object_records_0xec4_ecc.empty()) {
+			return false;
+		}
+		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc.back();
+		record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+		record.descriptor_source_key_0x00 = kind.record.source_row;
+		record.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(kind.record);
+		record.decorative_score_record_0x10_known = false;
+		record.copied_source_record_carried = true;
+		record.source_record_copy = kind.record;
+		build_object_record_score_cache_0x49b89c(record);
+	}
+	if (!route_seal_rewrite_final_payload(result)) {
+		return false;
+	}
+	RuntimeMapPayloadProjection sea = project_runtime_map_from_native_owned_final_payload(result);
+	if (!sea.applied || sea.objects.size() != projection.objects.size() + placements.size()
+			|| cut_off_town_count_departure(sea) > cut_off_before) {
+		return false;
+	}
+	// On the map the game reads, every new object stands on the water tiles it was put on.
+	std::vector<char> seen(placements.size(), 0);
+	for (const RuntimeMapObjectProjection &object : sea.objects) {
+		if (object.source_vector_index < 0 || size_t(object.source_vector_index) < first_record) {
+			continue;
+		}
+		const size_t index = size_t(object.source_vector_index) - first_record;
+		if (index >= placements.size() || seen[index]) {
+			return false;
+		}
+		seen[index] = 1;
+		const SeaContentPlacement &placement = placements[index];
+		std::set<int64_t> expected;
+		for (const auto &local : placement.kind->occupied) {
+			expected.insert(map.flat(placement.x - local.first, placement.y - local.second, placement.level));
+		}
+		std::set<int64_t> found;
+		for (const std::vector<RuntimeMapTilePoint> *tiles : { &object.body_tiles, &object.action_tiles }) {
+			for (const RuntimeMapTilePoint &tile : *tiles) {
+				found.insert(map.flat(tile.x, tile.y, tile.level));
+			}
+		}
+		if (object.type_id != placement.kind->record.type_id_0x1c || object.action_tiles.empty() || found != expected) {
+			return false;
+		}
+	}
+	for (const char placed : seen) {
+		if (!placed) {
+			return false;
+		}
+	}
+	for (const SeaContentPlacement &placement : placements) {
+		int32_t &count = placement.group == SEA_CONTENT_WHIRLPOOL ? result.sea_content_whirlpools
+				: placement.group == SEA_CONTENT_WRECK ? result.sea_content_wrecks
+				: placement.group == SEA_CONTENT_BUOY ? result.sea_content_buoys
+				: result.sea_content_pickups;
+		count += 1;
+		if (sea_content_trace()) {
+			std::fprintf(stderr, "RMG_TRACE_SEA_CONTENT_OBJECT type=%d def=%s x=%d y=%d level=%d\n",
+					placement.kind->record.type_id_0x1c, placement.kind->record.def_name.c_str(), placement.x, placement.y, placement.level);
+		}
+	}
+	if (sea_content_trace()) {
+		std::fprintf(stderr, "RMG_TRACE_SEA_CONTENT_DONE water_tiles=%d whirlpools=%d wrecks=%d buoys=%d pickups=%d\n",
+				result.sea_content_water_tiles, result.sea_content_whirlpools, result.sea_content_wrecks, result.sea_content_buoys,
+				result.sea_content_pickups);
+	}
+	projection = std::move(sea);
+	return true;
+}
+
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
 	return run_h3maped_rmg_entry_to_writeout_workflow(config, nullptr);
 }
@@ -45751,7 +46238,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(
 	const bool strict = rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") != nullptr;
 	const bool repair = config.repair_cut_off_towns && !config.route_join_departure && !strict;
 	const bool seal = config.repair_cut_off_towns && config.seal_guard_free_routes && !strict;
-	if (!repair && !seal && projection_out == nullptr) {
+	const bool sea = config.repair_cut_off_towns && config.sea_content && !strict;
+	if (!repair && !seal && !sea && projection_out == nullptr) {
 		return result;
 	}
 	RuntimeMapPayloadProjection projection = project_runtime_map_from_native_owned_final_payload(result);
@@ -45809,6 +46297,18 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(
 		result.guard_free_routes_before_seal = routes;
 		result.guard_free_routes_after_seal = routes;
 		projection = project_runtime_map_from_native_owned_final_payload(result);
+	}
+	if (sea && !sea_content_departure(result, projection)) {
+		// The sea content changed the generator state and then failed a check on the
+		// map it wrote: the map is generated again, everything else as before.
+		if (sea_content_trace()) {
+			std::fprintf(stderr, "RMG_TRACE_SEA_CONTENT_FAILED\n");
+		}
+		projection = RuntimeMapPayloadProjection();
+		result = H3MapedRmgWorkflowResult();
+		H3MapedRmgWorkflowConfig dry_config = config;
+		dry_config.sea_content = false;
+		return run_h3maped_rmg_entry_to_writeout_workflow(dry_config, projection_out);
 	}
 	if (projection_out != nullptr) {
 		*projection_out = std::move(projection);

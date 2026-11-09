@@ -1,0 +1,48 @@
+{
+  "generator": "gpt-image-2.6-sunburst (OpenAI Images API, edits endpoint with two reference sprites)",
+  "generated_date": "2026-11-09",
+  "settings": {
+    "size": "1024x1024",
+    "quality": "medium",
+    "background": "transparent",
+    "output_format": "png"
+  },
+  "purpose": "Original sprites for the sea pickups random maps place on open water (docs/rmg-sea-content.md): the Drift Wreckage stands for HoMM3's Flotsam, the Sea Coffer for the Sea Chest and the Castaway Raft for the Shipwreck Survivor. Two variants were generated per prompt; the one that reads best at map scale was kept.",
+  "cost_usd": 0.3669,
+  "images": [
+    {
+      "asset_id": "mapobj_drift_wreckage",
+      "prompt": "A single adventure-map sprite for an original fantasy strategy game: drift wreckage floating on the open sea, the remains of a lost ship that a passing boat can haul aboard for timber. A loose raft-like tangle of broken weathered ship planks and a snapped spar, a torn length of rope trailing from it, one wooden cask lashed to the planks with rope and a small split crate, a scrap of grey sailcloth caught on the spar. Wet dark-brown wood with paler broken ends, the planks riding low and level in the water.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 55% of the frame with transparent margin around it. A thin ring of pale water ripples and a little white foam hugs the waterline, nothing else of the sea.\n\nOne object only, no people, no creatures, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "drift_wreckage-source.png",
+      "references": [
+        "mapobj_water_boat",
+        "mapobj_storm_bell_wreck"
+      ],
+      "variants_generated": 2,
+      "variant_kept": 1
+    },
+    {
+      "asset_id": "mapobj_sea_coffer",
+      "prompt": "A single adventure-map sprite for an original fantasy strategy game: a sea coffer adrift on the open sea, a treasure a passing boat can fish out. A sturdy rectangular wooden coffer of tarred dark planks bound with rusted iron bands and a heavy brass lock, riding the swell on a ring of four lashed cork floats, a coil of wet rope around it, a few gold coins glinting in a gap under the lid. The coffer floats level with its lid above the water.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 55% of the frame with transparent margin around it. A thin ring of pale water ripples and a little white foam hugs the waterline, nothing else of the sea.\n\nOne object only, no people, no creatures, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "sea_coffer-source.png",
+      "references": [
+        "mapobj_water_boat",
+        "mapobj_storm_bell_wreck"
+      ],
+      "variants_generated": 2,
+      "variant_kept": 1
+    },
+    {
+      "asset_id": "mapobj_castaway_raft",
+      "prompt": "A single adventure-map sprite for an original fantasy strategy game: a castaway's raft drifting on the open sea, a survivor's raft that a passing boat can take aboard. A small square raft of lashed driftwood logs with a short crooked mast and a ragged patched cream sail, an unlit brass lantern hanging from the mast, a bundle wrapped in oilcloth and a small battered sea chest lashed to the logs, a silver amulet on a chain hanging from the mast top and catching the light, a tattered red cloth tied to the mast as a signal. The raft floats level on the water.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 55% of the frame with transparent margin around it. A thin ring of pale water ripples and a little white foam hugs the waterline, nothing else of the sea.\n\nOne object only, no people, no creatures, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "castaway_raft-source.png",
+      "references": [
+        "mapobj_water_boat",
+        "mapobj_storm_bell_wreck"
+      ],
+      "variants_generated": 2,
+      "variant_kept": 1
+    }
+  ],
+  "processing": "tools/pack_sea_content_sprites.py crops transparent margins (alpha above 8) and resizes uniformly onto the shared 512px RGBA canvas, centred and bottom-aligned (largest extent 330px, bottom row 420); no repainting."
+}

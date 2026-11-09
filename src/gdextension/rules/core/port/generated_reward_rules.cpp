@@ -194,6 +194,7 @@ constexpr int64_t kTypeRandomResource = 76;
 constexpr int64_t kTypeRefugeeCamp = 78;
 constexpr int64_t kTypeResource = 79;
 constexpr int64_t kTypeSeaChest = 82;
+constexpr int64_t kTypeShipwreckSurvivor = 86;
 constexpr int64_t kTypeShipyard = 87;
 constexpr int64_t kTypeSpellScroll = 93;
 constexpr int64_t kTypeTreasureChest = 101;
@@ -659,10 +660,30 @@ DictRef resolve(State &state, DictRef object, ArrayRef towns, ArrayRef terrain_r
 			}
 			const DictRef payload = state.new_dict();
 			state.set(payload, str(key::payload_rewards), dict_value(haul));
-			return _node(state, object, key::site_millroad_plank_stack, key::reward_reference, payload);
+			return _node(state, object, key::site_drift_wreckage, key::reward_reference, payload);
 		}
-		case kTypeSeaChest:
-			return _node(state, object, site_of(state, kPileSites, key::gold), key::reward_reference, rewards_payload(state, key::gold, 1500), key::gold);
+		case kTypeSeaChest: {
+			// Two coffers in three hold 1,500 gold; the third 1,000 gold and a treasure artifact.
+			const bool artifact = _roll(state, key_text, key::coffer, 3) == 2;
+			const DictRef payload = rewards_payload(state, key::gold, artifact ? 1000 : 1500);
+			if (artifact) {
+				const ArrayRef classes = state.new_array();
+				state.append(classes, str(key::treasure));
+				state.set(payload, str(key::payload_artifact_classes), array_value(classes));
+			}
+			return _node(state, object, key::site_sea_coffer, key::reward_reference, payload);
+		}
+		case kTypeShipwreckSurvivor: {
+			// The castaway's thanks: a treasure artifact five times in ten, a minor one
+			// three times, a major one twice.
+			const int64_t roll = _roll(state, key_text, key::castaway, 10);
+			const ArrayRef classes = state.new_array();
+			state.append(classes, str(roll < 5 ? key::treasure : (roll < 8 ? key::minor : key::major)));
+			const DictRef payload = state.new_dict();
+			state.set(payload, str(key::payload_rewards), dict_value(state.new_dict()));
+			state.set(payload, str(key::payload_artifact_classes), array_value(classes));
+			return _node(state, object, key::site_castaway_raft, key::reward_reference, payload);
+		}
 		case kTypeTreasureChest: {
 			// TREASURE_CHEST_TIERS: [gold, experience].
 			constexpr int64_t kTiers[3][2] = {{1000, 500}, {1500, 1000}, {2000, 1500}};

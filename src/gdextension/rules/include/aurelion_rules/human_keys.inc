@@ -6122,3 +6122,10 @@ AURELION_KEY(terrain_kind, "terrain_kind")
 AURELION_KEY(road_mask, "road_mask")
 AURELION_KEY(the_next_step_costs_more_movement_text, "The next step costs more movement than the hero has left today.")
 AURELION_KEY(home_terrain_ids, "home_terrain_ids")
+
+// Sea content (docs/rmg-sea-content.md): the water pickups random maps translate.
+AURELION_KEY(site_drift_wreckage, "site_drift_wreckage")
+AURELION_KEY(site_sea_coffer, "site_sea_coffer")
+AURELION_KEY(site_castaway_raft, "site_castaway_raft")
+AURELION_KEY(coffer, "coffer")
+AURELION_KEY(castaway, "castaway")

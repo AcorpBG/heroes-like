@@ -42261,6 +42261,45 @@
       "presentation_role": "sealed_mystery_casket_pickup",
       "accessible_description": "A domed casket of dark wood and bronze, chained and sealed with three locks and purple wax, glows violet at its seams.",
       "runtime_sha256": "5899c673e89f1e7d51f096434d13772b25ec3b41f3d385aba0031f1752db9dbf"
+    },
+    "mapobj_drift_wreckage": {
+      "path": "res://art/overworld/runtime/objects/pickups/drift_wreckage.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/drift_wreckage-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/provenance.json",
+      "source_model": "gpt-image-2.6-sunburst_transparent",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_drift_wreckage",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "floating_timber_pickup",
+      "accessible_description": "Broken ship planks and a snapped spar adrift, with a lashed cask, a split crate and a scrap of sailcloth.",
+      "runtime_sha256": "1392f391ba1dca31c2214855a1f67954d3f757a6a61ca8b780ea1da5fdecc890"
+    },
+    "mapobj_sea_coffer": {
+      "path": "res://art/overworld/runtime/objects/pickups/sea_coffer.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/sea_coffer-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/provenance.json",
+      "source_model": "gpt-image-2.6-sunburst_transparent",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_sea_coffer",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "floating_gold_coffer_pickup",
+      "accessible_description": "A tarred, iron-banded coffer with a brass lock riding on four cork floats, gold glinting under its lid.",
+      "runtime_sha256": "f6f1aa6e2afb96e9513be66a090546b5e6d38a7e1876d594c61c6356e5c6fc94"
+    },
+    "mapobj_castaway_raft": {
+      "path": "res://art/overworld/runtime/objects/pickups/castaway_raft.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/castaway_raft-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/sea_content_20261109/provenance.json",
+      "source_model": "gpt-image-2.6-sunburst_transparent",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_castaway_raft",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "castaway_artifact_pickup",
+      "accessible_description": "A lashed log raft with a ragged sail, a lantern, a bundle and a small chest, a silver amulet hanging from its mast.",
+      "runtime_sha256": "1646e00de80319675dae9e02ccb40050c8ae80bd03d5f88f9d259fd8122f49e5"
     }
   },
   "resource_site_sprites": {
@@ -44164,6 +44203,18 @@
     "site_free_company_exchange": {
       "asset_id": "mapobj_contract_scribe_booth",
       "fit": "Existing original art reused for the Free Company Exchange field service."
+    },
+    "site_drift_wreckage": {
+      "asset_id": "mapobj_drift_wreckage",
+      "fit": "One-time floating timber: wood, sometimes with gold."
+    },
+    "site_sea_coffer": {
+      "asset_id": "mapobj_sea_coffer",
+      "fit": "One-time floating coffer: gold, sometimes with a treasure artifact."
+    },
+    "site_castaway_raft": {
+      "asset_id": "mapobj_castaway_raft",
+      "fit": "One-time castaway raft: an artifact."
     }
   },
   "artifact_default_sprite": {

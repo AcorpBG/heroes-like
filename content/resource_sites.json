@@ -17234,6 +17234,33 @@
       }
     },
     {
+      "id": "site_drift_wreckage",
+      "name": "Drift Wreckage",
+      "action_label": "Haul Aboard",
+      "overworld_sprite_asset_id": "mapobj_drift_wreckage",
+      "public_text": "Planks, spars and a lashed cask from some lost hull, adrift on the open sea. A boat's crew hauls up wood, and sometimes gold.",
+      "rewards": {
+        "wood": 5
+      }
+    },
+    {
+      "id": "site_sea_coffer",
+      "name": "Sea Coffer",
+      "action_label": "Open Coffer",
+      "overworld_sprite_asset_id": "mapobj_sea_coffer",
+      "public_text": "A tarred, iron-banded coffer riding the swell: gold, and now and then a keepsake wrapped in oilcloth.",
+      "rewards": {
+        "gold": 1500
+      }
+    },
+    {
+      "id": "site_castaway_raft",
+      "name": "Castaway Raft",
+      "action_label": "Take Aboard",
+      "overworld_sprite_asset_id": "mapobj_castaway_raft",
+      "public_text": "A lashed raft under a ragged sail. The castaway aboard pays for the passage home with a keepsake saved from the wreck: an artifact."
+    },
+    {
       "id": "site_wayring",
       "name": "Wayring",
       "family": "transit_object",

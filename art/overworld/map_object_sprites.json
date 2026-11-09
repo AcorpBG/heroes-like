@@ -172,18 +172,18 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 469,
+    "authored_map_object_count": 472,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 269,
-    "total_distinct_authored_map_object_count_after_pass": 469,
+    "new_distinct_non_decorative_asset_count": 272,
+    "total_distinct_authored_map_object_count_after_pass": 472,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 33,
       "mine": 10,
       "neutral_dwelling": 94,
       "neutral_encounter": 6,
-      "pickup": 13,
+      "pickup": 16,
       "repeatable_service": 9,
       "scenario_objective": 14,
       "scouting_structure": 6,
@@ -463,7 +463,10 @@
     "mapobj_waygate",
     "mapobj_wayfall",
     "mapobj_wyrmcrown_hoard",
-    "mapobj_hushlock_casket"
+    "mapobj_hushlock_casket",
+    "mapobj_drift_wreckage",
+    "mapobj_sea_coffer",
+    "mapobj_castaway_raft"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -2327,6 +2330,27 @@
       "fit": "Original field-service art.",
       "assignment_source": "field_economy_20261026",
       "family": "repeatable_service"
+    },
+    "object_drift_wreckage": {
+      "asset_id": "mapobj_drift_wreckage",
+      "fit": "Distinct original drift wreckage assigned to the Drift Wreckage pickup, which stands for HoMM3's Flotsam on random maps.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": "sea_content_20261109"
+    },
+    "object_sea_coffer": {
+      "asset_id": "mapobj_sea_coffer",
+      "fit": "Distinct original floating coffer assigned to the Sea Coffer pickup, which stands for HoMM3's Sea Chest on random maps.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": "sea_content_20261109"
+    },
+    "object_castaway_raft": {
+      "asset_id": "mapobj_castaway_raft",
+      "fit": "Distinct original castaway raft assigned to the Castaway Raft pickup, which stands for HoMM3's Shipwreck Survivor on random maps.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": "sea_content_20261109"
     }
   }
 }
