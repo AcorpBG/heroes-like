@@ -11,6 +11,9 @@ as arches filled, with a short soft skirt of the painted ground at its foot. It 
   so clicks and the hover outline follow the building rather than its ground,
 - the 256 px catalog icon, from the building alone,
 - the 1600x900 runtime backdrop of the empty scene,
+- the town fully built (the last stage of each line, the first dwelling of each tier),
+  drawn as the town screen draws it; the town's own picture in content/towns.json,
+  which the town list, the town switcher and the build screen show,
 - the scene-art rows, the plot sites in the layout, and the backdrop record.
 
 The packet (tracked JSON next to the prompts) lists the plots, and for each building
@@ -36,9 +39,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SCENE = ROOT / 'content/town_building_scene_art_manifest.json'
 LAYOUT = ROOT / 'content/town_building_scene_layouts.json'
 BACKDROPS = ROOT / 'content/town_development_scene_manifest.json'
+DEVELOPMENT = ROOT / 'content/town_development.json'
 LAYER_MAX = 512
 ICON_SIZE, ICON_FIT = 256, 240
 BACKDROP_SIZE = (1600, 900)
+STAGE_TINT = ((5, 8, 10), 0.08)  # TownStageView draws this over the layers
 IMPORT_TEMPLATE = '''[remap]
 
 importer="texture"
@@ -188,6 +193,24 @@ def cut(master, edit, item, matte, settings):
     return (cx0, cy0), e, alpha, building, solid
 
 
+def built_town(backdrop, plots, rows, roster):
+    """The town fully built, as the town screen draws it: on each plot its last stage, of
+    the first dwelling where a tier offers two, stacked by ground line, under the stage tint."""
+    later = {entry[key] for entry in roster if entry['branch'] > 1 for key in ('building_id', 'upgrade_building_id')}
+    picks = [ids[-1] for ids in ([bid for bid in plot['building_ids'] if bid in rows and bid not in later] for plot in plots) if ids]
+    picks.sort(key=lambda bid: rows[bid]['ground_anchor'][1])
+    town = backdrop.copy()
+    width, height = town.size
+    for bid in picks:
+        x, y, w, h = rows[bid]['normalized_rect']
+        x0, y0 = round(x * width), round(y * height)
+        with Image.open(ROOT / rows[bid]['runtime_path'].removeprefix('res://')) as layer:
+            layer = layer.convert('RGBA').resize((round((x + w) * width) - x0, round((y + h) * height) - y0), Image.Resampling.LANCZOS)
+        town.paste(layer.convert('RGB'), (x0, y0), layer.getchannel('A'))
+    colour, strength = STAGE_TINT
+    return Image.blend(town, Image.new('RGB', town.size, colour), strength), picks
+
+
 def full_edit(master, item):
     """The building's painting over the whole scene: a close-up edit is scaled back."""
     with Image.open(ROOT / item['source_path']) as painting:
@@ -221,17 +244,9 @@ def main():
 
     runtime = ROOT / f"art/towns/runtime/backdrops/overhaul/{faction}_{packet['scene_id']}.png"
     runtime.parent.mkdir(parents=True, exist_ok=True)
-    master_image.resize(BACKDROP_SIZE, Image.Resampling.LANCZOS).save(runtime)
+    backdrop_image = master_image.resize(BACKDROP_SIZE, Image.Resampling.LANCZOS)
+    backdrop_image.save(runtime)
     write_import(runtime, mipmaps=False)
-    prompt = ROOT / backdrop['prompt_path']
-    write_backdrop_stage(BACKDROPS, faction, packet['stage'], {
-        'source_path': uri(master_path), 'source_sha256': digest(master_path), 'source_size': [width, height],
-        'prompt_path': uri(prompt), 'prompt_sha256': digest(prompt),
-        'generation_date': generation['date'], 'generation_tool': generation['tool'],
-        'reference_inputs': ['res://' + path for path in backdrop['reference_inputs']],
-        'processing_tool': 'tools/package_town_plot_layers.py',
-        'runtime_path': uri(runtime), 'runtime_sha256': digest(runtime),
-    })
 
     rows = scene['factions'][faction]
     for item in packet['buildings']:
@@ -296,6 +311,21 @@ def main():
         plot['anchor'] = [round((x + w / 2) / width, 6), round((y + h) / height, 6)]
         plot['height_ratio'] = round(h / height, 6)
         plot['embedded_in_base'] = False
+
+    built = runtime.with_name(runtime.stem + '_built.png')
+    town, picks = built_town(backdrop_image, faction_layout['plots'], rows, read(DEVELOPMENT)['rosters'][faction])
+    town.save(built)
+    write_import(built, mipmaps=False)
+    prompt = ROOT / backdrop['prompt_path']
+    write_backdrop_stage(BACKDROPS, faction, packet['stage'], {
+        'source_path': uri(master_path), 'source_sha256': digest(master_path), 'source_size': [width, height],
+        'prompt_path': uri(prompt), 'prompt_sha256': digest(prompt),
+        'generation_date': generation['date'], 'generation_tool': generation['tool'],
+        'reference_inputs': ['res://' + path for path in backdrop['reference_inputs']],
+        'processing_tool': 'tools/package_town_plot_layers.py',
+        'runtime_path': uri(runtime), 'runtime_sha256': digest(runtime),
+        'built_town_path': uri(built), 'built_town_sha256': digest(built), 'built_town_buildings': picks,
+    })
     write_json(SCENE, scene)
     write_json(LAYOUT, layout)
     print(f"Packaged {len(packet['buildings'])} {faction} layers on the {packet['scene_id']} backdrop.")
