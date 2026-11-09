@@ -114,6 +114,17 @@ double cohesion_gap(State &state, DictRef stack, DictRef battle) {
 	return 1.0 - (static_cast<double>(_stack_cohesion_total(state, stack, battle)) / static_cast<double>(kCohesionMax));
 }
 
+// A melee stack that cannot strike from where it stands, under the fire of a side that out-shoots its own: a hold
+// gives back a point or two of cohesion a round (_apply_defend_pressure), each volley that lands takes one or more
+// (_apply_damage_pressure), so holding cannot rally it.
+bool rally_spoiled_by_fire(State &state, DictRef battle, DictRef stack, int64_t contact) {
+	if (contact <= 0 || !_fights_in_melee(state, stack)) {
+		return false;
+	}
+	const Atom side = side_of(state, stack);
+	return _side_ranged_power(state, battle, _opposing_side(side)) > _side_ranged_power(state, battle, side);
+}
+
 // _has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")
 bool skirmisher(State &state, DictRef stack) {
 	return _has_ability(state, stack, key::harry) || _has_ability(state, stack, key::backstab) || _has_ability(state, stack, key::bloodrush);
@@ -532,8 +543,10 @@ double _defend_score(State &state, DictRef battle, DictRef active_stack, ArrayRe
 	// var round_number: read, never used.
 	(void)battle_round(state, battle);
 	const int64_t contact = _stack_contact_band(state, active_stack, battle);
-	const double cohesion_lost = cohesion_gap(state, active_stack, battle);
-	score += cohesion_lost * _w(state, key::defend_cohesion_lost);
+	// A shaken stack holds to rally, unless volleys it cannot answer take more than a hold gives back.
+	if (!rally_spoiled_by_fire(state, battle, active_stack, contact)) {
+		score += cohesion_gap(state, active_stack, battle) * _w(state, key::defend_cohesion_lost);
+	}
 	if (ranged(state, active_stack) && has_shots(state, active_stack)) {
 		score -= _w(state, key::defend_shooter);
 	}
@@ -663,7 +676,8 @@ double _advance_score(State &state, DictRef battle, DictRef active_stack, ArrayR
 		if (_side_controls_field_objective_type(state, battle, side, key::obstruction_line)) {
 			score -= 3.0;
 		}
-		if (_stack_cohesion_total(state, active_stack, battle) <= 4) {
+		// A shaken stack would rather rally than advance, unless fire it cannot answer spoils the rally.
+		if (_stack_cohesion_total(state, active_stack, battle) <= 4 && !rally_spoiled_by_fire(state, battle, active_stack, current_distance)) {
 			score -= _w(state, key::advance_own_shaken);
 		}
 	}

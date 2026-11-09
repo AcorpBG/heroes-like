@@ -45,6 +45,7 @@ None open.
 
 ## Open work
 
+- `battle-ai-shaken-under-fire-20261109` (in progress): A melee stack that cannot strike from where it stands, facing a side that out-shoots its own, no longer holds to rally when shaken: the volleys take more cohesion than a Defend gives back, so a lone guard facing shooters defended until it died (owner's Roadwardens Patrol). battle_ai_attack_scores.cpp, _defend_score and _advance_score. Owner (2026-11-09): fix it. See `docs/battle-rework.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

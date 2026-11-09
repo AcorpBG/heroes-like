@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-stage-effects-brasshollow-20261109",
- "currentSliceTitle": "Brasshollow's town view has four shader effects from its layout's stage_effects: churning slag, heat haze, flickering fire light and rising embers; reduced motion holds them still, high contrast leaves them out.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T15:42:02Z",
+ "currentSliceId": "battle-ai-shaken-under-fire-20261109",
+ "currentSliceTitle": "Battle AI: a shaken melee stack under fire it cannot answer advances",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-09T14:26:32Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-ai-shaken-under-fire-20261109",
+   "title": "Battle AI: a shaken melee stack under fire it cannot answer advances",
+   "status": "in_progress",
+   "goal": "A melee stack that cannot strike from where it stands, facing a side that out-shoots its own, no longer holds to rally when shaken: the volleys take more cohesion than a Defend gives back, so a lone guard facing shooters defended until it died (owner's Roadwardens Patrol). battle_ai_attack_scores.cpp, _defend_score and _advance_score. Owner (2026-11-09): fix it.",
+   "docs": [
+    "docs/battle-rework.md"
+   ],
+   "updatedAt": "2026-11-09"
+  },
   {
    "id": "town-stage-effects-brasshollow-20261109",
    "status": "completed",
