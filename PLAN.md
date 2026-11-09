@@ -37,6 +37,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-04: Every computer player's start hero and start army stand at its capital before player 1 moves, not from its own first turn.
 - 2026-11-05: A neutral town starts with a garrison of two weeks of its own tier 1-3 growth, so it is not free to take on day 1.
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
+- 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 
 ## Questions for the owner
 
@@ -44,6 +45,7 @@ None open.
 
 ## Open work
 
+- `battle-full-speed-20261109` (in progress): Battle movement counts a creature's full speed instead of holding it at 6 (owner decision, 2026-11-09: the cap left fast units no way to counter ranged armies). Spells still add on top; rooting, mire and the siege penalty are unchanged; the stack card shows the full speed. Files: board_setup.cpp, battle_screen_details.cpp, docs/battle-rework.md.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

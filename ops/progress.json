@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "bugfix-editor-guild-draws-20261109",
- "currentSliceTitle": "The editor names a loaded package's working copy after the package hashes, not the clock, so its guild draws repeat on every load; players' maps-folder games keep a clock id. Editor parity replays identically.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T08:18:01Z",
+ "currentSliceId": "battle-full-speed-20261109",
+ "currentSliceTitle": "Battle: a creature's full speed counts, no cap at 6",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-09T08:56:34Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-full-speed-20261109",
+   "title": "Battle: a creature's full speed counts, no cap at 6",
+   "status": "in_progress",
+   "goal": "Battle movement counts a creature's full speed instead of holding it at 6 (owner decision, 2026-11-09: the cap left fast units no way to counter ranged armies). Spells still add on top; rooting, mire and the siege penalty are unchanged; the stack card shows the full speed. Files: board_setup.cpp, battle_screen_details.cpp, docs/battle-rework.md.",
+   "docs": [],
+   "updatedAt": "2026-11-09"
+  },
   {
    "id": "bugfix-editor-guild-draws-20261109",
    "status": "completed",

@@ -178,7 +178,7 @@ DictRef stack_details(State &state, DictRef battle, Atom battle_id) {
 	state.set(details, str(key::damage), dict_value(pair_dict(state, key::min_, int_value(min_damage), key::max, int_value(max_damage))));
 	const int64_t health_base = gd::int_field(state, unit, key::hp, unit_hp);
 	state.set(details, str(key::health), dict_value(pair_dict(state, key::base, int_value(health_base), key::value, int_value(unit_hp))));
-	const int64_t speed_base = engine_clamp<int64_t>(gd::to_int(state, state.get(unit, str(key::speed), state.get(stack, str(key::speed), int_value(1)))), 1, 6);
+	const int64_t speed_base = engine_max<int64_t>(1, gd::to_int(state, state.get(unit, str(key::speed), state.get(stack, str(key::speed), int_value(1)))));
 	const int64_t speed_value = _stack_movement_points(state, stack, battle);
 	state.set(details, str(key::speed), dict_value(pair_dict(state, key::base, int_value(speed_base), key::value, int_value(speed_value))));
 	const int64_t initiative_base = gd::to_int(state, state.get(unit, str(key::initiative), state.get(stack, str(key::initiative), int_value(1))));

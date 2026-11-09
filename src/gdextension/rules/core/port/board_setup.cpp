@@ -303,7 +303,8 @@ int64_t _stack_movement_points(State &state, DictRef stack, DictRef battle) {
 		return 0;
 	}
 	const int64_t haste = !gd::is_empty(state, battle) ? spell_rules::effect_bonus_for_kind(state, stack, battle, key::speed) : 0;
-	const int64_t speed = engine_clamp<int64_t>(gd::int_field(state, stack, key::speed, 1), 1, 6);
+	// The creature's full speed, at least 1 (no cap: fast stacks are what reaches shooters).
+	const int64_t speed = engine_max<int64_t>(1, gd::int_field(state, stack, key::speed, 1));
 	const int64_t hasted = gd::add(speed, haste);
 	const int64_t penalty = town_battle_rules::movement_penalty(state, battle, stack);
 	const int64_t points = engine_max<int64_t>(1, gd::sub(hasted, penalty));
