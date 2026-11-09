@@ -98,9 +98,10 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.70, 0.56), "radius": 0.090, "color": Color(0.56, 1.0, 0.58), "strength": 0.78},
 	],
 	"faction_brasshollow": [
-		{"position": Vector2(0.62, 0.46), "radius": 0.075, "color": Color(1.0, 0.48, 0.12), "strength": 0.74},
-		{"position": Vector2(0.83, 0.78), "radius": 0.095, "color": Color(1.0, 0.30, 0.05), "strength": 0.96},
-		{"position": Vector2(0.18, 0.68), "radius": 0.065, "color": Color(1.0, 0.58, 0.18), "strength": 0.68},
+		# Along the slag river of the canyon: below the falls, mid-stream, foreground.
+		{"position": Vector2(0.84, 0.37), "radius": 0.080, "color": Color(1.0, 0.48, 0.12), "strength": 0.76},
+		{"position": Vector2(0.50, 0.63), "radius": 0.085, "color": Color(1.0, 0.40, 0.08), "strength": 0.84},
+		{"position": Vector2(0.24, 0.84), "radius": 0.090, "color": Color(1.0, 0.30, 0.05), "strength": 0.94},
 	],
 	"faction_veilmourn": [
 		{"position": Vector2(0.34, 0.19), "radius": 0.110, "color": Color(0.60, 0.75, 1.0), "strength": 0.68},
@@ -177,7 +178,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png",
 	},
 	"faction_brasshollow": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_brasshollow_cleared_foundry.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_brasshollow_slag_canyon.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png",
 	},
@@ -388,9 +389,15 @@ func _draw() -> void:
 	if not _draw_scenic_backdrop(scene_rect):
 		_draw_procedural_stage(scene_rect)
 	else:
+		# Layers cut with their own painted ground take the stage tint and light
+		# with the backdrop, so that ground cannot show as a brighter patch.
+		var layers_under_light := _building_layers_under_stage_light()
+		if layers_under_light:
+			_draw_integrated_buildings(scene_rect)
 		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
 		_draw_scenic_ambient_light(scene_rect)
-		_draw_integrated_buildings(scene_rect)
+		if not layers_under_light:
+			_draw_integrated_buildings(scene_rect)
 	_draw_status_plaques(scene_rect)
 	if not _external_command_overlay:
 		_draw_district_strip(scene_rect)
@@ -1366,6 +1373,9 @@ func _building_scene_faction_layout() -> Dictionary:
 	var faction_layout: Variant = factions.get(_town_faction_id(), {})
 	return faction_layout if faction_layout is Dictionary else {}
 
+func _building_layers_under_stage_light() -> bool:
+	return bool(_building_scene_faction_layout().get("layers_under_stage_light", false))
+
 func _town_scene_layers() -> Dictionary:
 	if not _building_scene_art_loaded:
 		_building_scene_art_loaded = true
@@ -1616,15 +1626,32 @@ func _sync_building_hotspots() -> void:
 		if texture == null:
 			continue
 		if not _town_building_masks.has(path):
-			var mask := BitMap.new()
-			mask.create_from_image_alpha(texture.get_image(), float(_town_scene_layer(building_id).get("hit_alpha_threshold", 0.25)))
-			_town_building_masks[path] = mask
+			_town_building_masks[path] = _town_building_hit_mask(building_id, texture)
 		button.painted_mask = _town_building_masks[path]
 		button.texture_region_ratio = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
 		button.visible = true
 		button.queue_redraw()
 		# Pointer ordering follows the same ground-depth order as the paintings.
 		move_child(button, get_child_count() - 1)
+
+func _town_building_hit_mask(building_id: String, texture: Texture2D) -> BitMap:
+	# A layer cut with its own painted ground declares a hit mask of the
+	# building alone, at the layer's size: clicks and the hover outline follow
+	# the building, not the ground around it.
+	var layer := _town_scene_layer(building_id)
+	var image := texture.get_image()
+	var mask_path := String(layer.get("hit_mask_path", ""))
+	if mask_path != "":
+		var mask_texture: Texture2D = null
+		if ResourceLoader.exists(mask_path, "Texture2D"):
+			mask_texture = load(mask_path) as Texture2D
+		if mask_texture != null and mask_texture.get_size() == texture.get_size():
+			image = mask_texture.get_image()
+		else:
+			push_error("Town building hit mask is missing or does not match its layer: %s" % mask_path)
+	var mask := BitMap.new()
+	mask.create_from_image_alpha(image, float(layer.get("hit_alpha_threshold", 0.25)))
+	return mask
 
 func _town_building_catalog_ids() -> Array:
 	var result: Array = []
@@ -1744,7 +1771,7 @@ func validation_town_building_progression_summary() -> Dictionary:
 		"isolated_building_texture_count": 0,
 		"construction_stake_overlay_enabled": false,
 		"runtime_generated_plot_fallback_enabled": false,
-		"draw_order": ["village_base_scene", "ambient_light_bloom", "depth_sorted_exact_building_layers", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
+		"draw_order": (["village_base_scene", "depth_sorted_exact_building_layers", "stage_tint", "ambient_light_bloom"] if _building_layers_under_stage_light() else ["village_base_scene", "stage_tint", "ambient_light_bloom", "depth_sorted_exact_building_layers"]) + ["status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
 	}
 
 func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:
