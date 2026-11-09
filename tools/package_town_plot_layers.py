@@ -3,8 +3,9 @@
 Every building was painted into the faction's empty backdrop by a masked edit whose
 mask is the building's plot box. For a small plot the edit was a close-up crop of the
 backdrop, so the model painted the building at the plot's size; this step scales such
-an edit back into the full scene. It then cuts the building out together with the
-painted ground at its foundation and writes:
+an edit back into the full scene. It cuts the building along its matte, which
+tools/town_plot_mattes.py made with BiRefNet: the parts that touch the plot, holes such
+as arches filled, with a short soft skirt of the painted ground at its foot. It writes:
 
 - the runtime layer (at most 512 px) and, beside it, a hit mask of the building alone,
   so clicks and the hover outline follow the building rather than its ground,
@@ -13,10 +14,10 @@ painted ground at its foundation and writes:
 - the scene-art rows, the plot sites in the layout, and the backdrop record.
 
 The packet (tracked JSON next to the prompts) lists the plots, and for each building
-its box, painting, prompt and reference images. Paintings, references and the backdrop
-master are untracked sources.
+its box, painting, matte, prompt and reference images. Paintings, mattes, references and
+the backdrop master are untracked sources.
 
-Needs numpy, scipy, Pillow and opencv-python (GrabCut).
+Needs numpy, scipy and Pillow.
 
 usage: python tools/package_town_plot_layers.py art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.json
 """
@@ -25,7 +26,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import cv2
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -115,77 +115,76 @@ def change(a, b):
     return ndimage.gaussian_filter(np.abs(a - b).max(axis=2), 1.2)
 
 
-def cut(master, edit, box, others, pad, grow, band):
-    """The layer and building alphas around one plot, in a window of the full scene.
+def smoothstep(low, high, x):
+    t = np.clip((x - low) / (high - low), 0.0, 1.0)
+    return t * t * (3.0 - 2.0 * t)
 
-    Returns the window origin, the tone-matched edit, the layer alpha (the building plus
-    the painted ground in a band above its base) and the building's own mask.
+
+def skirt(solid, radius, rise):
+    """A soft band of painted ground at the building's foot, fading out over radius pixels."""
+    height = solid.shape[0]
+    has = solid.any(axis=0)
+    low = np.where(has, height - 1 - np.argmax(solid[::-1], axis=0), -1)
+    foot = np.zeros_like(solid)
+    for x in np.flatnonzero(has):
+        foot[max(0, low[x] - rise):low[x] + 1, x] = True
+    band = np.clip(1.0 - ndimage.distance_transform_edt(~foot) / radius, 0.0, 1.0)
+    band = band * band * (3.0 - 2.0 * band)
+    # Only at and below the foot: never a halo up the building's sides.
+    top = ndimage.minimum_filter1d(np.where(has, low - rise, height), size=2 * radius + 1)
+    return np.where(np.arange(height)[:, None] >= top[None, :], band, 0.0) * ~solid
+
+
+def cut(master, edit, item, matte, settings):
+    """The layer around one building, from its matte, in a window of the full scene.
+
+    Returns the window origin, the layer colours (the tone-matched painting, edge colours
+    un-mixed from the backdrop), the layer alpha (the building and a short skirt of its
+    painted foundation), the building's own alpha and its solid mask.
     """
     height, width = master.shape[:2]
-    x, y, w, h = box
-    cx0, cy0 = max(0, x - pad), max(0, y - pad)
-    cx1, cy1 = min(width, x + w + pad), min(height, y + h + pad)
+    x, y, w, h = item['box']
+    wx, wy, ww, wh = item['matte']['window']
+    if matte.shape != (wh, ww):
+        raise ValueError('matte does not fit its window: ' + item['id'])
+    a = np.zeros((height, width), np.float32)
+    a[wy:wy + wh, wx:wx + ww] = matte
+    reach = settings['plot_reach']
+    near_plot = np.zeros((height, width), bool)
+    near_plot[max(0, y - reach):y + h + reach, max(0, x - reach):x + w + reach] = True
+    # The building: the matte's parts that touch its plot, holes (arches, lattices) filled.
+    solid = a > 0.5
+    labels, _ = ndimage.label(solid)
+    touching = np.unique(labels[solid & near_plot])
+    touching = touching[touching > 0]
+    if not len(touching):
+        raise ValueError('no building in the matte: ' + item['id'])
+    sizes = ndimage.sum(solid, labels, touching)
+    solid = ndimage.binary_fill_holes(np.isin(labels, touching[sizes >= 0.02 * sizes.max()]))
+    building = smoothstep(settings['alpha_low'], settings['alpha_high'], a) * ndimage.binary_dilation(solid, iterations=3)
+    building = np.maximum(building, ndimage.binary_erosion(solid, iterations=2).astype(np.float32))
+    ys, xs = np.nonzero(building > 0.004)
+    pad = settings['skirt_radius'] + 4
+    cy0, cy1 = max(0, ys.min() - pad), min(height, ys.max() + pad + 1)
+    cx0, cx1 = max(0, xs.min() - pad), min(width, xs.max() + pad + 1)
     m = master[cy0:cy1, cx0:cx1]
     e = edit[cy0:cy1, cx0:cx1].copy()
-
-    def rect(bx, by, bw, bh):
-        r = np.zeros(m.shape[:2], bool)
-        r[max(0, by - cy0):max(0, by - cy0 + bh), max(0, bx - cx0):max(0, bx - cx0 + bw)] = True
-        return r
-
-    inside = rect(x, y, w, h)
-    # Match the edit's tone to the backdrop on the bare ground inside the box, as an
+    solid, building = solid[cy0:cy1, cx0:cx1], building[cy0:cy1, cx0:cx1]
+    # Match the painting's tone to the backdrop on the bare ground inside the box, as an
     # offset only: a gain would sharpen the building along with the ground.
+    inside = np.zeros(solid.shape, bool)
+    inside[max(0, y - cy0):max(0, y - cy0 + h), max(0, x - cx0):max(0, x - cx0 + w)] = True
     land = inside & ~ndimage.binary_dilation(change(e, m) > 30, iterations=20)
     if land.sum() < 3000:
         land = inside & ~ndimage.binary_dilation(change(e, m) > 50, iterations=6)
-    for c in range(3):
-        e[..., c] = np.clip(e[..., c] + np.clip(m[..., c][land].mean() - e[..., c][land].mean(), -25.0, 25.0), 0, 255)
-    d = change(e, m)
-    # The building: GrabCut on the edit and its change, seeded by the strongest change
-    # that touches the box (the model paints a little past the mask: steps, cranes).
-    core = d > 70
-    labels, count = ndimage.label(core)
-    if count:
-        sizes = ndimage.sum(core, labels, range(1, count + 1))
-        keep = np.zeros(count + 1, bool)
-        for i in range(1, count + 1):
-            keep[i] = sizes[i - 1] >= 0.02 * sizes.max() and bool(((labels == i) & inside).any())
-        core = keep[labels]
-    core = ndimage.binary_erosion(core, iterations=1)
-    if not core.any():
-        raise ValueError('no building painted in the box')
-    near = ndimage.binary_dilation(core, iterations=36)
-    trimap = np.full(d.shape, cv2.GC_PR_BGD, np.uint8)
-    trimap[(d > 26) & near] = cv2.GC_PR_FGD
-    trimap[~ndimage.binary_dilation(inside, iterations=70) | ((d < 9) & ~near)] = cv2.GC_BGD
-    trimap[core] = cv2.GC_FGD
-    cv2.setRNGSeed(0)
-    cv2.grabCut(np.dstack([e[..., 2], e[..., 1], np.clip(d * 2.5, 0, 255)]).astype(np.uint8), trimap, None,
-                np.zeros((1, 65)), np.zeros((1, 65)), 6, cv2.GC_INIT_WITH_MASK)
-    solid = (trimap == cv2.GC_FGD) | (trimap == cv2.GC_PR_FGD)
-    labels, _ = ndimage.label(solid)
-    seeded = np.unique(labels[core])
-    solid = ndimage.binary_fill_holes(ndimage.binary_closing(np.isin(labels, seeded[seeded > 0]), iterations=3))
-    labels, count = ndimage.label(solid)
-    if count > 1:  # stray patches of changed smoke or rock away from the building
-        sizes = ndimage.sum(solid, labels, range(1, count + 1))
-        solid = np.isin(labels, 1 + np.flatnonzero(sizes >= 0.15 * sizes.max()))
-    building = ndimage.gaussian_filter(solid.astype(np.float32), 1.0)
-    # The layer keeps the edit's painted ground (foundation, path, shadow) only in a
-    # band above the building's base: higher up the edit repaints the scene softer
-    # than the backdrop. Inside other plots' boxes it keeps the building alone.
-    ground = ndimage.gaussian_filter(ndimage.binary_dilation(inside, iterations=grow).astype(np.float32), 6.0)
-    rows = np.arange(ground.shape[0], dtype=np.float32)[:, None]
-    base = np.nonzero(solid)[0].max()
-    ground *= np.clip((rows - (base - band)) / (band * 0.5), 0.0, 1.0)
-    alpha = np.maximum(ground, building)
-    zone = np.zeros_like(inside)
-    for other in others:
-        zone |= rect(*other)
-    if zone.any():
-        zone_weight = ndimage.gaussian_filter(ndimage.binary_dilation(zone, iterations=grow).astype(np.float32), 6.0)
-        alpha = alpha * (1.0 - zone_weight) + building * zone_weight
+    if land.any():
+        for c in range(3):
+            e[..., c] = np.clip(e[..., c] + np.clip(m[..., c][land].mean() - e[..., c][land].mean(), -25.0, 25.0), 0, 255)
+    alpha = np.maximum(building, settings['skirt_strength'] * skirt(solid, settings['skirt_radius'], settings['skirt_rise']))
+    # Edge colours un-mixed from the backdrop, so the layer over the backdrop gives the
+    # painting back instead of a fringe of the painting's own background.
+    soft = (alpha > 0.02) & (alpha < 0.98)
+    e[soft] = np.clip((e[soft] - (1.0 - alpha[soft, None]) * m[soft]) / alpha[soft, None], 0, 255)
     return (cx0, cy0), e, alpha, building, solid
 
 
@@ -240,9 +239,12 @@ def main():
         source = ROOT / item['source_path']
         if digest(source) != item['source_sha256']:
             raise ValueError('Changed painting: ' + str(source))
-        others = [box for plot_id, box in packet['plots'].items() if plot_id != item['plot_id']]
-        (cx0, cy0), edit, alpha, building, solid = cut(master, full_edit(master_image, item), item['box'], others,
-                                                       settings['pad'], settings['grow'], settings['ground_band'])
+        matte_path = ROOT / item['matte']['path']
+        if digest(matte_path) != item['matte']['sha256']:
+            raise ValueError('Changed matte: ' + str(matte_path))
+        with Image.open(matte_path) as matte_image:
+            matte = np.asarray(matte_image.convert('L')).astype(np.float32) / 255.0
+        (cx0, cy0), edit, alpha, building, solid = cut(master, full_edit(master_image, item), item, matte, settings)
         ys, xs = np.nonzero(alpha > 0.004)
         ly0, ly1, lx0, lx1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
         layer = Image.fromarray(np.dstack([edit, alpha * 255.0])[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'RGBA')

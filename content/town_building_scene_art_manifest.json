@@ -19422,23 +19422,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_wayfarers_hall",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_wayfarers_hall.png",
-        "runtime_sha256": "521a621f49f1f8c78b7fa8b51ed2c465805345509bbfe8c2a73bc1f2ef901176",
+        "runtime_sha256": "31e721c0deed275aecac3cadbe92514955b4ddc56eabdd5d5f62aa56f52c82a8",
         "runtime_size": [
-          244,
-          214
+          272,
+          221
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_wayfarers_hall_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_wayfarers_hall.png",
-        "icon_sha256": "cc31af9c6319b0b9103fab95a5a00b82ab91c93ef69d8aebb6b6b220dd46ca39",
+        "icon_sha256": "1d2cca3c556512646f9601e49d5be22bb27732fa3ae376b5fc9d3c04805c5b20",
         "normalized_rect": [
-          0.254395,
-          0.303819,
-          0.119141,
-          0.185764
+          0.249512,
+          0.273438,
+          0.132812,
+          0.19184
         ],
         "ground_anchor": [
-          0.313477,
-          0.461806
+          0.315674,
+          0.454861
         ],
         "modulate": [
           1,
@@ -19447,7 +19447,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_market_square": {
@@ -19468,23 +19468,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_market_square",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_market_square.png",
-        "runtime_sha256": "814565640273389a8f4a877676caaccb9e4d6ec289ecd0defdb1cf61f57f7be6",
+        "runtime_sha256": "6ff340117966ceb24b956ffc35a006d82f502aa803f54abce9fca649dbadf367",
         "runtime_size": [
-          405,
-          211
+          387,
+          156
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_market_square_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_market_square.png",
-        "icon_sha256": "244b00a1da5dd21d95c82ac2958b95e2d3e7adf33dc6abae9bb4810bf26faac1",
+        "icon_sha256": "11900d0db523693e7a63eeca50fb8b545b41c3263808b0f7da05b11f1a9de306",
         "normalized_rect": [
-          0.240723,
-          0.545139,
-          0.197754,
-          0.18316
+          0.238281,
+          0.547743,
+          0.188965,
+          0.135417
         ],
         "ground_anchor": [
-          0.339111,
-          0.709201
+          0.33252,
+          0.672743
         ],
         "modulate": [
           1,
@@ -19493,7 +19493,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_brasshollow_scalehouse": {
@@ -20642,23 +20642,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_fort_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_1.png",
-        "runtime_sha256": "12ef0676b7a569289f3aab758b02b55adb5f32a05f7ca6cf70adfcc2e3619b74",
+        "runtime_sha256": "a1d48456e3deceb3da54b2f199f7020fbe50a19398a9e8eade9f6ad13dffd8a3",
         "runtime_size": [
-          397,
-          177
+          373,
+          144
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_fort_1.png",
-        "icon_sha256": "8f23a7f0b04086285dd5a8f4290bdda3f120621575865671600f4779fc0e2e44",
+        "icon_sha256": "953e74c5a6ba8c5610dac3cf7752640309d8051ae72a00daebd256dfdf9d2097",
         "normalized_rect": [
-          0.778809,
-          0.184028,
-          0.193848,
-          0.153646
+          0.773926,
+          0.165799,
+          0.182129,
+          0.125
         ],
         "ground_anchor": [
-          0.866455,
-          0.334201
+          0.864746,
+          0.280382
         ],
         "modulate": [
           1,
@@ -20667,7 +20667,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_fort_2": {
@@ -20688,23 +20688,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_fort_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_2.png",
-        "runtime_sha256": "7dd44e67e4830fa483ea8d14db5ec9dd2c9dbcb44f6509789ea4237f6f281843",
+        "runtime_sha256": "aba66e36ad3e6c2f1f4bcf39f47d10baa407e879ca589875bb2bfcce8c644a4c",
         "runtime_size": [
-          428,
-          218
+          492,
+          201
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_fort_2.png",
-        "icon_sha256": "6c0ef77c6d93dde54fd25c147bd2f0d50f496cb9c25eff7f439445518799354f",
+        "icon_sha256": "80022e67b875da2e992a6b06fe20be106f783eb07d1c9044f0b289fc08d2a4da",
         "normalized_rect": [
-          0.773926,
-          0.139757,
-          0.208984,
-          0.189236
+          0.745117,
+          0.118924,
+          0.240234,
+          0.174479
         ],
         "ground_anchor": [
-          0.883301,
-          0.317708
+          0.86499,
+          0.282986
         ],
         "modulate": [
           1,
@@ -20713,7 +20713,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_fort_3": {
@@ -20734,23 +20734,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_fort_3",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_3.png",
-        "runtime_sha256": "298475a71fc1068b88e45f6ca3a5369f490efdc6169db7301cff93ea0702233a",
+        "runtime_sha256": "65be19d64255599dbb4020aa851d316beca7efcd5e3e5076ff239973921b8e38",
         "runtime_size": [
-          455,
-          297
+          512,
+          259
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_fort_3_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_fort_3.png",
-        "icon_sha256": "72a82ea418e69696490ea305518d4995a4672ee4b55ef86a44bd3c9e1c01b42b",
+        "icon_sha256": "4c6414f02dc5faf8570f0a91ccac4fabc1844b8268ffa0fd80da5c685c16ab1d",
         "normalized_rect": [
-          0.768066,
-          0.078993,
-          0.222168,
-          0.257812
+          0.738281,
+          0.080729,
+          0.261719,
+          0.235243
         ],
         "ground_anchor": [
-          0.893555,
-          0.334201
+          0.871582,
+          0.305556
         ],
         "modulate": [
           1,
@@ -20759,7 +20759,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_guild_1": {
@@ -20780,23 +20780,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_guild_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_1.png",
-        "runtime_sha256": "28a82ba4fe04d3de2f7dd81aadeae9dc1f3aefa9237cb22cb1585ebb86d92788",
+        "runtime_sha256": "0e4e62b0141c21cf57244c810e24391ea0f36f161edaf8cbc10aa6131dc13fe2",
         "runtime_size": [
-          235,
-          158
+          140,
+          88
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_guild_1.png",
-        "icon_sha256": "de6ce35ed1a1908ef74ac1accb8af8c877c767cb6bfe80eebeaddc2aeb995f7b",
+        "icon_sha256": "99d0181082bd9eb46ca017811e6aa8d17f5b851b4d531d47b5ad2fbd36a26f51",
         "normalized_rect": [
-          0.300781,
-          0.1875,
-          0.114746,
-          0.137153
+          0.32373,
+          0.194444,
+          0.068359,
+          0.076389
         ],
         "ground_anchor": [
-          0.359375,
-          0.288194
+          0.357666,
+          0.260417
         ],
         "modulate": [
           1,
@@ -20805,7 +20805,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_guild_2": {
@@ -20826,23 +20826,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_guild_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_2.png",
-        "runtime_sha256": "5a5663d44a1079da28bc9bc2a04fff1ca5b9910b1fed5569db76e23858512e3f",
+        "runtime_sha256": "0a2486f6b31c6b464b93293891f80a8f953a2cb435f42c9957972854b5df029d",
         "runtime_size": [
-          241,
-          210
+          138,
+          135
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_guild_2.png",
-        "icon_sha256": "48bd93dd8669a3d23b6958aff1e725c35e69883ed87ce7eac1b602be597ac323",
+        "icon_sha256": "c40e52b3a53e5e36d95756d960db11a3b7bc04fda807bb5a2d8ff9268b9ce693",
         "normalized_rect": [
-          0.29834,
-          0.142361,
-          0.117676,
-          0.182292
+          0.324707,
+          0.144097,
+          0.067383,
+          0.117188
         ],
         "ground_anchor": [
-          0.357422,
-          0.287326
+          0.358154,
+          0.250868
         ],
         "modulate": [
           1,
@@ -20851,7 +20851,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_guild_3": {
@@ -20872,23 +20872,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_guild_3",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_3.png",
-        "runtime_sha256": "8d04bd7e7827fbdf1833023beacdf7f22864faf6d65d45f41e3d008341d0fada",
+        "runtime_sha256": "109a7f5bd740acbadc1b111243ab08587966bdbf558f71c082b7ccb4079ad7f3",
         "runtime_size": [
-          246,
-          217
+          133,
+          158
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_3_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_guild_3.png",
-        "icon_sha256": "73ee889705b5be6d4703088654c444e9bf52a926276f38fcfa1d8fcb418814dc",
+        "icon_sha256": "1e7b1e3d828fd3b3fffbf0ab721f9b0762777aebc5877b77c87fb53e3b908606",
         "normalized_rect": [
-          0.295898,
-          0.136285,
-          0.120117,
-          0.188368
+          0.32666,
+          0.128472,
+          0.064941,
+          0.137153
         ],
         "ground_anchor": [
-          0.357666,
-          0.291667
+          0.358887,
+          0.255208
         ],
         "modulate": [
           1,
@@ -20897,7 +20897,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_guild_4": {
@@ -20918,23 +20918,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_guild_4",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_4.png",
-        "runtime_sha256": "620f7f6a00d6622df79f72600b8ae776d51a5a4725ec731e27ce431e254295cb",
+        "runtime_sha256": "8bcfa46dc4a4f7a06657eec5bea95d65edc15ee195545f632b2cb741022113d0",
         "runtime_size": [
-          252,
-          265
+          167,
+          190
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_4_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_guild_4.png",
-        "icon_sha256": "81945cb6b10a09589bbcf2b43d948331451a4d5976657b245e4e0698fa117f1d",
+        "icon_sha256": "b36395ec6d334339b10af9e9c7f4ea4edae08f84022c30372b332382ccbbfb90",
         "normalized_rect": [
-          0.293457,
-          0.094618,
-          0.123047,
-          0.230035
+          0.314941,
+          0.095486,
+          0.081543,
+          0.164931
         ],
         "ground_anchor": [
-          0.36084,
-          0.291667
+          0.355469,
+          0.25
         ],
         "modulate": [
           1,
@@ -20943,7 +20943,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_guild_5": {
@@ -20964,23 +20964,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_guild_5",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_5.png",
-        "runtime_sha256": "8d6dc0f0c4aa5c585b1d19dc44b5c39841675d02977488375c209c532c83d7c9",
+        "runtime_sha256": "4f19d89f60545c2e88122d2e5e2b3cb0c86e9b7d1b2ca8f000aeec2180f37fa5",
         "runtime_size": [
-          263,
-          367
+          281,
+          355
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_guild_5_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_guild_5.png",
-        "icon_sha256": "1f5146e881378c844fee29adf4c5eefece12f31a127a0d8612bfbd68f4d220b4",
+        "icon_sha256": "5ec5ff4a03f05bd871eff3204f8f4b997fd48d0d85f8aea8ad8104a4f310b52d",
         "normalized_rect": [
-          0.291992,
-          0.020833,
-          0.128418,
-          0.318576
+          0.27832,
+          0.005208,
+          0.137207,
+          0.30816
         ],
         "ground_anchor": [
-          0.356689,
-          0.335938
+          0.34668,
+          0.302951
         ],
         "modulate": [
           1,
@@ -20989,7 +20989,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_trade_exchange": {
@@ -21010,23 +21010,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_trade_exchange",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_trade_exchange.png",
-        "runtime_sha256": "d95796eb043084e4c18a96000a060abb34361aaa9a6d21bb5f98a198a38b5999",
+        "runtime_sha256": "08d96f1d5408a3b8c8ef219ce3abb2e8404d3d2181c3175ad4f8eff689f4699c",
         "runtime_size": [
-          412,
-          256
+          413,
+          191
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_trade_exchange_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_trade_exchange.png",
-        "icon_sha256": "5bcee2d0b20576f5610d72bbf7f465d514c5f7e6e32caafa353b988c46dc5568",
+        "icon_sha256": "05f7710802969d1193ffd297a7423e35dcdd032bff33b635dcd13a7c2ceb2638",
         "normalized_rect": [
-          0.23877,
-          0.506076,
-          0.201172,
-          0.222222
+          0.234863,
+          0.507812,
+          0.20166,
+          0.165799
         ],
         "ground_anchor": [
-          0.339355,
-          0.710069
+          0.335449,
+          0.663194
         ],
         "modulate": [
           1,
@@ -21035,7 +21035,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_storehouse_1": {
@@ -21056,23 +21056,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_storehouse_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_storehouse_1.png",
-        "runtime_sha256": "ee15fec7264bdda700e9812d8f15d31c1ff68a892f2a51ef729106a79a522b99",
+        "runtime_sha256": "313f3936aa73bec311fa44745cd9d81f6531b4722040e15783d2a80eb62b2e48",
         "runtime_size": [
-          336,
-          165
+          244,
+          139
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_storehouse_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_storehouse_1.png",
-        "icon_sha256": "1f64c10de0a8197afad08d376133cbf2120bec35a42599a4ad5d674e01393a65",
+        "icon_sha256": "1b3b15291cf8d61aab33ae7a7986dcf3e833aa409418aae53939fe6e1e1b91d4",
         "normalized_rect": [
-          0.116699,
+          0.121582,
           0.380208,
-          0.164062,
-          0.143229
+          0.119141,
+          0.12066
         ],
         "ground_anchor": [
-          0.19873,
-          0.519965
+          0.180908,
+          0.490451
         ],
         "modulate": [
           1,
@@ -21081,7 +21081,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_storehouse_2": {
@@ -21102,23 +21102,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_storehouse_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_storehouse_2.png",
-        "runtime_sha256": "a392b8f76fce53d26111a53e335b0e57a4dce1d540ba91eaa13ea79536eb3c62",
+        "runtime_sha256": "865af5d6a65ce8f52b98ef901678b84e04709eb0ccd98dc1bf662a413e193678",
         "runtime_size": [
-          369,
-          209
+          353,
+          166
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_storehouse_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_storehouse_2.png",
-        "icon_sha256": "cecb85e61b79594076a53597363055541eb7a249ace3c8245417f3eb814fc625",
+        "icon_sha256": "3d7c1f84e7d89e2748bc41bc41def15aaa0c9199d47024018d60cbe10a7e071a",
         "normalized_rect": [
-          0.108887,
-          0.361979,
-          0.180176,
-          0.181424
+          0.109863,
+          0.357639,
+          0.172363,
+          0.144097
         ],
         "ground_anchor": [
-          0.199219,
-          0.539931
+          0.195801,
+          0.491319
         ],
         "modulate": [
           1,
@@ -21127,7 +21127,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_growth_1": {
@@ -21148,23 +21148,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_growth_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_1.png",
-        "runtime_sha256": "4a64b3d3edb2b162f9978361dfc18437e0f2571a460bc0fffe14710d890b23fa",
+        "runtime_sha256": "b43d29d50eb612a05f187cd42ead355425b038ef02d68e4d803da128c0e5f388",
         "runtime_size": [
-          273,
-          118
+          267,
+          120
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_growth_1.png",
-        "icon_sha256": "1467d1de5b54ca7616bf24972d506ab0955797ba15274c3266d107a6799120c6",
+        "icon_sha256": "9e18900128b557010b09065bd30b8a51d13201a4fc2935a59d6732dc58f124a4",
         "normalized_rect": [
-          0.12793,
-          0.266493,
-          0.133301,
-          0.102431
+          0.137207,
+          0.268229,
+          0.130371,
+          0.104167
         ],
         "ground_anchor": [
-          0.194336,
-          0.366319
+          0.202148,
+          0.361979
         ],
         "modulate": [
           1,
@@ -21173,7 +21173,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_growth_2": {
@@ -21194,23 +21194,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_growth_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_2.png",
-        "runtime_sha256": "1c78612b6f871d031bb13cd7ffcd4c344ba95a350d99ab2293098b7ce43cda9d",
+        "runtime_sha256": "d6d611767695b6ffdb665c9bf14187a29f82432d1d32cfeeb0eea276c1a0697c",
         "runtime_size": [
-          293,
-          180
+          304,
+          164
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_growth_2.png",
-        "icon_sha256": "ecf10a674e3e63c613f5885c39d68ebece3788a63e298334f86e64d7d4f004be",
+        "icon_sha256": "b18480270ff219a4be444066e3ca3eeacb00906749cf10dd18f3530b7eb011e2",
         "normalized_rect": [
-          0.64209,
-          0.46441,
-          0.143066,
-          0.15625
+          0.638184,
+          0.465278,
+          0.148438,
+          0.142361
         ],
         "ground_anchor": [
-          0.713379,
-          0.618056
+          0.712158,
+          0.597222
         ],
         "modulate": [
           1,
@@ -21219,7 +21219,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_growth_3": {
@@ -21240,23 +21240,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_growth_3",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_3.png",
-        "runtime_sha256": "b94d5558030faebb88f1272fbf9a85e50d38199e0e0b4e100568131b7fdc3227",
+        "runtime_sha256": "454cfcbc76a09eafef25355c34465c9a265ed2974fae0b9d27f29ab8a94cc697",
         "runtime_size": [
-          247,
-          155
+          249,
+          168
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_growth_3_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_growth_3.png",
-        "icon_sha256": "2d26fba0f06b676f0c95c0b3d2bee528242dc8add3164da4cd738eb77fe84ee2",
+        "icon_sha256": "42c0bd2370efcd22702461d602ab3e4cb32f937e80c37d4b0a17b07ed85fe9b3",
         "normalized_rect": [
-          0.661133,
-          0.578993,
-          0.120605,
-          0.134549
+          0.650879,
+          0.580729,
+          0.121582,
+          0.145833
         ],
         "ground_anchor": [
-          0.721191,
-          0.710069
+          0.711426,
+          0.716146
         ],
         "modulate": [
           1,
@@ -21265,7 +21265,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_training_attack": {
@@ -21286,23 +21286,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_training_attack",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_attack.png",
-        "runtime_sha256": "f8ae8f8247cbb3610b189d6c71c7bcf8c6be76d58fd90badedb3e0c70b52d9bb",
+        "runtime_sha256": "ff469a0ff5b67d0a5251877fcd993da89f3ded7998e2dda007e64c82332ddc3e",
         "runtime_size": [
-          279,
-          175
+          298,
+          136
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_attack_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_training_attack.png",
-        "icon_sha256": "ea538e1f93937bda8e315f8191ddfd54806a91fe2e0ed658a30c39f748b7c628",
+        "icon_sha256": "646a379f3ca142d9d4b67b7a9471f454a2baa2fd480e48b418b7ca97eac2af6b",
         "normalized_rect": [
-          0.17041,
-          0.467882,
-          0.13623,
-          0.15191
+          0.166504,
+          0.466146,
+          0.145508,
+          0.118056
         ],
         "ground_anchor": [
-          0.238281,
-          0.581597
+          0.239014,
+          0.573785
         ],
         "modulate": [
           1,
@@ -21311,7 +21311,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_training_defense": {
@@ -21332,23 +21332,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_training_defense",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_defense.png",
-        "runtime_sha256": "e69cc65d35ca9be00b47a3634bdef2d6bcf712a5f08962236af6b144cd8dc1ff",
+        "runtime_sha256": "4dbeb21338e172c4a1185597a63d39dbecba130bda3e453aabb8b1c6166657b7",
         "runtime_size": [
-          281,
-          219
+          278,
+          177
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_defense_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_training_defense.png",
-        "icon_sha256": "d970af2f0a21efafce0be0177e49a9f0756aa0f5b0f65148e6f97db7f611cbf9",
+        "icon_sha256": "05ce2860108356ea7093ce66f920db40988d0db007f4bce8a256390ee630d84f",
         "normalized_rect": [
-          0.862793,
-          0.455729,
-          0.137207,
-          0.190104
+          0.85791,
+          0.452257,
+          0.135742,
+          0.153646
         ],
         "ground_anchor": [
-          0.928955,
-          0.625
+          0.925537,
+          0.595486
         ],
         "modulate": [
           1,
@@ -21357,7 +21357,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_training_experience": {
@@ -21378,23 +21378,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_training_experience",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_experience.png",
-        "runtime_sha256": "513e2759b3d193cbb773c2028cf731850bbcbe4e24323c82a9f90c9200c3f7ac",
+        "runtime_sha256": "81edcd498a31dbc7cabced0670c101044fae2ac529ac08968111e382e8eac8f2",
         "runtime_size": [
-          201,
-          169
+          154,
+          144
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_training_experience_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_training_experience.png",
-        "icon_sha256": "65da4cf5bc9e700192dcd851a66bb5038cec59b83d8a7075c452453b0866a5c0",
+        "icon_sha256": "05e380d29e4cd74f1832804cb1300a6d06549da42981d9ab99bf0bef1157447e",
         "normalized_rect": [
-          0.615234,
-          0.171875,
-          0.098145,
-          0.146701
+          0.634277,
+          0.170139,
+          0.075195,
+          0.125
         ],
         "ground_anchor": [
-          0.663818,
-          0.30816
+          0.671631,
+          0.284722
         ],
         "modulate": [
           1,
@@ -21403,7 +21403,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_artifact_exchange": {
@@ -21424,23 +21424,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_artifact_exchange",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_artifact_exchange.png",
-        "runtime_sha256": "8e54ea0c6962ca36b041a516c64c3cfbdbd1148695471e2e34c9444c094081a4",
+        "runtime_sha256": "a5d7448c89b07d1136c49e6f69d2392d58e8a790bd228fe4b70d8eeb0a299ecb",
         "runtime_size": [
-          257,
-          177
+          234,
+          161
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_artifact_exchange_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_artifact_exchange.png",
-        "icon_sha256": "bc5582f243fd96ea00e9eb366fe3f37aae976871245fc26b3b6e52962fcfd60a",
+        "icon_sha256": "a5d7b8a1b21458076399caa8127df03c7ddb03df05ae0925b71a2e46d4f97c92",
         "normalized_rect": [
-          0.347168,
-          0.366319,
-          0.125488,
-          0.153646
+          0.353027,
+          0.356771,
+          0.114258,
+          0.139757
         ],
         "ground_anchor": [
-          0.414551,
-          0.492188
+          0.409912,
+          0.486111
         ],
         "modulate": [
           1,
@@ -21449,7 +21449,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t1_1": {
@@ -21470,23 +21470,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t1_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1.png",
-        "runtime_sha256": "5386960624e2c71b55182971a052b53085dc0df12899daec16bc231652ab7bb9",
+        "runtime_sha256": "f1eed356a7d1a3e4c1d1388df89e6e507b4102d486ff8d385d7a1e989f7e52be",
         "runtime_size": [
-          260,
-          211
+          244,
+          159
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1.png",
-        "icon_sha256": "c557c872ba71d51933002160e14458b0bf19dea37206b6ff0fdc6c1eb6216c6c",
+        "icon_sha256": "d94309cb023874a4841692785a6b7f7d818ff973b9c4164e54338c06b3ac16db",
         "normalized_rect": [
-          0.375,
-          0.499132,
-          0.126953,
-          0.18316
+          0.390625,
+          0.500868,
+          0.119141,
+          0.138021
         ],
         "ground_anchor": [
-          0.438477,
-          0.678819
+          0.449951,
+          0.628472
         ],
         "modulate": [
           1,
@@ -21495,7 +21495,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t1_1_upgrade": {
@@ -21516,23 +21516,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t1_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade.png",
-        "runtime_sha256": "e4e8219e3e93e4bd877a1b78abd9066febc5216960479191b085b5616e94f92c",
+        "runtime_sha256": "5fb97022828f7d70f4e29b44807d997d1b4e53909d717b79f8677f64eff72589",
         "runtime_size": [
-          339,
-          259
+          321,
+          218
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade.png",
-        "icon_sha256": "d72fcd254e2270e032fe2aea83d1e641a2a5531169a11087f31b088ff583c1bc",
+        "icon_sha256": "47257977f2c43b6d3a5ed880273600bde96297d32bfff7f7a3c7acb30d6963f3",
         "normalized_rect": [
-          0.364746,
-          0.451389,
-          0.165527,
-          0.224826
+          0.377441,
+          0.453993,
+          0.156738,
+          0.189236
         ],
         "ground_anchor": [
-          0.44751,
-          0.649306
+          0.455566,
+          0.632812
         ],
         "modulate": [
           1,
@@ -21541,7 +21541,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t1_2": {
@@ -21562,23 +21562,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t1_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2.png",
-        "runtime_sha256": "a0fef7eb0f3d04577de57a697c924b9b877d62647b3a49d258a0c0d0f08beff8",
+        "runtime_sha256": "ec91bfd5b2e1ddc88aaa0df3270cd9498d7491977229bc73bc1aed7bc82adb48",
         "runtime_size": [
-          291,
-          207
+          272,
+          169
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2.png",
-        "icon_sha256": "8d5c216e137cab15e39f02d0af9d772bcab3c114612c0fb75885008cbe3c3dc0",
+        "icon_sha256": "76cc8a9e6c2d17fdf42fbf85e33438e0d553c2b469d339a9416a8e801566e64e",
         "normalized_rect": [
-          0.372559,
-          0.496528,
-          0.14209,
-          0.179688
+          0.386719,
+          0.498264,
+          0.132812,
+          0.146701
         ],
         "ground_anchor": [
-          0.443115,
-          0.661458
+          0.452881,
+          0.634549
         ],
         "modulate": [
           1,
@@ -21587,7 +21587,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t1_2_upgrade": {
@@ -21608,23 +21608,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t1_2_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade.png",
-        "runtime_sha256": "1c7ca31cb1b5ebe77531980f278a03f7af66af0062e25ec1dfea0a242c729906",
+        "runtime_sha256": "f7811815c2aa04457dcb80c784c9e182d581e0992999827f9163f1781daea3ea",
         "runtime_size": [
-          349,
-          237
+          386,
+          188
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade.png",
-        "icon_sha256": "6b16279b040d22eeb2ec2812ed82591965391b3bfe2ca46255822a99f90c291c",
+        "icon_sha256": "d1748542d69410d62a7804875a8cfa14adfae5324916b269b4237abe2cd3c1f1",
         "normalized_rect": [
-          0.364746,
-          0.470486,
-          0.17041,
-          0.205729
+          0.368164,
+          0.47309,
+          0.188477,
+          0.163194
         ],
         "ground_anchor": [
-          0.449951,
-          0.659722
+          0.462158,
+          0.625868
         ],
         "modulate": [
           1,
@@ -21633,7 +21633,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t2_1": {
@@ -21654,23 +21654,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t2_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1.png",
-        "runtime_sha256": "f9f41db94b96d9dc1417ddd27ea23fe67d406ce3de5f165e6f0ca725c9510954",
+        "runtime_sha256": "61daca5b2c54b8cff54ebf49962faed99133bf9c0a78f180a9c1a0e32303d814",
         "runtime_size": [
-          400,
-          280
+          424,
+          199
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1.png",
-        "icon_sha256": "a005b609bd02c72a000c6354567a061a586c6a5806357df60939874aee39890b",
+        "icon_sha256": "ffa8fc733869cc9b921d3725997c62a96144fbc0b764a03ce101369d5b819b6c",
         "normalized_rect": [
-          0.473633,
-          0.704861,
-          0.195312,
-          0.243056
+          0.474121,
+          0.722222,
+          0.207031,
+          0.172743
         ],
         "ground_anchor": [
-          0.571045,
-          0.944444
+          0.577393,
+          0.884549
         ],
         "modulate": [
           1,
@@ -21679,7 +21679,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t2_1_upgrade": {
@@ -21700,23 +21700,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t2_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade.png",
-        "runtime_sha256": "29ada93fc82854b0d9fe5ed867efa48eb67016d31adc0658d8abbdc9b7ac5da1",
+        "runtime_sha256": "c1469f48133e8cec7876924dd27b74947fecf881c86fc7d1a1c96b79b796cff6",
         "runtime_size": [
-          406,
-          277
+          512,
+          225
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade.png",
-        "icon_sha256": "e96a8f8cb5a89e7b1013306a100e2e48026d8684f71766fa0b3905c2122044e4",
+        "icon_sha256": "9fce0b4281f11d61c90edf3e21589c19bbcf955ea686774725ace6ddf2fd4af2",
         "normalized_rect": [
-          0.479004,
-          0.69184,
-          0.198242,
-          0.240451
+          0.475098,
+          0.664062,
+          0.271973,
+          0.212674
         ],
         "ground_anchor": [
-          0.579346,
-          0.908854
+          0.61084,
+          0.866319
         ],
         "modulate": [
           1,
@@ -21725,7 +21725,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t2_2": {
@@ -21746,23 +21746,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t2_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2.png",
-        "runtime_sha256": "07e3c53fb611835f12eb95e951cafe6a336f265ba51e98526233dc87dc7b026a",
+        "runtime_sha256": "fe1270fc0aeb35327775528176ad52cf0815c8cbe281d7a75da820c8dbb08554",
         "runtime_size": [
-          348,
-          254
+          358,
+          217
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2.png",
-        "icon_sha256": "1c7624e1e7243152e3e84bc2f3df9e4f91fed2a4b01fe5a44b354750068b3898",
+        "icon_sha256": "52ca2438f8ab3a1a39040ed427c88b6fa95f660dd46c9bc770686bc2a2446c53",
         "normalized_rect": [
           0.487305,
-          0.711806,
-          0.169922,
-          0.220486
+          0.713542,
+          0.174805,
+          0.188368
         ],
         "ground_anchor": [
-          0.575684,
-          0.921007
+          0.574463,
+          0.891493
         ],
         "modulate": [
           1,
@@ -21771,44 +21771,44 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t2_2_upgrade": {
-        "source_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon.png",
-        "source_sha256": "8b04aa9b53fd919ab8731dff2ba3fd3df0dfad7621a1c98f6e12e42a70602f44",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon_v2.png",
+        "source_sha256": "7a9de977394ce77a8ac6bf69fb209c55e1ae10153aa86158987e713c0f72022c",
         "source_size": [
           1072,
           736
         ],
-        "prompt_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon.prompt.txt",
-        "prompt_sha256": "f0f0c6554ddf9531b1192d7bac3c7b71456737ea99011263e3a51199553ca7e2",
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon_v2.prompt.txt",
+        "prompt_sha256": "1149431a42ccfd9bd111ca573378b6e204e8450aa5190e4b551c04fabddea70d",
         "generation_date": "2026-11-09",
         "generation_tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
         "reference_inputs": [
           "res://art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
-          "res://art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
+          "res://art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t2_2_upgrade_hall_crop.png"
         ],
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t2_2_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade.png",
-        "runtime_sha256": "d2380e7d3729dd9a34a73351fdd0515afb86cc4eb917d6d2f4abbf33b80f275f",
+        "runtime_sha256": "e6a76d701ba4dc7e876d8d6827f69d12ea2fa5369ebd84d9336036808a3b0cd4",
         "runtime_size": [
-          406,
-          266
+          510,
+          250
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade.png",
-        "icon_sha256": "2aa8e55e43f8068634a9c72d2c65c863447a9ea50691dc0eb7ac85e870a3fce2",
+        "icon_sha256": "adc6e7d1ecb84bbdebdbe4bdfa9196c10266c36e673e281426d9b97b21655e07",
         "normalized_rect": [
-          0.479004,
-          0.701389,
-          0.198242,
-          0.230903
+          0.456055,
+          0.696181,
+          0.249023,
+          0.217014
         ],
         "ground_anchor": [
-          0.607666,
-          0.921007
+          0.580322,
+          0.902778
         ],
         "modulate": [
           1,
@@ -21817,7 +21817,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t3_1": {
@@ -21838,23 +21838,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t3_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1.png",
-        "runtime_sha256": "c99d521bb48a29c710218e94665883e52534851f21ff83bd32cf9c1159b02726",
+        "runtime_sha256": "d0afd45024a99b00ef34a3772fbaedf0c5fc5202a426c10ab35a0a4448e30a0b",
         "runtime_size": [
-          299,
-          265
+          276,
+          211
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1.png",
-        "icon_sha256": "bdf14b983e045615c5829eb6784168e54ac9e4f150debf7928433b25b45de111",
+        "icon_sha256": "3d995580e46816c4535ae81c0c720abf1e6cea3f2ea0b2bbd9c0e6393e5b4bd1",
         "normalized_rect": [
-          0.056641,
-          0.472222,
-          0.145996,
-          0.230035
+          0.06543,
+          0.501736,
+          0.134766,
+          0.18316
         ],
         "ground_anchor": [
-          0.131836,
-          0.689236
+          0.132568,
+          0.674479
         ],
         "modulate": [
           1,
@@ -21863,7 +21863,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t3_1_upgrade": {
@@ -21884,23 +21884,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t3_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade.png",
-        "runtime_sha256": "8c2204400b9f4c02824cd98dbd99d0584f252453cf9868082ca7f01a4d7d92b2",
+        "runtime_sha256": "82f81b61554a89d549d47a533a858bd528aed43fbdc5cbe031db949453fc4a66",
         "runtime_size": [
-          357,
-          285
+          374,
+          262
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade.png",
-        "icon_sha256": "fad69ca4b824eadae54ba3458a090815ff399714f6ab6ba173554e58d8f659e3",
+        "icon_sha256": "f4ae554ad5d86f2995ca896490d15a4f55a33ce3ccdc8b2d91d3296b7b493a0a",
         "normalized_rect": [
-          0.049316,
-          0.454861,
-          0.174316,
-          0.247396
+          0.057617,
+          0.467014,
+          0.182617,
+          0.227431
         ],
         "ground_anchor": [
-          0.141113,
-          0.689236
+          0.148682,
+          0.684028
         ],
         "modulate": [
           1,
@@ -21909,7 +21909,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t3_2": {
@@ -21930,23 +21930,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t3_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2.png",
-        "runtime_sha256": "2b247e55980951a7e4158ad73939e90b662217a6960edd22f43228271b0e3c96",
+        "runtime_sha256": "127f7b6eb65f947ac67a65d8d8d7803af8d0c13943957dc5217e4bbd4b9766a0",
         "runtime_size": [
-          299,
-          239
+          286,
+          220
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2.png",
-        "icon_sha256": "c837053675736b5cc29a9ce5dfe40ef06494ef2f7607ecd1501f7b896f5802b4",
+        "icon_sha256": "9c8df3fd4405fdf7a091dab8415c20449e065632f3e8d344f4ba5fa6caad0d4f",
         "normalized_rect": [
-          0.056641,
-          0.494792,
-          0.145996,
-          0.207465
+          0.0625,
+          0.496528,
+          0.139648,
+          0.190972
         ],
         "ground_anchor": [
-          0.130127,
-          0.689236
+          0.13208,
+          0.677083
         ],
         "modulate": [
           1,
@@ -21955,7 +21955,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t3_2_upgrade": {
@@ -21976,23 +21976,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t3_2_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade.png",
-        "runtime_sha256": "be795c8963052b176b93bb4426104bc91e6d3320134a53527f0014ed295cd246",
+        "runtime_sha256": "3003f9a6bc15620bac6d74f282965da317e3f0ec9fe4b21216f32aadd3e915a2",
         "runtime_size": [
-          351,
-          292
+          320,
+          266
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade.png",
-        "icon_sha256": "b1004fcf95e647c2f41a058637cafaf625f9973fdd423d3d964153a97da70b05",
+        "icon_sha256": "419ff5d4c8d2196db707a29e12db9f08722975ca322375857a64058009994043",
         "normalized_rect": [
-          0.049316,
-          0.448785,
-          0.171387,
-          0.253472
+          0.053223,
+          0.4375,
+          0.15625,
+          0.230903
         ],
         "ground_anchor": [
-          0.137695,
-          0.667535
+          0.131104,
+          0.657986
         ],
         "modulate": [
           1,
@@ -22001,7 +22001,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t4_1": {
@@ -22022,23 +22022,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t4_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1.png",
-        "runtime_sha256": "dea955ced16024c74b16f184299885ff1f7ce2b4118975e39fe2b78e357b2d3c",
+        "runtime_sha256": "ff0b26d556233875bb7b205c652c7015bef46294c4ccc42730fd529f83ab2c7b",
         "runtime_size": [
-          278,
-          223
+          265,
+          205
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1.png",
-        "icon_sha256": "1701ae578ee3c9db64525f96a350c4767d9c1d56da22f368368aa1c460e9e9e0",
+        "icon_sha256": "5fe8023a8afca072e4414aa20a67a4fb37e3d5665990e1a06128297ffa03b3d4",
         "normalized_rect": [
-          0.864258,
-          0.747396,
-          0.135742,
-          0.193576
+          0.861328,
+          0.735243,
+          0.129395,
+          0.177951
         ],
         "ground_anchor": [
           0.925781,
-          0.918403
+          0.902778
         ],
         "modulate": [
           1,
@@ -22047,7 +22047,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t4_1_upgrade": {
@@ -22068,23 +22068,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t4_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade.png",
-        "runtime_sha256": "db216ca31956579988f5eb6c7b5f254473d530c6bd01a798574f0126a2f804b5",
+        "runtime_sha256": "ec47fd15bd857770bf8ad28f6e38df69f64123cf6e38875ab43a4c43684bf53e",
         "runtime_size": [
-          320,
-          271
+          337,
+          228
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade.png",
-        "icon_sha256": "4effbb6942293caf52b83e3f1781c0771490a5f50559ebfb9b91f7147e9d395d",
+        "icon_sha256": "7defb4275709d045a8a9ec32ec25253e1ccfd8d22dc3ea064d2664c5482d28ee",
         "normalized_rect": [
-          0.84375,
-          0.705729,
-          0.15625,
-          0.235243
+          0.834961,
+          0.710069,
+          0.164551,
+          0.197917
         ],
         "ground_anchor": [
-          0.919189,
-          0.921007
+          0.916992,
+          0.897569
         ],
         "modulate": [
           1,
@@ -22093,7 +22093,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t4_2": {
@@ -22114,23 +22114,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t4_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2.png",
-        "runtime_sha256": "1c4c85414be78d1362814c737ef392fffcd71110c4a53447638279973d62f10f",
+        "runtime_sha256": "e9e6fa97db1b89e65aad6e0da5960e53fafcfd38666ad0c5df734e9222489134",
         "runtime_size": [
-          296,
-          224
+          284,
+          182
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2.png",
-        "icon_sha256": "441fa628c05cf7a54b4b4eee03b097f588dc7f85928f2a86f85bdd35caec0735",
+        "icon_sha256": "5e21db48e8f702f14f0a06fe8cac31976c9e2e00f89f28f2cccd9d88a9d75fb4",
         "normalized_rect": [
-          0.855469,
-          0.746528,
-          0.144531,
-          0.194444
+          0.856934,
+          0.75,
+          0.138672,
+          0.157986
         ],
         "ground_anchor": [
-          0.925537,
-          0.927083
+          0.926025,
+          0.897569
         ],
         "modulate": [
           1,
@@ -22139,7 +22139,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t4_2_upgrade": {
@@ -22160,23 +22160,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t4_2_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade.png",
-        "runtime_sha256": "853f70182f8bd2181d6854858ce6aeca315b19e1ced903ae980a34fa51c94ba6",
+        "runtime_sha256": "c3d9237cf9c772f2877369d01c0843b2bcea96dfa60036442e5632c24a6727ed",
         "runtime_size": [
-          315,
-          294
+          375,
+          238
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade.png",
-        "icon_sha256": "7d53b13aa26dfdb6be47a5207236108f6cb4e235c73973b8097958eea9f5d7c6",
+        "icon_sha256": "59cf6ae2a7649d737af0aa361c98ace234643039e3871201c363ff4f7a6a6a08",
         "normalized_rect": [
-          0.846191,
-          0.685764,
-          0.153809,
-          0.255208
+          0.816895,
+          0.6875,
+          0.183105,
+          0.206597
         ],
         "ground_anchor": [
-          0.922607,
-          0.911458
+          0.9104,
+          0.883681
         ],
         "modulate": [
           1,
@@ -22185,7 +22185,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t5_1": {
@@ -22206,23 +22206,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t5_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1.png",
-        "runtime_sha256": "cdf629bb46a88cb72ddb3a619c8f5de3536eeeef9c99bbe7a24791137d431a82",
+        "runtime_sha256": "04b63752f88aaace0f9844384f239560a82fedc4e72c4d44c7f5c98072b6667f",
         "runtime_size": [
-          308,
-          196
+          256,
+          164
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1.png",
-        "icon_sha256": "5e54ad37e0b0920e5b031657fcdb8005b64779c2b0ebcc3d607b9258889468b4",
+        "icon_sha256": "a115718a02fb9c7b3d1ccfd81766d4f2fbff30f3e33ddeb705d345682e26a03a",
         "normalized_rect": [
-          0.828125,
-          0.322049,
-          0.150391,
-          0.170139
+          0.846191,
+          0.323785,
+          0.125,
+          0.142361
         ],
         "ground_anchor": [
-          0.905762,
-          0.486111
+          0.908447,
+          0.455729
         ],
         "modulate": [
           1,
@@ -22231,7 +22231,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t5_1_upgrade": {
@@ -22252,23 +22252,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t5_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade.png",
-        "runtime_sha256": "bed4d4e96332e801d2af290013fc7745d9f4f527570eb4ad17f3a3ea0311fb67",
+        "runtime_sha256": "1abd28182b29bed6002edd5f6a1f614ad7e1424d6029a1ceec1711e9eda477da",
         "runtime_size": [
-          342,
-          245
+          344,
+          226
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade.png",
-        "icon_sha256": "b795fb72b8ff8f859ab103fe93310c077235c77d3fe29a25bf69af7a1c42db6c",
+        "icon_sha256": "5f11fc223c16d3b3f7842352d41272ec3ceb04d5b0bb72da276d03ad2f5e87ff",
         "normalized_rect": [
-          0.818359,
-          0.288194,
-          0.166992,
-          0.212674
+          0.828125,
+          0.272569,
+          0.167969,
+          0.196181
         ],
         "ground_anchor": [
-          0.886475,
-          0.497396
+          0.911865,
+          0.458333
         ],
         "modulate": [
           1,
@@ -22277,7 +22277,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t5_2": {
@@ -22298,23 +22298,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t5_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2.png",
-        "runtime_sha256": "6e430300d7d3843b7b1ec84fe2d6488699584ae18784e269a08aa6acfd947ba5",
+        "runtime_sha256": "8cfbdf6d647ec9f6a745a8313616365bc53d77ab262281008cc9fe506f1f5afb",
         "runtime_size": [
-          308,
-          198
+          265,
+          175
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2.png",
-        "icon_sha256": "1b73745a9b4fdcc4a53ce8d37856b55c4b70197695018139ce159183cf70c238",
+        "icon_sha256": "3bf715c55980cf7a7f36e4371b9c412166b9c6e50f352288387b6c597b525245",
         "normalized_rect": [
-          0.828125,
-          0.321181,
-          0.150391,
-          0.171875
+          0.843262,
+          0.322049,
+          0.129395,
+          0.15191
         ],
         "ground_anchor": [
-          0.906006,
-          0.489583
+          0.907715,
+          0.463542
         ],
         "modulate": [
           1,
@@ -22323,7 +22323,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t5_2_upgrade": {
@@ -22344,23 +22344,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t5_2_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade.png",
-        "runtime_sha256": "dfda81fa1f81c56316bba5422c0982835ee4361dc7adf30b24202e298bfac18d",
+        "runtime_sha256": "3c00d0b49a6a788d676a37e300c7cb1794ac0e04c2eafc317845cbe15ef66f32",
         "runtime_size": [
-          338,
-          230
+          337,
+          192
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade.png",
-        "icon_sha256": "e2418cfbff009e88fc7a864ef7185bb27832200723bbe255e881eedc00fdfa15",
+        "icon_sha256": "6222d7801fd1e0e3c455f7e3c2a45fc6e703f667b1ffef70f954a18b92e86191",
         "normalized_rect": [
-          0.820801,
-          0.292535,
-          0.165039,
-          0.199653
+          0.824707,
+          0.294271,
+          0.164551,
+          0.166667
         ],
         "ground_anchor": [
-          0.906006,
-          0.477431
+          0.906738,
+          0.450521
         ],
         "modulate": [
           1,
@@ -22369,7 +22369,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t6_1": {
@@ -22390,23 +22390,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t6_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1.png",
-        "runtime_sha256": "29a2e63b265c7a58db91f09d99ea2b7b23c822618da4a21c934532041066b2ff",
+        "runtime_sha256": "4d8521259a398de42e0393a812cdcae2f4688b4f238de3b6774a62a31da2d58f",
         "runtime_size": [
-          347,
-          231
+          281,
+          227
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1.png",
-        "icon_sha256": "42f259ddb1a393fcc24e38a04e266e3981d42a45ad3566c8d8fb16d232d80316",
+        "icon_sha256": "2623bc1b3cc6cad8ecc39904e7de7dd25922b2608fa199feebee49a3f7dfb0f9",
         "normalized_rect": [
-          0.490723,
-          0.508681,
-          0.169434,
-          0.200521
+          0.506348,
+          0.510417,
+          0.137207,
+          0.197049
         ],
         "ground_anchor": [
-          0.571045,
-          0.703125
+          0.574707,
+          0.697049
         ],
         "modulate": [
           1,
@@ -22415,7 +22415,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t6_1_upgrade": {
@@ -22436,23 +22436,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t6_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade.png",
-        "runtime_sha256": "7586b886d7556e4922820a8b6ba780eb580138e409716f58bc661911e20c31b0",
+        "runtime_sha256": "fdb64135daef7a5d1a7dddeb6a1bceee760b6c60d423440500931fcf33a564d0",
         "runtime_size": [
-          462,
-          303
+          400,
+          273
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade.png",
-        "icon_sha256": "1ab72c3a8899ee5b5704fab2dcdf09a3bb52d5737f69bb217a878bde941168e1",
+        "icon_sha256": "841f259ce5637ba552d60ab8d974f71345c49676584d4213a9b17a87c64561f7",
         "normalized_rect": [
-          0.458984,
-          0.480035,
-          0.225586,
-          0.263021
+          0.477051,
+          0.480903,
+          0.195312,
+          0.236979
         ],
         "ground_anchor": [
-          0.571289,
-          0.740451
+          0.574463,
+          0.707465
         ],
         "modulate": [
           1,
@@ -22461,7 +22461,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t7_1": {
@@ -22482,23 +22482,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t7_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1.png",
-        "runtime_sha256": "a15e878ff4803f72df138732f42f56c7b70f7ade7e0b6825d702296adb4faad7",
+        "runtime_sha256": "38e78a96efca12bb854b6cd80a1efce622b976b705accdd16f2d31fcd76c6bb3",
         "runtime_size": [
-          347,
-          326
+          340,
+          290
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1.png",
-        "icon_sha256": "ab1e492b96b0fd77e88a44ce95cbe60956b9319d4b163e07c6ff12f320d13508",
+        "icon_sha256": "3947a5f8bf82188b795489d12c48d8f2de1d262455856340cea7a84b90b4d2e6",
         "normalized_rect": [
-          0.74707,
-          0.536458,
-          0.169434,
-          0.282986
+          0.744629,
+          0.538194,
+          0.166016,
+          0.251736
         ],
         "ground_anchor": [
-          0.831299,
-          0.790799
+          0.827393,
+          0.779514
         ],
         "modulate": [
           1,
@@ -22507,7 +22507,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_t7_1_upgrade": {
@@ -22528,23 +22528,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_t7_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade.png",
-        "runtime_sha256": "79c1434c8eea2742be176c3f5a7f636e0f26b137f5b9825b25ed26ed3242bb34",
+        "runtime_sha256": "0c3fc7e5aaa871dfc8f221db1127e3a0fb8f57aa5fdc9035a78f8594047a543a",
         "runtime_size": [
-          467,
-          437
+          512,
+          381
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade.png",
-        "icon_sha256": "b475e63b126ea3c968019a9d55a21e281204e1a97747b0ddef39b11085f7e3c4",
+        "icon_sha256": "eaf5832af635a6cd9d5013b291ceffba847e6ced3a4a7525e609e6569991b4b1",
         "normalized_rect": [
-          0.731445,
+          0.702637,
           0.440104,
-          0.228027,
-          0.37934
+          0.254883,
+          0.336806
         ],
         "ground_anchor": [
-          0.845459,
-          0.758681
+          0.829834,
+          0.766493
         ],
         "modulate": [
           1,
@@ -22553,7 +22553,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_unique_1": {
@@ -22574,23 +22574,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_unique_1",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1.png",
-        "runtime_sha256": "557ebf851b87573ff7a78e52da89a992440012a9e5a80cc36a508a1909f5552c",
+        "runtime_sha256": "2665f8719a2a9360bab1b63ca4283449e3c21ec96222752f7d7f6a56723e217d",
         "runtime_size": [
-          297,
-          232
+          244,
+          205
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1.png",
-        "icon_sha256": "1f68d204b04ff1a55aa9924c2eef57a9d82795bd75ea2bfd0a5a4cd4ea54f3eb",
+        "icon_sha256": "518ea8dc60ae88d8da245ff0f33c064f9cd495ab53ef04989266d0ebb5603aae",
         "normalized_rect": [
-          0.625977,
-          0.305556,
-          0.14502,
-          0.201389
+          0.64209,
+          0.317708,
+          0.119141,
+          0.177951
         ],
         "ground_anchor": [
-          0.707275,
-          0.50434
+          0.701416,
+          0.485243
         ],
         "modulate": [
           1,
@@ -22599,7 +22599,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_unique_2": {
@@ -22620,23 +22620,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_unique_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2.png",
-        "runtime_sha256": "613cb85a1bfb3e9f3d2ebd0f860dee9353812c3fc1fdb35c06493bfebdbd6293",
+        "runtime_sha256": "6b1f7b699ca74dd9aa816d66ca10c844bf5f162eeb95ab2b24e31383b22c2ba7",
         "runtime_size": [
-          190,
-          178
+          185,
+          119
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2.png",
-        "icon_sha256": "8a8986b41ab975edd64550e83849795ae51b73333dfcbe1305a968d6ba922047",
+        "icon_sha256": "a6360b77c93c0f7e128e9e3ac9466c372aa4ad85ba55ba136957977056e28b8d",
         "normalized_rect": [
-          0.696777,
-          0.18316,
-          0.092773,
-          0.154514
+          0.701172,
+          0.190972,
+          0.090332,
+          0.103299
         ],
         "ground_anchor": [
-          0.739746,
-          0.302951
+          0.746094,
+          0.283854
         ],
         "modulate": [
           1,
@@ -22645,7 +22645,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_brasshollow_unique_3": {
@@ -22666,23 +22666,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_brasshollow_unique_3",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3.png",
-        "runtime_sha256": "2a48fcb6d8880d77b8548effb9abbc1200e77bd78bd84df63d11723c3a820718",
+        "runtime_sha256": "32d05e090d78c4aecbda1c49695b59a5620e5f2859d255df4b00a91e89900bed",
         "runtime_size": [
-          383,
-          289
+          403,
+          246
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3.png",
-        "icon_sha256": "82841ef0a20705a321020e1828c003782d806c9bd678e8898a9aec5200b4bbae",
+        "icon_sha256": "1223adea804291b2ac1569c722cf7510a34695b8a97b77e5c827fcdb3d7df39a",
         "normalized_rect": [
-          0.608887,
-          0.655382,
-          0.187012,
-          0.250868
+          0.601562,
+          0.652778,
+          0.196777,
+          0.213542
         ],
         "ground_anchor": [
-          0.702393,
-          0.886285
+          0.699707,
+          0.855903
         ],
         "modulate": [
           1,
@@ -22691,7 +22691,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_town_hall": {
@@ -22712,23 +22712,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_town_hall",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_town_hall.png",
-        "runtime_sha256": "658e360f7b6c63369780e2f4c497f3290aa60da55352311570be517bbe599c11",
+        "runtime_sha256": "e454ed5e53cfaee36f78b211aa772d18ba70aec0c89cd08080efcabb19f4238b",
         "runtime_size": [
-          400,
-          322
+          296,
+          276
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_town_hall_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_town_hall.png",
-        "icon_sha256": "8798a0c0642cffe72dcb49b783dba491016fdedc2e0414ebc0a4b32f726b7b9d",
+        "icon_sha256": "df5f17876848363448f5b77ba98f2b17da4f31fd857867f71a8f3047da2a53d9",
         "normalized_rect": [
-          0.424805,
-          0.196181,
-          0.195312,
-          0.279514
+          0.452148,
+          0.197917,
+          0.144531,
+          0.239583
         ],
         "ground_anchor": [
-          0.522217,
-          0.467014
+          0.52417,
+          0.427083
         ],
         "modulate": [
           1,
@@ -22737,7 +22737,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_hall_2": {
@@ -22758,23 +22758,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_hall_2",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_2.png",
-        "runtime_sha256": "9ff63b1081be42f2528ba08c634dbe00b8f430cf4b0fb1425be7e8b521578b2a",
+        "runtime_sha256": "b97468343a5004c2f7d57c25aaa8728f3ac27cccbc89f8612d5d9e3869395d49",
         "runtime_size": [
-          404,
-          358
+          323,
+          299
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_2_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_hall_2.png",
-        "icon_sha256": "1aeec75060ee343864f721bec82bd3b4ace84007c19a6f3382c70e04b0abdc18",
+        "icon_sha256": "94fa7e90918fdabe889e80f4973ffbb4d35e4fedfa1b5b25b576b7fa0a55ffc6",
         "normalized_rect": [
-          0.444336,
-          0.164931,
-          0.197266,
-          0.310764
+          0.445312,
+          0.179688,
+          0.157715,
+          0.259549
         ],
         "ground_anchor": [
-          0.54248,
-          0.461806
+          0.523926,
+          0.428819
         ],
         "modulate": [
           1,
@@ -22783,7 +22783,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_hall_3": {
@@ -22804,23 +22804,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_hall_3",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_3.png",
-        "runtime_sha256": "1af0e12abc395c7cfd45a8966eb2ce00d00faef469fe4f5d3f8b55811f58e6f0",
+        "runtime_sha256": "25c828aefa5b68420274b33a4fd655123bc9a159c69f56a511f73dd522211ce5",
         "runtime_size": [
-          436,
-          377
+          486,
+          332
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_3_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_hall_3.png",
-        "icon_sha256": "accf24524340a43f34ea2ca2476dc86644829863813ab02005c22b6d8db73eb3",
+        "icon_sha256": "4baf798062154736e32b0f535cf2a494de804b33062f027b7dc02c4d71e59357",
         "normalized_rect": [
-          0.425781,
-          0.148438,
-          0.212891,
-          0.327257
+          0.399414,
+          0.150174,
+          0.237305,
+          0.288194
         ],
         "ground_anchor": [
-          0.530029,
-          0.440972
+          0.517822,
+          0.427951
         ],
         "modulate": [
           1,
@@ -22829,7 +22829,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       },
       "building_dev_hall_4": {
@@ -22850,23 +22850,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_hall_4",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_4.png",
-        "runtime_sha256": "935d78ecd1166c540ce5bf2166da5a14e4346b64a1d16f4dce3fd4fdbc487a9d",
+        "runtime_sha256": "42eb0d802e8276b67f0fcacb6229625ee70e2b8e2c946fa41864cc802a5229ed",
         "runtime_size": [
           512,
-          364
+          267
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_hall_4_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_hall_4.png",
-        "icon_sha256": "337b0d614c2a2592eb575df6052c3a01e0e82f1de10cfcf49971d7cd2b333081",
+        "icon_sha256": "3dbf82646c2ba62f6351f0863615885309054129bd60cb71d3368664004f216b",
         "normalized_rect": [
-          0.388184,
-          0.138889,
-          0.279297,
-          0.353299
+          0.315918,
+          0.141493,
+          0.37793,
+          0.350694
         ],
         "ground_anchor": [
-          0.527588,
-          0.489583
+          0.504639,
+          0.481771
         ],
         "modulate": [
           1,
@@ -22875,7 +22875,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
         "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
       }
     }

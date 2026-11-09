@@ -9,6 +9,14 @@
     "date": "2026-11-09"
   },
   "method": "Each building is a masked edit of the empty canyon (image 1) with its plot box as the mask and a reference (image 2): a crop of the concept painting for the finished buildings, the next stage's painting for earlier stages. When crop is set, image 1 was that crop of the canyon, scaled to the edit size, so the plot box filled about a third of the frame.",
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows"
+  },
   "backdrop": {
     "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
     "source_sha256": "6897cff4339ce4cd39533d5dd954a1f2e2a44eac6298c0cb39c5c85993ed7a96",
@@ -23,11 +31,14 @@
     }
   },
   "cut": {
-    "pad": 170,
-    "grow": 28,
-    "ground_band": 90
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
   },
-  "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer keeps the painted ground of its foundation, path and shadow in a band above the building's base, and later stages keep the plot's ground line.",
+  "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
   "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
   "plots": {
     "hall": [
@@ -186,7 +197,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_hall.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_4_canyon_matte.png",
+        "sha256": "2f0eb91357bd551661e98a0f56373398835ee2658fcdbdff1a44d496b1a0b84f",
+        "window": [
+          551,
+          15,
+          938,
+          632
+        ]
+      }
     },
     {
       "id": "building_dev_hall_3",
@@ -209,7 +230,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_hall_4_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3_canyon_matte.png",
+        "sha256": "1282e336126c7b3209e8bc53efb3cb0d55f635ef9452081e37a3951a568b9286",
+        "window": [
+          774,
+          98,
+          573,
+          462
+        ]
+      }
     },
     {
       "id": "building_dev_hall_2",
@@ -232,7 +263,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_hall_3_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_2_canyon_matte.png",
+        "sha256": "3faad9c0eb4844360778828897c5e62ad825fdcdb9410aa5e6a6f5f72c43a8ec",
+        "window": [
+          867,
+          165,
+          426,
+          381
+        ]
+      }
     },
     {
       "id": "building_town_hall",
@@ -255,7 +296,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_hall_2_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_town_hall_canyon_matte.png",
+        "sha256": "eb00b6b463d7f493fe1271cbfb648f8112782ed0b2776daa187983d0d4bea0c2",
+        "window": [
+          904,
+          194,
+          352,
+          345
+        ]
+      }
     },
     {
       "id": "building_dev_fort_3",
@@ -273,7 +324,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_fort.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_3_canyon_matte.png",
+        "sha256": "b879b73dc0a8bc7ff47458cc6a9f9ae675f6b3728aa9868466d6e64c69abafc1",
+        "window": [
+          1460,
+          31,
+          588,
+          386
+        ]
+      }
     },
     {
       "id": "building_dev_fort_2",
@@ -296,7 +357,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_fort_3_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_2_canyon_matte.png",
+        "sha256": "6126f7b1441aa8de79ba3a2f3c053e3cf759a60bdc82cf2339881007f003b7d3",
+        "window": [
+          1485,
+          81,
+          563,
+          310
+        ]
+      }
     },
     {
       "id": "building_dev_fort_1",
@@ -319,7 +390,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_fort_2_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_1_canyon_matte.png",
+        "sha256": "7eded933e06cc3127a018a15753ee4eb46cd565f5d09b56406884b77161e9d3c",
+        "window": [
+          1554,
+          150,
+          437,
+          227
+        ]
+      }
     },
     {
       "id": "building_dev_guild_5",
@@ -337,7 +418,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_guild.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_5_canyon_matte.png",
+        "sha256": "3fd596e247f2df17046235f45cee47563535e677de67ff2d8386e339e501ba4a",
+        "window": [
+          470,
+          0,
+          423,
+          487
+        ]
+      }
     },
     {
       "id": "building_dev_guild_4",
@@ -360,7 +451,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_guild_5_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_4_canyon_matte.png",
+        "sha256": "2473e9937457aa7eb45800908e50fe7ddfbed491b83ce76f5993bbad1fa9cacf",
+        "window": [
+          553,
+          45,
+          312,
+          393
+        ]
+      }
     },
     {
       "id": "building_dev_guild_3",
@@ -383,7 +484,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_guild_4_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_3_canyon_matte.png",
+        "sha256": "9e7917f52e716ac7c026d8b31187b62a45e0897404f3c52df49749ce82c0f22d",
+        "window": [
+          625,
+          95,
+          230,
+          260
+        ]
+      }
     },
     {
       "id": "building_dev_guild_2",
@@ -406,7 +517,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_guild_3_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_2_canyon_matte.png",
+        "sha256": "ddc2457d7f0e9b53f31bb0d426ccc324b4547de19cf45d1d9a184bf3fd2b2600",
+        "window": [
+          583,
+          142,
+          262,
+          260
+        ]
+      }
     },
     {
       "id": "building_dev_guild_1",
@@ -429,7 +550,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_guild_2_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_1_canyon_matte.png",
+        "sha256": "28907acb13f7c272e42b9b437292df21b19fa84779506dac5a81ada245ff06c6",
+        "window": [
+          641,
+          179,
+          198,
+          170
+        ]
+      }
     },
     {
       "id": "building_dev_trade_exchange",
@@ -452,7 +583,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_market.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_trade_exchange_canyon_matte.png",
+        "sha256": "c41e6d694aeadf3b2359cf585c46c9cfb7ddec429f8c157144f0b2733bf9e2c1",
+        "window": [
+          446,
+          540,
+          483,
+          301
+        ]
+      }
     },
     {
       "id": "building_market_square",
@@ -475,7 +616,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_trade_exchange_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_market_square_canyon_matte.png",
+        "sha256": "9b7a7179bd2e0f38a39322e87b3e094bbde84e65163d8eef2b8894539940f891",
+        "window": [
+          457,
+          588,
+          450,
+          254
+        ]
+      }
     },
     {
       "id": "building_dev_storehouse_2",
@@ -498,7 +649,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_warehouse.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_2_canyon_matte.png",
+        "sha256": "4d22c122bae58693d9a058675d346e0dcefe87e5d8d13c2490c7bbae27c5e7f4",
+        "window": [
+          199,
+          373,
+          403,
+          295
+        ]
+      }
     },
     {
       "id": "building_dev_storehouse_1",
@@ -521,7 +682,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_storehouse_2_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_1_canyon_matte.png",
+        "sha256": "6b212d71ab351b7f62b9123d9e0f44e7a5a320a6e0b38a310f9a9b089ba24df8",
+        "window": [
+          231,
+          409,
+          300,
+          190
+        ]
+      }
     },
     {
       "id": "building_wayfarers_hall",
@@ -544,7 +715,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_wayfarers_hall_canyon_matte.png",
+        "sha256": "c2f1667a190347d2ea2185573630678a04447bc34a4d79eccfc2dcbdadae12e9",
+        "window": [
+          492,
+          286,
+          310,
+          269
+        ]
+      }
     },
     {
       "id": "building_dev_growth_1",
@@ -567,7 +748,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_1_canyon_matte.png",
+        "sha256": "d03313bf2196bf0b3ac702f4f85ddeebf5567b61498a6ec87e850d09e89c1c29",
+        "window": [
+          263,
+          271,
+          303,
+          178
+        ]
+      }
     },
     {
       "id": "building_dev_growth_2",
@@ -590,7 +781,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_2_canyon_matte.png",
+        "sha256": "f1da5c53cb6c73b0d3df8118c9e49b889700989588e115c1a0cf0a699638605e",
+        "window": [
+          1294,
+          504,
+          334,
+          228
+        ]
+      }
     },
     {
       "id": "building_dev_growth_3",
@@ -613,7 +814,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_3_canyon_matte.png",
+        "sha256": "6a5575549acc856e01a33dbc7ceabf1a3bb0adc2febb6c27c0d6f0d1da5b4859",
+        "window": [
+          1316,
+          642,
+          282,
+          210
+        ]
+      }
     },
     {
       "id": "building_dev_training_attack",
@@ -636,7 +847,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_attack_canyon_matte.png",
+        "sha256": "dc79ca3f664d1306e7bbac919828f089a7c497a39cab639b4988519634015fb6",
+        "window": [
+          319,
+          504,
+          342,
+          199
+        ]
+      }
     },
     {
       "id": "building_dev_training_defense",
@@ -659,7 +880,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_defense_canyon_matte.png",
+        "sha256": "619c11ee4b1d69cffec1f3ac7655fa69a9c7e3570e682e6f16030aadeb3a8056",
+        "window": [
+          1733,
+          490,
+          315,
+          241
+        ]
+      }
     },
     {
       "id": "building_dev_training_experience",
@@ -682,7 +913,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_chapel.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_experience_canyon_matte.png",
+        "sha256": "c03d4b06a3ecce4bcde8346c48446a09e8f5ec37fb405c72bbb892a90a2a2c23",
+        "window": [
+          1293,
+          179,
+          174,
+          183
+        ]
+      }
     },
     {
       "id": "building_dev_artifact_exchange",
@@ -705,7 +946,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_artifact_exchange_canyon_matte.png",
+        "sha256": "b819c0ec702e239361e454589234055fc13f23a22e7ec869a6d992eab70fa0b8",
+        "window": [
+          707,
+          386,
+          264,
+          204
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_unique_1",
@@ -728,7 +979,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_mint.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1_canyon_matte.png",
+        "sha256": "faa25592b2cbf2d135ddcbe20b7292bfc7e1151995a9fc3a5e51ee609a77cc05",
+        "window": [
+          1299,
+          340,
+          275,
+          246
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_unique_2",
@@ -751,7 +1012,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2_canyon_matte.png",
+        "sha256": "5ff23c8c9454c37a215119f3e72accd909ae3126fcb081dde0e6a7f1ef3ac5f9",
+        "window": [
+          1427,
+          196,
+          202,
+          168
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_unique_3",
@@ -774,7 +1045,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3_canyon_matte.png",
+        "sha256": "f0d0f23768bce7385e5c37cb39d5aef79265c1fded34d575d94789ede43cb5f9",
+        "window": [
+          1199,
+          707,
+          470,
+          338
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t1_1_upgrade",
@@ -797,7 +1078,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade_canyon_matte.png",
+        "sha256": "0a3c75b1b194f65613ebf8b84dd2ed05588d9ad378c9b796777a56fda207ca15",
+        "window": [
+          749,
+          488,
+          369,
+          282
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t1_1",
@@ -820,7 +1111,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t1_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_canyon_matte.png",
+        "sha256": "905831293b71c57ff4eb0a8962658f9cf8256feb5b7bd2fcac52a3028c454ad4",
+        "window": [
+          785,
+          552,
+          269,
+          209
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t1_2_upgrade",
@@ -843,7 +1144,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade_canyon_matte.png",
+        "sha256": "2df3e706ba0cfca25eb0d7e36ca9d10db138a63b55a09601bc2a4bb359695037",
+        "window": [
+          722,
+          502,
+          450,
+          276
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t1_2",
@@ -866,7 +1177,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t1_2_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_canyon_matte.png",
+        "sha256": "408be2a60da01cc25d45de5f74d4b6e49336a34a01b8dc7a322a99dbb3270eaa",
+        "window": [
+          773,
+          544,
+          310,
+          221
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t2_1_upgrade",
@@ -889,7 +1210,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_kennels.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade_canyon_matte.png",
+        "sha256": "27e9770d7b6b2f3d1c1ca9fc67e45a70668a06df459209de20a9559442762e92",
+        "window": [
+          920,
+          701,
+          653,
+          393
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t2_1",
@@ -912,7 +1243,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t2_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_canyon_matte.png",
+        "sha256": "2dce43d2631fc9edc8b3f907cd6650fcf8e966e582ba4ab6d2440ec4592dfdf7",
+        "window": [
+          934,
+          784,
+          499,
+          294
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t2_2_upgrade",
@@ -929,13 +1270,23 @@
         806,
         556
       ],
-      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon.png",
-      "source_sha256": "8b04aa9b53fd919ab8731dff2ba3fd3df0dfad7621a1c98f6e12e42a70602f44",
-      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon.prompt.txt",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon_v2.png",
+      "source_sha256": "7a9de977394ce77a8ac6bf69fb209c55e1ae10153aa86158987e713c0f72022c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon_v2.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
-        "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+        "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t2_2_upgrade_hall_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade_canyon_v2_matte.png",
+        "sha256": "904c630e541dcc7913f66d70aa5c1e52e1825575e449529dd123b0bb32e36eff",
+        "window": [
+          887,
+          744,
+          604,
+          351
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t2_2",
@@ -958,7 +1309,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t2_2_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_canyon_matte.png",
+        "sha256": "34ad5b71eef56e6a8f0eecdeb55fca475cbdd956789210e4d3726c5b5516d37d",
+        "window": [
+          969,
+          781,
+          416,
+          289
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t3_1_upgrade",
@@ -981,7 +1342,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_shield.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade_canyon_matte.png",
+        "sha256": "06be2f3df2782e1f14adaa861de7a590377c1015042177ee62b6aeb4e84a501b",
+        "window": [
+          87,
+          496,
+          436,
+          335
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t3_1",
@@ -1004,7 +1375,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t3_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_canyon_matte.png",
+        "sha256": "dbb22fa4c602eab1545fcebd3a251473835d2750a3bea9a0f1ab6568ca2f2631",
+        "window": [
+          117,
+          548,
+          314,
+          260
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t3_2_upgrade",
@@ -1027,7 +1408,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade_canyon_matte.png",
+        "sha256": "3148d0f468e539bdac49b28f40eb89063c810dc78f261f2fc4c973c6b9899bb0",
+        "window": [
+          87,
+          469,
+          367,
+          331
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t3_2",
@@ -1050,7 +1441,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t3_2_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_canyon_matte.png",
+        "sha256": "4f4d87954ec85adac66633bbf5eb23024a0b1fecf585a674e677be5e56719caf",
+        "window": [
+          105,
+          540,
+          334,
+          274
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t4_1_upgrade",
@@ -1073,7 +1474,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade_canyon_matte.png",
+        "sha256": "8553532496e79fbf2a6f7c2fae6d56fa1db9828d8b9a6b64e6aeba73bf438e89",
+        "window": [
+          1683,
+          780,
+          365,
+          298
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t4_1",
@@ -1096,7 +1507,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t4_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_canyon_matte.png",
+        "sha256": "6f0b299b558e737987fa09ff108d19b3ad24abf71eff186c122ba80a454de4a7",
+        "window": [
+          1744,
+          817,
+          304,
+          254
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t4_2_upgrade",
@@ -1119,7 +1540,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade_canyon_matte.png",
+        "sha256": "c1d7bb3052cfe6c64f637fdcce369a3c983dcd2dfbfcaa8652d282fa6dc818c1",
+        "window": [
+          1677,
+          753,
+          371,
+          326
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t4_2",
@@ -1142,7 +1573,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t4_2_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_canyon_matte.png",
+        "sha256": "304ef7ca602b59bc76fe658db8756943aa6fae058e1341e776b926647812ad96",
+        "window": [
+          1742,
+          834,
+          306,
+          236
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t5_1_upgrade",
@@ -1165,7 +1606,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_style.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade_canyon_matte.png",
+        "sha256": "aaafbdf2843bab16bc596b183c29aedd6fe04e99fc83f1b946fee083dccdc366",
+        "window": [
+          1665,
+          275,
+          383,
+          304
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t5_1",
@@ -1188,7 +1639,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t5_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_canyon_matte.png",
+        "sha256": "86d3c79923dcfd00792976dc7466900705998ba75e4ed302f75708daab90bd8e",
+        "window": [
+          1712,
+          345,
+          294,
+          223
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t5_2_upgrade",
@@ -1211,7 +1672,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_mortar.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade_canyon_matte.png",
+        "sha256": "1ea51165f2f02bd9b1e73a28fe9e2579a8eef02cbcc940857221c7951b60b911",
+        "window": [
+          1663,
+          302,
+          385,
+          275
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t5_2",
@@ -1234,7 +1705,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t5_2_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_canyon_matte.png",
+        "sha256": "b532e29a49bbd06b8f430ee3fe61d45704e6566fde10c2952fb2e1502555e1c8",
+        "window": [
+          1712,
+          343,
+          297,
+          225
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t6_1_upgrade",
@@ -1257,7 +1738,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_crawler.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade_canyon_matte.png",
+        "sha256": "b97fa2b548988d86f51eb28cf046997de5b526552499902b5828caf988d3a3f1",
+        "window": [
+          943,
+          509,
+          469,
+          352
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t6_1",
@@ -1280,7 +1771,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t6_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_canyon_matte.png",
+        "sha256": "e2243a1ebfb500f8bf7497ce40fa9c3e390b011c4c7a996dee4abd5705fb574e",
+        "window": [
+          1016,
+          557,
+          324,
+          279
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t7_1_upgrade",
@@ -1303,7 +1804,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/ref_idol.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade_canyon_matte.png",
+        "sha256": "7d4e841153d9233f12f7254b19edbcff9d5d0c30086d11a4ed7195aacd434bd4",
+        "window": [
+          1394,
+          450,
+          596,
+          507
+        ]
+      }
     },
     {
       "id": "building_dev_brasshollow_t7_1",
@@ -1326,7 +1837,17 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_brasshollow_t7_1_upgrade_crop.png"
-      ]
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_canyon_matte.png",
+        "sha256": "d58053036c94704df4c1158c3f3a1d2adb6562f6ce8008e5e249fd5e27b9cb06",
+        "window": [
+          1498,
+          582,
+          394,
+          356
+        ]
+      }
     }
   ]
 }
