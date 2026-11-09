@@ -45,7 +45,6 @@ None open.
 
 ## Open work
 
-- `battle-full-speed-20261109` (in progress): Battle movement counts a creature's full speed instead of holding it at 6 (owner decision, 2026-11-09: the cap left fast units no way to counter ranged armies). Spells still add on top; rooting, mire and the siege penalty are unchanged; the stack card shows the full speed. Files: board_setup.cpp, battle_screen_details.cpp, docs/battle-rework.md.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -55,6 +54,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-09 `battle-full-speed-20261109` (a863a9bf6): Battle movement counts a creature's full speed instead of holding it at 6; spell speed adds on top and the stack card shows the full speed. Speed 9-10 stacks now strike across the board on their first move.
 - 2026-11-09 `bugfix-editor-guild-draws-20261109` (df0a73a88): The editor names a loaded package's working copy after the package hashes, not the clock, so its guild draws repeat on every load; players' maps-folder games keep a clock id. Editor parity replays identically.
 - 2026-11-09 `save-native-first-save-cleanup-20261108` (2d56888f2): Removed the native first-save fast path, its first-save and save-reason marker handling, the force-failure switch, 12 keys and the SaveService.gd constants; old saves keep the markers as inert data. Human parity identical.
 - 2026-11-09 `bugfix-auto-battle-spell-picks-20261109` (7d4071a3d): Auto battle casts a hex, move, summon or two-stack spell with the hex or second stack its plan picked (BattleShell._auto_spell_order); the human and editor seat checks no longer read the removed autosave flag; all 11 seat seeds pass

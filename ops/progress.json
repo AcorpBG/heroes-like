@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "battle-full-speed-20261109",
- "currentSliceTitle": "Battle: a creature's full speed counts, no cap at 6",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-09T08:56:34Z",
+ "currentSliceTitle": "Battle movement counts a creature's full speed instead of holding it at 6; spell speed adds on top and the stack card shows the full speed. Speed 9-10 stacks now strike across the board on their first move.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-09T09:09:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "battle-full-speed-20261109",
-   "title": "Battle: a creature's full speed counts, no cap at 6",
-   "status": "in_progress",
-   "goal": "Battle movement counts a creature's full speed instead of holding it at 6 (owner decision, 2026-11-09: the cap left fast units no way to counter ranged armies). Spells still add on top; rooting, mire and the siege penalty are unchanged; the stack card shows the full speed. Files: board_setup.cpp, battle_screen_details.cpp, docs/battle-rework.md.",
-   "docs": [],
-   "updatedAt": "2026-11-09"
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Battle movement counts a creature's full speed instead of holding it at 6; spell speed adds on top and the stack card shows the full speed. Speed 9-10 stacks now strike across the board on their first move.",
+   "commit": "a863a9bf6"
   },
   {
    "id": "bugfix-editor-guild-draws-20261109",
