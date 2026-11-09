@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-brasshollow-birefnet-recut-20261109",
- "currentSliceTitle": "Brasshollow's 51 buildings are cut along BiRefNet mattes (tools/town_plot_mattes.py), not GrabCut: walls, wings and windows stay whole; the t2_2 lodge upgrade is repainted with its tank under its roof ($0.04).",
+ "currentSliceId": "town-art-brasshollow-built-town-picture-20261109",
+ "currentSliceTitle": "Brasshollow's town picture (town list, town switcher, build screen) is now the slag-canyon town fully built, drawn by tools/package_town_plot_layers.py as the town screen draws it, not the old quarry painting.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-09T14:18:54Z",
+ "updatedAt": "2026-11-09T14:48:28Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-brasshollow-built-town-picture-20261109",
+   "status": "completed",
+   "completedAt": "2026-11-09",
+   "summary": "Brasshollow's town picture (town list, town switcher, build screen) is now the slag-canyon town fully built, drawn by tools/package_town_plot_layers.py as the town screen draws it, not the old quarry painting.",
+   "commit": "51d50dbc7"
+  },
   {
    "id": "town-art-brasshollow-birefnet-recut-20261109",
    "status": "completed",
