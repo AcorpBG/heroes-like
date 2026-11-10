@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
@@ -89,7 +90,7 @@ Atom concat(State &state, Atom a, Atom b) {
 
 // slot in ArtifactRules.EQUIPMENT_SLOTS.
 bool is_equipment_slot(Atom slot) {
-	return slot == key::boots || slot == key::banner || slot == key::armor || slot == key::trinket || slot == key::trinket_2;
+	return artifact_slots::is_equipment_slot(slot);
 }
 
 // session.overworld.get("player_heroes", []) if it is an Array, else [].

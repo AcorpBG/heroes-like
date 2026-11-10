@@ -57,7 +57,7 @@ Learning stays free: a hero in an own town learns everything its guild offers up
 ## Scrolls
 
 - The 16 scroll-only spells never appear in a guild. About 1 scroll in 3 found on the map holds one.
-- A scroll teaches nothing. A hero casts a scroll's spell, for mana as usual, only while the scroll is worn in one of its two trinket slots, like a charm, so a hero wears at most two, in place of charms. The scroll is not used up and can be handed to another hero like any item.
+- A scroll teaches nothing. A hero casts a scroll's spell, for mana as usual, only while the scroll is worn in one of its trinket slots, like a charm, so a hero wears at most four (two until the slots of 2026-11-10, `docs/hero-screen.md`), in place of charms. The scroll is not used up and can be handed to another hero like any item.
 - Generated maps keep placing scrolls by tier as they do today.
 - Each spell has one scroll item, which the content store adds to `artifacts.json` as it reads the file: `artifact_scroll_<spell id without spell_>`, a trinket of class `spell_scroll` naming its `spell_id`, with no bonus. Rarity follows the tier: 1 common, 2 uncommon, 3 rare, 4 and 5 epic. It shows the spell's icon.
 - A scroll site (`site_spell_scroll`, `gives_spell_scrolls`) hands its scroll to the hero, worn at once when a trinket slot is free, else carried. A hero holds one copy of each scroll; a second copy of one it holds is lost. Shrines and Pandora-style sites still teach, and only guild spells.

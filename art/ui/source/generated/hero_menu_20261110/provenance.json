@@ -1,0 +1,40 @@
+{
+ "purpose": "The hero menu's small art (docs/hero-screen.md): glyphs.png, twelve gold emblems on a 4 by 3 sheet (the four pages, the four command stats, the three meters, a laurel); slots.png, ten outlines for empty artifact slots on a 5 by 2 sheet; body.png, the figure the slots stand on. tools/build_hero_menu_icons.py cuts them into art/ui/runtime/hero_menu. hero_menu_mockup.png is the layout the owner picked (B, the showpiece) with the artifact page as a figure; a reference for scenes/shared/HeroSheet.gd, nothing is cut from it.",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-10",
+ "quality": "medium",
+ "note": "The PNGs are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
+ "items": [
+  {
+   "source": "glyphs.png",
+   "size": "1024x768",
+   "transparent": true,
+   "prompt_file": "glyphs.prompt.txt",
+   "sha256": "898c197075068c743ef9f7f3f12b3447d6ed8541f4b6103ae6a6b27abe54dec0"
+  },
+  {
+   "source": "slots.png",
+   "size": "1280x512",
+   "transparent": true,
+   "prompt_file": "slots.prompt.txt",
+   "sha256": "e0fe1c66275a52dc93b7fc4f17784f5b1ace378b3f5616f3bc3edfc30bdc9eea"
+  },
+  {
+   "source": "body.png",
+   "size": "640x1024",
+   "transparent": true,
+   "prompt_file": "body.prompt.txt",
+   "sha256": "843f23b6cb5fe928274c612da809eef18b4835d8cdbcafc1f44a6e4ec6eed4c6"
+  },
+  {
+   "source": "hero_menu_mockup.png",
+   "size": "1920x1088",
+   "prompt_file": "hero_menu_mockup.prompt.txt",
+   "inputs": [
+    "image 1: the first mockup of layout B (an edit of a screenshot of the old hero sheet on the map, with the skirmish setup column as the style reference)"
+   ],
+   "sha256": "47b5b43ec469f36313d06670a6fe782f15411ea76083509f3dadf2e0af397a98"
+  }
+ ]
+}

@@ -1,6 +1,7 @@
 // Layer 2: a hero's artifacts, normalized, and the bonuses they and their sets give.
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
 
@@ -19,9 +20,7 @@ using gd::str;
 using state::ContentTable;
 namespace key = state::key;
 
-// ARTIFACT_SLOTS and EQUIPMENT_SLOTS.
-constexpr Atom kArtifactSlots[] = {key::boots, key::banner, key::armor, key::trinket};
-constexpr Atom kEquipmentSlots[] = {key::boots, key::banner, key::armor, key::trinket, key::trinket_2};
+// ARTIFACT_SLOTS and EQUIPMENT_SLOTS: artifact_slots.hpp.
 
 // The int bonuses _apply_bonus_payload adds.
 constexpr Atom kIntBonusKeys[] = {
@@ -90,7 +89,7 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 	const DictRef artifacts = two_argument_get_target(get_or_new_dict(state, hero_state, key::artifacts));
 	const Value equipped = get_or_new_dict(state, artifacts, key::equipped);
 	const DictRef equipped_dict = two_argument_get_target(equipped);
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		const Atom artifact_id = string_of_field(state, equipped_dict, slot, key::empty);
 		if (artifact_id == key::empty) {
 			continue;
@@ -141,7 +140,7 @@ DictRef normalize_hero_artifacts(State &state, const Value &value) {
 	if (gd::is_dict(value)) {
 		const Value raw_equipped = gd::field(state, value.ref, key::equipped);
 		if (gd::is_dict(raw_equipped)) {
-			for (const Atom slot : kEquipmentSlots) {
+			for (const Atom slot : artifact_slots::kEquipment) {
 				_register_equipped_candidate(state, string_of_field(state, raw_equipped.ref, slot, key::empty), equipped, inventory, slot);
 			}
 		}
@@ -168,7 +167,7 @@ DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Va
 	const DictRef equipped = gd::as_dict(gd::field(state, merged, key::equipped));
 	const ArrayRef inventory = gd::as_array(gd::field(state, merged, key::inventory));
 	const DictRef imported_equipped = gd::as_dict(gd::field(state, imported, key::equipped));
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		const Atom imported_id = string_of_field(state, imported_equipped, slot, key::empty);
 		if (imported_id == key::empty || _artifact_is_owned(state, equipped, inventory, imported_id)) {
 			continue;
@@ -183,7 +182,7 @@ DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Va
 
 DictRef _blank_equipped_slots(State &state) {
 	const DictRef equipped = state.new_dict();
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		state.set(equipped, str(slot), str(key::empty));
 	}
 	return equipped;
@@ -233,7 +232,7 @@ bool _artifact_is_owned(State &state, DictRef equipped, ArrayRef inventory, Atom
 	if (artifact_id == key::empty) {
 		return false;
 	}
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		if (string_of_field(state, equipped, slot, key::empty) == artifact_id) {
 			return true;
 		}
@@ -252,7 +251,7 @@ Atom artifact_slot(State &state, Atom artifact_id) {
 	}
 	const DictRef artifact = gd::content_row(state, ContentTable::Artifact, artifact_id);
 	const Atom slot = string_of_field(state, artifact, key::slot, key::empty);
-	return std::find(std::begin(kArtifactSlots), std::end(kArtifactSlots), slot) != std::end(kArtifactSlots) ? slot : key::empty;
+	return artifact_slots::is_kind(slot) ? slot : static_cast<Atom>(key::empty);
 }
 
 bool is_spell_scroll(State &state, const Value &artifact) {
@@ -279,11 +278,8 @@ Atom spell_scroll_artifact_id(State &state, Atom spell_id) {
 
 ArrayRef _compatible_equipment_slots(State &state, Atom slot_type) {
 	const ArrayRef slots = state.new_array();
-	if (slot_type == key::trinket) {
-		state.append(slots, str(key::trinket));
-		state.append(slots, str(key::trinket_2));
-	} else if (slot_type == key::boots || slot_type == key::banner || slot_type == key::armor) {
-		state.append(slots, str(slot_type));
+	for (const Atom slot : artifact_slots::slots_of_kind(slot_type)) {
+		state.append(slots, str(slot));
 	}
 	return slots;
 }
@@ -401,7 +397,7 @@ ArrayRef _artifact_spell_modifier_records(State &state, DictRef artifact, Atom a
 ArrayRef _set_states_for_equipped(State &state, const Value &equipped) {
 	const DictRef equipped_dict = two_argument_get_target(equipped);
 	const ArrayRef equipped_ids = state.new_array();
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		const Atom artifact_id = string_of_field(state, equipped_dict, slot, key::empty);
 		if (artifact_id != key::empty && !gd::array_has(state, equipped_ids, str(artifact_id))) {
 			state.append(equipped_ids, str(artifact_id));

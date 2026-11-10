@@ -1,8 +1,21 @@
 class_name ArtifactRules
 extends RefCounted
 
-const ARTIFACT_SLOTS := ["boots", "banner", "armor", "trinket"]
-const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket", "trinket_2"]
+## What an artifact's "slot" can be, and the slots a hero wears them in
+## (docs/hero-screen.md, Artifact slots; the rules' copy is artifact_slots.hpp).
+## The five slots older saves hold come first.
+const ARTIFACT_SLOTS := ["boots", "banner", "armor", "trinket", "head", "neck", "cloak", "hand", "ring"]
+const EQUIPMENT_SLOTS := [
+	"boots", "banner", "armor", "trinket", "trinket_2",
+	"head", "neck", "cloak", "hand", "hand_2", "ring", "ring_2", "trinket_3", "trinket_4",
+]
+## A kind's slots, in the order an artifact tries them.
+const SLOTS_BY_KIND := {
+	"boots": ["boots"], "banner": ["banner"], "armor": ["armor"],
+	"trinket": ["trinket", "trinket_2", "trinket_3", "trinket_4"],
+	"head": ["head"], "neck": ["neck"], "cloak": ["cloak"],
+	"hand": ["hand", "hand_2"], "ring": ["ring", "ring_2"],
+}
 const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
@@ -50,7 +63,7 @@ const ARTIFACT_SOURCE_TAGS := [
 	"objective",
 ]
 const ARTIFACT_BONUS_TYPES := ["stat", "resource_income", "spell_modifier", "site_modifier", "town_modifier", "unit_tag_modifier", "adventure_effect", "tradeoff"]
-const SLOT_LIMITS := {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
+const SLOT_LIMITS := {"boots": 1, "banner": 1, "armor": 1, "trinket": 4, "head": 1, "neck": 1, "cloak": 1, "hand": 2, "ring": 2}
 const DAILY_INCOME_RESOURCE_IDS := [
 	"gold",
 	"wood",
@@ -150,7 +163,7 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 		"active_sets": bonuses.get("active_sets", []),
 		"slot_surface": {
 			"active_slots": EQUIPMENT_SLOTS.duplicate(),
-			"active_trinket_slots": 2,
+			"active_trinket_slots": 4,
 			"target_trinket_slots": int(SLOT_LIMITS.get("trinket", 1)),
 			"second_trinket_slot_live": true,
 		},

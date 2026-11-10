@@ -364,6 +364,7 @@ var _army_rows: PanelContainer
 var _resource_bar_panel: PanelContainer
 var _town_switcher: VBoxContainer
 var _hero_sheet: Control
+var _hero_sheet_hero_id := ""
 
 func _ready() -> void:
 	_banner_panel.set_meta("contextual_help_exclusion", true)
@@ -1267,8 +1268,31 @@ func _open_town_hero_sheet(hero_id: String) -> void:
 		_hero_sheet.name = "HeroSheet"
 		_hero_sheet.close_label = "Return to town"
 		add_child(_hero_sheet)
+		_hero_sheet.artifact_action_requested.connect(_on_artifact_action_pressed)
+		_hero_sheet.specialty_requested.connect(_on_specialty_action_pressed)
 	_hero_sheet.z_index = 60
-	_hero_sheet.open_hero(snapshot, _army_rows)
+	_hero_sheet_hero_id = hero_id
+	_hero_sheet.open_hero(snapshot, _army_rows, _town_hero_sheet_orders(hero_id))
+
+## What the hero menu may do in town (docs/hero-screen.md, In town): wear and stow
+## artifacts and choose specialties, for the hero the town's orders act on. Its
+## troops are moved on the town's own army bar and map spells are cast on the map.
+func _town_hero_sheet_orders(hero_id: String) -> Dictionary:
+	if hero_id == "" or hero_id != String(_session.overworld.get("active_hero_id", "")):
+		return {}
+	return {
+		"artifact_actions": TownRules.get_artifact_actions(_session),
+		"specialty_actions": TownRules.get_specialty_actions(_session),
+	}
+
+func _refresh_town_hero_sheet() -> void:
+	if not is_instance_valid(_hero_sheet) or not _hero_sheet.visible:
+		return
+	var snapshot := HeroCommandRules.hero_inspection_snapshot(_session, _hero_sheet_hero_id)
+	if snapshot.is_empty():
+		_hero_sheet.close_sheet()
+		return
+	_hero_sheet.refresh_hero(snapshot, _town_hero_sheet_orders(_hero_sheet_hero_id))
 
 func _on_response_action_pressed(action_id: String) -> void:
 	var context := _prepare_order_read_context(action_id)
@@ -1312,6 +1336,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_refresh_town_hero_sheet()
 	_record_town_artifact_presentation(action_id, action, result, before)
 
 func _on_specialty_action_pressed(action_id: String) -> void:
@@ -1327,6 +1352,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_refresh_town_hero_sheet()
 	_record_town_action_presentation("specialty", action_id, action, result, before)
 
 func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:

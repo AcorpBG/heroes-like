@@ -24,7 +24,8 @@ orders. It is replaced by a HoMM-style meeting screen.
 - Artifacts: a click hands the artifact to the partner (matching empty slot,
   otherwise backpack). Dropping on an equipment slot equips it there if the slot
   type fits; the item already worn goes to that hero's backpack, or swaps between
-  the two trinket slots. Dropping on a backpack cell stows it. `All →` / `← All`
+  the slots of one kind (hands, rings, the four trinkets; `docs/hero-screen.md`,
+  Artifact slots). Dropping on a backpack cell stows it. `All →` / `← All`
   hand over every artifact the receiver does not already own.
 - Spells: a click on a spell icon teaches it to the partner; the teacher keeps it.
 - `Done` or Escape closes. Escape first closes the split slider, then clears the

@@ -1,9 +1,10 @@
 extends Control
-
-const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
-## Owned-commander dossier. Read-only unless opened with `orders`; then it asks
-## its owning screen to cast spells, manage artifacts and stacks, choose
-## specialties and meet heroes. It never changes the session itself.
+## The hero menu (docs/hero-screen.md): the commander's portrait and command stats
+## at the left, and at the right one page at a time: Army, Artifacts (the figure
+## with a slot for everything worn), Specialties, Spells. Read-only unless opened
+## with `orders`; then it asks its owning screen to cast spells, wear and stow
+## artifacts, move stacks, choose specialties and meet heroes. It never changes
+## the session itself.
 
 signal closed
 signal spell_cast_requested(spell_id: String)
@@ -12,36 +13,79 @@ signal specialty_requested(action_id: String)
 signal army_operation_requested(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String)
 signal meet_requested(hero_id: String)
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 const Visuals = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
-const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
+const Spells = preload("res://scripts/core/SpellRules.gd")
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 const DecisionDetails = preload("res://scripts/ui/DecisionDetails.gd")
-const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
-const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
+
+const ICON_PATH := "res://art/ui/runtime/hero_menu/%s.png"
+const PANEL_SIZE := Vector2(1300.0, 720.0)
+const LEFT_WIDTH := 360.0
+const PORTRAIT_HEIGHT := 452.0
+## The pages, by the names their callers open them with.
+const PAGES := [
+	{"id": "Army", "caption": "Army", "icon": "page_army"},
+	{"id": "Artifacts", "caption": "Artifacts", "icon": "page_artifacts"},
+	{"id": "Specializations", "caption": "Specialties", "icon": "page_specialties"},
+	{"id": "Spellbook", "caption": "Spells", "icon": "page_spells"},
+]
+## Where each worn slot stands on the figure, in the figure's own box.
+const DOLL_SIZE := Vector2(440.0, 462.0)
+const DOLL_BODY := Rect2(98.0, 8.0, 244.0, 448.0)
+const DOLL_SLOTS := {
+	"banner": Rect2(0.0, 48.0, 76.0, 112.0),
+	"head": Rect2(188.0, 0.0, 64.0, 64.0),
+	"neck": Rect2(262.0, 58.0, 56.0, 56.0),
+	"cloak": Rect2(108.0, 60.0, 64.0, 64.0),
+	"armor": Rect2(188.0, 128.0, 64.0, 64.0),
+	"hand": Rect2(79.0, 208.0, 64.0, 64.0),
+	"hand_2": Rect2(297.0, 208.0, 64.0, 64.0),
+	"ring": Rect2(85.0, 282.0, 52.0, 52.0),
+	"ring_2": Rect2(303.0, 282.0, 52.0, 52.0),
+	"boots": Rect2(188.0, 396.0, 64.0, 64.0),
+}
+const TRINKET_SLOTS := ["trinket", "trinket_2", "trinket_3", "trinket_4"]
+const SLOT_NAMES := {
+	"head": "Head", "neck": "Neck", "cloak": "Cloak", "armor": "Chest", "hand": "Hand", "hand_2": "Hand",
+	"ring": "Ring", "ring_2": "Ring", "boots": "Feet", "banner": "Banner",
+	"trinket": "Trinket", "trinket_2": "Trinket", "trinket_3": "Trinket", "trinket_4": "Trinket",
+}
+const KIND_NAMES := {
+	"head": "headgear", "neck": "neckpiece", "cloak": "cloak", "armor": "armor", "hand": "held item",
+	"ring": "ring", "boots": "footgear", "banner": "banner", "trinket": "trinket",
+}
+const GOLD := Color(0.84, 0.67, 0.31)
+const GOLD_DIM := Color(0.55, 0.44, 0.24)
+const GOLD_BRIGHT := Color(1.0, 0.93, 0.70)
+const HAIRLINE := Color(0.83, 0.68, 0.36, 0.45)
+const TILE_FILL := Color(0.075, 0.062, 0.05, 0.96)
+const TILE_HOVER := Color(0.14, 0.115, 0.085, 0.98)
+const CARD_FILL := Color(0.06, 0.05, 0.04, 0.6)
 
 var hero: Dictionary = {}
-## Live orders for an interactive sheet: spell_actions, artifact_actions,
+## Live orders for an interactive menu: spell_actions, artifact_actions,
 ## specialty_actions (action lists), army_holder (army slot snapshot) and
-## meet_partners (heroes on the same tile). Empty keeps the sheet read-only.
+## meet_partners (heroes on the same tile). Empty keeps the menu read-only.
 var orders: Dictionary = {}
 ## The close button names where the player returns (the Town screen sets its own).
 var close_label := "Return to map"
 var _panel: PanelContainer
-var _body: VBoxContainer
-var _tabs: TabContainer
+var _body: HBoxContainer
 var _close: Button
 var _return_focus: WeakRef
-var _focusable: Array[Control] = []
-# Controls whose own focusable children join the focus cycle.
-var _focus_groups: Array[Control] = []
-var _spellbook_view: VBoxContainer
-var _artifact_search: LineEdit
-var _artifact_rows: Array[Control] = []
-var _artifact_empty_slots: Array[Control] = []
-var _artifact_empty: Label
+var _page_id := "Army"
+var _page_buttons := {}
+var _page_holder: MarginContainer
+# What is picked on each page; kept through a rebuild after an order.
+var _picked_stack := -1
+var _picked_slot := ""
+var _picked_artifact := ""
+var _picked_spell := ""
+var _last_focus: Control
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -54,61 +98,50 @@ func _ready() -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	_panel = PanelContainer.new()
-	_panel.add_theme_stylebox_override("panel", Visuals.ornate_frame_style(FRAME, "frame", 54, 24))
 	add_child(_panel)
-	# Wrapped labels settle after container layout. Re-clamp when their minimum
-	# changes as well as on viewport resize, including reopening another hero.
-	_panel.minimum_size_changed.connect(_layout.call_deferred)
-	_body = VBoxContainer.new()
-	_body.add_theme_constant_override("separation", 14)
+	_body = HBoxContainer.new()
+	_body.add_theme_constant_override("separation", 22)
 	_panel.add_child(_body)
 	resized.connect(_layout)
+	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 
-## `tab` opens a named tab ("Army", "Artifacts", "Specializations", "Spellbook").
+## `tab` opens a named page ("Army", "Artifacts", "Specializations", "Spellbook").
 func open_hero(snapshot: Dictionary, return_control: Control, live_orders: Dictionary = {}, tab: String = "") -> void:
 	_return_focus = weakref(return_control) if return_control != null else null
+	if String(snapshot.get("id", "")) != String(hero.get("id", "")):
+		_picked_stack = -1
+		_picked_slot = ""
+		_picked_artifact = ""
+		_picked_spell = ""
+	if tab != "":
+		_page_id = tab
 	_rebuild(snapshot, live_orders)
-	if tab != "": show_tab(tab)
 	show()
 	move_to_front()
 	set_process_input(true)
 	_layout()
-	_focus_cycle()
 	_close.call_deferred("grab_focus")
 
-## Rebuilds after an order, keeping the open tab.
+## Rebuilds after an order, keeping the open page and what was picked on it.
 func refresh_hero(snapshot: Dictionary, live_orders: Dictionary) -> void:
 	if not visible: return
-	var tab := current_tab()
 	_rebuild(snapshot, live_orders)
-	show_tab(tab)
 	_layout()
-	_focus_cycle()
-	_tabs.get_tab_bar().call_deferred("grab_focus")
+	if _page_buttons.has(_page_id):
+		(_page_buttons[_page_id] as Button).call_deferred("grab_focus")
 
 func show_tab(title: String) -> void:
-	for index in range(_tabs.get_tab_count()):
-		if _tabs.get_tab_control(index).name == title:
-			_tabs.current_tab = index
+	for page in PAGES:
+		if String(page.id) == title:
+			_page_id = title
+			_show_page()
 			return
 
 func current_tab() -> String:
-	return String(_tabs.get_current_tab_control().name) if _tabs != null and _tabs.get_current_tab_control() != null else ""
+	return _page_id
 
 func is_interactive() -> bool:
 	return not orders.is_empty()
-
-func _rebuild(snapshot: Dictionary, live_orders: Dictionary) -> void:
-	hero = snapshot.duplicate(true)
-	orders = live_orders.duplicate(true)
-	for child in _body.get_children():
-		_body.remove_child(child)
-		child.queue_free()
-	_focusable.clear()
-	_focus_groups.clear()
-	_artifact_rows.clear()
-	_artifact_empty_slots.clear()
-	_build()
 
 func close_sheet() -> void:
 	if not visible: return
@@ -124,255 +157,600 @@ func _input(event: InputEvent) -> void:
 		close_sheet()
 		get_viewport().set_input_as_handled()
 
+## Arrow keys and Tab never carry the focus to the screen behind the menu.
+func _on_focus_changed(control: Control) -> void:
+	if not visible or control == null:
+		return
+	if is_ancestor_of(control):
+		_last_focus = control
+		return
+	# A popup of the menu's own controls (none today) would have another viewport.
+	if control.get_viewport() != get_viewport():
+		return
+	var back: Control = _last_focus if is_instance_valid(_last_focus) and _last_focus.is_visible_in_tree() else _close
+	if is_instance_valid(back):
+		back.grab_focus.call_deferred()
+
 func _layout() -> void:
 	if _panel == null: return
-	_panel.size = Vector2(minf(1120.0, size.x - 32.0), minf(650.0, size.y - 32.0))
+	_panel.size = Vector2(minf(PANEL_SIZE.x, size.x - 32.0), minf(PANEL_SIZE.y, size.y - 32.0))
 	_panel.position = (size - _panel.size) * 0.5
 
-func _build() -> void:
-	var header := HBoxContainer.new()
-	_body.add_child(header)
-	var title := _label(header, String(hero.get("name", "Hero")), 26, "gold")
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for partner in orders.get("meet_partners", []):
-		var partner_id := String(partner.get("id", ""))
-		var partner_name := String(partner.get("name", "Commander"))
-		var meet := _button(header, "Meet %s" % partner_name.get_slice(" ", 0), "Meet %s to exchange troops, artifacts and spells." % partner_name, Vector2(150, 38))
-		meet.name = "Meet_%s" % partner_id
-		meet.icon = _texture(String(ContentService.get_hero_art(partner_id).get("portrait", "")))
-		meet.add_theme_constant_override("icon_max_width", 26)
-		meet.pressed.connect(func(): meet_requested.emit(partner_id))
-	_close = _button(header, close_label, "Close hero sheet · Escape / controller Back", Vector2(160, 38))
-	_close.name = "CloseHeroSheet"
-	_close.pressed.connect(close_sheet)
-	var content := HBoxContainer.new()
-	content.add_theme_constant_override("separation", 26)
-	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_body.add_child(content)
-	var identity := VBoxContainer.new()
-	identity.custom_minimum_size.x = 260
-	identity.add_theme_constant_override("separation", 12)
-	content.add_child(identity)
-	var portrait_frame := PanelContainer.new()
-	portrait_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	portrait_frame.add_theme_stylebox_override("panel", Visuals.ornate_frame_style(PORTRAIT_FRAME, "frame", 26, 8))
-	identity.add_child(portrait_frame)
-	var portrait := TextureRect.new()
+func _rebuild(snapshot: Dictionary, live_orders: Dictionary) -> void:
+	hero = snapshot.duplicate(true)
+	orders = live_orders.duplicate(true)
+	_panel.add_theme_stylebox_override("panel", Visuals.info_card_style())
+	for child in _body.get_children():
+		_body.remove_child(child)
+		child.queue_free()
+	_page_buttons.clear()
+	_last_focus = null
+	_build_identity()
+	_build_right()
+	_show_page()
+
+# --- The left: who the hero is -------------------------------------------------
+
+func _build_identity() -> void:
+	var left := VBoxContainer.new()
+	left.custom_minimum_size.x = LEFT_WIDTH
+	left.add_theme_constant_override("separation", 10)
+	_body.add_child(left)
+	var frame := PanelContainer.new()
+	frame.custom_minimum_size = Vector2(LEFT_WIDTH, PORTRAIT_HEIGHT)
+	frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	frame.clip_contents = true
+	var frame_style := _box(Color(0.76, 0.60, 0.30), 1, 5, Color(0.30, 0.27, 0.23))
+	frame_style.set_content_margin_all(2)
+	frame.add_theme_stylebox_override("panel", frame_style)
+	left.add_child(frame)
+	var portrait := _picture(_texture(String(ContentService.get_hero_art(String(hero.get("id", ""))).get("portrait", ""))), true)
 	portrait.name = "HeroPortrait"
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture = _texture(String(ContentService.get_hero_art(String(hero.id)).get("portrait", "")))
-	portrait_frame.add_child(portrait)
-	_label(identity, Heroes.hero_identity_context_line(hero), 17, "gold")
-	_label(identity, "Level %d  ·  Experience %d / %d" % [int(hero.get("level", 1)), int(hero.get("experience", 0)), int(hero.get("next_level_experience", 250))], 15)
+	frame.add_child(portrait)
+	# The name sits on the picture's lower edge, on a shade that fades upward.
+	var plate := Control.new()
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(plate)
+	var shade := TextureRect.new()
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(0.04, 0.03, 0.02, 0.0))
+	gradient.set_color(1, Color(0.04, 0.03, 0.02, 0.92))
+	var ramp := GradientTexture2D.new()
+	ramp.gradient = gradient
+	ramp.fill_from = Vector2(0.0, 0.0)
+	ramp.fill_to = Vector2(0.0, 1.0)
+	ramp.width = 8
+	ramp.height = 64
+	shade.texture = ramp
+	shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	shade.stretch_mode = TextureRect.STRETCH_SCALE
+	shade.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	shade.offset_top = -120.0
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.add_child(shade)
+	var names := VBoxContainer.new()
+	names.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	names.offset_left = 14.0
+	names.offset_right = -14.0
+	names.offset_top = -68.0
+	names.offset_bottom = -10.0
+	names.add_theme_constant_override("separation", 0)
+	names.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.add_child(names)
+	var title := _label(names, String(hero.get("name", "Hero")), 26, "gold")
+	title.name = "HeroName"
+	title.clip_text = true
+	var calling := _label(names, _calling_line(), 14, "body")
+	calling.clip_text = true
+	calling.tooltip_text = Heroes.hero_identity_context_line(hero)
+
+	var level_row := HBoxContainer.new()
+	level_row.add_theme_constant_override("separation", 12)
+	left.add_child(level_row)
+	_label(level_row, "Level %d" % int(hero.get("level", 1)), 18, "gold")
 	var experience := ProgressBar.new()
 	experience.name = "HeroExperienceProgress"
-	experience.custom_minimum_size.y = 12
+	experience.custom_minimum_size.y = 22.0
+	experience.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	experience.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	experience.show_percentage = false
 	experience.max_value = maxi(1, int(hero.get("next_level_experience", 250)))
 	experience.value = int(hero.get("experience", 0))
-	experience.tooltip_text = "%d experience remaining to level %d" % [maxi(0, int(experience.max_value) - int(experience.value)), int(hero.get("level", 1)) + 1]
+	experience.add_theme_stylebox_override("background", _box(GOLD_DIM, 1, 6, Color(0.05, 0.04, 0.035, 0.9)))
+	experience.add_theme_stylebox_override("fill", _box(Color(0, 0, 0, 0), 0, 6, Color(0.62, 0.47, 0.18, 0.95)))
+	experience.tooltip_text = "%d experience to level %d" % [maxi(0, int(experience.max_value) - int(experience.value)), int(hero.get("level", 1)) + 1]
 	experience.accessibility_name = experience.tooltip_text
-	identity.add_child(experience)
-	_label(identity, "Movement %d / %d\nMana %d / %d\nScouting radius %d" % [int(hero.get("movement", {}).get("current", 0)), int(hero.get("movement", {}).get("max", 0)), int(hero.get("spellbook", {}).get("mana", {}).get("current", 0)), int(hero.get("spellbook", {}).get("mana", {}).get("max", 0)), Heroes.scouting_radius_for_hero(hero)], 16)
-	var right := VBoxContainer.new()
-	right.add_theme_constant_override("separation", 14)
-	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.add_child(right)
+	level_row.add_child(experience)
+	var amount := _label(experience, "%d / %d" % [int(experience.value), int(experience.max_value)], 13, "body")
+	amount.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	amount.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	amount.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	amount.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	var stats := HBoxContainer.new()
 	stats.name = "CommandStats"
-	right.add_child(stats)
+	stats.add_theme_constant_override("separation", 8)
+	stats.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left.add_child(stats)
 	var artifact_bonuses := Artifacts.aggregate_bonuses(hero.duplicate(true))
 	var specialty_bonuses := Progression.aggregate_bonuses(hero)
 	for stat in ["attack", "defense", "power", "knowledge"]:
 		var base := int(hero.get("command", {}).get(stat, 0))
 		var bonus := int(artifact_bonuses.get("battle_" + stat, 0)) + int(specialty_bonuses.get("battle_" + stat, 0)) if stat in ["attack", "defense"] else 0
-		var field := _label(stats, "%s\n%d" % [String(stat).capitalize(), base + bonus], 20, "gold")
-		field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		field.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		field.tooltip_text = "%s: %d base + %d equipped artifact/specialization bonus. Battle conditions may add further modifiers." % [String(stat).capitalize(), base, bonus]
-	_tabs = TabContainer.new()
-	_tabs.name = "HeroTabs"
-	_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_tabs.set_tab_alignment(TabBar.ALIGNMENT_CENTER)
-	_tabs.add_theme_font_size_override("font_size", 18)
-	right.add_child(_tabs)
-	_build_army(_tab("Army"))
-	_build_artifacts(_tab("Artifacts"))
-	_build_specializations(_tab("Specializations"))
-	_spellbook_view = SpellbookViewScript.new()
-	_tabs.add_child(_spellbook_view)
-	if is_interactive():
-		_spellbook_view.configure(hero, _castable_spell_ids(), "overworld", _spell_availability())
-		_spellbook_view.spell_requested.connect(func(spell_id: String): spell_cast_requested.emit(spell_id))
-	else:
-		_spellbook_view.configure(hero, _castable_spell_ids())
-	_spellbook_view.controls_changed.connect(_focus_cycle)
-	_tabs.get_tab_bar().focus_mode = Control.FOCUS_ALL
-	_tabs.get_tab_bar().accessibility_name = "Hero information tabs"
-	_tabs.tab_changed.connect(func(_index: int): _focus_cycle())
-	_focusable.append(_tabs.get_tab_bar())
-	_focus_cycle()
+		var tile := PanelContainer.new()
+		tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tile.add_theme_stylebox_override("panel", _card_style())
+		tile.tooltip_text = "%s: %d base + %d from artifacts and specialties. Battle conditions may add more." % [String(stat).capitalize(), base, bonus]
+		stats.add_child(tile)
+		var column := VBoxContainer.new()
+		column.alignment = BoxContainer.ALIGNMENT_CENTER
+		column.add_theme_constant_override("separation", 0)
+		column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tile.add_child(column)
+		var glyph := _picture(_icon("stat_" + stat), false)
+		glyph.custom_minimum_size = Vector2(34.0, 34.0)
+		column.add_child(glyph)
+		var caption := _label(column, String(stat).capitalize(), 12, "muted")
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var number := _label(column, str(base + bonus), 24, "green" if bonus > 0 else "body")
+		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
-## The spells the hero can cast: those it knows, then those its worn scrolls lend.
-func _castable_spell_ids() -> Array:
-	var spell_ids := []
-	for spell in SpellRules.known_spells(hero):
-		spell_ids.append(String(spell.get("id", "")))
-	return spell_ids
+func _calling_line() -> String:
+	var template := Heroes.hero_template(hero)
+	var parts := PackedStringArray()
+	var archetype := String(template.get("archetype", "")).capitalize()
+	if archetype != "": parts.append(archetype)
+	parts.append("Magic hero" if String(template.get("command_path", hero.get("command_path", "might"))) == "magic" else "Might hero")
+	var faction := String(ContentService.get_faction(String(template.get("faction_id", ""))).get("name", ""))
+	if faction != "": parts.append(faction)
+	return " · ".join(parts)
 
-func _spell_availability() -> Dictionary:
-	var availability := {}
-	for action in orders.get("spell_actions", []):
-		var spell_id := String(action.get("id", "")).trim_prefix("cast_spell:")
-		var reason := String(action.get("invalid_reason", ""))
-		availability[spell_id] = {"enabled": not bool(action.get("disabled", false)), "message": reason if reason != "" else String(action.get("readiness", ""))}
-	return availability
+# --- The right: the page buttons, the meters and the chosen page ----------------
 
-func _action(list_key: String, action_id: String) -> Dictionary:
-	for action in orders.get(list_key, []):
-		if action is Dictionary and String(action.get("id", "")) == action_id: return action
-	return {}
+func _build_right() -> void:
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.add_theme_constant_override("separation", 10)
+	_body.add_child(right)
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 18)
+	right.add_child(top)
+	for page in PAGES:
+		top.add_child(_page_button(page))
+	var divider := ColorRect.new()
+	divider.color = HAIRLINE
+	divider.custom_minimum_size.x = 1.0
+	top.add_child(divider)
+	var meters := VBoxContainer.new()
+	meters.add_theme_constant_override("separation", 3)
+	meters.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(meters)
+	var movement: Dictionary = hero.get("movement", {})
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	_meter(meters, "meter_movement", "Movement", "%d / %d" % [int(movement.get("current", 0)), int(movement.get("max", 0))], "Movement left today, and what a full day gives.")
+	_meter(meters, "meter_mana", "Mana", "%d / %d" % [int(mana.get("current", 0)), int(mana.get("max", 0))], "Mana for spells, and the most the hero holds.")
+	_meter(meters, "meter_scouting", "Scouting", str(Heroes.scouting_radius_for_hero(hero)), "How many tiles around it the hero reveals.")
+	var gap := Control.new()
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(gap)
+	var buttons := VBoxContainer.new()
+	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	buttons.add_theme_constant_override("separation", 6)
+	top.add_child(buttons)
+	_close = _button(buttons, close_label, "Close the hero menu · Escape", "primary", Vector2(190.0, 40.0))
+	_close.name = "CloseHeroSheet"
+	_close.pressed.connect(close_sheet)
+	for partner in orders.get("meet_partners", []):
+		var partner_id := String(partner.get("id", ""))
+		var partner_name := String(partner.get("name", "Commander"))
+		var meet := _button(buttons, "Meet %s" % partner_name.get_slice(" ", 0), "Meet %s to exchange troops, artifacts and spells." % partner_name, "secondary", Vector2(190.0, 34.0))
+		meet.name = "Meet_%s" % partner_id
+		meet.icon = _texture(String(ContentService.get_hero_art(partner_id).get("portrait", "")))
+		meet.expand_icon = true
+		meet.add_theme_constant_override("icon_max_width", 24)
+		meet.pressed.connect(func(): meet_requested.emit(partner_id))
+	_hairline(right)
+	_page_holder = MarginContainer.new()
+	_page_holder.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(_page_holder)
 
-func _tab(title: String) -> VBoxContainer:
-	var scroll := ScrollContainer.new()
-	scroll.name = title
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.focus_mode = Control.FOCUS_ALL
-	scroll.accessibility_name = title + " details; scroll to read more"
-	_focusable.append(scroll)
-	_tabs.add_child(scroll)
-	var margin := MarginContainer.new()
-	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 12)
-	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(margin)
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 12)
-	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	margin.add_child(box)
-	return box
+func _page_button(page: Dictionary) -> Control:
+	var page_id := String(page.id)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 2)
+	var button := Button.new()
+	button.name = "Page_%s" % page_id
+	button.toggle_mode = true
+	button.custom_minimum_size = Vector2(64.0, 64.0)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.tooltip_text = String(page.caption)
+	button.accessibility_name = String(page.caption)
+	button.add_theme_stylebox_override("normal", _box(GOLD_DIM, 1, 32, TILE_FILL))
+	button.add_theme_stylebox_override("hover", _box(GOLD, 1, 32, TILE_HOVER))
+	for state in ["pressed", "hover_pressed"]:
+		button.add_theme_stylebox_override(state, _box(GOLD, 3, 32, TILE_HOVER))
+	button.add_theme_stylebox_override("focus", _box(GOLD_BRIGHT, 2, 32, Color(0, 0, 0, 0)))
+	var glyph := _picture(_icon(String(page.icon)), false)
+	glyph.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 13)
+	button.add_child(glyph)
+	button.pressed.connect(func():
+		_page_id = page_id
+		_show_page())
+	column.add_child(button)
+	var caption := _label(column, String(page.caption), 14, "body")
+	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caption.custom_minimum_size.x = 84.0
+	_page_buttons[page_id] = button
+	return column
 
-func _build_army(box: VBoxContainer) -> void:
-	var holder: Dictionary = orders.get("army_holder", {})
-	if not holder.is_empty():
-		_build_managed_army(box, holder)
-		return
-	_label(box, "Field army  ·  Select a stack to inspect", 16, "gold")
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
-	box.add_child(row)
-	var details := _label(box, "No troops in this army.", 16)
-	details.name = "UnitDetails"
-	var slots: Array = hero.get("inspection_army_slots", [])
-	for index in range(Heroes.ARMY_SLOT_COUNT):
-		var stack := {}
-		for candidate in slots:
-			if int(candidate.get("slot_index", -1)) == index: stack = candidate
-		var unit_id := String(stack.get("unit_id", ""))
-		var unit := ContentService.get_unit(unit_id) if unit_id != "" else {}
-		var count := int(stack.get("count", 0))
-		var button := _button(row, str(count) if count > 0 else "—", "%s · %d troops" % [String(unit.get("name", "Empty slot")), count], Vector2(72, 104))
-		button.name = "ArmySlot%d" % index
-		button.set_meta("unit_id", unit_id)
-		button.set_meta("count", count)
-		button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-		button.icon = UnitPortraits.for_unit(unit_id, "portrait") if unit_id != "" else null
-		button.disabled = unit_id == ""
-		if unit_id != "":
-			var description := _unit_description(unit, count)
-			button.pressed.connect(func(): details.text = description)
-			if details.text == "No troops in this army.": details.text = description
-	for stack in hero.get("inspection_overflow_stacks", []):
-		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		_label(box, "Legacy overflow · %s × %d\n%s" % [String(unit.get("name", "Unit")), int(stack.get("count", 0)), _unit_description(unit, int(stack.get("count", 0)))], 15)
-	_label(box, "Troop statistics are base values; command bonuses and battlefield effects apply in combat. Manage stacks from the hero sheet on the adventure map or in Town.", 14, "muted")
-
-## Click or drag a stack onto another slot to move, swap, merge or split it.
-func _build_managed_army(box: VBoxContainer, holder: Dictionary) -> void:
-	_label(box, "Field army  ·  Click or drag a stack to move, merge or split it", 16, "gold")
-	var bar := ArmyStackBarScript.new()
-	bar.name = "HeroArmyStacks"
-	box.add_child(bar)
-	bar.configure([holder], true)
-	_focus_groups.append(bar)
-	var details := _label(box, "Select a stack to see its statistics.", 16)
-	details.name = "UnitDetails"
-	bar.operation_requested.connect(func(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String):
-		army_operation_requested.emit(source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token))
-	bar.selection_changed.connect(func(snapshot: Dictionary):
-		var slot_index := int(snapshot.get("selected_slot_index", -1))
-		for stack in hero.get("inspection_army_slots", []):
-			if int(stack.get("slot_index", -1)) == slot_index:
-				details.text = _unit_description(ContentService.get_unit(String(stack.get("unit_id", ""))), int(stack.get("count", 0)))
-		call_deferred("_focus_cycle"))
-	_label(box, "Troop statistics are base values; command bonuses and battlefield effects apply in combat.", 14, "muted")
-
-func _unit_description(unit: Dictionary, count: int) -> String:
-	var text := "%s  × %d\nTier %d · %s\n\nAttack %d   Defense %d   Health %d\nDamage %d–%d   Speed %d   Initiative %d" % [String(unit.get("name", "Unit")), count, int(unit.get("tier", 1)), String(unit.get("role", "")).capitalize(), int(unit.get("attack", 0)), int(unit.get("defense", 0)), int(unit.get("hp", 0)), int(unit.get("min_damage", 0)), int(unit.get("max_damage", 0)), int(unit.get("speed", 0)), int(unit.get("initiative", 0))]
-	var body: Dictionary = ContentService.load_json("res://content/unit_battle_size_manifest.json").get("units", {}).get(String(unit.get("id", "")), {})
-	var width := 2 if int(body.get("footprint", 1)) == 2 else 1
-	text += "\n%s · Occupies %d hex%s" % ["Ranged · %d shots" % int(unit.get("shots", 0)) if bool(unit.get("ranged", false)) else "Melee", width, "es" if width == 2 else ""]
-	for ability in unit.get("abilities", []):
-		if ability is Dictionary: text += "\n\n%s · %s" % [String(ability.get("name", "Ability")), String(ability.get("description", ""))]
-	return text
-
-func _build_artifacts(box: VBoxContainer) -> void:
-	_artifact_search = LineEdit.new()
-	_artifact_search.name = "FindHeroArtifact"
-	_artifact_search.placeholder_text = "Find artifact…"
-	_artifact_search.clear_button_enabled = true
-	_artifact_search.accessibility_name = "Search equipped and backpack artifacts"
-	_artifact_search.text_changed.connect(func(_text): _filter_artifacts())
-	box.add_child(_artifact_search)
-	_focusable.append(_artifact_search)
-	_label(box, "Equipped", 18, "gold")
-	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
-	for slot in Artifacts.EQUIPMENT_SLOTS:
-		_artifact_row(box, String(equipped.get(slot, "")), String(slot).replace("_2", " II").capitalize(), "unequip_artifact:%s" % slot)
-	_label(box, "Backpack", 18, "gold")
-	var inventory: Array = hero.get("artifacts", {}).get("inventory", [])
-	if inventory.is_empty(): _label(box, "No carried artifacts.", 15, "muted")
-	for artifact_id in inventory: _artifact_row(box, String(artifact_id), "Carried", "equip_artifact:%s" % artifact_id)
-	_artifact_empty = _label(box, "No artifacts match this search.", 15, "muted")
-	_artifact_empty.hide()
-	_build_artifact_sets(box)
-	_label(box, Artifacts.describe_impact_summary(hero.duplicate(true)), 15)
-	if not is_interactive():
-		_label(box, "Equip and stow artifacts from the hero sheet on the adventure map. Inspecting an artifact does not equip it.", 14, "muted")
-
-## `order_id` is the equip/stow order offered for this row, if any.
-func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String, order_id: String = "") -> void:
-	if artifact_id == "":
-		_artifact_empty_slots.append(_label(box, "%s · Empty" % slot, 15, "muted"))
-		return
-	var entry := VBoxContainer.new()
-	entry.set_meta("artifact_name", Artifacts.artifact_name(artifact_id))
-	_artifact_rows.append(entry)
-	box.add_child(entry)
+func _meter(parent: Node, icon_name: String, caption: String, value: String, tooltip: String) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	entry.add_child(row)
-	var button := _button(row, "%s · %s" % [slot, Artifacts.artifact_name(artifact_id)], "Show artifact effects", Vector2(0, 48))
-	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	row.tooltip_text = tooltip
+	parent.add_child(row)
+	var glyph := _picture(_icon(icon_name), false)
+	glyph.custom_minimum_size = Vector2(22.0, 22.0)
+	row.add_child(glyph)
+	var name_label := _label(row, caption, 14, "muted")
+	name_label.custom_minimum_size.x = 82.0
+	_label(row, value, 15, "body")
+
+func _show_page() -> void:
+	if _page_holder == null or not is_instance_valid(_page_holder): return
+	if not _page_buttons.has(_page_id):
+		_page_id = "Army"
+	for page_id in _page_buttons:
+		(_page_buttons[page_id] as Button).set_pressed_no_signal(page_id == _page_id)
+	for child in _page_holder.get_children():
+		_page_holder.remove_child(child)
+		child.queue_free()
+	var page := VBoxContainer.new()
+	page.name = _page_id
+	page.add_theme_constant_override("separation", 10)
+	_page_holder.add_child(page)
+	match _page_id:
+		"Artifacts": _build_artifacts(page)
+		"Specializations": _build_specialties(page)
+		"Spellbook": _build_spells(page)
+		_: _build_army(page)
+
+# --- Army ---------------------------------------------------------------------
+
+func _build_army(page: VBoxContainer) -> void:
+	var holder: Dictionary = orders.get("army_holder", {})
+	var managed := not holder.is_empty()
+	var heading := HBoxContainer.new()
+	heading.add_theme_constant_override("separation", 14)
+	page.add_child(heading)
+	_label(heading, "Army", 22, "gold")
+	var hint := _label(heading, "Click a stack, then another slot, or drag it: move, merge or split." if managed else "Choose a stack to see what it is.", 13, "muted")
+	hint.size_flags_vertical = Control.SIZE_SHRINK_END
+	var detail := _card()
+	if managed:
+		var bar := ArmyStackBarScript.new()
+		bar.name = "HeroArmyStacks"
+		page.add_child(bar)
+		bar.set_large_tiles(true)
+		bar.configure([holder], true)
+		bar.operation_requested.connect(func(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String):
+			army_operation_requested.emit(source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token))
+		bar.selection_changed.connect(func(snapshot: Dictionary):
+			var slot_index := int(snapshot.get("selected_slot_index", -1))
+			if slot_index >= 0:
+				_picked_stack = slot_index
+				_show_stack(detail))
+	else:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		page.add_child(row)
+		for index in range(Heroes.ARMY_SLOT_COUNT):
+			var stack := _stack(index)
+			var unit_id := String(stack.get("unit_id", ""))
+			var count := int(stack.get("count", 0))
+			var tile := _tile(Vector2(104.0, 132.0), UnitPortraits.bust_for_unit(unit_id) if unit_id != "" else null, null)
+			tile.name = "ArmySlot%d" % index
+			tile.set_meta("unit_id", unit_id)
+			tile.set_meta("count", count)
+			tile.disabled = unit_id == ""
+			tile.tooltip_text = "%s · %d" % [String(ContentService.get_unit(unit_id).get("name", "Unit")), count] if unit_id != "" else "Empty slot"
+			if unit_id != "":
+				var number := _label(tile, str(count), 20, "body")
+				number.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+				number.offset_top = -30.0
+				number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				tile.set_pressed_no_signal(index == _picked_stack)
+				tile.pressed.connect(func():
+					_picked_stack = index
+					for other in row.get_children():
+						if other is Button: other.set_pressed_no_signal(other == tile)
+					_show_stack(detail))
+			row.add_child(tile)
+	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	page.add_child(detail)
+	if _stack(_picked_stack).is_empty():
+		_picked_stack = -1
+		for stack in hero.get("inspection_army_slots", []):
+			_picked_stack = int(stack.get("slot_index", -1))
+			break
+	_show_stack(detail)
+	for stack in hero.get("inspection_overflow_stacks", []):
+		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+		_label(page, "Over the seven stacks: %s × %d" % [String(unit.get("name", "Unit")), int(stack.get("count", 0))], 13, "muted")
+
+func _stack(slot_index: int) -> Dictionary:
+	for stack in hero.get("inspection_army_slots", []):
+		if int(stack.get("slot_index", -1)) == slot_index:
+			return stack
+	return {}
+
+func _show_stack(detail: PanelContainer) -> void:
+	_clear(detail)
+	var stack := _stack(_picked_stack)
+	if stack.is_empty():
+		_label(detail, "No troops in this army.", 15, "muted")
+		return
+	var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+	var count := int(stack.get("count", 0))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	detail.add_child(row)
+	var picture := _frame(UnitPortraits.for_unit(String(unit.get("id", "")), "portrait"), Vector2(150.0, 200.0), false)
+	picture.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(picture)
+	var text := VBoxContainer.new()
+	text.name = "UnitDetails"
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text.add_theme_constant_override("separation", 6)
+	row.add_child(text)
+	_label(text, "%s  × %d" % [String(unit.get("name", "Unit")), count], 22, "gold")
+	var body: Dictionary = ContentService.load_json("res://content/unit_battle_size_manifest.json").get("units", {}).get(String(unit.get("id", "")), {})
+	var width := 2 if int(body.get("footprint", 1)) == 2 else 1
+	var facts := PackedStringArray(["Tier %d" % int(unit.get("tier", 1))])
+	var role := String(unit.get("role", "")).capitalize()
+	if role != "" and role not in ["Melee", "Ranged"]:
+		facts.append(role)
+	facts.append("Ranged, %d shots" % int(unit.get("shots", 0)) if bool(unit.get("ranged", false)) else "Melee")
+	facts.append("%d hex%s" % [width, "es" if width == 2 else ""])
+	_label(text, " · ".join(facts), 14, "muted")
+	var numbers := HFlowContainer.new()
+	numbers.add_theme_constant_override("h_separation", 8)
+	numbers.add_theme_constant_override("v_separation", 6)
+	text.add_child(numbers)
+	for entry in [
+		["Attack", str(int(unit.get("attack", 0)))], ["Defense", str(int(unit.get("defense", 0)))], ["Health", str(int(unit.get("hp", 0)))],
+		["Damage", "%d–%d" % [int(unit.get("min_damage", 0)), int(unit.get("max_damage", 0))]], ["Speed", str(int(unit.get("speed", 0)))], ["Initiative", str(int(unit.get("initiative", 0)))],
+	]:
+		_chip(numbers, "%s %s" % [entry[0], entry[1]])
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	text.add_child(scroll)
+	var abilities := VBoxContainer.new()
+	abilities.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	abilities.add_theme_constant_override("separation", 6)
+	scroll.add_child(abilities)
+	for ability in unit.get("abilities", []):
+		if ability is Dictionary:
+			var line := _label(abilities, "%s · %s" % [String(ability.get("name", "Ability")), String(ability.get("description", ""))], 14, "body")
+			line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var note := _label(abilities, "Base values; the hero's command and the battlefield add to them in combat.", 12, "muted")
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+# --- Artifacts ------------------------------------------------------------------
+
+func _build_artifacts(page: VBoxContainer) -> void:
+	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
+	var inventory: Array = hero.get("artifacts", {}).get("inventory", [])
+	# What was picked follows its artifact to wherever the order put it.
+	if _picked_artifact != "":
+		_picked_slot = ""
+		for slot in Artifacts.EQUIPMENT_SLOTS:
+			if String(equipped.get(slot, "")) == _picked_artifact:
+				_picked_slot = String(slot)
+		if _picked_slot == "" and _picked_artifact not in inventory:
+			_picked_artifact = ""
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	page.add_child(row)
+	var detail := _card()
+	var tiles := {}
+
+	var doll := Control.new()
+	doll.name = "ArtifactFigure"
+	doll.custom_minimum_size = DOLL_SIZE
+	doll.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(doll)
+	var heading := _label(doll, "Artifacts", 22, "gold")
+	heading.position = Vector2(0.0, 0.0)
+	var figure := _picture(_icon("body"), false)
+	figure.modulate = Color(1.0, 1.0, 1.0, 0.5)
+	figure.position = DOLL_BODY.position
+	figure.size = DOLL_BODY.size
+	doll.add_child(figure)
+	for slot in DOLL_SLOTS:
+		var rect: Rect2 = DOLL_SLOTS[slot]
+		var tile := _slot_tile(String(slot), String(equipped.get(slot, "")), rect.size)
+		tile.position = rect.position
+		tile.size = rect.size
+		doll.add_child(tile)
+		tiles[String(slot)] = tile
+
+	var side := VBoxContainer.new()
+	side.add_theme_constant_override("separation", 8)
+	side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(side)
+	_label(side, "Trinkets", 16, "gold")
+	var trinkets := GridContainer.new()
+	trinkets.columns = 2
+	trinkets.add_theme_constant_override("h_separation", 8)
+	trinkets.add_theme_constant_override("v_separation", 8)
+	side.add_child(trinkets)
+	for slot in TRINKET_SLOTS:
+		var tile := _slot_tile(slot, String(equipped.get(slot, "")), Vector2(64.0, 64.0))
+		trinkets.add_child(tile)
+		tiles[slot] = tile
+	_build_artifact_sets(side)
+
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(detail)
+
+	_hairline(page)
+	var pack_row := HBoxContainer.new()
+	pack_row.add_theme_constant_override("separation", 14)
+	page.add_child(pack_row)
+	var pack_caption := _label(pack_row, "Backpack", 16, "gold")
+	pack_caption.custom_minimum_size.x = 86.0
+	var pack_scroll := ScrollContainer.new()
+	pack_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pack_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	pack_scroll.custom_minimum_size.y = 66.0
+	pack_scroll.follow_focus = true
+	pack_row.add_child(pack_scroll)
+	var pack := HBoxContainer.new()
+	pack.add_theme_constant_override("separation", 8)
+	pack_scroll.add_child(pack)
+	var pack_tiles := {}
+	for artifact_id_value in inventory:
+		var artifact_id := String(artifact_id_value)
+		var tile := _tile(Vector2(56.0, 56.0), _texture(Artifacts.artifact_icon_path(artifact_id)), null)
+		tile.name = "Pack_%s" % artifact_id
+		tile.set_meta("artifact_id", artifact_id)
+		tile.tooltip_text = "%s\n%s" % [Artifacts.artifact_name(artifact_id), Artifacts.describe_artifact_short(artifact_id)]
+		pack.add_child(tile)
+		pack_tiles[artifact_id] = tile
+	for index in range(maxi(0, 10 - inventory.size())):
+		var blank := _tile(Vector2(56.0, 56.0), null, null)
+		blank.disabled = true
+		blank.focus_mode = Control.FOCUS_NONE
+		pack.add_child(blank)
+
+	var show := func():
+		for slot in tiles:
+			(tiles[slot] as Button).set_pressed_no_signal(slot == _picked_slot)
+		# An empty slot rings what in the backpack would fit it.
+		var wanted_kind := _slot_kind(_picked_slot) if _picked_slot != "" and _picked_artifact == "" else ""
+		for artifact_id in pack_tiles:
+			var pack_tile := pack_tiles[artifact_id] as Button
+			pack_tile.set_pressed_no_signal(artifact_id == _picked_artifact and _picked_slot == "")
+			pack_tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if wanted_kind == "" or Artifacts.artifact_slot(artifact_id) == wanted_kind else Color(0.55, 0.55, 0.55, 0.8)
+		_show_artifact(detail)
+	for slot in tiles:
+		var tile := tiles[slot] as Button
+		tile.pressed.connect(func():
+			_picked_slot = slot
+			_picked_artifact = String(equipped.get(slot, ""))
+			show.call())
+		tile.gui_input.connect(func(event: InputEvent):
+			if event is InputEventMouseButton and event.double_click and event.button_index == MOUSE_BUTTON_LEFT:
+				_request_artifact_order("unequip_artifact:%s" % slot))
+	for artifact_id in pack_tiles:
+		var tile := pack_tiles[artifact_id] as Button
+		tile.pressed.connect(func():
+			_picked_slot = ""
+			_picked_artifact = artifact_id
+			show.call())
+		tile.gui_input.connect(func(event: InputEvent):
+			if event is InputEventMouseButton and event.double_click and event.button_index == MOUSE_BUTTON_LEFT:
+				_request_artifact_order("equip_artifact:%s" % artifact_id))
+	show.call()
+
+func _slot_kind(slot: String) -> String:
+	for kind in Artifacts.SLOTS_BY_KIND:
+		if slot in Artifacts.SLOTS_BY_KIND[kind]:
+			return String(kind)
+	return ""
+
+## A worn slot: the artifact in it, or the outline of what it takes.
+func _slot_tile(slot: String, artifact_id: String, tile_size: Vector2) -> Button:
+	var ghost := _icon("slot_" + _slot_kind(slot))
+	var tile := _tile(tile_size, _texture(Artifacts.artifact_icon_path(artifact_id)) if artifact_id != "" else null, ghost if artifact_id == "" else null)
+	tile.name = "Slot_%s" % slot
+	tile.set_meta("slot", slot)
+	tile.set_meta("artifact_id", artifact_id)
+	var slot_name := String(SLOT_NAMES.get(slot, slot.capitalize()))
+	tile.tooltip_text = "%s: %s\n%s" % [slot_name, Artifacts.artifact_name(artifact_id), Artifacts.describe_artifact_short(artifact_id)] if artifact_id != "" else "%s: empty. Takes a %s." % [slot_name, String(KIND_NAMES.get(_slot_kind(slot), "trinket"))]
+	tile.accessibility_name = tile.tooltip_text
+	return tile
+
+func _request_artifact_order(order_id: String) -> void:
+	var order := _action("artifact_actions", order_id)
+	if not order.is_empty() and not bool(order.get("disabled", false)):
+		artifact_action_requested.emit(order_id)
+
+func _show_artifact(detail: PanelContainer) -> void:
+	_clear(detail)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	detail.add_child(column)
+	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
+	if _picked_artifact == "":
+		if _picked_slot != "":
+			_label(column, String(SLOT_NAMES.get(_picked_slot, "Slot")), 20, "gold")
+			var kind := _slot_kind(_picked_slot)
+			var fitting := 0
+			for artifact_id in hero.get("artifacts", {}).get("inventory", []):
+				if Artifacts.artifact_slot(String(artifact_id)) == kind: fitting += 1
+			var note := _label(column, "Empty. It takes a %s.\n%s" % [String(KIND_NAMES.get(kind, "trinket")), "%d in the backpack fit%s: pick one to wear it." % [fitting, "s" if fitting == 1 else ""] if fitting > 0 else "Nothing in the backpack fits it."], 14, "body")
+			note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			return
+		var worn := 0
+		for slot in Artifacts.EQUIPMENT_SLOTS:
+			if String(equipped.get(slot, "")) != "": worn += 1
+		_label(column, "%d worn · %d carried" % [worn, (hero.get("artifacts", {}).get("inventory", []) as Array).size()], 18, "gold")
+		var summary := _label(column, Artifacts.describe_impact_summary(hero.duplicate(true)), 14, "body")
+		summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var hint := _label(column, "Pick a slot or an item to read it%s." % (", and wear or stow it with its button or a double click" if is_interactive() else ""), 13, "muted")
+		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		return
+	var artifact := ContentService.get_artifact(_picked_artifact)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	column.add_child(head)
+	head.add_child(_frame(_texture(Artifacts.artifact_icon_path(_picked_artifact)), Vector2(84.0, 84.0), false))
+	var titles := VBoxContainer.new()
+	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titles.add_theme_constant_override("separation", 2)
+	head.add_child(titles)
+	var title := _label(titles, Artifacts.artifact_name(_picked_artifact), 19, "gold")
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(titles, "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(_picked_artifact), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], 13, "muted")
+	_label(titles, "Worn: %s" % String(SLOT_NAMES.get(_picked_slot, "")) if _picked_slot != "" else "In the backpack", 13, "body")
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.add_child(scroll)
+	var lines := VBoxContainer.new()
+	lines.name = "ArtifactDetails"
+	lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lines.add_theme_constant_override("separation", 8)
+	scroll.add_child(lines)
+	# The rules' line reads "name | rarity and family | roles | story | what it gives".
+	var parts := Artifacts.describe_artifact(_picked_artifact).split(" | ")
+	if parts.size() >= 4:
+		_wrapped(lines, parts[parts.size() - 1], 15, "gold")
+		_wrapped(lines, parts[parts.size() - 2], 14, "body")
+		_wrapped(lines, " · ".join(parts.slice(1, parts.size() - 2)), 12, "muted")
+	else:
+		_wrapped(lines, " | ".join(parts), 14, "body")
+	# For an item in the backpack: what wearing it would change.
+	if _picked_slot == "":
+		_wrapped(lines, DecisionDetails.artifact_comparison(hero, _picked_artifact), 13, "muted")
+	var order_id := "unequip_artifact:%s" % _picked_slot if _picked_slot != "" else "equip_artifact:%s" % _picked_artifact
 	var order := _action("artifact_actions", order_id)
 	if not order.is_empty():
 		var label := String(order.get("label", ""))
-		var verb := "Stow" if order_id.begins_with("unequip_artifact:") else ("Swap in" if label.begins_with("Swap In") else "Equip")
-		var order_button := _button(row, verb, String(order.get("summary", label)), Vector2(110, 48))
+		var verb := "Stow" if _picked_slot != "" else ("Swap in" if label.begins_with("Swap In") else "Wear")
+		var order_button := _button(column, verb, String(order.get("summary", label)), "primary", Vector2(150.0, 36.0))
 		order_button.name = "ArtifactOrder_%s" % order_id.replace(":", "_")
 		order_button.accessibility_name = label
+		order_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		order_button.disabled = bool(order.get("disabled", false))
 		order_button.pressed.connect(func(): artifact_action_requested.emit(order_id))
-	button.icon = _texture(Artifacts.artifact_icon_path(artifact_id))
-	button.set_meta("artifact_id", artifact_id)
-	button.accessibility_name = button.text
-	var detail := _label(entry, DecisionDetails.artifact_comparison(hero, artifact_id) + "\n\n" + Artifacts.describe_artifact(artifact_id), 15)
-	detail.hide()
-	button.pressed.connect(func():
-		detail.visible = not detail.visible
-		if detail.visible: call_deferred("_reveal_artifact_entry", entry))
+	elif not is_interactive():
+		var note := _label(column, "Artifacts are worn and stowed from the hero menu on the map.", 12, "muted")
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 ## One insignia row per artifact set the hero carries pieces of.
 func _build_artifact_sets(box: VBoxContainer) -> void:
@@ -384,19 +762,16 @@ func _build_artifact_sets(box: VBoxContainer) -> void:
 		row.name = "ArtifactSetInsignia_%s" % String(set_state.get("set_id", "set"))
 		row.set_meta("artifact_set_id", String(set_state.get("set_id", "")))
 		row.set_meta("artifact_set_complete", bool(set_state.get("complete", false)))
-		row.tooltip_text = String(set_state.insignia.get("alt_text", ""))
+		row.tooltip_text = "%s\n%s" % [String(set_state.get("name", "Artifact Set")), String(set_state.insignia.get("alt_text", ""))]
+		row.add_theme_constant_override("separation", 6)
 		box.add_child(row)
-		var icon := TextureRect.new()
-		icon.name = "SetInsignia"
-		icon.custom_minimum_size = Vector2(32, 32)
-		icon.texture = texture
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(icon)
-		var label := _label(row, "%s %d/%d" % [String(set_state.get("name", "Artifact Set")), int(set_state.get("equipped_piece_count", 0)), int(set_state.get("piece_count", 0))], 15, "gold")
-		label.name = "SetProgress"
-		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var glyph := _picture(texture, false)
+		glyph.name = "SetInsignia"
+		glyph.custom_minimum_size = Vector2(28.0, 28.0)
+		row.add_child(glyph)
+		var progress := _label(row, "%d/%d" % [int(set_state.get("equipped_piece_count", 0)), int(set_state.get("piece_count", 0))], 14, "green" if bool(set_state.get("complete", false)) else "gold")
+		progress.name = "SetProgress"
+		progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _insignia_texture(insignia: Dictionary) -> Texture2D:
 	var region: Dictionary = insignia.get("atlas_region", {}) if insignia.get("atlas_region", {}) is Dictionary else {}
@@ -409,69 +784,88 @@ func _insignia_texture(insignia: Dictionary) -> Texture2D:
 	texture.region = rect
 	return texture
 
-func _reveal_artifact_entry(entry: Control) -> void:
-	if not is_inside_tree(): return
-	await get_tree().process_frame
-	if not is_instance_valid(entry) or not entry.is_inside_tree(): return
-	var ancestor := entry.get_parent()
-	while ancestor != null and ancestor != self:
-		if ancestor is ScrollContainer:
-			ancestor.scroll_vertical += int(entry.global_position.y - ancestor.global_position.y - 12)
-			return
-		ancestor = ancestor.get_parent()
+# --- Specialties ----------------------------------------------------------------
 
-func _filter_artifacts() -> void:
-	var query := _artifact_search.text.strip_edges().to_lower()
-	for row in _artifact_empty_slots: row.visible = query.is_empty()
-	for row in _artifact_rows:
-		row.visible = query.is_empty() or String(row.get_meta("artifact_name", "")).to_lower().contains(query)
-	_artifact_empty.visible = not query.is_empty() and not _artifact_rows.any(func(row): return row.visible)
-	_focus_cycle()
-
-func _build_specializations(box: VBoxContainer) -> void:
-	_label(box, "Learned specializations", 18, "gold")
-	var learned := 0
-	for specialty in Progression.specialties():
-		var specialty_id := String(specialty.id)
-		var rank := Progression.specialty_rank(hero, specialty_id)
-		if rank <= 0: continue
-		learned += 1
-		var row := HBoxContainer.new()
-		box.add_child(row)
-		var icon := TextureRect.new()
-		icon.texture = Progression.specialty_insignia_texture(specialty_id)
-		icon.custom_minimum_size = Vector2(38, 38)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		row.add_child(icon)
-		_label(row, "%s · %s\n%s" % [String(specialty.name), Progression.rank_label(rank), Progression.rank_text(specialty_id, rank)], 16)
-	if learned == 0: _label(box, "No specializations learned yet.", 16)
+func _build_specialties(page: VBoxContainer) -> void:
+	_label(page, "Specialties", 22, "gold")
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	page.add_child(scroll)
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 10)
+	scroll.add_child(box)
 	var pending := Progression.pending_choices_remaining(hero)
-	_label(box, "%d pending specialization choice%s" % [pending, "" if pending == 1 else "s"], 17, "gold")
 	if pending > 0:
+		var choice_card := _card()
+		box.add_child(choice_card)
+		var choices_box := VBoxContainer.new()
+		choices_box.add_theme_constant_override("separation", 8)
+		choice_card.add_child(choices_box)
+		_label(choices_box, "%d choice%s to make" % [pending, "" if pending == 1 else "s"], 17, "gold")
 		var choices: Array = orders.get("specialty_actions", [])
 		if choices.is_empty():
-			_label(box, "Choose upgrades from the hero sheet on the adventure map.\n" + Progression.pending_choice_summary(Progression.current_pending_choice(hero)), 15)
+			var waiting := _label(choices_box, "Choose from the hero menu on the map.\n" + Progression.pending_choice_summary(Progression.current_pending_choice(hero)), 14, "body")
+			waiting.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		for choice in choices:
 			var action_id := String(choice.get("id", ""))
 			var specialty_id := Progression.specialty_id_for_action(action_id)
 			var tooltip := String(choice.get("summary", ""))
 			var insignia := Progression.specialty_insignia_description(specialty_id)
 			if insignia != "": tooltip += "\nInsignia: " + insignia
-			var choose := _button(box, String(choice.get("label", "Choose specialty")), tooltip, Vector2(0, 48))
+			var choose := _button(choices_box, String(choice.get("label", "Choose specialty")), tooltip, "secondary", Vector2(0.0, 46.0))
 			choose.name = "Specialty_%s" % action_id.replace(":", "_")
 			choose.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			choose.disabled = bool(choice.get("disabled", false))
 			choose.icon = Progression.specialty_insignia_texture(specialty_id)
+			choose.expand_icon = true
 			choose.add_theme_constant_override("icon_max_width", 34)
 			choose.pressed.connect(func(): specialty_requested.emit(action_id))
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
+	box.add_child(grid)
+	var learned := 0
+	for specialty in Progression.specialties():
+		var specialty_id := String(specialty.id)
+		var rank := Progression.specialty_rank(hero, specialty_id)
+		if rank <= 0: continue
+		learned += 1
+		var card := _card()
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		grid.add_child(card)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 12)
+		card.add_child(row)
+		var glyph := _picture(Progression.specialty_insignia_texture(specialty_id), false)
+		glyph.custom_minimum_size = Vector2(52.0, 52.0)
+		glyph.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		row.add_child(glyph)
+		var text := VBoxContainer.new()
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text.add_theme_constant_override("separation", 2)
+		row.add_child(text)
+		_label(text, "%s · %s" % [String(specialty.name), Progression.rank_label(rank)], 17, "gold")
+		var gives := _label(text, Progression.rank_text(specialty_id, rank), 14, "body")
+		gives.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if learned == 0:
+		_label(box, "No specialties learned yet.", 15, "muted")
 	var template := Heroes.hero_template(hero)
-	_label(box, String(template.get("identity_summary", "")), 16)
+	var lines := PackedStringArray()
+	if String(template.get("identity_summary", "")) != "":
+		lines.append(String(template.get("identity_summary", "")))
 	var home_terrains: Array = ContentService.get_faction(String(template.get("faction_id", ""))).get("home_terrain_ids", [])
 	if not home_terrains.is_empty():
-		_label(box, "Home ground: %s %s the hero's army no more than grass." % [_terrain_names(home_terrains), "costs" if home_terrains.size() == 1 else "cost"], 14, "muted")
+		lines.append("Home ground: %s %s the hero's army no more than grass." % [_terrain_names(home_terrains), "costs" if home_terrains.size() == 1 else "cost"])
 	var focus := Progression.summarize_specialty_ids(template.get("specialty_focus_ids", []))
-	if focus != "": _label(box, "Development focus (not learned bonuses): " + focus, 14, "muted")
+	if focus != "":
+		lines.append("Leans toward (not learned yet): " + focus)
+	if not lines.is_empty():
+		var about := _label(box, "\n".join(lines), 13, "muted")
+		about.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 # "sand", "swamp and mire"; three or more as "snow, frost and ice".
 func _terrain_names(terrain_ids: Array) -> String:
@@ -481,56 +875,246 @@ func _terrain_names(terrain_ids: Array) -> String:
 		names += String(terrain_ids[index])
 	return names
 
+# --- Spells -----------------------------------------------------------------------
+
+func _build_spells(page: VBoxContainer) -> void:
+	var known: Array = Spells.known_spells(hero)
+	var heading := HBoxContainer.new()
+	heading.add_theme_constant_override("separation", 14)
+	page.add_child(heading)
+	_label(heading, "Spells", 22, "gold")
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var count := _label(heading, "%d known · Mana %d / %d" % [known.size(), int(mana.get("current", 0)), int(mana.get("max", 0))], 13, "muted")
+	count.size_flags_vertical = Control.SIZE_SHRINK_END
+	if known.is_empty():
+		var none := _label(page, "This hero has not learned any spells. Visit a town of yours that has spell archives.", 15, "muted")
+		none.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		return
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	page.add_child(row)
+	var scroll := ScrollContainer.new()
+	scroll.name = "SpellPages"
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	row.add_child(scroll)
+	var groups := VBoxContainer.new()
+	groups.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	groups.add_theme_constant_override("separation", 10)
+	scroll.add_child(groups)
+	var detail := _card()
+	detail.custom_minimum_size.x = 330.0
+	row.add_child(detail)
+	var tiles := {}
+	var ids := known.map(func(spell): return String(spell.get("id", "")))
+	if _picked_spell not in ids:
+		_picked_spell = ""
+	for group in [["overworld", "Map spells"], ["battle", "Battle spells"]]:
+		var members := known.filter(func(spell): return String(spell.get("context", "")) == group[0])
+		if members.is_empty(): continue
+		members.sort_custom(func(a, b): return String(a.get("name", "")).naturalnocasecmp_to(String(b.get("name", ""))) < 0)
+		_label(groups, String(group[1]), 15, "gold")
+		var flow := HFlowContainer.new()
+		flow.add_theme_constant_override("h_separation", 12)
+		flow.add_theme_constant_override("v_separation", 10)
+		groups.add_child(flow)
+		for spell in members:
+			var spell_id := String(spell.get("id", ""))
+			if _picked_spell == "": _picked_spell = spell_id
+			var cell := VBoxContainer.new()
+			cell.add_theme_constant_override("separation", 2)
+			flow.add_child(cell)
+			var icon_path := Spells.spell_icon_path(spell_id)
+			var tile := _tile(Vector2(72.0, 72.0), _texture(icon_path), null)
+			tile.name = spell_id
+			tile.set_meta("spell_id", spell_id)
+			tile.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			tile.tooltip_text = _spell_text(spell)
+			tile.accessibility_name = "%s, %d mana" % [String(spell.get("name", "Spell")), Spells.adjusted_spell_mana_cost(hero, spell)]
+			cell.add_child(tile)
+			var caption := _label(cell, String(spell.get("name", "Spell")), 12, "body")
+			caption.custom_minimum_size.x = 96.0
+			caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			caption.clip_text = true
+			caption.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			tiles[spell_id] = tile
+	var show := func():
+		for spell_id in tiles:
+			(tiles[spell_id] as Button).set_pressed_no_signal(spell_id == _picked_spell)
+		_show_spell(detail)
+	for spell_id in tiles:
+		(tiles[spell_id] as Button).pressed.connect(func():
+			_picked_spell = spell_id
+			show.call())
+	show.call()
+
+func _spell_text(spell: Dictionary) -> String:
+	return "%s — %s\n%s" % [String(spell.get("name", "Spell")), Spells._spell_effect_summary(spell, hero), String(spell.get("description", ""))]
+
+func _show_spell(detail: PanelContainer) -> void:
+	_clear(detail)
+	var spell := ContentService.get_spell(_picked_spell) if _picked_spell != "" else {}
+	if spell.is_empty():
+		return
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	detail.add_child(column)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	column.add_child(head)
+	head.add_child(_frame(_texture(Spells.spell_icon_path(_picked_spell)), Vector2(84.0, 84.0), false))
+	var titles := VBoxContainer.new()
+	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titles.add_theme_constant_override("separation", 2)
+	head.add_child(titles)
+	var title := _label(titles, String(spell.get("name", "Spell")), 19, "gold")
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(titles, "%s · Tier %d" % [Spells.spell_category_label(spell), int(spell.get("tier", 1))], 13, "muted")
+	_label(titles, "%d mana" % Spells.adjusted_spell_mana_cost(hero, spell), 14, "body")
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.add_child(scroll)
+	var text := _label(scroll, "%s\n\n%s" % [Spells._spell_effect_summary(spell, hero), String(spell.get("description", ""))], 14, "body")
+	text.name = "SpellDescription"
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var on_map := String(spell.get("context", "")) == "overworld"
+	var order := _action("spell_actions", "cast_spell:%s" % _picked_spell)
+	if on_map and not order.is_empty():
+		var reason := String(order.get("invalid_reason", ""))
+		var ready_text := reason if reason != "" else String(order.get("readiness", ""))
+		if ready_text != "":
+			var state := _label(column, ready_text, 13, "red" if bool(order.get("disabled", false)) else "green")
+			state.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var cast := _button(column, "Cast", ready_text if ready_text != "" else "Cast this spell on the map.", "primary", Vector2(150.0, 36.0))
+		cast.name = "PrepareSpell"
+		cast.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		cast.disabled = bool(order.get("disabled", false))
+		cast.pressed.connect(func(): spell_cast_requested.emit(_picked_spell))
+	else:
+		var note := _label(column, "Cast in battle, from the battle's spell book." if not on_map else "Cast from the hero menu on the map.", 12, "muted")
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+# --- Pieces -------------------------------------------------------------------------
+
+func _action(list_key: String, action_id: String) -> Dictionary:
+	for action in orders.get(list_key, []):
+		if action is Dictionary and String(action.get("id", "")) == action_id: return action
+	return {}
+
+## A square picture button: a gold ring when chosen. `ghost` is the faint outline
+## an empty one shows.
+func _tile(tile_size: Vector2, texture: Texture2D, ghost: Texture2D) -> Button:
+	var tile := Button.new()
+	tile.toggle_mode = true
+	tile.custom_minimum_size = tile_size
+	tile.focus_mode = Control.FOCUS_ALL
+	tile.clip_contents = true
+	tile.add_theme_stylebox_override("normal", _box(GOLD_DIM, 1, 5, TILE_FILL))
+	tile.add_theme_stylebox_override("disabled", _box(Color(0.33, 0.27, 0.17), 1, 5, Color(0.05, 0.042, 0.035, 0.9)))
+	tile.add_theme_stylebox_override("hover", _box(GOLD, 1, 5, TILE_HOVER))
+	for state in ["pressed", "hover_pressed"]:
+		tile.add_theme_stylebox_override(state, _box(GOLD, 3, 5, TILE_HOVER))
+	tile.add_theme_stylebox_override("focus", _box(GOLD_BRIGHT, 2, 5, Color(0, 0, 0, 0)))
+	if texture != null or ghost != null:
+		var picture := _picture(texture if texture != null else ghost, false)
+		picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 4 if texture != null else 10)
+		if texture == null:
+			picture.modulate = Color(1.0, 1.0, 1.0, 0.5)
+		tile.add_child(picture)
+	return tile
+
+## A framed picture that is not a button.
+func _frame(texture: Texture2D, frame_size: Vector2, cover: bool) -> PanelContainer:
+	var frame := PanelContainer.new()
+	frame.custom_minimum_size = frame_size
+	frame.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var style := _box(Color(0.76, 0.60, 0.30), 1, 5, Color(0.16, 0.14, 0.115))
+	style.set_content_margin_all(3)
+	frame.add_theme_stylebox_override("panel", style)
+	frame.add_child(_picture(texture, cover))
+	return frame
+
+func _card() -> PanelContainer:
+	var card := PanelContainer.new()
+	card.add_theme_stylebox_override("panel", _card_style())
+	return card
+
+func _card_style() -> StyleBoxFlat:
+	var style := _box(GOLD_DIM, 1, 6, CARD_FILL)
+	style.set_content_margin_all(12)
+	return style
+
+func _chip(parent: Node, text: String) -> void:
+	var chip := PanelContainer.new()
+	var style := _box(GOLD_DIM, 1, 7, TILE_FILL)
+	style.content_margin_left = 10.0
+	style.content_margin_right = 10.0
+	style.content_margin_top = 3.0
+	style.content_margin_bottom = 3.0
+	chip.add_theme_stylebox_override("panel", style)
+	_label(chip, text, 14, "body")
+	parent.add_child(chip)
+
+func _box(border: Color, width: int, radius: int, fill: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(width)
+	style.set_corner_radius_all(radius)
+	style.anti_aliasing = true
+	return style
+
+func _hairline(parent: Node) -> void:
+	var line := ColorRect.new()
+	line.color = HAIRLINE
+	line.custom_minimum_size.y = 1.0
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(line)
+
+func _picture(texture: Texture2D, cover: bool) -> TextureRect:
+	var picture := TextureRect.new()
+	picture.texture = texture
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED if cover else TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return picture
+
 func _label(parent: Node, text: String, font_size: int, tone: String = "body") -> Label:
 	var label := Label.new()
 	label.text = text
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Visuals.apply_label(label, tone, font_size)
 	parent.add_child(label)
 	return label
 
-func _button(parent: Node, text: String, tooltip: String, minimum: Vector2) -> Button:
+func _wrapped(parent: Node, text: String, font_size: int, tone: String) -> Label:
+	var label := _label(parent, text, font_size, tone)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return label
+
+func _button(parent: Node, text: String, tooltip: String, role: String, minimum: Vector2) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.tooltip_text = tooltip
 	button.accessibility_name = tooltip
 	button.focus_mode = Control.FOCUS_ALL
-	button.expand_icon = true
-	Visuals.apply_button(button, "secondary", minimum.x, minimum.y, 16)
-	button.add_theme_constant_override("icon_max_width", 54)
+	Visuals.apply_button(button, role, minimum.x, minimum.y, 15)
 	parent.add_child(button)
-	_focusable.append(button)
-	button.focus_entered.connect(func():
-		var ancestor := button.get_parent()
-		while ancestor != null and ancestor != self:
-			if ancestor is ScrollContainer: ancestor.ensure_control_visible(button)
-			ancestor = ancestor.get_parent())
 	return button
 
-func _focus_cycle() -> void:
-	var controls: Array[Control] = []
-	for control in _focusable:
-		if control.is_visible_in_tree() and not (control is Button and control.disabled): controls.append(control)
-	for group in _focus_groups:
-		if is_instance_valid(group) and group.is_visible_in_tree(): _append_focusable_descendants(group, controls)
-	if is_instance_valid(_spellbook_view) and _spellbook_view.is_visible_in_tree():
-		controls.append_array(_spellbook_view.focus_controls())
-	for index in range(controls.size()):
-		controls[index].focus_next = controls[index].get_path_to(controls[(index + 1) % controls.size()])
-		controls[index].focus_previous = controls[index].get_path_to(controls[(index - 1 + controls.size()) % controls.size()])
-		controls[index].focus_neighbor_top = controls[index].focus_previous
-		controls[index].focus_neighbor_bottom = controls[index].focus_next
-		if controls[index] is Button:
-			controls[index].focus_neighbor_left = controls[index].focus_previous
-			controls[index].focus_neighbor_right = controls[index].focus_next
+func _clear(container: Node) -> void:
+	for child in container.get_children():
+		container.remove_child(child)
+		child.queue_free()
 
-func _append_focusable_descendants(node: Node, controls: Array[Control]) -> void:
-	for child in node.get_children():
-		if child is BaseButton:
-			if child.is_visible_in_tree() and not child.disabled and child.focus_mode != Control.FOCUS_NONE: controls.append(child)
-		elif child is Control and child.is_visible_in_tree():
-			_append_focusable_descendants(child, controls)
+func _icon(icon_name: String) -> Texture2D:
+	return _texture(ICON_PATH % icon_name)
 
 func _texture(path: String) -> Texture2D:
 	return ResourceLoader.load(path, "Texture2D") as Texture2D if path != "" and ResourceLoader.exists(path, "Texture2D") else null

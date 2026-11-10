@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 
 #include <string>
@@ -133,7 +134,7 @@ ArrayRef worn_scroll_spell_ids(State &state, DictRef hero_state) {
 			|| !state.lookup(artifacts.ref, str(key::equipped), equipped) || !gd::is_dict(equipped)) {
 		return spell_ids;
 	}
-	for (const Atom slot : {key::trinket, key::trinket_2}) {
+	for (const Atom slot : artifact_slots::slots_of_kind(key::trinket)) {
 		Value worn;
 		if (!state.lookup(equipped.ref, str(slot), worn) || !worn.is_string_like()) {
 			continue;

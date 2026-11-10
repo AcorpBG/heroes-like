@@ -1,53 +1,122 @@
-# Owned Hero Screen
+# Hero menu
 
-Owner-directed Phase 6 slice: `ui-owned-hero-screen-20260913`. Completed 2026-09-13.
+Date: 2026-11-10. Slice `ui-hero-menu-rework-20261110`. It replaces the tabbed
+sheet of `ui-owned-hero-screen-20260913`.
 
-## Requirements
+Owner: the hero menu on the map and in town was terrible. Of three imggen
+mockups (one page with everything, a showpiece with a large portrait, a column at
+the side) the owner picked the showpiece, with two changes: the artifacts are
+laid out on a figure, as most games do, with more slots than the five in a row;
+and a page shows only its own content, never a strip of the other pages.
 
-- Double-click an owned hero in the Overworld roster to open that exact hero's sheet. Single-click continues selecting/centering. Provide a keyboard/controller inspection route, Escape/Back, and focus restoration.
-- Show original hero portrait, identity, level/experience, command stats, movement/mana, seven army slots with unit details, equipped and carried artifacts with effects, and learned specializations with ranks and pending progression information.
-- Use existing authoritative hero/army/artifact/progression rules and original registry-backed art. Inspection must not mutate state, consume movement, change equipment, choose upgrades, or alter saves. Inspecting an inactive hero must not show the active hero's army or artifacts.
-- Keep information readable at 1280x720 and 1920x1080. Use a portrait-led modal sheet with compact stats/army and tabbed detail space, not more permanent Overworld panels. Block underlying map commands while open and reject stale/non-owned targets or input during committed turns.
+## The menu
 
-## Scope and validation
+`scenes/shared/HeroSheet.gd`, one window in the information card's frame
+(`docs/overworld-info-card.md`), opened from the map (double click or Enter on a
+hero in the roster, a click on the hero's own tile, the level-up and spell
+buttons) and from a hero in the town's army bar.
 
-Targets: `scenes/overworld/OverworldShell.gd`, reusable `scenes/shared/HeroSheet.gd`, read-only `HeroCommandRules.hero_inspection_snapshot`, focused Python-owned input/state/layout regressions and the shared packaged-probe owner's hash selector, and this document/PLAN/tracker.
+- **Left**: the portrait, large, with the name and the line "calling · might or
+  magic hero · faction" on its lower edge; the level and the experience bar; the
+  four command stats as tiles with an icon (attack and defense count what
+  artifacts and specialties add).
+- **Right, top**: four round buttons for the pages (Army, Artifacts, Specialties,
+  Spells), the meters (movement, mana, scouting), the return button and a Meet
+  button for each hero standing on the same tile.
+- **Right, below**: the chosen page and nothing else.
 
-Run focused source and Linux/Windows packaged tests, Town double-click non-regression, `python3 tests/validate_repo.py`, both official export smokes and `git diff --check`. Inspect actual small/wide screenshots. Retain final evidence, clean task-owned temporary files, preserve caches and unrelated untracked files, then commit/push and verify origin/main.
+Pages:
 
-Non-goals: new gameplay, equipment/army transfer UI, balance, art generation, native RMG, town interiors, save schema or unrelated cleanup. Existing management/progression actions remain authoritative and available outside this read-only sheet.
+- **Army**: the seven stacks as large tiles with each unit's close-up and number;
+  under them the chosen stack: its picture, tier and kind, the six numbers as
+  chips, its abilities. On the map the tiles are the shared army bar
+  (`ArmyStackBar`, large tiles): click a stack then a slot, or drag, to move,
+  merge or split. Elsewhere they only show.
+- **Artifacts**: the figure with a slot where each thing is worn (head, neck,
+  cloak, chest, two hands, two rings, feet, a banner beside it), four trinket
+  slots, the sets the hero has pieces of, and the backpack as a row along the
+  foot. An empty slot shows the outline of what it takes. A click picks a slot or
+  an item and the card at the right reads it: what it gives, its story, its
+  family, and for a backpack item what wearing it would change, with a Wear, Swap
+  in or Stow button; a double click does the same. Picking an empty slot dims
+  what in the backpack does not fit it.
+- **Specialties**: pending choices first, as buttons; then a card for each
+  learned specialty with its insignia, rank and what it gives; then the hero's
+  identity line, home ground and leanings.
+- **Spells**: the known spells as icons, map spells and battle spells apart; the
+  card at the right reads the chosen one (what it does, its cost, whether it can
+  be cast now) and casts a map spell.
 
-## Evidence
+The menu never changes the session: it emits what was asked and its owning screen
+runs the order and hands back a fresh snapshot (`refresh_hero`), which keeps the
+page and what was picked. Escape closes it; arrow keys and Tab cannot carry the
+focus to the screen behind it.
 
-Implemented a modal portrait-led sheet with three scrollable tabs. Roster Enter/controller Confirm and mouse double-click inspect; mouse single-click still selects/centers. The sheet traps focus, restores the originating card, and blocks underlying Overworld commands. Content is copied before normalization; active mirrors are read without committing them. Attack/defense include equipped artifact and specialization bonuses, power/knowledge are command values, unit stats are explicitly labeled base values, and unlearned development focus is distinguished from learned ranks. Existing army/equipment/progression management stays in its current authoritative flows.
+## In town
 
-Initial visual testing caught and corrected deferred wrapped-label minimum sizing when reopening other heroes. Actual viewport dimensions are asserted, not inferred from command-line flags.
+The town's menu was read-only. It now takes the town's own artifact and
+specialty orders (`TownRules.get_artifact_actions`, `get_specialty_actions`) for
+the hero those orders act on, the active hero, so artifacts are worn and stowed
+and specialties chosen there with the town's rules and its result feedback. A
+hero in the garrison who is not the active hero is still only shown. Troops are
+moved on the town's army bar, and map spells are cast on the map.
 
-Evidence root: `.artifacts/hero-sheet-20260913/`.
+## Artifact slots
 
-| Check | Result / evidence |
-| --- | --- |
-| Source, 1280x720 | 528 checks passed; `source-acceptance-small/report.json` and inspected captures |
-| Linux release, 1920x1080 | 528 checks passed; `linux-packaged/report.json`, immutable-export/compiled-owner proof and inspected captures |
-| Windows release, 1280x720 | 528 checks passed; `windows-packaged/report.json`, same SHA-locked probe and compiled-owner proof |
-| Town roster entry | 18 checks passed; `.artifacts/town_roster_double_click_20260911/hero-sheet-nonregression/report.json` |
-| Official Linux/Windows export smokes | Both passed; `linux/report.json`, `windows/report.json`, including Windows generated-map/Town/build flow |
-| Package parity | Passed; `package-parity.json`. 516,833,864-byte packs, 8,519 members each; only `project.binary` differs |
-| Modal validator | Settings and hero guards must consume/return before ordinary commands; focused check passed and removing either consume call is rejected |
-| Full repository | Passed; `repository-validation-final.log`. Initial run found only a Settings-guard line-order assertion, corrected without weakening either guard |
+A hero wore five artifacts: boots, banner, armor and two trinkets. A hero now has
+fourteen slots of nine kinds:
 
-The probe checks actual pointer single/double clicks, invalid clicks, ownership/stale IDs, committed-turn rejection, keyboard/controller Confirm, Escape/focus restoration and focus containment. It compares complete session dictionaries across inspection, verifies current active mirrors, distinct inactive-hero state, empty armies and the seven-slot layout, unit details, equipped/carried artifacts and positive equipment/specialization stat bonuses. All 66 authored hero identities resolve portraits and independent snapshots; six faction presentations were rendered and visually inspected. Army/equipment details scroll inside their tab, not over the map.
+| Kind (an artifact's `slot`) | Slots | Artifacts today |
+| --- | --- | --- |
+| `head` | head | 1 |
+| `neck` | neck | 4 |
+| `cloak` | cloak | 3 |
+| `armor` (chest) | armor | 4 |
+| `hand` | hand, hand_2 | 18 |
+| `ring` | ring, ring_2 | 1 |
+| `boots` (feet) | boots | 3 |
+| `banner` | banner | 11 |
+| `trinket` | trinket, trinket_2, trinket_3, trinket_4 | 24, and every spell scroll |
 
-Reproduction:
+27 of the 69 artifacts moved to the kind their description names: the crown ring
+from banner to head; the gorget, the beads, the tally chain and the crown-tooth
+to neck; the three mantles to cloak; the stone ring to ring; and the compasses,
+lanterns, sextant, astrolabes, dial, lens, duelglass, rod, horn, fan, tuning fork,
+censer and signal pennon to hand. Head and ring have one artifact each until more
+are written.
 
-```sh
-python3 -B tests/hero_sheet_regression.py --label review-source --render --resolution 1280x720
-python3 -B tests/hero_sheet_regression.py --platform linux --binary .artifacts/hero-sheet-20260913/linux/export/heroes-like.x86_64 --pack .artifacts/hero-sheet-20260913/linux/export/heroes-like.pck --label review-linux --render --resolution 1920x1080
-python3 -B tests/hero_sheet_regression.py --platform windows --binary .artifacts/hero-sheet-20260913/windows/export/heroes-like.exe --pack .artifacts/hero-sheet-20260913/windows/export/heroes-like.pck --wine-prefix /root/dev/heroes-like/.artifacts/hero-sheet-20260913/review-wine-prefix --label review-windows
-python3 tests/validate_repo.py
-git diff --check
-```
+The rules' copy of the lists is `artifact_slots.hpp`, used by every rule that
+walks a hero's equipment (bonuses, sets, wearing, the computer player's choice of
+what to wear, worn scrolls); `ArtifactRules.gd` mirrors it for the screens. The
+five old slots come first in the list, so a saved hero reads as before; an
+artifact saved in a slot of its old kind moves to a free slot of its new kind
+when the hero is read, or to the backpack if there is none. A hero can now wear
+four scrolls. The hero exchange screen shows the fourteen slots in two rows.
 
-Use fresh labels/prefixes. Windows evidence is headless Wine execution, not physical Windows GPU certification. This is an inspection screen, not a new equipment editor or progression system, and does not claim whole-game release readiness.
+## Art
 
-Cleanup removed seven superseded task-owned capture directories (20,892,794 apparent bytes), after checking for open files/processes. Final evidence/packages, original art, caches and unrelated untracked files remain. Disposable probe directories/profiles and Wine system prefixes are automatically cleaned by the established runners; retained Wine user data and cleanup receipts are preserved.
+`art/ui/runtime/hero_menu`: twelve gold emblems (the pages, the stats, the
+meters, a laurel), ten outlines for empty slots and the figure, cut by
+`tools/build_hero_menu_icons.py` from three imggen sheets
+(`art/ui/source/generated/hero_menu_20261110`, with the mockup; the paintings are
+in the source art archive).
+
+## Not in this slice
+
+- Artifacts are not dragged between slots; a click and a button, or a double
+  click, wears and stows them.
+- The army bar's All, Half, One and Exact buttons and the hero exchange screen
+  keep their older look.
+- At a window lower than about 720 pixels the artifact page is taller than the
+  window.
+- The old sheet's layout and focus tests (`tests/hero_sheet_regression.py` and
+  the like) were not run or updated.
+
+## Validation
+
+In the game at 1920 by 1080, on a generated map: every page on the map; a stack
+picked; an artifact worn from the backpack into the head slot and one stowed in
+town, each through the rules; an empty slot picked; the town's menu; the hero
+exchange screen with two heroes. A hero saved with the five old slots and three
+moved artifacts read back with each in its new slot. Six seeds played the same in
+the game and in the match runner. Content check and core suite.

@@ -231,7 +231,7 @@ void Store::append_spell_scrolls(const Value &root, std::vector<Message> &messag
 		put(row, "source_tags", texts({"spell_scroll"}));
 		put(row, "spell_id", data_.string(spell_id));
 		const uint32_t constraints = dict();
-		put(constraints, "slot_limit", Value::of_int(2));
+		put(constraints, "slot_limit", Value::of_int(4));
 		put(constraints, "unique_per_hero", Value::of_bool(true));
 		put(constraints, "allowed_faction_ids", texts({}));
 		put(constraints, "required_tags", texts({}));

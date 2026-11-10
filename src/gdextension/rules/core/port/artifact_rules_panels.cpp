@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
@@ -27,8 +28,6 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// EQUIPMENT_SLOTS.
-constexpr Atom kEquipmentSlots[] = {key::boots, key::banner, key::armor, key::trinket, key::trinket_2};
 
 // String(x) of any value: the engine's text for a float, a vector or a container.
 Atom string_of(State &state, const Value &value) {
@@ -123,7 +122,7 @@ Atom describe_management(State &state, DictRef hero_state) {
 	const ArrayRef lines = state.new_array();
 
 	state.append(lines, str(key::Equipped));
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		const Atom artifact_id = string_of(state, ai::vget(state, equipped, slot, str(key::empty)));
 		if (artifact_id == key::empty) {
 			const Atom slot_label = _equipment_slot_label(state, slot);
@@ -286,6 +285,21 @@ Atom artifact_type_label(State &state, Atom artifact_id) {
 	}
 	if (slot == key::trinket) {
 		return key::Trinket;
+	}
+	if (slot == key::head) {
+		return key::Headgear;
+	}
+	if (slot == key::neck) {
+		return key::Neckpiece;
+	}
+	if (slot == key::cloak) {
+		return key::Cloak;
+	}
+	if (slot == key::hand) {
+		return key::held_item;
+	}
+	if (slot == key::ring) {
+		return key::Ring;
 	}
 	return key::carry_item;
 }

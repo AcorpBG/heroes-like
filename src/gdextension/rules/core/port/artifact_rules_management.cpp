@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
@@ -27,12 +28,9 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// EQUIPMENT_SLOTS.
-constexpr Atom kEquipmentSlots[] = {key::boots, key::banner, key::armor, key::trinket, key::trinket_2};
-
 // slot in EQUIPMENT_SLOTS of a String.
 bool is_equipment_slot(Atom slot) {
-	return std::find(std::begin(kEquipmentSlots), std::end(kEquipmentSlots), slot) != std::end(kEquipmentSlots);
+	return artifact_slots::is_equipment_slot(slot);
 }
 
 // String(d.get(field, fallback)).
@@ -220,7 +218,7 @@ ArrayRef get_management_actions(State &state, DictRef hero_state_value) {
 	}
 
 	if (gd::is_dict(equipped)) {
-		for (const Atom slot : kEquipmentSlots) {
+		for (const Atom slot : artifact_slots::kEquipment) {
 			const Atom equipped_id = string_of_field(state, equipped.ref, slot, key::empty);
 			if (equipped_id == key::empty) {
 				continue;

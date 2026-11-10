@@ -3,6 +3,7 @@
 // rewards it draws, and the messages and summaries of its claims.
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 
 #include <algorithm>
 #include <initializer_list>
@@ -24,8 +25,6 @@ using state::ContentTable;
 namespace key = state::key;
 
 // ARTIFACT_SLOTS, EQUIPMENT_SLOTS and DAILY_INCOME_RESOURCE_IDS.
-constexpr Atom kArtifactSlots[] = {key::boots, key::banner, key::armor, key::trinket};
-constexpr Atom kEquipmentSlots[] = {key::boots, key::banner, key::armor, key::trinket, key::trinket_2};
 constexpr Atom kDailyIncomeResourceIds[] = {
 	key::gold,
 	key::wood,
@@ -39,7 +38,7 @@ constexpr Atom kDailyIncomeResourceIds[] = {
 };
 
 bool is_artifact_slot(Atom slot) {
-	return std::find(std::begin(kArtifactSlots), std::end(kArtifactSlots), slot) != std::end(kArtifactSlots);
+	return artifact_slots::is_kind(slot);
 }
 
 // String(d.get(field, fallback)).
@@ -241,7 +240,7 @@ ArrayRef owned_artifact_ids(State &state, DictRef hero_state) {
 	const DictRef artifacts = normalize_hero_artifacts(state, gd::field(state, hero_state, key::artifacts));
 	const ArrayRef artifact_ids = state.new_array();
 	const DictRef equipped = gd::as_dict(gd::index(state, artifacts, str(key::equipped)));
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		const Atom equipped_id = string_of_field(state, equipped, slot, key::empty);
 		if (equipped_id != key::empty && !gd::array_has(state, artifact_ids, str(equipped_id))) {
 			state.append(artifact_ids, str(equipped_id));
@@ -263,7 +262,7 @@ DictRef locate_artifact(State &state, DictRef hero_state, Atom artifact_id) {
 	}
 
 	const DictRef equipped = gd::as_dict(gd::index(state, artifacts, str(key::equipped)));
-	for (const Atom slot : kEquipmentSlots) {
+	for (const Atom slot : artifact_slots::kEquipment) {
 		if (string_of_field(state, equipped, slot, key::empty) == artifact_id) {
 			return location_result(state, key::equipped, slot);
 		}

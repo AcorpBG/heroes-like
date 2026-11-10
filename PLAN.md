@@ -39,9 +39,9 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
-- 2026-11-10: The skirmish setup and the save menu are one tall column at the left in the dark-and-gold look (mockup B), with a hero card and pill buttons; maps built earlier sit behind a small button (`docs/skirmish-setup-screen.md`).
+- 2026-11-10: Menus, tooltips, windows and the hero menu wear the dark-and-gold card look; the skirmish setup, save menu and settings are a left column that leaves the scene in view; every unit's small icon is a head-and-shoulders close-up (`docs/overworld-info-card.md`, `docs/skirmish-setup-screen.md`).
 - 2026-11-10: Source art goes into the source art archive on N: with an incremental snapshot from the owner's checkout; it does not stay in temp folders, worktrees or as loose untracked files (`docs/source-material-storage-map.md`).
-- 2026-11-10: The map's hover card and right-click report, and every other tooltip with its F1 window, use the sidebar's dark-and-gold look (mockup B); every unit's icon there is a head-and-shoulders close-up: a crop of the portrait for soldiers, a painted close-up for beasts, machines and failed crops (`docs/overworld-info-card.md`).
+- 2026-11-10: A hero wears artifacts in fourteen slots laid out on a figure (head, neck, cloak, chest, two hands, two rings, feet, banner, four trinkets); a page of the hero menu shows only its own content; the town's hero menu wears and stows artifacts too (`docs/hero-screen.md`).
 - 2026-11-10: The map tells another side's unit numbers as size bands, never as counts; battles and the player's own armies stay exact (`docs/army-size-bands.md`).
 - 2026-11-10: The map's Wayside Exchange serves each player one trade a week (`docs/visit-buildings.md`).
 - 2026-11-10: Every Veilmourn town with a harbour has the Shipyard built from the start, and boats there cost half (`docs/water-travel.md`).
@@ -54,6 +54,7 @@ None open.
 
 ## Open work
 
+- `ui-hero-menu-rework-20261110` (in progress): Owner 2026-11-10: the hero menu on the map and in town as layout B with artifacts on a figure and more slots. Files: scenes/shared/HeroSheet.gd, artifact_slots.hpp and the artifact rules, content/artifacts.json, TownShell.gd, HeroExchangeScreen.gd. See `docs/hero-screen.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -63,10 +64,10 @@ None open.
 
 ## Recently completed
 
-- 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): The in-game settings window is the settings column in the card frame; every confirmation window and the hero keys window wear the card frame with a gold title.
-- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look: rows of pills, volume sliders, Restore defaults, Support bundle, Back. The skirmish setup scrolls at larger interface scales.
+- 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings window, every confirmation window and the hero keys window wear the card frame.
+- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; the skirmish setup scrolls at larger interface scales.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.
-- 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Hero portrait in the skirmish setup keeps one size (249x332); built maps window shows each map as a picture with seats, commander and setting chips.
+- 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Hero portrait in the skirmish setup keeps one size; the built maps window shows each map as a picture.
 - 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.
 - 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
@@ -83,7 +84,7 @@ None open.
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used, guard and owner. Used buildings no longer read Available.
 - 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.
 - 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.
-- 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week instead of any time (new visit cadence weekly_per_side); computer players still leave it alone.
+- 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week (visit cadence weekly_per_side).
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood; computer players plan with that price.
 - 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.
 - 2026-11-10 `ai-shipyard-needs-20261110` (e3eb20d58): A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one.

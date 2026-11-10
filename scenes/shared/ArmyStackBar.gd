@@ -11,6 +11,8 @@ const VisualKit := preload("res://scripts/ui/FrontierVisualKit.gd")
 const SLOT_COUNT := 7
 const SLOT_SIZE := Vector2(38.0, 48.0)
 const COMPACT_SLOT_SIZE := Vector2(28.0, 38.0)
+## The hero menu's army page: a close-up of each unit over its number.
+const LARGE_SLOT_SIZE := Vector2(104.0, 132.0)
 const SELECTED_MODULATE := Color(1.0, 0.82, 0.34, 1.0)
 const OCCUPIED_MODULATE := Color(1.0, 1.0, 1.0, 1.0)
 const EMPTY_MODULATE := Color(0.64, 0.69, 0.72, 0.88)
@@ -32,6 +34,7 @@ var _slot_buttons: Dictionary = {}
 var _texture_cache: Dictionary = {}
 var _missing_textures: Dictionary = {}
 var _compact_mode := false
+var _large_tiles := false
 var _revision := 0
 var _exact_mode := false
 var _quantity: SpinBox
@@ -62,8 +65,23 @@ func set_compact_mode(compact: bool) -> void:
 	for button_value in _slot_buttons.values():
 		var button := button_value as Button
 		if button != null:
-			button.custom_minimum_size = COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
-			button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)
+			button.custom_minimum_size = _slot_size()
+			button.add_theme_constant_override("icon_max_width", _slot_icon_width())
+
+## Large tiles with each unit's close-up, for a surface with room (set before
+## configure). The heading and the holder's name line are left to the surface.
+func set_large_tiles(large: bool) -> void:
+	_large_tiles = large
+	if _heading != null: _heading.visible = not large and not _compact_mode
+	_rebuild_holder_rows()
+
+func _slot_size() -> Vector2:
+	if _large_tiles: return LARGE_SLOT_SIZE
+	return COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
+
+func _slot_icon_width() -> int:
+	if _large_tiles: return 92
+	return 16 if _compact_mode else 22
 
 func clear_selection() -> void:
 	_selected_holder_id = ""
@@ -114,7 +132,7 @@ func _build_static_surface() -> void:
 		return
 	var heading := Label.new()
 	_heading = heading
-	heading.visible = not _compact_mode
+	heading.visible = not _compact_mode and not _large_tiles
 	heading.text = "Formation"
 	heading.tooltip_text = "Click or drag a stack to its destination. All, Half, One, or an exact quantity; the destination is previewed before committing."
 	VisualKit.apply_label(heading, "gold", 13)
@@ -194,9 +212,10 @@ func _rebuild_holder_rows() -> void:
 		label.clip_text = true
 		VisualKit.apply_label(label, "body", 12)
 		label.tooltip_text = label.text
+		label.visible = not _large_tiles
 		row_box.add_child(label)
 		var slots_row := HBoxContainer.new()
-		slots_row.add_theme_constant_override("separation", 3)
+		slots_row.add_theme_constant_override("separation", 10 if _large_tiles else 3)
 		var slots: Array = holder.get("slots", []) if holder.get("slots", []) is Array else []
 		for slot_index in range(SLOT_COUNT):
 			var slot: Dictionary = slots[slot_index] if slot_index < slots.size() and slots[slot_index] is Dictionary else {"slot_index": slot_index, "occupied": false, "holder_id": holder_id}
@@ -229,14 +248,14 @@ func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> 
 	button.holder_id = holder_id
 	button.slot_index = slot_index
 	var occupied := bool(slot.get("occupied", false))
-	button.custom_minimum_size = COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
+	button.custom_minimum_size = _slot_size()
 	button.focus_mode = Control.FOCUS_ALL
 	button.disabled = not _can_manage
 	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)
+	button.add_theme_constant_override("icon_max_width", _slot_icon_width())
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_font_size_override("font_size", 20 if _large_tiles else 12)
 	button.add_theme_color_override("font_disabled_color", Color(0.84, 0.82, 0.74))
 	button.add_theme_stylebox_override("normal", _slot_style(SLOT_FILL, SLOT_BORDER, 1))
 	button.add_theme_stylebox_override("hover", _slot_style(SLOT_HOVER_FILL, SLOT_HOVER_BORDER, 2))
@@ -247,7 +266,7 @@ func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> 
 	button.tooltip_text = _slot_tooltip(slot, slot_index)
 	button.accessibility_name = button.tooltip_text
 	if occupied:
-		button.icon = UnitPortraits.for_unit(String(slot.get("unit_id", "")))
+		button.icon = UnitPortraits.bust_for_unit(String(slot.get("unit_id", ""))) if _large_tiles else UnitPortraits.for_unit(String(slot.get("unit_id", "")))
 	button.set_meta("occupied", occupied)
 	button.set_meta("holder_id", holder_id)
 	button.set_meta("slot_index", slot_index)

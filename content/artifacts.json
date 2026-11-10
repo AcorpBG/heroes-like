@@ -1329,7 +1329,7 @@
     {
       "id": "artifact_quarry_tally_rod",
       "name": "Quarry Tally Rod",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "crafted",
       "rarity": "common",
       "family": "surveyor_instruments",
@@ -1498,7 +1498,7 @@
     {
       "id": "artifact_bastion_gorget",
       "name": "Bastion Gorget",
-      "slot": "armor",
+      "slot": "neck",
       "artifact_class": "crafted",
       "rarity": "uncommon",
       "family": "battle_command_pieces",
@@ -1574,7 +1574,7 @@
     {
       "id": "artifact_waymark_compass",
       "name": "Waymark Compass",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "roadfinder_gear",
@@ -1655,7 +1655,7 @@
     {
       "id": "artifact_milepost_lantern",
       "name": "Milepost Lantern",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "roadfinder_gear",
@@ -1744,7 +1744,7 @@
     {
       "id": "artifact_tollstone_ring",
       "name": "Tollstone Ring",
-      "slot": "trinket",
+      "slot": "ring",
       "artifact_class": "set_piece",
       "rarity": "rare",
       "family": "tollstone_rings",
@@ -1841,7 +1841,7 @@
     {
       "id": "artifact_mudglass_beads",
       "name": "Mudglass Beads",
-      "slot": "trinket",
+      "slot": "neck",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "mudglass_beads",
@@ -1950,7 +1950,7 @@
     {
       "id": "artifact_choir_tuning_fork",
       "name": "Choir Tuning Fork",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "choir_tuning_forks",
@@ -2299,7 +2299,7 @@
     {
       "id": "artifact_black_sail_compass",
       "name": "Black-Sail Compass",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "rare",
       "family": "black_sail_compasses",
@@ -2401,7 +2401,7 @@
     {
       "id": "artifact_rainstar_sextant",
       "name": "Rainstar Sextant",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "asterfall_survey_gear",
@@ -2489,7 +2489,7 @@
     {
       "id": "artifact_asterfall_mantle",
       "name": "Asterfall Mantle",
-      "slot": "armor",
+      "slot": "cloak",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "asterfall_survey_gear",
@@ -2860,7 +2860,7 @@
     {
       "id": "artifact_prismward_mantle",
       "name": "Prismward Mantle",
-      "slot": "armor",
+      "slot": "cloak",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "prismward_mantles",
@@ -4008,7 +4008,7 @@
     {
       "id": "artifact_meridian_relay_lens",
       "name": "Meridian Relay Lens",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "meridian_relay_lenses",
@@ -4103,7 +4103,7 @@
     {
       "id": "artifact_rootpath_seed_compass",
       "name": "Rootpath Seed Compass",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "rootpath_seed_compasses",
@@ -4198,7 +4198,7 @@
     {
       "id": "artifact_redline_survey_dial",
       "name": "Redline Survey Dial",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "redline_survey_dials",
@@ -4293,7 +4293,7 @@
     {
       "id": "artifact_drowned_star_astrolabe",
       "name": "Drowned-Star Astrolabe",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "uncommon",
       "family": "drowned_star_astrolabes",
@@ -5324,7 +5324,7 @@
     {
       "id": "artifact_crownroot_oathseed_censer",
       "name": "Crownroot Oathseed Censer",
-      "slot": "armor",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "horizon_citadel_commissions",
@@ -5639,7 +5639,7 @@
     {
       "id": "artifact_ashcrown_crownring",
       "name": "Ashcrown Crownring",
-      "slot": "banner",
+      "slot": "head",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "sovereign_wild_trophies",
@@ -5729,7 +5729,7 @@
     {
       "id": "artifact_miremoon_crown_tooth",
       "name": "Miremoon Crown-Tooth",
-      "slot": "trinket",
+      "slot": "neck",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "sovereign_wild_trophies",
@@ -5910,7 +5910,7 @@
     {
       "id": "artifact_rootvault_heartgrain_mantle",
       "name": "Rootvault Heartgrain Mantle",
-      "slot": "armor",
+      "slot": "cloak",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "sovereign_wild_trophies",
@@ -6180,7 +6180,7 @@
     {
       "id": "artifact_amberweir_lockpike_tallychain",
       "name": "Amberweir Lockpike Tallychain",
-      "slot": "trinket",
+      "slot": "neck",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "marchland_retinue_heirlooms",
@@ -6362,7 +6362,7 @@
     {
       "id": "artifact_splitprism_parallax_duelglass",
       "name": "Splitprism Parallax Duelglass",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "marchland_retinue_heirlooms",
@@ -6817,7 +6817,7 @@
     {
       "id": "artifact_varn_switchrail_compass",
       "name": "Varn Switchrail Compass",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",
@@ -6908,7 +6908,7 @@
     {
       "id": "artifact_valechant_star_cadence_astrolabe",
       "name": "Valechant Star-Cadence Astrolabe",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",
@@ -6999,7 +6999,7 @@
     {
       "id": "artifact_ashgrove_millward_lantern",
       "name": "Ashgrove Millward Lantern",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",
@@ -7090,7 +7090,7 @@
     {
       "id": "artifact_reedcaller_circle_horn",
       "name": "Reedcaller Circle Horn",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",
@@ -7363,7 +7363,7 @@
     {
       "id": "artifact_glasswind_sightline_fan",
       "name": "Glasswind Sightline Fan",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",
@@ -7636,7 +7636,7 @@
     {
       "id": "artifact_oriflag_stolen_signal_pennon",
       "name": "Oriflag Stolen Signal Pennon",
-      "slot": "trinket",
+      "slot": "hand",
       "artifact_class": "faction",
       "rarity": "rare",
       "family": "command_relic_marches",

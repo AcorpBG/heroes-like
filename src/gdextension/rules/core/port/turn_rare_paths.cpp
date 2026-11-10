@@ -4,6 +4,7 @@
 
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
+#include "aurelion_rules/port/artifact_slots.hpp"
 #include "aurelion_rules/port/enemy_town_services_turn.hpp"
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_level_rules_turn.hpp"
@@ -107,7 +108,7 @@ DictRef values_target(const Value &target) {
 
 // ArtifactRules.EQUIPMENT_SLOTS.
 bool is_equipment_slot(Atom slot) {
-	return slot == key::boots || slot == key::banner || slot == key::armor || slot == key::trinket || slot == key::trinket_2;
+	return artifact_slots::is_equipment_slot(slot);
 }
 
 } // namespace
@@ -364,13 +365,12 @@ DictRef best_equipment(State &state, DictRef hero, Atom artifact_id) {
 	state.set(best, str(key::gain), float_value(0.0));
 	const double before = loadout_value(state, hero);
 	const Atom slot_type = artifact_rules::artifact_slot(state, artifact_id);
-	const std::vector<Atom> slots = slot_type == key::trinket ? std::vector<Atom>{ key::trinket, key::trinket_2 } : std::vector<Atom>{ slot_type };
-	for (const Atom slot : slots) {
+	for (const Atom slot : artifact_slots::slots_of_kind(slot_type)) {
 		if (!is_equipment_slot(slot)) {
 			continue;
 		}
 		const DictRef candidate = artifact_rules::ensure_hero_artifacts(state, gd::deep_duplicate_dict(state, hero));
-		// Explicitly compare both trinket slots; default equip only replaces the first.
+		// Explicitly compare every slot of the kind; default equip only replaces the first.
 		const Value artifacts = gd::index(state, candidate, str(key::artifacts));
 		const Value equipped = ai::vmember(state, artifacts, key::equipped);
 		const Atom displaced = gd::stringify(state, ai::vget(state, equipped, str(slot), str(key::empty)));

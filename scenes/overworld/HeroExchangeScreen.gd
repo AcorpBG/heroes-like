@@ -31,7 +31,13 @@ const SPINE_WIDTH := 150.0
 const PANEL_MAX_WIDTH := 1580.0
 const DRAG_ARMY := "hero_exchange_army"
 const DRAG_ARTIFACT := "hero_exchange_artifact"
-const EQUIP_CAPTIONS := {"boots": "Boots", "banner": "Banner", "armor": "Armor", "trinket": "Trinket", "trinket_2": "Trinket"}
+const EQUIP_CAPTIONS := {
+	"boots": "Feet", "banner": "Banner", "armor": "Chest", "trinket": "Trinket", "trinket_2": "Trinket",
+	"head": "Head", "neck": "Neck", "cloak": "Cloak", "hand": "Hand", "hand_2": "Hand",
+	"ring": "Ring", "ring_2": "Ring", "trinket_3": "Trinket", "trinket_4": "Trinket",
+}
+## Body slots first, then the trinkets: the order the worn row shows them in.
+const EQUIP_ORDER := ["head", "neck", "cloak", "armor", "hand", "hand_2", "ring", "ring_2", "boots", "banner", "trinket", "trinket_2", "trinket_3", "trinket_4"]
 const IDLE_HINT := "Click a stack, then a slot · Shift-click splits · Click an artifact or spell to hand it over"
 
 var _state: Dictionary = {}
@@ -411,9 +417,15 @@ func _build_army_row(side: String) -> Control:
 	return row
 
 func _build_equip_row(side: String) -> Control:
+	# Fourteen slots in two rows of seven, as wide as the army row.
 	var row := _row(side, "Equipped", 8)
-	for slot in Artifacts.EQUIPMENT_SLOTS:
-		row.add_child(_make_cell(side, "equip", String(slot), EQUIP_CELL))
+	var grid := GridContainer.new()
+	grid.columns = 7
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 6)
+	for slot in EQUIP_ORDER:
+		grid.add_child(_make_cell(side, "equip", String(slot), EQUIP_CELL))
+	row.add_child(grid)
 	return row
 
 func _build_pack_row(side: String) -> Control:
