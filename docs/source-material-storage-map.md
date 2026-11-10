@@ -65,7 +65,7 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-feaae1fc
 ```
 
 ## Incremental snapshots, 2026-10-14
@@ -108,6 +108,10 @@ The same day (owner: remove both) the snapshot's untracked files were removed fr
 python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9 --prefix art/towns/source/generated/overhaul/faction_mireclaw/ --apply
 ```
 
+## Incremental snapshot, 2026-11-10: Thornwake town
+
+`2026-11-10-feaae1fc` extends `2026-11-10-2e3c36a9`, written from the owner's checkout at Git revision `feaae1fc6b883906e17a0d42e60a4989b173e26e` after the Thornwake town repaint (slice `town-art-thornwake-20261110`): one ZIP64 archive, 202 files, 81,693,373 bytes, all under `art/towns/source/generated/overhaul/faction_thornwake`. 144 are the repaint's binary sources (the 52 building paintings and their mattes, the emptied backdrop, the concept, the foreground mask and the reference crops); 58 are its tracked prompts, packet and mask scripts as backup copies. Every payload was read back against its SHA-256 and ZIP CRC. The 144 sources are still at their paths in the owner's checkout and in the worktree `encounter-reward-surface-errors-d6ed09`; nothing was removed.
+
 ## Tests never need archived sources
 
 The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
@@ -126,7 +130,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-feaae1fc --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.
