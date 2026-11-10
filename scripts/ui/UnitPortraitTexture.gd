@@ -23,16 +23,21 @@ static func for_unit(unit_id: String, surface: String = "battle_icon", round_bac
 	layered.round_background = round_backdrop
 	return layered
 
-## A unit's small icon: the part of its portrait content/unit_bust_regions.json
-## names (head and shoulders of a standing figure, the whole of a beast or a
-## machine; tools/build_unit_bust_regions.py). The whole figure shrunk to an
-## icon is unreadable. Falls back to the battle icon.
+## A unit's small icon, a head-and-shoulders close-up named by
+## content/unit_bust_regions.json: a painted icon, or the part of the portrait
+## that shows a standing figure's head (tools/build_unit_bust_regions.py). The
+## whole figure shrunk to an icon is unreadable. Falls back to the battle icon.
 const BUST_REGIONS_PATH := "res://content/unit_bust_regions.json"
 
 static func bust_for_unit(unit_id: String) -> Texture2D:
 	var art := ContentService.get_unit_art(unit_id)
 	var path := String(art.get("portrait", ""))
-	var regions: Dictionary = ContentService.load_json(BUST_REGIONS_PATH).get("regions", {})
+	var document := ContentService.load_json(BUST_REGIONS_PATH)
+	# A beast or a machine has a painted close-up (tools/build_unit_icon_busts.py).
+	var icon_path := String((document.get("icons", {}) as Dictionary).get(unit_id, ""))
+	if icon_path != "" and ResourceLoader.exists(icon_path, "Texture2D"):
+		return load(icon_path) as Texture2D
+	var regions: Dictionary = document.get("regions", {})
 	var box = regions.get(unit_id, null)
 	if path == "" or not (box is Array) or box.size() != 4 or not ResourceLoader.exists(path, "Texture2D"):
 		return for_unit(unit_id)

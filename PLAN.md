@@ -39,7 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
-- 2026-11-10: The map's hover card and right-click report use the sidebar's dark-and-gold look (mockup B); unit icons there are crops of the existing portraits, not newly generated art (`docs/overworld-info-card.md`).
+- 2026-11-10: The map's hover card and right-click report use the sidebar's dark-and-gold look (mockup B); every unit's icon there is a head-and-shoulders close-up: a crop of the portrait for soldiers, a painted close-up for beasts, machines and failed crops (`docs/overworld-info-card.md`).
 - 2026-11-10: The map tells another side's unit numbers as size bands, never as counts; battles and the player's own armies stay exact (`docs/army-size-bands.md`).
 - 2026-11-10: The map's Wayside Exchange serves each player one trade a week (`docs/visit-buildings.md`).
 - 2026-11-10: Every Veilmourn town with a harbour has the Shipyard built from the start, and boats there cost half (`docs/water-travel.md`).
@@ -52,6 +52,7 @@ None open.
 
 ## Open work
 
+- `art-unit-icon-closeups-20261110` (in progress): Every unit's small icon is a head-and-shoulders close-up (owner, 2026-11-10: all units should look consistent). 75 beasts, winged and plant creatures, machines and failed crops get an imggen close-up made from their own portrait; six soldier units get a forced crop. Files: art/units/icon_busts, content/unit_bust_regions.json, tools. See `docs/overworld-info-card.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

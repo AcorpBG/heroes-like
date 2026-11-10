@@ -1,0 +1,465 @@
+{
+ "purpose": "Close-up icons of the units a crop of the portrait cannot show by head and shoulders: beasts, winged and plant creatures, war machines. Each is painted from the unit's own portrait (res://art/units/portraits), keeping its design.",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-10",
+ "size": "1024x1024",
+ "quality": "medium",
+ "transparent_background": true,
+ "prompt_file": "unit_icon_bust.prompt.txt",
+ "input": "image 1 is the unit's portrait",
+ "runtime_tool": "tools/build_unit_icon_busts.py",
+ "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are kept beside this file in the owner's checkout.",
+ "items": [
+  {
+   "unit_id": "unit_aurora_ballista",
+   "source": "unit_aurora_ballista.png",
+   "sha256": "01a487626e4838c5dd0ca49baf3ddcdedb8f534c83cf1c8c64a951f48f156a1e",
+   "runtime_path": "res://art/units/icon_busts/unit_aurora_ballista.png"
+  },
+  {
+   "unit_id": "unit_aurora_ballista_veteran",
+   "source": "unit_aurora_ballista_veteran.png",
+   "sha256": "c2738247861b9d64b074d7c3777def3c1b7410044caf112d8d36ab7622def727",
+   "runtime_path": "res://art/units/icon_busts/unit_aurora_ballista_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_crucible_crawlers",
+   "source": "unit_brasshollow_crucible_crawlers.png",
+   "sha256": "53e1d5bbbb92a6255bceb496ae5f45d0a9ca433214e6d992aa087dea9fb38eda",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_crucible_crawlers.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+   "source": "unit_brasshollow_crucible_crawlers_veteran.png",
+   "sha256": "156bf3af3e20fb065f62c15dad9e0b06697dd15fd3f2f3413a0969068f27b2fa",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_crucible_crawlers_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_debt_engine_exactors",
+   "source": "unit_brasshollow_debt_engine_exactors.png",
+   "sha256": "6e10cf7f61473e1fc0a88513458b2fcb5041eb6657a0b7eb2c5519820ac7e535",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_debt_engine_exactors.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+   "source": "unit_brasshollow_debt_engine_exactors_veteran.png",
+   "sha256": "cb17ccd6642062497da05d25c0306971e28658c495966d61cba73ede4a17365f",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_debt_engine_exactors_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_foundry_saint",
+   "source": "unit_brasshollow_foundry_saint.png",
+   "sha256": "3ab9ac7b4d7e736126ea8a2f54702f2bc08ece111ddbe24f664f1d7c6b3707c2",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_foundry_saint.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_foundry_saint_veteran",
+   "source": "unit_brasshollow_foundry_saint_veteran.png",
+   "sha256": "78b674c8bd2787ebff8bcddc6d2766751b8a2e2b174980a9b3264f0779fd5a13",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_foundry_saint_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_furnace_pavis_teams",
+   "source": "unit_brasshollow_furnace_pavis_teams.png",
+   "sha256": "7840304f4d961ac536e6d4129ea21b92281fb2ae8d00e6b459c8ccd3a9f4d85e",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_furnace_pavis_teams.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+   "source": "unit_brasshollow_furnace_pavis_teams_veteran.png",
+   "sha256": "0d64bc3841cf10dfbe327a9af2f275fc1d2f3bd8ac8d5098275c41a38997f0ab",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_furnace_pavis_teams_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_pressure_lancers",
+   "source": "unit_brasshollow_pressure_lancers.png",
+   "sha256": "7c25cc85bd9a81db345b1236a3dcaa8eef7ee9cdc9deca0b21bbb99bb6a705bf",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_pressure_lancers.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_quenchbell_mortars",
+   "source": "unit_brasshollow_quenchbell_mortars.png",
+   "sha256": "a93a850a576a3712c07317f01d85bab01ee4d80a8ac087869f2141e656606bcb",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_quenchbell_mortars.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+   "source": "unit_brasshollow_quenchbell_mortars_veteran.png",
+   "sha256": "eef6679279515dd7470830d8065b5206c1fce3891fe466eb4ab35279123f6980",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_quenchbell_mortars_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_rivet_hounds",
+   "source": "unit_brasshollow_rivet_hounds.png",
+   "sha256": "699c1fb5270c91732d94f8d691157bfe9146e4c75590fb983d55cf55171c79f1",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_rivet_hounds.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_rivet_hounds_veteran",
+   "source": "unit_brasshollow_rivet_hounds_veteran.png",
+   "sha256": "2feaced8dfd0d270ce4513e71e15d6f2ea3c0af9979b09c61f490fddb69fc3f3",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_rivet_hounds_veteran.png"
+  },
+  {
+   "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+   "source": "unit_brasshollow_whitegauge_datum_breach_cannons.png",
+   "sha256": "f3ca64c4c05857ed0e26cad6942e471d961225ae6c7e5b2dcd2c4080b9a68f15",
+   "runtime_path": "res://art/units/icon_busts/unit_brasshollow_whitegauge_datum_breach_cannons.png"
+  },
+  {
+   "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+   "source": "unit_embercourt_amberweir_sluicebrand_mangonels.png",
+   "sha256": "31b19e7152b698e85ba5a29db1fdcff8aa7c537175a8973a906c00640b6b7280",
+   "runtime_path": "res://art/units/icon_busts/unit_embercourt_amberweir_sluicebrand_mangonels.png"
+  },
+  {
+   "unit_id": "unit_embercourt_charter_colossus",
+   "source": "unit_embercourt_charter_colossus.png",
+   "sha256": "497a72fc0dbf72a2d5c9382e12a1f68f6c4adf301455a528d1945884d74e9abd",
+   "runtime_path": "res://art/units/icon_busts/unit_embercourt_charter_colossus.png"
+  },
+  {
+   "unit_id": "unit_embercourt_charter_colossus_veteran",
+   "source": "unit_embercourt_charter_colossus_veteran.png",
+   "sha256": "d08825aca6f112b0966aded4838ff6a7415ffcd4ab15d100dd77cb8d44ab861f",
+   "runtime_path": "res://art/units/icon_busts/unit_embercourt_charter_colossus_veteran.png"
+  },
+  {
+   "unit_id": "unit_embercourt_sluicefire_lindworms",
+   "source": "unit_embercourt_sluicefire_lindworms.png",
+   "sha256": "2d23b5873bde6c011e4d09e3b4f5000ee56a018df2eea734ae88f1507eec19e6",
+   "runtime_path": "res://art/units/icon_busts/unit_embercourt_sluicefire_lindworms.png"
+  },
+  {
+   "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+   "source": "unit_embercourt_sluicefire_lindworms_veteran.png",
+   "sha256": "2787ffa872da6e37bf3e0abdf1ad8e71f12f1ae4c83125b1c4a8f6202bbbc52b",
+   "runtime_path": "res://art/units/icon_busts/unit_embercourt_sluicefire_lindworms_veteran.png"
+  },
+  {
+   "unit_id": "unit_gorefen_ripper",
+   "source": "unit_gorefen_ripper.png",
+   "sha256": "005304bb95e0e50106ba5a6460519ea79751e5d1fa66a289d7868471daf5230f",
+   "runtime_path": "res://art/units/icon_busts/unit_gorefen_ripper.png"
+  },
+  {
+   "unit_id": "unit_gorefen_ripper_veteran",
+   "source": "unit_gorefen_ripper_veteran.png",
+   "sha256": "bf971cb80153c2eeb16b399471e3d39ca9654874708d4c77bf85d75f01178148",
+   "runtime_path": "res://art/units/icon_busts/unit_gorefen_ripper_veteran.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+   "source": "unit_mireclaw_drowned_antler_sovereign.png",
+   "sha256": "6004ba0670a386bc1e05f33ca60733339cdbc60c2f58d0f7ba6913f18acb246a",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_drowned_antler_sovereign.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+   "source": "unit_mireclaw_drowned_antler_sovereign_veteran.png",
+   "sha256": "52a417a3fa5ec7994b45afb30b417247671ba70bb5711e53a7b708e2372a181c",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_drowned_antler_sovereign_veteran.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_gorefen_rippers",
+   "source": "unit_mireclaw_gorefen_rippers.png",
+   "sha256": "c9f4e61a2d4ee995ed1e02bba40fcff6e42da4b82e707233145cbd00995c2547",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_gorefen_rippers.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+   "source": "unit_mireclaw_gorefen_rippers_veteran.png",
+   "sha256": "5bed9474806b790777de5c1379db91f437424d6f48ea066b2a04b3af8c9961e7",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_gorefen_rippers_veteran.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_mireglass_reedcasters",
+   "source": "unit_mireclaw_mireglass_reedcasters.png",
+   "sha256": "079ebb8227e9e6fefdf3d3ce484b418ed077065abbf4e1c359a3436e783c1953",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_mireglass_reedcasters.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+   "source": "unit_mireclaw_mireglass_reedcasters_veteran.png",
+   "sha256": "686cf81999e5b68f76ff0ddc8dbb2a4960a39085337ab77f76f64d3d0c259b47",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_mireglass_reedcasters_veteran.png"
+  },
+  {
+   "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+   "source": "unit_mireclaw_moonbite_mirehorn_breakers.png",
+   "sha256": "3a770bcf466e18618275c9d8ef56ab1ecd174d6ff05a93d155ffc44a5573d923",
+   "runtime_path": "res://art/units/icon_busts/unit_mireclaw_moonbite_mirehorn_breakers.png"
+  },
+  {
+   "unit_id": "unit_neutral_ashcrown_kilnelk",
+   "source": "unit_neutral_ashcrown_kilnelk.png",
+   "sha256": "aa2a5fa77db476e8639c065dcd2b577d89052a9f974c305e3d3c144e9b4ccc26",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_ashcrown_kilnelk.png"
+  },
+  {
+   "unit_id": "unit_neutral_brambleback_knucklebears",
+   "source": "unit_neutral_brambleback_knucklebears.png",
+   "sha256": "15fb62a02151cedcbf59f4a5411142ac5d64f6c63cba4bafc748d4bba3d6f171",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_brambleback_knucklebears.png"
+  },
+  {
+   "unit_id": "unit_neutral_cindervane_censerwings",
+   "source": "unit_neutral_cindervane_censerwings.png",
+   "sha256": "dc4c6b71065dc4585b8a8b105b6c622b3506bb0cbaf6595d9b078cbc2dba7252",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_cindervane_censerwings.png"
+  },
+  {
+   "unit_id": "unit_neutral_cinderwake_aurochs",
+   "source": "unit_neutral_cinderwake_aurochs.png",
+   "sha256": "da6df30437cad5242227239fae2df5255d4718d3d74a7bfe5fe32c06a813abe6",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_cinderwake_aurochs.png"
+  },
+  {
+   "unit_id": "unit_neutral_deepforge_vaultwyrms",
+   "source": "unit_neutral_deepforge_vaultwyrms.png",
+   "sha256": "aac4403ecc17aa9fd7d9eec100e1c0583ce8637f568eba7c3160195d3710c673",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_deepforge_vaultwyrms.png"
+  },
+  {
+   "unit_id": "unit_neutral_fenhound_runners",
+   "source": "unit_neutral_fenhound_runners.png",
+   "sha256": "645eec7fa62670540702427488d5a542d690fa548eca0c600104ef04f606cc6b",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_fenhound_runners.png"
+  },
+  {
+   "unit_id": "unit_neutral_fenmirror_gallowshells",
+   "source": "unit_neutral_fenmirror_gallowshells.png",
+   "sha256": "a191702ff502eb14af9673ba3d058947410e7e233d7c794f4a8141d65299565f",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_fenmirror_gallowshells.png"
+  },
+  {
+   "unit_id": "unit_neutral_galehorn_striders",
+   "source": "unit_neutral_galehorn_striders.png",
+   "sha256": "abef26bc074bc64b18ea3172cb5358c2991289de4ee1def9be070c9e44db68bc",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_galehorn_striders.png"
+  },
+  {
+   "unit_id": "unit_neutral_gaugecoil_orewyrms",
+   "source": "unit_neutral_gaugecoil_orewyrms.png",
+   "sha256": "6ae8845b970995f1c28242584ecb2011bfc32e35e3412a3e5e1e1cd6682e8391",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_gaugecoil_orewyrms.png"
+  },
+  {
+   "unit_id": "unit_neutral_gloambell_wake_mantas",
+   "source": "unit_neutral_gloambell_wake_mantas.png",
+   "sha256": "dd61d52224860044ec2651d8654649e23c85f77598e1b72138f09e4b84ae49d1",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_gloambell_wake_mantas.png"
+  },
+  {
+   "unit_id": "unit_neutral_mireglass_belltoads",
+   "source": "unit_neutral_mireglass_belltoads.png",
+   "sha256": "68fd22de5f29f76eed7de3f13509e5f18bdcb4236a64c6b91c284044b272ebb7",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_mireglass_belltoads.png"
+  },
+  {
+   "unit_id": "unit_neutral_miremoon_crownmaws",
+   "source": "unit_neutral_miremoon_crownmaws.png",
+   "sha256": "926e86a3dacf7e14458f7689a4953253196b4068c2768425255ff45e5db01bc7",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_miremoon_crownmaws.png"
+  },
+  {
+   "unit_id": "unit_neutral_mossglass_sentinels",
+   "source": "unit_neutral_mossglass_sentinels.png",
+   "sha256": "5ace89d54b83e3b5696261eaeda3dc5da6cafe28f570d988e7f6e5b7f6926cd4",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_mossglass_sentinels.png"
+  },
+  {
+   "unit_id": "unit_neutral_noonshard_prism_kites",
+   "source": "unit_neutral_noonshard_prism_kites.png",
+   "sha256": "5194471fab61d0fa389ed652c8c827eca5c531468a9b91f6bd90370a454a84de",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_noonshard_prism_kites.png"
+  },
+  {
+   "unit_id": "unit_neutral_prismwake_raylings",
+   "source": "unit_neutral_prismwake_raylings.png",
+   "sha256": "d5bf2e21247aaf24bba531071eade715328f3ab6934ef4fbd5289fe78281f247",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_prismwake_raylings.png"
+  },
+  {
+   "unit_id": "unit_neutral_quenchbell_ironbacks",
+   "source": "unit_neutral_quenchbell_ironbacks.png",
+   "sha256": "db2be707a2890171861d4e19a5a9341be65e108a27af8c0ac448245b85461252",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_quenchbell_ironbacks.png"
+  },
+  {
+   "unit_id": "unit_neutral_rimebell_skyrakers",
+   "source": "unit_neutral_rimebell_skyrakers.png",
+   "sha256": "1259a94dc9444dc8ef1be1bec75b08990d66e251aba46b41b41e6a0cdcf4d57d",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_rimebell_skyrakers.png"
+  },
+  {
+   "unit_id": "unit_neutral_rootcrown_knotstags",
+   "source": "unit_neutral_rootcrown_knotstags.png",
+   "sha256": "c28318c4b94c01a055035a64eb658f2e56e9f9c27b6c7636f73d109b9abd21b8",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_rootcrown_knotstags.png"
+  },
+  {
+   "unit_id": "unit_neutral_rootvault_barkhulks",
+   "source": "unit_neutral_rootvault_barkhulks.png",
+   "sha256": "bb5bfae4f575da44f6f45249cc997eed5412a81fba96d97b756b20be63ed374b",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_rootvault_barkhulks.png"
+  },
+  {
+   "unit_id": "unit_neutral_saltwake_bellwhales",
+   "source": "unit_neutral_saltwake_bellwhales.png",
+   "sha256": "bd31513eaf85f77d1a2295246f6f17b222020d55aae8fc9fe323230fa72675f7",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_saltwake_bellwhales.png"
+  },
+  {
+   "unit_id": "unit_neutral_sunscale_lanternmoths",
+   "source": "unit_neutral_sunscale_lanternmoths.png",
+   "sha256": "fcd971dfd9b7d264f589cff79abfb88374c2919ee56b252342ddd86902614afc",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_sunscale_lanternmoths.png"
+  },
+  {
+   "unit_id": "unit_neutral_tideglass_skyrays",
+   "source": "unit_neutral_tideglass_skyrays.png",
+   "sha256": "102bafd65d801d2f164eaaac8dedd48ed8e528df59bdfb5932e9490d0134e3ce",
+   "runtime_path": "res://art/units/icon_busts/unit_neutral_tideglass_skyrays.png"
+  },
+  {
+   "unit_id": "unit_sunvault_aurora_ballistae",
+   "source": "unit_sunvault_aurora_ballistae.png",
+   "sha256": "e2a59f23812f8625de006911ae454025a89b2b2cfcf40059d0f357a95c40a4f0",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_aurora_ballistae.png"
+  },
+  {
+   "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+   "source": "unit_sunvault_aurora_ballistae_veteran.png",
+   "sha256": "cd24af6e28de60493fcb7e889165d22eca7735e327f33028d0801b171c451339",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_aurora_ballistae_veteran.png"
+  },
+  {
+   "unit_id": "unit_sunvault_daybreak_colossus",
+   "source": "unit_sunvault_daybreak_colossus.png",
+   "sha256": "d53d280f9f3aa77a49a7e3d516aca57027dee92a315a9a3af97fb6ef50bd90bb",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_daybreak_colossus.png"
+  },
+  {
+   "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+   "source": "unit_sunvault_daybreak_colossus_veteran.png",
+   "sha256": "bd87858c42e2396f086610e601ebe1434fc390e021e1c6e868f53950da2e431e",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_daybreak_colossus_veteran.png"
+  },
+  {
+   "unit_id": "unit_sunvault_solar_array_striders",
+   "source": "unit_sunvault_solar_array_striders.png",
+   "sha256": "2b0e3db49deee1ec92c59a85a112352c59e079de899d45099dba87fd71a146e2",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_solar_array_striders.png"
+  },
+  {
+   "unit_id": "unit_sunvault_solar_array_striders_veteran",
+   "source": "unit_sunvault_solar_array_striders_veteran.png",
+   "sha256": "828099ea0078b21cf62875f34acdb46347a883a4b137c4e1f7df523c09379760",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_solar_array_striders_veteran.png"
+  },
+  {
+   "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+   "source": "unit_sunvault_splitprism_heliograph_ballistae.png",
+   "sha256": "abdd203013393d82f0fee831c3fd07c08e29c440cf92d9b56d19641da91e9154",
+   "runtime_path": "res://art/units/icon_busts/unit_sunvault_splitprism_heliograph_ballistae.png"
+  },
+  {
+   "unit_id": "unit_thornwake_barkmantle_rams",
+   "source": "unit_thornwake_barkmantle_rams.png",
+   "sha256": "5e7bfae3ff811798d32828a70c1fc8d0a629920b987d0a749bcc8e2d90daeaf2",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_barkmantle_rams.png"
+  },
+  {
+   "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+   "source": "unit_thornwake_barkmantle_rams_veteran.png",
+   "sha256": "a01a515f967499bf0a4ecb9523c0eee6cf099cdb0a3f9187e92d7a780699c1a6",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_barkmantle_rams_veteran.png"
+  },
+  {
+   "unit_id": "unit_thornwake_canopy_rammers",
+   "source": "unit_thornwake_canopy_rammers.png",
+   "sha256": "98b9bd0d0653f69303ba7b404668cc79c1829924c841ee260255859fd124c6cd",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_canopy_rammers.png"
+  },
+  {
+   "unit_id": "unit_thornwake_graft_matriarchs",
+   "source": "unit_thornwake_graft_matriarchs.png",
+   "sha256": "76bf28fb52ba9ff6b4bc56f2a9a31c07a4af89bccf1516e3c13b5a00703c42c8",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_graft_matriarchs.png"
+  },
+  {
+   "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+   "source": "unit_thornwake_graft_matriarchs_veteran.png",
+   "sha256": "40e6bbfd538123533381bb343a42b04d324e0bba9348a068a6064b579500b450",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_graft_matriarchs_veteran.png"
+  },
+  {
+   "unit_id": "unit_thornwake_stagknot_runners",
+   "source": "unit_thornwake_stagknot_runners.png",
+   "sha256": "081a94d513550f73513a638085885aab3473997f3db43724bf551e352b6d4125",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_stagknot_runners.png"
+  },
+  {
+   "unit_id": "unit_thornwake_stagknot_runners_veteran",
+   "source": "unit_thornwake_stagknot_runners_veteran.png",
+   "sha256": "3cfde65a6f1888f23b02c03388db2d2c7ebe376692db0a202bc512483522c2af",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_stagknot_runners_veteran.png"
+  },
+  {
+   "unit_id": "unit_thornwake_worldroot_bastion",
+   "source": "unit_thornwake_worldroot_bastion.png",
+   "sha256": "a7002460456021b2f8faed367f1a007ce05266c6f88f98e708745ae0510b3a4c",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_worldroot_bastion.png"
+  },
+  {
+   "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+   "source": "unit_thornwake_worldroot_bastion_veteran.png",
+   "sha256": "335836b89e0ca2218a72ba933146771bee1b26b59aafa9141e7629a28781942c",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_worldroot_bastion_veteran.png"
+  },
+  {
+   "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+   "source": "unit_thornwake_woundroot_rootmaul_behemoths.png",
+   "sha256": "8286a022c1969f1d995678349f3b0d3d24ceef44f583dcf5dbeab368a14083dd",
+   "runtime_path": "res://art/units/icon_busts/unit_thornwake_woundroot_rootmaul_behemoths.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+   "source": "unit_veilmourn_dreamwake_foganchor_colossi.png",
+   "sha256": "79e03652fed598dbbc04020914142b583e301b4f6a68c3adcd4c07accc457f32",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_dreamwake_foganchor_colossi.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_fogbound_leviathan",
+   "source": "unit_veilmourn_fogbound_leviathan.png",
+   "sha256": "97bed849ae7a92f62ff2bb5ca018e8e933a4ee3f5e9de86160be93535618f88d",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_fogbound_leviathan.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+   "source": "unit_veilmourn_fogbound_leviathan_veteran.png",
+   "sha256": "bfd3a4f7a92897f6c25fedc0a48f3f73fb13f4910953c9ed49a8a14d502b3c8d",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_fogbound_leviathan_veteran.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+   "source": "unit_veilmourn_mirrorkeel_reavers.png",
+   "sha256": "f7cce94ff7eb1f5d4a43197027a2462b0fb2b05e666f275925efd41e0e2a9b3c",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_mirrorkeel_reavers.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+   "source": "unit_veilmourn_mirrorkeel_reavers_veteran.png",
+   "sha256": "404d37d05c2908ae118b3cacfde9e230091aa9c2a0a32fe9caa6ea9e9135e6ce",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_mirrorkeel_reavers_veteran.png"
+  },
+  {
+   "unit_id": "unit_veilmourn_tidehook_deckhands",
+   "source": "unit_veilmourn_tidehook_deckhands.png",
+   "sha256": "b0af8d467ec9e9e80576e33b26b4226dd2cc90eacf356286ad93fa4e7de4a27e",
+   "runtime_path": "res://art/units/icon_busts/unit_veilmourn_tidehook_deckhands.png"
+  }
+ ]
+}
