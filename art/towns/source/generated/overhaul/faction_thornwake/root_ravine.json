@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty ravine (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the ravine around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the ravine was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
-    "source_sha256": "a476f9504a6dd3e5532e73db3385c19f504b0d75c539cffef8f74fddc0f7d30a",
+    "source_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_v2.png",
+    "source_sha256": "35020fd76774f5ca06ff6fdb4bb5eba4b31d4c9cc1e46fbce0258b81118529e6",
     "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_concept.png"
@@ -30,7 +30,31 @@
         "art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png"
       ],
       "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Thornwake town painting, used for style and building designs only."
-    }
+    },
+    "painted_on": {
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+      "source_sha256": "a476f9504a6dd3e5532e73db3385c19f504b0d75c539cffef8f74fddc0f7d30a"
+    },
+    "revisions": [
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "from_sha256": "a476f9504a6dd3e5532e73db3385c19f504b0d75c539cffef8f74fddc0f7d30a",
+        "change": "Level natural ground painted in at the plots: the buildings were each painted with a shelf of their own under them, which the layer does not keep, so on steep ground they hung over cliff faces and slopes. One unmasked edit of the backdrop, marked with a band at the foot of every plot's buildings; it is taken only near the bands, and the river, the small waterfalls and the blossoming crowns of the foreground stay as they were. Plots that stand on water or on their own piles have no band (building_dev_shipyard). The buildings are cut against the backdrop they were painted on (painted_on) and drawn over this one.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shelves_edit.png",
+        "edit_sha256": "33518c464e321add869bb10cbbb14911f074b50069836d0bb0ec0ecad6f344b1",
+        "markup_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shelves_markup.png",
+        "markup_sha256": "ffee701dba0f5db20e95b17bbcf071775ca6be49c58f1b04f9e62a7fdba010fe",
+        "bands_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shelves_bands.png",
+        "bands_sha256": "44fe68e9b2c0331541ce7e22599e9a45eb284d6814b43941bcf1af82d660bc33",
+        "keep_mask_paths": [
+          "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shelves_keep.png",
+          "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_foreground.png"
+        ],
+        "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shelves.prompt.txt",
+        "tool": "tools/town_plot_shelves.py (marks, blend); imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask with the marks as markup, quality high, complexity high. root_ravine_shelves_keep.png is the water, falls and lamps of the effect mask at the master's size.",
+        "date": "2026-11-10"
+      }
+    ]
   },
   "sources": "The paintings, mattes, masks and reference crops are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
   "cut": {

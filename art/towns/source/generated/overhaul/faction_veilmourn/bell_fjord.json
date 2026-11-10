@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty fjord (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the fjord around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the fjord was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records. Two buildings the model painted wider than their plot were repainted into a narrower box, which box records; their earlier stages scale from it.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3.png",
-    "source_sha256": "a0f0b69f2b64fc3e417d86ff2f92a2a25e2996f18812d23f90abfd148c57e7eb",
+    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v4.png",
+    "source_sha256": "8d30d55984689f9bde854d18ea51191ee8e0384bb848e1b322f4d0d18ac07a93",
     "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.png",
@@ -59,6 +59,23 @@
         "keep_mask_sha256": "6f7999f8570481c3fb9854a4bc58a88ebaa6a4d99ee9444e766b96f9021eb941",
         "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3.prompt.txt",
         "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask, quality high, complexity high; white in the keep mask is blended back from the earlier backdrop with a 4-pixel feather",
+        "date": "2026-11-10"
+      },
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3.png",
+        "from_sha256": "a0f0b69f2b64fc3e417d86ff2f92a2a25e2996f18812d23f90abfd148c57e7eb",
+        "change": "Level natural ground painted in at the plots: the buildings were each painted with a shelf of their own under them, which the layer does not keep, so on steep ground they hung over cliff faces and slopes. One unmasked edit of the backdrop, marked with a band at the foot of every plot's buildings; it is taken only near the bands, and the sea and the waterfall stay as they were. Plots that stand on water or on their own piles have no band (building_dev_shipyard, fort, veilmourn_t6_1, veilmourn_t7_1). The buildings are cut against the backdrop they were painted on (painted_on) and drawn over this one.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_shelves_edit.png",
+        "edit_sha256": "63488aac9447cd25cda3911ae67b7386ed5bf9c5ef02d9ff193cafde3d5eaf24",
+        "markup_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_shelves_markup.png",
+        "markup_sha256": "f78320da96686210b37575f69398e75eb9440c630cb2be6b0b1b0acd04850c98",
+        "bands_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_shelves_bands.png",
+        "bands_sha256": "f870ab6357f1240cdd3c86c91e8c4a4d9b7516e84bf0b4bc28ecdb67324c8250",
+        "keep_mask_paths": [
+          "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_shelves_keep.png"
+        ],
+        "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_shelves.prompt.txt",
+        "tool": "tools/town_plot_shelves.py (marks, blend); imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask with the marks as markup, quality high, complexity high. bell_fjord_shelves_keep.png is the water, falls and lamps of the effect mask at the master's size.",
         "date": "2026-11-10"
       }
     ],

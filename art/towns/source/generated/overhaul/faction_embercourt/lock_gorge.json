@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty gorge (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the gorge around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the gorge was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
-    "source_sha256": "2d5211ba74ab97dea1440c7446b789819f5fc07a2c20b9f5014e07afef0db795",
+    "source_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_v2.png",
+    "source_sha256": "f6bf14410380f74e6bf5712740edac579b75a454cacfce5894d00633fec2addd",
     "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_concept.png"
@@ -24,7 +24,30 @@
         "art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png"
       ],
       "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Embercourt town painting, used for style and building designs only."
-    }
+    },
+    "painted_on": {
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+      "source_sha256": "2d5211ba74ab97dea1440c7446b789819f5fc07a2c20b9f5014e07afef0db795"
+    },
+    "revisions": [
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "from_sha256": "2d5211ba74ab97dea1440c7446b789819f5fc07a2c20b9f5014e07afef0db795",
+        "change": "Level natural ground painted in at the plots: the buildings were each painted with a shelf of their own under them, which the layer does not keep, so on steep ground they hung over cliff faces and slopes. One unmasked edit of the backdrop, marked with a band at the foot of every plot's buildings; it is taken only near the bands, and the basin, the locks' falls and the beacons stay as they were. Plots that stand on water or on their own piles have no band (building_dev_shipyard, embercourt_t7_1). The edit was also asked for ground under the serpent pen, which stands in the basin; the blend leaves that plot out. The buildings are cut against the backdrop they were painted on (painted_on) and drawn over this one.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_shelves_edit.png",
+        "edit_sha256": "754a922d6e7efcea9f5c9797c7a41298702f2e5ba70c09e53fb1140fede535da",
+        "markup_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_shelves_markup.png",
+        "markup_sha256": "0db1504c8a92e5ef3c72dbdedf1602ef508d62851ed2b28dfaa4fd4d7d61cead",
+        "bands_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_shelves_bands.png",
+        "bands_sha256": "8021d87c1d4386f1b3a18a459fbad2f0bf2d4c425c6b5020b33e609786f17ad4",
+        "keep_mask_paths": [
+          "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_shelves_keep.png"
+        ],
+        "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_shelves.prompt.txt",
+        "tool": "tools/town_plot_shelves.py (marks, blend); imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask with the marks as markup, quality high, complexity high. lock_gorge_shelves_keep.png is the water, falls and lamps of the effect mask at the master's size.",
+        "date": "2026-11-10"
+      }
+    ]
   },
   "cut": {
     "plot_reach": 20,

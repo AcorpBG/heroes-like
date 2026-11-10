@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty cirque (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the cirque around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the cirque was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2.png",
-    "source_sha256": "e09ed4b9d342071178c681c82aeaf9164c9ddd807654c0963327db1a16fd067b",
+    "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v3.png",
+    "source_sha256": "765e06661efbfecd2f60cf48c92706726aa387f230bc193f9641cf6fdca778fd",
     "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_concept.png"
@@ -40,6 +40,24 @@
         "keep_mask_sha256": "4d9e219945f9e6d9e486433d12c689d504c6d843fe7f86cba07435d24a28368e",
         "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2.prompt.txt",
         "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask, quality high, complexity high; white in the keep mask is blended back from the earlier backdrop with a 4-pixel feather",
+        "date": "2026-11-10"
+      },
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2.png",
+        "from_sha256": "e09ed4b9d342071178c681c82aeaf9164c9ddd807654c0963327db1a16fd067b",
+        "change": "Level natural ground painted in at the plots: the buildings were each painted with a shelf of their own under them, which the layer does not keep, so on steep ground they hung over cliff faces and slopes. One unmasked edit of the backdrop, marked with a band at the foot of every plot's buildings; it is taken only near the bands, and the lake, the fall and the top of the sky stay as they were. Plots that stand on water or on their own piles have no band (building_dev_shipyard). The marks of this edit were drawn round each plot's whole outline, by an earlier version of the tool; the bands of the blend are the tool's. The buildings are cut against the backdrop they were painted on (painted_on) and drawn over this one.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_shelves_edit.png",
+        "edit_sha256": "757918ef3cc0960c6d52f8c6bba420f8e69f7f7acc8def272eee7374f20c7253",
+        "markup_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_shelves_markup.png",
+        "markup_sha256": "d2cb41c404eddab1fc28db31c51921bacb4df7bcc9eb6931843eb6331c6b9203",
+        "bands_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_shelves_bands.png",
+        "bands_sha256": "d79e2291a8717944d418bd06f633f363c2754c8c8180525e58a07f7d0a7072bf",
+        "keep_mask_paths": [
+          "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_shelves_keep.png",
+          "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2_keep.png"
+        ],
+        "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_shelves.prompt.txt",
+        "tool": "tools/town_plot_shelves.py (marks, blend); imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask with the marks as markup, quality high, complexity high. sun_cirque_shelves_keep.png is the water, falls and lamps of the effect mask at the master's size.",
         "date": "2026-11-10"
       }
     ]
