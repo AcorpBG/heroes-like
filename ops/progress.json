@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-art-brasshollow-boatworks-lower-20261110",
- "currentSliceTitle": "Brasshollow boatworks repainted lower, clear of the T3 hall",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T07:45:42Z",
+ "currentSliceTitle": "Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T07:47:00Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-art-brasshollow-boatworks-lower-20261110",
-   "title": "Brasshollow boatworks repainted lower, clear of the T3 hall",
-   "status": "in_progress",
-   "goal": "The first Brasshollow Shipyard painting rose onto the terrace and hid 27-49% of the T3 hall. Repaint it as a masked edit on the cliff face under the market terrace, nothing above the cliff lip; matte, package, built picture. Owner, 2026-11-10: repaint it lower.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.",
+   "commit": "06e7f1832"
   },
   {
    "id": "ai-shipyard-needs-20261110",

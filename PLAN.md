@@ -48,7 +48,6 @@ None open.
 
 ## Open work
 
-- `town-art-brasshollow-boatworks-lower-20261110` (in progress): The first Brasshollow Shipyard painting rose onto the terrace and hid 27-49% of the T3 hall. Repaint it as a masked edit on the cliff face under the market terrace, nothing above the cliff lip; matte, package, built picture. Owner, 2026-11-10: repaint it lower. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -58,6 +57,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.
 - 2026-11-10 `ai-shipyard-needs-20261110` (e3eb20d58): A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one; 12 of 143 islands games had changed with no Shipyard built, one to the day cap.
 - 2026-11-10 `town-art-shipyards-20261110` (097ec7b06): Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.
 - 2026-11-10 `ai-shipyard-main-army-20261110` (882bf8251): Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, at that army's worth against the Shipyard and boat price, and build none before day 8. Any idle hero set it off before.
