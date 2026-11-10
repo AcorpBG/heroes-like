@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-skirmish-setup-rework-20261110",
- "currentSliceTitle": "Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.",
+ "currentSliceId": "town-art-quality-pass-20261110",
+ "currentSliceTitle": "Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T12:44:49Z",
+ "updatedAt": "2026-11-10T12:52:18Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-quality-pass-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.",
+   "commit": "f59c98e13"
+  },
   {
    "id": "ui-skirmish-setup-rework-20261110",
    "status": "completed",

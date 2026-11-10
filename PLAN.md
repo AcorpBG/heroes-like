@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.
 - 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.
