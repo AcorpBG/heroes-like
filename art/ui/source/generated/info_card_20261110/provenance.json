@@ -27,5 +27,5 @@
       "runtime_tool": "tools/build_info_card_panel.py"
     }
   ],
-  "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are kept beside this file in the owner's checkout."
+  "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py."
 }

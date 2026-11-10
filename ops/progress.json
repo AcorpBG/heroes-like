@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-tooltip-card-art-20261110",
- "currentSliceTitle": "Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T11:33:39Z",
+ "currentSliceId": "tooling-source-archive-snapshot-20261110",
+ "currentSliceTitle": "Source art made since 14 October goes into the archive",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T11:41:53Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "tooling-source-archive-snapshot-20261110",
+   "title": "Source art made since 14 October goes into the archive",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-10: source art belongs in the source archive, not in temp folders. Write an incremental snapshot of the owner's checkout (unit icon close-ups, information card, town overhaul, spell and battle effect sources made since 2026-10-14) with tools/archive_source_material.py, and make the provenance notes name the archive.",
+   "docs": [
+    "docs/source-material-storage-map.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ui-tooltip-card-art-20261110",
    "status": "completed",

@@ -18,8 +18,8 @@ field note and a walnut plaque with a crimson banner.
 
 - `art/ui/source/generated/info_card_20261110/` holds the approved mockup, the
   empty panel generated from it, both prompts and `provenance.json`. The PNG
-  sources are not tracked (`art/*/source/**/*.png` is ignored); they stay in the
-  owner's checkout.
+  sources are not tracked (`art/*/source/**/*.png` is ignored); they are in the
+  source art archive (`docs/source-material-storage-map.md`).
 - `tools/build_info_card_panel.py` cuts the two nine-slice frames from the panel:
   `art/ui/runtime/overworld/info_card.png` (corners of 48 px, the report) and
   `info_card_small.png` (corners of 28 px, the hover card). It keeps the four
@@ -79,7 +79,7 @@ painted.
   portrait, keeping its design: `art/units/icon_busts/<unit_id>.png`, 160 pixels,
   listed under `icons` in the same JSON. `tools/build_unit_icon_busts.py` scales
   the 1024 pixel sources (`art/units/source/generated/icon_busts_20261110`, with the
-  prompt and `provenance.json`; the PNG sources are not tracked).
+  prompt and `provenance.json`; the PNG sources are in the source art archive).
 - `UnitPortraitTexture.bust_for_unit` returns the painted icon if the unit has one,
   else the crop; the report shows it at 56 pixels in a gold-framed tile on a
   backing lighter than the card, so a dark-cloaked unit keeps its outline.

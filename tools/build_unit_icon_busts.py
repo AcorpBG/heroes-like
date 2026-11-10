@@ -51,7 +51,7 @@ def main() -> None:
         "prompt_file": "unit_icon_bust.prompt.txt",
         "input": "image 1 is the unit's portrait",
         "runtime_tool": "tools/build_unit_icon_busts.py",
-        "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are kept beside this file in the owner's checkout.",
+        "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
         "items": items,
     }
     (SOURCE / "provenance.json").write_text(json.dumps(provenance, indent=1) + "\n", encoding="utf-8", newline="\n")
