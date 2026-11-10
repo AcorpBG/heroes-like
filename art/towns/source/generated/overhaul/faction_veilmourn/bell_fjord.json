@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty fjord (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the fjord around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the fjord was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records. Two buildings the model painted wider than their plot were repainted into a narrower box, which box records; their earlier stages scale from it.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
-    "source_sha256": "df9bd04fcf1e72c50c5c19258352e3df302775288fb7183041ac301f4ec82ff1",
+    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3.png",
+    "source_sha256": "a0f0b69f2b64fc3e417d86ff2f92a2a25e2996f18812d23f90abfd148c57e7eb",
     "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.png",
@@ -48,16 +48,32 @@
         "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.prompt.txt",
         "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
         "date": "2026-11-10"
+      },
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
+        "from_sha256": "df9bd04fcf1e72c50c5c19258352e3df302775288fb7183041ac301f4ec82ff1",
+        "change": "The land repainted with a cleaner hand: the slopes were covered in fine diagonal hatching and criss-crossed by thin fog wisps. One unmasked edit of the second backdrop that keeps the layout (forms moved by under 1 pixel): clear rock planes, turf tops lighter than the faces, a few broad mist banks. The sea, the sky, the ships, the jetty and the falls were blended back from the second backdrop through the keep mask, so the effect mask still fits. The buildings are cut against the second backdrop (painted_on).",
+        "edit_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3_edit.png",
+        "edit_sha256": "ad804db65e74bea9fc8e26b012d6e769de7de63f52187b2a1ff905851e1ac2d3",
+        "keep_mask_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3_keep.png",
+        "keep_mask_sha256": "6f7999f8570481c3fb9854a4bc58a88ebaa6a4d99ee9444e766b96f9021eb941",
+        "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v3.prompt.txt",
+        "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask, quality high, complexity high; white in the keep mask is blended back from the earlier backdrop with a 4-pixel feather",
+        "date": "2026-11-10"
       }
-    ]
+    ],
+    "painted_on": {
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
+      "source_sha256": "df9bd04fcf1e72c50c5c19258352e3df302775288fb7183041ac301f4ec82ff1"
+    }
   },
   "cut": {
     "plot_reach": 20,
     "alpha_low": 0.35,
     "alpha_high": 0.8,
-    "skirt_radius": 12,
-    "skirt_rise": 6,
-    "skirt_strength": 0.85
+    "skirt_radius": 4,
+    "skirt_rise": 2,
+    "skirt_strength": 0.4
   },
   "grounding": "Painted into the empty fjord on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
   "curation": "Owner-approved bell-fjord set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
@@ -1936,5 +1952,6 @@
     "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
     "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
     "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
-  }
+  },
+  "sources": "The paintings, mattes, masks and reference crops are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py."
 }

@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty cirque (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the cirque around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the cirque was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
-    "source_sha256": "dd07b324aea99c12d89bb488b161a91a6195c64289ab27b238b265bcb588816e",
+    "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2.png",
+    "source_sha256": "e09ed4b9d342071178c681c82aeaf9164c9ddd807654c0963327db1a16fd067b",
     "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_concept.png"
@@ -24,15 +24,33 @@
         "art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png"
       ],
       "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Sunvault town painting, used for style and building designs only."
-    }
+    },
+    "painted_on": {
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+      "source_sha256": "dd07b324aea99c12d89bb488b161a91a6195c64289ab27b238b265bcb588816e"
+    },
+    "revisions": [
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "from_sha256": "dd07b324aea99c12d89bb488b161a91a6195c64289ab27b238b265bcb588816e",
+        "change": "The rock of the whole cirque repainted with a crisper hand: the first backdrop had soft, blurred rock faces covered in long diagonal smeary streaks. One unmasked edit of the first backdrop that keeps the layout (forms moved by under 1 pixel); the lake, the fall and the top of the sky were blended back from the first backdrop through the keep mask. The buildings were painted on the first backdrop and are cut against it (painted_on); they are drawn over this one.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2_edit.png",
+        "edit_sha256": "3b308e4aae26a947585796302dd68863b2dd8ec95b4418153d5432850cb5a050",
+        "keep_mask_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2_keep.png",
+        "keep_mask_sha256": "4d9e219945f9e6d9e486433d12c689d504c6d843fe7f86cba07435d24a28368e",
+        "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_v2.prompt.txt",
+        "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask, quality high, complexity high; white in the keep mask is blended back from the earlier backdrop with a 4-pixel feather",
+        "date": "2026-11-10"
+      }
+    ]
   },
   "cut": {
     "plot_reach": 20,
     "alpha_low": 0.35,
     "alpha_high": 0.8,
-    "skirt_radius": 12,
-    "skirt_rise": 6,
-    "skirt_strength": 0.85
+    "skirt_radius": 4,
+    "skirt_rise": 2,
+    "skirt_strength": 0.4
   },
   "grounding": "Painted into the empty cirque on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
   "curation": "Owner-approved sun-cirque set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
@@ -1908,5 +1926,6 @@
     "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
     "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
     "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
-  }
+  },
+  "sources": "The paintings, mattes, masks and reference crops are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py."
 }

@@ -10,8 +10,8 @@
   },
   "method": "Each building is a masked edit of the empty swamp (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the swamp around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the swamp was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v2.png",
-    "source_sha256": "8594482de210c40d4f774c3bdb8182f445fff6401936659679b3322372221f23",
+    "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v3.png",
+    "source_sha256": "7e7c6d92897ba3c32fc31d351b66ea0bbff4fdca4c06d161d641e1e68f90726a",
     "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_concept.png"
@@ -37,6 +37,18 @@
         "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v2.prompt.txt",
         "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit, quality medium, complexity high",
         "date": "2026-11-10"
+      },
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v2.png",
+        "from_sha256": "8594482de210c40d4f774c3bdb8182f445fff6401936659679b3322372221f23",
+        "change": "The swamp floor repainted with definition: the second backdrop had lost its hatching but left the ground soft and featureless, so the dark buildings did not stand out. One unmasked edit of the second backdrop that keeps the layout (forms moved by under 1 pixel): crisp hummocks, tussocks, mud and clean pool edges, lighter tops against dark water. The foreground tree and the top of the sky were blended back from the second backdrop through the keep mask, so the foreground mask still fits.",
+        "edit_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v3_edit.png",
+        "edit_sha256": "da25ed5bbc970bdeb358705429ba2c1d020a2aa6cf27d2e95ea2b3e34d6ff3fe",
+        "keep_mask_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v3_keep.png",
+        "keep_mask_sha256": "aca0cff25f4ad15e2a833aa763be12197be2b8dc0aeb35115bc780e9c067750a",
+        "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v3.prompt.txt",
+        "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit without a mask, quality high, complexity high; white in the keep mask is blended back from the earlier backdrop with a 4-pixel feather",
+        "date": "2026-11-10"
       }
     ],
     "foreground": {
@@ -50,9 +62,9 @@
     "plot_reach": 20,
     "alpha_low": 0.35,
     "alpha_high": 0.8,
-    "skirt_radius": 12,
-    "skirt_rise": 6,
-    "skirt_strength": 0.85
+    "skirt_radius": 4,
+    "skirt_rise": 2,
+    "skirt_strength": 0.4
   },
   "grounding": "Painted into the empty swamp on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
   "curation": "Owner-approved dusk-fen set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
@@ -681,20 +693,21 @@
         333
       ],
       "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen.png",
-      "source_sha256": "05beb4fbfea317cf45499fcbcab6955d2c422ac2260ff1e80a9dbaf5203ba2f2",
+      "source_sha256": "dbe2f69bfbe9586c66cdb3cd131fa5f7f62d350aef70741daa5804086f21efba",
       "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
       ],
+      "generation_date": "2026-11-10",
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen_matte.png",
-        "sha256": "d7ddd5461669902cb1c75ce31b124ea43e8605d15bf0fc18253b5d09db2a6a8b",
+        "sha256": "74c1716df11dd05c9c5808d0ae8efd91a3027d249483ef17f921fcf5a1c9f713",
         "window": [
-          1115,
-          249,
-          304,
-          221
+          1136,
+          247,
+          301,
+          222
         ]
       }
     },
@@ -714,20 +727,21 @@
         272
       ],
       "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen.png",
-      "source_sha256": "9111b18db0b9357efc61ac9d12d5928320922b1e123e3a9cd5ebd1f3a44c753e",
+      "source_sha256": "0b9f570ed7de0fddacc2d8d06ac2ad49d46d121a4ca5c8b0ba54795077ae2fb1",
       "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_storehouse_2_crop.png"
       ],
+      "generation_date": "2026-11-10",
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen_matte.png",
-        "sha256": "e5c9a1516f2e96af788c6ddddf095fc7f6d42b8b702e76f3ad56d9c3b340e5b4",
+        "sha256": "cfcea17de69129386ed3f23eadc3cc750cf38669bf54a12acd4b7d61d2f88a11",
         "window": [
-          1166,
-          303,
-          211,
-          157
+          1175,
+          306,
+          201,
+          153
         ]
       }
     },
@@ -1638,20 +1652,21 @@
         319
       ],
       "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen.png",
-      "source_sha256": "9646da9e17c654d67214571da9427a90aad6387a1f6d24c9c1065cc62ac6ba75",
+      "source_sha256": "09253b99eea7daae43dd6fc0cd53e9a110e9bc7925448a384ba860c4d8f3ece1",
       "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
       ],
+      "generation_date": "2026-11-10",
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen_matte.png",
-        "sha256": "9745d31b4171e25650c258e61641cb675c2719a4a5f80c63a11b753eb1f66111",
+        "sha256": "ec050fce11eb69295b5a723101b810a01cf1b489f8481f5408fc689d4153e586",
         "window": [
-          855,
+          828,
           194,
-          255,
-          210
+          296,
+          214
         ]
       }
     },
@@ -1671,20 +1686,21 @@
         275
       ],
       "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen.png",
-      "source_sha256": "f05d0fdb7f3d79ac32de25b283333ddce407b13bdafd18fd73bd872a27712d3e",
+      "source_sha256": "d7a0f8b8c4da28e5a425d0d0bfebabd92d7b53029bc8246dd13430d7cf7059ee",
       "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
         "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t5_1_upgrade_crop.png"
       ],
+      "generation_date": "2026-11-10",
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen_matte.png",
-        "sha256": "cddaf971d748a6fccd0e712e626b8b61d3f0c93b9c3b07cae90bd4fcb7e8abd8",
+        "sha256": "7ee641e9d1f561f18a625bf1c2f7c75c17c7ad9f8eac87d80666caa53378a454",
         "window": [
-          891,
-          229,
-          187,
-          174
+          888,
+          234,
+          191,
+          172
         ]
       }
     },
@@ -1930,5 +1946,6 @@
     "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
     "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
     "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
-  }
+  },
+  "sources": "The paintings, mattes, masks and reference crops are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py."
 }

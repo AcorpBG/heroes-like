@@ -34,7 +34,12 @@
           25.0,
           -6.0
         ],
-        "gain": 0.75
+        "gain": 0.5,
+        "shape": [
+          0.8,
+          3.2
+        ],
+        "soft": 1.0
       },
       "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_lock_gorge_fx_mask.png",
       "plots": [
@@ -1055,7 +1060,12 @@
           22.0,
           -4.0
         ],
-        "gain": 0.75
+        "gain": 0.45,
+        "shape": [
+          0.8,
+          3.4
+        ],
+        "soft": 1.0
       },
       "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_sunvault_sun_cirque_fx_mask.png"
     },
@@ -1406,7 +1416,12 @@
           -14.0,
           3.0
         ],
-        "gain": 0.75
+        "gain": 0.5,
+        "shape": [
+          0.8,
+          3.2
+        ],
+        "soft": 1.0
       },
       "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_thornwake_root_ravine_fx_mask.png",
       "layers_under_stage_light": true

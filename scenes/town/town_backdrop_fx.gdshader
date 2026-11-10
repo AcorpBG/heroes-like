@@ -37,6 +37,11 @@ uniform vec2 mist_wind = vec2(-20.0, 7.9);
 uniform vec3 mist_color : source_color = vec3(0.47, 0.48, 0.57);
 uniform float mist_gain = 0.75;
 uniform float mist_thin = 0.15;
+// The streamers' shape: their length and thickness as multiples of the bell fjord's long thin
+// wisps (1, 1); a thicker, shorter shape drifts as soft patches. And how soft their edges are:
+// 0 keeps the wisps' crisp edges and fine strands, 1 blends them out into haze.
+uniform vec2 mist_shape = vec2(1.0, 1.0);
+uniform float mist_soft = 0.0;
 uniform float lantern_strength = 0.0;
 uniform float lantern_gain = 0.24;
 // Screen pixels per flicker cell, so neighbouring lamps flicker apart.
@@ -113,14 +118,16 @@ void fragment() {
 			vec2 along = normalize(mist_wind);
 			vec2 across = vec2(-along.y, along.x);
 			vec2 w = vec2(dot(p, along) - length(mist_wind) * t, dot(p, across));
-			vec2 warp = vec2(town_noise(w / vec2(380.0, 90.0) + vec2(0.0, t * 0.04)),
-					town_noise(w / vec2(380.0, 90.0) + vec2(5.3, -t * 0.03))) - 0.5;
-			vec2 sw = w + warp * vec2(120.0, 26.0);
-			float streak = town_noise(sw / vec2(150.0, 22.0)) * 0.65 + town_noise(sw / vec2(70.0, 11.0) + vec2(9.1, 2.7)) * 0.35;
+			vec2 warp = vec2(town_noise(w / (vec2(380.0, 90.0) * mist_shape) + vec2(0.0, t * 0.04)),
+					town_noise(w / (vec2(380.0, 90.0) * mist_shape) + vec2(5.3, -t * 0.03))) - 0.5;
+			vec2 sw = w + warp * vec2(120.0, 26.0) * mist_shape;
+			float streak = town_noise(sw / (vec2(150.0, 22.0) * mist_shape)) * 0.65
+					+ town_noise(sw / (vec2(70.0, 11.0) * mist_shape) + vec2(9.1, 2.7)) * 0.35;
 			float bank = smoothstep(0.30, 0.70, town_noise(w / vec2(700.0, 240.0) + vec2(t * 0.01, 1.3)));
-			// Fine strands within each streamer, as the painted wisps have.
-			float strands = town_noise(sw / vec2(60.0, 5.0) + vec2(3.3, 7.7));
-			float density = smoothstep(0.52, 0.80, streak) * mix(0.3, 1.0, bank) * mix(0.55, 1.0, strands);
+			// Fine strands within each streamer, as the painted wisps have; soft haze has none.
+			float strands = mix(town_noise(sw / (vec2(60.0, 5.0) * mist_shape) + vec2(3.3, 7.7)), 1.0, mist_soft);
+			float density = smoothstep(mix(0.52, 0.36, mist_soft), mix(0.80, 0.96, mist_soft), streak)
+					* mix(0.3, 1.0, bank) * mix(0.55, 1.0, strands);
 			float painted_fog = town_mist(rgb);
 			rgb = mix(rgb, mist_color, clamp(fog * density * mist_gain, 0.0, 1.0));
 			// Out of the banks the painted fog thins, so it seems to move with them.

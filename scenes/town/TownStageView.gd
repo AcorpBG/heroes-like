@@ -31,8 +31,10 @@ const TOWN_FX_PARAMETERS := {
 	"wisps": [[&"heat", &"wisp_strength"]],
 }
 # The drifting fog as the shader has it: the bell fjord's. A faction layout's stage_mist may give
-# its own colour, wind (backdrop pixels per second) and cover, to match its painting.
-const TOWN_FX_MIST_DEFAULTS := {"color": Color(0.47, 0.48, 0.57), "wind": Vector2(-20.0, 7.9), "gain": 0.75}
+# its own colour, wind (backdrop pixels per second) and cover, to match its painting, and the
+# streamers' shape (length and thickness against the fjord's long thin wisps) and edge softness.
+const TOWN_FX_MIST_DEFAULTS := {"color": Color(0.47, 0.48, 0.57), "wind": Vector2(-20.0, 7.9), "gain": 0.75,
+	"shape": Vector2(1.0, 1.0), "soft": 0.0}
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
 const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"
@@ -358,6 +360,11 @@ func _town_fx_mist() -> Dictionary:
 			mist["wind"] = Vector2(float(wind[0]), float(wind[1]))
 		if configured.has("gain"):
 			mist["gain"] = clampf(float(configured["gain"]), 0.0, 1.0)
+		var shape: Variant = configured.get("shape", [])
+		if shape is Array and shape.size() == 2:
+			mist["shape"] = Vector2(clampf(float(shape[0]), 0.2, 6.0), clampf(float(shape[1]), 0.2, 6.0))
+		if configured.has("soft"):
+			mist["soft"] = clampf(float(configured["soft"]), 0.0, 1.0)
 	return mist
 
 func _town_fx_uses_layer(strengths: Dictionary, layer: StringName) -> bool:
@@ -385,6 +392,8 @@ func _apply_town_fx_parameters(strengths: Dictionary) -> void:
 		backdrop_material.set_shader_parameter(&"mist_color", mist["color"])
 		backdrop_material.set_shader_parameter(&"mist_wind", mist["wind"])
 		backdrop_material.set_shader_parameter(&"mist_gain", mist["gain"])
+		backdrop_material.set_shader_parameter(&"mist_shape", mist["shape"])
+		backdrop_material.set_shader_parameter(&"mist_soft", mist["soft"])
 	for fx_name in TOWN_FX_PARAMETERS:
 		for target in TOWN_FX_PARAMETERS[fx_name]:
 			var material: ShaderMaterial = _town_fx_materials.get(target[0], null)
