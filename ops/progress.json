@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "art-unit-icon-closeups-20261110",
- "currentSliceTitle": "Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
+ "currentSliceId": "town-art-sunvault-20261110",
+ "currentSliceTitle": "Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T10:53:25Z",
+ "updatedAt": "2026-11-10T11:17:50Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-sunvault-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.",
+   "commit": "711b60cb0"
+  },
   {
    "id": "art-unit-icon-closeups-20261110",
    "status": "completed",
