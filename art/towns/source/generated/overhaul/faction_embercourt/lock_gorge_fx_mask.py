@@ -1,8 +1,9 @@
 """Builds the lock gorge's stage-effect mask, faction_embercourt_lock_gorge_fx_mask.png.
 
 Red is the water (the harbour basin and the river above the locks), green the water falling
-over the four lock gates, blue the fire baskets on the lock piers with their glow, and alpha is
-1/255 everywhere: no drifting fog, and no import step treats the mask as see-through.
+over the four lock gates, blue the fire baskets on the lock piers with their glow, and alpha how
+thick the drifting haze is: spray around each fall and the golden haze of the far gorge (never
+below 1/255, so no import step treats the mask as see-through).
 The shapes are drawn by hand for this painting; GrabCut finds the shores inside them, and the
 falls and the fires are picked by their paint. Run from anywhere; it writes the runtime mask.
 """
@@ -32,6 +33,18 @@ ZONE_FADE = 14.0
 
 # The falls: a box around the white water under each lock gate, from the top lock down.
 FALLS = [(650, 288, 740, 324), (704, 354, 820, 396), (768, 440, 900, 498), (828, 546, 1004, 606)]
+# Spray hangs around each fall, a little above and downwind (to the right) of it: the fall's box
+# grown by these shares of its width and height, faded out softly.
+SPRAY_GROW = (0.8, 1.5)
+SPRAY_SHIFT = (18, -14)
+SPRAY_SOFT = 20.0
+# The golden haze the painting lays in the far gorge, above the locks: drifting haze at this thickness.
+HAZE = [(250, 118), (520, 104), (760, 112), (840, 170), (800, 250), (690, 300), (520, 330), (380, 300), (270, 232)]
+HAZE_THICKNESS = 1.0
+HAZE_SOFT = 28.0
+# Thinner bands of the same haze drift across the dark walls of the gorge around the locks.
+GORGE = [(560, 236), (860, 222), (1090, 236), (1150, 400), (1090, 560), (900, 600), (700, 560), (600, 420)]
+GORGE_THICKNESS = 0.7
 # The fire baskets stand on the lock piers: look for their flames inside this box.
 FIRES = (590, 230, 1030, 520)
 
@@ -108,17 +121,26 @@ def fires_mask():
     return flame, np.clip(soft(glow, 6.0) * 1.2, 0, 1)
 
 
+def spray_mask():
+    spray = np.zeros((H, W), np.float32)
+    for x0, y0, x1, y1 in FALLS:
+        cx, cy = (x0 + x1) / 2 + SPRAY_SHIFT[0], (y0 + y1) / 2 + SPRAY_SHIFT[1]
+        rx, ry = (x1 - x0) / 2 * (1 + SPRAY_GROW[0]), (y1 - y0) / 2 * (1 + SPRAY_GROW[1])
+        cv2.ellipse(spray, (int(cx), int(cy)), (int(rx), int(ry)), 0, 0, 360, 1.0, -1)
+    return np.clip(soft(spray, SPRAY_SOFT), 0, 1)
+
+
 def main():
     falls = falls_mask()
     water, r = water_mask(falls)
     g = soft(falls, 0.8)
     flame, fires = fires_mask()
     b = fires * (1.0 - r) * (1.0 - np.clip(g * 1.5, 0, 1))
-    a = np.full((H, W), 1.0 / 255.0, np.float32)
-    out = np.stack([r, g, b, a], axis=2)
+    a = np.maximum.reduce([spray_mask(), soft(poly(HAZE), HAZE_SOFT) * HAZE_THICKNESS, soft(poly(GORGE), HAZE_SOFT) * GORGE_THICKNESS])
+    out = np.stack([r, g, b, (1.0 + 254.0 * a) / 255.0], axis=2)
     Image.fromarray(np.clip(out * 255.0 + 0.5, 0, 255).astype(np.uint8), 'RGBA').save(OUT, optimize=True)
     n = cv2.connectedComponents(flame.astype(np.uint8), connectivity=8)[0] - 1
-    print('water %.1f%%, falls %.2f%%, fires %d' % (water.mean() * 100, (falls > 0.3).mean() * 100, n))
+    print('water %.1f%%, falls %.2f%%, fires %d, haze over a third %.1f%%' % (water.mean() * 100, (falls > 0.3).mean() * 100, n, (a > 0.33).mean() * 100))
 
 
 if __name__ == '__main__':

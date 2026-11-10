@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-shared-tile-description-20261110",
- "currentSliceTitle": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T09:08:01Z",
+ "currentSliceId": "town-stage-haze-embercourt-20261110",
+ "currentSliceTitle": "Embercourt town: drifting haze and spray in the lock gorge",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T09:22:49Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-stage-haze-embercourt-20261110",
+   "title": "Embercourt town: drifting haze and spray in the lock gorge",
+   "status": "in_progress",
+   "goal": "Measured beside Brasshollow and Veilmourn, Embercourt's effects moved only in spots. Add a gorge-wide layer: the mist effect with a per-town colour, wind and cover (layout stage_mist), haze zones in the far gorge and around the locks and spray at the falls in the mask's alpha. Owner, 2026-11-10: yes, add it.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ui-shared-tile-description-20261110",
    "status": "completed",

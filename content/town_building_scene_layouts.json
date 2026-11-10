@@ -20,8 +20,21 @@
       "stage_effects": {
         "water": 1.0,
         "falls": 1.0,
+        "mist": 1.0,
         "beacons": 1.0,
         "windows": 0.6
+      },
+      "stage_mist": {
+        "color": [
+          0.97,
+          0.78,
+          0.58
+        ],
+        "wind": [
+          25.0,
+          -6.0
+        ],
+        "gain": 0.75
       },
       "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_lock_gorge_fx_mask.png",
       "plots": [

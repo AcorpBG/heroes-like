@@ -30,6 +30,9 @@ const TOWN_FX_PARAMETERS := {
 	"beacons": [[&"backdrop", &"lantern_strength"]],
 	"wisps": [[&"heat", &"wisp_strength"]],
 }
+# The drifting fog as the shader has it: the bell fjord's. A faction layout's stage_mist may give
+# its own colour, wind (backdrop pixels per second) and cover, to match its painting.
+const TOWN_FX_MIST_DEFAULTS := {"color": Color(0.47, 0.48, 0.57), "wind": Vector2(-20.0, 7.9), "gain": 0.75}
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
 const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"
@@ -335,6 +338,21 @@ func _town_fx_mask(path: String) -> Texture2D:
 		_town_fx_mask_textures[path] = texture
 	return _town_fx_mask_textures[path]
 
+func _town_fx_mist() -> Dictionary:
+	# The faction layout's stage_mist over the defaults.
+	var mist := TOWN_FX_MIST_DEFAULTS.duplicate()
+	var configured: Variant = _building_scene_faction_layout().get("stage_mist", {})
+	if configured is Dictionary:
+		var color: Variant = configured.get("color", [])
+		if color is Array and color.size() == 3:
+			mist["color"] = Color(float(color[0]), float(color[1]), float(color[2]))
+		var wind: Variant = configured.get("wind", [])
+		if wind is Array and wind.size() == 2:
+			mist["wind"] = Vector2(float(wind[0]), float(wind[1]))
+		if configured.has("gain"):
+			mist["gain"] = clampf(float(configured["gain"]), 0.0, 1.0)
+	return mist
+
 func _town_fx_uses_layer(strengths: Dictionary, layer: StringName) -> bool:
 	for fx_name in strengths:
 		if float(strengths[fx_name]) > 0.0:
@@ -354,6 +372,12 @@ func _apply_town_fx_parameters(strengths: Dictionary) -> void:
 		material.set_shader_parameter(&"motion_enabled", motion)
 		if layer != &"buildings":
 			material.set_shader_parameter(&"fx_mask", mask)
+	var backdrop_material: ShaderMaterial = _town_fx_materials.get(&"backdrop", null)
+	if backdrop_material != null:
+		var mist := _town_fx_mist()
+		backdrop_material.set_shader_parameter(&"mist_color", mist["color"])
+		backdrop_material.set_shader_parameter(&"mist_wind", mist["wind"])
+		backdrop_material.set_shader_parameter(&"mist_gain", mist["gain"])
 	for fx_name in TOWN_FX_PARAMETERS:
 		for target in TOWN_FX_PARAMETERS[fx_name]:
 			var material: ShaderMaterial = _town_fx_materials.get(target[0], null)
