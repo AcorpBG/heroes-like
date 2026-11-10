@@ -54,7 +54,6 @@ None open.
 
 ## Open work
 
-- `ui-hero-menu-rework-20261110` (in progress): Owner 2026-11-10: the hero menu on the map and in town as layout B with artifacts on a figure and more slots. Files: scenes/shared/HeroSheet.gd, artifact_slots.hpp and the artifact rules, content/artifacts.json, TownShell.gd, HeroExchangeScreen.gd. See `docs/hero-screen.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -64,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.
 - 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings window, every confirmation window and the hero keys window wear the card frame.
 - 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; the skirmish setup scrolls at larger interface scales.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.

@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-hero-menu-rework-20261110",
- "currentSliceTitle": "Hero menu rework, body artifact slots",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T15:58:13Z",
+ "currentSliceTitle": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T16:10:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-hero-menu-rework-20261110",
-   "title": "Hero menu rework, body artifact slots",
-   "status": "in_progress",
-   "goal": "Owner 2026-11-10: the hero menu on the map and in town as layout B with artifacts on a figure and more slots. Files: scenes/shared/HeroSheet.gd, artifact_slots.hpp and the artifact rules, content/artifacts.json, TownShell.gd, HeroExchangeScreen.gd.",
-   "docs": [
-    "docs/hero-screen.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.",
+   "commit": "1d47aabab"
   },
   {
    "id": "ui-window-card-frames-20261110",
