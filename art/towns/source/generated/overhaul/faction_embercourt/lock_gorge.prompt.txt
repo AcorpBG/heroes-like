@@ -1,0 +1,23 @@
+The empty gorge was painted in two masked edits (gpt-image-2.6-sunburst through the imggen skill, 2048x1152, quality medium).
+
+1. Image 1: lock_gorge_concept.png (the owner's concept C). Complexity high. Mask boxes (x,y,w,h) around every built thing: 60,20,190,300; 430,80,330,135; 265,190,190,110; 240,330,200,120; 0,410,250,130; 330,225,520,375; 790,500,160,140; 0,520,320,280; 200,655,300,110; 335,750,535,210; 945,175,305,135; 1230,190,195,110; 1190,95,400,110; 1230,300,200,110; 1600,30,160,180; 1495,185,505,215; 1380,410,250,135; 1340,370,708,510; 990,750,680,360. The whole result is kept: the model repainted the terrain between the boxes a little, so the plots were fitted to this picture, not to the concept.
+
+Prompt:
+Image 1 is a painting of a river town in a deep rocky gorge at golden sunset, seen from high on the right-hand wall: a river comes from the sunset in the far distance, passes under an arched stone bridge and plunges down a rock step through a staircase of four great stone locks with timber gates into a wide dark harbour basin in the foreground. Inside the masked areas only, take the town away: paint the bare land, water and sky that were there before the town was built. Outside the masked areas, change nothing.
+
+Remove, inside the masked areas: the fortified barrage with its towers across the far river; the lantern tower on the rock pinnacle at the upper left; the great hall with its beacon tower on the spur left of the locks, with its side wings; every house, hall, lodge, tower, chapel, arcade and shed on both banks and on the far slopes; the beacon tower on the crag at the upper right; the market stalls and their awnings; in the basin, the round pen with its walls, gates and fire baskets, and the red river drake inside it; the colossal bronze statue with its pedestal, the foundry sheds, forges and chimneys around it; and the shipyard in the foreground with its crane, the hull on the stocks, its sheds and its stone dock.
+
+Where each of them stood, paint the natural ground that would be there: bare ledges, shelves, spurs and crags of warm grey rock with scrub, tufts of dry grass, a few small pines, scree and boulders, continuing the rock around each masked area. The rock pinnacle at the upper left and the crag at the upper right keep their height and end in bare, rough tops. The spur left of the locks keeps its height and ends in a bare, uneven rock shelf above the sheer drop. Where the barrage stood, the far river comes out of the glowing haze between bare rocky shoulders, with the low sun above it. Where the pen stood, the basin is open dark water with long reflections. Where the shipyard stood, the near shore is a bare rocky bank sloping into the water. Where the statue and the foundry stood, the slope is bare rock shelves. Nothing may look like a prepared plot: no paving, no foundations, no walls, no outlines, no markers, no stakes, no stacked materials, no smoke.
+
+Keep the river, the stone bridge, the four locks with their gates, walls, fire baskets and falling water, the stone quay with the moored barges at the left of the basin, and the stairs and paths cut into the rock.
+
+Match the camera, the perspective, the colours, the sunset light, the haze and the painted brushwork of image 1 exactly, so no masked area shows a seam. No text, no lettering, no signature, no people.
+
+2. Image 1: the result of step 1. Complexity low. Mask boxes: 10,300,160,170; 320,265,130,100; 60,465,120,120; 520,630,220,150; 1330,190,100,80; 1780,130,260,190 (leftover smoke and steam). Pasted back inside the same boxes less 8 px, feathered by 6 px.
+
+Prompt:
+Image 1 is a painting of a wild, empty river gorge at golden sunset, seen from high on its right-hand wall: a river comes from the sunset, passes under a stone bridge and falls through a staircase of four stone locks into a dark harbour basin, between bare rocky slopes with scrub and a few pines.
+
+Inside the masked areas only, remove the leftover wisps and plumes of smoke and steam and paint the bare rock, scrub, pines and far hills that continue around each masked area, in the same warm evening light. There is no smoke, no steam and no fire inside the masked areas.
+
+Outside the masked areas, change nothing. Match the colours, light, haze and painted brushwork around each masked area so no seam shows. No text, no lettering, no people, no buildings, no posts, no lanterns.

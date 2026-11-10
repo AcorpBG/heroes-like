@@ -98,9 +98,11 @@ const MAIN_BUILDING_HOTSPOTS := {
 }
 const SCENIC_AMBIENT_LIGHTS := {
 	"faction_embercourt": [
-		{"position": Vector2(0.61, 0.15), "radius": 0.075, "color": Color(1.0, 0.50, 0.16), "strength": 0.78},
-		{"position": Vector2(0.76, 0.43), "radius": 0.065, "color": Color(1.0, 0.42, 0.10), "strength": 0.72},
-		{"position": Vector2(0.83, 0.75), "radius": 0.085, "color": Color(1.0, 0.34, 0.07), "strength": 0.92},
+		# On the lights of the lock gorge: the sunset on the far river, and the fire baskets of the
+		# upper and the lowest lock.
+		{"position": Vector2(0.245, 0.205), "radius": 0.075, "color": Color(1.0, 0.62, 0.26), "strength": 0.74},
+		{"position": Vector2(0.445, 0.31), "radius": 0.060, "color": Color(1.0, 0.50, 0.16), "strength": 0.72},
+		{"position": Vector2(0.566, 0.53), "radius": 0.075, "color": Color(1.0, 0.44, 0.12), "strength": 0.84},
 	],
 	"faction_mireclaw": [
 		{"position": Vector2(0.10, 0.38), "radius": 0.070, "color": Color(0.76, 1.0, 0.22), "strength": 0.76},
@@ -179,7 +181,7 @@ const FACTION_BACKDROP_TEXTURES := {
 }
 const FACTION_DEVELOPMENT_SCENE_PATHS := {
 	"faction_embercourt": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_terraced_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_lock_gorge.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
 	},

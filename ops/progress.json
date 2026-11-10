@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rule-wayside-exchange-weekly-20261110",
- "currentSliceTitle": "The map's Wayside Exchange serves each player one trade a week instead of any time (new visit cadence weekly_per_side); computer players still leave it alone.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T08:20:34Z",
+ "currentSliceId": "town-art-embercourt-lock-gorge-20261110",
+ "currentSliceTitle": "Embercourt town repainted as a lock gorge with a harbour",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T08:36:18Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-embercourt-lock-gorge-20261110",
+   "title": "Embercourt town repainted as a lock gorge with a harbour",
+   "status": "in_progress",
+   "goal": "Repaint Embercourt as the last two towns: an empty river gorge with a lock staircase and harbour basin (owner's pick, concept C), 24 plots planned with the Shipyard from the start, all 52 building stages as masked edits, BiRefNet mattes, package_town_plot_layers.py; TownStageView backdrop and glows. Owner approved about 3.50 USD of imggen.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "rule-wayside-exchange-weekly-20261110",
    "status": "completed",

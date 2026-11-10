@@ -1,0 +1,1914 @@
+{
+  "schema_id": "town_plot_layer_packet_v1",
+  "faction_id": "faction_embercourt",
+  "scene_id": "lock_gorge",
+  "stage": "village",
+  "owner_decision": "2026-11-10: the owner asked for the next town with its harbour planned in from the start, rejected the first frontal concepts as too flat, chose concept C (a deep gorge seen from its right wall, the locks falling into a harbour basin) and approved painting the full Embercourt set into it.",
+  "generation": {
+    "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+    "date": "2026-11-10"
+  },
+  "method": "Each building is a masked edit of the empty gorge (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the gorge around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the gorge was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
+  "backdrop": {
+    "source_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+    "source_sha256": "2d5211ba74ab97dea1440c7446b789819f5fc07a2c20b9f5014e07afef0db795",
+    "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.prompt.txt",
+    "reference_inputs": [
+      "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_concept.png"
+    ],
+    "concept": {
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_concept.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_concept.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/plan_sketch.png",
+        "art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png"
+      ],
+      "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Embercourt town painting, used for style and building designs only."
+    }
+  },
+  "cut": {
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
+  },
+  "grounding": "Painted into the empty gorge on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+  "curation": "Owner-approved lock-gorge set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
+  "plots": {
+    "fort": [
+      420,
+      175,
+      250,
+      95
+    ],
+    "guild": [
+      235,
+      120,
+      140,
+      190
+    ],
+    "embercourt_t2": [
+      205,
+      335,
+      175,
+      110
+    ],
+    "embercourt_t1": [
+      20,
+      415,
+      180,
+      125
+    ],
+    "hall": [
+      395,
+      275,
+      280,
+      260
+    ],
+    "building_dev_training_attack": [
+      470,
+      545,
+      140,
+      85
+    ],
+    "building_dev_growth_1": [
+      180,
+      545,
+      135,
+      140
+    ],
+    "building_wayfarers_hall": [
+      10,
+      600,
+      165,
+      185
+    ],
+    "market": [
+      315,
+      630,
+      280,
+      135
+    ],
+    "embercourt_t6_1": [
+      520,
+      765,
+      400,
+      125
+    ],
+    "building_dev_growth_3": [
+      955,
+      180,
+      145,
+      95
+    ],
+    "embercourt_t5": [
+      1105,
+      200,
+      145,
+      95
+    ],
+    "building_dev_training_defense": [
+      1260,
+      195,
+      160,
+      95
+    ],
+    "storehouse": [
+      1440,
+      300,
+      160,
+      105
+    ],
+    "building_dev_embercourt_unique_2": [
+      1610,
+      62,
+      130,
+      140
+    ],
+    "building_dev_growth_2": [
+      1600,
+      275,
+      158,
+      98
+    ],
+    "building_dev_embercourt_unique_3": [
+      1765,
+      190,
+      225,
+      175
+    ],
+    "embercourt_t3": [
+      1400,
+      420,
+      235,
+      120
+    ],
+    "building_dev_artifact_exchange": [
+      1440,
+      600,
+      250,
+      115
+    ],
+    "building_dev_embercourt_unique_1": [
+      1595,
+      716,
+      160,
+      110
+    ],
+    "building_dev_training_experience": [
+      1350,
+      722,
+      165,
+      95
+    ],
+    "embercourt_t4": [
+      1530,
+      850,
+      230,
+      150
+    ],
+    "embercourt_t7_1": [
+      1765,
+      450,
+      225,
+      425
+    ],
+    "building_dev_shipyard": [
+      1180,
+      830,
+      330,
+      250
+    ]
+  },
+  "buildings": [
+    {
+      "id": "building_dev_hall_4",
+      "plot_id": "hall",
+      "box": [
+        395,
+        275,
+        280,
+        260
+      ],
+      "crop": [
+        146,
+        44,
+        778,
+        722
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4_gorge.png",
+      "source_sha256": "70f4887f0d8c98c62d2cb80f2cc7d89dc6eac43d1c721ac82729d8667273edcd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_hall.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4_gorge_matte.png",
+        "sha256": "1b96d75e543c30577cf3ebb0b158058dc1817559aa87107e55b8073f24e834c5",
+        "window": [
+          296,
+          208,
+          571,
+          382
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_3",
+      "plot_id": "hall",
+      "box": [
+        406,
+        306,
+        258,
+        229
+      ],
+      "crop": [
+        176,
+        102,
+        717,
+        636
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3_gorge.png",
+      "source_sha256": "857d66b2a14b93416c9565aefacf5722caa8d4699107bc2e073e21517402da5d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_hall_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3_gorge_matte.png",
+        "sha256": "0d742987b1b470955133bc2aa552998f68fdc3b355d544303ef2f99daf7f793a",
+        "window": [
+          369,
+          273,
+          349,
+          295
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_2",
+      "plot_id": "hall",
+      "box": [
+        423,
+        343,
+        224,
+        192
+      ],
+      "crop": [
+        224,
+        172,
+        622,
+        533
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2_gorge.png",
+      "source_sha256": "46fdee925a400ab5313cb426029351d9f1195870e6de4327eba3d5ac44c445c9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_hall_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2_gorge_matte.png",
+        "sha256": "ca0680e380d1187c8ca6acd13ae784c1fa793f8886b0b128c658a8e2c9ff7384",
+        "window": [
+          393,
+          311,
+          283,
+          251
+        ]
+      }
+    },
+    {
+      "id": "building_town_hall",
+      "plot_id": "hall",
+      "box": [
+        440,
+        384,
+        190,
+        151
+      ],
+      "crop": [
+        271,
+        250,
+        528,
+        419
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_town_hall_gorge.png",
+      "source_sha256": "cc6e556b9efbb72b461134566061bb92cf0d833b87f8366295b3f14bce009a09",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_town_hall_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_hall_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_town_hall_gorge_matte.png",
+        "sha256": "44f0ced2c9f58f418f770dd35d73936f6938de497cd60100b426a098cd2adfd2",
+        "window": [
+          395,
+          354,
+          266,
+          206
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "box": [
+        420,
+        175,
+        250,
+        95
+      ],
+      "crop": [
+        198,
+        40,
+        694,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_3_gorge.png",
+      "source_sha256": "f0a827c958c081a76d9e57db79beba8fd53cf4559b7a10a057b833f800eb809c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_3_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_fort.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_3_gorge_matte.png",
+        "sha256": "05f9bfa714b3aa2b8b9ec3cd080d968a9fa1aa9b57e29e32b57537cb159b119b",
+        "window": [
+          390,
+          135,
+          310,
+          165
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "box": [
+        420,
+        190,
+        250,
+        80
+      ],
+      "crop": [
+        198,
+        48,
+        694,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_2_gorge.png",
+      "source_sha256": "32c2594cb9c5b4bdd1b92ab89db7604f0b1728fb5d68b6addc225edf10e2dba4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_fort_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_2_gorge_matte.png",
+        "sha256": "e181c2a14beb5c16fbe661b5d21352a3eaa142dd15fccb04f0b9bc1ea1501e4b",
+        "window": [
+          390,
+          160,
+          310,
+          140
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "box": [
+        420,
+        209,
+        250,
+        61
+      ],
+      "crop": [
+        198,
+        57,
+        694,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1_gorge.png",
+      "source_sha256": "27ea3a6a2e433bcf90a702881d2102b63c1b6a707fecc4f6a339ff23762ce61f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_fort_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1_gorge_matte.png",
+        "sha256": "4b2a0f85ef964971fa9d7a9cb04389e93560a0b5012ac694f2a4accdda65fd6f",
+        "window": [
+          385,
+          179,
+          315,
+          121
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "box": [
+        235,
+        120,
+        140,
+        190
+      ],
+      "crop": [
+        110,
+        0,
+        389,
+        479
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_5_gorge.png",
+      "source_sha256": "a68c8ca03e0a5a30f2a5cd15ca98909d6a22dbec6b5283f413cc92ac65ff6a72",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_5_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_guild.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_5_gorge_matte.png",
+        "sha256": "d1b3a45427bb64c26e649bcb6f8f69305b2c26ffb5c7f32958fc0679755be790",
+        "window": [
+          213,
+          98,
+          184,
+          234
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "box": [
+        238,
+        148,
+        133,
+        162
+      ],
+      "crop": [
+        120,
+        4,
+        369,
+        450
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_4_gorge.png",
+      "source_sha256": "f0865715a6328707318a8234c822da155933aa13065a0109468eed5cc4fbd83c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_4_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_guild_5_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_4_gorge_matte.png",
+        "sha256": "56c40499b921f7bae75589b63e82ad37f034ef7ac0acc58809dcd923808da5b6",
+        "window": [
+          219,
+          129,
+          171,
+          200
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "box": [
+        242,
+        177,
+        126,
+        133
+      ],
+      "crop": [
+        130,
+        59,
+        350,
+        369
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_3_gorge.png",
+      "source_sha256": "9fc95895091043665ed404c227f26c21a2d9932002ac1132a2203fc34ae6bb69",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_3_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_guild_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_3_gorge_matte.png",
+        "sha256": "eb84cac4f91c47a4e65c3bc02644ca4d6f9add0afad3c2e0eb1239b11d1702d1",
+        "window": [
+          227,
+          162,
+          156,
+          163
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "box": [
+        246,
+        204,
+        119,
+        106
+      ],
+      "crop": [
+        140,
+        110,
+        331,
+        294
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_2_gorge.png",
+      "source_sha256": "c242271773ef078807915b8507793c8c55c45f6429daa4455d0fbeb589556cae",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_guild_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_2_gorge_matte.png",
+        "sha256": "0aea960625ebd0084f1829ac6fd1e9979cc1e92bf86bb174319ca97ac2496e7f",
+        "window": [
+          232,
+          190,
+          147,
+          134
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "box": [
+        249,
+        226,
+        112,
+        84
+      ],
+      "crop": [
+        150,
+        152,
+        311,
+        233
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_1_gorge.png",
+      "source_sha256": "f36d86a1d1f3a82e39b75ee062c7290735d85e7032ed8b581317ece375657572",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_guild_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_1_gorge_matte.png",
+        "sha256": "3464c61ff0ca157afdf05cf30e431bd5578cbe652309e0b1cc2719dc4d813e33",
+        "window": [
+          236,
+          213,
+          138,
+          110
+        ]
+      }
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "box": [
+        315,
+        630,
+        280,
+        135
+      ],
+      "crop": [
+        66,
+        493,
+        778,
+        409
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_trade_exchange_gorge.png",
+      "source_sha256": "cc17e923cad83982095220963ac6e9af7ee86aa0644bfbc2268c604269dd86a7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_trade_exchange_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_market.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_trade_exchange_gorge_matte.png",
+        "sha256": "6cb49840fc5a4dc4debf4550e2a388f4dc97039c9a76d61212e2ef8cb84df599",
+        "window": [
+          227,
+          576,
+          429,
+          230
+        ]
+      }
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "box": [
+        329,
+        657,
+        252,
+        108
+      ],
+      "crop": [
+        105,
+        527,
+        700,
+        368
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_market_square_gorge.png",
+      "source_sha256": "50019a45db2bfe4f40c12fd41ec9d635bbb7589606a222070c2a776437577f9a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_market_square_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_trade_exchange_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_market_square_gorge_matte.png",
+        "sha256": "28115c782846728fe27e73091befc0d4ffbb9814b4260b65ce4f8cc496f6b2a1",
+        "window": [
+          292,
+          626,
+          323,
+          170
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "box": [
+        1440,
+        300,
+        160,
+        105
+      ],
+      "crop": [
+        1298,
+        206,
+        444,
+        292
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_2_gorge.png",
+      "source_sha256": "b550856a8747ad76bb956203586d082840e6e0ea9831174de724a30344432f26",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_2_gorge_matte.png",
+        "sha256": "a29a51e1c946cbf4b6e8655b47cedf8d2dd25e19be9d3175bcf66a8189e27307",
+        "window": [
+          1406,
+          265,
+          254,
+          164
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "box": [
+        1451,
+        319,
+        138,
+        86
+      ],
+      "crop": [
+        1328,
+        242,
+        383,
+        239
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_1_gorge.png",
+      "source_sha256": "54a9aaf0cf31809db8dd08635d2fc2f4d57a3c3a3a6dd07e41fdf1c0dabb5ecb",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_storehouse_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_1_gorge_matte.png",
+        "sha256": "fa5e7c7dc5e14ee07c6e50d9444f6014bb797532cbf90221fc6258f9f6449064",
+        "window": [
+          1434,
+          291,
+          176,
+          131
+        ]
+      }
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "plot_id": "building_wayfarers_hall",
+      "box": [
+        10,
+        600,
+        165,
+        185
+      ],
+      "crop": [
+        0,
+        436,
+        322,
+        514
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_wayfarers_hall_gorge.png",
+      "source_sha256": "5682800161b8111dde38b38b1de91764db3b4c2294913189600e66dfb4173a78",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_wayfarers_hall_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_wayfarers_hall_gorge_matte.png",
+        "sha256": "ffb286c654244e93f4fbb51793776c67804e37441739237ea260d59f7b0f4406",
+        "window": [
+          0,
+          541,
+          232,
+          270
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_1",
+      "plot_id": "building_dev_growth_1",
+      "box": [
+        180,
+        545,
+        135,
+        140
+      ],
+      "crop": [
+        60,
+        420,
+        375,
+        389
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_1_gorge.png",
+      "source_sha256": "4b0cebb9db5c7bb401520ee3d34fa61d4de0b069c8e85436d7be93bd13770274",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_1_gorge_matte.png",
+        "sha256": "9819662fe44e9d13c83572e2b3aa382ac4c4d44ce5e584ed77ae243336166628",
+        "window": [
+          114,
+          521,
+          249,
+          190
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_2",
+      "plot_id": "building_dev_growth_2",
+      "box": [
+        1600,
+        275,
+        158,
+        98
+      ],
+      "crop": [
+        1460,
+        188,
+        439,
+        272
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_2_gorge.png",
+      "source_sha256": "f0097548714253de0041239a70ff73791f5030e233f3014e05fd1f4a5340f21e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_2_gorge_matte.png",
+        "sha256": "ef7714df8e904f50bdb252d62e12fcb58f4a7bdcc6d2649491777e0d83e181dd",
+        "window": [
+          1568,
+          239,
+          248,
+          160
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_3",
+      "plot_id": "building_dev_growth_3",
+      "box": [
+        955,
+        180,
+        145,
+        95
+      ],
+      "crop": [
+        826,
+        96,
+        403,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_3_gorge.png",
+      "source_sha256": "67f6c2be41cd61923119e495c96af8f24c5aa1cb438b9ced020de5d6196bf09e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_3_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_3_gorge_matte.png",
+        "sha256": "12b01e46bfea11bf2d23da52cece332a3bb06a4eb9bf8526df93b9355bcc4f64",
+        "window": [
+          938,
+          161,
+          180,
+          131
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_attack",
+      "plot_id": "building_dev_training_attack",
+      "box": [
+        470,
+        545,
+        140,
+        85
+      ],
+      "crop": [
+        346,
+        470,
+        389,
+        236
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_attack_gorge.png",
+      "source_sha256": "0f814a3991878b8e51344571a65005d2f7889d6e36b5e07f327b830a6ccd348a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_attack_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_attack_gorge_matte.png",
+        "sha256": "3d7ee2f84a032a22cab5f42f418d6ea1b2162a624110ec6f07d28fc90447deb1",
+        "window": [
+          448,
+          528,
+          182,
+          137
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_defense",
+      "plot_id": "building_dev_training_defense",
+      "box": [
+        1260,
+        195,
+        160,
+        95
+      ],
+      "crop": [
+        1118,
+        110,
+        444,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_defense_gorge.png",
+      "source_sha256": "404529c0a742a1e05d0e3756b20494b6fd452685ca1b0cfa503046070ece278b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_defense_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_defense_gorge_matte.png",
+        "sha256": "082e5c1114a47d06e0df7d640cd680e2f446078b7695bedd574b0503ec51122a",
+        "window": [
+          1241,
+          154,
+          200,
+          155
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_experience",
+      "plot_id": "building_dev_training_experience",
+      "box": [
+        1350,
+        722,
+        165,
+        95
+      ],
+      "crop": [
+        1204,
+        638,
+        458,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_experience_gorge.png",
+      "source_sha256": "5b4d48529fc60cae967bc9238c8bfc170f5bac65255f7f9531a70f0df7867514",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_experience_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_experience_gorge_matte.png",
+        "sha256": "e15f3dfa7c3cdabc636f9c68104cc61bce4ed2ddb32803f7c09d73cfa6ec7dc0",
+        "window": [
+          1326,
+          638,
+          254,
+          203
+        ]
+      }
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "plot_id": "building_dev_artifact_exchange",
+      "box": [
+        1440,
+        600,
+        250,
+        115
+      ],
+      "crop": [
+        1218,
+        475,
+        694,
+        365
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_artifact_exchange_gorge.png",
+      "source_sha256": "128bff096d17f2fc381a7840a592b4e7b136856a244ac84111f2edb4cbc2ee59",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_artifact_exchange_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_artifact_exchange_gorge_matte.png",
+        "sha256": "6c0e9ed26fc63674a01b8076c632027fbacc183520eb1420194325fcbbb23c70",
+        "window": [
+          1391,
+          512,
+          394,
+          269
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_unique_1",
+      "plot_id": "building_dev_embercourt_unique_1",
+      "box": [
+        1595,
+        716,
+        160,
+        110
+      ],
+      "crop": [
+        1453,
+        618,
+        444,
+        306
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_gorge.png",
+      "source_sha256": "66aec983fdf29901dffd3a748b9e7f3670199f5fb408e143bf582570e3d644a8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_gorge_matte.png",
+        "sha256": "d18913af817efe160f8f17e6193a7c47bab888a9fe976c93115c96343820c852",
+        "window": [
+          1550,
+          646,
+          265,
+          205
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_unique_2",
+      "plot_id": "building_dev_embercourt_unique_2",
+      "box": [
+        1610,
+        62,
+        130,
+        140
+      ],
+      "crop": [
+        1494,
+        0,
+        361,
+        327
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_2_gorge.png",
+      "source_sha256": "18f8b97444aa9b91790823b4ee53d58ca84b560b5f2195f02d25dc3bb9f44285",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_beacon.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_2_gorge_matte.png",
+        "sha256": "2c59c49e51de1e70d9b30f1dcfdb6784b02ad220aad52d0ba61812098e073f42",
+        "window": [
+          1594,
+          46,
+          162,
+          172
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_unique_3",
+      "plot_id": "building_dev_embercourt_unique_3",
+      "box": [
+        1765,
+        190,
+        225,
+        175
+      ],
+      "crop": [
+        1565,
+        34,
+        483,
+        486
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_3_gorge.png",
+      "source_sha256": "bf0c8a963a9b055bbe562f1907ef79d509bf00b96c5835075b7433e8668f82b9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_3_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_3_gorge_matte.png",
+        "sha256": "b7411766bb9642f2da440d4818d5ce8953fdbe3199983e8eaf9470c7a6fe843d",
+        "window": [
+          1699,
+          147,
+          348,
+          251
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t1_1_upgrade",
+      "plot_id": "embercourt_t1",
+      "box": [
+        20,
+        415,
+        180,
+        125
+      ],
+      "crop": [
+        0,
+        304,
+        360,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade_gorge.png",
+      "source_sha256": "03b0cc3585026bd835af34992503dda4c1d7561ad9a96f3d396d239c6a82695f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade_gorge_matte.png",
+        "sha256": "05d156c5c98de4a25dd146e54f33b42c3c7f2f860c512095823a622898256f08",
+        "window": [
+          0,
+          362,
+          256,
+          203
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t1_1",
+      "plot_id": "embercourt_t1",
+      "box": [
+        31,
+        432,
+        158,
+        108
+      ],
+      "crop": [
+        0,
+        336,
+        329,
+        300
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_gorge.png",
+      "source_sha256": "625edade3fb5124e39be9757f25bec879ac2e7260331dffb0994e2cd09a1bb85",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t1_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_gorge_matte.png",
+        "sha256": "95be96011840bf5633449358568b9501d73ccd90851689f7530a0d0e0a248f3d",
+        "window": [
+          5,
+          405,
+          203,
+          154
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t1_2_upgrade",
+      "plot_id": "embercourt_t1",
+      "box": [
+        20,
+        415,
+        180,
+        125
+      ],
+      "crop": [
+        0,
+        304,
+        360,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade_gorge.png",
+      "source_sha256": "fbd4feff2020a80fa2ba5a6b15ca18804339bb47edf9a33780e6e2546c70a753",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade_gorge_matte.png",
+        "sha256": "17e74a8f0bf40434b6bfc15a893970e057b0d0949a8f401b5bb83535911cf9df",
+        "window": [
+          0,
+          352,
+          245,
+          214
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t1_2",
+      "plot_id": "embercourt_t1",
+      "box": [
+        31,
+        432,
+        158,
+        108
+      ],
+      "crop": [
+        0,
+        336,
+        329,
+        300
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_gorge.png",
+      "source_sha256": "7269b725e1eaebae7e47d46be52cc84379d9b265c0497cf9ac632acb60c93cc8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t1_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_gorge_matte.png",
+        "sha256": "81bce66234497442900278eb0ed7e72eedc21ee6473549eb9e0d3343a894ab41",
+        "window": [
+          10,
+          397,
+          209,
+          163
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t2_1_upgrade",
+      "plot_id": "embercourt_t2",
+      "box": [
+        205,
+        335,
+        175,
+        110
+      ],
+      "crop": [
+        50,
+        237,
+        486,
+        306
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade_gorge.png",
+      "source_sha256": "49f6d9c49dbe164f7de6dc64f0db50b10b506dc94c6d53f764c48cb55ee2865e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade_gorge_matte.png",
+        "sha256": "a498e42b5f245b1d08e634f09f03ee87d1c1132a20428f91517833d546329713",
+        "window": [
+          176,
+          287,
+          245,
+          181
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t2_1",
+      "plot_id": "embercourt_t2",
+      "box": [
+        216,
+        350,
+        154,
+        95
+      ],
+      "crop": [
+        79,
+        266,
+        428,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_gorge.png",
+      "source_sha256": "189b8770ff4433215805ac9d25c3911d82d6ae2e3328a57816161ad824ee3fe8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t2_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_gorge_matte.png",
+        "sha256": "9d3742cfec9d1dc6dff8e080e234b2c364b44b76dd966b1319a26593ea902fd5",
+        "window": [
+          197,
+          321,
+          197,
+          143
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t2_2_upgrade",
+      "plot_id": "embercourt_t2",
+      "box": [
+        205,
+        335,
+        175,
+        110
+      ],
+      "crop": [
+        50,
+        237,
+        486,
+        306
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade_gorge.png",
+      "source_sha256": "f3913f739dbfebd88edce505909292589ee94e3ebd4e8c4ff4c30105ddac7e6b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade_gorge_matte.png",
+        "sha256": "e6a69d68901a151878e7900981aa7e4692426801f77ad57ac872cdfac1693a4d",
+        "window": [
+          171,
+          302,
+          254,
+          167
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t2_2",
+      "plot_id": "embercourt_t2",
+      "box": [
+        216,
+        350,
+        154,
+        95
+      ],
+      "crop": [
+        79,
+        266,
+        428,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_gorge.png",
+      "source_sha256": "57e7272c8fc7347d76da3fb39f4d541ca2d50d11752aceb8f4c3b9324a37c181",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t2_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_gorge_matte.png",
+        "sha256": "a87472b30ba2f9dd0e11c9a48d15564382b942e10f0487ead9025b4bc7538a98",
+        "window": [
+          198,
+          324,
+          190,
+          139
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t3_1_upgrade",
+      "plot_id": "embercourt_t3",
+      "box": [
+        1400,
+        420,
+        235,
+        120
+      ],
+      "crop": [
+        1191,
+        308,
+        653,
+        344
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade_gorge.png",
+      "source_sha256": "84af1df5b3c0c19ca8c0a25fe82407192485ce1f2d87cba3135f467ddf5b81dd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade_gorge_matte.png",
+        "sha256": "f9db9ab45364d653c333f140675e61e1c4d1ce00d75425dd454fc137a06bb04e",
+        "window": [
+          1343,
+          351,
+          396,
+          244
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t3_1",
+      "plot_id": "embercourt_t3",
+      "box": [
+        1414,
+        437,
+        207,
+        103
+      ],
+      "crop": [
+        1230,
+        337,
+        575,
+        303
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_gorge.png",
+      "source_sha256": "92106eeb23db82e3725cb46a3407b75a15a914f57d635efda2e1c219716396b1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t3_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_gorge_matte.png",
+        "sha256": "4f04d63fb58e49f3a896c8d75512512ea285cb45e3b453783bd2cb6da08f4856",
+        "window": [
+          1372,
+          386,
+          294,
+          199
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t3_2_upgrade",
+      "plot_id": "embercourt_t3",
+      "box": [
+        1400,
+        420,
+        235,
+        120
+      ],
+      "crop": [
+        1191,
+        308,
+        653,
+        344
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade_gorge.png",
+      "source_sha256": "cec88c8bb82cb895f40f048fe77015aa3c704a4e54708c473c3246b1dd18e064",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade_gorge_matte.png",
+        "sha256": "822f9a791c8cbc6ab8102038eeabd35bf24ae3be975a71bae224a60ce6cbf0d3",
+        "window": [
+          1348,
+          362,
+          347,
+          225
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t3_2",
+      "plot_id": "embercourt_t3",
+      "box": [
+        1414,
+        437,
+        207,
+        103
+      ],
+      "crop": [
+        1230,
+        337,
+        575,
+        303
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_gorge.png",
+      "source_sha256": "393db14b5f22b028818bd1af842e0fe4f0659cd59b5d8e364028101e49073fb7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t3_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_gorge_matte.png",
+        "sha256": "8560221554a195cc61c4139bc0d1ec3d88e05a0f3a7f71d19b97d1a76e841821",
+        "window": [
+          1367,
+          394,
+          316,
+          198
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t4_1_upgrade",
+      "plot_id": "embercourt_t4",
+      "box": [
+        1530,
+        850,
+        230,
+        150
+      ],
+      "crop": [
+        1326,
+        716,
+        639,
+        417
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade_gorge.png",
+      "source_sha256": "1fa9193a7a036d004bb28d51cfef611df41b0be73b04c2fdd9f693acdb4ea168",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade_gorge_matte.png",
+        "sha256": "fd238cdc994d4659dc8b7c1521537822513e56a4c5244a67ff5c0ef568acf39f",
+        "window": [
+          1466,
+          791,
+          368,
+          282
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t4_1",
+      "plot_id": "embercourt_t4",
+      "box": [
+        1544,
+        871,
+        202,
+        129
+      ],
+      "crop": [
+        1364,
+        756,
+        561,
+        358
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_gorge.png",
+      "source_sha256": "423224c591d9b1988abe624debe7c7b9f12cb3bb65f2bd57caf1307a06966477",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t4_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_gorge_matte.png",
+        "sha256": "1b76c3b023cdae2d126949880ba4b4ce10f17fbd5cb100f526ac581bc1da7ca8",
+        "window": [
+          1514,
+          821,
+          279,
+          225
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t4_2_upgrade",
+      "plot_id": "embercourt_t4",
+      "box": [
+        1530,
+        850,
+        230,
+        150
+      ],
+      "crop": [
+        1326,
+        716,
+        639,
+        417
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade_gorge.png",
+      "source_sha256": "07d3dc460453c24015a85d85c75fc03f0a4cbd2191bf955c51e2f29584b6fbc4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade_gorge_matte.png",
+        "sha256": "9ad068acc0e21efe826bb541f08b3f163df8ec8ac9f6998f7baaf87a9dc26cfc",
+        "window": [
+          1461,
+          729,
+          394,
+          313
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t4_2",
+      "plot_id": "embercourt_t4",
+      "box": [
+        1544,
+        871,
+        202,
+        129
+      ],
+      "crop": [
+        1364,
+        756,
+        561,
+        358
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_gorge.png",
+      "source_sha256": "30dc8c03acca87188ed8fb509615cca80ec579c3edfe6fa4c634e5b2722f31ac",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t4_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_gorge_matte.png",
+        "sha256": "249f79d2e18a570edcc85714971e47cb7aa2b154500e275d1f4b7a987b2a9184",
+        "window": [
+          1513,
+          795,
+          280,
+          232
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t5_1_upgrade",
+      "plot_id": "embercourt_t5",
+      "box": [
+        1105,
+        200,
+        145,
+        95
+      ],
+      "crop": [
+        976,
+        116,
+        403,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade_gorge.png",
+      "source_sha256": "2a74526c99459336f7bc50c71338c6c5574dff4b2332181ebcebf55fb0d31e49",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade_gorge_matte.png",
+        "sha256": "3b45423902a04976497133fe62b2b4bf84f8cae720b7dc30016db55e44162311",
+        "window": [
+          1088,
+          165,
+          182,
+          147
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t5_1",
+      "plot_id": "embercourt_t5",
+      "box": [
+        1114,
+        213,
+        128,
+        82
+      ],
+      "crop": [
+        1000,
+        140,
+        356,
+        228
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_gorge.png",
+      "source_sha256": "17440fc67cad0b25fa75580fe301e1f062ee5d4b254774cd1e944b0d6b65aa38",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t5_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_gorge_matte.png",
+        "sha256": "f56309cbc14898df49603f2b2257d8023d34aa74b320554bc0dc741cb59d3e42",
+        "window": [
+          1099,
+          198,
+          158,
+          112
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t5_2_upgrade",
+      "plot_id": "embercourt_t5",
+      "box": [
+        1105,
+        200,
+        145,
+        95
+      ],
+      "crop": [
+        976,
+        116,
+        403,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade_gorge.png",
+      "source_sha256": "a33994fd9f578675395235b96f7aff6e301b714d413c2a63f7a6f417570f465e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade_gorge_matte.png",
+        "sha256": "896644f6be8cd150716163813e327641e846eacee436155937bae1f4f5d46907",
+        "window": [
+          1086,
+          178,
+          183,
+          134
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t5_2",
+      "plot_id": "embercourt_t5",
+      "box": [
+        1114,
+        213,
+        128,
+        82
+      ],
+      "crop": [
+        1000,
+        140,
+        356,
+        228
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_gorge.png",
+      "source_sha256": "dc9dadcdbb49ae3094d9d80cea68b86bd6604b717cdb6a3e691831de8aed27a0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t5_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_gorge_matte.png",
+        "sha256": "2f7e3f3aaea2e1504bfd8aa3d464cc7cb138ce465ac8d6a87d693b5e175fe702",
+        "window": [
+          1099,
+          198,
+          158,
+          112
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t6_1_upgrade",
+      "plot_id": "embercourt_t6_1",
+      "box": [
+        520,
+        765,
+        400,
+        125
+      ],
+      "crop": [
+        164,
+        535,
+        1111,
+        585
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade_gorge.png",
+      "source_sha256": "73221d071d1cbd6d60ff1e506bc99420ab710557689a68a38caf4f6ef07fead8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_pen.png"
+      ],
+      "matte_passes": 2,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade_gorge_matte.png",
+        "sha256": "86ce6a365c602564a0758508d2a1fc15ab92a9524838903d6a0d11568bd3943a",
+        "window": [
+          386,
+          675,
+          655,
+          328
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t6_1",
+      "plot_id": "embercourt_t6_1",
+      "box": [
+        544,
+        782,
+        352,
+        108
+      ],
+      "crop": [
+        231,
+        578,
+        978,
+        515
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_gorge.png",
+      "source_sha256": "2ef7c9e754ecdd951eb3d22ddcff0392b8422a78b6ffcfa48584094da12d3280",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t6_1_upgrade_crop.png"
+      ],
+      "matte_passes": 2,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_gorge_matte.png",
+        "sha256": "c7d61f0ace8a147e8bad94743c8fc4f79ba0720145281f21c334ff840c323849",
+        "window": [
+          472,
+          729,
+          473,
+          238
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t7_1_upgrade",
+      "plot_id": "embercourt_t7_1",
+      "box": [
+        1765,
+        450,
+        225,
+        425
+      ],
+      "crop": [
+        1524,
+        86,
+        524,
+        1066
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade_gorge.png",
+      "source_sha256": "1a8e44e29acde0b37b5f7964fba73d70046a22f5bb1d3500d4f1b0ae658e7575",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_colossus.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade_gorge_matte.png",
+        "sha256": "03e92f978f051936f79581fa1be1089bc8b0df3b078568dfbb620a8a2639a1d5",
+        "window": [
+          1662,
+          261,
+          386,
+          709
+        ]
+      }
+    },
+    {
+      "id": "building_dev_embercourt_t7_1",
+      "plot_id": "embercourt_t7_1",
+      "box": [
+        1778,
+        509,
+        198,
+        366
+      ],
+      "crop": [
+        1572,
+        184,
+        476,
+        968
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_gorge.png",
+      "source_sha256": "2d82290334f973178a6e20dabf9df980b76beb724cd350804c5211fedfddbd58",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/building_dev_embercourt_t7_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_gorge_matte.png",
+        "sha256": "981a276d5b4761721ec2777a34aad8699fc22e555212f6fb6305fe1e638df4b0",
+        "window": [
+          1601,
+          359,
+          447,
+          739
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        1180,
+        830,
+        330,
+        250
+      ],
+      "crop": [
+        886,
+        608,
+        917,
+        544
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_shipyard_gorge.png",
+      "source_sha256": "31341e3a84d870f00330d4b1a7825c8fbad48db1d908723a7f5e2e6c9c67a045",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_shipyard_gorge.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge.png",
+        "art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_refs/ref_shipyard.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_shipyard_gorge_matte.png",
+        "sha256": "8e09fc37234be9e299d4d670c44a609eecfc2c0bf06c9bb1661bc3daa0429080",
+        "window": [
+          962,
+          742,
+          606,
+          410
+        ]
+      }
+    }
+  ],
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
+  }
+}
