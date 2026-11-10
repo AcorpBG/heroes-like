@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-window-card-frames-20261110",
- "currentSliceTitle": "Windows in the card frame",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T15:08:41Z",
+ "currentSliceTitle": "The in-game settings window is the settings column in the card frame; every confirmation window and the hero keys window wear the card frame with a gold title.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T15:09:29Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-window-card-frames-20261110",
-   "title": "Windows in the card frame",
-   "status": "in_progress",
-   "goal": "Owner 2026-11-10: the in-game settings window and the confirmation windows in the settings menu's look. Files: scenes/shared/ActivePlaySettingsDialog.gd, scripts/ui/FrontierVisualKit.gd, scenes/menus/SettingsColumn.gd, HeroKeybindingsDialog.gd.",
-   "docs": [
-    "docs/skirmish-setup-screen.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "The in-game settings window is the settings column in the card frame; every confirmation window and the hero keys window wear the card frame with a gold title.",
+   "commit": "08774ca13"
   },
   {
    "id": "ui-settings-column-20261110",
