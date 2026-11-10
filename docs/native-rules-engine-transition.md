@@ -457,7 +457,7 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   fight 4/44. `normalize_battle_state` does not run inside the fight.
 - **Callers outside the defining files** (name match, so a few hits are same-named helpers):
   `scenes/battle/BattleBoardView.gd` and `BattleShell.gd` (board reads, targeting, `perform_player_action`,
-  `cast_player_spell`, `player_autoplay_decision`), `scenes/shared/SpellbookView.gd`, `AiHeroRules.gd`
+  `cast_player_spell`, `player_autoplay_decision`), `AiHeroRules.gd`
   (`resolve_active_battle`, `attack_defense_multiplier`, `ensure_hero_spellbook`), five overworld scripts
   (`ensure_hero_spellbook`, `known_spells`, `mana_max_from_hero`), `tools/battle_ai_arena/worker.gd`, and about 100
   test files, most of them on layers 1, 4 and 8. Each slice's brief lists its own callers.

@@ -43,7 +43,7 @@ Built on a retired test: `ai_multi_scenario_recruitment_delivery_report`, `econo
 
 ## Packaged modes left broken
 
-Seven tests stay for their own mode. Run with `--platform`, each imports the retired `packaged_menu_and_turn_readability_regression`: `battle_pose_playback_regression`, `combat_vfx_regression`, `generated_overworld_quality_regression`, `hero_sheet_regression`, `rmg_town_supply_removal_regression`, `spell_effect_variety_regression` and `spellbook_regression`. Release packaging waits until the owner prepares a release.
+Six tests stay for their own mode. Run with `--platform`, each imports the retired `packaged_menu_and_turn_readability_regression`: `battle_pose_playback_regression`, `combat_vfx_regression`, `generated_overworld_quality_regression`, `hero_sheet_regression`, `rmg_town_supply_removal_regression` and `spell_effect_variety_regression`. The seventh, `spellbook_regression`, was deleted on 2026-11-10 with the spell list it drove (`scenes/shared/SpellbookView.gd`). Release packaging waits until the owner prepares a release.
 
 ## Rules
 
