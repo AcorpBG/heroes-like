@@ -54,29 +54,41 @@ func _ready() -> void:
 	add_theme_constant_override("separation", 8)
 	_label(self, "New skirmish", "gold", 26)
 
+	# Between the title and the launch buttons the setup scrolls when the screen
+	# is too low for it (a small window, a larger interface scale).
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	add_child(scroll)
+	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation", 8)
+	scroll.add_child(content)
+
 	var faction_head := HBoxContainer.new()
 	faction_head.add_theme_constant_override("separation", 8)
-	add_child(faction_head)
+	content.add_child(faction_head)
 	_label(faction_head, "FACTION", "muted", 12)
 	_faction_name = _label(faction_head, "", "body", 13)
 	_faction_row = HBoxContainer.new()
 	_faction_row.add_theme_constant_override("separation", 10)
-	add_child(_faction_row)
+	content.add_child(_faction_row)
 
-	_label(self, "HERO", "muted", 12)
+	_label(content, "HERO", "muted", 12)
 	_hero_row = HBoxContainer.new()
 	_hero_row.add_theme_constant_override("separation", 6)
 	_hero_row.custom_minimum_size.y = THUMB_SIZE.y
-	add_child(_hero_row)
+	content.add_child(_hero_row)
 
 	_hero_card = HBoxContainer.new()
 	_hero_card.add_theme_constant_override("separation", 14)
 	_hero_card.custom_minimum_size.y = PORTRAIT_SIZE.y
-	add_child(_hero_card)
+	content.add_child(_hero_card)
 
-	_hairline(self)
+	_hairline(content)
 	var map_head := HBoxContainer.new()
-	add_child(map_head)
+	content.add_child(map_head)
 	_label(map_head, "The map", "gold", 18)
 	_map_status = _label(map_head, "", "muted", 12)
 	_map_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -84,7 +96,7 @@ func _ready() -> void:
 	_map_status.clip_text = true
 	_rows_box = VBoxContainer.new()
 	_rows_box.add_theme_constant_override("separation", 5)
-	add_child(_rows_box)
+	content.add_child(_rows_box)
 
 	var seed_row := _row_shell("Seed")
 	_seed_line = seed_row.get_parent()
@@ -101,9 +113,6 @@ func _ready() -> void:
 	roll.pressed.connect(_roll_seed)
 	seed_row.add_child(roll)
 
-	var spacer := Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(spacer)
 	_progress = ProgressBar.new()
 	_progress.custom_minimum_size.y = 6.0
 	_progress.show_percentage = false

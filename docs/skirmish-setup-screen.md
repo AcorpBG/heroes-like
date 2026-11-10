@@ -43,6 +43,10 @@ the chosen ids, and a pressed pill goes back through the picker's own handler. T
 dock panel is the column for the skirmish tab: its header row, rail slot and inner
 board frame are hidden there.
 
+Between the title and the launch buttons the setup scrolls when the screen is too
+low for it: at the 115% and 130% interface scales, or in a small window. Build &
+Play, Built maps and Back stay in view.
+
 ## Built maps
 
 `scenes/menus/BuiltMapsDialog.gd`: the maps built earlier, in the card's frame,
@@ -75,9 +79,45 @@ mode and time; the newest is marked. Under the list: the name field of a manual
 save, then Load, Delete and Back. The actions are the old board's (`SaveService`
 labels, the delete confirmation, the load path); only the view is new.
 
+## Settings
+
+`scenes/menus/SettingsColumn.gd`: the same column (owner, 2026-11-10: the settings
+menu in the same style). Four sections of rows:
+
+- **Display**: window, resolution, quality, frame limit, VSync.
+- **Sound**: master, music and effects as sliders with their percentage.
+- **Game**: battle speed, navigation keys, hero movement keys (opens the keys
+  window).
+- **Readability**: interface scale, battle shake, colour cues, high contrast,
+  reduce motion, reduce flashes, fewer repeat sounds.
+
+A setting with a few values is a row of pills with the chosen one in gold; an
+on or off setting is the two pills On and Off. Under the rows a status line (what
+was saved, or why not), then Restore defaults, Support bundle and Back. The rows
+scroll when the screen is too low for them.
+
+The view is generic: `show_settings` takes sections of rows (choice, switch,
+volume, button) and the column emits what was pressed. `MainMenu` builds the rows
+from the old board's pickers, toggles and sliders, which stay, hidden, as the
+model (`_sync_settings_column`), and a pressed pill goes back through the old
+control's own handler, so the rules of the settings are unchanged: display changes
+are previewed and kept or reverted, a held volume slider previews and saves once
+when let go, Restore defaults asks first. After a confirmation the focus returns
+to the column's control that stands for the old one (`_settings_column_control`).
+
+The theme pass of the menu (`_apply_visual_theme`, run when high contrast or the
+colour cues change) dressed the dock as the old board again; it now ends by giving
+an open column its card frame back, and the settings column rebuilds its rows in
+the new colours.
+
 ## Not in this slice
 
-- The campaign, settings and guide boards keep the cartography board.
+- The campaign and guide boards keep the cartography board.
+- The confirmation windows (keep display settings, restore defaults, delete a
+  save) and the hero movement keys window keep the game's shared window frame.
+- The settings window inside a game (`scenes/shared/ActivePlaySettingsDialog.gd`)
+  is its own surface and is unchanged.
+- In high contrast the logo's panel shows behind the top of a column.
 - Stats have no icons; the four numbers are labelled in words.
 - `tests/menu_outcome_visual_smoke.gd` and other layout tests of the old boards
   were not run or updated; they assert the old dock's coordinates.
@@ -90,4 +130,9 @@ map built and started through Build & Play; the built maps window; the save menu
 with an autosave and two manual saves, a save renamed and one loaded. Content
 check and core suite. For the fixed portrait and the pictured built maps: five
 heroes of four factions measured at one portrait size, the window with six maps
-of two sizes, one and two levels, and one of them started from it.
+of two sizes, one and two levels, and one of them started from it. For the
+settings column: every kind of row driven (battle speed, interface scale, colour
+cues, high contrast, reduce motion, music volume), the saved values read back from
+the settings service, Restore defaults confirmed, a window mode change made by
+keyboard and reverted with the focus back on its row, the keys window opened; the
+three columns at the 130% interface scale.

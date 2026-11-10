@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-plot-shelves-20261110",
- "currentSliceTitle": "Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T14:48:30Z",
+ "currentSliceId": "ui-settings-column-20261110",
+ "currentSliceTitle": "Settings as a left column",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T14:59:57Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-settings-column-20261110",
+   "title": "Settings as a left column",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-10: the settings menu in the same style as the skirmish setup. Files: scenes/menus/SettingsColumn.gd, MainMenu.gd; the skirmish setup scrolls at larger interface scales.",
+   "docs": [
+    "docs/skirmish-setup-screen.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-plot-shelves-20261110",
    "status": "completed",
@@ -42,7 +52,7 @@
    "id": "ui-skirmish-setup-rework-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.",
+   "summary": "Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.",
    "commit": "36c648462"
   },
   {
@@ -56,14 +66,14 @@
    "id": "tooling-source-archive-snapshot-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.",
+   "summary": "Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October, verified; provenance and the storage map name it.",
    "commit": "2e3c36a9e"
   },
   {
    "id": "ui-tooltip-card-art-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.",
+   "summary": "Every tooltip and its F1 full-text window take the map information card's dark-and-gold frames, with a gold heading and a Close button.",
    "commit": "80c713f87"
   },
   {
@@ -77,7 +87,7 @@
    "id": "art-unit-icon-closeups-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
+   "summary": "Every unit's small icon is a head-and-shoulders close-up: 75 creatures and machines get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
    "commit": "9325c50c4"
   },
   {
@@ -98,7 +108,7 @@
    "id": "ui-map-info-card-art-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "The map's right-click report and hover card use the sidebar's dark-and-gold frame (imggen mockup B), fit their content, and show unit icons cut from the existing portraits at 56 px instead of the whole figure at 36.",
+   "summary": "The map's right-click report and hover card use the sidebar's dark-and-gold frame, fit their content, and show unit icons cut from the portraits at 56 px.",
    "commit": "e6fcbbbd4"
   },
   {
@@ -112,7 +122,7 @@
    "id": "ui-army-size-bands-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.",
+   "summary": "The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' texts. Own armies and battles stay exact.",
    "commit": "cd8c4ec8d"
   },
   {
@@ -126,7 +136,7 @@
    "id": "ui-shared-tile-description-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.",
+   "summary": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used, guard and owner. Used buildings no longer read Available.",
    "commit": "4e55b993d"
   },
   {
@@ -154,7 +164,7 @@
    "id": "feature-veilmourn-harbor-shipyards-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.",
+   "summary": "Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood; computer players plan with that price.",
    "commit": "466f6281a"
   },
   {
@@ -168,7 +178,7 @@
    "id": "ai-shipyard-needs-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one; 12 of 143 islands games had changed with no Shipyard built, one to the day cap.",
+   "summary": "A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one.",
    "commit": "e3eb20d58"
   },
   {
@@ -182,7 +192,7 @@
    "id": "ai-shipyard-main-army-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, at that army's worth against the Shipyard and boat price, and build none before day 8. Any idle hero set it off before.",
+   "summary": "Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, and build none before day 8.",
    "commit": "882bf8251"
   },
   {

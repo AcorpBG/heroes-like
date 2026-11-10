@@ -9,6 +9,7 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const SkirmishSetupColumnScript = preload("res://scenes/menus/SkirmishSetupColumn.gd")
 const BuiltMapsDialogScript = preload("res://scenes/menus/BuiltMapsDialog.gd")
 const SaveListColumnScript = preload("res://scenes/menus/SaveListColumn.gd")
+const SettingsColumnScript = preload("res://scenes/menus/SettingsColumn.gd")
 
 const TAB_CAMPAIGN := 0
 const TAB_SKIRMISH := 1
@@ -261,6 +262,7 @@ var _built_maps_dialog: BuiltMapsDialogScript
 # The save menu in the same look. The save list and the buttons of the old
 # board stay as its state; the column shows them.
 var _save_list_column: SaveListColumnScript
+var _settings_column: SettingsColumnScript
 var _generated_map_forge_expanded := false
 var _generated_generation_in_progress := false
 var _generated_generation_yield_count := 0
@@ -1573,9 +1575,9 @@ func _finish_display_change_ui(
 func _focus_display_change_origin() -> void:
 	if not is_inside_tree() or not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SETTINGS:
 		return
-	var target := get_node_or_null("%%%s" % String(_display_change_focus_name)) as Control
+	var target := _settings_column_control(get_node_or_null("%%%s" % String(_display_change_focus_name)) as Control)
 	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
-		_settings_scroll.ensure_control_visible(target)
+		_settings_column.ensure_visible(target)
 		target.grab_focus()
 
 func _display_mode_label(mode_id: String) -> String:
@@ -1640,7 +1642,7 @@ func _on_keyboard_navigation_layout_selected(index: int) -> void:
 	_finish_settings_commit(result)
 
 func _on_customize_movement_keys_pressed() -> void:
-	_hero_keybindings_dialog.open_dialog(_customize_movement_keys_button)
+	_hero_keybindings_dialog.open_dialog(_settings_column_control(_customize_movement_keys_button))
 
 func _on_hero_keybindings_dialog_dismissed() -> void:
 	_refresh_settings_panel()
@@ -1768,7 +1770,7 @@ func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
 
 func _on_restore_settings_defaults_pressed() -> void:
-	_settings_restore_return_focus = _capture_confirmation_origin(_restore_settings_defaults_button)
+	_settings_restore_return_focus = _capture_confirmation_origin(_settings_column_control(_restore_settings_defaults_button))
 	_settings_restore_pending = true
 	_begin_destructive_confirmation_generation("settings_restore")
 	_count_destructive_confirmation("settings_restore", "request_count")
@@ -1796,12 +1798,12 @@ func _on_settings_restore_defaults_confirmed() -> void:
 	_apply_visual_theme()
 	_refresh_settings_panel()
 	if not bool(result.get("ok", false)) or not bool(result.get("display_change_deferred", false)):
-		_restore_settings_defaults_button.call_deferred("grab_focus")
+		_settings_column_control(_restore_settings_defaults_button).call_deferred("grab_focus")
 		return
 	var display_candidate_value: Variant = result.get("display_candidate", {})
 	var display_candidate: Dictionary = display_candidate_value if display_candidate_value is Dictionary else {}
 	if display_candidate.is_empty():
-		_restore_settings_defaults_button.call_deferred("grab_focus")
+		_settings_column_control(_restore_settings_defaults_button).call_deferred("grab_focus")
 		return
 	var restore_status := _settings_restore_status
 	var preview_result := _request_display_change_preview(
@@ -2360,6 +2362,7 @@ func _settings_summary_visible_line(line: String) -> String:
 	return "…"
 
 func _refresh_settings_panel() -> void:
+	_ensure_settings_column()
 	_set_settings_summary(SettingsService.describe_settings())
 	var settings_check := SettingsService.describe_settings_persistence_check()
 	var display_settings_check := "Display changes preview immediately and are stored only after Keep. Revert or timeout restores the previous display; campaign progress and expedition saves stay unchanged."
@@ -2514,6 +2517,177 @@ func _refresh_settings_panel() -> void:
 	_settings_restore_status_label.tooltip_text = "This operation changes only device settings. Support bundles, campaign progress, expedition saves, and the active session remain unchanged."
 	_syncing_settings_ui = false
 	_queue_current_settings_focus_visibility()
+	_sync_settings_column()
+
+# --- The settings column -------------------------------------------------------
+
+## The settings are the column; the old board's pickers, toggles and sliders stay,
+## hidden, as the lists of what can be chosen (the validation calls use them).
+func _ensure_settings_column() -> void:
+	if _settings_column != null:
+		return
+	_settings_scroll.visible = false
+	_settings_column = SettingsColumnScript.new()
+	_settings_column.name = "SettingsColumn"
+	_settings_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_settings_scroll.get_parent().add_child(_settings_column)
+	_settings_column.option_chosen.connect(_on_settings_column_option_chosen)
+	_settings_column.toggle_changed.connect(_on_settings_column_toggle_changed)
+	_settings_column.volume_changed.connect(_on_settings_column_volume_changed)
+	_settings_column.action_requested.connect(_on_settings_column_action_requested)
+	_settings_column.back_requested.connect(_hide_stage_dock)
+
+func _settings_column_pickers() -> Dictionary:
+	return {
+		"window": [_presentation_mode_picker, _on_presentation_mode_selected],
+		"resolution": [_resolution_picker, _on_resolution_selected],
+		"quality": [_render_quality_picker, _on_render_quality_selected],
+		"frame_limit": [_frame_rate_picker, _on_frame_rate_selected],
+		"battle_speed": [_battle_playback_speed_picker, _on_battle_playback_speed_selected],
+		"navigation": [_keyboard_navigation_layout_picker, _on_keyboard_navigation_layout_selected],
+		"ui_scale": [_ui_scale_picker, _on_ui_scale_selected],
+		"battle_shake": [_battle_camera_shake_picker, _on_battle_camera_shake_selected],
+		"color_cue": [_color_cue_picker, _on_color_cue_selected],
+	}
+
+func _settings_column_toggles() -> Dictionary:
+	return {
+		"vsync": [_vsync_toggle, _on_vsync_toggled],
+		"high_contrast": [_high_contrast_toggle, _on_high_contrast_toggled],
+		"reduce_motion": [_reduce_motion_toggle, _on_reduce_motion_toggled],
+		"reduce_flashes": [_reduce_flashes_toggle, _on_reduce_flashes_toggled],
+		"reduce_sounds": [_reduce_repetitive_sounds_toggle, _on_reduce_repetitive_sounds_toggled],
+	}
+
+func _settings_column_volumes() -> Dictionary:
+	return {
+		"master": [_master_volume_slider, _on_master_volume_changed],
+		"music": [_music_volume_slider, _on_music_volume_changed],
+		"effects": [_effects_volume_slider, _on_effects_volume_changed],
+	}
+
+func _settings_column_actions() -> Dictionary:
+	return {
+		"movement_keys": [_customize_movement_keys_button, _on_customize_movement_keys_pressed],
+		"restore_defaults": [_restore_settings_defaults_button, _on_restore_settings_defaults_pressed],
+		"support_bundle": [_export_support_bundle_button, _on_export_support_bundle_pressed],
+	}
+
+## The column's control that stands for a control of the old board (to hand the
+## focus to).
+func _settings_column_control(control: Control) -> Control:
+	if _settings_column == null or control == null:
+		return control
+	for group in [_settings_column_pickers(), _settings_column_toggles(), _settings_column_volumes(), _settings_column_actions()]:
+		for key in group:
+			if group[key][0] == control:
+				var target := _settings_column.focus_target(key)
+				return target if target != null else control
+	return control
+
+func _settings_choice_row(key: String, label: String) -> Dictionary:
+	var picker: OptionButton = _settings_column_pickers()[key][0]
+	var options := []
+	for index in range(picker.get_item_count()):
+		options.append({"id": str(picker.get_item_metadata(index)), "label": picker.get_item_text(index)})
+	return {
+		"kind": "choice", "key": key, "label": label, "options": options,
+		"selected": str(picker.get_selected_metadata()) if picker.selected >= 0 else "",
+		"tooltip": picker.tooltip_text,
+	}
+
+func _settings_switch_row(key: String, label: String) -> Dictionary:
+	var toggle: BaseButton = _settings_column_toggles()[key][0]
+	return {"kind": "switch", "key": key, "label": label, "on": toggle.button_pressed, "tooltip": toggle.tooltip_text}
+
+func _settings_volume_row(key: String, label: String) -> Dictionary:
+	var slider: HSlider = _settings_column_volumes()[key][0]
+	return {"kind": "volume", "key": key, "label": label, "value": slider.value, "tooltip": slider.tooltip_text}
+
+func _sync_settings_column() -> void:
+	if _settings_column == null:
+		return
+	var status := _settings_restore_status if _settings_restore_status != "" else "Changes apply at once and are saved on this device."
+	if not _support_bundle_result.is_empty():
+		status = "%s  ·  %s" % [status, _support_bundle_status]
+	_settings_column.show_settings({
+		"theme": "%s|%s" % [SettingsService.high_contrast_ui_enabled(), SettingsService.color_cue_mode_id()],
+		"sections": [
+			{"title": "Display", "rows": [
+				_settings_choice_row("window", "Window"),
+				_settings_choice_row("resolution", "Resolution"),
+				_settings_choice_row("quality", "Quality"),
+				_settings_choice_row("frame_limit", "Frame limit"),
+				_settings_switch_row("vsync", "VSync"),
+			]},
+			{"title": "Sound", "rows": [
+				_settings_volume_row("master", "Master"),
+				_settings_volume_row("music", "Music"),
+				_settings_volume_row("effects", "Effects"),
+			]},
+			{"title": "Game", "rows": [
+				_settings_choice_row("battle_speed", "Battle speed"),
+				_settings_choice_row("navigation", "Navigation keys"),
+				{
+					"kind": "button", "key": "movement_keys", "label": "Hero movement keys",
+					"text": "Custom keys set" if SettingsService.has_custom_hero_movement_bindings() else "Customize keys",
+					"tooltip": _customize_movement_keys_button.tooltip_text,
+				},
+			]},
+			{"title": "Readability", "rows": [
+				_settings_choice_row("ui_scale", "Interface scale"),
+				_settings_choice_row("battle_shake", "Battle shake"),
+				_settings_choice_row("color_cue", "Color cues"),
+				_settings_switch_row("high_contrast", "High contrast"),
+				_settings_switch_row("reduce_motion", "Reduce motion"),
+				_settings_switch_row("reduce_flashes", "Reduce flashes"),
+				_settings_switch_row("reduce_sounds", "Fewer repeat sounds"),
+			]},
+		],
+		"status": status,
+		"status_tooltip": _settings_restore_status_label.tooltip_text,
+		"actions": [
+			{"key": "restore_defaults", "text": "Restore defaults", "tooltip": _restore_settings_defaults_button.tooltip_text},
+			{"key": "support_bundle", "text": "Support bundle", "tooltip": "%s\n%s" % [_export_support_bundle_button.tooltip_text, _support_bundle_status_label.tooltip_text]},
+		],
+	})
+
+func _on_settings_column_option_chosen(key: String, id: String) -> void:
+	var target: Array = _settings_column_pickers().get(key, [])
+	if target.is_empty():
+		return
+	var picker: OptionButton = target[0]
+	for index in range(picker.get_item_count()):
+		if str(picker.get_item_metadata(index)) == id:
+			picker.select(index)
+			(target[1] as Callable).call(index)
+			return
+
+func _on_settings_column_toggle_changed(key: String, on: bool) -> void:
+	var target: Array = _settings_column_toggles().get(key, [])
+	if target.is_empty():
+		return
+	(target[0] as BaseButton).set_pressed_no_signal(on)
+	(target[1] as Callable).call(on)
+
+## A held slider previews each step and saves once when it is let go, as the old
+## board's sliders did.
+func _on_settings_column_volume_changed(key: String, value: float, dragging: bool) -> void:
+	var target: Array = _settings_column_volumes().get(key, [])
+	if target.is_empty():
+		return
+	var slider: HSlider = target[0]
+	if dragging and slider not in _dragging_volume_sliders:
+		_dragging_volume_sliders.append(slider)
+	elif not dragging:
+		_dragging_volume_sliders.erase(slider)
+	slider.set_value_no_signal(value)
+	(target[1] as Callable).call(value)
+
+func _on_settings_column_action_requested(key: String) -> void:
+	var target: Array = _settings_column_actions().get(key, [])
+	if not target.is_empty():
+		(target[1] as Callable).call()
 
 func _refresh_support_bundle_surface() -> void:
 	_export_support_bundle_button.tooltip_text = "Create a local support bundle from bounded device settings and recent runtime issues. No saves or telemetry are included."
@@ -2525,6 +2699,7 @@ func _refresh_support_bundle_surface() -> void:
 		]
 	else:
 		_support_bundle_status_label.tooltip_text = "Local-only export status. Expedition saves and campaign progression are never included."
+	_sync_settings_column()
 
 func _rebuild_save_browser() -> void:
 	# Normal browsing is file-based. Keep occupied legacy slots loadable, but do
@@ -3729,7 +3904,7 @@ func _apply_stage_dock_layout() -> void:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
 	elif _menu_tabs.current_tab == TAB_SKIRMISH:
 		anchors = _skirmish_stage_dock_anchors(_skirmish_intel_expanded)
-	elif _menu_tabs.current_tab == TAB_SAVES:
+	elif _menu_tabs.current_tab == TAB_SAVES or _menu_tabs.current_tab == TAB_SETTINGS:
 		anchors = SKIRMISH_SETUP_COLUMN_ANCHORS
 	elif _menu_tabs.current_tab == TAB_GUIDE:
 		anchors = _guide_stage_dock_anchors()
@@ -3925,7 +4100,7 @@ func _focus_stage_entry() -> void:
 		TAB_GUIDE:
 			target = _help_list if _help_list.item_count > 0 else _stage_help_button
 		TAB_SETTINGS:
-			target = _presentation_mode_picker
+			target = _settings_column.entry_control() if _settings_column != null else null
 	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
 		target.grab_focus()
 		_queue_stage_accessibility_refresh()
@@ -3937,10 +4112,10 @@ func _restore_first_view_focus() -> void:
 	if target != null and target.is_visible_in_tree():
 		target.grab_focus()
 
-## The skirmish setup and the save menu are columns with their own title and
-## buttons.
+## The skirmish setup, the save menu and the settings are columns with their own
+## title and buttons.
 func _stage_dock_is_column() -> bool:
-	return _menu_tabs.current_tab == TAB_SKIRMISH or _menu_tabs.current_tab == TAB_SAVES
+	return _menu_tabs.current_tab in [TAB_SKIRMISH, TAB_SAVES, TAB_SETTINGS]
 
 ## A column wears the information card's frame; the other boards keep the
 ## cartography board.
@@ -5412,7 +5587,7 @@ func validation_select_keyboard_navigation_layout(layout_id: String) -> bool:
 	return false
 
 func validation_open_hero_keybindings_dialog() -> Dictionary:
-	_hero_keybindings_dialog.open_dialog(_customize_movement_keys_button)
+	_hero_keybindings_dialog.open_dialog(_settings_column_control(_customize_movement_keys_button))
 	return _hero_keybindings_dialog.validation_snapshot()
 
 func validation_begin_hero_key_capture(action: StringName) -> bool:
@@ -5931,6 +6106,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_master_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_music_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_effects_volume_value, "gold", 13)
+	# This pass dresses the dock as the old board; a column takes its card back.
+	_apply_stage_dock_frame()
 
 
 func _apply_main_menu_wordmark_theme() -> void:

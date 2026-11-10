@@ -35,6 +35,8 @@ func _ready() -> void:
 	_label(self, "Load game", "gold", 26)
 	_empty = _label(self, "No saved games yet. Start a skirmish: the game keeps an autosave of each day, and you can save by hand at any time.", "muted", 14)
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# With no save the text takes the list's room, so the buttons stay at the foot.
+	_empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
