@@ -1,9 +1,10 @@
 extends Control
 
 const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
-## HoMM-style meeting screen for two friendly commanders sharing a field tile.
-## The heroes face each other: portrait and primary stats, the seven army
-## slots, worn and carried artifacts and the spells one can teach the other.
+## Meeting screen for two friendly commanders sharing a field tile, in the hero
+## menu's look (docs/hero-exchange-screen.md). The heroes face each other:
+## portrait and command stats, the figure with what each wears, the seven army
+## slots, the backpack and the spells one can teach the other.
 ## It renders HeroCommandRules.field_exchange_state and emits orders built with
 ## HeroCommandRules.field_*_action_id; OverworldShell commits every order
 ## through OverworldRules.perform_rendezvous_action and calls refresh_exchange.
@@ -17,18 +18,25 @@ const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const Spells = preload("res://scripts/core/SpellRules.gd")
 const CellScript = preload("res://scenes/overworld/HeroExchangeSlot.gd")
-const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
-const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
+const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
+const ICON_PATH := "res://art/ui/runtime/hero_menu/%s.png"
 const SIDES := ["left", "right"]
-const ARMY_CELL := Vector2(84.0, 96.0)
-const EQUIP_CELL := Vector2(72.0, 72.0)
-const PACK_CELL := Vector2(60.0, 60.0)
-const SPELL_CELL := Vector2(50.0, 50.0)
+## The hero menu's figure, smaller: two of them stand side by side here. A wide
+## screen takes the larger one.
+const FIGURE_SCALE := 0.7
+const FIGURE_SCALE_WIDE := 0.85
+const WIDE_SCREEN := 1700.0
+const IDENTITY_WIDTH := 190.0
+const ARMY_CELL := Vector2(80.0, 92.0)
+const PACK_CELL := Vector2(52.0, 52.0)
+const SPELL_CELL := Vector2(48.0, 48.0)
 const PORTRAIT_SIZE := Vector2(138.0, 184.0)
-const PACK_VISIBLE := 6
-const SPELL_VISIBLE := 8
-const SPINE_WIDTH := 150.0
-const PANEL_MAX_WIDTH := 1580.0
+const PACK_VISIBLE := 9
+const SPELL_VISIBLE := 9
+const SPINE_WIDTH := 130.0
+const PANEL_MAX_WIDTH := 1640.0
+const GOLD_DIM := Color(0.55, 0.44, 0.24)
+const HAIRLINE := Color(0.83, 0.68, 0.36, 0.45)
 const DRAG_ARMY := "hero_exchange_army"
 const DRAG_ARTIFACT := "hero_exchange_artifact"
 const EQUIP_CAPTIONS := {
@@ -36,8 +44,6 @@ const EQUIP_CAPTIONS := {
 	"head": "Head", "neck": "Neck", "cloak": "Cloak", "hand": "Hand", "hand_2": "Hand",
 	"ring": "Ring", "ring_2": "Ring", "trinket_3": "Trinket", "trinket_4": "Trinket",
 }
-## Body slots first, then the trinkets: the order the worn row shows them in.
-const EQUIP_ORDER := ["head", "neck", "cloak", "armor", "hand", "hand_2", "ring", "ring_2", "boots", "banner", "trinket", "trinket_2", "trinket_3", "trinket_4"]
 const IDLE_HINT := "Click a stack, then a slot · Shift-click splits · Click an artifact or spell to hand it over"
 
 var _state: Dictionary = {}
@@ -54,6 +60,7 @@ var _status: Label
 var _split_button: Button
 var _done_button: Button
 var _split_popup: PanelContainer
+var _split_frame: PanelContainer
 var _split_slider: HSlider
 var _split_icon: TextureRect
 var _split_title: Label
@@ -67,6 +74,11 @@ var _move_buttons: Dictionary = {}
 var _teach_empty: Dictionary = {}
 var _partner_row: VBoxContainer
 var _texture_cache: Dictionary = {}
+var _body: VBoxContainer
+var _grid: GridContainer
+var _figure_scale := FIGURE_SCALE
+# The status line is reading the cell under the mouse.
+var _reading_cell := false
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -81,41 +93,62 @@ func _ready() -> void:
 	add_child(shade)
 	_panel = PanelContainer.new()
 	_panel.name = "ExchangePanel"
-	_panel.add_theme_stylebox_override("panel", Visuals.ornate_frame_style(FRAME, "frame", 54, 28))
 	add_child(_panel)
 	_panel.minimum_size_changed.connect(_layout.call_deferred)
 	resized.connect(_layout)
 	var body := VBoxContainer.new()
-	body.add_theme_constant_override("separation", 16)
+	_body = body
+	body.add_theme_constant_override("separation", 12)
 	_panel.add_child(body)
+	_build_grid()
+	var line := ColorRect.new()
+	line.color = HAIRLINE
+	line.custom_minimum_size.y = 1.0
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	body.add_child(line)
+	body.add_child(_build_footer())
+	_build_split_popup()
+
+# --- Public surface -------------------------------------------------------
+
+## The rows of cells, built again when the screen calls for the other figure size.
+func _build_grid() -> void:
+	if _grid != null:
+		_body.remove_child(_grid)
+		_grid.queue_free()
+	_cells.clear()
+	_headers.clear()
+	_pagers.clear()
+	_move_buttons.clear()
+	_teach_empty.clear()
 	var grid := GridContainer.new()
+	_grid = grid
 	grid.name = "ExchangeGrid"
 	grid.columns = 3
 	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 14)
-	body.add_child(grid)
-	grid.add_child(_build_header("left"))
-	grid.add_child(_build_partner_spine())
-	grid.add_child(_build_header("right"))
+	grid.add_theme_constant_override("v_separation", 10)
+	_body.add_child(grid)
+	_body.move_child(grid, 0)
+	grid.add_child(_build_hero_block("left"))
+	grid.add_child(_build_top_spine())
+	grid.add_child(_build_hero_block("right"))
 	grid.add_child(_build_army_row("left"))
 	grid.add_child(_build_move_spine("troops", "Troops"))
 	grid.add_child(_build_army_row("right"))
-	grid.add_child(_build_equip_row("left"))
-	grid.add_child(_build_move_spine("artifacts", "Artifacts"))
-	grid.add_child(_build_equip_row("right"))
 	grid.add_child(_build_pack_row("left"))
 	grid.add_child(_spine_caption("Backpack"))
 	grid.add_child(_build_pack_row("right"))
 	grid.add_child(_build_spell_row("left"))
 	grid.add_child(_spine_caption("Teach spells"))
 	grid.add_child(_build_spell_row("right"))
-	body.add_child(_build_footer())
-	_build_split_popup()
-
-# --- Public surface -------------------------------------------------------
 
 func open_exchange(state: Dictionary, return_control: Control = null) -> void:
 	_return_focus = weakref(return_control) if return_control != null else null
+	_apply_frames()
+	var wanted_scale := FIGURE_SCALE_WIDE if size.x >= WIDE_SCREEN else FIGURE_SCALE
+	if not is_equal_approx(wanted_scale, _figure_scale):
+		_figure_scale = wanted_scale
+		_build_grid()
 	_selected.clear()
 	_split_armed = false
 	_pack_page = {"left": 0, "right": 0}
@@ -166,7 +199,12 @@ func press_cell(item: Control, shift: bool = false) -> void:
 
 ## Pointer or focus over a cell: with a stack selected, say what a click would do.
 func hover_cell(item: Control) -> void:
-	if _selected.is_empty() or String(item.kind) != "army" or _split_popup.visible:
+	if _split_popup.visible:
+		return
+	if _selected.is_empty() and String(item.kind) in ["equip", "pack", "spell"]:
+		_read_cell(item)
+		return
+	if _selected.is_empty() or String(item.kind) != "army":
 		return
 	if String(item.side) == String(_selected.side) and int(item.key) == int(_selected.slot):
 		_set_status(_selection_hint(), "body")
@@ -174,6 +212,27 @@ func hover_cell(item: Control) -> void:
 	var preview := _army_preview(String(_selected.side), int(_selected.slot), String(item.side), int(item.key), _split_armed)
 	if String(preview.get("message", "")) != "":
 		_set_status(String(preview.get("message", "")), "body" if bool(preview.get("allowed", false)) else "red")
+
+## With nothing chosen, the status line says what the cell under the mouse holds.
+func _read_cell(item: Control) -> void:
+	var text := ""
+	if String(item.kind) == "spell":
+		if String(item.item_id) != "":
+			var spell := ContentService.get_spell(String(item.item_id))
+			text = "%s — %s" % [String(spell.get("name", item.item_id)), Spells._spell_effect_summary(spell, {})]
+	elif String(item.item_id) != "":
+		text = "%s — %s" % [Artifacts.artifact_name(String(item.item_id)), Artifacts.artifact_effect_summary(String(item.item_id))]
+	elif String(item.kind) == "equip":
+		text = "%s: empty" % String(EQUIP_CAPTIONS.get(String(item.key), "Slot"))
+	if text != "":
+		_reading_cell = true
+		_set_status(text, "body")
+
+func leave_cell(_item: Control) -> void:
+	if _reading_cell:
+		_reading_cell = false
+		if _selected.is_empty() and not _split_popup.visible:
+			_set_status(IDLE_HINT, "muted")
 
 func set_split_amount(amount: int) -> void:
 	if _split_slider != null:
@@ -319,54 +378,144 @@ func _layout() -> void:
 			floorf(_panel.position.y + _panel.size.y - _split_popup.size.y - 92.0)
 		)
 
+## The frames follow the contrast setting, so they are dressed at each opening.
+func _apply_frames() -> void:
+	var card := Visuals.info_card_style().duplicate()
+	card.set_content_margin_all(20)
+	_panel.add_theme_stylebox_override("panel", card)
+	if _split_frame != null:
+		_split_frame.add_theme_stylebox_override("panel", Visuals.info_card_style(true))
+
+## A hero's upper block: who it is, and the figure with what it wears. The two
+## blocks mirror each other, the portraits at the outer edges.
+func _build_hero_block(side: String) -> Control:
+	var block := HBoxContainer.new()
+	block.name = "%sHero" % side.capitalize()
+	block.add_theme_constant_override("separation", 8)
+	var parts := [_build_header(side), _build_figure(side), _build_trinkets(side)]
+	if side == "right":
+		parts.reverse()
+	for part in parts:
+		block.add_child(part)
+	return block
+
 func _build_header(side: String) -> Control:
-	var row := HBoxContainer.new()
-	row.name = "%sHeader" % side.capitalize()
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_theme_constant_override("separation", 18)
-	row.alignment = BoxContainer.ALIGNMENT_END if side == "right" else BoxContainer.ALIGNMENT_BEGIN
+	var column := VBoxContainer.new()
+	column.name = "%sHeader" % side.capitalize()
+	column.custom_minimum_size.x = IDENTITY_WIDTH
+	column.add_theme_constant_override("separation", 3)
 	var frame := PanelContainer.new()
-	frame.add_theme_stylebox_override("panel", Visuals.ornate_frame_style(PORTRAIT_FRAME, "frame", 26, 6))
+	frame.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var frame_style := StyleBoxFlat.new()
+	frame_style.bg_color = Color(0.30, 0.27, 0.23)
+	frame_style.border_color = Color(0.76, 0.60, 0.30)
+	frame_style.set_border_width_all(1)
+	frame_style.set_corner_radius_all(5)
+	frame_style.set_content_margin_all(2)
+	frame.add_theme_stylebox_override("panel", frame_style)
 	var portrait := TextureRect.new()
 	portrait.name = "Portrait"
 	portrait.custom_minimum_size = PORTRAIT_SIZE
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	portrait.mouse_filter = Control.MOUSE_FILTER_PASS
 	frame.add_child(portrait)
-	var info := VBoxContainer.new()
-	info.alignment = BoxContainer.ALIGNMENT_CENTER
-	info.add_theme_constant_override("separation", 4)
-	var align := HORIZONTAL_ALIGNMENT_RIGHT if side == "right" else HORIZONTAL_ALIGNMENT_LEFT
-	var name_label := _label(info, "", 28, "gold", align)
+	column.add_child(frame)
+	var name_label := _label(column, "", 20, "gold", HORIZONTAL_ALIGNMENT_CENTER)
 	name_label.name = "HeroName"
-	var level_label := _label(info, "", 17, "body", align)
+	name_label.clip_text = true
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	var level_label := _label(column, "", 13, "muted", HORIZONTAL_ALIGNMENT_CENTER)
 	level_label.name = "HeroLevel"
+	level_label.clip_text = true
 	var stats_row := HBoxContainer.new()
 	stats_row.name = "PrimaryStats"
-	stats_row.add_theme_constant_override("separation", 16)
-	stats_row.alignment = BoxContainer.ALIGNMENT_END if side == "right" else BoxContainer.ALIGNMENT_BEGIN
-	info.add_child(stats_row)
+	stats_row.add_theme_constant_override("separation", 2)
+	column.add_child(stats_row)
 	var stat_values := []
 	for stat in ["attack", "defense", "power", "knowledge"]:
 		var stat_box := VBoxContainer.new()
-		stat_box.add_theme_constant_override("separation", -4)
+		stat_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stat_box.add_theme_constant_override("separation", -3)
 		stat_box.mouse_filter = Control.MOUSE_FILTER_PASS
-		_label(stat_box, String(stat).capitalize(), 15, "muted", HORIZONTAL_ALIGNMENT_CENTER)
-		var value := _label(stat_box, "0", 28, "title", HORIZONTAL_ALIGNMENT_CENTER)
+		stat_box.tooltip_text = String(stat).capitalize()
+		var glyph := TextureRect.new()
+		glyph.texture = _texture(ICON_PATH % ("stat_" + stat))
+		glyph.custom_minimum_size = Vector2(24.0, 24.0)
+		glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		glyph.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stat_box.add_child(glyph)
+		var value := _label(stat_box, "0", 20, "body", HORIZONTAL_ALIGNMENT_CENTER)
 		value.mouse_filter = Control.MOUSE_FILTER_PASS
 		stats_row.add_child(stat_box)
 		stat_values.append(value)
-	var resources := _label(info, "", 15, "muted", align)
+	var resources := _label(column, "", 12, "muted", HORIZONTAL_ALIGNMENT_CENTER)
 	resources.name = "HeroResources"
-	if side == "right":
-		row.add_child(info)
-		row.add_child(frame)
-	else:
-		row.add_child(frame)
-		row.add_child(info)
 	_headers[side] = {"portrait": portrait, "name": name_label, "level": level_label, "stats": stat_values, "resources": resources}
-	return row
+	return column
+
+## The figure with a cell where each thing is worn, as in the hero menu.
+func _build_figure(side: String) -> Control:
+	var figure := Control.new()
+	figure.name = "%sEquipped" % side.capitalize()
+	figure.custom_minimum_size = (HeroSheetScript.DOLL_SIZE * _figure_scale).floor()
+	figure.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var body := TextureRect.new()
+	body.texture = _texture(ICON_PATH % "body")
+	body.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	body.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	body.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	body.modulate = Color(1.0, 1.0, 1.0, 0.5)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	body.position = (HeroSheetScript.DOLL_BODY.position * _figure_scale).floor()
+	body.size = (HeroSheetScript.DOLL_BODY.size * _figure_scale).floor()
+	figure.add_child(body)
+	for slot in HeroSheetScript.DOLL_SLOTS:
+		var rect: Rect2 = HeroSheetScript.DOLL_SLOTS[slot]
+		var item := _make_cell(side, "equip", String(slot), (rect.size * _figure_scale).floor())
+		item.set_ghost(_texture(ICON_PATH % ("slot_" + _slot_kind(String(slot)))))
+		item.position = (rect.position * _figure_scale).floor()
+		item.size = (rect.size * _figure_scale).floor()
+		figure.add_child(item)
+	return figure
+
+func _build_trinkets(side: String) -> Control:
+	var column := VBoxContainer.new()
+	column.name = "%sTrinkets" % side.capitalize()
+	column.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	column.add_theme_constant_override("separation", 6)
+	_label(column, "Trinkets", 12, "muted", HORIZONTAL_ALIGNMENT_CENTER)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 6)
+	column.add_child(grid)
+	var edge := floorf(64.0 * _figure_scale)
+	for slot in HeroSheetScript.TRINKET_SLOTS:
+		var item := _make_cell(side, "equip", String(slot), Vector2(edge, edge))
+		item.set_ghost(_texture(ICON_PATH % "slot_trinket"))
+		grid.add_child(item)
+	return column
+
+func _slot_kind(slot: String) -> String:
+	for kind in Artifacts.SLOTS_BY_KIND:
+		if slot in Artifacts.SLOTS_BY_KIND[kind]:
+			return String(kind)
+	return ""
+
+## Between the two heroes' upper blocks: who else can be met on this tile, and
+## the buttons that hand over every artifact.
+func _build_top_spine() -> Control:
+	var spine := VBoxContainer.new()
+	spine.custom_minimum_size = Vector2(SPINE_WIDTH, 0)
+	spine.alignment = BoxContainer.ALIGNMENT_CENTER
+	spine.add_theme_constant_override("separation", 18)
+	spine.add_child(_build_partner_spine())
+	spine.add_child(_build_move_spine("artifacts", "Artifacts"))
+	return spine
 
 func _build_partner_spine() -> Control:
 	_partner_row = VBoxContainer.new()
@@ -382,7 +531,7 @@ func _build_move_spine(kind: String, caption: String) -> Control:
 	box.custom_minimum_size = Vector2(SPINE_WIDTH, 0)
 	box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	box.add_theme_constant_override("separation", 6)
-	_label(box, caption, 16, "muted", HORIZONTAL_ALIGNMENT_CENTER)
+	_label(box, caption, 14, "muted", HORIZONTAL_ALIGNMENT_CENTER)
 	for side in SIDES:
 		var button := Button.new()
 		button.name = "%sAll%s" % [kind.capitalize(), "Right" if side == "left" else "Left"]
@@ -398,7 +547,7 @@ func _spine_caption(text: String) -> Control:
 	var box := VBoxContainer.new()
 	box.custom_minimum_size = Vector2(SPINE_WIDTH, 0)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	_label(box, text, 16, "muted", HORIZONTAL_ALIGNMENT_CENTER)
+	_label(box, text, 14, "muted", HORIZONTAL_ALIGNMENT_CENTER)
 	return box
 
 func _row(side: String, row_name: String, separation: int) -> HBoxContainer:
@@ -414,18 +563,6 @@ func _build_army_row(side: String) -> Control:
 	var row := _row(side, "Army", 7)
 	for slot_index in range(Heroes.ARMY_SLOT_COUNT):
 		row.add_child(_make_cell(side, "army", str(slot_index), ARMY_CELL))
-	return row
-
-func _build_equip_row(side: String) -> Control:
-	# Fourteen slots in two rows of seven, as wide as the army row.
-	var row := _row(side, "Equipped", 8)
-	var grid := GridContainer.new()
-	grid.columns = 7
-	grid.add_theme_constant_override("h_separation", 6)
-	grid.add_theme_constant_override("v_separation", 6)
-	for slot in EQUIP_ORDER:
-		grid.add_child(_make_cell(side, "equip", String(slot), EQUIP_CELL))
-	row.add_child(grid)
 	return row
 
 func _build_pack_row(side: String) -> Control:
@@ -502,7 +639,7 @@ func _build_split_popup() -> void:
 	_split_popup.hide()
 	add_child(_split_popup)
 	var frame := PanelContainer.new()
-	frame.add_theme_stylebox_override("panel", Visuals.ornate_frame_style(PORTRAIT_FRAME, "frame", 26, 18))
+	_split_frame = frame
 	_split_popup.add_child(frame)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
@@ -595,7 +732,7 @@ func _update_header(side: String, hero: Dictionary) -> void:
 	(header.portrait as TextureRect).texture = _texture(String(hero.get("portrait", "")))
 	(header.portrait as TextureRect).tooltip_text = String(hero.get("name", ""))
 	(header.name as Label).text = String(hero.get("name", ""))
-	(header.level as Label).text = "Level %d · %s" % [int(hero.get("level", 1)), String(hero.get("archetype", ""))]
+	(header.level as Label).text = "Level %d · %s" % [int(hero.get("level", 1)), String(hero.get("archetype", "")).capitalize()]
 	var stats: Array = hero.get("stats", [])
 	for index in range((header.stats as Array).size()):
 		var value_label: Label = header.stats[index]
@@ -616,7 +753,7 @@ func _update_army(side: String, hero: Dictionary) -> void:
 		if bool(slot.get("occupied", false)):
 			item.show_item(
 				String(slot.get("unit_id", "")),
-				UnitPortraits.for_unit(String(slot.get("unit_id", ""))),
+				UnitPortraits.bust_for_unit(String(slot.get("unit_id", ""))),
 				int(slot.get("count", 0)),
 				"",
 				"%s × %d\nTier %d %s" % [String(slot.get("unit_name", "")), int(slot.get("count", 0)), int(slot.get("tier", 1)), String(slot.get("role", "")).capitalize()]

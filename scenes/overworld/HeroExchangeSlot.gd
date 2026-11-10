@@ -3,11 +3,12 @@ extends Button
 ## artifact, or a teachable spell. Clicks and drag & drop are delegated to the
 ## owning HeroExchangeScreen, which turns them into HeroCommandRules orders.
 
-const FILL := Color(0.035, 0.05, 0.05, 0.96)
-const HOVER_FILL := Color(0.08, 0.11, 0.10, 1.0)
-const BORDER := Color(0.46, 0.37, 0.19, 1.0)
-const HOVER_BORDER := Color(0.88, 0.68, 0.27, 1.0)
-const SELECTED_BORDER := Color(1.0, 0.82, 0.34, 1.0)
+# The hero menu's tiles (scenes/shared/HeroSheet.gd).
+const FILL := Color(0.075, 0.062, 0.05, 0.96)
+const HOVER_FILL := Color(0.14, 0.115, 0.085, 0.98)
+const BORDER := Color(0.55, 0.44, 0.24, 1.0)
+const HOVER_BORDER := Color(0.84, 0.67, 0.31, 1.0)
+const SELECTED_BORDER := Color(1.0, 0.93, 0.70, 1.0)
 const LEGAL_BORDER := Color(0.52, 0.80, 0.56, 1.0)
 
 var screen: Control
@@ -20,6 +21,8 @@ var count_label: Label
 var caption: Label
 var _selected := false
 var _legal := false
+# The outline an empty worn slot shows for what it takes.
+var _ghost: Texture2D
 
 func setup(owner_screen: Control, cell_side: String, cell_kind: String, cell_key: String, cell_size: Vector2) -> void:
 	screen = owner_screen
@@ -34,6 +37,7 @@ func setup(owner_screen: Control, cell_side: String, cell_kind: String, cell_key
 	art.name = "Art"
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var inset := 3.0 if kind == "army" else 6.0
@@ -67,16 +71,22 @@ func setup(owner_screen: Control, cell_side: String, cell_kind: String, cell_key
 	add_child(count_label)
 	pressed.connect(func(): screen.press_cell(self, Input.is_key_pressed(KEY_SHIFT)))
 	mouse_entered.connect(func(): screen.hover_cell(self))
+	mouse_exited.connect(func(): screen.leave_cell(self))
 	focus_entered.connect(func(): screen.hover_cell(self))
 	_apply_styles()
 
-## `texture` null shows an empty cell; `count` <= 0 hides the count badge.
+func set_ghost(texture: Texture2D) -> void:
+	_ghost = texture
+
+## `texture` null shows an empty cell (its outline, if it has one, in place of the
+## caption); `count` <= 0 hides the count badge.
 func show_item(id: String, texture: Texture2D, count: int, empty_caption: String, tooltip: String) -> void:
 	item_id = id
-	art.texture = texture
-	art.modulate = Color(1, 1, 1, 1)
+	var outlined := id == "" and _ghost != null
+	art.texture = _ghost if outlined else texture
+	art.modulate = Color(1, 1, 1, 0.5) if outlined else Color(1, 1, 1, 1)
 	count_label.text = str(count) if count > 0 else ""
-	caption.text = empty_caption if id == "" else ""
+	caption.text = empty_caption if id == "" and not outlined else ""
 	tooltip_text = tooltip
 	accessibility_name = tooltip
 
@@ -107,7 +117,8 @@ func _style(fill: Color, border: Color, width: int) -> StyleBoxFlat:
 	style.bg_color = fill
 	style.border_color = border
 	style.set_border_width_all(width)
-	style.set_corner_radius_all(3)
+	style.set_corner_radius_all(5)
+	style.anti_aliasing = true
 	return style
 
 func _get_drag_data(_position: Vector2) -> Variant:
@@ -120,10 +131,11 @@ func _get_drag_data(_position: Vector2) -> Variant:
 	if get_viewport().gui_is_dragging():
 		var preview := TextureRect.new()
 		preview.texture = art.texture
-		preview.custom_minimum_size = size * 0.9
-		preview.size = size * 0.9
+		# Before the size: a picture that keeps its own size would not shrink to it.
 		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		preview.custom_minimum_size = size * 0.9
+		preview.size = size * 0.9
 		preview.modulate = Color(1, 1, 1, 0.85)
 		set_drag_preview(preview)
 	return payload

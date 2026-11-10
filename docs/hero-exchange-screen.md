@@ -10,9 +10,20 @@ orders. It is replaced by a HoMM-style meeting screen.
   focused modal over the dimmed map. The active commander stands left, the partner
   right. With several partners on the tile, the spine lists them for switching.
 - Each side shows portrait, name, level, archetype, attack/defense/power/knowledge
-  (artifact and specialty bonuses included), mana and movement, the seven army slots,
-  the five equipment slots, a paged backpack strip and the spells the partner does
-  not know yet. No scroll containers.
+  (artifact and specialty bonuses included), mana and movement, the figure with a
+  cell where each thing is worn and the four trinket cells beside it, the seven
+  army slots, a paged backpack strip and the spells the partner does not know yet.
+  The two sides mirror each other, portraits at the outer edges. No scroll
+  containers.
+- The look is the hero menu's (owner, 2026-11-10; `docs/hero-screen.md`): the
+  information card's frame, its tiles, each unit's close-up on the army cells, the
+  stat emblems, and the same figure and empty-slot outlines, smaller: at 0.85 of
+  the hero menu's size on a screen 1,700 wide or more, at 0.7 below that, so the
+  screen still fits at the 130% interface scale. The layout is rebuilt when the
+  screen is opened at the other size.
+- With nothing chosen, the footer reads the artifact or spell under the mouse
+  (name and what it gives) and returns to the hint when the mouse leaves; the
+  cell's tooltip says the same.
 - Army: click a stack, then a slot. An empty slot takes the stack, the same creature
   merges, a different creature swaps. Drag and drop does the same. Shift-click,
   Shift-drop or the `Split` toggle opens an amount slider (1 to count-1) for a split
@@ -49,6 +60,16 @@ orders. It is replaced by a HoMM-style meeting screen.
   `equipped`/`inventory`.
 
 ## Validation
+
+2026-11-10, for the new look, in the game at 1920 by 1080 with real mouse events:
+an artifact dragged from one backpack to the other, a worn artifact dragged onto
+the partner's hand slot, a stack dragged across, an artifact handed over by a
+click (worn at once in the free chest slot), the footer reading the cell under
+the mouse; the screen opened again at the 130% interface scale, inside the
+screen. Content check and core suite.
+
+Earlier:
+
 
 - `tests/hero_exchange_screen_report.tscn` drives the real screen inside
   `OverworldShell`: move, refused last-stack move with reason, keyboard merge, swap,
