@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "feature-veilmourn-harbor-shipyards-20261110",
- "currentSliceTitle": "Veilmourn harbour towns start with a Shipyard; boats there half price",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T07:37:08Z",
+ "currentSliceTitle": "Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T07:52:16Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "feature-veilmourn-harbor-shipyards-20261110",
-   "title": "Veilmourn harbour towns start with a Shipyard; boats there half price",
-   "status": "in_progress",
-   "goal": "Every Veilmourn town with a harbour has the Shipyard built from the start, and its boats cost 500 gold and 5 wood (owner, 2026-11-10). Data on the town template in content/towns.json; rules in water_travel_rules_ai.cpp, town services, AI boat buying.",
-   "docs": [
-    "docs/water-travel.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.",
+   "commit": "466f6281a"
   },
   {
    "id": "town-art-brasshollow-boatworks-lower-20261110",
