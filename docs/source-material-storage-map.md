@@ -100,7 +100,13 @@ Source art belongs in this archive, not in temp folders, agent worktrees or as l
 | `art/ui/source/generated/info_card_20261110` (map information card) | 2 | 4.7 |
 | `art/overworld/source/generated/resource_sites` | 3 | 3.4 |
 
-The other 890 files are tracked recipe, prompt and provenance files that changed since, as backup copies. Every payload was read back against its SHA-256 and ZIP CRC, and the snapshot's standalone verifier passed again. A path, size and SHA-256 check of the owner's checkout and of the worktree `neutral-encounters-retreat-bug-cd04af` then found no binary source outside the chain. Nothing was removed locally. Other agent worktrees were not checked: a town repaint in progress there is in no snapshot until its sources reach the owner's checkout and the next snapshot is written.
+The other 890 files are 322 tracked recipe, prompt and provenance files that changed since, as backup copies, and the 568 untracked `.import` sidecars of the Brasshollow, Veilmourn, Mireclaw and Embercourt town sources. Every payload was read back against its SHA-256 and ZIP CRC, and the snapshot's standalone verifier passed again. A path, size and SHA-256 check of the owner's checkout and of the worktree `neutral-encounters-retreat-bug-cd04af` then found no binary source outside the chain. Other agent worktrees were not checked: a town repaint in progress there is in no snapshot until its sources reach the owner's checkout and the next snapshot is written.
+
+The same day (owner: remove both) the snapshot's untracked files were removed from the owner's checkout (1,656 files: the 1,088 sources and the 568 sidecars) and from that worktree (376 sources) with `tools/restore_archived_source_material.py --paths-file <the snapshot's paths> --remove --apply`. Each file was deleted only after its local copy and its archived payload matched the manifest SHA-256; none differed and the 322 tracked files stayed. The content check passes in both, and the core suite in the worktree. A retake restores the sources it needs first:
+
+```text
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9 --prefix art/towns/source/generated/overhaul/faction_mireclaw/ --apply
+```
 
 ## Tests never need archived sources
 
