@@ -54,7 +54,6 @@ None open.
 
 ## Open work
 
-- `ui-skirmish-setup-rework-20261110` (in progress): Owner, 2026-11-10: the skirmish and save menus look terrible and hero selection tells nothing. New skirmish setup as mockup B: one tall dark-and-gold column at the left with faction crests, hero portraits, a hero card (portrait, stats, specialty, spells, starting troops), map settings as pill buttons, Build & Play; built maps behind a small button. Then the save menu in the same look. Files: scenes/menus. See `docs/skirmish-setup-screen.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -64,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.
 - 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.

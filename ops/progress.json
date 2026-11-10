@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-skirmish-setup-rework-20261110",
- "currentSliceTitle": "Skirmish setup: left column with hero card and pill buttons",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T12:42:21Z",
+ "currentSliceTitle": "Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T12:44:49Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-skirmish-setup-rework-20261110",
-   "title": "Skirmish setup: left column with hero card and pill buttons",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-10: the skirmish and save menus look terrible and hero selection tells nothing. New skirmish setup as mockup B: one tall dark-and-gold column at the left with faction crests, hero portraits, a hero card (portrait, stats, specialty, spells, starting troops), map settings as pill buttons, Build & Play; built maps behind a small button. Then the save menu in the same look. Files: scenes/menus.",
-   "docs": [
-    "docs/skirmish-setup-screen.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.",
+   "commit": "36c648462"
   },
   {
    "id": "town-art-thornwake-20261110",
