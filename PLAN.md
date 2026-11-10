@@ -50,7 +50,6 @@ None open.
 
 ## Open work
 
-- `town-art-embercourt-lock-gorge-20261110` (in progress): Repaint Embercourt as the last two towns: an empty river gorge with a lock staircase and harbour basin (owner's pick, concept C), 24 plots planned with the Shipyard from the start, all 52 building stages as masked edits, BiRefNet mattes, package_town_plot_layers.py; TownStageView backdrop and glows. Owner approved about 3.50 USD of imggen. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -60,6 +59,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week instead of any time (new visit cadence weekly_per_side); computer players still leave it alone.
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.
 - 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.
