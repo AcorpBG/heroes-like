@@ -326,13 +326,12 @@ Atom _encounter_readiness_surface(State &state, DictRef session, DictRef encount
 	} else if (player_headcount > enemy_headcount) {
 		relation = key::you_larger;
 	}
+	// The comparison is told, the two headcounts are not.
 	if (compact) {
-		return gd::format(state, key::ready_d_vs_d_troops_s, {int_value(player_headcount), int_value(enemy_headcount), str(relation)});
+		return gd::format(state, state.intern("Numbers: %s"), {str(relation)});
 	}
-	return gd::format(state, key::readiness_your_army_d_troops_d, {
-		int_value(player_headcount),
+	return gd::format(state, state.intern("Readiness: your %d groups against %d; %s."), {
 		int_value(gd::int_field(state, player_totals, key::groups, 0)),
-		int_value(enemy_headcount),
 		int_value(gd::int_field(state, enemy_totals, key::groups, 0)),
 		str(relation),
 	});
@@ -614,6 +613,56 @@ Atom _encounter_difficulty_label(State &state, DictRef encounter) {
 	return gd::format(state, key::difficulty_s, {str(_humanize_id(state, difficulty))});
 }
 
+namespace {
+
+// The size bands (owner decision, 2026-11-10): each about twice the one before,
+// so a word narrows a stack to a factor of two and no closer.
+struct SizeBand {
+	int64_t low;
+	int64_t high;
+	const char *word;
+	const char *lead;
+};
+constexpr SizeBand kSizeBands[] = {
+	{1, 3, "few", "a few"},
+	{4, 8, "handful", "a handful of"},
+	{9, 15, "squad", "a squad of"},
+	{16, 30, "band", "a band of"},
+	{31, 60, "company", "a company of"},
+	{61, 120, "host", "a host of"},
+	{121, 250, "multitude", "a multitude of"},
+	{251, 500, "legion", "a legion of"},
+	{501, -1, "countless", "countless"},
+};
+
+} // namespace
+
+DictRef army_size_band(State &state, int64_t count) {
+	const DictRef band = state.new_dict();
+	if (count < 1) {
+		return band;
+	}
+	for (const SizeBand &entry : kSizeBands) {
+		if (entry.high >= 0 && count > entry.high) {
+			continue;
+		}
+		state.set(band, str(state.intern("word")), str(state.intern(entry.word)));
+		state.set(band, str(state.intern("lead")), str(state.intern(entry.lead)));
+		state.set(band, str(state.intern("low")), int_value(entry.low));
+		state.set(band, str(state.intern("high")), int_value(entry.high));
+		break;
+	}
+	return band;
+}
+
+Atom army_size_phrase(State &state, int64_t count, Atom what) {
+	const DictRef band = army_size_band(state, count);
+	if (gd::is_empty(state, band)) {
+		return what;
+	}
+	return gd::format(state, state.intern("%s %s"), {gd::index(state, band, str(state.intern("lead"))), str(what)});
+}
+
 Atom _encounter_army_surface(State &state, DictRef encounter, bool include_units) {
 	const DictRef army = _encounter_army_payload(state, encounter);
 	if (gd::is_empty(state, army)) {
@@ -625,7 +674,9 @@ Atom _encounter_army_surface(State &state, DictRef encounter, bool include_units
 	if (army_name != key::empty) {
 		state.append(parts, str(army_name));
 	}
-	state.append(parts, str(gd::format(state, key::d_troops_d_groups, {int_value(gd::int_field(state, totals, key::headcount, 0)), int_value(gd::int_field(state, totals, key::groups, 0))})));
+	// Another side's headcount is not told; its groups are what the map shows.
+	const int64_t group_count = gd::int_field(state, totals, key::groups, 0);
+	state.append(parts, str(gd::format(state, state.intern("%d group%s"), {int_value(group_count), str(group_count == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s))})));
 	if (include_units) {
 		const Atom unit_summary = _encounter_army_unit_summary(state, army);
 		if (unit_summary != key::empty) {
@@ -662,7 +713,7 @@ Atom _encounter_army_unit_summary(State &state, DictRef army) {
 		}
 		const Atom unit_id = text_of(state, stack.ref, key::unit_id);
 		const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
-		labels.push_back(gd::format(state, key::s_x_d, {str(text_of(state, unit, key::name, unit_id)), int_value(count)}));
+		labels.push_back(army_size_phrase(state, count, text_of(state, unit, key::name, unit_id)));
 		if (labels.size() >= kEncounterArmyDetailGroupLimit) {
 			break;
 		}

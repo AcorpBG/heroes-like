@@ -30,6 +30,12 @@ namespace enemy_adventure_rules {
 gd::DictRef sync_commander_army_continuity(state::State &state, gd::DictRef commander_state, const state::Value &army_source, gd::Atom encounter_id);
 } // namespace enemy_adventure_rules
 
+namespace overworld_rules {
+// Defined in overworld_rules_encounter_text.cpp: a size band for what the
+// player reads of another side's numbers (docs/army-size-bands.md).
+gd::Atom army_size_phrase(state::State &state, int64_t count, gd::Atom what);
+} // namespace overworld_rules
+
 namespace {
 
 using gd::array_value;
@@ -295,7 +301,8 @@ DictRef _visit_own_town_if_inside(State &state, DictRef session, DictRef context
 	state.set(target, str(key::target_public_importance), str(key::low));
 	const Atom name = hero_name(state, entry);
 	const Atom town_name = enemy_turn_rules::_town_name(state, town);
-	const Atom summary = gd::format(state, key::s_gathers_d_troops_at_s, {str(name), int_value(gained), str(town_name)});
+	// What the player reads of another side's reinforcement is a size band.
+	const Atom summary = gd::format(state, state.intern("%s gathers %s at %s."), {str(name), str(overworld_rules::army_size_phrase(state, gained, state.intern("troops"))), str(town_name)});
 	const ArrayRef reasons = state.new_array();
 	state.append(reasons, str(key::garrison_taken));
 	const DictRef event = _event(state, session, context, key::ai_hero_reinforced, entry, target, summary, reasons);

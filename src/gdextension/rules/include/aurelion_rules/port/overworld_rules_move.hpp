@@ -164,6 +164,12 @@ Atom _script_hook_effect_consequence_summary(State &state, const Value &effects)
 Atom _encounter_risk_label(State &state, DictRef encounter);
 Atom _encounter_difficulty_label(State &state, DictRef encounter);
 Atom _encounter_army_surface(State &state, DictRef encounter, bool include_units);
+// How many of another side's creatures the player is told there are: a word
+// for a range, never the count (docs/army-size-bands.md). {word, lead, low,
+// high}; high is -1 for the open last band, and a count under 1 has no band.
+DictRef army_size_band(State &state, int64_t count);
+// "a squad of Beacon Lectors": the band's lead with what is counted.
+Atom army_size_phrase(State &state, int64_t count, Atom what);
 DictRef _encounter_army_payload(State &state, DictRef encounter);
 Atom _encounter_army_unit_summary(State &state, DictRef army);
 Atom _encounter_reward_surface(State &state, DictRef encounter);

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-stage-haze-embercourt-20261110",
- "currentSliceTitle": "Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T09:23:29Z",
+ "currentSliceId": "ui-army-size-bands-20261110",
+ "currentSliceTitle": "Other armies' numbers shown as size bands",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T09:39:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-army-size-bands-20261110",
+   "title": "Other armies' numbers shown as size bands",
+   "status": "in_progress",
+   "goal": "The map no longer tells the exact count of another side's creatures: hover, the right-click report, the rules' army, readiness, dwelling-guard and enemy-garrison texts use nine size bands (owner, 2026-11-10; ranges picked by the agent). Battles and the player's own armies stay exact.",
+   "docs": [
+    "docs/army-size-bands.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-stage-haze-embercourt-20261110",
    "status": "completed",

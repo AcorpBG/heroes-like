@@ -85,7 +85,8 @@ func open_report(report: Dictionary, viewport_size: Vector2, hold_button := MOUS
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			row.add_child(icon)
 		var label := Label.new()
-		label.text = "%s × %d" % [stack.get("name", "Unit"), stack.get("count", 0)]
+		# A size band and its range: another side's exact numbers are not told.
+		label.text = "%s · %s (%s)" % [stack.get("name", "Unit"), stack.get("size", ""), stack.get("range", "")]
 		label.tooltip_text = label.text
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS

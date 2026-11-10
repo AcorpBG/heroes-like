@@ -45,7 +45,8 @@ static func visible_record(session, record: Dictionary, level: int) -> bool:
 ## kind (unscouted, ground, town, site, army, artifact), in_sight, title, subtitle
 ## (what kind of thing), gives (what it gives and how often), status and tone
 ## (ready, used, guarded, hostile, yours, neutral, plain), flavour, terrain, guard
-## ({} or name, stacks, strength, troops, reward, battlefield), tag, tag_tone and
+## ({} or name, stacks (unit, size band and its range, never a count), strength,
+## troops, reward, battlefield), tag, tag_tone and
 ## tag_tile for the Sites label, encounter_key.
 static func describe_tile(session, tile: Vector2i, level: int) -> Dictionary:
 	var record := _blank(tile)
@@ -472,15 +473,13 @@ static func _guard_block(session, encounter: Dictionary) -> Dictionary:
 	var stacks: Array = army.get("stacks", []) if army.get("stacks", []) is Array else []
 	var listed: Array = []
 	_append_stacks(listed, stacks, "")
-	var troops := 0
-	for stack in listed:
-		troops += int(stack.count)
 	var definition := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	return {
 		"name": String(Rules.encounter_display_name(encounter)),
 		"stacks": listed,
 		"strength": _strength_label(session, stacks),
-		"troops": "%d troops in %d %s" % [troops, listed.size(), "group" if listed.size() == 1 else "groups"],
+		# Another side's numbers are told as size bands, never as counts.
+		"troops": "%d %s" % [listed.size(), "group" if listed.size() == 1 else "groups"],
 		"reward": String(Rules._encounter_reward_surface(encounter)),
 		# The battle is fought on the encounter's own field, not the ground it stands on.
 		"battlefield": String(definition.get("terrain", "")).capitalize(),
@@ -491,7 +490,13 @@ static func _append_stacks(target: Array, stacks: Array, suffix: String) -> void
 		if not stack is Dictionary or int(stack.get("count", 0)) <= 0: continue
 		var unit_id := String(stack.get("unit_id", ""))
 		var unit := ContentService.get_unit(unit_id)
-		target.append({"unit_id": unit_id, "name": String(unit.get("name", unit_id)) + suffix, "count": int(stack.get("count", 0))})
+		var band: Dictionary = Rules.army_size_band(int(stack.get("count", 0)))
+		var high := int(band.get("high", -1))
+		target.append({
+			"unit_id": unit_id, "name": String(unit.get("name", unit_id)) + suffix,
+			"size": String(band.get("word", "")).capitalize(),
+			"range": "%d or more" % int(band.get("low", 0)) if high < 0 else "%d to %d" % [int(band.get("low", 0)), high],
+		})
 
 ## The other army against the active hero's, in words ("Unknown" without an army on either side).
 static func _strength_label(session, stacks: Array) -> String:

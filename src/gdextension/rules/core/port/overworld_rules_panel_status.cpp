@@ -547,7 +547,9 @@ Atom describe_town_context(State &state, DictRef town, const Value &session) {
 	}
 	if (field_text(state, town, key::owner, key::neutral) == key::enemy && _town_garrison_headcount(state, town) > 0) {
 		const int64_t headcount = _town_garrison_headcount(state, town);
-		parts.push_back(gd::format(state, key::garrison_d_troops_d_companies, { int_value(headcount), int_value(_town_garrison_company_count(state, town)) }));
+		// An enemy garrison is told as a size band, never as a count.
+		const int64_t companies = _town_garrison_company_count(state, town);
+		parts.push_back(gd::format(state, state.intern(companies == 1 ? "Garrison: %s in %d company" : "Garrison: %s in %d companies"), { str(army_size_phrase(state, headcount, state.intern("troops"))), int_value(companies) }));
 		if (_town_requires_assault(state, town)) {
 			parts.push_back(key::assault_required);
 		}

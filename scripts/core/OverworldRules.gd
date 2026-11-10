@@ -871,6 +871,12 @@ static func _encounter_difficulty_label(encounter: Dictionary) -> String:
 static func _encounter_army_surface(encounter: Dictionary, include_units: bool) -> String:
 	return HumanEngine.native(&"OverworldRules._encounter_army_surface", [encounter, include_units])
 
+## How many of another side's creatures the player is told there are: a word
+## for a range, never the count (docs/army-size-bands.md). {word, lead, low,
+## high}; high is -1 for the open last band.
+static func army_size_band(count: int) -> Dictionary:
+	return HumanEngine.native(&"OverworldRules.army_size_band", [count])
+
 static func _encounter_army_payload(encounter: Dictionary) -> Dictionary:
 	return HumanEngine.native(&"OverworldRules._encounter_army_payload", [encounter])
 

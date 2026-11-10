@@ -621,7 +621,7 @@ Atom summary(State &state, DictRef node, DictRef site, int64_t day) {
 		const int64_t count = gd::to_int(state, ai::vget(state, first, key::count, int_value(0)));
 		const Atom guard_unit_id = string_of_value(state, ai::vget(state, first, key::unit_id, str(key::empty)));
 		const Atom guard_name = string_of(state, gd::content_row(state, ContentTable::Unit, guard_unit_id), key::name, key::empty);
-		parts.push_back(gd::format(state, key::guarded_by_d_s, {int_value(count), str(guard_name)}));
+		parts.push_back(gd::format(state, state.intern("guarded by %s"), {str(overworld_rules::army_size_phrase(state, count, guard_name))}));
 	}
 	return join_atoms(state, key::comma_space, parts);
 }
