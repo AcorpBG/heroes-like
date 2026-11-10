@@ -52,7 +52,6 @@ None open.
 
 ## Open work
 
-- `ui-tooltip-card-art-20261110` (in progress): The game's general hover tooltip (ContextualHelp.make_hover_card, every screen) and its F1 full-text window take the map information card's frames and text tones (owner, 2026-11-10: restyle both). Behaviour, text and the three-line limit are unchanged. Files: scripts/autoload/ContextualHelp.gd. See `docs/overworld-info-card.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -62,6 +61,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.
 - 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.
 - 2026-11-10 `town-art-mireclaw-foreground-20261110` (598dc4ee3): Mireclaw's den and the other layers now stay behind the great tree painted in the backdrop's foreground: a mask of the tree in the packet (backdrop.foreground), cut out of every layer and hit mask by the packaging tool.
