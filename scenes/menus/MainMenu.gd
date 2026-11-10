@@ -6,6 +6,9 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const SkirmishSetupColumnScript = preload("res://scenes/menus/SkirmishSetupColumn.gd")
+const BuiltMapsDialogScript = preload("res://scenes/menus/BuiltMapsDialog.gd")
+const SaveListColumnScript = preload("res://scenes/menus/SaveListColumn.gd")
 
 const TAB_CAMPAIGN := 0
 const TAB_SKIRMISH := 1
@@ -34,12 +37,10 @@ const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
-const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 560.0
-const SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const SKIRMISH_SETUP_COLUMN_ANCHORS := Rect2(0.0156, 0.0852, 0.3354, 0.8963)
 const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)
-const SAVE_EMPTY_DOCK_MAX_SIZE := Vector2(920.0, 360.0)
 const STAGE_DOCK_REVEAL_DURATION_SECONDS := 0.16
 const STAGE_DOCK_REVEAL_START_ALPHA := 0.12
 const SETTINGS_SUMMARY_MAX_LINES := 4
@@ -253,6 +254,13 @@ var _generated_water_mode := "land"
 var _generated_monster_strength := ScenarioSelectRulesScript.RANDOM_MAP_DEFAULT_MONSTER_STRENGTH
 var _generated_underground := false
 var _generated_last_setup := {}
+# The setup screen (docs/skirmish-setup-screen.md). The pickers under the hidden
+# SkirmishScroll stay as the lists of what can be chosen; the column shows them.
+var _skirmish_setup_column: SkirmishSetupColumnScript
+var _built_maps_dialog: BuiltMapsDialogScript
+# The save menu in the same look. The save list and the buttons of the old
+# board stay as its state; the column shows them.
+var _save_list_column: SaveListColumnScript
 var _generated_map_forge_expanded := false
 var _generated_generation_in_progress := false
 var _generated_generation_yield_count := 0
@@ -2558,11 +2566,89 @@ func _save_browser_is_empty() -> bool:
 	return true
 
 func _refresh_save_browser_presentation() -> void:
-	var empty := _save_browser_is_empty()
-	_save_empty_panel.visible = empty
-	_save_split.visible = not empty
+	_ensure_save_list_column()
+	_sync_save_list_column()
 	if _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SAVES:
 		_apply_stage_dock_layout()
+
+func _ensure_save_list_column() -> void:
+	if _save_list_column != null:
+		return
+	for old in _save_list_column_parent().get_children():
+		old.visible = false
+	_save_list_column = SaveListColumnScript.new()
+	_save_list_column.name = "SaveListColumn"
+	_save_list_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_save_list_column_parent().add_child(_save_list_column)
+	_save_list_column.save_chosen.connect(_on_save_column_chosen)
+	_save_list_column.load_requested.connect(_on_load_selected_pressed)
+	_save_list_column.delete_requested.connect(_on_delete_selected_save_pressed)
+	_save_list_column.name_edited.connect(_on_save_column_name_edited)
+	_save_list_column.name_applied.connect(_on_apply_save_name_pressed)
+	_save_list_column.back_requested.connect(_hide_stage_dock)
+
+func _save_list_column_parent() -> Control:
+	return _save_split.get_parent()
+
+func _on_save_column_chosen(key: String) -> void:
+	for index in range(_save_summaries.size()):
+		if _summary_key(_save_summaries[index]) == key:
+			_save_list.select(index)
+			_on_save_selected(index)
+			return
+
+func _on_save_column_name_edited(text: String) -> void:
+	_save_name_edit.text = text
+	_on_save_name_text_changed(text)
+
+## One save as a card: its slot or name, where the game stands, and who leads it.
+func _save_column_row(summary: Dictionary, latest_key: String) -> Dictionary:
+	var hero := ContentService.get_hero(String(summary.get("hero_id", "")))
+	var faction := ContentService.get_faction(String(hero.get("faction_id", "")))
+	var mode := "Campaign" if String(summary.get("launch_mode", "")) == "campaign" else "Skirmish"
+	var where := PackedStringArray(["Day %d" % int(summary.get("day", 1))])
+	if String(summary.get("campaign_name", "")) != "":
+		where.append(String(summary.get("campaign_name", "")))
+	if String(faction.get("name", "")) != "":
+		where.append(String(faction.get("name", "")))
+	where.append(ScenarioSelectRulesScript.difficulty_label(String(summary.get("difficulty", ""))))
+	return {
+		"key": _summary_key(summary),
+		"title": SaveService.describe_slot_browser_row(summary).get_slice(" | ", 0),
+		"line": " · ".join(where),
+		"sub": "%s · %s · saved %s" % [String(summary.get("hero_name", "")), mode, String(summary.get("summary", "")).get_slice(" | ", 2)],
+		"hero_id": String(summary.get("hero_id", "")),
+		"latest": _summary_key(summary) == latest_key and SaveService.can_load_summary(summary),
+		"tooltip": String(summary.get("status_text", "")),
+	}
+
+func _sync_save_list_column() -> void:
+	if _save_list_column == null:
+		return
+	var latest_key := _summary_key(_latest_loaded_save_summary())
+	var saves := []
+	for summary in _save_summaries:
+		saves.append(_save_column_row(summary, latest_key))
+	_save_list_column.show_saves({
+		"saves": saves,
+		"selected": _selected_save_key,
+		"notice": _save_load_notice,
+		"name": {
+			"visible": _save_name_edit.visible,
+			"text": _save_name_edit.text,
+			"placeholder": _save_name_edit.placeholder_text,
+			"tooltip": _save_name_edit.tooltip_text,
+			"button": _apply_save_name_button.text,
+			"button_disabled": _apply_save_name_button.disabled,
+		},
+		"load": {"text": _load_selected_button.text, "disabled": _load_selected_button.disabled, "tooltip": _load_selected_button.tooltip_text},
+		"delete": {
+			"text": _delete_selected_save_button.text,
+			"visible": _delete_selected_save_button.visible,
+			"disabled": _delete_selected_save_button.disabled,
+			"tooltip": _delete_selected_save_button.tooltip_text,
+		},
+	})
 
 func _refresh_selected_save() -> void:
 	var summary := _selected_summary()
@@ -2579,6 +2665,7 @@ func _refresh_selected_save() -> void:
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
+		_sync_save_list_column()
 		return
 
 	_save_commander_portrait.set_hero_id(String(summary.get("hero_id", "")))
@@ -2602,6 +2689,7 @@ func _refresh_selected_save() -> void:
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
+	_sync_save_list_column()
 
 func _refresh_save_name_action(selected_action: Dictionary = {}) -> void:
 	if not _save_name_edit.visible:
@@ -2613,6 +2701,7 @@ func _refresh_save_name_action(selected_action: Dictionary = {}) -> void:
 	_apply_save_name_button.text = "Clear Name" if requested_name == "" and current_name != "" else "Save Name"
 	_apply_save_name_button.disabled = bool(action.get("disabled", true)) or requested_name == current_name
 	_apply_save_name_button.tooltip_text = String(action.get("message", ""))
+	_sync_save_list_column()
 
 func _save_browser_row_tooltip(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -2852,12 +2941,129 @@ func _rebuild_skirmish_browser() -> void:
 func _ensure_skirmish_browser_loaded() -> void:
 	if _skirmish_browser_loaded:
 		return
+	_ensure_skirmish_setup_column()
 	_configure_generated_random_map_controls()
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
 	_refresh_generated_random_map_setup()
 	_refresh_generated_map_forge_disclosure()
 	_skirmish_browser_loaded = true
+	_sync_skirmish_setup_column()
+
+# --- The setup column ----------------------------------------------------------
+
+func _ensure_skirmish_setup_column() -> void:
+	if _skirmish_setup_column != null:
+		return
+	_skirmish_scroll.visible = false
+	_skirmish_setup_column = SkirmishSetupColumnScript.new()
+	_skirmish_setup_column.name = "SkirmishSetupColumn"
+	_skirmish_setup_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_skirmish_scroll.get_parent().add_child(_skirmish_setup_column)
+	_skirmish_setup_column.option_chosen.connect(_on_skirmish_setup_option_chosen)
+	_skirmish_setup_column.seed_changed.connect(_on_skirmish_setup_seed_changed)
+	_skirmish_setup_column.build_requested.connect(_on_start_generated_skirmish_pressed)
+	_skirmish_setup_column.built_maps_requested.connect(_open_built_maps)
+	_skirmish_setup_column.back_requested.connect(_hide_stage_dock)
+
+## What a picker offers, as a row of the setup column. A hidden picker offers
+## nothing to choose.
+func _setup_picker_options(picker: OptionButton, labels: Callable) -> Array:
+	var options := []
+	if not picker.visible:
+		return options
+	for index in range(picker.get_item_count()):
+		var id := str(picker.get_item_metadata(index))
+		options.append({"id": id, "label": String(labels.call(id, picker.get_item_text(index))), "tooltip": picker.tooltip_text})
+	return options
+
+func _sync_skirmish_setup_column() -> void:
+	if _skirmish_setup_column == null:
+		return
+	var plain := func(_id: String, text: String) -> String: return text
+	var rows := [
+		{"key": "size", "label": "Size", "selected": _generated_size_class_id,
+			"options": _setup_picker_options(_generated_size_picker, func(_id: String, text: String) -> String: return text.rsplit("x", true, 1)[0])},
+		{"key": "players", "label": "Players", "selected": str(_generated_player_count),
+			"options": _setup_picker_options(_generated_player_count_picker, func(id: String, _text: String) -> String: return id)},
+		{"key": "layout", "label": "Layout", "selected": _generated_chosen_template_id,
+			"options": _setup_picker_options(_generated_template_picker, func(id: String, text: String) -> String: return "Random" if id == "" else text)},
+		{"key": "water", "label": "Water", "selected": _generated_water_mode,
+			"options": _setup_picker_options(_generated_water_picker, plain)},
+		{"key": "levels", "label": "Levels", "selected": "2" if _generated_underground else "1",
+			"options": _setup_picker_options(_generated_underground_toggle, func(id: String, _text: String) -> String: return "Surface + underground" if id == "2" else "Surface")},
+		{"key": "monsters", "label": "Monsters", "selected": _generated_monster_strength,
+			"options": _setup_picker_options(_generated_monster_strength_picker, func(_id: String, text: String) -> String: return text.trim_suffix(" Monsters"))},
+		{"key": "difficulty", "label": "Difficulty", "selected": _selected_difficulty,
+			"options": _setup_picker_options(_difficulty_picker, plain)},
+	]
+	_skirmish_setup_column.show_setup({
+		"factions": _setup_picker_options(_generated_faction_picker, plain),
+		"faction_id": _generated_faction_id,
+		"heroes": _setup_picker_options(_generated_hero_picker, plain),
+		"hero_id": _generated_hero_id,
+		"rows": rows,
+		"seed": _generated_seed,
+		"status": _generated_status_label.text,
+		"detail": _generated_provenance_label.text,
+		"build_label": _start_generated_skirmish_button.text,
+		"build_disabled": _start_generated_skirmish_button.disabled,
+		"build_tooltip": _start_generated_skirmish_button.tooltip_text,
+		"busy": _generated_generation_in_progress,
+		"progress": _generated_progress_bar.value if _generated_progress_bar.visible else -1.0,
+		"built_maps": _skirmish_entries.size(),
+	})
+
+func _on_skirmish_setup_option_chosen(group: String, id: String) -> void:
+	var targets := {
+		"faction": [_generated_faction_picker, _on_generated_faction_selected],
+		"hero": [_generated_hero_picker, _on_generated_hero_selected],
+		"size": [_generated_size_picker, _on_generated_size_selected],
+		"players": [_generated_player_count_picker, _on_generated_player_count_selected],
+		"layout": [_generated_template_picker, _on_generated_template_selected],
+		"water": [_generated_water_picker, _on_generated_water_selected],
+		"levels": [_generated_underground_toggle, _on_generated_level_selected],
+		"monsters": [_generated_monster_strength_picker, _on_generated_monster_strength_selected],
+		"difficulty": [_difficulty_picker, _on_difficulty_selected],
+	}
+	if not targets.has(group):
+		return
+	var picker: OptionButton = targets[group][0]
+	for index in range(picker.get_item_count()):
+		if str(picker.get_item_metadata(index)) == id:
+			picker.select(index)
+			(targets[group][1] as Callable).call(index)
+			return
+
+func _on_skirmish_setup_seed_changed(text: String) -> void:
+	_generated_seed_edit.text = text
+	_on_generated_seed_changed(text)
+
+func _open_built_maps() -> void:
+	if _built_maps_dialog == null:
+		_built_maps_dialog = BuiltMapsDialogScript.new()
+		add_child(_built_maps_dialog)
+		_built_maps_dialog.map_selected.connect(_on_built_map_selected)
+		_built_maps_dialog.play_requested.connect(_on_built_map_play_requested)
+	_built_maps_dialog.open_maps(_skirmish_entries, _selected_skirmish_id)
+	_show_built_map_details()
+
+func _on_built_map_selected(scenario_id: String) -> void:
+	_selected_skirmish_id = scenario_id
+	_refresh_skirmish_setup()
+	_show_built_map_details()
+
+func _show_built_map_details() -> void:
+	# The map's own line (size, players, seed); the launch check stays a tooltip.
+	var summary := String(_selected_skirmish_entry().get("summary", "")).get_slice("\n", 0)
+	_built_maps_dialog.show_details(summary, not _start_skirmish_button.disabled)
+
+func _on_built_map_play_requested(scenario_id: String) -> void:
+	_on_built_map_selected(scenario_id)
+	if _start_skirmish_button.disabled:
+		return
+	FrontierVisualKit.hide_exclusive_dialog(_built_maps_dialog)
+	_on_start_skirmish_pressed()
 
 func _refresh_skirmish_setup() -> void:
 	var selected_entry := _selected_skirmish_entry()
@@ -2972,6 +3178,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	_set_compact_label(_generated_status_label, status_text, 2, 72)
 	_set_compact_label(_generated_provenance_label, plan_text, 2, 118)
 	_generated_progress_bar.visible = false
+	_sync_skirmish_setup_column()
 
 func _generated_setup_pending_launch_validation(setup: Dictionary, retry: Dictionary) -> bool:
 	return bool(setup.get("preview_only", false)) \
@@ -3162,6 +3369,7 @@ func _set_generated_generation_stage(stage_label: String, progress_value: int, d
 	_set_compact_label(_generated_status_label, "%s | %d%%" % [stage_label, int(_generated_generation_stage.get("progress", 0))], 2, 72)
 	_set_compact_label(_generated_provenance_label, detail, 2, 118)
 	_generated_generation_snapshots.append(_generated_generation_stage.duplicate(true))
+	_sync_skirmish_setup_column()
 
 func _yield_generated_generation_frame() -> void:
 	await get_tree().process_frame
@@ -3522,8 +3730,8 @@ func _apply_stage_dock_layout() -> void:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
 	elif _menu_tabs.current_tab == TAB_SKIRMISH:
 		anchors = _skirmish_stage_dock_anchors(_skirmish_intel_expanded)
-	elif _menu_tabs.current_tab == TAB_SAVES and _save_browser_is_empty():
-		anchors = _save_empty_stage_dock_anchors()
+	elif _menu_tabs.current_tab == TAB_SAVES:
+		anchors = SKIRMISH_SETUP_COLUMN_ANCHORS
 	elif _menu_tabs.current_tab == TAB_GUIDE:
 		anchors = _guide_stage_dock_anchors()
 	_stage_dock_panel.anchor_left = anchors.position.x
@@ -3541,15 +3749,10 @@ func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:
 	var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)
 	return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))
 
-func _skirmish_stage_dock_anchors(expanded: bool) -> Rect2:
-	var viewport_size := get_viewport().get_visible_rect().size
-	var viewport_height := maxf(viewport_size.y, 1.0)
-	var first_view_height_ratio := minf(
-		SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height,
-		SKIRMISH_DOCK_MAX_HEIGHT_RATIO
-	)
-	var height_ratio := SKIRMISH_DOCK_MAX_HEIGHT_RATIO if expanded else first_view_height_ratio
-	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(STANDARD_DOCK_ANCHORS.size.x, height_ratio))
+## The setup is one tall column at the left, under the game's title; the scene
+## stays in view beside it.
+func _skirmish_stage_dock_anchors(_expanded: bool) -> Rect2:
+	return SKIRMISH_SETUP_COLUMN_ANCHORS
 
 func _guide_stage_dock_anchors() -> Rect2:
 	var viewport_size := get_viewport().get_visible_rect().size
@@ -3557,12 +3760,6 @@ func _guide_stage_dock_anchors() -> Rect2:
 		return STANDARD_DOCK_ANCHORS
 	var width_ratio := minf(STANDARD_DOCK_ANCHORS.size.x, GUIDE_DOCK_MAX_SIZE.x / viewport_size.x)
 	var height_ratio := minf(STANDARD_DOCK_ANCHORS.size.y, GUIDE_DOCK_MAX_SIZE.y / viewport_size.y)
-	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))
-
-func _save_empty_stage_dock_anchors() -> Rect2:
-	var viewport_size := get_viewport().get_visible_rect().size
-	var width_ratio := minf(STANDARD_DOCK_ANCHORS.size.x, SAVE_EMPTY_DOCK_MAX_SIZE.x / maxf(viewport_size.x, 1.0))
-	var height_ratio := minf(STANDARD_DOCK_ANCHORS.size.y, SAVE_EMPTY_DOCK_MAX_SIZE.y / maxf(viewport_size.y, 1.0))
 	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))
 
 func _hide_stage_dock() -> void:
@@ -3723,9 +3920,9 @@ func _focus_stage_entry() -> void:
 		TAB_CAMPAIGN:
 			target = _campaign_list if _campaign_list.item_count > 0 else _campaign_primary_button
 		TAB_SKIRMISH:
-			target = _skirmish_list if _skirmish_list.item_count > 0 else _difficulty_picker
+			target = _skirmish_setup_column.entry_control() if _skirmish_setup_column != null else null
 		TAB_SAVES:
-			target = _close_stage_dock_button if _save_browser_is_empty() else (_save_list if _save_list.item_count > 0 else _close_stage_dock_button)
+			target = _save_list_column.entry_control() if _save_list_column != null else null
 		TAB_GUIDE:
 			target = _help_list if _help_list.item_count > 0 else _stage_help_button
 		TAB_SETTINGS:
@@ -3741,6 +3938,27 @@ func _restore_first_view_focus() -> void:
 	if target != null and target.is_visible_in_tree():
 		target.grab_focus()
 
+## The skirmish setup and the save menu are columns with their own title and
+## buttons.
+func _stage_dock_is_column() -> bool:
+	return _menu_tabs.current_tab == TAB_SKIRMISH or _menu_tabs.current_tab == TAB_SAVES
+
+## A column wears the information card's frame; the other boards keep the
+## cartography board.
+func _apply_stage_dock_frame() -> void:
+	var style: StyleBox = _stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
+	var setup := _stage_dock_is_column()
+	if setup:
+		style = FrontierVisualKit.info_card_style().duplicate()
+		style.set_content_margin_all(14)
+	_stage_dock_panel.add_theme_stylebox_override("panel", style)
+	# The column fills the card: no rail slot above it and no inner board frame.
+	(_menu_tabs.get_parent().get_node("StageCommandRailSlot") as Control).visible = not setup
+	if setup:
+		_menu_tabs.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	else:
+		FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
+
 func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
 	var campaign_navigation_visible := _menu_tabs.current_tab == TAB_CAMPAIGN
@@ -3748,7 +3966,10 @@ func _refresh_stage_dock_header() -> void:
 	_campaign_arc_navigation.visible = true
 	_campaign_chapter_navigation.visible = campaign_navigation_visible or _menu_tabs.current_tab == TAB_SKIRMISH
 	_campaign_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_CAMPAIGN
-	_skirmish_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SKIRMISH
+	# The setup column carries its own title and buttons.
+	_skirmish_command_rail.visible = false
+	_stage_dock_title_label.get_parent().visible = not _stage_dock_is_column()
+	_apply_stage_dock_frame()
 	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
 	_stage_dock_title_label.tooltip_text = String(stage_copy.get("hint", ""))
 	_stage_dock_title_label.accessibility_description = String(stage_copy.get("hint", ""))

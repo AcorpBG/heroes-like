@@ -2077,6 +2077,8 @@ const Function kFunctions[] = {
 			return gd::dict_value(hero_command::build_hero_from_template(s, D(a, 0), D(a, 1), D(a, 2), a[3]))),
 	NATIVE(HeroCommandRules, starting_army_for_hero, 2, true,
 			return gd::dict_value(hero_command::starting_army_for_hero(s, D(a, 0), S(a, 1)))),
+	NATIVE(HeroCommandRules, starting_army_pool, 1, true,
+			return gd::dict_value(hero_command::starting_army_pool(s, D(a, 0)))),
 	NATIVE(HeroProgressionRules, _specialty_row, 1, true,
 			return gd::dict_value(hero_progression::_specialty_row(s, S(a, 0)))),
 	NATIVE(NativeSceneryRules, asset_candidates, 3, true,

@@ -36,6 +36,8 @@ namespace key = state::key;
 
 // HeroCommandRules.ARMY_SLOT_COUNT.
 constexpr int64_t kArmySlotCount = 7;
+// HeroCommandRules.STARTING_SECOND_COMPANY_PERCENT.
+constexpr int64_t kStartingSecondCompanyPercent = 75;
 // HeroProgressionRules.RECRUIT_GROWTH_MAX_TIER.
 constexpr int64_t kRecruitGrowthMaxTier = 6;
 
@@ -270,7 +272,7 @@ DictRef starting_army_for_hero(State &state, DictRef hero_template, Atom seed_ke
 				}
 			}
 			// STARTING_SECOND_COMPANY_PERCENT, then STARTING_SECOND_COMPANY_TIER_TWO_PERCENT.
-			if (gd::rng_randi_range(state, rng, 0, 99) < 75 && !(state.array_size(tier_two) == 0 && state.array_size(other_tier_one) == 0)) {
+			if (gd::rng_randi_range(state, rng, 0, 99) < kStartingSecondCompanyPercent && !(state.array_size(tier_two) == 0 && state.array_size(other_tier_one) == 0)) {
 				const int64_t tier_two_roll = gd::rng_randi_range(state, rng, 0, 99);
 				const ArrayRef pool = state.array_size(tier_two) > 0 && (state.array_size(other_tier_one) == 0 || tier_two_roll < 70) ? tier_two : other_tier_one;
 				const Atom second = gd::stringify(state, state.at(pool, gd::rng_randi_range(state, rng, 0, state.array_size(pool) - 1)));
@@ -286,6 +288,47 @@ DictRef starting_army_for_hero(State &state, DictRef hero_template, Atom seed_ke
 	state.set(army, str(key::name), str(key::field_army));
 	state.set(army, str(key::stacks), array_value(stacks));
 	return army;
+}
+
+// What starting_army_for_hero draws from, for a screen that shows a hero before
+// the game exists: the first company's units, the units a second company can
+// be besides those, and how often a second company comes. An authored army
+// lists its units as the first company and rolls no second.
+DictRef starting_army_pool(State &state, DictRef hero_template) {
+	const ArrayRef first = state.new_array();
+	const ArrayRef second = state.new_array();
+	int64_t second_percent = 0;
+	Value authored;
+	if (state.lookup(hero_template, str(key::starting_army), authored) && gd::is_array(authored)) {
+		for (const Value &row : gd::items(state, authored)) {
+			const Atom unit_id = gd::is_dict(row) ? ai::string_or_empty(state, row.ref, key::unit_id) : key::empty;
+			if (unit_id != key::empty && !gd::array_has(state, first, str(unit_id)) &&
+					!gd::is_empty(state, gd::content_row(state, state::ContentTable::Unit, unit_id))) {
+				state.append(first, str(unit_id));
+			}
+		}
+	}
+	if (state.array_size(first) == 0) {
+		const Atom faction_id = ai::string_or_empty(state, hero_template, key::faction_id);
+		const ArrayRef tier_one = _faction_creatures(state, faction_id, 1);
+		const ArrayRef tier_two = _faction_creatures(state, faction_id, 2);
+		for (const Value &unit_id : gd::items(state, array_value(tier_one))) {
+			state.append(first, unit_id);
+		}
+		if (state.array_size(tier_one) > 0) {
+			for (const Value &unit_id : gd::items(state, array_value(tier_two))) {
+				state.append(second, unit_id);
+			}
+			if (state.array_size(tier_two) > 0 || state.array_size(tier_one) > 1) {
+				second_percent = kStartingSecondCompanyPercent;
+			}
+		}
+	}
+	const DictRef pool = state.new_dict();
+	state.set(pool, str(key::first_company), array_value(first));
+	state.set(pool, str(key::second_company), array_value(second));
+	state.set(pool, str(key::second_company_percent), int_value(second_percent));
+	return pool;
 }
 
 int64_t scout_row_half_width(State &state, int64_t dy, int64_t radius) {

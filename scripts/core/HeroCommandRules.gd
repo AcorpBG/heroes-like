@@ -43,6 +43,12 @@ static func build_hero_from_template(hero_template: Dictionary, position: Dictio
 static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) -> Dictionary:
 	return HumanEngine.native_writing(&"HeroCommandRules.starting_army_for_hero", [hero_template, seed_key])
 
+## What a hero's starting army is drawn from, for a screen shown before the game
+## exists: first_company and second_company (unit ids) and
+## second_company_percent, how often the second company comes.
+static func starting_army_pool(hero_template: Dictionary) -> Dictionary:
+	return HumanEngine.native_writing(&"HeroCommandRules.starting_army_pool", [hero_template])
+
 static func army_has_troops(army: Variant) -> bool:
 	return HumanEngine.native_writing(&"HeroCommandRules.army_has_troops", [army])
 

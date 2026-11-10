@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-thornwake-20261110",
- "currentSliceTitle": "Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T12:09:21Z",
+ "currentSliceId": "ui-skirmish-setup-rework-20261110",
+ "currentSliceTitle": "Skirmish setup: left column with hero card and pill buttons",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T12:42:21Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-skirmish-setup-rework-20261110",
+   "title": "Skirmish setup: left column with hero card and pill buttons",
+   "status": "in_progress",
+   "goal": "Owner, 2026-11-10: the skirmish and save menus look terrible and hero selection tells nothing. New skirmish setup as mockup B: one tall dark-and-gold column at the left with faction crests, hero portraits, a hero card (portrait, stats, specialty, spells, starting troops), map settings as pill buttons, Build & Play; built maps behind a small button. Then the save menu in the same look. Files: scenes/menus.",
+   "docs": [
+    "docs/skirmish-setup-screen.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-thornwake-20261110",
    "status": "completed",
@@ -1931,54 +1941,6 @@
    "status": "completed",
    "completedAt": "2026-10-11",
    "summary": "Clean purple edges on blue-backdrop creature clips."
-  },
-  {
-   "id": "tests-validation-budget-20261010",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Validation budget, core suite, authored-scenario test deletion."
-  },
-  {
-   "id": "bugfix-start-hero-growth-seed-20261010",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "A new game's start hero takes its growth seed from the session."
-  },
-  {
-   "id": "bugfix-battle-walk-pace-20261010",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Every unit crosses a battle hex at the same pace."
-  },
-  {
-   "id": "bugfix-battle-fallen-stack-effect-expiry-20261010",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "A fallen stack's status ends without standing it up again."
-  },
-  {
-   "id": "battle-rework-plates-details-20261009",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Stack plates with role, shots and strike-back pips; right-button details cards."
-  },
-  {
-   "id": "battle-rework-cursor-forecast-20261009",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Sword and arrow cursors with kill, damage and strike-back forecasts; pointing picks the approach hex."
-  },
-  {
-   "id": "battle-rework-battlefield-art-20261009",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Painted battlefields and obstacle props per terrain; grid and speed options."
-  },
-  {
-   "id": "battle-rework-ai-balance-20261009",
-   "status": "completed",
-   "completedAt": "2026-10-10",
-   "summary": "Battle AI and balance for the reworked flow."
   }
  ]
 }

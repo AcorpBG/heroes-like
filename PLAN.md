@@ -39,6 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
+- 2026-11-10: The skirmish setup and the save menu are one tall column at the left in the dark-and-gold look (mockup B), with a hero card and pill buttons; maps built earlier sit behind a small button (`docs/skirmish-setup-screen.md`).
 - 2026-11-10: Source art goes into the source art archive on N: with an incremental snapshot from the owner's checkout; it does not stay in temp folders, worktrees or as loose untracked files (`docs/source-material-storage-map.md`).
 - 2026-11-10: The map's hover card and right-click report, and every other tooltip with its F1 window, use the sidebar's dark-and-gold look (mockup B); every unit's icon there is a head-and-shoulders close-up: a crop of the portrait for soldiers, a painted close-up for beasts, machines and failed crops (`docs/overworld-info-card.md`).
 - 2026-11-10: The map tells another side's unit numbers as size bands, never as counts; battles and the player's own armies stay exact (`docs/army-size-bands.md`).
@@ -53,6 +54,7 @@ None open.
 
 ## Open work
 
+- `ui-skirmish-setup-rework-20261110` (in progress): Owner, 2026-11-10: the skirmish and save menus look terrible and hero selection tells nothing. New skirmish setup as mockup B: one tall dark-and-gold column at the left with faction crests, hero portraits, a hero card (portrait, stats, specialty, spells, starting troops), map settings as pill buttons, Build & Play; built maps behind a small button. Then the save menu in the same look. Files: scenes/menus. See `docs/skirmish-setup-screen.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -353,11 +355,3 @@ None open.
 - 2026-10-11 `art-h3-painted-units-20261011`: Convert the painted creature clips to H3 video.
 - 2026-10-11 `art-h3-painted-unit-pilot-20261011`: Profile one painted unit converted to H3 video.
 - 2026-10-11 `art-blue-plate-edge-rematte-20261011`: Clean purple edges on blue-backdrop creature clips.
-- 2026-10-10 `tests-validation-budget-20261010`: Validation budget, core suite, authored-scenario test deletion.
-- 2026-10-10 `bugfix-start-hero-growth-seed-20261010`: A new game's start hero takes its growth seed from the session.
-- 2026-10-10 `bugfix-battle-walk-pace-20261010`: Every unit crosses a battle hex at the same pace.
-- 2026-10-10 `bugfix-battle-fallen-stack-effect-expiry-20261010`: A fallen stack's status ends without standing it up again.
-- 2026-10-10 `battle-rework-plates-details-20261009`: Stack plates with role, shots and strike-back pips; right-button details cards.
-- 2026-10-10 `battle-rework-cursor-forecast-20261009`: Sword and arrow cursors with kill, damage and strike-back forecasts; pointing picks the approach hex.
-- 2026-10-10 `battle-rework-battlefield-art-20261009`: Painted battlefields and obstacle props per terrain; grid and speed options.
-- 2026-10-10 `battle-rework-ai-balance-20261009`: Battle AI and balance for the reworked flow.

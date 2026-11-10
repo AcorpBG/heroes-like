@@ -1,0 +1,25 @@
+UI mockup for a painted fantasy turn-based strategy game: the "New skirmish" setup screen where the player picks a faction, a hero and the random map's settings.
+
+Image 1 is the current screen at 1920x1080: a painted castle landscape with an ugly dark panel of dropdown boxes over it. Keep the painted landscape, the "AURELION REACH" title and the overall lighting of image 1 exactly; remove the existing dark panel and all its dropdowns and buttons completely, and draw the new interface described below in its place.
+Image 2 is the selected hero's portrait: use this exact woman (same face, hat, coat, colours) wherever the hero's large portrait is shown.
+Image 3 is the game's panel frame: every panel of the new interface uses this exact style: dark warm brown lacquer, a thin antique-gold border line, and small compass-star corner ornaments with a teal gem. Buttons are dark with a thin gold outline; the chosen option of a group is filled warm gold with dark text.
+
+No dropdown boxes anywhere: every setting is a row of small pill buttons with the chosen one highlighted in gold. Clean, readable, aligned on a grid, generous spacing, small painted icons, crisp light text (a clean sans-serif) on the dark panels, gold headings. It must look like a finished screen of the same game, not a wireframe.
+
+Content of the interface (use exactly these words, spelled exactly; no other text):
+
+FACTION: a row of seven round faction crests; the sixth is highlighted with a gold ring and labelled "Veilmourn Armada"; the seventh is a question mark for a random faction.
+HERO: a row of eleven small square hero portrait thumbnails of different sea-faring characters; the first is highlighted with a gold frame.
+HERO CARD: the large portrait from image 2; the name "Ivara Blacktide" in gold; under it "Admiral · Might hero"; four stats in a row, each a small icon with a number: "Attack 2", "Defense 0", "Power 1", "Knowledge 1"; a line with a small round insignia: "Drillmaster · +1 battle initiative"; a heading "Spells" with three small square spell icons labelled "Quicken", "Bolt", "Sharpen"; a heading "Starting troops" with three small square unit portraits of dark-cloaked sailors and the note "one or two companies of these".
+MAP: heading "The map". Rows of pill buttons, each row with a small label at its left:
+"Size": "Small 36", "Medium 72", "Large 108" (chosen), "Extra large 144".
+"Players": "2", "3", "4" (chosen), "5", "6", "7", "8".
+"Layout": "Random" (chosen), "Cartwheel", "Inner Keeps", "Pilgrim Roads", "Trefoil Fields".
+"Water": "Land" (chosen), "Normal water", "Islands".
+"Levels": "Surface" (chosen), "Surface + underground".
+"Monsters": "Weak", "Normal" (chosen), "Strong".
+"Difficulty": "Story", "Captain" (chosen), "Warlord".
+"Seed": a short text field showing "Auto" with a small dice button.
+One large gold primary button: "Build & Play". One small plain button: "Back".
+
+LAYOUT B, one tall column at the left: a single tall framed panel about 640 pixels wide along the left edge of the screen, from just under the game title down to the bottom, so the castle and the landscape stay fully visible on the right two thirds of the screen. Top to bottom inside the panel: the heading "New skirmish", the FACTION row, the HERO row, the HERO CARD (portrait at the left, text at the right, compact), a thin gold divider, the MAP rows, and at the bottom the wide "Build & Play" button with a small "Back" button beside it.

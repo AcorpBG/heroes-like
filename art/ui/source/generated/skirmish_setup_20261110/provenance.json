@@ -1,0 +1,21 @@
+{
+ "purpose": "Layout mockup of the skirmish setup screen the owner picked (B, one column at the left). A reference for scenes/menus/SkirmishSetupColumn.gd; no runtime asset is cut from it.",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-10",
+ "size": "1920x1088",
+ "quality": "medium",
+ "prompt_file": "skirmish_setup_mockup.prompt.txt",
+ "inputs": [
+  "image 1: a screenshot of the old skirmish board",
+  "image 2: art/heroes/portraits/hero_veilmourn_ivara_blacktide.png",
+  "image 3: the information card frame drawn at 640x420"
+ ],
+ "note": "The PNG is not tracked (art/*/source/**/*.png is ignored); it is in the source art archive (docs/source-material-storage-map.md) and comes back with tools/restore_archived_source_material.py.",
+ "items": [
+  {
+   "source": "skirmish_setup_mockup.png",
+   "sha256": "0a857ebb9996af9dc8a1678d02f653a9a906fdad4955e092fbfaacc542f945e0"
+  }
+ ]
+}
