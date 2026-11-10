@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-settings-column-20261110",
- "currentSliceTitle": "Settings as a left column",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T14:59:57Z",
+ "currentSliceTitle": "Settings are a left column in the dark-and-gold look: rows of pills, volume sliders, Restore defaults, Support bundle, Back. The skirmish setup scrolls at larger interface scales.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T15:01:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-settings-column-20261110",
-   "title": "Settings as a left column",
-   "status": "in_progress",
-   "goal": "Owner 2026-11-10: the settings menu in the same style as the skirmish setup. Files: scenes/menus/SettingsColumn.gd, MainMenu.gd; the skirmish setup scrolls at larger interface scales.",
-   "docs": [
-    "docs/skirmish-setup-screen.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Settings are a left column in the dark-and-gold look: rows of pills, volume sliders, Restore defaults, Support bundle, Back. The skirmish setup scrolls at larger interface scales.",
+   "commit": "e75200d7f"
   },
   {
    "id": "town-plot-shelves-20261110",
