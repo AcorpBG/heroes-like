@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-hero-menu-rework-20261110",
- "currentSliceTitle": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.",
+ "currentSliceId": "ui-hero-exchange-look-20261110",
+ "currentSliceTitle": "Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T16:10:13Z",
+ "updatedAt": "2026-11-10T16:39:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,10 +18,17 @@
  },
  "plannedSlices": [
   {
+   "id": "ui-hero-exchange-look-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.",
+   "commit": "27ebb2940"
+  },
+  {
    "id": "ui-hero-menu-rework-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.",
+   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots (27 artifacts moved), usable in town.",
    "commit": "1d47aabab"
   },
   {
@@ -98,7 +105,7 @@
    "id": "art-unit-icon-closeups-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Every unit's small icon is a head-and-shoulders close-up: 75 creatures and machines get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
+   "summary": "Every unit's small icon is a head-and-shoulders close-up: 75 painted with imggen, 157 portrait crops.",
    "commit": "9325c50c4"
   },
   {
@@ -133,7 +140,7 @@
    "id": "ui-army-size-bands-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' texts. Own armies and battles stay exact.",
+   "summary": "The map tells another side's unit numbers as nine size bands (Few to Countless); own armies and battles stay exact.",
    "commit": "cd8c4ec8d"
   },
   {
@@ -147,7 +154,7 @@
    "id": "ui-shared-tile-description-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used, guard and owner. Used buildings no longer read Available.",
+   "summary": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile.",
    "commit": "4e55b993d"
   },
   {

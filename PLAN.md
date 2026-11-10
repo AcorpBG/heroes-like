@@ -63,7 +63,8 @@ None open.
 
 ## Recently completed
 
-- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots of nine kinds (27 artifacts moved), usable in town; 23 new icons.
+- 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.
+- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots (27 artifacts moved), usable in town.
 - 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings window, every confirmation window and the hero keys window wear the card frame.
 - 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; the skirmish setup scrolls at larger interface scales.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.
@@ -74,14 +75,14 @@ None open.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October, verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip and its F1 full-text window take the map information card's dark-and-gold frames, with a gold heading and a Close button.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.
-- 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 creatures and machines get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.
+- 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 painted with imggen, 157 portrait crops.
 - 2026-11-10 `town-art-mireclaw-foreground-20261110` (598dc4ee3): Mireclaw's den and the other layers now stay behind the great tree painted in the backdrop's foreground: a mask of the tree in the packet (backdrop.foreground), cut out of every layer and hit mask by the packaging tool.
 - 2026-11-10 `town-art-mireclaw-backdrop-v2-20261110` (b876ba799): Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.
 - 2026-11-10 `ui-map-info-card-art-20261110` (e6fcbbbd4): The map's right-click report and hover card use the sidebar's dark-and-gold frame, fit their content, and show unit icons cut from the portraits at 56 px.
 - 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.
-- 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' texts. Own armies and battles stay exact.
+- 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few to Countless); own armies and battles stay exact.
 - 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).
-- 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used, guard and owner. Used buildings no longer read Available.
+- 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile.
 - 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.
 - 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week (visit cadence weekly_per_side).
