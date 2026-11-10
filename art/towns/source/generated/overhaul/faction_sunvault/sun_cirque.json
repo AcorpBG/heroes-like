@@ -1,0 +1,1912 @@
+{
+  "schema_id": "town_plot_layer_packet_v1",
+  "faction_id": "faction_sunvault",
+  "scene_id": "sun_cirque",
+  "stage": "village",
+  "owner_decision": "2026-11-10: the owner asked for the next faction; Sunvault was planned as a sunlit mountain cirque round a glacial lake, with the Shipyard on the lake shore, and the owner chose concept A (the steeper, more rugged of two) and approved painting the full set into it.",
+  "generation": {
+    "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+    "date": "2026-11-10"
+  },
+  "method": "Each building is a masked edit of the empty cirque (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the cirque around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the cirque was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
+  "backdrop": {
+    "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+    "source_sha256": "dd07b324aea99c12d89bb488b161a91a6195c64289ab27b238b265bcb588816e",
+    "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.prompt.txt",
+    "reference_inputs": [
+      "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_concept.png"
+    ],
+    "concept": {
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_concept.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_concept.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/plan_sketch.png",
+        "art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png"
+      ],
+      "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Sunvault town painting, used for style and building designs only."
+    }
+  },
+  "cut": {
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
+  },
+  "grounding": "Painted into the empty cirque on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+  "curation": "Owner-approved sun-cirque set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
+  "plots": {
+    "fort": [
+      1290,
+      110,
+      260,
+      100
+    ],
+    "guild": [
+      75,
+      160,
+      150,
+      230
+    ],
+    "sunvault_t5": [
+      345,
+      174,
+      180,
+      118
+    ],
+    "building_dev_growth_3": [
+      930,
+      205,
+      135,
+      90
+    ],
+    "building_dev_growth_1": [
+      1110,
+      145,
+      145,
+      92
+    ],
+    "building_dev_training_defense": [
+      1590,
+      170,
+      160,
+      100
+    ],
+    "building_dev_sunvault_unique_2": [
+      1830,
+      200,
+      180,
+      125
+    ],
+    "hall": [
+      480,
+      280,
+      300,
+      265
+    ],
+    "sunvault_t2": [
+      255,
+      320,
+      185,
+      120
+    ],
+    "sunvault_t1": [
+      40,
+      430,
+      180,
+      120
+    ],
+    "building_dev_training_attack": [
+      250,
+      470,
+      165,
+      105
+    ],
+    "building_wayfarers_hall": [
+      45,
+      580,
+      190,
+      130
+    ],
+    "market": [
+      250,
+      600,
+      215,
+      115
+    ],
+    "storehouse": [
+      1070,
+      335,
+      200,
+      125
+    ],
+    "sunvault_t3": [
+      1290,
+      355,
+      215,
+      135
+    ],
+    "building_dev_sunvault_unique_3": [
+      1540,
+      300,
+      185,
+      130
+    ],
+    "building_dev_training_experience": [
+      1880,
+      365,
+      150,
+      135
+    ],
+    "sunvault_t4": [
+      1075,
+      485,
+      212,
+      120
+    ],
+    "building_dev_artifact_exchange": [
+      1340,
+      510,
+      170,
+      125
+    ],
+    "building_dev_sunvault_unique_1": [
+      1580,
+      505,
+      190,
+      145
+    ],
+    "building_dev_growth_2": [
+      1070,
+      650,
+      200,
+      125
+    ],
+    "sunvault_t6_1": [
+      1370,
+      650,
+      255,
+      155
+    ],
+    "sunvault_t7_1": [
+      1770,
+      545,
+      270,
+      405
+    ],
+    "building_dev_shipyard": [
+      985,
+      850,
+      350,
+      225
+    ]
+  },
+  "buildings": [
+    {
+      "id": "building_dev_hall_4",
+      "plot_id": "hall",
+      "box": [
+        480,
+        280,
+        300,
+        265
+      ],
+      "crop": [
+        214,
+        44,
+        833,
+        736
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4_cirque.png",
+      "source_sha256": "01bf5ac1702b42c583da910d4384513f1dc8b884bc31df04ac837d31cc6e0708",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_hall.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4_cirque_matte.png",
+        "sha256": "2fbcd08eda895e33c0751f2b297849f6696721ffc6127adf6da0da7d37471a4a",
+        "window": [
+          406,
+          207,
+          415,
+          380
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_3",
+      "plot_id": "hall",
+      "box": [
+        492,
+        312,
+        276,
+        233
+      ],
+      "crop": [
+        246,
+        105,
+        767,
+        647
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3_cirque.png",
+      "source_sha256": "a3fe036affc9e3c6dac15a5e5babb4b67a56900789337c3b5609048d94b34ba2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_hall_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3_cirque_matte.png",
+        "sha256": "efd5524448198f2940f5f649af18b25025d11a4a2eb12214ae2d94be2aa8114c",
+        "window": [
+          454,
+          266,
+          347,
+          312
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_2",
+      "plot_id": "hall",
+      "box": [
+        510,
+        349,
+        240,
+        196
+      ],
+      "crop": [
+        296,
+        175,
+        667,
+        544
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2_cirque.png",
+      "source_sha256": "dd2a4e3400d3c214431172052a4c65ebf4a43cb6d9682a5393a3422d839ce8c3",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_hall_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2_cirque_matte.png",
+        "sha256": "0a0e96d85c6429dc8417feba182c74b202c2d5aff54c92878fdc9d9aa87bd8d1",
+        "window": [
+          469,
+          310,
+          313,
+          265
+        ]
+      }
+    },
+    {
+      "id": "building_town_hall",
+      "plot_id": "hall",
+      "box": [
+        528,
+        391,
+        204,
+        154
+      ],
+      "crop": [
+        346,
+        254,
+        567,
+        428
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_town_hall_cirque.png",
+      "source_sha256": "94e4882ffd96030b01cc992fa182810da53126e1ac8220e594f6591f61cec059",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_town_hall_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_hall_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_town_hall_cirque_matte.png",
+        "sha256": "b0d6d650977d40e8f0371aeac2fd75090f1b3438459225664eaa5d3e6dc9c301",
+        "window": [
+          504,
+          364,
+          252,
+          206
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        110,
+        260,
+        100
+      ],
+      "crop": [
+        1059,
+        0,
+        722,
+        350
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3_cirque.png",
+      "source_sha256": "568d5180ccb224274aa653197baa00e564a06b046b476eba86557b8dbdb98037",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_fort.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3_cirque_matte.png",
+        "sha256": "5b0ffe5b8a1075da3201c5ac758eaf7fc259afc0ded30f8919af61123c07d1fe",
+        "window": [
+          1259,
+          60,
+          322,
+          181
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        126,
+        260,
+        84
+      ],
+      "crop": [
+        1059,
+        0,
+        722,
+        358
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2_cirque.png",
+      "source_sha256": "d500e1bd8d6f2e15abcf40568264becc59cd0ed782040db09ac5d008ff8446c3",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_fort_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2_cirque_matte.png",
+        "sha256": "dc098d0c2a8eee5e631128bc0097e795deb208f868b349727faf2dc37156c62f",
+        "window": [
+          1259,
+          86,
+          322,
+          155
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        146,
+        260,
+        64
+      ],
+      "crop": [
+        1059,
+        0,
+        722,
+        368
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1_cirque.png",
+      "source_sha256": "4aa4a6e16997c5ed424e26f9c9065c7c1a466ebba1fe09665a80ff6edc48a871",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_fort_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1_cirque_matte.png",
+        "sha256": "7ac6c13bdfa98940ad39211f1c0b6cd028aa1589275fa192d77e28bbb96c605a",
+        "window": [
+          1259,
+          115,
+          322,
+          133
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "box": [
+        75,
+        160,
+        150,
+        230
+      ],
+      "crop": [
+        0,
+        0,
+        359,
+        595
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5_cirque.png",
+      "source_sha256": "db695752778cf74124fcfcad794126cf1d634f2f68a4823861bc68f7a09a605d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_guild.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5_cirque_matte.png",
+        "sha256": "6a2d23f2e1ac36c14314e7ddc6338aee4c65399a041f6e89ff6cb1e3fecefa3b",
+        "window": [
+          48,
+          133,
+          204,
+          284
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "box": [
+        79,
+        194,
+        142,
+        196
+      ],
+      "crop": [
+        0,
+        20,
+        347,
+        544
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4_cirque.png",
+      "source_sha256": "904c5b26b0694622e44b0d3eb13ad64172177f1ec4acc658b55050a027c83126",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_guild_5_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4_cirque_matte.png",
+        "sha256": "ae970dc59395ee94d670e2caa6b755002fe58d49aac767c29d212666bd3fc777",
+        "window": [
+          56,
+          171,
+          188,
+          242
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "box": [
+        82,
+        229,
+        135,
+        161
+      ],
+      "crop": [
+        0,
+        86,
+        337,
+        447
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3_cirque.png",
+      "source_sha256": "04de6549cbf377fcaa9cf14fc9e799b2df5c03af2e6234d8a78b0ac9dc07c61f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_guild_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3_cirque_matte.png",
+        "sha256": "db5f347c0dac848367b4bc75fded3210a24d46f7cf012574ce3d4a47c245438a",
+        "window": [
+          63,
+          210,
+          173,
+          199
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "box": [
+        86,
+        261,
+        128,
+        129
+      ],
+      "crop": [
+        0,
+        146,
+        328,
+        358
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2_cirque.png",
+      "source_sha256": "423b23ce671346e42255ac544f900820675ea0efbcae4db3da039751c5a76388",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_guild_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2_cirque_matte.png",
+        "sha256": "c285ca650ea67cdc8b3cf866bc6712b9121994a07a38e4823b5bd399bbde96cb",
+        "window": [
+          71,
+          246,
+          158,
+          159
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "box": [
+        90,
+        289,
+        120,
+        101
+      ],
+      "crop": [
+        0,
+        199,
+        317,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1_cirque.png",
+      "source_sha256": "f603a295b5e0475115beb056cd8fb6446f7301f36e9b8245877a509bbe3f3a6a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_guild_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1_cirque_matte.png",
+        "sha256": "9c609920a58cb725245f6d6714a804f638f8aca52fe9993bb923dd7723e60096",
+        "window": [
+          76,
+          275,
+          148,
+          129
+        ]
+      }
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "box": [
+        250,
+        600,
+        215,
+        115
+      ],
+      "crop": [
+        59,
+        498,
+        597,
+        319
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange_cirque.png",
+      "source_sha256": "d0d72c377f0b7a552a3cffb0446a8f6e84fdfb00b26b6dfc570fecb05fddd518",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_market.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange_cirque_matte.png",
+        "sha256": "3472e56f12192abeaa8ebd9e7c68a5bcfbe953a9d67ffdf8163b4aff15d44861",
+        "window": [
+          219,
+          556,
+          272,
+          185
+        ]
+      }
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "box": [
+        260,
+        623,
+        194,
+        92
+      ],
+      "crop": [
+        88,
+        527,
+        539,
+        284
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_market_square_cirque.png",
+      "source_sha256": "caf5d26605e21a1028d0c9ff0d4c10c31a25dba02c239b5df15b61aa2a174321",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_market_square_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_trade_exchange_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_market_square_cirque_matte.png",
+        "sha256": "a030ad8569d60611f14ef78a678afd0508b27bb3a08976559a1cd0a933ab6c7f",
+        "window": [
+          233,
+          582,
+          244,
+          156
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "box": [
+        1070,
+        335,
+        200,
+        125
+      ],
+      "crop": [
+        892,
+        224,
+        556,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2_cirque.png",
+      "source_sha256": "e33b8e1383d684917db611a05701e3534ee19c4fc436b6416b4ef12d02eb6b31",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2_cirque_matte.png",
+        "sha256": "9b910e2238b0054db8641f623fc400dfbbc727bf5ed36bf867ce3b6a0d1726cf",
+        "window": [
+          994,
+          280,
+          348,
+          226
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "box": [
+        1084,
+        358,
+        172,
+        102
+      ],
+      "crop": [
+        931,
+        268,
+        478,
+        283
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1_cirque.png",
+      "source_sha256": "25e990bde014ad8beb1f7af05f0c3dca9293e41640f68e9bb5ddf48aa1c2c577",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_storehouse_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1_cirque_matte.png",
+        "sha256": "03f2ab3763d432cc9f6563e2709982d8972f45f0e8c6ac3f9317321eca1aa463",
+        "window": [
+          1054,
+          326,
+          223,
+          155
+        ]
+      }
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "plot_id": "building_wayfarers_hall",
+      "box": [
+        45,
+        580,
+        190,
+        130
+      ],
+      "crop": [
+        0,
+        464,
+        404,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_wayfarers_hall_cirque.png",
+      "source_sha256": "627765c80030dec3c79c896028ec348f2094db458c4f5befab279a9fe3570ff1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_wayfarers_hall_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_wayfarers_hall_cirque_matte.png",
+        "sha256": "5b6a3584f37523f5e726e7c90185227c4421094dc2dce30db0089d94ff67cb44",
+        "window": [
+          18,
+          510,
+          280,
+          235
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_1",
+      "plot_id": "building_dev_growth_1",
+      "box": [
+        1110,
+        145,
+        145,
+        92
+      ],
+      "crop": [
+        981,
+        63,
+        403,
+        256
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_1_cirque.png",
+      "source_sha256": "35cf09bc95834ade90e5b8e62775925f8f268752f4314e0111f5b7888a9e086d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_1_cirque_matte.png",
+        "sha256": "ee92a4b6a1024d1e401152a32e69c022c1c38641dac0df738816ffb5ffb3934e",
+        "window": [
+          1087,
+          123,
+          186,
+          132
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_2",
+      "plot_id": "building_dev_growth_2",
+      "box": [
+        1070,
+        650,
+        200,
+        125
+      ],
+      "crop": [
+        892,
+        539,
+        556,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_2_cirque.png",
+      "source_sha256": "cc530dc4fb856c040cf6c76a97cc6262d03aa33fa720ed0354df46c5ed8274ac",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_2_cirque_matte.png",
+        "sha256": "248cd3ff3deb814444552040a687b1956ac7391b457872a1f6f8540e57624f9d",
+        "window": [
+          1002,
+          556,
+          368,
+          270
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_3",
+      "plot_id": "building_dev_growth_3",
+      "box": [
+        930,
+        205,
+        135,
+        90
+      ],
+      "crop": [
+        810,
+        125,
+        375,
+        250
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_3_cirque.png",
+      "source_sha256": "06df80cb77e13b39247b77c95524f5446d17554b6154882bdf3b7af506485e1f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_3_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_growth_3_cirque_matte.png",
+        "sha256": "dbeeb44a9f4a734fe68a71b9acea7d423d626cf62b39a2bd38e421329d581209",
+        "window": [
+          914,
+          189,
+          167,
+          122
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_attack",
+      "plot_id": "building_dev_training_attack",
+      "box": [
+        250,
+        470,
+        165,
+        105
+      ],
+      "crop": [
+        104,
+        376,
+        458,
+        292
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_attack_cirque.png",
+      "source_sha256": "2db75b8dc9ac4367b8bbd702fafb37d9114144e275f50a30b4e7b932de74a580",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_attack_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_attack_cirque_matte.png",
+        "sha256": "894348d091890caa82c1c1a653ee9d009a5d507671f6f6ddebc5ce1d23111e6d",
+        "window": [
+          207,
+          435,
+          243,
+          163
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_defense",
+      "plot_id": "building_dev_training_defense",
+      "box": [
+        1590,
+        170,
+        160,
+        100
+      ],
+      "crop": [
+        1448,
+        81,
+        444,
+        278
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_defense_cirque.png",
+      "source_sha256": "f863936cf5f72630fca78b030c165570e0d111a893adaf5d1d64fe50fdebb080",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_defense_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_defense_cirque_matte.png",
+        "sha256": "f2a0c7dde954cfe9a4f5935edb79d8a4fffeb519423014fcbe586d160a534ae1",
+        "window": [
+          1571,
+          137,
+          198,
+          153
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_experience",
+      "plot_id": "building_dev_training_experience",
+      "box": [
+        1880,
+        365,
+        150,
+        135
+      ],
+      "crop": [
+        1746,
+        245,
+        302,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_experience_cirque.png",
+      "source_sha256": "f6165735810f51a284ffd08a0c57d0e0ef1749327f43ec2f061ae78227b1d6e9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_experience_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_training_experience_cirque_matte.png",
+        "sha256": "f77694d147d6dfcb4eee2c9d0f2390c6dd90262f60c7d5a5be75c023c6cf4a46",
+        "window": [
+          1858,
+          310,
+          190,
+          210
+        ]
+      }
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "plot_id": "building_dev_artifact_exchange",
+      "box": [
+        1340,
+        510,
+        170,
+        125
+      ],
+      "crop": [
+        1189,
+        399,
+        472,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_artifact_exchange_cirque.png",
+      "source_sha256": "e96a14fd476d2c7c413377147b503054f257b8c037b62bdf183efd948520a7c1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_artifact_exchange_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_orb.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_artifact_exchange_cirque_matte.png",
+        "sha256": "1b050bedfc99330d4b0aac555c990830533d96dd307cdc7990d36709c855774e",
+        "window": [
+          1318,
+          468,
+          228,
+          190
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_unique_1",
+      "plot_id": "building_dev_sunvault_unique_1",
+      "box": [
+        1580,
+        505,
+        190,
+        145
+      ],
+      "crop": [
+        1411,
+        376,
+        528,
+        403
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_1_cirque.png",
+      "source_sha256": "5ff9d00b1fbf69bdde7242d520f0c8e1ea647c69088f378bd3f19dc8c0b34d54",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_dome.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_1_cirque_matte.png",
+        "sha256": "1e067609d2a3420f1a765fa353524099a656c0a4337f9f338bccf95738ff673b",
+        "window": [
+          1547,
+          469,
+          255,
+          211
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_unique_2",
+      "plot_id": "building_dev_sunvault_unique_2",
+      "box": [
+        1830,
+        200,
+        180,
+        125
+      ],
+      "crop": [
+        1670,
+        89,
+        378,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_2_cirque.png",
+      "source_sha256": "dfafdfda36c25c84beea24b1534d88b552d06173316bff33e8284f8f4e1db481",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_court.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_2_cirque_matte.png",
+        "sha256": "4eceb9d658ab4119729a343b2dbb495186e0af26c450439ddae8b77e55a26eb3",
+        "window": [
+          1809,
+          174,
+          222,
+          172
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_unique_3",
+      "plot_id": "building_dev_sunvault_unique_3",
+      "box": [
+        1540,
+        300,
+        185,
+        130
+      ],
+      "crop": [
+        1376,
+        184,
+        514,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_3_cirque.png",
+      "source_sha256": "e3e261e7d51ff846891a4c2da14e2ab8c2f372a27d50267737a7ee25238508f7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_3_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_unique_3_cirque_matte.png",
+        "sha256": "2c4456376a0253c216c64a9c407c9f1bdd1dc5c3cfeb02087f99b36cfb25f468",
+        "window": [
+          1470,
+          241,
+          303,
+          218
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t1_1_upgrade",
+      "plot_id": "sunvault_t1",
+      "box": [
+        40,
+        430,
+        180,
+        120
+      ],
+      "crop": [
+        0,
+        324,
+        380,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_upgrade_cirque.png",
+      "source_sha256": "c5a0c293c2e7797cb1ac14aaafe54d55af17118e29a218204e2f0f1491953fe1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_upgrade_cirque_matte.png",
+        "sha256": "55f2b6f2a357914de6ac38c12cca9e2b8ad38b4b954e35661b19d4b4cc1cdb7d",
+        "window": [
+          0,
+          381,
+          284,
+          197
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t1_1",
+      "plot_id": "sunvault_t1",
+      "box": [
+        51,
+        447,
+        158,
+        103
+      ],
+      "crop": [
+        0,
+        356,
+        349,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_cirque.png",
+      "source_sha256": "34f1640b553db708c5bad593c134e4710ef8c9bce3b934d25b7f900247b2a03a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t1_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_1_cirque_matte.png",
+        "sha256": "aa7baa962a26359617b33f377e8f7de498b808fb6b9bdda66d3fac11c4af4058",
+        "window": [
+          16,
+          400,
+          219,
+          181
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t1_2_upgrade",
+      "plot_id": "sunvault_t1",
+      "box": [
+        40,
+        430,
+        180,
+        120
+      ],
+      "crop": [
+        0,
+        324,
+        380,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_upgrade_cirque.png",
+      "source_sha256": "1686272bbfd8c1f77b8fd8b7c51e89d1f636dc58cdd05d36061f70b8f9b98343",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_upgrade_cirque_matte.png",
+        "sha256": "705a2b3d6f5726e3c52730ec2bce3b8c62987cdb396151ec3a7e277ec9734e56",
+        "window": [
+          0,
+          374,
+          276,
+          204
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t1_2",
+      "plot_id": "sunvault_t1",
+      "box": [
+        51,
+        447,
+        158,
+        103
+      ],
+      "crop": [
+        0,
+        356,
+        349,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_cirque.png",
+      "source_sha256": "1ee2fd4c779e19be6476516348835386d2289852c134e17f55f1f33d739dc8aa",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t1_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t1_2_cirque_matte.png",
+        "sha256": "007a8c84a4a2756eb147a776ea77d05e7750aee6f8d3c4facc56b03ea7fa69d3",
+        "window": [
+          27,
+          401,
+          207,
+          169
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t2_1_upgrade",
+      "plot_id": "sunvault_t2",
+      "box": [
+        255,
+        320,
+        185,
+        120
+      ],
+      "crop": [
+        90,
+        214,
+        514,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_upgrade_cirque.png",
+      "source_sha256": "392a5dfe79475d4a8550eeccf72a24beef4026e90ff4f2c8e92684d481ca37a0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_upgrade_cirque_matte.png",
+        "sha256": "2061912ce694cc406bfc424c427164d8a88cc40913f641ad5be99381a0c79ef8",
+        "window": [
+          201,
+          246,
+          321,
+          227
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t2_1",
+      "plot_id": "sunvault_t2",
+      "box": [
+        266,
+        337,
+        163,
+        103
+      ],
+      "crop": [
+        121,
+        246,
+        453,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_cirque.png",
+      "source_sha256": "4d9601b8f9143de2a1a78edc8a2b97da26401ca1b8514c2cde9ea304ff7c7466",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t2_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_1_cirque_matte.png",
+        "sha256": "c14fd043cb1d17992223361aa7e45582cdcbaeab174b6eeaa729a91dbbbcab5a",
+        "window": [
+          232,
+          287,
+          229,
+          179
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t2_2_upgrade",
+      "plot_id": "sunvault_t2",
+      "box": [
+        255,
+        320,
+        185,
+        120
+      ],
+      "crop": [
+        90,
+        214,
+        514,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_upgrade_cirque.png",
+      "source_sha256": "f90fc95fd56a68beafdeeb48a970ca17508017c6450cd71b7f468c8edea61a82",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_upgrade_cirque_matte.png",
+        "sha256": "f7d888967dbf9b4d30ca7bec9b58f33ef3eadb237262f5d59fb6a5f8781dea6e",
+        "window": [
+          213,
+          241,
+          297,
+          230
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t2_2",
+      "plot_id": "sunvault_t2",
+      "box": [
+        266,
+        337,
+        163,
+        103
+      ],
+      "crop": [
+        121,
+        246,
+        453,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_cirque.png",
+      "source_sha256": "509bf0fb6d413fb004c633b1b3b3c955f5013a897f26d9a1ca266bef6d506c9e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t2_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t2_2_cirque_matte.png",
+        "sha256": "9f5da364c1ed825fc31f9d54a237f1e5c9c1f9b7465916459559901606aff018",
+        "window": [
+          233,
+          293,
+          217,
+          168
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t3_1_upgrade",
+      "plot_id": "sunvault_t3",
+      "box": [
+        1290,
+        355,
+        215,
+        135
+      ],
+      "crop": [
+        1099,
+        235,
+        597,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_upgrade_cirque.png",
+      "source_sha256": "c9078371ef7574af992fc18f10a6c7f167d3b68653b08239941f0b304e722421",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_upgrade_cirque_matte.png",
+        "sha256": "dd770427296e81212765a27b3541b506d4a3c9d63d0fe7f3e141e834f84718b5",
+        "window": [
+          1230,
+          277,
+          310,
+          243
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t3_1",
+      "plot_id": "sunvault_t3",
+      "box": [
+        1303,
+        374,
+        189,
+        116
+      ],
+      "crop": [
+        1135,
+        271,
+        525,
+        322
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_cirque.png",
+      "source_sha256": "dee150fa45fe4c4d58931ae51c6dcb5a05773d96e12c081a63fa7e49c8cd39a9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t3_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_1_cirque_matte.png",
+        "sha256": "6cd80558b8708d4f3aef090b80c681fc970ff99088394411a31b2bd9ecea8de1",
+        "window": [
+          1281,
+          319,
+          233,
+          193
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t3_2_upgrade",
+      "plot_id": "sunvault_t3",
+      "box": [
+        1290,
+        355,
+        215,
+        135
+      ],
+      "crop": [
+        1099,
+        235,
+        597,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_upgrade_cirque.png",
+      "source_sha256": "b1b4cc8c96c5e5f20def956b70d45b9bb50db9f99ba9528624d0d18e4dccc65d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_upgrade_cirque_matte.png",
+        "sha256": "bc61ba66f3fd4cdfeeac5a287a98779750c7bb68ac3b93bb62ba4a254311f12a",
+        "window": [
+          1212,
+          279,
+          335,
+          243
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t3_2",
+      "plot_id": "sunvault_t3",
+      "box": [
+        1303,
+        374,
+        189,
+        116
+      ],
+      "crop": [
+        1135,
+        271,
+        525,
+        322
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_cirque.png",
+      "source_sha256": "295dbe5bfe2d8980871a2018f567bbedc2947248ac22a0319023b03d86b7a026",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t3_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t3_2_cirque_matte.png",
+        "sha256": "d36bc12231816e041360b49488052300320f53e2fd4b6d8356c8e9879393d314",
+        "window": [
+          1275,
+          317,
+          240,
+          196
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t4_1_upgrade",
+      "plot_id": "sunvault_t4",
+      "box": [
+        1075,
+        485,
+        212,
+        120
+      ],
+      "crop": [
+        886,
+        378,
+        589,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_upgrade_cirque.png",
+      "source_sha256": "f6ef0d587461ca20019b57bebca25fb72eae4dc2334105415c5e2e2d23f770f5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_upgrade_cirque_matte.png",
+        "sha256": "1aa9eb57ce3533adf29bd9c996e8a4214093bcf36eda103b67643aca6938a9be",
+        "window": [
+          1029,
+          389,
+          300,
+          245
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t4_1",
+      "plot_id": "sunvault_t4",
+      "box": [
+        1088,
+        502,
+        187,
+        103
+      ],
+      "crop": [
+        922,
+        410,
+        519,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_cirque.png",
+      "source_sha256": "195465491b932576e09cfd49e0eb34f7658cd3bb8831a83c8405711dd05e93cd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t4_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_1_cirque_matte.png",
+        "sha256": "10ea8ffc750c8871beb8295678bfe7ba075a93982b47bec8313e008cc660bbf4",
+        "window": [
+          1066,
+          450,
+          231,
+          177
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t4_2_upgrade",
+      "plot_id": "sunvault_t4",
+      "box": [
+        1075,
+        485,
+        212,
+        120
+      ],
+      "crop": [
+        886,
+        378,
+        589,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_upgrade_cirque.png",
+      "source_sha256": "1e83b200c0ceac9a96b79d37963cbf2bc85da10607183966dccb06cc8c284592",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_upgrade_cirque_matte.png",
+        "sha256": "b557b9d72526e5e02d9fdc667dcd73bb617ec0efbadfa10a6eea40d5e9d9b0e5",
+        "window": [
+          1013,
+          416,
+          376,
+          254
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t4_2",
+      "plot_id": "sunvault_t4",
+      "box": [
+        1088,
+        502,
+        187,
+        103
+      ],
+      "crop": [
+        922,
+        410,
+        519,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_cirque.png",
+      "source_sha256": "21f05059053e40ef391176dbef1605f939184e64643d41b6fc210b719fdb279a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t4_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t4_2_cirque_matte.png",
+        "sha256": "e4983adb74580f54c6cfaaff8f420d3688ddbfcafc23607ef1fb1463f1d1a709",
+        "window": [
+          1051,
+          452,
+          270,
+          200
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t5_1_upgrade",
+      "plot_id": "sunvault_t5",
+      "box": [
+        345,
+        174,
+        180,
+        118
+      ],
+      "crop": [
+        185,
+        69,
+        500,
+        328
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_upgrade_cirque.png",
+      "source_sha256": "3c88e4efe5c47b2dccb13d698af81cfdbf976c9799e8e524be574cbde65ea35a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_upgrade_cirque_matte.png",
+        "sha256": "3e611de7c668d4178dabf745a61d425cfd87224edd8d9245a81af835951a8c73",
+        "window": [
+          317,
+          141,
+          242,
+          174
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t5_1",
+      "plot_id": "sunvault_t5",
+      "box": [
+        356,
+        191,
+        158,
+        101
+      ],
+      "crop": [
+        216,
+        101,
+        439,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_cirque.png",
+      "source_sha256": "4a8b66a86d74dffbe0037680c9ad69884ddcce65ac0e0f724508a550195a7a3e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t5_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_1_cirque_matte.png",
+        "sha256": "3ead0c26c125b0ff1352839bb6a90571e9f2ef18cd7e891f230b10e49522e613",
+        "window": [
+          338,
+          173,
+          194,
+          137
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t5_2_upgrade",
+      "plot_id": "sunvault_t5",
+      "box": [
+        345,
+        174,
+        180,
+        118
+      ],
+      "crop": [
+        185,
+        69,
+        500,
+        328
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_upgrade_cirque.png",
+      "source_sha256": "1a9856d9eb39a25fe41a1473a774fe0cce594fcbf3dbb85f91914cbf8fd3a061",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_upgrade_cirque_matte.png",
+        "sha256": "c6566c015ab30229bae0af939ac54f0c6bdf5ba45c95b97de7f0138fac9b756e",
+        "window": [
+          323,
+          153,
+          223,
+          160
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t5_2",
+      "plot_id": "sunvault_t5",
+      "box": [
+        356,
+        191,
+        158,
+        101
+      ],
+      "crop": [
+        216,
+        101,
+        439,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_cirque.png",
+      "source_sha256": "a4530cfe0aa3bab0f9797e8047eba0028a2a6e8a175e0f6c72d07cd16b11c49e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t5_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t5_2_cirque_matte.png",
+        "sha256": "fb1547b2b4ce026a1dd700c8d7e41da95d5e041466eac445454b5fde02acfb8b",
+        "window": [
+          338,
+          173,
+          194,
+          137
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t6_1_upgrade",
+      "plot_id": "sunvault_t6_1",
+      "box": [
+        1370,
+        650,
+        255,
+        155
+      ],
+      "crop": [
+        1144,
+        512,
+        708,
+        431
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_upgrade_cirque.png",
+      "source_sha256": "d84563576130e0e56963f5c36e59a0f12cd1dacb255e77372858ccd38690f3dd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_t6.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_upgrade_cirque_matte.png",
+        "sha256": "419a8f481df64c092ec7c10b06b0cd7594de8093c74b28bd54676170f71c8526",
+        "window": [
+          1273,
+          599,
+          483,
+          252
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t6_1",
+      "plot_id": "sunvault_t6_1",
+      "box": [
+        1386,
+        672,
+        224,
+        133
+      ],
+      "crop": [
+        1187,
+        554,
+        622,
+        369
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_cirque.png",
+      "source_sha256": "1f9e7c20cbcd010e3428cfd19a33425f5c8c56b459aaad0489885e0edcd4ff9c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t6_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t6_1_cirque_matte.png",
+        "sha256": "0bd3e243e7026f1b2dcaaf82aa60fb7b57be7c573e88050e7ef7ffe61e5cf8c7",
+        "window": [
+          1360,
+          627,
+          276,
+          204
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t7_1_upgrade",
+      "plot_id": "sunvault_t7_1",
+      "box": [
+        1770,
+        545,
+        270,
+        405
+      ],
+      "crop": [
+        1530,
+        185,
+        518,
+        967
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_upgrade_cirque.png",
+      "source_sha256": "cb0b1b1d9d832d70d94a02711a97733fe48bfbc2c72d8d7a7837eb42de56507e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_upgrade_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_colossus.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_upgrade_cirque_matte.png",
+        "sha256": "c2a2ff4ab17d3bdd2a37ab299f583cc2d3b7ad50027daaa6e640506ac80586ac",
+        "window": [
+          1661,
+          423,
+          387,
+          643
+        ]
+      }
+    },
+    {
+      "id": "building_dev_sunvault_t7_1",
+      "plot_id": "sunvault_t7_1",
+      "box": [
+        1786,
+        602,
+        238,
+        348
+      ],
+      "crop": [
+        1574,
+        292,
+        474,
+        860
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_cirque.png",
+      "source_sha256": "0fed87e7420ddc02714969461667ff918255c00e7669c695b0d28b5177590222",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/building_dev_sunvault_t7_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_sunvault_t7_1_cirque_matte.png",
+        "sha256": "57e41b7029ccf08dc20c636d288d0bde404b67062f19a7f50c02a123c1432f92",
+        "window": [
+          1702,
+          505,
+          346,
+          493
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        985,
+        850,
+        350,
+        225
+      ],
+      "crop": [
+        674,
+        650,
+        972,
+        502
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_shipyard_cirque.png",
+      "source_sha256": "05b3098c20dfb2e630309edc5cd51ec7896678f7dd5be52bc539a348eb55b6d6",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_shipyard_cirque.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque.png",
+        "art/towns/source/generated/overhaul/faction_sunvault/sun_cirque_refs/ref_shipyard.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_shipyard_cirque_matte.png",
+        "sha256": "25226559efdeda3713883eb700af2d1f3ea9ce8005b0e7f7a7b76d5813047a5a",
+        "window": [
+          794,
+          767,
+          682,
+          385
+        ]
+      }
+    }
+  ],
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
+  }
+}

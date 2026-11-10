@@ -117,9 +117,11 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.24, 0.39), "radius": 0.060, "color": Color(1.0, 0.46, 0.12), "strength": 0.82},
 	],
 	"faction_sunvault": [
-		{"position": Vector2(0.09, 0.18), "radius": 0.080, "color": Color(0.70, 0.91, 1.0), "strength": 0.82},
-		{"position": Vector2(0.54, 0.28), "radius": 0.080, "color": Color(0.94, 0.89, 0.48), "strength": 0.70},
-		{"position": Vector2(0.80, 0.19), "radius": 0.075, "color": Color(0.55, 0.86, 1.0), "strength": 0.84},
+		# On the lights of the sun cirque: the gold front of the sun vault, the sun's glints on the
+		# lake, and the white spray at the foot of the fall.
+		{"position": Vector2(0.308, 0.41), "radius": 0.065, "color": Color(1.0, 0.90, 0.56), "strength": 0.70},
+		{"position": Vector2(0.265, 0.745), "radius": 0.075, "color": Color(1.0, 0.92, 0.62), "strength": 0.72},
+		{"position": Vector2(0.42, 0.64), "radius": 0.070, "color": Color(0.80, 0.93, 1.0), "strength": 0.78},
 	],
 	"faction_thornwake": [
 		{"position": Vector2(0.53, 0.21), "radius": 0.130, "color": Color(0.91, 1.0, 0.72), "strength": 0.62},
@@ -198,7 +200,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png",
 	},
 	"faction_sunvault": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_sunvault_cleared_plateau.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_sunvault_sun_cirque.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png",
 	},
