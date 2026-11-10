@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-mireclaw-20261110",
- "currentSliceTitle": "Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T10:11:47Z",
+ "currentSliceId": "ui-map-info-card-art-20261110",
+ "currentSliceTitle": "Map information card: sidebar look and readable unit icons",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T10:17:29Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-map-info-card-art-20261110",
+   "title": "Map information card: sidebar look and readable unit icons",
+   "status": "in_progress",
+   "goal": "The map's right-click report and hover card take the sidebar's dark-and-gold frame (owner picked mockup B, made with imggen), are only as tall as their content, and show unit icons cut from the existing portraits (owner: free crops, no new unit art).",
+   "docs": [
+    "docs/overworld-info-card.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-mireclaw-20261110",
    "status": "completed",

@@ -295,6 +295,11 @@ static func _describe_artifact(session, record: Dictionary, node: Dictionary, le
 
 ## The hover card: at most three short lines.
 static func hover_text(session, tile: Vector2i, level: int) -> String:
+	return String(hover_card(session, tile, level).text)
+
+## The hover card's text with what the card needs to colour it: the status
+## line's index (-1 without one) and the description's tone.
+static func hover_card(session, tile: Vector2i, level: int) -> Dictionary:
 	var record := describe_tile(session, tile, level)
 	var lines: Array = []
 	var head := String(record.title)
@@ -307,9 +312,11 @@ static func hover_text(session, tile: Vector2i, level: int) -> String:
 		lines.append(_clip(String(record.gives), HOVER_LINE_LIMIT))
 	elif String(record.flavour) != "":
 		lines.append(_clip(String(record.flavour), HOVER_LINE_LIMIT))
+	var status_line := -1
 	if String(record.status) != "":
+		status_line = lines.size()
 		lines.append(_clip(String(record.status), HOVER_LINE_LIMIT))
-	return "\n".join(lines)
+	return {"text": "\n".join(lines), "status_line": status_line, "tone": String(record.tone)}
 
 ## The right-click report: the same description with room for the guard's
 ## stacks, the flavour line and what scouting marks the ground carries.

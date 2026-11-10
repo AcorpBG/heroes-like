@@ -359,6 +359,30 @@ static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	style.shadow_offset = Vector2(0.0, 2.0)
 	return style
 
+## The map's information card: dark lacquer with a thin gold border and compass
+## corners, the sidebar's family (tools/build_info_card_panel.py cuts the two
+## frames; the corners are drawn at their own size, never stretched). `small`
+## is the hover card.
+const INFO_CARD_PATH := "res://art/ui/runtime/overworld/info_card.png"
+const INFO_CARD_SMALL_PATH := "res://art/ui/runtime/overworld/info_card_small.png"
+const INFO_CARD_CORNER_PX := 48
+const INFO_CARD_SMALL_CORNER_PX := 28
+
+static func info_card_style(small: bool = false) -> StyleBox:
+	var path := INFO_CARD_SMALL_PATH if small else INFO_CARD_PATH
+	if high_contrast_enabled() or not ResourceLoader.exists(path):
+		return panel_style("ink")
+	var corner := INFO_CARD_SMALL_CORNER_PX if small else INFO_CARD_CORNER_PX
+	var style := StyleBoxTexture.new()
+	style.texture = load(path) as Texture2D
+	style.set_texture_margin_all(corner)
+	var inset := 16 if small else 26
+	style.set_content_margin_all(inset)
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.draw_center = true
+	return style
+
 static func texture_panel_style(path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> StyleBox:
 	if high_contrast_enabled():
 		return panel_style(fallback_tone)

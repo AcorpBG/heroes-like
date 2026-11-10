@@ -23,6 +23,24 @@ static func for_unit(unit_id: String, surface: String = "battle_icon", round_bac
 	layered.round_background = round_backdrop
 	return layered
 
+## A unit's small icon: the part of its portrait content/unit_bust_regions.json
+## names (head and shoulders of a standing figure, the whole of a beast or a
+## machine; tools/build_unit_bust_regions.py). The whole figure shrunk to an
+## icon is unreadable. Falls back to the battle icon.
+const BUST_REGIONS_PATH := "res://content/unit_bust_regions.json"
+
+static func bust_for_unit(unit_id: String) -> Texture2D:
+	var art := ContentService.get_unit_art(unit_id)
+	var path := String(art.get("portrait", ""))
+	var regions: Dictionary = ContentService.load_json(BUST_REGIONS_PATH).get("regions", {})
+	var box = regions.get(unit_id, null)
+	if path == "" or not (box is Array) or box.size() != 4 or not ResourceLoader.exists(path, "Texture2D"):
+		return for_unit(unit_id)
+	var bust := AtlasTexture.new()
+	bust.atlas = load(path) as Texture2D
+	bust.region = Rect2(float(box[0]), float(box[1]), float(box[2]), float(box[3]))
+	return bust
+
 static func background_path(unit_id: String) -> String:
 	var art := ContentService.get_unit_art(unit_id)
 	var backgrounds: Dictionary = ContentService.load_json(ContentService.UNIT_ART_PATH).get("ui_faction_backgrounds", {})

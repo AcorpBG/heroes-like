@@ -1,0 +1,20 @@
+UI design mockup for a painted fantasy turn-based strategy game. Image 1 is a real screenshot of the game: a painted adventure map with a sidebar on the right and a resource bar at the bottom, and in the centre the current "scout report" information window, which looks out of place: a large, mostly empty dark square with tiny, unreadable unit icons.
+
+Task: redesign ONLY that information window. Keep the map, the sidebar, the resource bar, the buttons and every other pixel of the screenshot as they are.
+
+Direction B, "sidebar family": the window belongs to the same family as the game's sidebar and resource bar: a compact panel of very dark warm brown-black lacquer with a subtle leather grain, framed by a thin antique-gold line border with small compass-star corner ornaments set with a teal gem, exactly in the style of the gold frame in image 2 (image 2 is only a style reference for the game's existing frames and panels). It casts a soft shadow on the map. It is about 430 pixels wide and only as tall as its content, placed in the centre where the old window was. No empty space below the content, no "Return to map" button.
+
+Layout, top to bottom:
+1. The title in warm gold serif: "Charcoal Burners Camp Watch". Under it, smaller, in muted grey-beige: "4 groups · on grassland". A thin gold hairline under the header.
+2. A line in off-white: "Victory brings 110 gold, 542 xp".
+3. A line in soft red: "Much stronger than Lyra Emberwell's army".
+4. Four rows, one per enemy stack. Each row starts with a square icon tile about 56 pixels across with rounded corners and a thin gold frame: a close-up head-and-shoulders portrait of the soldier, large and easy to tell apart, on a dark backing tinted by a muted colour. Use the two soldiers from image 3: the left one (bearded man in dark armour with a great two-headed maul) is "Charcoal Mauls", the right one is "Emberpack Lobbers". Next to each icon, the row text in off-white:
+   "Charcoal Mauls · Band"
+   "Charcoal Mauls · Squad"
+   "Charcoal Mauls · Squad"
+   "Emberpack Lobbers · Band"
+5. A thin gold hairline, then small muted text: "Battlefield: Lava".
+
+Also add one small hover tooltip card in the same dark-and-gold style near the upper right part of the map, about 330 pixels wide, with exactly these three lines: first line in gold "Fortune Ring · Hero visit", second line off-white "+1 momentum next battle, once per hero each week", third line in gold "Ready for Lyra Emberwell".
+
+Typography: a readable humanist serif, crisp, no blur. Spell every string exactly as written, and add no other text anywhere. Painted, hand-crafted look that matches the map art; not flat vector, not glossy sci-fi.

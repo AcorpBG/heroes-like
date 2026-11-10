@@ -9103,7 +9103,11 @@ func _selected_route_simple_tooltip() -> String:
 ## What the hover card says about a tile: the shared description, in at most
 ## three short lines (scripts/ui/OverworldInspection.gd).
 func _tile_visibility_tooltip(tile: Vector2i, _prefix: String) -> String:
-	return Inspection.hover_text(_session, tile, LevelRules.view_level(_session))
+	var card := Inspection.hover_card(_session, tile, LevelRules.view_level(_session))
+	# The map view draws the card; it colours the status line of this text.
+	if is_instance_valid(_map_view):
+		_map_view.hover_card_hint = card
+	return String(card.text)
 
 func _selected_route() -> Array:
 	var route_state := _ensure_selected_route_state("shell")

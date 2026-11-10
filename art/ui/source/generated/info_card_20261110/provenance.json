@@ -1,0 +1,31 @@
+{
+  "purpose": "The adventure map's information card: the frame of the right-click report and of the hover card. Owner picked direction B (the sidebar's dark lacquer and thin gold border) from three mockups on 2026-11-10.",
+  "generator": "imggen skill (OpenAI Images API)",
+  "model": "gpt-image-2.6-sunburst",
+  "created": "2026-11-10",
+  "transparent_background": false,
+  "items": [
+    {
+      "filename": "info_card_mockup.png",
+      "role": "approved mockup, an edit of a 1920x1080 game screenshot with the UI kit frames and two unit portraits as references; not used at runtime",
+      "prompt_file": "info_card_mockup.prompt.txt",
+      "size": "1920x1088",
+      "quality": "medium",
+      "sha256": "4e0bf089510f72bc141a1c6c00705a243496842372d835d75b0a24b4956c50b2"
+    },
+    {
+      "filename": "info_card_panel_source.png",
+      "role": "the empty panel, generated from the mockup's window; the nine-slice source",
+      "prompt_file": "info_card_panel.prompt.txt",
+      "size": "1024x1024",
+      "quality": "high",
+      "sha256": "7fae2abfbb55fd5153c70699bb1aea344aa98ffe5d3032ed085c19e7d6ef73e7",
+      "runtime_paths": [
+        "res://art/ui/runtime/overworld/info_card.png",
+        "res://art/ui/runtime/overworld/info_card_small.png"
+      ],
+      "runtime_tool": "tools/build_info_card_panel.py"
+    }
+  ],
+  "note": "The PNG sources are not tracked (art/*/source/**/*.png is ignored); they are kept beside this file in the owner's checkout."
+}

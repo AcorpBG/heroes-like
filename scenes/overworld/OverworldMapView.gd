@@ -28,6 +28,10 @@ func set_interaction_highlights(enabled: bool) -> void:
 # as a text tone of the visual kit.
 const INTERACTION_LABEL_TONES := {"ready": "gold", "used": "muted", "guarded": "red", "hostile": "red", "yours": "green", "neutral": "gold", "plain": "body"}
 
+## What the shell last built for a hovered tile: the card's text, its status
+## line and tone (OverworldInspection.hover_card).
+var hover_card_hint: Dictionary = {}
+
 func _refresh_interaction_highlights() -> void:
 	_interaction_highlight_index.clear()
 	if not _interaction_highlights or _session == null: return
@@ -2194,38 +2198,36 @@ func _build_hover_tooltip_card(for_text: String) -> PanelContainer:
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.custom_minimum_size = Vector2(float(profile.get("card_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)
 
-	var panel_style := StyleBoxFlat.new()
-	panel_style.bg_color = profile.get("panel_color", HOVER_TOOLTIP_PANEL_COLOR)
-	panel_style.border_color = profile.get("border_color", HOVER_TOOLTIP_BORDER_COLOR)
-	panel_style.set_border_width_all(int(profile.get("border_width_px", HOVER_TOOLTIP_BORDER_WIDTH_PX)))
-	panel_style.set_corner_radius_all(int(profile.get("corner_radius_px", HOVER_TOOLTIP_CORNER_RADIUS_PX)))
-	panel_style.shadow_color = profile.get("shadow_color", HOVER_TOOLTIP_SHADOW_COLOR)
-	panel_style.shadow_size = int(profile.get("shadow_size_px", HOVER_TOOLTIP_SHADOW_SIZE_PX))
-	panel_style.shadow_offset = profile.get("shadow_offset", HOVER_TOOLTIP_SHADOW_OFFSET)
-	card.add_theme_stylebox_override("panel", panel_style)
+	# The information card's small frame (docs/overworld-info-card.md): the
+	# sidebar's dark lacquer and thin gold border.
+	card.add_theme_stylebox_override("panel", FrontierVisualKitScript.info_card_style(true))
 
-	var margin := MarginContainer.new()
-	margin.name = "CardMargin"
-	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_theme_constant_override("margin_left", int(profile.get("margin_horizontal_px", HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX)))
-	margin.add_theme_constant_override("margin_right", int(profile.get("margin_horizontal_px", HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX)))
-	margin.add_theme_constant_override("margin_top", int(profile.get("margin_vertical_px", HOVER_TOOLTIP_MARGIN_VERTICAL_PX)))
-	margin.add_theme_constant_override("margin_bottom", int(profile.get("margin_vertical_px", HOVER_TOOLTIP_MARGIN_VERTICAL_PX)))
-	card.add_child(margin)
+	var lines_box := VBoxContainer.new()
+	lines_box.name = "CardLines"
+	lines_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lines_box.add_theme_constant_override("separation", 2)
+	card.add_child(lines_box)
 
-	var label := Label.new()
-	label.name = "CardText"
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.custom_minimum_size = Vector2(float(profile.get("content_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)
-	label.autowrap_mode = int(profile.get("autowrap_mode", TextServer.AUTOWRAP_WORD_SMART))
-	label.text_overrun_behavior = int(profile.get("overrun_behavior", TextServer.OVERRUN_TRIM_ELLIPSIS))
-	label.max_lines_visible = int(profile.get("max_lines", HOVER_TOOLTIP_MAX_LINES))
-	label.text = for_text
-	label.add_theme_color_override("font_color", profile.get("text_color", HOVER_TOOLTIP_TEXT_COLOR))
-	label.add_theme_color_override("font_shadow_color", profile.get("shadow_color", HOVER_TOOLTIP_SHADOW_COLOR))
-	label.add_theme_constant_override("shadow_offset_x", 1)
-	label.add_theme_constant_override("shadow_offset_y", 1)
-	margin.add_child(label)
+	# The first line names the thing; the status line takes the description's
+	# tone when this is the text the shell built for the hovered tile.
+	var hinted := String(hover_card_hint.get("text", "")) == for_text
+	var status_line := int(hover_card_hint.get("status_line", -1)) if hinted else -1
+	var lines := for_text.split("\n", false)
+	var shown := mini(lines.size(), int(profile.get("max_lines", HOVER_TOOLTIP_MAX_LINES)))
+	for index in range(shown):
+		var label := Label.new()
+		label.name = "CardText" if index == 0 else "CardLine%d" % index
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.custom_minimum_size = Vector2(float(profile.get("content_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)
+		label.autowrap_mode = int(profile.get("autowrap_mode", TextServer.AUTOWRAP_WORD_SMART))
+		label.text_overrun_behavior = int(profile.get("overrun_behavior", TextServer.OVERRUN_TRIM_ELLIPSIS))
+		label.max_lines_visible = 2
+		label.text = String(lines[index])
+		var tone := "gold" if index == 0 else "body"
+		if index == status_line:
+			tone = String(INTERACTION_LABEL_TONES.get(String(hover_card_hint.get("tone", "plain")), "body"))
+		FrontierVisualKitScript.apply_label(label, tone, 15 if index == 0 else 13)
+		lines_box.add_child(label)
 	return card
 
 func _make_custom_tooltip(for_text: String) -> Object:
