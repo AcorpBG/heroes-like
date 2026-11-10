@@ -27,6 +27,9 @@ Atom cadence(State &state, DictRef site);
 DictRef cost(State &state, DictRef site, Atom choice_id = state::key::empty);
 int64_t required_level(State &state, DictRef site);
 ArrayRef choices(State &state, DictRef site);
+// A building whose every choice has a price is a trade (the Wayside Exchange),
+// not a boon: computer players leave it to their town markets.
+bool is_trade(State &state, DictRef site);
 DictRef effects(State &state, DictRef site, Atom choice_id = state::key::empty);
 DictRef readiness(State &state, DictRef node, DictRef site, Atom visitor_key, int64_t day, Atom side = state::key::empty);
 int64_t week_index(State &state, int64_t day);

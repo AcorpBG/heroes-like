@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "feature-veilmourn-harbor-shipyards-20261110",
- "currentSliceTitle": "Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T07:52:16Z",
+ "currentSliceId": "rule-wayside-exchange-weekly-20261110",
+ "currentSliceTitle": "Wayside Exchange: one trade a week for each player",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T07:58:11Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "rule-wayside-exchange-weekly-20261110",
+   "title": "Wayside Exchange: one trade a week for each player",
+   "status": "in_progress",
+   "goal": "The map's Wayside Exchange (wood, ore and gold at far better rates than a town market, any time) serves each player one trade a week (owner, 2026-11-10): a new visit cadence weekly_per_side. Files: content/resource_sites.json, visit_building_rules_ai.cpp, hero_rules_turn.cpp.",
+   "docs": [
+    "docs/visit-buildings.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "feature-veilmourn-harbor-shipyards-20261110",
    "status": "completed",

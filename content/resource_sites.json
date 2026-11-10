@@ -1423,10 +1423,10 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "action_label": "Visit",
-      "public_text": "Caravans trade wood, ore and gold any time.",
+      "public_text": "Caravans trade wood, ore and gold: one trade a week for each player.",
       "visit": {
         "role": "trading_post",
-        "cadence": "always",
+        "cadence": "weekly_per_side",
         "choices": [
           {
             "id": "sell_wood",

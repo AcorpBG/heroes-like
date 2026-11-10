@@ -36,7 +36,8 @@ LABELS = {
 CADENCES = {
     "once_per_hero": "Once per hero", "weekly_per_hero": "Once per hero per week",
     "daily_per_hero": "Once per hero per day", "once_per_side": "Once per player",
-    "weekly_site": "One use per site per week", "always": "Repeatable",
+    "weekly_site": "One use per site per week", "weekly_per_side": "Once per player per week",
+    "always": "Repeatable",
 }
 
 

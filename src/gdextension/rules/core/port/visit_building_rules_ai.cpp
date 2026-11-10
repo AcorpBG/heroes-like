@@ -93,6 +93,20 @@ ArrayRef choices(State &state, DictRef site) {
 	return state.new_array();
 }
 
+bool is_trade(State &state, DictRef site) {
+	const ArrayRef options = choices(state, site);
+	if (state.array_size(options) == 0) {
+		return false;
+	}
+	for (const Value &choice : gd::items(state, array_value(options))) {
+		Value choice_cost;
+		if (!gd::is_dict(choice) || !state.lookup(choice.ref, str(key::cost), choice_cost) || !gd::is_dict(choice_cost) || gd::is_empty(state, choice_cost.ref)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 DictRef effects(State &state, DictRef site, Atom choice_id) {
 	if (choice_id != key::empty) {
 		for (const Value &choice : gd::items(state, array_value(choices(state, site)))) {
@@ -117,6 +131,14 @@ DictRef readiness(State &state, DictRef node, DictRef site, Atom visitor_key, in
 		Value side_visits;
 		if (state.lookup(node, str(key::side_visits), side_visits) && gd::is_dict(side_visits) && state.has(side_visits.ref, str(side != key::empty ? side : visitor_key))) {
 			return refusal(state, gd::format(state, key::you_have_already_used_s_what, {str(site_name(state, site, key::this_site))}));
+		}
+	} else if (mode == key::weekly_per_side) {
+		// One use a week for each player, whichever hero comes.
+		Value side_visits;
+		Value last;
+		if (state.lookup(node, str(key::side_visits), side_visits) && gd::is_dict(side_visits) && state.lookup(side_visits.ref, str(side != key::empty ? side : visitor_key), last) &&
+				week_index(state, gd::to_int(state, last)) == week_index(state, day)) {
+			return refusal(state, gd::format(state, key::s_has_served_you_this_week, {str(site_name(state, site, key::this_site_2)), int_value(gd::add(gd::mul(gd::add(week_index(state, day), 1), 7), 1))}));
 		}
 	} else if (mode == key::weekly_site) {
 		const int64_t last_site_day = gd::int_field(state, node, key::site_last_visit_day, 0);

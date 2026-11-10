@@ -648,6 +648,9 @@ Atom cadence_label(State &state, DictRef site) {
 	if (mode == key::weekly_per_hero) {
 		return key::once_per_hero_each_week;
 	}
+	if (mode == key::weekly_per_side) {
+		return key::once_per_player_each_week;
+	}
 	if (mode == key::weekly_site) {
 		return key::once_a_week;
 	}
@@ -688,7 +691,7 @@ Atom status_line(State &state, DictRef node, DictRef site, Atom visitor_key, int
 	if (!gd::bool_field(state, ready, key::ok, false)) {
 		return string_of(state, ready, key::message, key::empty);
 	}
-	return cadence(state, site) == key::once_per_side ? key::Ready : key::ready_for_this_hero;
+	return cadence(state, site) == key::once_per_side || cadence(state, site) == key::weekly_per_side ? key::Ready : key::ready_for_this_hero;
 }
 
 void add_week_bonus(State &state, DictRef hero, Atom bonus_key, int64_t amount) {

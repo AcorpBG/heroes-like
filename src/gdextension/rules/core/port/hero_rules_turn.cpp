@@ -604,7 +604,7 @@ void record_visit(State &state, DictRef node, DictRef site, Atom visitor_key, in
 	const Value visits = dict_or_new(state, node, key::hero_visits);
 	state.set(visits.ref, str(visitor_key), int_value(day));
 	state.set(node, str(key::hero_visits), visits);
-	if (cadence(state, site) == key::once_per_side) {
+	if (cadence(state, site) == key::once_per_side || cadence(state, site) == key::weekly_per_side) {
 		const Value side_visits = dict_or_new(state, node, key::side_visits);
 		state.set(side_visits.ref, str(side != key::empty ? side : visitor_key), int_value(day));
 		state.set(node, str(key::side_visits), side_visits);

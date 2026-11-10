@@ -20,8 +20,9 @@ A visit building is a resource site with family `visit_building` and a `visit` b
 | `once_per_side` | Each player (the human side or a computer faction) may use it once; what it reveals stays revealed. |
 | `daily_per_hero` | Each hero may visit once per day. |
 | `weekly_per_hero` | Each hero may visit once per week (days 1-7, 8-14, ...). |
+| `weekly_per_side` | Each player may use it once per week, whichever hero comes (the Wayside Exchange: one trade a week, owner decision 2026-11-10). |
 | `weekly_site` | The first hero each week uses it; the rest wait for the next week. |
-| `always` | No limit (the Wayside Exchange). |
+| `always` | No limit. |
 
 The node stores `hero_visits` (`{hero_id or "ai:<faction>": day}`), `side_visits` (`{"player:<id>" or "ai:<faction>": day}`) and `site_last_visit_day`. A computer faction's commanders share one key per faction.
 
@@ -45,7 +46,7 @@ Effects (`visit.effects`, or the picked entry of `visit.choices`):
 
 Random maps can override a placement's `visit` block through `payload_visit` (`ResourceNodePayloadRules.gd`): an Elder Graft Tree rolls free, 2,000 gold or 10 of a rare; a Fountain of Fortune rolls +1 to +3 momentum; spell shrines roll a spell of their tier.
 
-Computer players visit stat, experience, level and spell buildings with their commanders when the faction may still use them (`EnemyAdventureRules._visit_building_by_raid`). Their target value is `VisitBuildingRules.ai_value`. The Wayside Exchange and mana or movement buildings are left to the human player for now.
+Computer players visit stat, experience, level and spell buildings with their commanders when the faction may still use them (`EnemyAdventureRules._visit_building_by_raid`). Their target value is `VisitBuildingRules.ai_value`. The Wayside Exchange (any building whose every choice has a price, `is_trade`) and mana or movement buildings are left to the human player for now. Until 2026-11-10 the Wayside Exchange traded any time: 5 wood or ore for 600 gold where a town market asks 250 to 380 gold for one, with no weekly cap.
 
 ## Buildings
 
@@ -71,7 +72,7 @@ Computer players visit stat, experience, level and spell buildings with their co
 | Buoy | Tide Bell | +1 cohesion next battle | weekly per hero |
 | Faerie Ring, Swan Pond, Fountain of Fortune, Idol of Fortune, Mermaid | Fortune Ring | +1 momentum next battle (+1 to +3 for Fountain of Fortune) | weekly per hero |
 | Cartographer | Chartmaker | 1,000 gold to reveal the whole map level | once per player |
-| Trading Post | Wayside Exchange | trade wood, ore and gold without a town | always |
+| Trading Post | Wayside Exchange | trade wood, ore and gold without a town | once per player per week |
 | Eye of the Magi, Hut of the Magi | Lens Calibration Cart | reveal radius 12 | once per player |
 | (no HoMM3 match; not placed on random maps) | Reedboat Supply Stand | +3 movement today | daily per hero |
 
