@@ -48,11 +48,11 @@ board frame are hidden there.
 `scenes/menus/BuiltMapsDialog.gd`: the maps built earlier, in the card's frame,
 newest first. Owner, 2026-11-10: less text, a picture of what the map is.
 
-- At the left a card for each map: a small picture of its surface with the start
-  towns, its name, the crests of the seats and its size.
+- At the left a card for each map: a small picture of its surface with your
+  start town, its name, the crests of the seats and its size.
 - At the right the chosen map: a picture of each level (ground in the minimap's
-  colours, obstacles darker, roads, towns: a start town in its seat's colour,
-  the others grey), the commander it was built for, each seat's crest in a ring
+  colours, obstacles darker, roads, towns: your start town in your seat's colour,
+  the neutral towns grey), the commander it was built for, each seat's crest in a ring
   of the seat's colour, and the settings as chips (size, players, levels, water,
   monsters, towns) with the seed under them.
 - Play and Close; a double click plays. It plays the chosen map at the difficulty
@@ -64,7 +64,8 @@ package takes a third of a second to load, so the window opens at once and reads
 one map each frame, the chosen one first. The seats, hero and settings come from
 the entry the rules already list.
 
-The pictures show the whole map and where every seat starts.
+The pictures show the whole map's ground, but not where the rivals start: their
+start towns are left off (owner, 2026-11-10).
 
 ## Save menu
 

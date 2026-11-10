@@ -1,7 +1,8 @@
 extends RefCounted
 ## What a built map looks like (docs/skirmish-setup-screen.md): one picture per
 ## level, a texel per tile in the minimap's colours with obstacles darkened and
-## roads drawn, and where its towns stand. Read from the map package and kept
+## roads drawn, and where its towns stand (your start town and the neutral
+## towns, not the rivals' start towns). Read from the map package and kept
 ## for the session, as loading a large package takes a third of a second.
 
 const Minimap := preload("res://scenes/overworld/OverworldMinimap.gd")
@@ -60,6 +61,10 @@ static func build(entry: Dictionary) -> Dictionary:
 		if level < 0 or level >= level_count:
 			continue
 		if kind == "town":
+			# A rival's start town is not shown: where rivals start is for the
+			# game to reveal (owner, 2026-11-10).
+			if bool(object.get("is_start_town", false)) and String(object.get("owner", "")) != "player":
+				continue
 			preview.towns.append({
 				"tile": Vector2i(int(object.get("x", 0)), int(object.get("y", 0))),
 				"level": level,

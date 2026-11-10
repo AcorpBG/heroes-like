@@ -22,8 +22,8 @@ const HAIRLINE := Color(0.83, 0.68, 0.36, 0.45)
 const SIZE_NAMES := {36: "Small", 72: "Medium", 108: "Large", 144: "Extra Large"}
 const WATER_NAMES := {"land": "Land", "normal_water": "Normal water", "islands": "Islands"}
 
-## A level of a built map: its picture with the towns marked, start towns in
-## their player's colour. Always square, whatever it is given to draw.
+## A level of a built map: its picture with the towns marked, your start town
+## in your seat's colour. Always square, whatever it is given to draw.
 class MapPicture extends Control:
 	const BACKING := Color("0c1113")
 	const FRAME := Color(0.76, 0.60, 0.30)
@@ -317,8 +317,7 @@ func _card(entry: Dictionary) -> Button:
 			play_requested.emit(scenario_id))
 	return card
 
-## A seat's faction crest in a ring of the seat's colour, the colour its start
-## town has on the picture.
+## A seat's faction crest in a ring of the seat's colour.
 func _seat_crest(faction_id: String, slot: int, edge: float, yours: bool) -> Control:
 	var ring := PanelContainer.new()
 	ring.custom_minimum_size = Vector2(edge, edge)
