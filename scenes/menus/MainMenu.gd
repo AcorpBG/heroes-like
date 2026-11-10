@@ -3054,9 +3054,8 @@ func _on_built_map_selected(scenario_id: String) -> void:
 	_show_built_map_details()
 
 func _show_built_map_details() -> void:
-	# The map's own line (size, players, seed); the launch check stays a tooltip.
-	var summary := String(_selected_skirmish_entry().get("summary", "")).get_slice("\n", 0)
-	_built_maps_dialog.show_details(summary, not _start_skirmish_button.disabled)
+	# The window draws the map itself; the launch check stays a tooltip.
+	_built_maps_dialog.set_playable(not _start_skirmish_button.disabled, _start_skirmish_button.tooltip_text)
 
 func _on_built_map_play_requested(scenario_id: String) -> void:
 	_on_built_map_selected(scenario_id)

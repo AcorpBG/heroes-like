@@ -146,6 +146,7 @@ func _card(save: Dictionary) -> Button:
 	card.add_child(row)
 	var frame := PanelContainer.new()
 	frame.custom_minimum_size = THUMB_SIZE
+	frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var frame_style := _outline(Color(0.76, 0.60, 0.30), 1, Color(0.30, 0.27, 0.23))
 	frame_style.set_content_margin_all(2)

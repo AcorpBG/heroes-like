@@ -19,7 +19,9 @@ const HeroCommand := preload("res://scripts/core/HeroCommandRules.gd")
 const RANDOM_ID := "random"
 const CREST_SIZE := 52.0
 const THUMB_SIZE := Vector2(48.0, 60.0)
-const PORTRAIT_SIZE := Vector2(204.0, 272.0)
+## The portrait keeps this size for every hero, and so does the card: the tallest
+## text (a magic hero: two specialties) is as high as the portrait.
+const PORTRAIT_SIZE := Vector2(249.0, 332.0)
 const ROW_LABEL_WIDTH := 88.0
 const PILL_HEIGHT := 27.0
 const GOLD := Color(0.84, 0.67, 0.31)
@@ -236,6 +238,8 @@ func _sync_hero_card(faction_id: String, hero_id: String) -> void:
 	var hero := ContentService.get_hero(hero_id) if hero_id != "" else {}
 	var frame := PanelContainer.new()
 	frame.custom_minimum_size = PORTRAIT_SIZE
+	frame.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	frame.add_theme_stylebox_override("panel", _tile_style(1, 4, 2))
 	_hero_card.add_child(frame)
 	var text := VBoxContainer.new()
@@ -374,6 +378,8 @@ func _hero_thumb(hero_id: String, label: String) -> Button:
 	var button := Button.new()
 	button.toggle_mode = true
 	button.custom_minimum_size = THUMB_SIZE
+	button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	button.clip_contents = true
 	button.set_meta("id", hero_id)
 	button.tooltip_text = "%s\n%s" % [label, String(hero.get("roster_summary", ""))]
@@ -445,6 +451,8 @@ func _row_shell(title: String, wraps: bool = false) -> Container:
 func _tile(texture: Texture2D, edge: float) -> PanelContainer:
 	var tile := PanelContainer.new()
 	tile.custom_minimum_size = Vector2(edge, edge)
+	tile.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	tile.add_theme_stylebox_override("panel", _tile_style(1, 4, 2))
 	tile.add_child(_picture(texture, true))
 	return tile

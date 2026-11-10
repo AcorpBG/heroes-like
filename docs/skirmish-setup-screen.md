@@ -21,7 +21,9 @@ bottom:
 - **Hero card**: the portrait, name, calling and might or magic path, the
   one-line identity, the four command stats, each starting specialty with its
   insignia and what it gives at rank one, the starting spells, and the starting
-  troops.
+  troops. The portrait and the card keep one size for every hero (the height of
+  the longest text, a magic hero's two specialties), so nothing moves when the
+  hero changes; the hero thumbnails and the save cards' portraits are fixed too.
 - **The map**: each setting is a row of pills with the chosen one in gold: size,
   players, layout, water, levels, monsters, difficulty; then the seed field (empty
   means a fresh seed) with a Roll button that writes a random one. A row with one
@@ -44,7 +46,25 @@ board frame are hidden there.
 ## Built maps
 
 `scenes/menus/BuiltMapsDialog.gd`: the maps built earlier, in the card's frame,
-with Play and Close. It plays the chosen map at the difficulty the column shows.
+newest first. Owner, 2026-11-10: less text, a picture of what the map is.
+
+- At the left a card for each map: a small picture of its surface with the start
+  towns, its name, the crests of the seats and its size.
+- At the right the chosen map: a picture of each level (ground in the minimap's
+  colours, obstacles darker, roads, towns: a start town in its seat's colour,
+  the others grey), the commander it was built for, each seat's crest in a ring
+  of the seat's colour, and the settings as chips (size, players, levels, water,
+  monsters, towns) with the seed under them.
+- Play and Close; a double click plays. It plays the chosen map at the difficulty
+  the column shows.
+
+`scripts/ui/MapPackagePreview.gd` reads the pictures from the map package (the
+terrain and road layers and the objects) and keeps them for the session. A large
+package takes a third of a second to load, so the window opens at once and reads
+one map each frame, the chosen one first. The seats, hero and settings come from
+the entry the rules already list.
+
+The pictures show the whole map and where every seat starts.
 
 ## Save menu
 
@@ -67,4 +87,6 @@ In the game at 1920 by 1080: the column for Embercourt, Veilmourn (might and mag
 heroes), Mireclaw and the random faction; every row driven through its pills; a
 map built and started through Build & Play; the built maps window; the save menu
 with an autosave and two manual saves, a save renamed and one loaded. Content
-check and core suite.
+check and core suite. For the fixed portrait and the pictured built maps: five
+heroes of four factions measured at one portrait size, the window with six maps
+of two sizes, one and two levels, and one of them started from it.

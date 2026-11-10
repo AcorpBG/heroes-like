@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-quality-pass-20261110",
- "currentSliceTitle": "Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T12:52:18Z",
+ "currentSliceId": "ui-built-maps-pictures-20261110",
+ "currentSliceTitle": "Built maps as pictures, fixed hero portrait",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T14:36:19Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-built-maps-pictures-20261110",
+   "title": "Built maps as pictures, fixed hero portrait",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-10: the hero portrait in the skirmish setup must keep one size, and the built maps window should show what each map is with less text. Files: scenes/menus/SkirmishSetupColumn.gd, BuiltMapsDialog.gd, SaveListColumn.gd, MainMenu.gd, scripts/ui/MapPackagePreview.gd.",
+   "docs": [
+    "docs/skirmish-setup-screen.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-quality-pass-20261110",
    "status": "completed",
