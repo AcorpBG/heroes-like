@@ -286,10 +286,7 @@ ArrayRef effect_lines(State &state, DictRef building, DictRef town, const Value 
 		append_text(state, lines, key::artifact_trade_offers_refresh_weekly);
 	}
 	if (gd::bool_field(state, building, key::shipyard, false)) {
-		Value boat_cost;
-		if (!state.lookup(building, str(key::boat_cost), boat_cost)) {
-			boat_cost = dict_value(state.new_dict());
-		}
+		const Value boat_cost = dict_value(water_travel_rules::town_boat_cost(state, town, building));
 		append_text(state, lines, gd::format(state, key::s_s_11, {str(key::builds_boats), str(_resource_text(state, boat_cost))}));
 		if (water_travel_rules::town_has_harbor(state, town)) {
 			append_text(state, lines, water_travel_rules::harbor_line(state, town, key::harbor_s_from_the_gate, key::harbor_beside_the_gate));

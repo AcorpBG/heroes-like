@@ -229,7 +229,7 @@ ArrayRef service_actions(State &state, const Value &session, DictRef town) {
 		}
 		// The Shipyard launches a boat on the town's harbour, hero or no hero.
 		if (gd::bool_field(state, b, key::shipyard, false) && water_travel_rules::town_has_harbor(state, town)) {
-			const DictRef cost = gd::as_dict(field_or_new_dict(state, b, key::boat_cost));
+			const DictRef cost = water_travel_rules::town_boat_cost(state, town, b);
 			const Atom blocker = water_travel_rules::dock_blocker(state, session, town);
 			const DictRef action = state.new_dict();
 			state.set(action, str(key::id), str(concat(state, key::town_boat_2, building_id)));
@@ -361,7 +361,7 @@ DictRef perform_service(State &state, const Value &session, DictRef town, Atom a
 		const Atom name = text_or(state, gd::content_row(state, ContentTable::Artifact, part_at(parts, 1)), key::name, part_at(parts, 1));
 		message = concat(state, concat(state, key::sold_2, name), key::period);
 	} else if (kind == key::town_boat) {
-		const DictRef cost = gd::as_dict(field_or_new_dict(state, gd::content_row(state, ContentTable::Building, part_at(parts, 1)), key::boat_cost));
+		const DictRef cost = water_travel_rules::town_boat_cost(state, town, gd::content_row(state, ContentTable::Building, part_at(parts, 1)));
 		const Atom blocker = water_travel_rules::build_boat(state, session, town);
 		if (blocker != key::empty) {
 			return refusal(state, blocker);

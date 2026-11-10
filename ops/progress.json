@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-brasshollow-boatworks-lower-20261110",
- "currentSliceTitle": "Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T07:47:00Z",
+ "currentSliceId": "feature-veilmourn-harbor-shipyards-20261110",
+ "currentSliceTitle": "Veilmourn harbour towns start with a Shipyard; boats there half price",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T07:37:08Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "feature-veilmourn-harbor-shipyards-20261110",
+   "title": "Veilmourn harbour towns start with a Shipyard; boats there half price",
+   "status": "in_progress",
+   "goal": "Every Veilmourn town with a harbour has the Shipyard built from the start, and its boats cost 500 gold and 5 wood (owner, 2026-11-10). Data on the town template in content/towns.json; rules in water_travel_rules_ai.cpp, town services, AI boat buying.",
+   "docs": [
+    "docs/water-travel.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-brasshollow-boatworks-lower-20261110",
    "status": "completed",

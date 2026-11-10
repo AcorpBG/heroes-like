@@ -579,6 +579,8 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 			if (gd::is_empty(state, dock)) {
 				continue;
 			}
+			// The town's own price for a boat (Veilmourn's towns ask half).
+			const DictRef yard_cost = water_travel_rules::town_boat_cost(state, town.ref, gd::content_row(state, ContentTable::Building, water_travel_rules::town_shipyard_id(state, town.ref)));
 			const int64_t dock_x = gd::to_int(state, gd::index(state, dock, str(key::x)));
 			const int64_t dock_y = gd::to_int(state, gd::index(state, dock, str(key::y)));
 			for (int64_t dy = -1; dy <= 1; ++dy) {
@@ -595,6 +597,7 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 					const DictRef yard = state.new_dict();
 					state.set(yard, str(key::town), int_value(index));
 					state.set(yard, str(key::dock), int_value(gd::add(gd::mul(dock_y, width), dock_x)));
+					state.set(yard, str(key::boat_cost), dict_value(yard_cost));
 					state.set(shipyards, int_value(shore), dict_value(yard));
 				}
 			}

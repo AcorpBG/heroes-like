@@ -6148,3 +6148,5 @@ AURELION_KEY(shipwrights_launch_a_boat_beside, "Shipwrights launch a boat beside
 AURELION_KEY(builds_boats, "Builds boats")
 AURELION_KEY(harbor_s_from_the_gate, "Harbor %s from the gate")
 AURELION_KEY(harbor_beside_the_gate, "Harbor beside the gate")
+AURELION_KEY(harbor_building_ids, "harbor_building_ids")
+AURELION_KEY(boat_cost_percent, "boat_cost_percent")

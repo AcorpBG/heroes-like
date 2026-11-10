@@ -231,11 +231,60 @@ std::pair<int64_t, int64_t> find_harbor(HarborGrid &grid, Vector2i gate) {
 
 namespace water_travel_rules {
 
+namespace {
+
+// A town whose template names harbor_building_ids (Veilmourn: the Shipyard)
+// stands with them built wherever it has a harbour, from the start of the game
+// and in saves from before the rule.
+void grant_harbor_buildings(State &state, DictRef town) {
+	if (!town_has_harbor(state, town)) {
+		return;
+	}
+	const DictRef row = gd::content_row(state, state::ContentTable::Town, gd::stringify(state, state.get(town, str(key::town_id), str(key::empty))));
+	Value granted;
+	if (!state.lookup(row, str(key::harbor_building_ids), granted) || !gd::is_array(granted)) {
+		return;
+	}
+	Value built_value;
+	const bool has_built = state.lookup(town, str(key::built_buildings), built_value) && gd::is_array(built_value);
+	gd::ArrayRef built = 0;
+	bool changed = false;
+	for (const Value &id : gd::items(state, granted)) {
+		const Atom building_id = gd::stringify(state, id);
+		if (has_built && gd::array_has(state, changed ? built : built_value.ref, str(building_id))) {
+			continue;
+		}
+		if (!changed) {
+			built = has_built ? gd::duplicate_array(state, built_value.ref) : state.new_array();
+			changed = true;
+		}
+		state.append(built, str(building_id));
+	}
+	if (changed) {
+		state.set(town, str(key::built_buildings), gd::array_value(built));
+	}
+}
+
+void scan_harbors(State &state, DictRef session, const Value &towns);
+
+} // namespace
+
 void ensure_harbors(State &state, DictRef session) {
 	const Value towns = gd::field(state, session_view::overworld(state, session), key::towns);
 	if (!gd::is_array(towns)) {
 		return;
 	}
+	scan_harbors(state, session, towns);
+	for (const Value &town : gd::items(state, towns)) {
+		if (gd::is_dict(town)) {
+			grant_harbor_buildings(state, town.ref);
+		}
+	}
+}
+
+namespace {
+
+void scan_harbors(State &state, DictRef session, const Value &towns) {
 	std::vector<DictRef> unchecked;
 	for (const Value &town : gd::items(state, towns)) {
 		if (gd::is_dict(town) && !state.has(town.ref, str(key::harbor))) {
@@ -279,6 +328,8 @@ void ensure_harbors(State &state, DictRef session) {
 	state.set(meta, gd::name_value(key::harbors_checked), int_value(left));
 }
 
+} // namespace
+
 bool town_has_harbor(State &state, DictRef town) {
 	Value harbor;
 	return state.lookup(town, str(key::harbor), harbor) && gd::is_dict(harbor) && !gd::is_empty(state, harbor.ref);
@@ -299,6 +350,21 @@ Atom town_shipyard_id(State &state, DictRef town) {
 		}
 	}
 	return key::empty;
+}
+
+DictRef town_boat_cost(State &state, DictRef town, DictRef building) {
+	Value base;
+	const DictRef cost = state.new_dict();
+	if (!state.lookup(building, str(key::boat_cost), base) || !gd::is_dict(base)) {
+		return cost;
+	}
+	const DictRef row = gd::content_row(state, state::ContentTable::Town, gd::stringify(state, state.get(town, str(key::town_id), str(key::empty))));
+	const int64_t percent = gd::int_field(state, row, key::boat_cost_percent, 100);
+	for (const Value &resource : gd::items(state, base)) {
+		const int64_t amount = gd::to_int(state, gd::index(state, base.ref, resource));
+		state.set(cost, resource, int_value(percent == 100 ? amount : (amount * percent + 99) / 100));
+	}
+	return cost;
 }
 
 Atom harbor_line(State &state, DictRef town, Atom walk, Atom beside) {

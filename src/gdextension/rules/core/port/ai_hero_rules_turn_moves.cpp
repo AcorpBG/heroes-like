@@ -968,7 +968,7 @@ DictRef _launch_boat(State &state, DictRef session, DictRef context, DictRef ent
 	}
 	const bool town_yard = state.has(yard, str(key::town));
 	const DictRef cost = town_yard
-			? dict_or_new(state, gd::content_row(state, state::ContentTable::Building, water_travel_rules::town_shipyard_id(state, dock_node)), key::boat_cost)
+			? water_travel_rules::town_boat_cost(state, dock_node, gd::content_row(state, state::ContentTable::Building, water_travel_rules::town_shipyard_id(state, dock_node)))
 			: dict_or_new(state, surface, key::boat_cost);
 	const DictRef treasury = gd::as_dict(context_treasury(state, context));
 	const DictRef market = _boat_market(state, session, context, cost);

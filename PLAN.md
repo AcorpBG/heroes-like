@@ -39,6 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
+- 2026-11-10: Every Veilmourn town with a harbour has the Shipyard built from the start, and boats there cost half (`docs/water-travel.md`).
 - 2026-11-10: Computer players build no Shipyard in the first week, and only their main army running out of targets makes one wanted (`docs/ai-plays-by-player-rules.md`, "Water").
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 
@@ -48,6 +49,7 @@ None open.
 
 ## Open work
 
+- `feature-veilmourn-harbor-shipyards-20261110` (in progress): Every Veilmourn town with a harbour has the Shipyard built from the start, and its boats cost 500 gold and 5 wood (owner, 2026-11-10). Data on the town template in content/towns.json; rules in water_travel_rules_ai.cpp, town services, AI boat buying. See `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

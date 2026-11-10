@@ -29,6 +29,10 @@ bool town_has_harbor(State &state, DictRef town);
 bool needs_missing_harbor(State &state, DictRef town, DictRef building);
 // The Shipyard a harbour town has built (its building id), or "".
 Atom town_shipyard_id(State &state, DictRef town);
+// What a boat costs at this town's Shipyard `building`: the building's
+// boat_cost at the town template's boat_cost_percent (Veilmourn 50), each
+// amount rounded up.
+DictRef town_boat_cost(State &state, DictRef town, DictRef building);
 // A harbour town's walk to its boats, filled into one of two lines: "3 steps"
 // into `walk`, or `beside` when the water touches the gate.
 Atom harbor_line(State &state, DictRef town, Atom walk, Atom beside);

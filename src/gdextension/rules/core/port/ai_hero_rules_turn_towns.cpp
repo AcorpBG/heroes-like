@@ -18,6 +18,7 @@
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/town_rules_actions.hpp"
 #include "aurelion_rules/port/turn_port.hpp"
+#include "aurelion_rules/port/water_travel_rules.hpp"
 
 #include <algorithm>
 #include <string>
@@ -548,7 +549,7 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 		if (wants_shipyard && gd::bool_field(state, building, key::shipyard, false)) {
 			value += shipyard_value;
 			reason = key::shipyard;
-			freeing_cost = _build_value(state, gd::as_dict(field_or_new_dict(state, building, key::boat_cost)));
+			freeing_cost = _build_value(state, water_travel_rules::town_boat_cost(state, town, building));
 		}
 		const double cost_value = compat::engine_max(1.0, _build_value(state, cost) + freeing_cost);
 		const double score = value / cost_value;

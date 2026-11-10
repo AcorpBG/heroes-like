@@ -590,14 +590,21 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 			if (state.lookup(surface, str(key::shipyards), shipyards) && !ai::vempty(state, shipyards)) {
 				Value cost;
 				const DictRef boat_cost = state.lookup(surface, str(key::boat_cost), cost) ? gd::as_dict(cost) : state.new_dict();
-				if (!gd::is_empty(state, _boat_market(state, session, context, boat_cost))) {
-					if (!gd::is_dict(shipyards)) {
-						throw state::ScriptError(std::string("Invalid call. Nonexistent function 'keys' in base '") + gd::type_name(shipyards) + "'.");
-					}
+				// A neutral shipyard asks the surface's price; a town's Shipyard its
+				// own (the yard's boat_cost), which the player may afford alone.
+				const bool affords_neutral = !gd::is_empty(state, _boat_market(state, session, context, boat_cost));
+				if (gd::is_dict(shipyards)) {
 					for (const Value &visit_index : gd::items(state, shipyards)) {
 						const Value yard = ai::vindex(state, gd::index(state, surface, str(key::shipyards)), visit_index);
 						const int64_t dock = gd::to_int(state, ai::vmember(state, yard, key::dock));
 						if (gd::is_empty(state, _yard_place(state, session, controller, yard))) {
+							continue;
+						}
+						Value own_cost;
+						const bool affords = gd::is_dict(yard) && state.lookup(yard.ref, str(key::boat_cost), own_cost) && gd::is_dict(own_cost)
+								? !gd::is_empty(state, _boat_market(state, session, context, own_cost.ref))
+								: affords_neutral;
+						if (!affords) {
 							continue;
 						}
 						if (gd::packed_int(state, sea_open, dock) != 0 && gd::packed_int(state, guard_mask, dock) == 0 && !state.has(dynamic_stops, int_value(dock))) {
@@ -605,6 +612,8 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 							gd::packed_append(state, docks, dock);
 						}
 					}
+				} else if (affords_neutral) {
+					throw state::ScriptError(std::string("Invalid call. Nonexistent function 'keys' in base '") + gd::type_name(shipyards) + "'.");
 				}
 			}
 		}
