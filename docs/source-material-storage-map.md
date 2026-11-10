@@ -65,7 +65,7 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-14-dd68fe59
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9
 ```
 
 ## Incremental snapshots, 2026-10-14
@@ -81,6 +81,26 @@ The H3 video sources made from 2026-10-11 to 2026-10-14 existed only on D:, almo
 Write each snapshot from the checkout that made the sources. Agent worktrees hold untracked sources that no other checkout has, and removing a worktree deletes them.
 
 On 2026-10-14 (owner request) the 140,968 untracked sources of the worktree `.claude/worktrees/cool-greider-b0456c` (105.75 GiB) were removed with `tools/restore_archived_source_material.py --prefix art/ --remove --apply` against `2026-10-14-dd68fe59`. Each file was deleted only after its local copy and its archived payload both matched the manifest SHA-256; none differed, and the 45,816 tracked files stayed. A retake there restores its guides and painted sources from the archive first.
+
+## Incremental snapshot, 2026-11-10
+
+Source art belongs in this archive, not in temp folders, agent worktrees or as loose untracked files (owner, 2026-11-10). A slice that makes source paintings puts them at their `art/*/source/...` path in the owner's checkout and writes a snapshot from there; its provenance names the archive.
+
+`2026-11-10-2e3c36a9` extends `2026-10-14-dd68fe59`, written from the owner's checkout at Git revision `2e3c36a9eecd9b5a14420ada3a7fc30db6f2946d`: 10 ZIP64 archives, 1,978 files, 1,163,025,958 bytes; the ZIPs total 1,162,226,429 bytes. It holds the 1,088 binary sources made since 2026-10-14 that were in no snapshot (1,160,829,608 bytes), all imggen paintings and their mattes:
+
+| Source folder | Files | MiB |
+|---|---:|---:|
+| `art/towns/source/generated/overhaul` (town repaints, Shipyards) | 712 | 408.9 |
+| `art/magic/source/spells/curated` (magic rework spell art) | 139 | 317.4 |
+| `art/battle/source/generated/magic_rework_vfx_20261108` | 123 | 163.4 |
+| `art/units/source/generated/icon_busts_20261110` (unit icon close-ups) | 75 | 150.4 |
+| `art/battle/source/generated/status_effects` | 19 | 30.4 |
+| `art/battle/source/generated/magic_rework_ground_20261108` | 11 | 18.7 |
+| `art/overworld/source/generated/map_spell_marks_20261108` | 4 | 9.8 |
+| `art/ui/source/generated/info_card_20261110` (map information card) | 2 | 4.7 |
+| `art/overworld/source/generated/resource_sites` | 3 | 3.4 |
+
+The other 890 files are tracked recipe, prompt and provenance files that changed since, as backup copies. Every payload was read back against its SHA-256 and ZIP CRC, and the snapshot's standalone verifier passed again. A path, size and SHA-256 check of the owner's checkout and of the worktree `neutral-encounters-retreat-bug-cd04af` then found no binary source outside the chain. Nothing was removed locally. Other agent worktrees were not checked: a town repaint in progress there is in no snapshot until its sources reach the owner's checkout and the next snapshot is written.
 
 ## Tests never need archived sources
 
@@ -100,7 +120,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-14-dd68fe59 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-2e3c36a9 --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.

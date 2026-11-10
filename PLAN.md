@@ -39,6 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
+- 2026-11-10: Source art goes into the source art archive on N: with an incremental snapshot from the owner's checkout; it does not stay in temp folders, worktrees or as loose untracked files (`docs/source-material-storage-map.md`).
 - 2026-11-10: The map's hover card and right-click report, and every other tooltip with its F1 window, use the sidebar's dark-and-gold look (mockup B); every unit's icon there is a head-and-shoulders close-up: a crop of the portrait for soldiers, a painted close-up for beasts, machines and failed crops (`docs/overworld-info-card.md`).
 - 2026-11-10: The map tells another side's unit numbers as size bands, never as counts; battles and the player's own armies stay exact (`docs/army-size-bands.md`).
 - 2026-11-10: The map's Wayside Exchange serves each player one trade a week (`docs/visit-buildings.md`).
@@ -52,7 +53,6 @@ None open.
 
 ## Open work
 
-- `tooling-source-archive-snapshot-20261110` (in progress): Owner, 2026-11-10: source art belongs in the source archive, not in temp folders. Write an incremental snapshot of the owner's checkout (unit icon close-ups, information card, town overhaul, spell and battle effect sources made since 2026-10-14) with tools/archive_source_material.py, and make the provenance notes name the archive. See `docs/source-material-storage-map.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -62,6 +62,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.
 - 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.

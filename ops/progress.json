@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "tooling-source-archive-snapshot-20261110",
- "currentSliceTitle": "Source art made since 14 October goes into the archive",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T11:41:53Z",
+ "currentSliceTitle": "Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T11:48:42Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "tooling-source-archive-snapshot-20261110",
-   "title": "Source art made since 14 October goes into the archive",
-   "status": "in_progress",
-   "goal": "Owner, 2026-11-10: source art belongs in the source archive, not in temp folders. Write an incremental snapshot of the owner's checkout (unit icon close-ups, information card, town overhaul, spell and battle effect sources made since 2026-10-14) with tools/archive_source_material.py, and make the provenance notes name the archive.",
-   "docs": [
-    "docs/source-material-storage-map.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.",
+   "commit": "2e3c36a9e"
   },
   {
    "id": "ui-tooltip-card-art-20261110",
