@@ -50,7 +50,6 @@ None open.
 
 ## Open work
 
-- `town-stage-effects-embercourt-20261110` (in progress): Stage effects for the lock gorge: an effect mask (water, the four lock falls, the lock fire baskets) built by lock_gorge_fx_mask.py, water and falls from the existing shader, a backdrop-only beacons effect for the painted fires, building fire light at 0.6. Owner, 2026-11-10: yes, add effects. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -60,6 +59,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.
 - 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week instead of any time (new visit cadence weekly_per_side); computer players still leave it alone.
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood for whoever holds the town; computer players pay and plan routes with that price.

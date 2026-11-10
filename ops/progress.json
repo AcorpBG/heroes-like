@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-stage-effects-embercourt-20261110",
- "currentSliceTitle": "Embercourt town: moving water, falls and fires in the lock gorge",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T08:53:06Z",
+ "currentSliceTitle": "Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T08:53:55Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-stage-effects-embercourt-20261110",
-   "title": "Embercourt town: moving water, falls and fires in the lock gorge",
-   "status": "in_progress",
-   "goal": "Stage effects for the lock gorge: an effect mask (water, the four lock falls, the lock fire baskets) built by lock_gorge_fx_mask.py, water and falls from the existing shader, a backdrop-only beacons effect for the painted fires, building fire light at 0.6. Owner, 2026-11-10: yes, add effects.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.",
+   "commit": "589d79c1e"
   },
   {
    "id": "town-art-embercourt-lock-gorge-20261110",
