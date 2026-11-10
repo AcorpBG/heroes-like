@@ -369,6 +369,25 @@
         0.58,
         0.94
       ],
+      "stage_effects": {
+        "water": 1.0,
+        "mist": 1.0,
+        "wisps": 1.0,
+        "windows": 0.8
+      },
+      "stage_mist": {
+        "color": [
+          0.62,
+          0.6,
+          0.4
+        ],
+        "wind": [
+          -18.0,
+          3.0
+        ],
+        "gain": 0.75
+      },
+      "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_mireclaw_dusk_fen_fx_mask.png",
       "plots": [
         {
           "plot_id": "hall",
@@ -379,10 +398,10 @@
             "building_dev_hall_4"
           ],
           "anchor": [
-            0.55,
-            0.66
+            0.239258,
+            0.412326
           ],
-          "height_ratio": 0.245,
+          "height_ratio": 0.225694,
           "embedded_in_base": false
         },
         {
@@ -393,10 +412,10 @@
             "building_dev_fort_3"
           ],
           "anchor": [
-            0.33,
-            0.6
+            0.690918,
+            0.177951
           ],
-          "height_ratio": 0.16,
+          "height_ratio": 0.082465,
           "embedded_in_base": false
         },
         {
@@ -409,10 +428,10 @@
             "building_dev_guild_5"
           ],
           "anchor": [
-            0.28,
-            0.69
+            0.068359,
+            0.295139
           ],
-          "height_ratio": 0.15,
+          "height_ratio": 0.186632,
           "embedded_in_base": false
         },
         {
@@ -422,10 +441,10 @@
             "building_dev_trade_exchange"
           ],
           "anchor": [
-            0.2,
-            0.55
+            0.195312,
+            0.642361
           ],
-          "height_ratio": 0.12,
+          "height_ratio": 0.121528,
           "embedded_in_base": false
         },
         {
@@ -434,10 +453,10 @@
             "building_wayfarers_hall"
           ],
           "anchor": [
-            0.74,
-            0.6
+            0.063477,
+            0.677083
           ],
-          "height_ratio": 0.16,
+          "height_ratio": 0.138889,
           "embedded_in_base": false
         },
         {
@@ -447,10 +466,10 @@
             "building_dev_storehouse_2"
           ],
           "anchor": [
-            0.42,
-            0.52
+            0.622559,
+            0.381944
           ],
-          "height_ratio": 0.13,
+          "height_ratio": 0.104167,
           "embedded_in_base": false
         },
         {
@@ -459,10 +478,10 @@
             "building_dev_growth_1"
           ],
           "anchor": [
-            0.67,
-            0.51
+            0.557861,
+            0.212674
           ],
-          "height_ratio": 0.12,
+          "height_ratio": 0.082465,
           "embedded_in_base": false
         },
         {
@@ -471,10 +490,10 @@
             "building_dev_growth_2"
           ],
           "anchor": [
-            0.86,
-            0.54
+            0.802002,
+            0.659722
           ],
-          "height_ratio": 0.13,
+          "height_ratio": 0.117188,
           "embedded_in_base": false
         },
         {
@@ -483,10 +502,10 @@
             "building_dev_growth_3"
           ],
           "anchor": [
-            0.12,
-            0.63
+            0.371094,
+            0.260417
           ],
-          "height_ratio": 0.14,
+          "height_ratio": 0.091146,
           "embedded_in_base": false
         },
         {
@@ -495,10 +514,10 @@
             "building_dev_training_attack"
           ],
           "anchor": [
-            0.48,
-            0.66
+            0.623779,
+            0.672743
           ],
-          "height_ratio": 0.15,
+          "height_ratio": 0.099826,
           "embedded_in_base": false
         },
         {
@@ -507,10 +526,10 @@
             "building_dev_training_defense"
           ],
           "anchor": [
-            0.71,
-            0.7
+            0.808105,
+            0.230035
           ],
-          "height_ratio": 0.15,
+          "height_ratio": 0.086806,
           "embedded_in_base": false
         },
         {
@@ -519,10 +538,10 @@
             "building_dev_training_experience"
           ],
           "anchor": [
-            0.89,
-            0.68
+            0.710449,
+            0.655382
           ],
-          "height_ratio": 0.15,
+          "height_ratio": 0.108507,
           "embedded_in_base": false
         },
         {
@@ -531,10 +550,10 @@
             "building_dev_artifact_exchange"
           ],
           "anchor": [
-            0.1,
-            0.78
+            0.727539,
+            0.503472
           ],
-          "height_ratio": 0.17,
+          "height_ratio": 0.104167,
           "embedded_in_base": false
         },
         {
@@ -546,10 +565,10 @@
             "building_dev_mireclaw_t1_2_upgrade"
           ],
           "anchor": [
-            0.26,
-            0.82
+            0.074463,
+            0.529514
           ],
-          "height_ratio": 0.18,
+          "height_ratio": 0.108507,
           "embedded_in_base": false
         },
         {
@@ -561,10 +580,10 @@
             "building_dev_mireclaw_t2_2_upgrade"
           ],
           "anchor": [
-            0.43,
-            0.78
+            0.054932,
+            0.407986
           ],
-          "height_ratio": 0.17,
+          "height_ratio": 0.104167,
           "embedded_in_base": false
         },
         {
@@ -576,10 +595,10 @@
             "building_dev_mireclaw_t3_2_upgrade"
           ],
           "anchor": [
-            0.6,
-            0.84
+            0.731201,
+            0.368924
           ],
-          "height_ratio": 0.18,
+          "height_ratio": 0.117188,
           "embedded_in_base": false
         },
         {
@@ -591,10 +610,10 @@
             "building_dev_mireclaw_t4_2_upgrade"
           ],
           "anchor": [
-            0.77,
-            0.8
+            0.621338,
+            0.542535
           ],
-          "height_ratio": 0.17,
+          "height_ratio": 0.121528,
           "embedded_in_base": false
         },
         {
@@ -606,10 +625,10 @@
             "building_dev_mireclaw_t5_2_upgrade"
           ],
           "anchor": [
-            0.91,
-            0.84
+            0.480957,
+            0.329861
           ],
-          "height_ratio": 0.18,
+          "height_ratio": 0.099826,
           "embedded_in_base": false
         },
         {
@@ -619,10 +638,10 @@
             "building_dev_mireclaw_t6_1_upgrade"
           ],
           "anchor": [
-            0.08,
-            0.93
+            0.74707,
+            0.872396
           ],
-          "height_ratio": 0.19,
+          "height_ratio": 0.138889,
           "embedded_in_base": false
         },
         {
@@ -632,10 +651,10 @@
             "building_dev_mireclaw_t7_1_upgrade"
           ],
           "anchor": [
-            0.24,
-            0.91
+            0.395508,
+            0.625
           ],
-          "height_ratio": 0.19,
+          "height_ratio": 0.15191,
           "embedded_in_base": false
         },
         {
@@ -644,10 +663,10 @@
             "building_dev_mireclaw_unique_1"
           ],
           "anchor": [
-            0.75,
-            0.96
+            0.820312,
+            0.538194
           ],
-          "height_ratio": 0.2,
+          "height_ratio": 0.121528,
           "embedded_in_base": false
         },
         {
@@ -656,10 +675,10 @@
             "building_dev_mireclaw_unique_2"
           ],
           "anchor": [
-            0.4,
-            0.95
+            0.478516,
+            0.438368
           ],
-          "height_ratio": 0.2,
+          "height_ratio": 0.091146,
           "embedded_in_base": false
         },
         {
@@ -668,13 +687,26 @@
             "building_dev_mireclaw_unique_3"
           ],
           "anchor": [
-            0.58,
-            0.92
+            0.827637,
+            0.390625
           ],
-          "height_ratio": 0.19,
+          "height_ratio": 0.108507,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_dev_shipyard",
+          "building_ids": [
+            "building_dev_shipyard"
+          ],
+          "anchor": [
+            0.563965,
+            0.950521
+          ],
+          "height_ratio": 0.217014,
           "embedded_in_base": false
         }
-      ]
+      ],
+      "layers_under_stage_light": true
     },
     "faction_sunvault": {
       "base_stage": "village",

@@ -110,9 +110,11 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.566, 0.53), "radius": 0.075, "color": Color(1.0, 0.44, 0.12), "strength": 0.84},
 	],
 	"faction_mireclaw": [
-		{"position": Vector2(0.10, 0.38), "radius": 0.070, "color": Color(0.76, 1.0, 0.22), "strength": 0.76},
-		{"position": Vector2(0.70, 0.56), "radius": 0.075, "color": Color(0.94, 0.72, 0.15), "strength": 0.72},
-		{"position": Vector2(0.28, 0.80), "radius": 0.085, "color": Color(1.0, 0.39, 0.08), "strength": 0.88},
+		# On the lights of the dusk fen: the glow on the horizon, its glints on the far pools, and
+		# the fire in the drum hall's front.
+		{"position": Vector2(0.79, 0.085), "radius": 0.080, "color": Color(0.98, 0.84, 0.34), "strength": 0.74},
+		{"position": Vector2(0.78, 0.22), "radius": 0.065, "color": Color(0.90, 0.86, 0.36), "strength": 0.66},
+		{"position": Vector2(0.24, 0.39), "radius": 0.060, "color": Color(1.0, 0.46, 0.12), "strength": 0.82},
 	],
 	"faction_sunvault": [
 		{"position": Vector2(0.09, 0.18), "radius": 0.080, "color": Color(0.70, 0.91, 1.0), "strength": 0.82},
@@ -191,7 +193,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
 	},
 	"faction_mireclaw": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_mireclaw_cleared_marsh.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_mireclaw_dusk_fen.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png",
 	},

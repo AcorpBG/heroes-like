@@ -1,0 +1,1914 @@
+{
+  "schema_id": "town_plot_layer_packet_v1",
+  "faction_id": "faction_mireclaw",
+  "scene_id": "dusk_fen",
+  "stage": "village",
+  "owner_decision": "2026-11-10: the owner chose Mireclaw next and rejected the first concepts, a river gorge with the antlered beast in the water: Mireclaw should feel more swampy and less like a river, and the elk should not be in the water. The owner then chose concept D (a bog of still pools, reeds and hummocks, the beast on a dry island) and approved painting the full set into it.",
+  "generation": {
+    "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+    "date": "2026-11-10"
+  },
+  "method": "Each building is a masked edit of the empty swamp (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the swamp around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the swamp was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
+  "backdrop": {
+    "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+    "source_sha256": "a8c0718f864acb822ec9a4f1b49251d443dfaa8063cbc6b72a6af0e7093b4090",
+    "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.prompt.txt",
+    "reference_inputs": [
+      "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_concept.png"
+    ],
+    "concept": {
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_concept.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_concept.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/plan_sketch.png",
+        "art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png"
+      ],
+      "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Mireclaw town painting, used for style and building designs only."
+    }
+  },
+  "cut": {
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
+  },
+  "grounding": "Painted into the empty swamp on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+  "curation": "Owner-approved dusk-fen set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
+  "plots": {
+    "fort": [
+      1290,
+      110,
+      250,
+      95
+    ],
+    "guild": [
+      60,
+      125,
+      160,
+      215
+    ],
+    "hall": [
+      330,
+      215,
+      320,
+      260
+    ],
+    "building_dev_growth_3": [
+      680,
+      195,
+      160,
+      105
+    ],
+    "mireclaw_t5": [
+      900,
+      265,
+      170,
+      115
+    ],
+    "building_dev_growth_1": [
+      1070,
+      150,
+      145,
+      95
+    ],
+    "mireclaw_t2": [
+      20,
+      350,
+      185,
+      120
+    ],
+    "mireclaw_t1": [
+      60,
+      485,
+      185,
+      125
+    ],
+    "building_wayfarers_hall": [
+      30,
+      620,
+      200,
+      160
+    ],
+    "market": [
+      270,
+      600,
+      260,
+      140
+    ],
+    "mireclaw_t7_1": [
+      610,
+      545,
+      400,
+      175
+    ],
+    "building_dev_mireclaw_unique_2": [
+      860,
+      400,
+      240,
+      105
+    ],
+    "building_dev_training_defense": [
+      1575,
+      165,
+      160,
+      100
+    ],
+    "storehouse": [
+      1180,
+      320,
+      190,
+      120
+    ],
+    "mireclaw_t3": [
+      1395,
+      290,
+      205,
+      135
+    ],
+    "building_dev_mireclaw_unique_3": [
+      1620,
+      325,
+      150,
+      125
+    ],
+    "mireclaw_t4": [
+      1160,
+      485,
+      225,
+      140
+    ],
+    "building_dev_artifact_exchange": [
+      1410,
+      460,
+      160,
+      120
+    ],
+    "building_dev_mireclaw_unique_1": [
+      1590,
+      480,
+      180,
+      140
+    ],
+    "building_dev_training_attack": [
+      1190,
+      660,
+      175,
+      115
+    ],
+    "building_dev_training_experience": [
+      1385,
+      630,
+      140,
+      125
+    ],
+    "building_dev_growth_2": [
+      1545,
+      625,
+      195,
+      135
+    ],
+    "mireclaw_t6_1": [
+      1380,
+      845,
+      300,
+      160
+    ],
+    "building_dev_shipyard": [
+      990,
+      845,
+      330,
+      250
+    ]
+  },
+  "buildings": [
+    {
+      "id": "building_dev_hall_4",
+      "plot_id": "hall",
+      "box": [
+        330,
+        215,
+        320,
+        260
+      ],
+      "crop": [
+        46,
+        0,
+        889,
+        706
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4_fen.png",
+      "source_sha256": "7d7a815c3f6a064ac9c59228ff76f2947b098d613310932e1155ffb974caacd0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_hall.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4_fen_matte.png",
+        "sha256": "fb2aadec39f96f6f3264691aeb29523b67e2d4cb22066e8a5527b56d20a89d59",
+        "window": [
+          220,
+          72,
+          527,
+          454
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_3",
+      "plot_id": "hall",
+      "box": [
+        343,
+        246,
+        294,
+        229
+      ],
+      "crop": [
+        82,
+        42,
+        817,
+        636
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3_fen.png",
+      "source_sha256": "35b091c5aaf7ee2f66ff9099a7371fe70001a08aa687d4beff807255c8019908",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_hall_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3_fen_matte.png",
+        "sha256": "74715222fb356962d2228f757cbd946e656c47d1bbfec9b4d15d97e034543497",
+        "window": [
+          252,
+          156,
+          448,
+          362
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_2",
+      "plot_id": "hall",
+      "box": [
+        362,
+        283,
+        256,
+        192
+      ],
+      "crop": [
+        134,
+        112,
+        711,
+        533
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2_fen.png",
+      "source_sha256": "33568203fa626866003449c015e1aea5dbdda72325dcebca3f57de26c19d99a1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_hall_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2_fen_matte.png",
+        "sha256": "9265d90653172be12effb9045de48e8f337e895dd0ad9fa89ee75ef3f83ec645",
+        "window": [
+          292,
+          190,
+          376,
+          326
+        ]
+      }
+    },
+    {
+      "id": "building_town_hall",
+      "plot_id": "hall",
+      "box": [
+        381,
+        324,
+        218,
+        151
+      ],
+      "crop": [
+        187,
+        190,
+        606,
+        419
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall_fen.png",
+      "source_sha256": "3c9eaf2e6bf44a1780860e7e65cff43c99fcec1cba2b44b4093ca75bd49a0504",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_hall_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall_fen_matte.png",
+        "sha256": "b77785a33acb7b67c0072d5c0feaeedf0b459d9128485230e7a8f3424bc96420",
+        "window": [
+          316,
+          265,
+          322,
+          250
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        110,
+        250,
+        95
+      ],
+      "crop": [
+        1068,
+        0,
+        694,
+        340
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3_fen.png",
+      "source_sha256": "a738311564108e67d1259b89c3019ced26fc742df33f677272dbd6077f20180d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_fort.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3_fen_matte.png",
+        "sha256": "da9cc3b05ee665e290e0735d216a7b5cbd2c0c36543738d0aaf5669b769c9e30",
+        "window": [
+          1260,
+          80,
+          310,
+          155
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        125,
+        250,
+        80
+      ],
+      "crop": [
+        1068,
+        0,
+        694,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2_fen.png",
+      "source_sha256": "5e5e1a2542b113a730081be131519d80535bf726b045dcee9b860c1e725fe5dd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_fort_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2_fen_matte.png",
+        "sha256": "5dfe60e07a7e864a87056f4d1a46ac2295322535b1b952e22f342bceaaf833a2",
+        "window": [
+          1260,
+          95,
+          310,
+          140
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "box": [
+        1290,
+        144,
+        250,
+        61
+      ],
+      "crop": [
+        1068,
+        0,
+        694,
+        357
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1_fen.png",
+      "source_sha256": "df357688ac892dd1e4a41d5d4d3af1885cff0ee86b4d478348b84ef1232bed1c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_fort_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1_fen_matte.png",
+        "sha256": "985bbf7c2be5775f7cb5daa601af70dfad80619d016758bf8f5b956f5d71d4d4",
+        "window": [
+          1259,
+          114,
+          315,
+          121
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "box": [
+        60,
+        125,
+        160,
+        215
+      ],
+      "crop": [
+        0,
+        0,
+        362,
+        531
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5_fen.png",
+      "source_sha256": "c2ce8008ba88c7d730f3143af232765e032e7f1fc44b39c3bcf5ebf786a3d815",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_guild.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5_fen_matte.png",
+        "sha256": "ff781654d9e93344847b7e4e438b9a265d25fe9d15bd9cd9adf9ea1e5e2ed641",
+        "window": [
+          0,
+          81,
+          295,
+          286
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "box": [
+        64,
+        157,
+        152,
+        183
+      ],
+      "crop": [
+        0,
+        0,
+        351,
+        502
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4_fen.png",
+      "source_sha256": "490efbe03ba94652ce98f260b444d616212fd267132c4b75608e06aa71919d76",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_guild_5_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4_fen_matte.png",
+        "sha256": "be46504997b15f428542dbdb297708e2c799146a08adbde99d5fe0877f62ef92",
+        "window": [
+          0,
+          100,
+          351,
+          271
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "box": [
+        68,
+        190,
+        144,
+        150
+      ],
+      "crop": [
+        0,
+        56,
+        340,
+        417
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3_fen.png",
+      "source_sha256": "b43cbf13f08c4a2cee98de24611aaa15b78bd0f013b63720dc4e60e70cbef9b2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_guild_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3_fen_matte.png",
+        "sha256": "2196ac10465b38b1fa7a3813ad3a755d9731d08e827369daddea2fa41ec976e7",
+        "window": [
+          0,
+          136,
+          279,
+          225
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "box": [
+        72,
+        220,
+        136,
+        120
+      ],
+      "crop": [
+        0,
+        114,
+        329,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2_fen.png",
+      "source_sha256": "accd583fda9e4796b6cb7fe4da2db5d32ce00f4300fffe6c17feb9378cc53012",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_guild_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2_fen_matte.png",
+        "sha256": "51c578e31714f36dcea5c41f2835bf5eabfd41f1830cd43fe8a35bb4ac7e2089",
+        "window": [
+          54,
+          170,
+          174,
+          188
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "box": [
+        76,
+        245,
+        128,
+        95
+      ],
+      "crop": [
+        0,
+        160,
+        318,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1_fen.png",
+      "source_sha256": "dd63633f0ce7ed08e1ada263bdfc335ead0e8159ab2367eff079b11f61145fcf",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_guild_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1_fen_matte.png",
+        "sha256": "0533a86611891556eff746ed2c88c6062ea848cad363dc13492b84cac20332ae",
+        "window": [
+          61,
+          211,
+          158,
+          144
+        ]
+      }
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "box": [
+        270,
+        600,
+        260,
+        140
+      ],
+      "crop": [
+        39,
+        476,
+        722,
+        389
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange_fen.png",
+      "source_sha256": "a16e8ded5181f0bb7eebdba919549e5c0d1597871294def558ea5377562b1d44",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_market.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange_fen_matte.png",
+        "sha256": "e58920132fa0cbf228e1cc19c33f2df1bb658b4f8bbfaa70dba38b116f56a4bc",
+        "window": [
+          197,
+          505,
+          389,
+          272
+        ]
+      }
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "box": [
+        283,
+        628,
+        234,
+        112
+      ],
+      "crop": [
+        75,
+        513,
+        650,
+        342
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_market_square_fen.png",
+      "source_sha256": "1ad8109cb4eb389189b81c41b3f3f109ca9560f7e2163ab8fb264cfc0fdf4e13",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_market_square_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_trade_exchange_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_market_square_fen_matte.png",
+        "sha256": "062fc6769a3554b3aec6d51eddf8da7fdf4cb1bc836b33957fb9a4e5afc8ab57",
+        "window": [
+          213,
+          557,
+          352,
+          217
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "box": [
+        1180,
+        320,
+        190,
+        120
+      ],
+      "crop": [
+        1011,
+        214,
+        528,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen.png",
+      "source_sha256": "05beb4fbfea317cf45499fcbcab6955d2c422ac2260ff1e80a9dbaf5203ba2f2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2_fen_matte.png",
+        "sha256": "d7ddd5461669902cb1c75ce31b124ea43e8605d15bf0fc18253b5d09db2a6a8b",
+        "window": [
+          1115,
+          249,
+          304,
+          221
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "box": [
+        1194,
+        342,
+        163,
+        98
+      ],
+      "crop": [
+        1049,
+        255,
+        453,
+        272
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen.png",
+      "source_sha256": "9111b18db0b9357efc61ac9d12d5928320922b1e123e3a9cd5ebd1f3a44c753e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_storehouse_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1_fen_matte.png",
+        "sha256": "e5c9a1516f2e96af788c6ddddf095fc7f6d42b8b702e76f3ad56d9c3b340e5b4",
+        "window": [
+          1166,
+          303,
+          211,
+          157
+        ]
+      }
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "plot_id": "building_wayfarers_hall",
+      "box": [
+        30,
+        620,
+        200,
+        160
+      ],
+      "crop": [
+        0,
+        478,
+        408,
+        444
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall_fen.png",
+      "source_sha256": "4504b57de07a29e572be8d1e415d84c704c6e70e2b8a1a13bb663329985e7f05",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall_fen_matte.png",
+        "sha256": "b92a25d5f6d84168f1ec5af7dc66e950c5f5f8c0b0a4757bfc9d0566a0bdb140",
+        "window": [
+          0,
+          547,
+          290,
+          330
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_1",
+      "plot_id": "building_dev_growth_1",
+      "box": [
+        1070,
+        150,
+        145,
+        95
+      ],
+      "crop": [
+        941,
+        66,
+        403,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1_fen.png",
+      "source_sha256": "54389497e8a132bfa01ec9b690afc693a457e810db86000286a1d2eede1bc968",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1_fen_matte.png",
+        "sha256": "80ab3de93e44d0662cdcdf349a5c108cdec97306cc861cb9b4d817a7340ea92b",
+        "window": [
+          1051,
+          127,
+          194,
+          141
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_2",
+      "plot_id": "building_dev_growth_2",
+      "box": [
+        1545,
+        625,
+        195,
+        135
+      ],
+      "crop": [
+        1372,
+        505,
+        542,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2_fen.png",
+      "source_sha256": "195819f5591dc2b25df9aa32459ab2835d42fdc0f0bb4201d94448eeb735520d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2_fen_matte.png",
+        "sha256": "f61964b3a1cba34cf159fc69cb9cc061f00ba4f05f47861d5f8fb9b29136a04a",
+        "window": [
+          1463,
+          516,
+          393,
+          347
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_3",
+      "plot_id": "building_dev_growth_3",
+      "box": [
+        680,
+        195,
+        160,
+        105
+      ],
+      "crop": [
+        538,
+        102,
+        444,
+        292
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3_fen.png",
+      "source_sha256": "743e5a8c3360f1e369f82f75ad52f4b6cf76c792f753d464a18a9ebd0464c353",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3_fen_matte.png",
+        "sha256": "7e45685ecb61af7e4ac957ea43f062b1908f7ab39321ffc81dddfcfe96f6bfb6",
+        "window": [
+          640,
+          162,
+          235,
+          160
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_attack",
+      "plot_id": "building_dev_training_attack",
+      "box": [
+        1190,
+        660,
+        175,
+        115
+      ],
+      "crop": [
+        1034,
+        558,
+        486,
+        319
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack_fen.png",
+      "source_sha256": "423477421e3bba1138cb568027a6cfab6474bb2f9df62c72cfb8a03dca2b9aae",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack_fen_matte.png",
+        "sha256": "57f697d5f76369419733f07e269cfe3aee8a6c3e1abdd274a0c5bbc9e1dd8039",
+        "window": [
+          1118,
+          589,
+          324,
+          232
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_defense",
+      "plot_id": "building_dev_training_defense",
+      "box": [
+        1575,
+        165,
+        160,
+        100
+      ],
+      "crop": [
+        1433,
+        76,
+        444,
+        278
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense_fen.png",
+      "source_sha256": "ee57214c00eba67b270bcf9508469487d5c528b217c743b52e7c4fa46145b7cd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense_fen_matte.png",
+        "sha256": "16118ecbe7398d815886dd124e24de8157ee0157f9dd410f437aa24ec2dec0a2",
+        "window": [
+          1555,
+          101,
+          214,
+          188
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_experience",
+      "plot_id": "building_dev_training_experience",
+      "box": [
+        1385,
+        630,
+        140,
+        125
+      ],
+      "crop": [
+        1260,
+        519,
+        389,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience_fen.png",
+      "source_sha256": "ff0a9b0070629855df893e0bfe615ae94feb835daf90cfba39f1d0d2adc37373",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience_fen_matte.png",
+        "sha256": "fd32fa7197dc53d120f2f55970af6215952fe878734d93a575f0a92e68b33dca",
+        "window": [
+          1312,
+          555,
+          262,
+          265
+        ]
+      }
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "plot_id": "building_dev_artifact_exchange",
+      "box": [
+        1410,
+        460,
+        160,
+        120
+      ],
+      "crop": [
+        1268,
+        354,
+        444,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange_fen.png",
+      "source_sha256": "bf4a60aa1112f693d1ca8eb94effa503984ea655247f54781ad1fc01d7cd09bc",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_dome.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange_fen_matte.png",
+        "sha256": "b8c0dca0c68f62be153db0f7799bd587045e6ce80c0056513e3a90991931bd65",
+        "window": [
+          1358,
+          403,
+          256,
+          226
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_unique_1",
+      "plot_id": "building_dev_mireclaw_unique_1",
+      "box": [
+        1590,
+        480,
+        180,
+        140
+      ],
+      "crop": [
+        1430,
+        356,
+        500,
+        389
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1_fen.png",
+      "source_sha256": "bc0f6e43ea4586aa920749ef5a7d95d9d4ae3d8170013a890820409558209559",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1_fen_matte.png",
+        "sha256": "e6e2313c18f968c1ea5af122d4638e7c0bca2f6b925f5b30bedbcdf203ed2294",
+        "window": [
+          1531,
+          390,
+          307,
+          265
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_unique_2",
+      "plot_id": "building_dev_mireclaw_unique_2",
+      "box": [
+        860,
+        400,
+        240,
+        105
+      ],
+      "crop": [
+        646,
+        277,
+        667,
+        351
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2_fen.png",
+      "source_sha256": "4982195d2c85fe486129b854cc1bd71be957d7908255f4dbe816da937e782e71",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_chain.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2_fen_matte.png",
+        "sha256": "cea9ff6a70508e16b7e1588877991243f94ecb12d3acf6653a8b71cf046186dc",
+        "window": [
+          832,
+          369,
+          296,
+          164
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_unique_3",
+      "plot_id": "building_dev_mireclaw_unique_3",
+      "box": [
+        1620,
+        325,
+        150,
+        125
+      ],
+      "crop": [
+        1486,
+        214,
+        417,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3_fen.png",
+      "source_sha256": "a632d2de3da49a29e0ac5a13fa377079dff2994fc03bc5a92661d6700ba397f8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3_fen_matte.png",
+        "sha256": "badcee788b057fa01b28d3f427985e9a762b678edf2834c34e4d292e41e42d9a",
+        "window": [
+          1555,
+          275,
+          264,
+          219
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1_upgrade",
+      "plot_id": "mireclaw_t1",
+      "box": [
+        60,
+        485,
+        185,
+        125
+      ],
+      "crop": [
+        0,
+        374,
+        410,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade_fen.png",
+      "source_sha256": "da22f0940cd1810a7997cb839edd7085cbdc6514944bc65db6e0b22cf14d26ca",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade_fen_matte.png",
+        "sha256": "ce33d245eff80fe0c861f9ed3668d06af509780d573b040a5fc140e5d38f2523",
+        "window": [
+          29,
+          414,
+          256,
+          230
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1",
+      "plot_id": "mireclaw_t1",
+      "box": [
+        71,
+        502,
+        163,
+        108
+      ],
+      "crop": [
+        0,
+        406,
+        379,
+        300
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_fen.png",
+      "source_sha256": "164e8fb1a6bddd884cf5ab5b1ca1d7bfcf569d2dc8a1e3dfd3dcb780738e4eef",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t1_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_fen_matte.png",
+        "sha256": "eb9babc80c4dabb1d830ab9a6fe5c80f9c5775582ac6aabf797d9ebf4047cb1b",
+        "window": [
+          41,
+          452,
+          213,
+          187
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2_upgrade",
+      "plot_id": "mireclaw_t1",
+      "box": [
+        60,
+        485,
+        185,
+        125
+      ],
+      "crop": [
+        0,
+        374,
+        410,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade_fen.png",
+      "source_sha256": "257a70694cac8d695166529889dfeb687e0fded160fdb1a067f6c217741f2f2f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade_fen_matte.png",
+        "sha256": "7b5dedff179e40c4b1cf1e4d088b9cc2271a3b52d7bd1ddda1cd63b9f7278c8d",
+        "window": [
+          0,
+          420,
+          313,
+          239
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2",
+      "plot_id": "mireclaw_t1",
+      "box": [
+        71,
+        502,
+        163,
+        108
+      ],
+      "crop": [
+        0,
+        406,
+        379,
+        300
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_fen.png",
+      "source_sha256": "574d0834a1c7aeace1e90e434f77b5926acb9f0333a0134fac0f11bff26dc335",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t1_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_fen_matte.png",
+        "sha256": "a338788357d1e3c7af5da2d1b5687c703a7d7e323b670c920a908011e3a86864",
+        "window": [
+          36,
+          443,
+          229,
+          202
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1_upgrade",
+      "plot_id": "mireclaw_t2",
+      "box": [
+        20,
+        350,
+        185,
+        120
+      ],
+      "crop": [
+        0,
+        244,
+        370,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade_fen.png",
+      "source_sha256": "a884689cda8886c517f464741340bbadca4ba8ab8fccbfa8d66c146abc6dcab9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade_fen_matte.png",
+        "sha256": "432e70dc1426f4ab462645307257e10265498b7023c076bc6bd07c634bd9dc7a",
+        "window": [
+          0,
+          298,
+          285,
+          214
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1",
+      "plot_id": "mireclaw_t2",
+      "box": [
+        31,
+        367,
+        163,
+        103
+      ],
+      "crop": [
+        0,
+        276,
+        339,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_fen.png",
+      "source_sha256": "77bec6d3e7677a62c8d5b584dcae4f0ef0a5a1ab492907490121fb676e4fe3aa",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t2_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_fen_matte.png",
+        "sha256": "ae5b9f0a7c190f23f4e38417b3363acb3399b54aaae25e07e2d5b931c63b41d3",
+        "window": [
+          0,
+          311,
+          243,
+          189
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2_upgrade",
+      "plot_id": "mireclaw_t2",
+      "box": [
+        20,
+        350,
+        185,
+        120
+      ],
+      "crop": [
+        0,
+        244,
+        370,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade_fen.png",
+      "source_sha256": "d02aecfb7de56ae338296506a4637753189cc51fd38bc4cadec5212619ebb9ea",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade_fen_matte.png",
+        "sha256": "4ff61c2c0d719ba9d8c52c475897f18fb2d203bff61f7eea0603f75501116f6c",
+        "window": [
+          0,
+          270,
+          274,
+          243
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2",
+      "plot_id": "mireclaw_t2",
+      "box": [
+        31,
+        367,
+        163,
+        103
+      ],
+      "crop": [
+        0,
+        276,
+        339,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_fen.png",
+      "source_sha256": "6ceefeff7aa79bd79703d0a954269e14d762a11462c476c1d2f324d145ac53aa",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t2_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_fen_matte.png",
+        "sha256": "0b7b2a3242a5c950f437c5bf879b2b530e6da5d1d37d7cfc3d116d208ae267a4",
+        "window": [
+          0,
+          314,
+          219,
+          180
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1_upgrade",
+      "plot_id": "mireclaw_t3",
+      "box": [
+        1395,
+        290,
+        205,
+        135
+      ],
+      "crop": [
+        1213,
+        170,
+        569,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade_fen.png",
+      "source_sha256": "a512ed3200e8510d414462c067c902e1e85a4224e7749a7b0f40a5a427e69aff",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade_fen_matte.png",
+        "sha256": "b30f73ebb38d28b53b00488cb2d43ed13f586565474ca1e811b0623a65cfe42c",
+        "window": [
+          1330,
+          221,
+          332,
+          250
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1",
+      "plot_id": "mireclaw_t3",
+      "box": [
+        1408,
+        309,
+        180,
+        116
+      ],
+      "crop": [
+        1248,
+        206,
+        500,
+        322
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_fen.png",
+      "source_sha256": "254386ed6899238ff57be35ed3923c81bbcec5b63a4eeeb883a8f4ed9adfa2ac",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t3_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_fen_matte.png",
+        "sha256": "8259e3e7f0f251dda14b5d21b500355f4aad773549f85a2f3af85347f670d682",
+        "window": [
+          1387,
+          264,
+          222,
+          182
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2_upgrade",
+      "plot_id": "mireclaw_t3",
+      "box": [
+        1395,
+        290,
+        205,
+        135
+      ],
+      "crop": [
+        1213,
+        170,
+        569,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade_fen.png",
+      "source_sha256": "1246eb6f1a8e7733985462995d194d75cf9e13b8907d400de26cdda171a36bc8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade_fen_matte.png",
+        "sha256": "29a7a2ac8af2f06b8fdce2b2446758fb71d35a9db3c5956db174a05ad014bbe4",
+        "window": [
+          1313,
+          208,
+          355,
+          267
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2",
+      "plot_id": "mireclaw_t3",
+      "box": [
+        1408,
+        309,
+        180,
+        116
+      ],
+      "crop": [
+        1248,
+        206,
+        500,
+        322
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_fen.png",
+      "source_sha256": "1e7db7125e1c9e82adfeb8d2328ceb341613b5c0d4e470259821cb6c92fc7d75",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t3_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_fen_matte.png",
+        "sha256": "72f90c371e8c80e37aeb6ebf53ac5b54d2105b3f81aef87606ec8ae21d99c39b",
+        "window": [
+          1386,
+          257,
+          230,
+          192
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1_upgrade",
+      "plot_id": "mireclaw_t4",
+      "box": [
+        1178,
+        485,
+        189,
+        140
+      ],
+      "crop": [
+        1010,
+        360,
+        525,
+        389
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade_fen.png",
+      "source_sha256": "c67671027330c119c43ac2a8e1f7baabe3f7466add9aa037d268d51d29801a02",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade_fen_matte.png",
+        "sha256": "3be8c41995070af84a084c046adc51cdd43563dd6c740f299079eb6d0b3d537c",
+        "window": [
+          1111,
+          387,
+          354,
+          292
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1",
+      "plot_id": "mireclaw_t4",
+      "box": [
+        1174,
+        505,
+        198,
+        120
+      ],
+      "crop": [
+        998,
+        398,
+        550,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_fen.png",
+      "source_sha256": "da5ba0e53f6e024b68fadf505e078c46f6f1523a444cf4844110d404b9acb0a0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t4_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_fen_matte.png",
+        "sha256": "e411202b7c62b085ffebdd3a4c41ae5278cb0401d01d67117e358c793392d71c",
+        "window": [
+          1141,
+          432,
+          272,
+          227
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2_upgrade",
+      "plot_id": "mireclaw_t4",
+      "box": [
+        1178,
+        485,
+        189,
+        140
+      ],
+      "crop": [
+        1010,
+        360,
+        525,
+        389
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade_fen.png",
+      "source_sha256": "c46a1bb793a95b86862de7ac63c0f77854c885b002e8a36f968491d2395fa5ac",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade_fen_matte.png",
+        "sha256": "df1899055ec1221de9f49c8ab46d3a904c4be73a9ee4f154d6f5f64c5a9d77d4",
+        "window": [
+          1151,
+          397,
+          276,
+          254
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2",
+      "plot_id": "mireclaw_t4",
+      "box": [
+        1174,
+        505,
+        198,
+        120
+      ],
+      "crop": [
+        998,
+        398,
+        550,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_fen.png",
+      "source_sha256": "77a0d0473e751a39ba447c75b7d17edd0163eaf40f67cb7c0e455cc73411c2da",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t4_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_fen_matte.png",
+        "sha256": "8d37b6379784c24fa7cec271d9d7530575598923c9b66d84a315b3eb3da29f4c",
+        "window": [
+          1149,
+          445,
+          254,
+          205
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1_upgrade",
+      "plot_id": "mireclaw_t5",
+      "box": [
+        900,
+        265,
+        170,
+        115
+      ],
+      "crop": [
+        749,
+        163,
+        472,
+        319
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen.png",
+      "source_sha256": "9646da9e17c654d67214571da9427a90aad6387a1f6d24c9c1065cc62ac6ba75",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade_fen_matte.png",
+        "sha256": "9745d31b4171e25650c258e61641cb675c2719a4a5f80c63a11b753eb1f66111",
+        "window": [
+          855,
+          194,
+          255,
+          210
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1",
+      "plot_id": "mireclaw_t5",
+      "box": [
+        910,
+        281,
+        150,
+        99
+      ],
+      "crop": [
+        776,
+        193,
+        417,
+        275
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen.png",
+      "source_sha256": "f05d0fdb7f3d79ac32de25b283333ddce407b13bdafd18fd73bd872a27712d3e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t5_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_fen_matte.png",
+        "sha256": "cddaf971d748a6fccd0e712e626b8b61d3f0c93b9c3b07cae90bd4fcb7e8abd8",
+        "window": [
+          891,
+          229,
+          187,
+          174
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2_upgrade",
+      "plot_id": "mireclaw_t5",
+      "box": [
+        900,
+        265,
+        170,
+        115
+      ],
+      "crop": [
+        749,
+        163,
+        472,
+        319
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade_fen.png",
+      "source_sha256": "d98e444e5113955bb06daa573a11ff1bb04a15e82013a072504495b6c624fef5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade_fen_matte.png",
+        "sha256": "c976ed220878239f6e7d61d023a3e94158a9b4ff562e64bd66703202fcebb7e3",
+        "window": [
+          860,
+          192,
+          269,
+          225
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2",
+      "plot_id": "mireclaw_t5",
+      "box": [
+        910,
+        281,
+        150,
+        99
+      ],
+      "crop": [
+        776,
+        193,
+        417,
+        275
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_fen.png",
+      "source_sha256": "750641715d2e20d03a6055c953b30757a5a719dadc53e45d793992bf264b7993",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t5_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_fen_matte.png",
+        "sha256": "acad87faa3f004d45c6e7f8f05aad0424cc06df0291a8bb513217364f93a9735",
+        "window": [
+          887,
+          225,
+          238,
+          184
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1_upgrade",
+      "plot_id": "mireclaw_t6_1",
+      "box": [
+        1380,
+        845,
+        300,
+        160
+      ],
+      "crop": [
+        1114,
+        703,
+        833,
+        444
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade_fen.png",
+      "source_sha256": "7bb1808eb3730a1a58cee646c67e31d353e76cf254ff42276df1c42fba947599",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_den.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade_fen_matte.png",
+        "sha256": "61343a9c1964dd90e89b6e3a0ee50378b34a6e0e29b30fa7423e8d610a60caed",
+        "window": [
+          1270,
+          722,
+          582,
+          360
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1",
+      "plot_id": "mireclaw_t6_1",
+      "box": [
+        1398,
+        867,
+        264,
+        138
+      ],
+      "crop": [
+        1164,
+        743,
+        733,
+        386
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_fen.png",
+      "source_sha256": "e97c2c4898e6214b5abfa76d11622c9d7a5a5b86bcd260cb9c3c680b071c995d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t6_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_fen_matte.png",
+        "sha256": "8a9806079b08fa628f3fd6e2bb639adddd0c5e2be015f1701d62923754f45b10",
+        "window": [
+          1351,
+          766,
+          395,
+          298
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1_upgrade",
+      "plot_id": "mireclaw_t7_1",
+      "box": [
+        610,
+        545,
+        400,
+        175
+      ],
+      "crop": [
+        254,
+        340,
+        1111,
+        585
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade_fen.png",
+      "source_sha256": "421f781079ee8e80b587869d8257a16c666c8a81613075b0c71764bc97c640f9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_elk.png"
+      ],
+      "matte_passes": 3,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade_fen_matte.png",
+        "sha256": "63131fe8f8a67ec4a43d97969358abdddb592291e87b39f24b6a96c3d06342b8",
+        "window": [
+          466,
+          425,
+          602,
+          369
+        ]
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1",
+      "plot_id": "mireclaw_t7_1",
+      "box": [
+        634,
+        570,
+        352,
+        150
+      ],
+      "crop": [
+        321,
+        388,
+        978,
+        515
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_fen.png",
+      "source_sha256": "0c190a9f3f2a0e7a0ed4d8ce6189bd2ae4672d080a77e81fabfdff8870c6136f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/building_dev_mireclaw_t7_1_upgrade_crop.png"
+      ],
+      "matte_passes": 3,
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_fen_matte.png",
+        "sha256": "433a672864721fd433b3397e83bfa8f2782324b87edf2d64020b826cef71cb1b",
+        "window": [
+          569,
+          486,
+          482,
+          291
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        990,
+        845,
+        330,
+        250
+      ],
+      "crop": [
+        696,
+        623,
+        917,
+        529
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_shipyard_fen.png",
+      "source_sha256": "11a17ed4c45239ef4447512573345b72fca002f00c6fd52568e40e9baf745f6c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_shipyard_fen.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_refs/ref_shipyard.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_shipyard_fen_matte.png",
+        "sha256": "f0d888b44b967470463874beb788e3d72f8d625345dddb74d16c089205d58794",
+        "window": [
+          792,
+          763,
+          674,
+          389
+        ]
+      }
+    }
+  ],
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
+  }
+}
