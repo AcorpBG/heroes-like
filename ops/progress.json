@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-battle-spell-book-20261110",
- "currentSliceTitle": "Battle spell book is the hero menu's open grimoire, one shared view.",
+ "currentSliceId": "ui-magic-guild-book-20261110",
+ "currentSliceTitle": "Town's magic guild is the open spell book: a bookmark per level, the build order under it.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T17:40:53Z",
+ "updatedAt": "2026-11-10T18:20:15Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-magic-guild-book-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Town's magic guild is the open spell book: a bookmark per level, the build order under it.",
+   "commit": "a37aea861"
+  },
   {
    "id": "ui-battle-spell-book-20261110",
    "status": "completed",
@@ -35,14 +42,14 @@
    "id": "ui-hero-exchange-look-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero trading screen wears the hero menu's look: card frame, a slot figure per hero, unit close-ups.",
+   "summary": "Hero trading screen wears the hero menu's look.",
    "commit": "27ebb2940"
   },
   {
    "id": "ui-hero-menu-rework-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure (27 moved), usable in town.",
+   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure, usable in town.",
    "commit": "1d47aabab"
   },
   {
@@ -56,7 +63,7 @@
    "id": "ui-settings-column-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Settings are a left column in the dark-and-gold look; skirmish setup scrolls at larger scales.",
+   "summary": "Settings are a left column in the dark-and-gold look.",
    "commit": "e75200d7f"
   },
   {
@@ -70,7 +77,7 @@
    "id": "ui-built-maps-pictures-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero portrait in the skirmish setup keeps one size; the built maps window shows each map as a picture.",
+   "summary": "Skirmish hero portrait keeps one size; the built maps window shows map pictures.",
    "commit": "715d958f0"
   },
   {

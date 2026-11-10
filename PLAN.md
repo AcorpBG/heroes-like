@@ -63,14 +63,15 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-magic-guild-book-20261110` (a37aea861): Town's magic guild is the open spell book: a bookmark per level, the build order under it.
 - 2026-11-10 `ui-battle-spell-book-20261110` (62e6143ae): Battle spell book is the hero menu's open grimoire, one shared view.
 - 2026-11-10 `ui-hero-spell-book-20261110` (45e75ab76): Hero menu's spell page is an open grimoire: a school's spells by tier, the chosen one written out.
-- 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look: card frame, a slot figure per hero, unit close-ups.
-- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure (27 moved), usable in town.
+- 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look.
+- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure, usable in town.
 - 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings, confirmation and hero keys windows wear the card frame.
-- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; skirmish setup scrolls at larger scales.
+- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.
-- 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Hero portrait in the skirmish setup keeps one size; the built maps window shows each map as a picture.
+- 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Skirmish hero portrait keeps one size; the built maps window shows map pictures.
 - 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.
 - 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
