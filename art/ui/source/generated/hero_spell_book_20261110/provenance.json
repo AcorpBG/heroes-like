@@ -1,0 +1,36 @@
+{
+ "purpose": "The hero menu's spell page (docs/hero-screen.md, Spells): spell_book.png, the empty open book the page is laid on; schools.png, a row of five round badges for the schools of magic (basic, beacon, furnace, root, veil). tools/build_hero_menu_icons.py makes art/ui/runtime/hero_menu/spell_book.png and school_*.png from them. spell_page_mockup.png is the layout the owner picked (the grimoire); a reference for scenes/shared/HeroSheet.gd, nothing is cut from it.",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-10",
+ "quality": "medium",
+ "note": "The PNGs are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
+ "items": [
+  {
+   "source": "spell_book.png",
+   "size": "1728x1120",
+   "transparent": true,
+   "prompt_file": "spell_book.prompt.txt",
+   "inputs": [
+    "image 1: the book cut out of spell_page_mockup.png"
+   ],
+   "sha256": "b0e338ed6fe38f75bbb2a6725adc92cdc13f839e49aa444de1699f61872a50ed"
+  },
+  {
+   "source": "schools.png",
+   "size": "1600x544",
+   "transparent": true,
+   "prompt_file": "schools.prompt.txt",
+   "sha256": "0f580abe6ac22030096fca85131d80a4ec8268979f026ba35dc18b81a651e144"
+  },
+  {
+   "source": "spell_page_mockup.png",
+   "size": "1920x1088",
+   "prompt_file": "spell_page_mockup.prompt.txt",
+   "inputs": [
+    "image 1: a screenshot of the hero menu's spell page with 34 spells"
+   ],
+   "sha256": "2fa8b849061db7cfaa5296fe55cccb0765eb738260616dd7486807a57aab46a8"
+  }
+ ]
+}

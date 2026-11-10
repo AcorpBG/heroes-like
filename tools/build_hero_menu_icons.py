@@ -8,6 +8,9 @@ the four command stats, the three meters, a laurel); slots.png, a 5 by 2 sheet
 of the outlines empty artifact slots show; body.png, the figure the artifact
 slots stand on. Each icon is cut from its cell, trimmed to what is painted,
 centred on a square and written to art/ui/runtime/hero_menu.
+
+The spell page's open book (art/ui/source/generated/hero_spell_book_20261110,
+spell_book.png) is only made smaller.
 """
 
 from __future__ import annotations
@@ -19,6 +22,13 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "art" / "ui" / "source" / "generated" / "hero_menu_20261110"
 RUNTIME = ROOT / "art" / "ui" / "runtime" / "hero_menu"
+BOOK_SOURCE = ROOT / "art" / "ui" / "source" / "generated" / "hero_spell_book_20261110" / "spell_book.png"
+# A row of five round badges, one for each school of magic.
+SCHOOLS_SOURCE = ROOT / "art" / "ui" / "source" / "generated" / "hero_spell_book_20261110" / "schools.png"
+SCHOOLS = [["school_basic", "school_beacon", "school_furnace", "school_root", "school_veil"]]
+SCHOOL_EDGE = 96
+# One and a half times the page it lies on in the hero menu at 100%.
+BOOK_SIZE = (1296, 840)
 
 GLYPHS = [
     ["page_army", "page_artifacts", "page_specialties", "page_spells"],
@@ -89,6 +99,15 @@ def cut_body(path: Path) -> None:
 
 def main() -> None:
     RUNTIME.mkdir(parents=True, exist_ok=True)
+    # Each group is cut when its paintings are restored from the archive.
+    if BOOK_SOURCE.exists():
+        Image.open(BOOK_SOURCE).convert("RGBA").resize(BOOK_SIZE, Image.LANCZOS).save(RUNTIME / "spell_book.png")
+        print(f"wrote {RUNTIME / 'spell_book.png'}")
+    if SCHOOLS_SOURCE.exists():
+        cut_sheet(SCHOOLS_SOURCE, SCHOOLS, SCHOOL_EDGE)
+        print(f"wrote {len(SCHOOLS[0])} school badges")
+    if not (SOURCE / "glyphs.png").exists():
+        return
     cut_sheet(SOURCE / "glyphs.png", GLYPHS, GLYPH_EDGE)
     cut_sheet(SOURCE / "slots.png", SLOTS, SLOT_EDGE)
     cut_body(SOURCE / "body.png")

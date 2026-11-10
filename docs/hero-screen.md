@@ -48,9 +48,17 @@ Pages:
 - **Specialties**: pending choices first, as buttons; then a card for each
   learned specialty with its insignia, rank and what it gives; then the hero's
   identity line, home ground and leanings.
-- **Spells**: the known spells as icons, map spells and battle spells apart; the
-  card at the right reads the spell under the mouse, else the chosen one (what it
-  does, its cost, whether it can be cast now) and casts a map spell.
+- **Spells**: an open book (owner, 2026-11-10: of a classic two-page spell book
+  and a grimoire, the grimoire). The left page lists the known spells of one
+  school by tier, as icons with their names; round badges at its head open a
+  school (basic, beacon, furnace, root, veil; only those the hero knows a spell
+  of), and Battle and Map at its foot switch the kind. A spell the hero has not
+  the mana for is paler. The right page writes out the spell under the mouse,
+  else the chosen one: its picture, name, school, tier and cost, what it does,
+  its story, and for a map spell whether it can be cast now, with the Cast
+  button. The book opens at the map spells when the hero knows one, and stays
+  where it was left. The picture on the right page is the spell's 128 pixel
+  icon; larger illustrations for the 139 spells are not painted.
 
 The menu never changes the session: it emits what was asked and its owning screen
 runs the order and hands back a fresh snapshot (`refresh_hero`), which keeps the
@@ -107,7 +115,8 @@ four scrolls. The hero exchange screen shows the fourteen slots in two rows.
 meters, a laurel), ten outlines for empty slots and the figure, cut by
 `tools/build_hero_menu_icons.py` from three imggen sheets
 (`art/ui/source/generated/hero_menu_20261110`, with the mockup; the paintings are
-in the source art archive).
+in the source art archive). The same tool makes the spell page's open book and
+five school badges from `art/ui/source/generated/hero_spell_book_20261110`.
 
 ## Not in this slice
 
@@ -128,6 +137,8 @@ town, each through the rules; an empty slot picked; the town's menu; the hero
 exchange screen with two heroes; artifacts dragged with the mouse from the
 backpack to a slot, to a slot of another kind (refused), between two hands (they
 swap), between trinket slots and back to the backpack, on the map and in town,
-and the card reading the item under the mouse. A hero saved with the five old slots and three
+and the card reading the item under the mouse. The spell book with 34 spells:
+each school opened, battle and map switched, a spell read under the mouse, a map
+spell's Cast button. A hero saved with the five old slots and three
 moved artifacts read back with each in its new slot. Six seeds played the same in
 the game and in the match runner. Content check and core suite.
