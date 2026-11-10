@@ -124,8 +124,11 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.42, 0.64), "radius": 0.070, "color": Color(0.80, 0.93, 1.0), "strength": 0.78},
 	],
 	"faction_thornwake": [
-		{"position": Vector2(0.53, 0.21), "radius": 0.130, "color": Color(0.91, 1.0, 0.72), "strength": 0.62},
-		{"position": Vector2(0.70, 0.56), "radius": 0.090, "color": Color(0.56, 1.0, 0.58), "strength": 0.78},
+		# On the lights of the root ravine: the sunlit flank of the mother tree, the lit arches of
+		# the concord seat at its foot, and the sun's glints on the river.
+		{"position": Vector2(0.565, 0.14), "radius": 0.085, "color": Color(1.0, 0.92, 0.56), "strength": 0.66},
+		{"position": Vector2(0.508, 0.39), "radius": 0.065, "color": Color(1.0, 0.72, 0.30), "strength": 0.78},
+		{"position": Vector2(0.918, 0.82), "radius": 0.075, "color": Color(1.0, 0.94, 0.58), "strength": 0.72},
 	],
 	"faction_brasshollow": [
 		# Along the slag river of the canyon: below the falls, mid-stream, foreground.
@@ -205,7 +208,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png",
 	},
 	"faction_thornwake": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_thornwake_cleared_orchard.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_thornwake_root_ravine.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png",
 	},

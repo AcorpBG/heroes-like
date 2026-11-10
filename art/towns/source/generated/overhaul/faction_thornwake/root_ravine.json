@@ -1,0 +1,1920 @@
+{
+  "schema_id": "town_plot_layer_packet_v1",
+  "faction_id": "faction_thornwake",
+  "scene_id": "root_ravine",
+  "stage": "village",
+  "owner_decision": "2026-11-10: the owner said yes to Thornwake. Of four concepts over one plan the owner asked why everything looked pixelated (blossom, leaves and moss built from blocky square dabs), saw a smoother repaint of concept C, the steep root ravine, and approved painting the full set into that smoother concept C.",
+  "generation": {
+    "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+    "date": "2026-11-10"
+  },
+  "method": "Each building is a masked edit of the empty ravine (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the ravine around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the ravine was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
+  "backdrop": {
+    "source_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+    "source_sha256": "a476f9504a6dd3e5532e73db3385c19f504b0d75c539cffef8f74fddc0f7d30a",
+    "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.prompt.txt",
+    "reference_inputs": [
+      "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_concept.png"
+    ],
+    "foreground": {
+      "path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_foreground.png",
+      "sha256": "20688b1d9ddbcb499186599b8d89183b1bd817ba34b0828187eff8e50e957a59",
+      "tool": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_foreground.py",
+      "note": "The crowns of the blossoming trees in the lower left corner stand in front of every building; the layers are cut away under them."
+    },
+    "concept": {
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_concept.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_concept.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/plan_sketch.png",
+        "art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png"
+      ],
+      "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Thornwake town painting, used for style and building designs only."
+    }
+  },
+  "sources": "The paintings, mattes, masks and reference crops are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
+  "cut": {
+    "plot_reach": 20,
+    "alpha_low": 0.35,
+    "alpha_high": 0.8,
+    "skirt_radius": 12,
+    "skirt_rise": 6,
+    "skirt_strength": 0.85
+  },
+  "grounding": "Painted into the empty ravine on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+  "curation": "Owner-approved root-ravine set (2026-11-10); layers draw under the stage tint and light, clicks follow the building-only hit mask.",
+  "plots": {
+    "fort": [
+      1245,
+      110,
+      275,
+      95
+    ],
+    "guild": [
+      95,
+      128,
+      155,
+      180
+    ],
+    "building_dev_growth_3": [
+      335,
+      190,
+      165,
+      105
+    ],
+    "building_dev_thornwake_unique_2": [
+      640,
+      110,
+      170,
+      100
+    ],
+    "building_dev_growth_1": [
+      1560,
+      115,
+      150,
+      92
+    ],
+    "building_dev_growth_2": [
+      1770,
+      150,
+      160,
+      100
+    ],
+    "building_dev_training_defense": [
+      345,
+      305,
+      150,
+      95
+    ],
+    "thornwake_t5": [
+      510,
+      300,
+      185,
+      120
+    ],
+    "thornwake_t1": [
+      45,
+      345,
+      180,
+      120
+    ],
+    "thornwake_t2": [
+      240,
+      400,
+      175,
+      118
+    ],
+    "hall": [
+      850,
+      215,
+      380,
+      290
+    ],
+    "thornwake_t3": [
+      1290,
+      300,
+      205,
+      130
+    ],
+    "building_dev_training_experience": [
+      1800,
+      305,
+      145,
+      145
+    ],
+    "thornwake_t7_1": [
+      800,
+      545,
+      240,
+      275
+    ],
+    "thornwake_t4": [
+      1235,
+      455,
+      220,
+      120
+    ],
+    "storehouse": [
+      30,
+      520,
+      195,
+      125
+    ],
+    "building_dev_thornwake_unique_3": [
+      500,
+      470,
+      220,
+      135
+    ],
+    "building_wayfarers_hall": [
+      120,
+      650,
+      195,
+      128
+    ],
+    "market": [
+      330,
+      655,
+      215,
+      120
+    ],
+    "building_dev_training_attack": [
+      550,
+      720,
+      190,
+      110
+    ],
+    "thornwake_t6_1": [
+      1500,
+      340,
+      275,
+      160
+    ],
+    "building_dev_artifact_exchange": [
+      1060,
+      625,
+      170,
+      125
+    ],
+    "building_dev_thornwake_unique_1": [
+      1240,
+      655,
+      195,
+      130
+    ],
+    "building_dev_shipyard": [
+      1320,
+      840,
+      390,
+      235
+    ]
+  },
+  "buildings": [
+    {
+      "id": "building_dev_hall_4",
+      "plot_id": "hall",
+      "box": [
+        850,
+        215,
+        380,
+        290
+      ],
+      "crop": [
+        512,
+        0,
+        1056,
+        763
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_4_ravine.png",
+      "source_sha256": "f6e08af37ef67cba3d625cb28613ea214e615a08231d470ac53003299c9bd83d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_4_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_hall.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_4_ravine_matte.png",
+        "sha256": "3d593dddb9c9243beef25d25a1919cbe0b27ae7ae7b3f11224789bfd53565267",
+        "window": [
+          773,
+          48,
+          551,
+          510
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_3",
+      "plot_id": "hall",
+      "box": [
+        865,
+        250,
+        350,
+        255
+      ],
+      "crop": [
+        554,
+        24,
+        972,
+        708
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3_ravine.png",
+      "source_sha256": "cce77943c5ae7dd59f761658c38af8832bc8e601d8293b87a53c24f1fcea12a7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_hall_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3_ravine_matte.png",
+        "sha256": "d3eabe3fb3a29dbb9994e9ca00ca8bf2ea18ce67bdc31f0372fc36a928f56e09",
+        "window": [
+          819,
+          102,
+          479,
+          561
+        ]
+      }
+    },
+    {
+      "id": "building_dev_hall_2",
+      "plot_id": "hall",
+      "box": [
+        888,
+        290,
+        304,
+        215
+      ],
+      "crop": [
+        618,
+        99,
+        844,
+        597
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2_ravine.png",
+      "source_sha256": "12d66798a9542b1b244605508c01cbd1fe4d8b1a7155a3097ebb042f79f9b918",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_hall_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2_ravine_matte.png",
+        "sha256": "e0e18ffe76c3f9350ac73a12b63145669cd77b5eda484e2ad9f6ba8c90288e06",
+        "window": [
+          849,
+          162,
+          405,
+          382
+        ]
+      }
+    },
+    {
+      "id": "building_town_hall",
+      "plot_id": "hall",
+      "box": [
+        911,
+        337,
+        258,
+        168
+      ],
+      "crop": [
+        682,
+        188,
+        717,
+        467
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_town_hall_ravine.png",
+      "source_sha256": "b0e511c76ac403f9c0cc0a64f0c304a3581b9726390d96e955f543682cc0c01b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_town_hall_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_hall_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_town_hall_ravine_matte.png",
+        "sha256": "7b557f40cd81a6c32c780642ce3e534ffab2b5653c0056b05deab8328d5e9b8b",
+        "window": [
+          798,
+          238,
+          403,
+          372
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "box": [
+        1245,
+        110,
+        275,
+        95
+      ],
+      "crop": [
+        1000,
+        0,
+        764,
+        358
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_3_ravine.png",
+      "source_sha256": "7be0a8e9f0e743a8783b91a6e3441930ec4fdec3be2f7c38986fd8faf35cfaef",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_3_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_fort.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_3_ravine_matte.png",
+        "sha256": "4982adc09dd00e044e2bb08da9c0e09bde455a43be55bf4f3f7de3d676ba31d8",
+        "window": [
+          1195,
+          75,
+          364,
+          165
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "box": [
+        1245,
+        125,
+        275,
+        80
+      ],
+      "crop": [
+        1000,
+        0,
+        764,
+        366
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2_ravine.png",
+      "source_sha256": "0b7ab118ef586b7df507895c7bed75510e487471619acb94da8fca38cf94b41b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_fort_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2_ravine_matte.png",
+        "sha256": "c8c332c8f8c9d617c2d6cf0948d60f5a01e183652ed35bbc0fe630d661a246ab",
+        "window": [
+          1209,
+          92,
+          347,
+          146
+        ]
+      }
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "box": [
+        1245,
+        144,
+        275,
+        61
+      ],
+      "crop": [
+        1000,
+        0,
+        764,
+        376
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1_ravine.png",
+      "source_sha256": "5adc0c0d52fb6dd00be7578973abe40ae636eb574d75a58dcc2597b021e1c52c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_fort_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1_ravine_matte.png",
+        "sha256": "f0b8917477ec962150e5e0fb6ef1091bdb7e02e4639bf22cba889fdbfbed54db",
+        "window": [
+          1198,
+          109,
+          366,
+          136
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "box": [
+        95,
+        128,
+        155,
+        180
+      ],
+      "crop": [
+        0,
+        0,
+        388,
+        468
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_5_ravine.png",
+      "source_sha256": "245c4c496fc822ab7b32098789aac6b570c56efa297cf2df6b3d122037e7b9a2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_5_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_guild.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_5_ravine_matte.png",
+        "sha256": "6f2d86954a1052474bf5549a15ca22c75831fb37721dea926c69a548b974152a",
+        "window": [
+          72,
+          91,
+          201,
+          240
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "box": [
+        99,
+        155,
+        147,
+        153
+      ],
+      "crop": [
+        0,
+        19,
+        376,
+        425
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4_ravine.png",
+      "source_sha256": "d13e144afc250863eb0e3cff14544612c23db1dc346d799d5e80eb34d2b9f679",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_guild_5_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4_ravine_matte.png",
+        "sha256": "f83de834ae6d4b92ad5103bdb9f66f31418ff8680a34fec25badcde5d0dc6f7c",
+        "window": [
+          79,
+          116,
+          187,
+          212
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "box": [
+        102,
+        182,
+        140,
+        126
+      ],
+      "crop": [
+        0,
+        70,
+        367,
+        350
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3_ravine.png",
+      "source_sha256": "b3cab8acb5156cd99bebe65d91fc4d8573ac43cc4f1570590dd35247a959b361",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_guild_4_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3_ravine_matte.png",
+        "sha256": "da1084a2749023220474e8d97539cb3070405507c6df23418179604b520d8ffd",
+        "window": [
+          86,
+          162,
+          172,
+          162
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "box": [
+        106,
+        207,
+        132,
+        101
+      ],
+      "crop": [
+        0,
+        117,
+        355,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2_ravine.png",
+      "source_sha256": "5b6606830fb0ec12986176d40c26e6c62d02c1b57952f0af6b008caadda7047f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_guild_3_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2_ravine_matte.png",
+        "sha256": "bc71fc8817dc5ca33c899cbbcf810e9a62829dde3df3f7d055280d30828dc42a",
+        "window": [
+          91,
+          187,
+          162,
+          136
+        ]
+      }
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "box": [
+        110,
+        229,
+        124,
+        79
+      ],
+      "crop": [
+        0,
+        159,
+        344,
+        219
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1_ravine.png",
+      "source_sha256": "8b6490fe5976eb8c2659a36ff69eb186f7f4358f3b04ddb8e549f44610f52455",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_guild_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1_ravine_matte.png",
+        "sha256": "d8cce7329471ea640d0fe65d8e95d17e95920d1e511c148d9fe77c11eef82075",
+        "window": [
+          96,
+          215,
+          152,
+          107
+        ]
+      }
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "box": [
+        330,
+        655,
+        215,
+        120
+      ],
+      "crop": [
+        139,
+        548,
+        597,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_trade_exchange_ravine.png",
+      "source_sha256": "c89aa00878e383fa46dbf041bb17c60dab86647f841931cf4685ea614e14ce77",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_trade_exchange_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_market.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_trade_exchange_ravine_matte.png",
+        "sha256": "1c3283a63cedb0da74b3d8efe68c098d40a5ec848d9c1cf5b8fd8c93e0721df0",
+        "window": [
+          266,
+          586,
+          327,
+          220
+        ]
+      }
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "box": [
+        340,
+        679,
+        194,
+        96
+      ],
+      "crop": [
+        168,
+        585,
+        539,
+        284
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_market_square_ravine.png",
+      "source_sha256": "d977ed3e8a8bc281f44679fe1161e057e876dd27fae1c20a878f5decf6f20c48",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_market_square_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_trade_exchange_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_market_square_ravine_matte.png",
+        "sha256": "f6f263b427c55e0e4409d1d6a564072094b4310db42b9a8b62e20bc43eac267b",
+        "window": [
+          315,
+          643,
+          242,
+          155
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "box": [
+        30,
+        520,
+        195,
+        125
+      ],
+      "crop": [
+        0,
+        409,
+        398,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_2_ravine.png",
+      "source_sha256": "2911773e424ae1cb0529d2326df463a4d2203f9aadc6ec4694788b89e9eb754c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_2_ravine_matte.png",
+        "sha256": "09ff877fe113bbbbe7af52669ec069480b478d7db8e9f4ba60c3b92f85a37a1a",
+        "window": [
+          0,
+          476,
+          290,
+          199
+        ]
+      }
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "box": [
+        44,
+        543,
+        168,
+        102
+      ],
+      "crop": [
+        0,
+        452,
+        361,
+        283
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1_ravine.png",
+      "source_sha256": "ab640b6f4f3ba8a43f73634ab6a4ec0fc12881b583018e1edf2e1fb921a8f346",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_storehouse_2_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1_ravine_matte.png",
+        "sha256": "85ab470bc578034d5de7f347a02169f3b8c372b2093aed635e3ee3c242ccf3c5",
+        "window": [
+          18,
+          511,
+          214,
+          154
+        ]
+      }
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "plot_id": "building_wayfarers_hall",
+      "box": [
+        120,
+        650,
+        195,
+        128
+      ],
+      "crop": [
+        0,
+        536,
+        488,
+        356
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_wayfarers_hall_ravine.png",
+      "source_sha256": "fdbb1cc43b0ce70e7fc8e7857c3660cba6a744478e15d1f1088d3bd0b17b09a8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_wayfarers_hall_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_wayfarers_hall_ravine_matte.png",
+        "sha256": "50ee2f3ea6ee3ce25eabef93e7cdee6f71b07547b37f04a80e441b168941b810",
+        "window": [
+          65,
+          592,
+          301,
+          215
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_1",
+      "plot_id": "building_dev_growth_1",
+      "box": [
+        1560,
+        115,
+        150,
+        92
+      ],
+      "crop": [
+        1426,
+        33,
+        417,
+        256
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_1_ravine.png",
+      "source_sha256": "208bfb555b09109d035a9081b64c26b4f377f45a92963d17a90d2ccb12812b06",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_1_ravine_matte.png",
+        "sha256": "52595a63b3dcf5a6bc1090d7cbd7368a0d87e77d6ae48c2e054500be328038e9",
+        "window": [
+          1541,
+          90,
+          198,
+          136
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_2",
+      "plot_id": "building_dev_growth_2",
+      "box": [
+        1770,
+        150,
+        160,
+        100
+      ],
+      "crop": [
+        1628,
+        61,
+        420,
+        278
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_2_ravine.png",
+      "source_sha256": "56a7f9bc644e101eb7f358ef12261b479f5cc6a2962e25c9a49bc5c5503e81f0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_2_ravine_matte.png",
+        "sha256": "26e831f87191cbc00bc8e0062cc0f4b7bd0d64d11daa117a40530a29c66912b7",
+        "window": [
+          1749,
+          121,
+          214,
+          149
+        ]
+      }
+    },
+    {
+      "id": "building_dev_growth_3",
+      "plot_id": "building_dev_growth_3",
+      "box": [
+        335,
+        190,
+        165,
+        105
+      ],
+      "crop": [
+        188,
+        96,
+        458,
+        292
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_3_ravine.png",
+      "source_sha256": "8412cf47e3a3bc9db05edd7eb50f6e467862fe716ea36be69682a2e4e307518b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_3_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_3_ravine_matte.png",
+        "sha256": "cdf7e3a092f6dd6e7a95b2c6528c30e1f3c45daf178746df856b0bc46f654bb7",
+        "window": [
+          304,
+          155,
+          217,
+          161
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_attack",
+      "plot_id": "building_dev_training_attack",
+      "box": [
+        550,
+        720,
+        190,
+        110
+      ],
+      "crop": [
+        381,
+        622,
+        528,
+        306
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_attack_ravine.png",
+      "source_sha256": "047a7fd6d8fd942c65f6eab916da4c13f8025e5ea7c18f94a02a18470a427f6a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_attack_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_ring.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_attack_ravine_matte.png",
+        "sha256": "2dc6d5b2ef4d81e5a60572524218a65d6f583275888647bcb02d377b0c940ab8",
+        "window": [
+          503,
+          642,
+          295,
+          230
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_defense",
+      "plot_id": "building_dev_training_defense",
+      "box": [
+        345,
+        305,
+        150,
+        95
+      ],
+      "crop": [
+        212,
+        220,
+        417,
+        264
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_defense_ravine.png",
+      "source_sha256": "3d9c1bd8fe45b2431a88e8c72a0fe74a0293ab981345077e130799f6e71a7426",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_defense_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_defense_ravine_matte.png",
+        "sha256": "d554f52c6ee4169c28f2af4bf064bd321a37f822d92c3ccb51f7b9b5f9e564ac",
+        "window": [
+          327,
+          256,
+          186,
+          162
+        ]
+      }
+    },
+    {
+      "id": "building_dev_training_experience",
+      "plot_id": "building_dev_training_experience",
+      "box": [
+        1800,
+        305,
+        145,
+        145
+      ],
+      "crop": [
+        1671,
+        176,
+        377,
+        403
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_experience_ravine.png",
+      "source_sha256": "edae123cfb0fa08aa197759d985b533f931e3eef0ee2deac76d2ba2b4e8c0dd6",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_experience_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_lantern.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_experience_ravine_matte.png",
+        "sha256": "b2efb939006d4cd0c6e5123a7b032af053a1fa2658d1be677d35e61a54b0aa4d",
+        "window": [
+          1778,
+          244,
+          189,
+          228
+        ]
+      }
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "plot_id": "building_dev_artifact_exchange",
+      "box": [
+        1060,
+        625,
+        170,
+        125
+      ],
+      "crop": [
+        909,
+        514,
+        472,
+        347
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_artifact_exchange_ravine.png",
+      "source_sha256": "2c56b50c440931b62346a3ffe929fc1a8d799a4436e9ff7280c8140a5960ea5f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_artifact_exchange_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_arch.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_artifact_exchange_ravine_matte.png",
+        "sha256": "d4c627f7d427615d3645ec60366a32e68d54768f502c1c3fa477b0e35da3c60a",
+        "window": [
+          1039,
+          548,
+          212,
+          223
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_unique_1",
+      "plot_id": "building_dev_thornwake_unique_1",
+      "box": [
+        1240,
+        655,
+        195,
+        130
+      ],
+      "crop": [
+        1066,
+        540,
+        542,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_1_ravine.png",
+      "source_sha256": "b87b031010dffca513f855ea76169f74112ab29a097e1eb2f442521dfccd2a98",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_nursery.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_1_ravine_matte.png",
+        "sha256": "ed543ca8e8fb8c3e3468521b63f00fa9b1fcb21a716d3066c2d4fca8c353d0c2",
+        "window": [
+          1200,
+          605,
+          271,
+          210
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_unique_2",
+      "plot_id": "building_dev_thornwake_unique_2",
+      "box": [
+        640,
+        110,
+        170,
+        100
+      ],
+      "crop": [
+        489,
+        21,
+        472,
+        278
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_2_ravine.png",
+      "source_sha256": "46a043fa7e4ef0d19a000665b79880460a6ca7fd52852554185205e44de94d07",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_2_ravine_matte.png",
+        "sha256": "5212ca242ddf2008ade1afb9d2d967f792286a09065a99d3287ff1a9fbd85f65",
+        "window": [
+          616,
+          89,
+          224,
+          142
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_unique_3",
+      "plot_id": "building_dev_thornwake_unique_3",
+      "box": [
+        500,
+        470,
+        220,
+        135
+      ],
+      "crop": [
+        304,
+        350,
+        611,
+        375
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_3_ravine.png",
+      "source_sha256": "fa60c24a103c302af2cba23db910d0197b1e8e39f606799295a5ea7305713834",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_3_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_ring.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_3_ravine_matte.png",
+        "sha256": "cf9e9551298e66861a712d908d3ebc2fd9ad140d75363a5932afb5e9bd57e698",
+        "window": [
+          466,
+          413,
+          297,
+          220
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t1_1_upgrade",
+      "plot_id": "thornwake_t1",
+      "box": [
+        45,
+        345,
+        180,
+        120
+      ],
+      "crop": [
+        0,
+        238,
+        385,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_upgrade_ravine.png",
+      "source_sha256": "bbcb940dc710d71a12971d590ce1bd78bcce2d78a466cbc9deb3298753962e45",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_upgrade_ravine_matte.png",
+        "sha256": "39a981631f55802c031b8854f714d78974dcf4dc0222c8c51653ab81c2a29f29",
+        "window": [
+          3,
+          275,
+          284,
+          217
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t1_1",
+      "plot_id": "thornwake_t1",
+      "box": [
+        56,
+        362,
+        158,
+        103
+      ],
+      "crop": [
+        0,
+        270,
+        355,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_ravine.png",
+      "source_sha256": "281fd7b73fdb64f8278ba2aaf54d4ecb0db5e64c01f1ea277e2b7949683d564f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t1_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_ravine_matte.png",
+        "sha256": "6c63ba412047818140be3344de132abb21bee89f489c9a6b0eb708feaba7a0c7",
+        "window": [
+          38,
+          330,
+          194,
+          153
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t1_2_upgrade",
+      "plot_id": "thornwake_t1",
+      "box": [
+        45,
+        345,
+        180,
+        120
+      ],
+      "crop": [
+        0,
+        238,
+        385,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_upgrade_ravine.png",
+      "source_sha256": "95f990bdac17779fc6ed387d1d354f0955e8a86f0af45c4a480666b0f42c3f2e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_upgrade_ravine_matte.png",
+        "sha256": "2d23ea6b53e01a928a14d57936bfef228bf705a06dd331c655afb9c3573d9092",
+        "window": [
+          0,
+          238,
+          305,
+          288
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t1_2",
+      "plot_id": "thornwake_t1",
+      "box": [
+        56,
+        362,
+        158,
+        103
+      ],
+      "crop": [
+        0,
+        270,
+        355,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_ravine.png",
+      "source_sha256": "1bb91dd0b7ece60d8505a5c43013338fb02f65693f419d46e9a83701527a913a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t1_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_ravine_matte.png",
+        "sha256": "bf9f99ad3e328b852f78fcdb64fce6a0db6ef846df95879b8d2a16ccae908b9f",
+        "window": [
+          31,
+          317,
+          210,
+          183
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t2_1_upgrade",
+      "plot_id": "thornwake_t2",
+      "box": [
+        240,
+        400,
+        175,
+        118
+      ],
+      "crop": [
+        84,
+        295,
+        486,
+        328
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_upgrade_ravine.png",
+      "source_sha256": "1622e8aa69bbebab783a73843cedcc7995bb65e592895782ea6c3f3017e3a34c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_upgrade_ravine_matte.png",
+        "sha256": "4c9e43faf446349e185bb9bba0c57dc37cd275647af0ea1c5a9866e97058d878",
+        "window": [
+          168,
+          336,
+          273,
+          208
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t2_1",
+      "plot_id": "thornwake_t2",
+      "box": [
+        250,
+        417,
+        154,
+        101
+      ],
+      "crop": [
+        113,
+        327,
+        428,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_ravine.png",
+      "source_sha256": "fa7781a869074d52617c3b97f70ee55f64683053daaa5a62bbc5da4ec435978d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t2_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_ravine_matte.png",
+        "sha256": "9466567b83891321805ce988925a36db0fd38b3c8522fbc6fc56854e9ae81072",
+        "window": [
+          229,
+          385,
+          193,
+          151
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t2_2_upgrade",
+      "plot_id": "thornwake_t2",
+      "box": [
+        240,
+        400,
+        175,
+        118
+      ],
+      "crop": [
+        84,
+        295,
+        486,
+        328
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_upgrade_ravine.png",
+      "source_sha256": "53e696b91c08cc031676c18aad023c5cf7c48609c7467e6d9703378a6c4bbd69",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_upgrade_ravine_matte.png",
+        "sha256": "3c285edb9221a5b9f008d5a56199430e68e97c4e9f771c65d3fb9a529ec9e8ab",
+        "window": [
+          175,
+          351,
+          271,
+          193
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t2_2",
+      "plot_id": "thornwake_t2",
+      "box": [
+        250,
+        417,
+        154,
+        101
+      ],
+      "crop": [
+        113,
+        327,
+        428,
+        281
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_ravine.png",
+      "source_sha256": "3df65cfefdfdb4929c34a2749b48b67ee5271cf1d6ac4060d2347932c99b4461",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t2_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_ravine_matte.png",
+        "sha256": "949a286e22775ef51a9a958efea49fcafea47389c0c68ae89c09725fbc76c509",
+        "window": [
+          221,
+          386,
+          208,
+          152
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t3_1_upgrade",
+      "plot_id": "thornwake_t3",
+      "box": [
+        1290,
+        300,
+        205,
+        130
+      ],
+      "crop": [
+        1108,
+        184,
+        569,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_upgrade_ravine.png",
+      "source_sha256": "3cbddae213e2457d0a69e8c6241b152f30a69f87440553f7c0829c04474aa5a5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_dome.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_upgrade_ravine_matte.png",
+        "sha256": "3b255f5b3c828388b760f83ee4ca1e151f24516d6f46990b659beec4cf7fcbaf",
+        "window": [
+          1265,
+          247,
+          264,
+          208
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t3_1",
+      "plot_id": "thornwake_t3",
+      "box": [
+        1302,
+        318,
+        180,
+        112
+      ],
+      "crop": [
+        1142,
+        218,
+        500,
+        311
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_ravine.png",
+      "source_sha256": "c4fb1353e3a7545780b06b546ad078aadcc05dcebc91e749efd55914cacb10c5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t3_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_ravine_matte.png",
+        "sha256": "228f582224e9550bd2c2eced1612aed6ad7e7d9b184f8070e3f9c92f1b3775da",
+        "window": [
+          1281,
+          284,
+          222,
+          167
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t3_2_upgrade",
+      "plot_id": "thornwake_t3",
+      "box": [
+        1290,
+        300,
+        205,
+        130
+      ],
+      "crop": [
+        1108,
+        184,
+        569,
+        361
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_upgrade_ravine.png",
+      "source_sha256": "1a2427629622306699206439efab0a89d1139bb2614beb32d31ad545bfc36f34",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_upgrade_ravine_matte.png",
+        "sha256": "616fe182c3cf866f3e992730bc75b4cf3df0e754a333f0b0569a854df1458a27",
+        "window": [
+          1239,
+          255,
+          341,
+          208
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t3_2",
+      "plot_id": "thornwake_t3",
+      "box": [
+        1302,
+        318,
+        180,
+        112
+      ],
+      "crop": [
+        1142,
+        218,
+        500,
+        311
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_ravine.png",
+      "source_sha256": "d95ef42ec1c0394bb2b119ad80f80b965eb41f332d71c8d6b89add5247d809a7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t3_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_ravine_matte.png",
+        "sha256": "b8449c0c01902bfb29549fdff0e4159b97036ee10b4d4c8fbdcbc83a0c319002",
+        "window": [
+          1277,
+          272,
+          232,
+          180
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t4_1_upgrade",
+      "plot_id": "thornwake_t4",
+      "box": [
+        1235,
+        455,
+        220,
+        120
+      ],
+      "crop": [
+        1040,
+        348,
+        611,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_upgrade_ravine.png",
+      "source_sha256": "4373bd6690cd6a7fe4e0cb254ca9a3af5a641666ed02e42a031a495f8b0dc097",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_upgrade_ravine_matte.png",
+        "sha256": "d67ba4eb0a8370fb330e8b635cc5f838ebbcd572272034d8b825e0fcd0fabec3",
+        "window": [
+          1134,
+          400,
+          404,
+          214
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t4_1",
+      "plot_id": "thornwake_t4",
+      "box": [
+        1248,
+        472,
+        194,
+        103
+      ],
+      "crop": [
+        1076,
+        380,
+        539,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_ravine.png",
+      "source_sha256": "d2b5f3aa8255dc63ceaa1ccc04e0c8960b8c3fa551e07f54f16842a36acca033",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t4_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_ravine_matte.png",
+        "sha256": "46a0468795656c844c2fa5aec3e670094a27d05e9f850aa2cdfeb670b7d8e84b",
+        "window": [
+          1223,
+          421,
+          242,
+          177
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t4_2_upgrade",
+      "plot_id": "thornwake_t4",
+      "box": [
+        1235,
+        455,
+        220,
+        120
+      ],
+      "crop": [
+        1040,
+        348,
+        611,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_upgrade_ravine.png",
+      "source_sha256": "3ef601960b10944cb0c8fe57617228c11018a09f161ac24ec5fd54a6f514fe3a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_upgrade_ravine_matte.png",
+        "sha256": "aa2f194dfba3e40db157372964cdc9851cb238502f59bdd28e55a97080832c7a",
+        "window": [
+          1185,
+          382,
+          348,
+          226
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t4_2",
+      "plot_id": "thornwake_t4",
+      "box": [
+        1248,
+        472,
+        194,
+        103
+      ],
+      "crop": [
+        1076,
+        380,
+        539,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_ravine.png",
+      "source_sha256": "833906c7b96a8fe83c224a234911c5de7782b023734d8b53733348568bc8f546",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t4_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_ravine_matte.png",
+        "sha256": "869d8ccc8e08eca92c337660fa9ad25b72a249b0dbec7f3ea3a95eec22ef11d8",
+        "window": [
+          1218,
+          424,
+          248,
+          175
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t5_1_upgrade",
+      "plot_id": "thornwake_t5",
+      "box": [
+        510,
+        300,
+        185,
+        120
+      ],
+      "crop": [
+        346,
+        194,
+        514,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_upgrade_ravine.png",
+      "source_sha256": "0c785db281869fa1edbe0666e0b7c1840e7f40f3601889e28a6dcb09d2630bad",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_upgrade_ravine_matte.png",
+        "sha256": "5c05b2e3d3f5424261b166a2aff2e2c3bf22992dfe76a76aacb796c5afb94e79",
+        "window": [
+          427,
+          245,
+          349,
+          208
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t5_1",
+      "plot_id": "thornwake_t5",
+      "box": [
+        521,
+        317,
+        163,
+        103
+      ],
+      "crop": [
+        376,
+        226,
+        453,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_ravine.png",
+      "source_sha256": "c823779492a7031df4671cdf3c26a7c046d4543f26caeae889801884a94536d3",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t5_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_ravine_matte.png",
+        "sha256": "37bf63788b0009115d3ec20d32d0eff36338da89b4204f0c1518a456daefd754",
+        "window": [
+          502,
+          282,
+          201,
+          157
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t5_2_upgrade",
+      "plot_id": "thornwake_t5",
+      "box": [
+        510,
+        300,
+        185,
+        120
+      ],
+      "crop": [
+        346,
+        194,
+        514,
+        333
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_upgrade_ravine.png",
+      "source_sha256": "92eecce8888ac31930fc04d6715f377c9312fd23a245ea8862eeb8f7c47a8539",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_style.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_upgrade_ravine_matte.png",
+        "sha256": "b520144cf6e10c60f5e8c47726684819cfe73869d325c0d6b1962e28140d5dfa",
+        "window": [
+          474,
+          258,
+          248,
+          232
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t5_2",
+      "plot_id": "thornwake_t5",
+      "box": [
+        521,
+        317,
+        163,
+        103
+      ],
+      "crop": [
+        376,
+        226,
+        453,
+        286
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_ravine.png",
+      "source_sha256": "cceb34f014c320cf92093451e45ea5a6ad50190479e1a25cbcf4fc30062619a3",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t5_2_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_ravine_matte.png",
+        "sha256": "70693836f819459e0281102abf35d9489de796b07c031919ee44a8f7df3169dc",
+        "window": [
+          501,
+          278,
+          202,
+          162
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t6_1_upgrade",
+      "plot_id": "thornwake_t6_1",
+      "box": [
+        1500,
+        340,
+        275,
+        160
+      ],
+      "crop": [
+        1256,
+        198,
+        764,
+        444
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_upgrade_ravine.png",
+      "source_sha256": "39ed7a4aaad2a5c1df17b6c94222ae44c0e45d11f88e657e6ae8552c0df3163b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_lodge.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_upgrade_ravine_matte.png",
+        "sha256": "361306b014e00073bc67a4a378cd09e5e7427123587ea03308e948c6815a3df0",
+        "window": [
+          1429,
+          295,
+          438,
+          247
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t6_1",
+      "plot_id": "thornwake_t6_1",
+      "box": [
+        1516,
+        362,
+        242,
+        138
+      ],
+      "crop": [
+        1301,
+        240,
+        672,
+        383
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_ravine.png",
+      "source_sha256": "c816eeae1bf7a0516699f8a3122a9693511d7e20d3fdf0794e4f762789fe8837",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t6_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_ravine_matte.png",
+        "sha256": "112b96a4876c08d7cbf5e48e69df307dcd0fbac43ad2ac795361743a9a4ace72",
+        "window": [
+          1472,
+          313,
+          347,
+          220
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t7_1_upgrade",
+      "plot_id": "thornwake_t7_1",
+      "box": [
+        800,
+        545,
+        240,
+        275
+      ],
+      "crop": [
+        586,
+        300,
+        667,
+        764
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_upgrade_ravine.png",
+      "source_sha256": "1ef8f53b17c07e5818a17957a0bf0f1f88bfa255da34cb3281c2946bba0c2a46",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_upgrade_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_gate.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_upgrade_ravine_matte.png",
+        "sha256": "ded75b8c06cdf676bc3fa3f94a6bb27b0800cfbbeb28b427d638b6afdb65e88f",
+        "window": [
+          586,
+          413,
+          667,
+          651
+        ]
+      }
+    },
+    {
+      "id": "building_dev_thornwake_t7_1",
+      "plot_id": "thornwake_t7_1",
+      "box": [
+        814,
+        584,
+        211,
+        236
+      ],
+      "crop": [
+        626,
+        374,
+        586,
+        656
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_ravine.png",
+      "source_sha256": "98846881e73fc704be5f7af453434c35de91a796337fce68f758ccf5975ae9c4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/building_dev_thornwake_t7_1_upgrade_crop.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_ravine_matte.png",
+        "sha256": "e9737a4071d88baac316c4d8281a65d929892d033d3e8def9d60fa48f52a438e",
+        "window": [
+          642,
+          493,
+          523,
+          486
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        1320,
+        840,
+        390,
+        235
+      ],
+      "crop": [
+        974,
+        631,
+        1074,
+        521
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_shipyard_ravine.png",
+      "source_sha256": "ef4cb3fc49bae76ba4e039715ac8a349b6953fbe8151c48c7bebe5fd61f93c36",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_shipyard_ravine.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine.png",
+        "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_refs/ref_shipyard.png"
+      ],
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_shipyard_ravine_matte.png",
+        "sha256": "db6ccd8da00a65615c258dd2ca7c5e13874e948e0c2ca22516ac1e4de75990f8",
+        "window": [
+          1268,
+          773,
+          544,
+          354
+        ],
+        "tool": "art/towns/source/generated/overhaul/faction_thornwake/root_ravine_shipyard_matte.py"
+      }
+    }
+  ],
+  "matting": {
+    "tool": "tools/town_plot_mattes.py",
+    "model": "BiRefNet general (MIT): Comfy-Org/BiRefNet background_removal/birefnet.safetensors, revision 25511f8787e51912e1480706b4e47b8f467fbf72",
+    "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
+    "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
+  }
+}
