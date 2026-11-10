@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-mireclaw-backdrop-v2-20261110",
- "currentSliceTitle": "Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T10:24:04Z",
+ "currentSliceId": "town-art-mireclaw-foreground-20261110",
+ "currentSliceTitle": "Mireclaw buildings stay behind the foreground tree",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T10:38:26Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-mireclaw-foreground-20261110",
+   "title": "Mireclaw buildings stay behind the foreground tree",
+   "status": "in_progress",
+   "goal": "The den's layer drew over the root of the great tree painted in the backdrop's foreground. A foreground mask of the tree in the packet (backdrop.foreground, dusk_fen_foreground.py); package_town_plot_layers.py cuts every layer and hit mask under it. Owner, 2026-11-10: recut it so it stays behind the foreground tree.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-mireclaw-backdrop-v2-20261110",
    "status": "completed",

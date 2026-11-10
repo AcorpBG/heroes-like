@@ -247,6 +247,17 @@ def main():
             raise ValueError('Changed painted-on master: ' + str(painted_path))
         painted_image = Image.open(painted_path).convert('RGB')
     master = np.asarray(painted_image).astype(np.float32)
+    # What the backdrop paints in front of the buildings (a foreground tree): white in this mask
+    # is cut out of every layer and hit mask, so it stays in front. Icons keep the whole building.
+    foreground = None
+    if backdrop.get('foreground'):
+        foreground_path = ROOT / backdrop['foreground']['path']
+        if digest(foreground_path) != backdrop['foreground']['sha256']:
+            raise ValueError('Changed foreground mask: ' + str(foreground_path))
+        with Image.open(foreground_path) as foreground_image:
+            if foreground_image.size != (width, height):
+                raise ValueError('The foreground mask does not fit the master: ' + str(foreground_path))
+            foreground = np.asarray(foreground_image.convert('L')).astype(np.float32) / 255.0
     scene, layout = read(SCENE), read(LAYOUT)
     generation = packet['generation']
 
@@ -268,10 +279,14 @@ def main():
         with Image.open(matte_path) as matte_image:
             matte = np.asarray(matte_image.convert('L')).astype(np.float32) / 255.0
         (cx0, cy0), edit, alpha, building, solid = cut(master, full_edit(painted_image, item), item, matte, settings)
-        ys, xs = np.nonzero(alpha > 0.004)
+        shown, clickable = alpha, building
+        if foreground is not None:
+            behind = 1.0 - foreground[cy0:cy0 + alpha.shape[0], cx0:cx0 + alpha.shape[1]]
+            shown, clickable = alpha * behind, building * behind
+        ys, xs = np.nonzero(shown > 0.004)
         ly0, ly1, lx0, lx1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
-        layer = Image.fromarray(np.dstack([edit, alpha * 255.0])[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'RGBA')
-        hit = Image.fromarray((building * 255.0)[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'L')
+        layer = Image.fromarray(np.dstack([edit, shown * 255.0])[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'RGBA')
+        hit = Image.fromarray((clickable * 255.0)[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'L')
         layer_path = ROOT / f'art/towns/runtime/scene_layers/overhaul/{faction}/{bid}.png'
         hit_path = layer_path.with_name(bid + '_hit.png')
         icon_path = ROOT / f'art/towns/runtime/buildings/overhaul/{faction}/{bid}.png'

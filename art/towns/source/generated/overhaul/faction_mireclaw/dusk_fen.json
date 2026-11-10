@@ -3,7 +3,7 @@
   "faction_id": "faction_mireclaw",
   "scene_id": "dusk_fen",
   "stage": "village",
-  "owner_decision": "2026-11-10: the owner chose Mireclaw next and rejected the first concepts, a river gorge with the antlered beast in the water: Mireclaw should feel more swampy and less like a river, and the elk should not be in the water. The owner then chose concept D (a bog of still pools, reeds and hummocks, the beast on a dry island) and approved painting the full set into it. Later the same day the owner found the backdrop very streaky, with vertical lines all over, and chose candidate 1 of two repaints of the swamp floor.",
+  "owner_decision": "2026-11-10: the owner chose Mireclaw next and rejected the first concepts, a river gorge with the antlered beast in the water: Mireclaw should feel more swampy and less like a river, and the elk should not be in the water. The owner then chose concept D (a bog of still pools, reeds and hummocks, the beast on a dry island) and approved painting the full set into it. Later the same day the owner found the backdrop very streaky, with vertical lines all over, and chose candidate 1 of two repaints of the swamp floor. The owner then had the den cut so it stays behind the foreground tree.",
   "generation": {
     "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
     "date": "2026-11-10"
@@ -38,7 +38,13 @@
         "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit, quality medium, complexity high",
         "date": "2026-11-10"
       }
-    ]
+    ],
+    "foreground": {
+      "path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_foreground.png",
+      "sha256": "0fd382d927ddbcaf2b5310e86e533b3320fae186dac5f364c715935db484e1a9",
+      "tool": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_foreground.py",
+      "note": "The great tree at the right edge stands in front of every building; the layers are cut away under it."
+    }
   },
   "cut": {
     "plot_reach": 20,

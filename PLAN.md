@@ -52,6 +52,7 @@ None open.
 
 ## Open work
 
+- `town-art-mireclaw-foreground-20261110` (in progress): The den's layer drew over the root of the great tree painted in the backdrop's foreground. A foreground mask of the tree in the packet (backdrop.foreground, dusk_fen_foreground.py); package_town_plot_layers.py cuts every layer and hit mask under it. Owner, 2026-11-10: recut it so it stays behind the foreground tree. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
