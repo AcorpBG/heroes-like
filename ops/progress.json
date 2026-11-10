@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-shipyards-20261110",
- "currentSliceTitle": "Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T07:06:13Z",
+ "currentSliceId": "ai-shipyard-needs-20261110",
+ "currentSliceTitle": "An unwanted Shipyard is no resource shortage",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T07:07:55Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-shipyard-needs-20261110",
+   "title": "An unwanted Shipyard is no resource shortage",
+   "status": "in_progress",
+   "goal": "A harbour town's unbuilt Shipyard counted as a shortage of wood and gold for the player's heroes (_resource_needs) although no town would build it; it counts only while the main army wants one. Files: ai_hero_rules_power.cpp, ai_hero_rules_turn_towns.cpp.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-shipyards-20261110",
    "status": "completed",

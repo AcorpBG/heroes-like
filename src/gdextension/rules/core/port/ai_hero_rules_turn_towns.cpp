@@ -57,9 +57,6 @@ using state::Value;
 namespace key = state::key;
 
 constexpr Atom kScript = key::ai_hero_rules_script;
-// A computer player builds no Shipyard in the first week (owner decision,
-// 2026-11-10): day 8 opens week 2.
-constexpr int64_t kFirstShipyardDay = 8;
 // HeroCommandRules.TAVERN_OFFER_SIZE.
 
 // d.get(k, {}) / d.get(k, []) whose result is kept: a new container when the
@@ -420,47 +417,6 @@ DictRef _build_tavern(State &state, DictRef session, DictRef context, ArrayRef t
 		}
 	}
 	return state.new_dict();
-}
-
-// What a Shipyard is worth to the player today (_build_choice): the troops of
-// the main army it would free, counted as a dwelling's troops are, when that
-// army found nothing in reach and no shipyard in the last BOAT_SAVING_DAYS
-// (_note_boat_need). Nothing before week 2, or once the army is gone.
-double _wanted_shipyard_value(State &state, DictRef session, DictRef context) {
-	const int64_t day = ai::session_int(state, session, key::day);
-	const int64_t harbor_day = gd::to_int(state, ai::vget(state, gd::index(state, context, str(key::state)), key::ai_harbor_wanted_day, int_value(-1000)));
-	if (day < kFirstShipyardDay || harbor_day < gd::sub(day, ai::static_int(state, kScript, key::BOAT_SAVING_DAYS))) {
-		return 0.0;
-	}
-	const Atom controller = context_controller(state, context);
-	const Atom main_id = _main_hero_id(state, session, controller);
-	if (main_id == key::empty) {
-		return 0.0;
-	}
-	for (const Value &hero : gd::items(state, array_value(active_hero_entries(state, session, controller)))) {
-		if (!gd::is_dict(hero) || ai::string_or_empty(state, hero.ref, key::placement_id) != main_id) {
-			continue;
-		}
-		Value army;
-		Value stacks;
-		if (!(state.lookup(hero.ref, str(key::enemy_army), army) && gd::is_dict(army) && state.lookup(army.ref, str(key::stacks), stacks))) {
-			return 0.0;
-		}
-		const DictRef troops = state.new_dict();
-		for (const Value &stack : gd::items(state, stacks)) {
-			if (!gd::is_dict(stack)) {
-				continue;
-			}
-			const Atom unit_id = ai::string_or_empty(state, stack.ref, key::unit_id);
-			const int64_t count = gd::int_field(state, stack.ref, key::count, 0);
-			if (unit_id == key::empty || count <= 0) {
-				continue;
-			}
-			state.set(troops, str(unit_id), int_value(gd::add(gd::to_int(state, state.get(troops, str(unit_id), int_value(0))), count)));
-		}
-		return _recruit_set_value(state, troops);
-	}
-	return 0.0;
 }
 
 DictRef _build_in_towns(State &state, DictRef session, DictRef context) {

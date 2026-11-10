@@ -126,6 +126,9 @@ ArrayRef _unit_power_figures(State &state, Atom unit_id);
 ArrayRef _damage_spell_figures(State &state, Atom spell_id);
 void _sync_power_memos(State &state);
 double hero_power(State &state, DictRef entry);
+// What a Shipyard is worth to the player today: the troops of the stranded
+// main army, 0 while nobody wants one (docs/ai-plays-by-player-rules.md, Water).
+double _wanted_shipyard_value(State &state, DictRef session, DictRef context);
 DictRef _resource_needs(State &state, DictRef session, DictRef context);
 double _payload_value(State &state, const Value &payload, DictRef needs);
 DictRef _merge_stacks_into(State &state, const Value &destination, const Value &additions);
