@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-sunvault-20261110",
- "currentSliceTitle": "Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T11:17:50Z",
+ "currentSliceId": "ui-tooltip-card-art-20261110",
+ "currentSliceTitle": "General tooltip and F1 window in the dark-and-gold card",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T11:26:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-tooltip-card-art-20261110",
+   "title": "General tooltip and F1 window in the dark-and-gold card",
+   "status": "in_progress",
+   "goal": "The game's general hover tooltip (ContextualHelp.make_hover_card, every screen) and its F1 full-text window take the map information card's frames and text tones (owner, 2026-11-10: restyle both). Behaviour, text and the three-line limit are unchanged. Files: scripts/autoload/ContextualHelp.gd.",
+   "docs": [
+    "docs/overworld-info-card.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-sunvault-20261110",
    "status": "completed",

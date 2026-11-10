@@ -41,7 +41,22 @@ letting go still closes it; the Inspect button's version keeps "Return to map".
 `OverworldMapView._build_hover_tooltip_card` uses the small frame. The first line is
 gold; the status line takes the description's tone (the shell hands the card
 `OverworldInspection.hover_card`: the text, the status line's index and the tone).
-Other tooltips of the game keep their own card for now.
+
+## The general tooltip and its F1 window
+
+Every other tooltip of the game (buttons, bars, portraits, town buildings, on
+every screen) is one card, `ContextualHelp.make_hover_card`, and takes the same
+small frame (owner: restyle both). Its text keeps the three-line limit and the
+F1 hint line. A short first line over more text (at most 44 characters) names
+the thing and is shown as a gold heading, as on the map card; a single passage
+stays in the body tone.
+
+F1 opens the full text in `ContextualHelp`'s window, which takes the large frame:
+no title bar, a "Close" button in the kit's primary style, and only as tall as
+its text up to the screen (longer text scrolls). Both follow the high-contrast
+setting through `info_card_style`.
+
+The battle field draws its own forecast beside the pointer and is not this card.
 
 ## Unit icons
 
@@ -79,3 +94,7 @@ treasure, a hero-visit building and the Wayside Exchange, and the hover card on
 four kinds of object, compared with the approved mockup. All 232 icons were read
 on one sheet, and each of the 75 painted ones beside its portrait; in the game all
 75 load as their own texture and three army reports were read.
+
+The general tooltip was read in the game on ten controls of the main menu, game
+setup, map, town and battle screens, and the F1 window on a short and a long
+text, one after the other in both orders of size.

@@ -1,8 +1,14 @@
 extends Node
 
 const TooltipControl = preload("res://scripts/ui/BoundedTooltipControl.gd")
+const VisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const MAX_SUMMARY_CHARACTERS := 240
 const MAX_SUMMARY_LINES := 3
+# A short first line over more text names the thing and is shown as the card's
+# gold heading, as on the map's information card.
+const MAX_TITLE_CHARACTERS := 44
+const DETAIL_WIDTH := 520.0
+const DETAIL_MIN_TEXT_HEIGHT := 48.0
 var _hover_owner: WeakRef
 var _hover_card: WeakRef
 var _hover_layer: CanvasLayer
@@ -62,33 +68,43 @@ func make_hover_card(control: Control, full_text: String) -> Control:
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var width := minf(360.0, control.get_viewport_rect().size.x * 0.32)
 	card.custom_minimum_size.x = width
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("182021")
-	style.border_color = Color("b59c60")
-	style.set_border_width_all(1)
-	style.content_margin_left = 10
-	style.content_margin_right = 10
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+	# The map information card's small frame (docs/overworld-info-card.md): dark
+	# lacquer, a thin gold border and compass corners.
+	var style := VisualKit.info_card_style(true)
 	card.add_theme_stylebox_override("panel", style)
+	var text_width := width - style.get_minimum_size().x
 	var column := VBoxContainer.new()
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_theme_constant_override("separation", 2)
 	card.add_child(column)
+	var summary := summary_text(full_text)
+	var title := hover_title(summary)
+	if title != "":
+		var heading := Label.new()
+		heading.name = "Title"
+		heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		heading.custom_minimum_size.x = text_width
+		heading.clip_text = true
+		heading.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		heading.text = title
+		VisualKit.apply_label(heading, "gold", 15)
+		column.add_child(heading)
+		summary = summary.substr(summary.find("\n") + 1)
 	var label := Label.new()
 	label.name = "Summary"
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.custom_minimum_size.x = width - 20
+	label.custom_minimum_size.x = text_width
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.max_lines_visible = MAX_SUMMARY_LINES
 	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	label.add_theme_font_size_override("font_size", 14)
-	label.text = summary_text(full_text)
+	label.text = summary
+	VisualKit.apply_label(label, "body", 14)
 	column.add_child(label)
 	var hint := Label.new()
+	hint.name = "Hint"
 	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint.text = "F1 / controller View: inspect • Esc: dismiss"
-	hint.add_theme_font_size_override("font_size", 11)
-	hint.add_theme_color_override("font_color", Color("d4bd83"))
+	VisualKit.apply_label(hint, "muted", 11)
 	column.add_child(hint)
 	return adopt_hover_card(control, card, full_text)
 
@@ -111,6 +127,13 @@ func adopt_hover_card(control: Control, card: Control, full_text: String) -> Con
 	var suppress_native := Control.new()
 	suppress_native.hide()
 	return suppress_native
+
+## The first line of a hover summary when it names the thing: short, with more
+## text under it. "" when the summary is one passage.
+func hover_title(summary: String) -> String:
+	var lines := summary.split("\n", false)
+	if lines.size() < 2 or String(lines[0]).length() > MAX_TITLE_CHARACTERS: return ""
+	return String(lines[0])
 
 func summary_text(full_text: String) -> String:
 	var lines := full_text.strip_edges().split("\n", false)
@@ -242,34 +265,49 @@ func inspect_control(control: Control, focused: bool = false) -> bool:
 	if not is_instance_valid(_detail):
 		_detail = ConfirmationDialog.new()
 		_detail.name = "ContextInspection"
-		_detail.title = "Inspect"
+		# The map information card's frame is the window: no title bar around it.
+		_detail.title = ""
+		_detail.borderless = true
 		_detail.exclusive = true
 		_detail_text = RichTextLabel.new()
 		_detail_text.bbcode_enabled = false
 		_detail_text.scroll_active = true
 		_detail_text.selection_enabled = true
 		_detail_text.focus_mode = Control.FOCUS_ALL
+		_detail_text.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		_detail_text.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		_detail_text.add_theme_font_size_override("normal_font_size", 15)
 		_detail.add_child(_detail_text)
 		parent_window.add_child(_detail)
-		var frame := StyleBoxFlat.new()
-		frame.bg_color = Color("182021")
-		frame.border_color = Color("b59c60")
-		frame.set_border_width_all(1)
-		frame.set_content_margin_all(12)
-		_detail.add_theme_stylebox_override("panel", frame)
-		_detail.add_theme_color_override("title_color", Color("e0c98f"))
+		_detail.add_theme_stylebox_override("embedded_border", StyleBoxEmpty.new())
+		_detail.add_theme_stylebox_override("embedded_unfocused_border", StyleBoxEmpty.new())
+		_detail.add_theme_constant_override("buttons_min_width", 120)
+		_detail.add_theme_constant_override("buttons_min_height", 32)
+		_detail.get_ok_button().text = "Close"
 		_detail.get_cancel_button().hide()
 		_detail.confirmed.connect(dismiss_details)
 		_detail.canceled.connect(dismiss_details)
 		_detail.close_requested.connect(dismiss_details)
 		_detail.window_input.connect(_detail_input)
 	dismiss_hover()
+	# Colours follow the display settings, so they are set at each opening.
+	var frame := VisualKit.info_card_style()
+	_detail.add_theme_stylebox_override("panel", frame)
+	VisualKit.apply_button(_detail.get_ok_button(), "primary", 120, 32)
+	_detail_text.add_theme_color_override("default_color", VisualKit.text_color("body"))
 	_detail_text.text = text
 	_detail_text.scroll_to_line(0)
+	# Only as tall as what it says, up to the screen; longer text scrolls.
 	var viewport_size := control.get_viewport_rect().size
-	_detail_text.custom_minimum_size = Vector2(minf(520, viewport_size.x - 64), minf(360, viewport_size.y - 140))
+	var text_width := minf(DETAIL_WIDTH, viewport_size.x - 64.0 - frame.get_minimum_size().x)
+	var font := _detail_text.get_theme_font("normal_font")
+	var wanted := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, text_width, 15).y + 8.0
+	var tallest := maxf(DETAIL_MIN_TEXT_HEIGHT, viewport_size.y - 140.0 - frame.get_minimum_size().y)
+	_detail_text.custom_minimum_size = Vector2(text_width, clampf(wanted, DETAIL_MIN_TEXT_HEIGHT, tallest))
 	_detail_owner = weakref(control)
 	_detail_revision = _revision(control)
+	# A window keeps its last size; a shorter text must not open in a longer one's.
+	_detail.reset_size()
 	_detail.popup_centered()
 	_detail_text.grab_focus()
 	set_process(true)
