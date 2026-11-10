@@ -210,7 +210,7 @@ func _configure_scout_controls() -> void:
 	_highlight_interactions_button.name = "HighlightInteractables"
 	_highlight_interactions_button.text = "Sites · Alt"
 	_highlight_interactions_button.toggle_mode = true
-	_highlight_interactions_button.tooltip_text = "Hold Alt, or toggle here, to label visible sites: Available, Guarded, Visited, Exhausted. Hidden sites stay hidden."
+	_highlight_interactions_button.tooltip_text = "Hold Alt, or toggle here, to name what is in sight: buildings and whether the selected hero can still use them, guards, armies by strength, towns by owner."
 	_highlight_interactions_button.accessibility_name = "Highlight visible interactable sites"
 	_highlight_interactions_button.toggled.connect(func(_enabled): _sync_interaction_highlights())
 	FrontierVisualKit.apply_button(_highlight_interactions_button, "secondary", 90, 26, 12)
@@ -9100,109 +9100,10 @@ func _selected_route_simple_tooltip() -> String:
 		return "%s. %s" % [line, reason]
 	return "%s. Press Enter or Space to commit this route order." % line
 
-func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
-	if not OverworldRules.is_tile_explored(_session, tile.x, tile.y, LevelRules.view_level(_session)):
-		return "%s %d,%d | Unexplored ground | Scout closer" % [prefix, tile.x, tile.y]
-	var terrain := _terrain_name_at(tile.x, tile.y)
-	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
-		return "%s %d,%d | Mapped %s | Out of scout net" % [prefix, tile.x, tile.y, terrain]
-	var hover_order := _hover_tile_order_cue(tile)
-	var town := _town_at(tile.x, tile.y)
-	if not town.is_empty():
-		var town_data := ContentService.get_town(String(town.get("town_id", "")))
-		return _append_hover_order_cue("%s %d,%d | Town: %s | %s | %s" % [
-			prefix,
-			tile.x,
-			tile.y,
-			String(town_data.get("name", town.get("placement_id", "Town"))),
-			OverworldRules.town_control_label(String(town.get("owner", "neutral"))),
-			terrain,
-		], hover_order)
-	var node := _resource_node_at(tile.x, tile.y)
-	if not node.is_empty():
-		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		var surface := OverworldRules.describe_resource_site_surface(_session, node, site)
-		var interaction_surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
-		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
-		var recruit_summary := OverworldRules.describe_recruit_source_compact(_session, node, site)
-		return _append_hover_order_cue("%s %d,%d | %s | %s%s%s%s" % [
-			prefix,
-			tile.x,
-			tile.y,
-			String(site.get("name", "Frontier site")),
-			surface,
-			"" if interaction_surface == "" else " | %s" % interaction_surface,
-			"" if control_summary == "" else " | %s" % control_summary,
-			"" if recruit_summary == "" else " | %s" % recruit_summary,
-		], hover_order)
-	var encounter := _encounter_at(tile.x, tile.y)
-	if not encounter.is_empty():
-		var object_surface := OverworldRules.describe_encounter_object_surface(encounter)
-		var readability := OverworldRules.describe_encounter_compact_readability(_session, encounter)
-		return _append_hover_order_cue("%s %d,%d | %s | %s%s%s" % [
-			prefix,
-			tile.x,
-			tile.y,
-			OverworldRules.encounter_display_name(encounter),
-			terrain,
-			"" if object_surface == "" else " | %s" % object_surface,
-			"" if readability == "" else " | %s" % readability,
-		], hover_order)
-	var artifact_node := _artifact_node_at(tile.x, tile.y)
-	if not artifact_node.is_empty():
-		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return _append_hover_order_cue("%s %d,%d | Artifact: %s | %s | %s | %s | %s" % [
-			prefix,
-			tile.x,
-			tile.y,
-			ArtifactRules.artifact_name(artifact_id),
-			ArtifactRules.artifact_reward_role(artifact_id),
-			ArtifactRules.artifact_effect_summary(artifact_id),
-			ArtifactRules.describe_single_artifact_impact(artifact_id),
-			terrain,
-		], hover_order)
-	return _append_hover_order_cue("%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain], hover_order)
-
-func _append_hover_order_cue(text: String, hover_order: String) -> String:
-	if hover_order.strip_edges() == "":
-		return text
-	return "%s | %s" % [text, hover_order]
-
-func _hover_tile_order_cue(tile: Vector2i) -> String:
-	if not _viewing_hero_level():
-		return "Map inspection only; the active hero is on the other level."
-	var movement = _session.overworld.get("movement", {})
-	var movement_line := "Move %d/%d" % [
-		int(movement.get("current", 0)),
-		int(movement.get("max", 0)),
-	]
-	var hero_pos := OverworldRules.hero_position(_session)
-	if tile == hero_pos:
-		return "Hover order: current hero; %s" % movement_line
-	var order := "select route"
-	var adjacent := maxi(abs(hero_pos.x - tile.x), abs(hero_pos.y - tile.y)) == 1
-	var town := _town_at(tile.x, tile.y)
-	if not town.is_empty():
-		var owner := String(town.get("owner", "neutral"))
-		if owner == "player":
-			order = "select Visit Town"
-		elif adjacent:
-			order = "select Assault Town" if owner == "enemy" else "select Claim Town"
-	var node := _resource_node_at(tile.x, tile.y)
-	if not node.is_empty():
-		order = "select Secure Site" if adjacent else "select route"
-	if not _artifact_node_at(tile.x, tile.y).is_empty():
-		order = "select Recover Artifact" if adjacent else "select route"
-	if not _encounter_at(tile.x, tile.y).is_empty():
-		order = "select Enter Battle" if adjacent else "select route"
-	# Same rule as routing: a blocked tile can still end a route when it holds an
-	# actionable destination (a site on an object body, a free boat).
-	if order == "select route" and OverworldRules.hero_route_tile_blocked(_session, tile.x, tile.y) \
-			and not OverworldRules.hero_route_destination(_session, tile.x, tile.y):
-		return "Hover order: blocked; %s" % movement_line
-	if order == "select route" and _is_adjacent_move_target(hero_pos, tile):
-		order = "select March"
-	return "Hover order: %s, then commit if ready; %s" % [order, movement_line]
+## What the hover card says about a tile: the shared description, in at most
+## three short lines (scripts/ui/OverworldInspection.gd).
+func _tile_visibility_tooltip(tile: Vector2i, _prefix: String) -> String:
+	return Inspection.hover_text(_session, tile, LevelRules.view_level(_session))
 
 func _selected_route() -> Array:
 	var route_state := _ensure_selected_route_state("shell")

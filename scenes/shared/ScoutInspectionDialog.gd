@@ -3,6 +3,8 @@ extends AcceptDialog
 const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 
 const VisualKit := preload("res://scripts/ui/FrontierVisualKit.gd")
+# The description's tone of a status line, as a text tone of the visual kit.
+const TONES := {"ready": "gold", "used": "muted", "guarded": "red", "hostile": "red", "yours": "green", "neutral": "gold", "plain": "body"}
 var snapshot: Dictionary = {}
 var _content: VBoxContainer
 # Mouse button that keeps a held report open; MOUSE_BUTTON_NONE for the normal
@@ -42,8 +44,34 @@ func open_report(report: Dictionary, viewport_size: Vector2, hold_button := MOUS
 	for child in _content.get_children():
 		_content.remove_child(child)
 		child.queue_free()
+	# The shared description of the tile (scripts/ui/OverworldInspection.gd): what
+	# it is, what it gives, where it stands for the selected hero, then its guard.
+	var kind := String(report.get("kind", ""))
 	_add_label(String(report.get("title", "Scout report")), "gold", 18)
-	_add_label("Terrain · %s\nEnemy strength · %s" % [report.get("terrain", "Unknown"), report.get("strength", "Unknown")], "body", 14)
+	var kind_line := String(report.get("subtitle", ""))
+	var ground := String(report.get("terrain", "Unknown"))
+	if kind != "ground" and kind != "unscouted" and ground != "Unknown":
+		kind_line = "On %s" % ground.to_lower() if kind_line == "" else "%s · on %s" % [kind_line, ground.to_lower()]
+	if kind_line != "":
+		_add_label(kind_line, "muted", 13)
+	# A flavour line that already states what the building gives says it once.
+	var gives := String(report.get("gives", ""))
+	var flavour := String(report.get("flavour", ""))
+	if gives != "" and not flavour.to_lower().contains(gives.to_lower()):
+		_add_label(gives, "body", 14)
+	for choice in report.get("choices", []):
+		_add_label("  %s" % String(choice), "body", 13)
+	if String(report.get("status", "")) != "":
+		_add_label(String(report.get("status", "")), String(TONES.get(String(report.get("tone", "plain")), "body")), 14)
+	if String(report.get("flavour", "")) != "":
+		_add_label(String(report.get("flavour", "")), "muted", 13)
+	for mark in report.get("marks", []):
+		_add_label(String(mark), "muted", 13)
+	var guard: Dictionary = report.get("guard", {}) if report.get("guard", {}) is Dictionary else {}
+	if not guard.is_empty() and kind != "army":
+		_add_label(String(guard.get("name", "Guard")), "gold", 15)
+		if String(guard.get("troops", "")) != "":
+			_add_label(String(guard.get("troops", "")), "muted", 13)
 	for stack in report.get("stacks", []):
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
@@ -63,8 +91,16 @@ func open_report(report: Dictionary, viewport_size: Vector2, hold_button := MOUS
 		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		VisualKit.apply_label(label, "body", 14)
 		row.add_child(label)
-	_add_label("Reward / guarded site · %s" % report.get("reward", "None disclosed"), "gold", 13)
-	_add_label(String(report.get("summary", "")), "muted", 13)
+	if not guard.is_empty():
+		var battle: Array = []
+		if kind != "army" and String(guard.get("reward", "")) != "":
+			battle.append("Victory brings %s" % guard.get("reward", ""))
+		if String(guard.get("battlefield", "")) != "":
+			battle.append("Battlefield: %s" % guard.get("battlefield", ""))
+		if not battle.is_empty():
+			_add_label(" · ".join(battle), "body", 13)
+		if not (report.get("stacks", []) as Array).is_empty():
+			_add_label("Strength is an estimate against the selected hero's army; abilities, spells and ground can change the outcome.", "muted", 12)
 	popup_centered(Vector2i(minf(480, viewport_size.x - 48), minf(480, viewport_size.y - 100)))
 	if held_button == MOUSE_BUTTON_NONE:
 		get_ok_button().grab_focus()

@@ -24,6 +24,10 @@ func set_interaction_highlights(enabled: bool) -> void:
 	_refresh_interaction_highlights()
 	_invalidate_dynamic_layer("interaction_highlights")
 
+# The description's tone of a Sites label (scripts/ui/OverworldInspection.gd),
+# as a text tone of the visual kit.
+const INTERACTION_LABEL_TONES := {"ready": "gold", "used": "muted", "guarded": "red", "hostile": "red", "yours": "green", "neutral": "gold", "plain": "body"}
+
 func _refresh_interaction_highlights() -> void:
 	_interaction_highlight_index.clear()
 	if not _interaction_highlights or _session == null: return
@@ -32,19 +36,26 @@ func _refresh_interaction_highlights() -> void:
 
 func _draw_interaction_highlight(tile: Vector2i, rect: Rect2, viewport_rect: Rect2) -> void:
 	if not _interaction_highlights or not _interaction_highlight_index.has(tile): return
-	# Recheck visibility at the draw boundary, including during AI playback.
-	if not _fog_visible(tile.x, tile.y): return
-	var state := String(_interaction_highlight_index[tile].get("state", "Available"))
+	# Recheck visibility at the draw boundary, including during AI playback. A
+	# hero-visit building keeps its label on remembered ground.
+	var row: Dictionary = _interaction_highlight_index[tile]
+	if not _fog_visible(tile.x, tile.y) and not (bool(row.get("remembered", false)) and _fog_explored(tile.x, tile.y)): return
+	var state := String(row.get("label", ""))
+	if state == "": return
 	var font := get_theme_default_font()
 	var font_size := 11
 	var extent := font.get_string_size(state, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	var label_size := Vector2(extent.x + 10, 19)
 	var position := rect.get_center() + Vector2(-label_size.x / 2, rect.size.y * 0.20)
+	# An army often stands beside what it guards: its label hangs a line lower,
+	# so the two do not cover each other.
+	if String(row.get("kind", "")) == "encounter":
+		position.y += label_size.y + 1
 	position.x = clampf(position.x, viewport_rect.position.x, maxf(viewport_rect.position.x, viewport_rect.end.x - label_size.x))
 	position.y = clampf(position.y, viewport_rect.position.y, maxf(viewport_rect.position.y, viewport_rect.end.y - label_size.y))
 	var canvas := _current_draw_canvas_item()
 	canvas.draw_rect(Rect2(position, label_size), Color(0.018, 0.025, 0.022, 0.94))
-	var tone := "red" if state == "Guarded" else ("gold" if state == "Available" else "muted")
+	var tone := String(INTERACTION_LABEL_TONES.get(String(row.get("tone", "plain")), "body"))
 	canvas.draw_string(font, position + Vector2(5, 14), state, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, FrontierVisualKitScript.text_color(tone))
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
