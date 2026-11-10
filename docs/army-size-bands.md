@@ -30,9 +30,9 @@ The table is `kSizeBands` in `overworld_rules_encounter_text.cpp`;
 ## Where the bands replace counts
 
 - The hover and the right-click report (`docs/overworld-tile-description.md`): an
-  army reads "4 groups"; each stack in the report reads "Charcoal Mauls · Band (16
-  to 30)". The report shows the range beside the word so nobody has to learn the
-  table by heart.
+  army reads "4 groups"; each stack in the report reads "Charcoal Mauls · Band".
+  Only the word is shown, never its range (owner decision, 2026-11-10): a later
+  intelligence feature is to sharpen what the player is told.
 - The rules' own army line (`_encounter_army_surface`: "4 groups | a band of
   Charcoal Mauls, ..."), which the battle prompt, the scout report line and the
   selected-tile panel reuse.

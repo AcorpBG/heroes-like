@@ -45,7 +45,7 @@ static func visible_record(session, record: Dictionary, level: int) -> bool:
 ## kind (unscouted, ground, town, site, army, artifact), in_sight, title, subtitle
 ## (what kind of thing), gives (what it gives and how often), status and tone
 ## (ready, used, guarded, hostile, yours, neutral, plain), flavour, terrain, guard
-## ({} or name, stacks (unit, size band and its range, never a count), strength,
+## ({} or name, stacks (unit and size band word, never a count or range), strength,
 ## troops, reward, battlefield), tag, tag_tone and
 ## tag_tile for the Sites label, encounter_key.
 static func describe_tile(session, tile: Vector2i, level: int) -> Dictionary:
@@ -490,12 +490,11 @@ static func _append_stacks(target: Array, stacks: Array, suffix: String) -> void
 		if not stack is Dictionary or int(stack.get("count", 0)) <= 0: continue
 		var unit_id := String(stack.get("unit_id", ""))
 		var unit := ContentService.get_unit(unit_id)
+		# The band's word only: neither the count nor the band's range is told.
 		var band: Dictionary = Rules.army_size_band(int(stack.get("count", 0)))
-		var high := int(band.get("high", -1))
 		target.append({
 			"unit_id": unit_id, "name": String(unit.get("name", unit_id)) + suffix,
 			"size": String(band.get("word", "")).capitalize(),
-			"range": "%d or more" % int(band.get("low", 0)) if high < 0 else "%d to %d" % [int(band.get("low", 0)), high],
 		})
 
 ## The other army against the active hero's, in words ("Unknown" without an army on either side).
