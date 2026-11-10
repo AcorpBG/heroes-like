@@ -51,7 +51,6 @@ None open.
 
 ## Open work
 
-- `town-art-mireclaw-20261110` (in progress): Repaint Mireclaw as the last three towns: an empty bog of still pools, reeds and hummocks (owner's pick, concept D; no river, the antlered beast on dry land), 24 plots planned with the ferry yard as its Shipyard, all 52 building stages as masked edits, BiRefNet mattes, package_town_plot_layers.py; stage backdrop, glows and effects. Owner approved about 3 USD of imggen. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -61,6 +60,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.
 - 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.
 - 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.

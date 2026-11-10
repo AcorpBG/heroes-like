@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-art-mireclaw-20261110",
- "currentSliceTitle": "Mireclaw town repainted as a swamp with its harbour planned in",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T10:08:39Z",
+ "currentSliceTitle": "Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T10:11:47Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-art-mireclaw-20261110",
-   "title": "Mireclaw town repainted as a swamp with its harbour planned in",
-   "status": "in_progress",
-   "goal": "Repaint Mireclaw as the last three towns: an empty bog of still pools, reeds and hummocks (owner's pick, concept D; no river, the antlered beast on dry land), 24 plots planned with the ferry yard as its Shipyard, all 52 building stages as masked edits, BiRefNet mattes, package_town_plot_layers.py; stage backdrop, glows and effects. Owner approved about 3 USD of imggen.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.",
+   "commit": "c393e0abd"
   },
   {
    "id": "ui-army-size-bands-20261110",
