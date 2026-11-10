@@ -39,6 +39,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
+- 2026-11-10: Computer players build no Shipyard in the first week, and only their main army running out of targets makes one wanted (`docs/ai-plays-by-player-rules.md`, "Water").
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 
 ## Questions for the owner
@@ -47,6 +48,7 @@ None open.
 
 ## Open work
 
+- `ai-shipyard-main-army-20261110` (in progress): A computer player's town weighs a Shipyard only when its main army has nothing in reach and no shipyard, at that army's worth against the Shipyard and boat price, never before day 8 (owner, 2026-11-10). Files: ai_hero_rules_turn_moves.cpp, ai_hero_rules_turn_towns.cpp. See `docs/ai-plays-by-player-rules.md`, `docs/water-travel.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

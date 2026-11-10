@@ -87,9 +87,10 @@ static var SHORE_STEP_SHARE: float
 ## reach and no means to pay for a boat: for BOAT_SAVING_DAYS after it the
 ## player's towns keep the boat's price back (`_govern_towns`).
 const BOAT_WANTED_KEY := "ai_boat_wanted_day"
-## The day such an army found no shipyard in reach while one of the player's
-## harbour towns has no Shipyard: for BOAT_SAVING_DAYS after it that town's
-## next build is the Shipyard (`_build_choice`, docs/water-travel.md).
+## The day the main army found nothing in reach and no shipyard while one of
+## the player's harbour towns has no Shipyard: for BOAT_SAVING_DAYS after it
+## that town weighs a Shipyard at the army's worth, from day 8 on
+## (`_build_choice`, docs/ai-plays-by-player-rules.md).
 const HARBOR_WANTED_KEY := "ai_harbor_wanted_day"
 static var BOAT_SAVING_DAYS: int
 ## A guard is considered (and previewed) from this strength margin. With the

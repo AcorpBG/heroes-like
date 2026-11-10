@@ -1011,10 +1011,12 @@ void _note_boat_need(State &state, DictRef session, DictRef context, DictRef ent
 	const DictRef shipyards = dict_or_new(state, surface, key::shipyards);
 	const bool can_pay = !gd::is_empty(state, shipyards) && !gd::is_empty(state, _boat_market(state, session, context, dict_or_new(state, surface, key::boat_cost)));
 	// One of the player's harbour towns has no Shipyard yet (docs/water-travel.md).
+	// Only the main army's idleness counts: a lesser hero with nothing it can
+	// beat on its island is no reason to build one.
 	const Atom controller = context_controller(state, context);
 	const int64_t harbor_day = gd::to_int(state, ai::vget(state, context_state(state, context), key::ai_harbor_wanted_day, int_value(-1000)));
 	bool open_harbor = false;
-	if (nothing_in_reach && harbor_day != ai::session_int(state, session, key::day)) {
+	if (nothing_in_reach && harbor_day != ai::session_int(state, session, key::day) && ai::string_or_empty(state, entry, key::placement_id) == _main_hero_id(state, session, controller)) {
 		for (const Value &owned : gd::items(state, array_value(enemy_turn_rules::_owned_town_entries(state, session, controller)))) {
 			const Value town = ai::vget(state, owned, key::town, Value());
 			if (gd::is_dict(town) && water_travel_rules::town_has_harbor(state, town.ref) && water_travel_rules::town_shipyard_id(state, town.ref) == key::empty) {

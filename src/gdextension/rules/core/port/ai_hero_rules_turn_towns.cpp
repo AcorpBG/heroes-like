@@ -57,10 +57,9 @@ using state::Value;
 namespace key = state::key;
 
 constexpr Atom kScript = key::ai_hero_rules_script;
-// What a Shipyard is worth to a player whose army is stuck on its island
-// (_build_choice): its cost counts 10,000, so it outscores any dwelling or
-// income building and is the town's next build.
-constexpr double kWantedShipyardValue = 60000.0;
+// A computer player builds no Shipyard in the first week (owner decision,
+// 2026-11-10): day 8 opens week 2.
+constexpr int64_t kFirstShipyardDay = 8;
 // HeroCommandRules.TAVERN_OFFER_SIZE.
 
 // d.get(k, {}) / d.get(k, []) whose result is kept: a new container when the
@@ -423,12 +422,54 @@ DictRef _build_tavern(State &state, DictRef session, DictRef context, ArrayRef t
 	return state.new_dict();
 }
 
+// What a Shipyard is worth to the player today (_build_choice): the troops of
+// the main army it would free, counted as a dwelling's troops are, when that
+// army found nothing in reach and no shipyard in the last BOAT_SAVING_DAYS
+// (_note_boat_need). Nothing before week 2, or once the army is gone.
+double _wanted_shipyard_value(State &state, DictRef session, DictRef context) {
+	const int64_t day = ai::session_int(state, session, key::day);
+	const int64_t harbor_day = gd::to_int(state, ai::vget(state, gd::index(state, context, str(key::state)), key::ai_harbor_wanted_day, int_value(-1000)));
+	if (day < kFirstShipyardDay || harbor_day < gd::sub(day, ai::static_int(state, kScript, key::BOAT_SAVING_DAYS))) {
+		return 0.0;
+	}
+	const Atom controller = context_controller(state, context);
+	const Atom main_id = _main_hero_id(state, session, controller);
+	if (main_id == key::empty) {
+		return 0.0;
+	}
+	for (const Value &hero : gd::items(state, array_value(active_hero_entries(state, session, controller)))) {
+		if (!gd::is_dict(hero) || ai::string_or_empty(state, hero.ref, key::placement_id) != main_id) {
+			continue;
+		}
+		Value army;
+		Value stacks;
+		if (!(state.lookup(hero.ref, str(key::enemy_army), army) && gd::is_dict(army) && state.lookup(army.ref, str(key::stacks), stacks))) {
+			return 0.0;
+		}
+		const DictRef troops = state.new_dict();
+		for (const Value &stack : gd::items(state, stacks)) {
+			if (!gd::is_dict(stack)) {
+				continue;
+			}
+			const Atom unit_id = ai::string_or_empty(state, stack.ref, key::unit_id);
+			const int64_t count = gd::int_field(state, stack.ref, key::count, 0);
+			if (unit_id == key::empty || count <= 0) {
+				continue;
+			}
+			state.set(troops, str(unit_id), int_value(gd::add(gd::to_int(state, state.get(troops, str(unit_id), int_value(0))), count)));
+		}
+		return _recruit_set_value(state, troops);
+	}
+	return 0.0;
+}
+
 DictRef _build_in_towns(State &state, DictRef session, DictRef context) {
 	const ArrayRef messages = state.new_array();
 	const ArrayRef events = state.new_array();
 	const DictRef treasury = context_treasury(state, context);
 	ArrayRef towns = overworld_towns(state, session);
 	const ArrayRef entries = enemy_turn_rules::_owned_town_entries(state, session, context_controller(state, context));
+	const double shipyard_value = _wanted_shipyard_value(state, session, context);
 	for (int64_t at = 0; at < state.array_size(entries); ++at) {
 		const Value entry = state.at(entries, at);
 		const int64_t index = gd::to_int(state, ai::vget(state, entry, key::index, int_value(-1)));
@@ -439,9 +480,7 @@ DictRef _build_in_towns(State &state, DictRef session, DictRef context) {
 		if (gd::int_field(state, town, key::last_build_day, 0) == ai::session_int(state, session, key::day)) {
 			continue;
 		}
-		const int64_t harbor_day = gd::to_int(state, ai::vget(state, gd::index(state, context, str(key::state)), key::ai_harbor_wanted_day, int_value(-1000)));
-		const bool wants_shipyard = harbor_day >= gd::sub(ai::session_int(state, session, key::day), ai::static_int(state, kScript, key::BOAT_SAVING_DAYS));
-		const DictRef choice = _build_choice(state, session, town, treasury, state.new_dict(), wants_shipyard);
+		const DictRef choice = _build_choice(state, session, town, treasury, state.new_dict(), shipyard_value);
 		if (gd::is_empty(state, choice)) {
 			continue;
 		}
@@ -455,7 +494,8 @@ DictRef _build_in_towns(State &state, DictRef session, DictRef context) {
 	return messages_events(state, messages, events);
 }
 
-DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values, bool wants_shipyard) {
+DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values, double shipyard_value) {
+	const bool wants_shipyard = shipyard_value > 0.0;
 	const DictRef income_before = _trial_income(state, town);
 	const DictRef growth_before = _trial_growth(state, town);
 	const double weekly_troops_before = _recruit_set_value(state, growth_before);
@@ -544,13 +584,17 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 		}
 		const double opens_value = ai::static_float(state, kScript, key::OPENS_BUILDING_VALUE);
 		value += opens_value * static_cast<double>(_opens_count(state, town, building_id, trial_built));
-		// A Shipyard is worth nothing until an army has run out of things to do
-		// with no shipyard in reach (_note_boat_need); then it is what frees it.
+		// A Shipyard is worth nothing until the main army has run out of things
+		// to do with no shipyard in reach (_note_boat_need); then it is worth the
+		// army it frees, against its own price and the boat's, and competes with
+		// the town's other builds.
+		double freeing_cost = 0.0;
 		if (wants_shipyard && gd::bool_field(state, building, key::shipyard, false)) {
-			value += kWantedShipyardValue;
+			value += shipyard_value;
 			reason = key::shipyard;
+			freeing_cost = _build_value(state, gd::as_dict(field_or_new_dict(state, building, key::boat_cost)));
 		}
-		const double cost_value = compat::engine_max(1.0, _build_value(state, cost));
+		const double cost_value = compat::engine_max(1.0, _build_value(state, cost) + freeing_cost);
 		const double score = value / cost_value;
 		state.set(values, str(building_id), float_value(value));
 		if (score > best_score) {

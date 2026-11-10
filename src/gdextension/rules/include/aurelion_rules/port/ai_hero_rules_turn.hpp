@@ -119,6 +119,7 @@ DictRef _nearest_owned_town(State &state, DictRef session, Atom controller, Vect
 bool _next_to_any(State &state, Vector2i tile, ArrayRef others);
 // nothing_in_reach: the hero's plan found nothing worth doing within a week's
 // travel (_decide_plan), as opposed to stepping aside or waiting behind a friend.
+// Only the main army's marks the day a Shipyard of the player's own is wanted.
 void _note_boat_need(State &state, DictRef session, DictRef context, DictRef entry, bool nothing_in_reach = false);
 DictRef _own_town_at(State &state, DictRef session, Atom controller, DictRef entry);
 void _park(State &state, DictRef session, Atom placement_id, Atom town_id);
@@ -134,7 +135,9 @@ DictRef _wait_by_home(State &state, DictRef session, DictRef context, DictRef en
 
 // Ported in ai_hero_rules_turn_towns.cpp.
 void _append_all(State &state, ArrayRef target, const Value &values);
-DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values, bool wants_shipyard = false);
+// shipyard_value: what a Shipyard is worth to the player today (the troops of
+// the stranded main army, _wanted_shipyard_value); 0 leaves it out.
+DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treasury, DictRef values, double shipyard_value = 0.0);
 DictRef _build_in_towns(State &state, DictRef session, DictRef context);
 DictRef _build_tavern(State &state, DictRef session, DictRef context, ArrayRef town_entries);
 DictRef _create_hero(State &state, DictRef session, DictRef context, DictRef town, Atom hero_id, ArrayRef start_stacks);
