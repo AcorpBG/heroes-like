@@ -110,7 +110,13 @@ python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-ar
 
 ## Incremental snapshot, 2026-11-10: Thornwake town
 
-`2026-11-10-feaae1fc` extends `2026-11-10-2e3c36a9`, written from the owner's checkout at Git revision `feaae1fc6b883906e17a0d42e60a4989b173e26e` after the Thornwake town repaint (slice `town-art-thornwake-20261110`): one ZIP64 archive, 202 files, 81,693,373 bytes, all under `art/towns/source/generated/overhaul/faction_thornwake`. 144 are the repaint's binary sources (the 52 building paintings and their mattes, the emptied backdrop, the concept, the foreground mask and the reference crops); 58 are its tracked prompts, packet and mask scripts as backup copies. Every payload was read back against its SHA-256 and ZIP CRC. The 144 sources are still at their paths in the owner's checkout and in the worktree `encounter-reward-surface-errors-d6ed09`; nothing was removed.
+`2026-11-10-feaae1fc` extends `2026-11-10-2e3c36a9`, written from the owner's checkout at Git revision `feaae1fc6b883906e17a0d42e60a4989b173e26e` after the Thornwake town repaint (slice `town-art-thornwake-20261110`): one ZIP64 archive, 202 files, 81,693,373 bytes, all under `art/towns/source/generated/overhaul/faction_thornwake`. 144 are the repaint's binary sources (the 52 building paintings and their mattes, the emptied backdrop, the concept, the foreground mask and the reference crops); 58 are its tracked prompts, packet and mask scripts as backup copies. Every payload was read back against its SHA-256 and ZIP CRC.
+
+The same day (owner: use the archival tool for source art) `tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-feaae1fc --prefix <folder> --remove --apply` removed the archived loose copies: the 144 Thornwake sources from the owner's checkout (`--prefix art/towns/source/generated/overhaul/faction_thornwake/`) and 1,424 files from the worktree `encounter-reward-surface-errors-d6ed09` (`--prefix art/towns/source/generated/overhaul/`: the sources of all six town repaints, which were painted there, and the sidecars the chain holds). Each file was deleted only after its local copy and its archived payload matched the manifest SHA-256; none differed and the tracked files stayed. The worktree's 288 remaining `.import` sidecars of those paintings, which Godot had written there and no snapshot holds, were deleted as orphans. Neither place has an untracked file under `art/towns/source/generated/overhaul` now, and the content check passes. A retake restores what it needs first, for example:
+
+```text
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-feaae1fc --prefix art/towns/source/generated/overhaul/faction_thornwake/ --apply
+```
 
 ## Tests never need archived sources
 
