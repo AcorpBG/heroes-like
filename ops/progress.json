@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-shipyard-needs-20261110",
- "currentSliceTitle": "A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one; 12 of 143 islands games had changed with no Shipyard built, one to the day cap.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T07:18:34Z",
+ "currentSliceId": "town-art-brasshollow-boatworks-lower-20261110",
+ "currentSliceTitle": "Brasshollow boatworks repainted lower, clear of the T3 hall",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T07:45:42Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-brasshollow-boatworks-lower-20261110",
+   "title": "Brasshollow boatworks repainted lower, clear of the T3 hall",
+   "status": "in_progress",
+   "goal": "The first Brasshollow Shipyard painting rose onto the terrace and hid 27-49% of the T3 hall. Repaint it as a masked edit on the cliff face under the market terrace, nothing above the cliff lip; matte, package, built picture. Owner, 2026-11-10: repaint it lower.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ai-shipyard-needs-20261110",
    "status": "completed",

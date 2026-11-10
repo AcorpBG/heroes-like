@@ -3,7 +3,7 @@
   "faction_id": "faction_brasshollow",
   "scene_id": "slag_canyon",
   "stage": "village",
-  "owner_decision": "2026-11-09: the owner chose the slag canyon (concept B) and approved painting the full Brasshollow set into it. 2026-11-10: the owner had a Shipyard painted as a boatworks down the cliff under the market terrace, its hulls running on rails toward the slag river; the canyon has no water.",
+  "owner_decision": "2026-11-09: the owner chose the slag canyon (concept B) and approved painting the full Brasshollow set into it. 2026-11-10: the owner had a Shipyard painted as a boatworks on the cliff face under the market terrace, its hull on rails running down into the slag river, as the canyon has no water; it was repainted lower the same day, as the first one rose onto the terrace in front of the T3 hall.",
   "generation": {
     "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
     "date": "2026-11-09"
@@ -181,10 +181,10 @@
       185
     ],
     "building_dev_shipyard": [
-      180,
-      766,
-      375,
-      168
+      480,
+      806,
+      340,
+      128
     ]
   },
   "buildings": [
@@ -1860,19 +1860,19 @@
       "id": "building_dev_shipyard",
       "plot_id": "building_dev_shipyard",
       "box": [
-        180,
-        766,
-        375,
-        168
+        480,
+        806,
+        340,
+        128
       ],
       "crop": [
-        0,
-        598,
-        930,
-        504
+        74,
+        654,
+        1152,
+        432
       ],
       "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.png",
-      "source_sha256": "904cf83bc4ab17f1d2a32073055deea2dfd026304145504b0c3d4057abc04615",
+      "source_sha256": "94b9b48a8938f9236bb7dc8384d6adf3fa792b42d43dcf2841b628867ab7044b",
       "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.prompt.txt",
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
@@ -1881,12 +1881,12 @@
       "generation_date": "2026-11-10",
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon_matte.png",
-        "sha256": "60c47e4634426a8f0a2ddd7f07f77626b1cd95bf9c216921aaab866cebb517b0",
+        "sha256": "a31e7771352a34c4ba6c37ba7b00f3aca99831b58cbfc2e96b3bd457a2bb5b53",
         "window": [
-          54,
-          607,
-          736,
-          495
+          226,
+          707,
+          765,
+          379
         ]
       }
     }

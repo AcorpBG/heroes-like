@@ -22659,13 +22659,13 @@
       },
       "building_dev_shipyard": {
         "source_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.png",
-        "source_sha256": "904cf83bc4ab17f1d2a32073055deea2dfd026304145504b0c3d4057abc04615",
+        "source_sha256": "94b9b48a8938f9236bb7dc8384d6adf3fa792b42d43dcf2841b628867ab7044b",
         "source_size": [
-          1270,
-          688
+          1536,
+          576
         ],
         "prompt_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.prompt.txt",
-        "prompt_sha256": "82647c0bc73b982f3d58e7d00e7fc1c94753d5f82e91ad1f3a49a5d160ac27d3",
+        "prompt_sha256": "65659ca354f5158e6f51a48ccbd54b06f22ba8f94f45587c7f9cc1ff8bf83296",
         "generation_date": "2026-11-10",
         "generation_tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
         "reference_inputs": [
@@ -22675,23 +22675,23 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_brasshollow_building_dev_shipyard",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_shipyard.png",
-        "runtime_sha256": "2fec6ca520351c1ae0c88102a52f87e34339458ab99df576583852e7c33b25d4",
+        "runtime_sha256": "9fd70f162d5cc53f7a0e4e6d18c7d61c7475758dac12946da21ceb28c4f0dac1",
         "runtime_size": [
           512,
-          303
+          209
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_shipyard_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_shipyard.png",
-        "icon_sha256": "c67ab466d739bc5481456a351b55552eb8b44bcbe74857536d4a3eb73b1dd385",
+        "icon_sha256": "1500c68a0ca17dc4ff42ebf3b05285f315d841018a055500859e3e678fe19e54",
         "normalized_rect": [
-          0.055664,
-          0.588542,
-          0.300781,
-          0.315972
+          0.141602,
+          0.677951,
+          0.311035,
+          0.225694
         ],
         "ground_anchor": [
-          0.205811,
-          0.894097
+          0.296875,
+          0.893229
         ],
         "modulate": [
           1,
