@@ -63,11 +63,12 @@ None open.
 
 ## Recently completed
 
-- 2026-11-10 `ui-hero-spell-book-20261110` (45e75ab76): The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.
-- 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.
-- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots (27 artifacts moved), usable in town.
-- 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings window, every confirmation window and the hero keys window wear the card frame.
-- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; the skirmish setup scrolls at larger interface scales.
+- 2026-11-10 `ui-battle-spell-book-20261110` (62e6143ae): Battle spell book is the hero menu's open grimoire, one shared view.
+- 2026-11-10 `ui-hero-spell-book-20261110` (45e75ab76): Hero menu's spell page is an open grimoire: a school's spells by tier, the chosen one written out.
+- 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look: card frame, a slot figure per hero, unit close-ups.
+- 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure (27 moved), usable in town.
+- 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings, confirmation and hero keys windows wear the card frame.
+- 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look; skirmish setup scrolls at larger scales.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.
 - 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Hero portrait in the skirmish setup keeps one size; the built maps window shows each map as a picture.
 - 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-hero-spell-book-20261110",
- "currentSliceTitle": "The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.",
+ "currentSliceId": "ui-battle-spell-book-20261110",
+ "currentSliceTitle": "Battle spell book is the hero menu's open grimoire, one shared view.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T17:20:46Z",
+ "updatedAt": "2026-11-10T17:40:53Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,38 +18,45 @@
  },
  "plannedSlices": [
   {
+   "id": "ui-battle-spell-book-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Battle spell book is the hero menu's open grimoire, one shared view.",
+   "commit": "62e6143ae"
+  },
+  {
    "id": "ui-hero-spell-book-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.",
+   "summary": "Hero menu's spell page is an open grimoire: a school's spells by tier, the chosen one written out.",
    "commit": "45e75ab76"
   },
   {
    "id": "ui-hero-exchange-look-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.",
+   "summary": "Hero trading screen wears the hero menu's look: card frame, a slot figure per hero, unit close-ups.",
    "commit": "27ebb2940"
   },
   {
    "id": "ui-hero-menu-rework-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots (27 artifacts moved), usable in town.",
+   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure (27 moved), usable in town.",
    "commit": "1d47aabab"
   },
   {
    "id": "ui-window-card-frames-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "In-game settings window, every confirmation window and the hero keys window wear the card frame.",
+   "summary": "In-game settings, confirmation and hero keys windows wear the card frame.",
    "commit": "08774ca13"
   },
   {
    "id": "ui-settings-column-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Settings are a left column in the dark-and-gold look; the skirmish setup scrolls at larger interface scales.",
+   "summary": "Settings are a left column in the dark-and-gold look; skirmish setup scrolls at larger scales.",
    "commit": "e75200d7f"
   },
   {
