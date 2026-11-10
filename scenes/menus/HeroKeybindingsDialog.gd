@@ -148,8 +148,8 @@ func _build_binding_rows() -> void:
 		_binding_buttons[action] = button
 
 func _apply_theme() -> void:
-	FrontierVisualKit.apply_panel(_panel, "ink", 8)
-	FrontierVisualKit.apply_label(_title_label, "title", 22)
+	_panel.add_theme_stylebox_override("panel", FrontierVisualKit.info_card_style())
+	FrontierVisualKit.apply_label(_title_label, "gold", 22)
 	FrontierVisualKit.apply_label(_preset_label, "muted", 13)
 	FrontierVisualKit.apply_label(_status_label, "gold", 13)
 	FrontierVisualKit.apply_button(_reset_button, "secondary", 154.0, 36.0, 14)

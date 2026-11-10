@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-settings-column-20261110",
- "currentSliceTitle": "Settings are a left column in the dark-and-gold look: rows of pills, volume sliders, Restore defaults, Support bundle, Back. The skirmish setup scrolls at larger interface scales.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T15:01:05Z",
+ "currentSliceId": "ui-window-card-frames-20261110",
+ "currentSliceTitle": "Windows in the card frame",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T15:08:41Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-window-card-frames-20261110",
+   "title": "Windows in the card frame",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-10: the in-game settings window and the confirmation windows in the settings menu's look. Files: scenes/shared/ActivePlaySettingsDialog.gd, scripts/ui/FrontierVisualKit.gd, scenes/menus/SettingsColumn.gd, HeroKeybindingsDialog.gd.",
+   "docs": [
+    "docs/skirmish-setup-screen.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ui-settings-column-20261110",
    "status": "completed",

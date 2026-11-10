@@ -4,6 +4,10 @@ signal closed
 signal setting_changed(setting_id: String)
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const SettingsColumnScript = preload("res://scenes/menus/SettingsColumn.gd")
+## The window is this tall where the screen has the room, so no row scrolls.
+const ACTIVE_PLAY_SETTINGS_PANEL_SIZE := Vector2(620.0, 650.0)
+const ACTIVE_PLAY_SETTINGS_SCREEN_MARGIN := 24.0
 const UI_ART_ACTIVE_PLAY_SETTINGS_FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
 const ACTIVE_PLAY_SETTINGS_FRAME_MODEL := "shared_overworld_parchment_cartographic_frame"
 const ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN := 54
@@ -31,6 +35,9 @@ const ACTIVE_PLAY_SETTINGS_SECTION_LABELS := [&"SoundTitle", &"GameplayTitle", &
 
 var _syncing := false
 var _dragging_volume_sliders: Array[HSlider] = []
+# The view (docs/skirmish-setup-screen.md, Settings): the scene's sliders,
+# pickers and toggles stay, hidden, as its model.
+var _column: SettingsColumnScript
 
 func _ready() -> void:
 	visible = false
@@ -40,6 +47,8 @@ func _ready() -> void:
 	_connect_volume_slider_drags()
 
 func open_dialog() -> void:
+	_ensure_column()
+	_fit_panel()
 	_sync_controls()
 	visible = true
 	set_process_input(true)
@@ -72,8 +81,135 @@ func _option_popup_is_open() -> bool:
 	return false
 
 func _focus_first_control() -> void:
-	if visible and _master_slider != null:
-		_master_slider.grab_focus()
+	if visible and _column != null:
+		var target := _column.entry_control()
+		if target != null:
+			target.grab_focus()
+
+func _ensure_column() -> void:
+	if _column != null:
+		return
+	var content := _settings_scroll.get_parent()
+	for child in content.get_children():
+		child.visible = false
+	_column = SettingsColumnScript.new()
+	_column.name = "SettingsColumn"
+	_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_child(_column)
+	_column.option_chosen.connect(_on_column_option_chosen)
+	_column.toggle_changed.connect(_on_column_toggle_changed)
+	_column.volume_changed.connect(_on_column_volume_changed)
+	_column.back_requested.connect(close_dialog)
+	get_viewport().size_changed.connect(_fit_panel)
+
+func _fit_panel() -> void:
+	var room := get_viewport_rect().size - Vector2.ONE * ACTIVE_PLAY_SETTINGS_SCREEN_MARGIN * 2.0
+	_panel.custom_minimum_size = Vector2(minf(ACTIVE_PLAY_SETTINGS_PANEL_SIZE.x, room.x), minf(ACTIVE_PLAY_SETTINGS_PANEL_SIZE.y, room.y))
+
+func _column_pickers() -> Dictionary:
+	return {
+		"battle_speed": [_battle_speed_picker, _on_battle_playback_speed_selected],
+		"ui_scale": [_ui_scale_picker, _on_ui_scale_selected],
+		"battle_shake": [_battle_shake_picker, _on_battle_camera_shake_selected],
+		"color_cue": [_color_cue_picker, _on_color_cue_selected],
+	}
+
+func _column_toggles() -> Dictionary:
+	return {
+		"high_contrast": [_high_contrast_toggle, _on_high_contrast_toggled],
+		"reduce_motion": [_reduce_motion_toggle, _on_reduce_motion_toggled],
+		"reduce_flashes": [_reduce_flashes_toggle, _on_reduce_flashes_toggled],
+		"reduce_sounds": [_reduce_repetitive_sounds_toggle, _on_reduce_repetitive_sounds_toggled],
+	}
+
+func _column_volumes() -> Dictionary:
+	return {
+		"master": [_master_slider, _on_master_volume_changed],
+		"music": [_music_slider, _on_music_volume_changed],
+		"effects": [_effects_slider, _on_effects_volume_changed],
+	}
+
+func _choice_row(key: String, label: String) -> Dictionary:
+	var picker: OptionButton = _column_pickers()[key][0]
+	var options := []
+	for index in range(picker.get_item_count()):
+		options.append({"id": str(picker.get_item_metadata(index)), "label": picker.get_item_text(index)})
+	return {
+		"kind": "choice", "key": key, "label": label, "options": options,
+		"selected": str(picker.get_selected_metadata()) if picker.selected >= 0 else "",
+		"tooltip": picker.tooltip_text,
+	}
+
+func _switch_row(key: String, label: String) -> Dictionary:
+	var toggle: BaseButton = _column_toggles()[key][0]
+	return {"kind": "switch", "key": key, "label": label, "on": toggle.button_pressed, "tooltip": toggle.tooltip_text}
+
+func _volume_row(key: String, label: String) -> Dictionary:
+	var slider: HSlider = _column_volumes()[key][0]
+	return {"kind": "volume", "key": key, "label": label, "value": slider.value, "tooltip": slider.tooltip_text}
+
+func _sync_column() -> void:
+	if _column == null:
+		return
+	_column.show_settings({
+		"title": _title.text,
+		"back_text": "Close",
+		"back_tooltip": "Return to the game. Changes are already saved.",
+		"theme": "%s|%s" % [SettingsService.high_contrast_ui_enabled(), SettingsService.color_cue_mode_id()],
+		"sections": [
+			{"title": "Sound", "rows": [
+				_volume_row("master", "Master"),
+				_volume_row("music", "Music"),
+				_volume_row("effects", "Effects"),
+			]},
+			{"title": "Game", "rows": [
+				_choice_row("battle_speed", "Battle speed"),
+			]},
+			{"title": "Readability", "rows": [
+				_choice_row("ui_scale", "Interface scale"),
+				_choice_row("battle_shake", "Battle shake"),
+				_choice_row("color_cue", "Color cues"),
+				_switch_row("high_contrast", "High contrast"),
+				_switch_row("reduce_motion", "Reduce motion"),
+				_switch_row("reduce_flashes", "Reduce flashes"),
+				_switch_row("reduce_sounds", "Fewer repeat sounds"),
+			]},
+		],
+		"status": _status.text,
+		"status_tooltip": "Display settings and movement keys are in the main menu.",
+		"actions": [],
+	})
+
+func _on_column_option_chosen(key: String, id: String) -> void:
+	var target: Array = _column_pickers().get(key, [])
+	if target.is_empty():
+		return
+	var picker: OptionButton = target[0]
+	for index in range(picker.get_item_count()):
+		if str(picker.get_item_metadata(index)) == id:
+			picker.select(index)
+			(target[1] as Callable).call(index)
+			return
+
+func _on_column_toggle_changed(key: String, on: bool) -> void:
+	var target: Array = _column_toggles().get(key, [])
+	if target.is_empty():
+		return
+	(target[0] as BaseButton).set_pressed_no_signal(on)
+	(target[1] as Callable).call(on)
+
+## A held slider previews each step and saves once when it is let go.
+func _on_column_volume_changed(key: String, value: float, dragging: bool) -> void:
+	var target: Array = _column_volumes().get(key, [])
+	if target.is_empty():
+		return
+	var slider: HSlider = target[0]
+	if dragging and slider not in _dragging_volume_sliders:
+		_dragging_volume_sliders.append(slider)
+	elif not dragging:
+		_dragging_volume_sliders.erase(slider)
+	slider.set_value_no_signal(value)
+	(target[1] as Callable).call(value)
 
 func _focus_cycle_controls() -> Array:
 	return [
@@ -132,7 +268,7 @@ func _sync_controls() -> void:
 	_status.text = "Saved on this device"
 	_syncing = false
 	_apply_visual_theme()
-	_configure_focus_cycle()
+	_sync_column()
 
 func _sync_option(picker: OptionButton, options: Array, metadata_key: String, fallback: Variant) -> void:
 	picker.clear()
@@ -150,8 +286,10 @@ func _finish_setting_change(result: Dictionary, setting_id: String, defer_sync: 
 	if not bool(result.get("ok", false)):
 		_sync_controls()
 		_status.text = _settings_commit_failure_text(result)
+		_sync_column()
 		return false
 	_status.text = "Saved on this device"
+	_sync_column()
 	setting_changed.emit(setting_id)
 	if defer_sync:
 		call_deferred("_sync_controls")
@@ -286,17 +424,15 @@ func _on_reduce_repetitive_sounds_toggled(enabled: bool) -> void:
 func _apply_visual_theme() -> void:
 	if _panel == null:
 		return
-	FrontierVisualKit.apply_art_panel(
-		_panel,
-		UI_ART_ACTIVE_PLAY_SETTINGS_FRAME,
-		"ink",
-		ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN,
-		0,
-		Color(0.82, 0.78, 0.70, 1.0)
-	)
+	var card := FrontierVisualKit.info_card_style().duplicate()
+	card.set_content_margin_all(14)
+	_panel.add_theme_stylebox_override("panel", card)
 	FrontierVisualKit.apply_label(_title, "title", 20)
 	FrontierVisualKit.apply_label(_status, "muted", 12)
 	for label in find_children("*", "Label", true, false):
+		# The column's texts are its own to dress.
+		if _column != null and _column.is_ancestor_of(label):
+			continue
 		if label is Label and label != _title and label != _status:
 			var tone := "gold" if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else "body"
 			var font_size := 15 if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else 13

@@ -110,13 +110,32 @@ colour cues change) dressed the dock as the old board again; it now ends by givi
 an open column its card frame back, and the settings column rebuilds its rows in
 the new colours.
 
+## The windows
+
+Owner, 2026-11-10: the settings window inside a game and the confirmation windows
+in the same look.
+
+- **Settings inside a game** (`scenes/shared/ActivePlaySettingsDialog.gd`, opened
+  from the map and from a battle): the settings column in the card's frame, with
+  the settings that window had (Sound; battle speed; Readability) and Close. Its
+  sliders, pickers and toggles stay, hidden, as the model, as in the main menu.
+  The window is 620 by 650, less where the screen is smaller; then its rows scroll.
+- **Confirmation windows** (`FrontierVisualKit.apply_confirmation_dialog`, every
+  window that asks before an action: end turn, restore defaults, keep display
+  settings, delete a save, overwrite a save, withdraw, recruit, level up and the
+  rest): one card frames the window and its title strip, the title in gold; the
+  window's own picture is clear so the card shows through, the content keeps off
+  the frame, the buttons have a least size, and the close cross is gone (the
+  second button closes). In high contrast the plain panel stays.
+- **Hero movement keys**: the card's frame.
+
+In the settings column the arrow keys move along a row and to the chosen value of
+the row above or below, Tab goes through every control, and the focus stays in
+the column (`SettingsColumn._wire_focus`).
+
 ## Not in this slice
 
 - The campaign and guide boards keep the cartography board.
-- The confirmation windows (keep display settings, restore defaults, delete a
-  save) and the hero movement keys window keep the game's shared window frame.
-- The settings window inside a game (`scenes/shared/ActivePlaySettingsDialog.gd`)
-  is its own surface and is unchanged.
 - In high contrast the logo's panel shows behind the top of a column.
 - Stats have no icons; the four numbers are labelled in words.
 - `tests/menu_outcome_visual_smoke.gd` and other layout tests of the old boards
@@ -135,4 +154,8 @@ settings column: every kind of row driven (battle speed, interface scale, colour
 cues, high contrast, reduce motion, music volume), the saved values read back from
 the settings service, Restore defaults confirmed, a window mode change made by
 keyboard and reverted with the focus back on its row, the keys window opened; the
-three columns at the 130% interface scale.
+three columns at the 130% interface scale. For the windows: restore defaults,
+keep display settings, the keys window, end turn on the map, and the settings
+inside a game with a pill, a switch and a volume set and read back, in the normal
+look and in high contrast. The battle's windows, the recruit, save and level-up
+windows share the function and were not opened.

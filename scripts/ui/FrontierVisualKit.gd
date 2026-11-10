@@ -193,6 +193,9 @@ const CONFIRMATION_DIALOG_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_do
 const CONFIRMATION_DIALOG_TEXTURE_MARGIN := 24
 const CONFIRMATION_DIALOG_CONTENT_MARGIN := 10
 const CONFIRMATION_DIALOG_FRAME_MODULATE := Color(0.92, 0.94, 0.96, 0.98)
+## The strip of the card that holds a confirmation window's title.
+const CONFIRMATION_DIALOG_TITLE_HEIGHT := 52
+const CONFIRMATION_DIALOG_INSET := 26
 const ITEM_LIST_ROW_MODEL := "compact_enamel_gold_registration_inlay"
 const ITEM_LIST_ROW_CORNER_RADIUS := 4
 const ITEM_LIST_ROW_ACCENT_WIDTH := 4
@@ -472,16 +475,47 @@ static func apply_confirmation_dialog(dialog: ConfirmationDialog, confirm_role: 
 	if dialog == null:
 		return
 	var resolved_confirm_role := "danger" if confirm_role == "danger" else "primary"
-	var frame_style := texture_panel_style(
-		CONFIRMATION_DIALOG_FRAME_PATH,
-		"ink",
-		CONFIRMATION_DIALOG_TEXTURE_MARGIN,
-		CONFIRMATION_DIALOG_CONTENT_MARGIN,
-		CONFIRMATION_DIALOG_FRAME_MODULATE
-	)
-	dialog.add_theme_stylebox_override("panel", frame_style)
-	dialog.add_theme_stylebox_override("embedded_border", frame_style.duplicate())
+	var card := info_card_style()
+	if card is StyleBoxTexture:
+		# One card frames the window and its title strip; inside, the panel is
+		# only the inset that keeps the content off the frame.
+		var border: StyleBoxTexture = card.duplicate()
+		border.expand_margin_top = CONFIRMATION_DIALOG_TITLE_HEIGHT
+		var inset := StyleBoxEmpty.new()
+		inset.content_margin_left = CONFIRMATION_DIALOG_INSET
+		inset.content_margin_right = CONFIRMATION_DIALOG_INSET
+		inset.content_margin_bottom = CONFIRMATION_DIALOG_INSET - 4
+		inset.content_margin_top = 2
+		dialog.add_theme_stylebox_override("panel", inset)
+		# The card is drawn behind the window's own picture, which is clear.
+		dialog.transparent_bg = true
+		dialog.add_theme_stylebox_override("embedded_border", border)
+		dialog.add_theme_stylebox_override("embedded_unfocused_border", border)
+		dialog.add_theme_constant_override("title_height", CONFIRMATION_DIALOG_TITLE_HEIGHT)
+		dialog.add_theme_font_size_override("title_font_size", 20)
+		# Cancel closes the window; the frame's corner stays clear.
+		dialog.add_theme_icon_override("close", _blank_icon())
+		dialog.add_theme_icon_override("close_pressed", _blank_icon())
+	else:
+		# High contrast: the plain ink panel, with the window's own title strip.
+		var frame_style := texture_panel_style(
+			CONFIRMATION_DIALOG_FRAME_PATH,
+			"ink",
+			CONFIRMATION_DIALOG_TEXTURE_MARGIN,
+			CONFIRMATION_DIALOG_CONTENT_MARGIN,
+			CONFIRMATION_DIALOG_FRAME_MODULATE
+		)
+		dialog.add_theme_stylebox_override("panel", frame_style)
+		dialog.transparent_bg = false
+		dialog.add_theme_stylebox_override("embedded_border", frame_style.duplicate())
+		dialog.remove_theme_stylebox_override("embedded_unfocused_border")
+		dialog.remove_theme_constant_override("title_height")
+		dialog.remove_theme_font_size_override("title_font_size")
+		dialog.remove_theme_icon_override("close")
+		dialog.remove_theme_icon_override("close_pressed")
 	dialog.add_theme_color_override("title_color", text_color("gold"))
+	dialog.add_theme_constant_override("buttons_min_width", 132)
+	dialog.add_theme_constant_override("buttons_min_height", 34)
 	var message_label := dialog.get_label()
 	if message_label != null:
 		apply_label(message_label, "body")
@@ -491,6 +525,15 @@ static func apply_confirmation_dialog(dialog: ConfirmationDialog, confirm_role: 
 	var confirm_button := dialog.get_ok_button()
 	if confirm_button != null:
 		_apply_button_theme(confirm_button, resolved_confirm_role)
+
+static var _blank_icon_texture: ImageTexture = null
+
+static func _blank_icon() -> ImageTexture:
+	if _blank_icon_texture == null:
+		var image := Image.create(1, 1, false, Image.FORMAT_RGBA8)
+		image.fill(Color(0, 0, 0, 0))
+		_blank_icon_texture = ImageTexture.create_from_image(image)
+	return _blank_icon_texture
 
 static func configure_focus_cycle(surfaces: Array) -> Array:
 	var controls: Array = []

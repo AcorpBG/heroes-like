@@ -32,6 +32,8 @@ var _back_button: Button
 # key -> {kind, shell, ids}; a row is rebuilt only when what it offers changes.
 var _rows := {}
 var _layout_key := ""
+var _back_text := "Back"
+var _back_tooltip := ""
 var _dragging := {}
 
 func _ready() -> void:
@@ -90,8 +92,12 @@ func ensure_visible(control: Control) -> void:
 ## by kind, "choice": options ([{id, label}]) and selected; "switch": on;
 ## "volume": value (0 to 100); "button": text. status; actions ([{key, text,
 ## tooltip, role}]); theme (the contrast and colour cue modes: the column is
-## rebuilt when they change, as its colours do).
+## rebuilt when they change, as its colours do). title and back_text name the
+## column and its last button where "Settings" and "Back" do not fit.
 func show_settings(state: Dictionary) -> void:
+	_title.text = String(state.get("title", "Settings"))
+	_back_text = String(state.get("back_text", "Back"))
+	_back_tooltip = String(state.get("back_tooltip", "Return to the main menu. Changes are already saved."))
 	var sections: Array = state.get("sections", [])
 	var layout_key := "%s|%s" % [String(state.get("theme", "")), str(sections.map(func(section): return [section.get("title", ""), section.get("rows", []).map(func(row): return row.get("key", ""))]))]
 	if layout_key != _layout_key:
@@ -110,6 +116,57 @@ func show_settings(state: Dictionary) -> void:
 	_status.text = String(state.get("status", ""))
 	_status.tooltip_text = "%s\n%s" % [_status.text, String(state.get("status_tooltip", ""))]
 	_sync_actions(state.get("actions", []))
+	_wire_focus()
+
+## Arrow keys move along a row and to the chosen control of the row above or
+## below, Tab goes through every control, and the focus stays in the column.
+func _wire_focus() -> void:
+	if not is_inside_tree():
+		return
+	var rows: Array = []
+	for key in _rows:
+		var entry: Dictionary = _rows[key]
+		var controls: Array = []
+		if String(entry.kind) == "volume":
+			controls.append(entry.slider)
+		else:
+			for pill in entry.shell.get_children():
+				if pill is Button:
+					controls.append(pill)
+		if not controls.is_empty():
+			rows.append(controls)
+	var foot: Array = []
+	for button in _actions.get_children():
+		if button is Button:
+			foot.append(button)
+	if not foot.is_empty():
+		rows.append(foot)
+	var every: Array = []
+	for row in rows:
+		every.append_array(row)
+	for row_index in range(rows.size()):
+		var row: Array = rows[row_index]
+		var above := _row_stop(rows[(row_index - 1 + rows.size()) % rows.size()])
+		var below := _row_stop(rows[(row_index + 1) % rows.size()])
+		for index in range(row.size()):
+			var control: Control = row[index]
+			control.focus_neighbor_top = control.get_path_to(above)
+			control.focus_neighbor_bottom = control.get_path_to(below)
+			# A slider takes left and right for its value.
+			if not (control is Slider):
+				control.focus_neighbor_left = control.get_path_to(row[maxi(index - 1, 0)])
+				control.focus_neighbor_right = control.get_path_to(row[mini(index + 1, row.size() - 1)])
+	for index in range(every.size()):
+		var control: Control = every[index]
+		control.focus_next = control.get_path_to(every[(index + 1) % every.size()])
+		control.focus_previous = control.get_path_to(every[(index - 1 + every.size()) % every.size()])
+
+## Where the focus lands in a row: its chosen pill, else its first control.
+func _row_stop(row: Array) -> Control:
+	for control in row:
+		if control is Button and control.toggle_mode and control.button_pressed:
+			return control
+	return row[0]
 
 func _build(sections: Array) -> void:
 	for child in _body.get_children():
@@ -260,11 +317,11 @@ func _sync_actions(actions: Array) -> void:
 		_actions.add_child(spacer)
 		_back_button = Button.new()
 		_back_button.name = "SettingsBack"
-		_back_button.text = "Back"
-		_back_button.tooltip_text = "Return to the main menu. Changes are already saved."
 		VisualKit.apply_button(_back_button, "primary", 140, 40, 16)
 		_back_button.pressed.connect(func(): back_requested.emit())
 		_actions.add_child(_back_button)
+	_back_button.text = _back_text
+	_back_button.tooltip_text = _back_tooltip
 	for action in actions:
 		for button in _actions.get_children():
 			if button is Button and String(button.get_meta("key", "")) == String(action.get("key", "")):
