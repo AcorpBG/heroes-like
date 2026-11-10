@@ -35,21 +35,29 @@ Pages:
 - **Artifacts**: the figure with a slot where each thing is worn (head, neck,
   cloak, chest, two hands, two rings, feet, a banner beside it), four trinket
   slots, the sets the hero has pieces of, and the backpack as a row along the
-  foot. An empty slot shows the outline of what it takes. A click picks a slot or
-  an item and the card at the right reads it: what it gives, its story, its
-  family, and for a backpack item what wearing it would change, with a Wear, Swap
-  in or Stow button; a double click does the same. Picking an empty slot dims
-  what in the backpack does not fit it.
+  foot. An empty slot shows the outline of what it takes. The card at the right
+  reads whatever the mouse is over, at once: what it gives, its story, its
+  family, and for a backpack item what wearing it would change; the tile's
+  tooltip says the same. A click picks a slot or an item, and the card returns to
+  it when the mouse leaves, with its Wear, Swap in or Stow button; a double click
+  does the same. Picking an empty slot dims what in the backpack does not fit it.
+  Artifacts are dragged: from the backpack onto a slot of their kind, from a slot
+  to another slot of its kind (two worn there swap), and from a slot onto the
+  backpack. While one is dragged the slots it fits stay lit and the others dim; a
+  slot of another kind refuses it.
 - **Specialties**: pending choices first, as buttons; then a card for each
   learned specialty with its insignia, rank and what it gives; then the hero's
   identity line, home ground and leanings.
 - **Spells**: the known spells as icons, map spells and battle spells apart; the
-  card at the right reads the chosen one (what it does, its cost, whether it can
-  be cast now) and casts a map spell.
+  card at the right reads the spell under the mouse, else the chosen one (what it
+  does, its cost, whether it can be cast now) and casts a map spell.
 
 The menu never changes the session: it emits what was asked and its owning screen
 runs the order and hands back a fresh snapshot (`refresh_hero`), which keeps the
-page and what was picked. Escape closes it; arrow keys and Tab cannot carry the
+page and what was picked. A drop onto a slot is the order
+`wear_artifact:<slot>:<artifact id>` (`ArtifactRules.perform_management_action`,
+native: into that slot from the backpack or from another slot); a drop onto the
+backpack is the stow order. Escape closes it; arrow keys and Tab cannot carry the
 focus to the screen behind it.
 
 ## In town
@@ -103,8 +111,8 @@ in the source art archive).
 
 ## Not in this slice
 
-- Artifacts are not dragged between slots; a click and a button, or a double
-  click, wears and stows them.
+- An artifact placed by dragging plays no cue on the map or in town, as the
+  button's orders do.
 - The army bar's All, Half, One and Exact buttons and the hero exchange screen
   keep their older look.
 - At a window lower than about 720 pixels the artifact page is taller than the
@@ -117,6 +125,9 @@ in the source art archive).
 In the game at 1920 by 1080, on a generated map: every page on the map; a stack
 picked; an artifact worn from the backpack into the head slot and one stowed in
 town, each through the rules; an empty slot picked; the town's menu; the hero
-exchange screen with two heroes. A hero saved with the five old slots and three
+exchange screen with two heroes; artifacts dragged with the mouse from the
+backpack to a slot, to a slot of another kind (refused), between two hands (they
+swap), between trinket slots and back to the backpack, on the map and in town,
+and the card reading the item under the mouse. A hero saved with the five old slots and three
 moved artifacts read back with each in its new slot. Six seeds played the same in
 the game and in the match runner. Content check and core suite.

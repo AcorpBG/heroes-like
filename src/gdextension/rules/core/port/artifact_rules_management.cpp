@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <string>
 
 namespace aurelion::rules::port {
 
@@ -77,6 +78,15 @@ DictRef perform_management_action(State &state, DictRef hero_state, Atom action_
 	}
 	if (gd::begins_with(state, action_id, key::unequip_artifact)) {
 		return unequip_artifact(state, hero_state, gd::trim_prefix(state, action_id, key::unequip_artifact));
+	}
+	// "wear_artifact:<slot>:<artifact id>": into that slot, from the pack or from
+	// another slot (dragging in the hero menu, docs/hero-screen.md).
+	if (gd::begins_with(state, action_id, key::wear_artifact)) {
+		const std::string order = state.text(gd::trim_prefix(state, action_id, key::wear_artifact));
+		const size_t colon = order.find(':');
+		if (colon != std::string::npos) {
+			return equip_artifact_in_slot(state, hero_state, state.intern(order.substr(colon + 1)), state.intern(order.substr(0, colon)));
+		}
 	}
 	return hero_result(state, false, ensured_copy(state, hero_state), key::that_artifact_order_is_not_supported);
 }
@@ -242,6 +252,16 @@ Atom artifact_id_for_management_action(State &state, DictRef hero_state, Atom ac
 		const Atom inventory_artifact_id = gd::trim_prefix(state, action_id, key::equip_artifact);
 		const DictRef location = locate_artifact(state, hero_state, inventory_artifact_id);
 		return string_of_field(state, location, key::location, key::missing) == key::inventory ? inventory_artifact_id : static_cast<Atom>(key::empty);
+	}
+	if (gd::begins_with(state, action_id, key::wear_artifact)) {
+		const std::string order = state.text(gd::trim_prefix(state, action_id, key::wear_artifact));
+		const size_t colon = order.find(':');
+		if (colon == std::string::npos) {
+			return key::empty;
+		}
+		const Atom worn_artifact_id = state.intern(order.substr(colon + 1));
+		const DictRef location = locate_artifact(state, hero_state, worn_artifact_id);
+		return string_of_field(state, location, key::location, key::missing) != key::missing ? worn_artifact_id : static_cast<Atom>(key::empty);
 	}
 	if (gd::begins_with(state, action_id, key::unequip_artifact)) {
 		const Atom slot = gd::trim_prefix(state, action_id, key::unequip_artifact);

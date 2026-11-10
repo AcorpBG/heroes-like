@@ -65,6 +65,7 @@ const HAIRLINE := Color(0.83, 0.68, 0.36, 0.45)
 const TILE_FILL := Color(0.075, 0.062, 0.05, 0.96)
 const TILE_HOVER := Color(0.14, 0.115, 0.085, 0.98)
 const CARD_FILL := Color(0.06, 0.05, 0.04, 0.6)
+const DRAG_ARTIFACT := "hero_menu_artifact"
 
 var hero: Dictionary = {}
 ## Live orders for an interactive menu: spell_actions, artifact_actions,
@@ -85,7 +86,13 @@ var _picked_stack := -1
 var _picked_slot := ""
 var _picked_artifact := ""
 var _picked_spell := ""
+# What the mouse is over, shown in the page's card until it leaves.
+var _hover_stack := -1
+var _hover_spell := ""
 var _last_focus: Control
+# The worn slots' tiles, and the kind of the artifact being dragged.
+var _slot_tiles := {}
+var _dragged_kind := ""
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -151,6 +158,12 @@ func close_sheet() -> void:
 	if is_instance_valid(previous) and previous.is_visible_in_tree():
 		previous.grab_focus()
 	closed.emit()
+
+func _notification(what: int) -> void:
+	# A drag ended, dropped or not: the slots stop showing where it could go.
+	if what == NOTIFICATION_DRAG_END and _dragged_kind != "":
+		_dragged_kind = ""
+		_mark_drop_slots()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -465,9 +478,16 @@ func _build_army(page: VBoxContainer) -> void:
 					for other in row.get_children():
 						if other is Button: other.set_pressed_no_signal(other == tile)
 					_show_stack(detail))
+				tile.mouse_entered.connect(func():
+					_hover_stack = index
+					_show_stack(detail))
+				tile.mouse_exited.connect(func():
+					_hover_stack = -1
+					_show_stack(detail))
 			row.add_child(tile)
 	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(detail)
+	_hover_stack = -1
 	if _stack(_picked_stack).is_empty():
 		_picked_stack = -1
 		for stack in hero.get("inspection_army_slots", []):
@@ -485,8 +505,10 @@ func _stack(slot_index: int) -> Dictionary:
 	return {}
 
 func _show_stack(detail: PanelContainer) -> void:
+	if not is_instance_valid(detail):
+		return
 	_clear(detail)
-	var stack := _stack(_picked_stack)
+	var stack := _stack(_hover_stack if _hover_stack >= 0 else _picked_stack)
 	if stack.is_empty():
 		_label(detail, "No troops in this army.", 15, "muted")
 		return
@@ -617,14 +639,16 @@ func _build_artifacts(page: VBoxContainer) -> void:
 		var tile := _tile(Vector2(56.0, 56.0), _texture(Artifacts.artifact_icon_path(artifact_id)), null)
 		tile.name = "Pack_%s" % artifact_id
 		tile.set_meta("artifact_id", artifact_id)
-		tile.tooltip_text = "%s\n%s" % [Artifacts.artifact_name(artifact_id), Artifacts.describe_artifact_short(artifact_id)]
+		tile.tooltip_text = _artifact_tooltip(artifact_id)
 		pack.add_child(tile)
 		pack_tiles[artifact_id] = tile
+	var pack_drops: Array[Control] = [pack_scroll]
 	for index in range(maxi(0, 10 - inventory.size())):
 		var blank := _tile(Vector2(56.0, 56.0), null, null)
 		blank.disabled = true
 		blank.focus_mode = Control.FOCUS_NONE
 		pack.add_child(blank)
+		pack_drops.append(blank)
 
 	var show := func():
 		for slot in tiles:
@@ -636,15 +660,27 @@ func _build_artifacts(page: VBoxContainer) -> void:
 			pack_tile.set_pressed_no_signal(artifact_id == _picked_artifact and _picked_slot == "")
 			pack_tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if wanted_kind == "" or Artifacts.artifact_slot(artifact_id) == wanted_kind else Color(0.55, 0.55, 0.55, 0.8)
 		_show_artifact(detail)
+	_slot_tiles = tiles
+	# The card reads what the mouse is over, and what is picked once it leaves.
+	var read_picked := func(): _show_artifact(detail)
 	for slot in tiles:
 		var tile := tiles[slot] as Button
+		var worn_id := String(equipped.get(slot, ""))
 		tile.pressed.connect(func():
 			_picked_slot = slot
-			_picked_artifact = String(equipped.get(slot, ""))
+			_picked_artifact = worn_id
 			show.call())
 		tile.gui_input.connect(func(event: InputEvent):
 			if event is InputEventMouseButton and event.double_click and event.button_index == MOUSE_BUTTON_LEFT:
 				_request_artifact_order("unequip_artifact:%s" % slot))
+		tile.mouse_entered.connect(func(): _show_artifact(detail, slot, worn_id))
+		tile.mouse_exited.connect(read_picked)
+		# Drag a worn artifact to another slot of its kind or to the backpack; a
+		# slot takes what fits it, from the backpack or from another slot.
+		tile.set_drag_forwarding(
+			func(_at: Vector2): return _artifact_drag(tile, slot, worn_id),
+			func(_at: Vector2, data: Variant): return _slot_takes(slot, data),
+			func(_at: Vector2, data: Variant): _drop_on_slot(slot, data))
 	for artifact_id in pack_tiles:
 		var tile := pack_tiles[artifact_id] as Button
 		tile.pressed.connect(func():
@@ -654,7 +690,67 @@ func _build_artifacts(page: VBoxContainer) -> void:
 		tile.gui_input.connect(func(event: InputEvent):
 			if event is InputEventMouseButton and event.double_click and event.button_index == MOUSE_BUTTON_LEFT:
 				_request_artifact_order("equip_artifact:%s" % artifact_id))
+		tile.mouse_entered.connect(func(): _show_artifact(detail, "", artifact_id))
+		tile.mouse_exited.connect(read_picked)
+		pack_drops.append(tile)
+	for target in pack_drops:
+		var own_id := String(target.get_meta("artifact_id", ""))
+		target.set_drag_forwarding(
+			func(_at: Vector2): return _artifact_drag(target, "", own_id),
+			func(_at: Vector2, data: Variant): return _pack_takes(data),
+			func(_at: Vector2, data: Variant): _drop_on_pack(data))
 	show.call()
+
+func _can_order_artifacts() -> bool:
+	return orders.has("artifact_actions")
+
+func _artifact_drag(source: Control, slot: String, artifact_id: String) -> Variant:
+	if artifact_id == "" or not _can_order_artifacts():
+		return null
+	var preview := _frame(_texture(Artifacts.artifact_icon_path(artifact_id)), Vector2(58.0, 58.0), false)
+	preview.modulate = Color(1.0, 1.0, 1.0, 0.92)
+	source.set_drag_preview(preview)
+	_dragged_kind = Artifacts.artifact_slot(artifact_id)
+	_mark_drop_slots()
+	return {"type": DRAG_ARTIFACT, "artifact_id": artifact_id, "slot": slot}
+
+func _slot_takes(slot: String, data: Variant) -> bool:
+	return (
+		data is Dictionary and String(data.get("type", "")) == DRAG_ARTIFACT and _can_order_artifacts()
+		and String(data.get("slot", "")) != slot
+		and Artifacts.artifact_slot(String(data.get("artifact_id", ""))) == _slot_kind(slot)
+	)
+
+func _drop_on_slot(slot: String, data: Variant) -> void:
+	if not _slot_takes(slot, data):
+		return
+	_picked_artifact = String(data.artifact_id)
+	_picked_slot = slot
+	artifact_action_requested.emit("wear_artifact:%s:%s" % [slot, String(data.artifact_id)])
+
+func _pack_takes(data: Variant) -> bool:
+	return data is Dictionary and String(data.get("type", "")) == DRAG_ARTIFACT and _can_order_artifacts() and String(data.get("slot", "")) != ""
+
+func _drop_on_pack(data: Variant) -> void:
+	if not _pack_takes(data):
+		return
+	_picked_artifact = String(data.artifact_id)
+	_picked_slot = ""
+	artifact_action_requested.emit("unequip_artifact:%s" % String(data.slot))
+
+## While an artifact is dragged the slots it fits stay lit and the rest dim.
+func _mark_drop_slots() -> void:
+	for slot in _slot_tiles:
+		var tile = _slot_tiles[slot]
+		if is_instance_valid(tile):
+			(tile as Control).modulate = Color(1.0, 1.0, 1.0, 1.0) if _dragged_kind == "" or _slot_kind(String(slot)) == _dragged_kind else Color(0.45, 0.45, 0.45, 0.75)
+
+## What an artifact gives and its story: the hover text of its tile.
+func _artifact_tooltip(artifact_id: String) -> String:
+	var parts := Artifacts.describe_artifact(artifact_id).split(" | ")
+	if parts.size() >= 4:
+		return "%s\n%s\n%s" % [Artifacts.artifact_name(artifact_id), parts[parts.size() - 1], parts[parts.size() - 2]]
+	return "%s\n%s" % [Artifacts.artifact_name(artifact_id), Artifacts.describe_artifact_short(artifact_id)]
 
 func _slot_kind(slot: String) -> String:
 	for kind in Artifacts.SLOTS_BY_KIND:
@@ -670,7 +766,7 @@ func _slot_tile(slot: String, artifact_id: String, tile_size: Vector2) -> Button
 	tile.set_meta("slot", slot)
 	tile.set_meta("artifact_id", artifact_id)
 	var slot_name := String(SLOT_NAMES.get(slot, slot.capitalize()))
-	tile.tooltip_text = "%s: %s\n%s" % [slot_name, Artifacts.artifact_name(artifact_id), Artifacts.describe_artifact_short(artifact_id)] if artifact_id != "" else "%s: empty. Takes a %s." % [slot_name, String(KIND_NAMES.get(_slot_kind(slot), "trinket"))]
+	tile.tooltip_text = "%s: %s" % [slot_name, _artifact_tooltip(artifact_id)] if artifact_id != "" else "%s: empty. Takes a %s." % [slot_name, String(KIND_NAMES.get(_slot_kind(slot), "trinket"))]
 	tile.accessibility_name = tile.tooltip_text
 	return tile
 
@@ -679,16 +775,23 @@ func _request_artifact_order(order_id: String) -> void:
 	if not order.is_empty() and not bool(order.get("disabled", false)):
 		artifact_action_requested.emit(order_id)
 
-func _show_artifact(detail: PanelContainer) -> void:
+## The card of the artifact page: the hovered slot or item when one is given,
+## else what is picked.
+func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_artifact: String = "") -> void:
+	if not is_instance_valid(detail):
+		return
+	var hovering := hovered_slot != "?"
+	var at_slot := hovered_slot if hovering else _picked_slot
+	var item_id := hovered_artifact if hovering else _picked_artifact
 	_clear(detail)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 8)
 	detail.add_child(column)
 	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
-	if _picked_artifact == "":
-		if _picked_slot != "":
-			_label(column, String(SLOT_NAMES.get(_picked_slot, "Slot")), 20, "gold")
-			var kind := _slot_kind(_picked_slot)
+	if item_id == "":
+		if at_slot != "":
+			_label(column, String(SLOT_NAMES.get(at_slot, "Slot")), 20, "gold")
+			var kind := _slot_kind(at_slot)
 			var fitting := 0
 			for artifact_id in hero.get("artifacts", {}).get("inventory", []):
 				if Artifacts.artifact_slot(String(artifact_id)) == kind: fitting += 1
@@ -701,22 +804,22 @@ func _show_artifact(detail: PanelContainer) -> void:
 		_label(column, "%d worn · %d carried" % [worn, (hero.get("artifacts", {}).get("inventory", []) as Array).size()], 18, "gold")
 		var summary := _label(column, Artifacts.describe_impact_summary(hero.duplicate(true)), 14, "body")
 		summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var hint := _label(column, "Pick a slot or an item to read it%s." % (", and wear or stow it with its button or a double click" if is_interactive() else ""), 13, "muted")
+		var hint := _label(column, "Point at a slot or an item to read it%s." % (". Drag it to wear, move or stow it; a double click or its button does the same" if _can_order_artifacts() else ""), 13, "muted")
 		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		return
-	var artifact := ContentService.get_artifact(_picked_artifact)
+	var artifact := ContentService.get_artifact(item_id)
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 12)
 	column.add_child(head)
-	head.add_child(_frame(_texture(Artifacts.artifact_icon_path(_picked_artifact)), Vector2(84.0, 84.0), false))
+	head.add_child(_frame(_texture(Artifacts.artifact_icon_path(item_id)), Vector2(84.0, 84.0), false))
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.add_theme_constant_override("separation", 2)
 	head.add_child(titles)
-	var title := _label(titles, Artifacts.artifact_name(_picked_artifact), 19, "gold")
+	var title := _label(titles, Artifacts.artifact_name(item_id), 19, "gold")
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_label(titles, "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(_picked_artifact), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], 13, "muted")
-	_label(titles, "Worn: %s" % String(SLOT_NAMES.get(_picked_slot, "")) if _picked_slot != "" else "In the backpack", 13, "body")
+	_label(titles, "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(item_id), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], 13, "muted")
+	_label(titles, "Worn: %s" % String(SLOT_NAMES.get(at_slot, "")) if at_slot != "" else "In the backpack", 13, "body")
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -727,7 +830,7 @@ func _show_artifact(detail: PanelContainer) -> void:
 	lines.add_theme_constant_override("separation", 8)
 	scroll.add_child(lines)
 	# The rules' line reads "name | rarity and family | roles | story | what it gives".
-	var parts := Artifacts.describe_artifact(_picked_artifact).split(" | ")
+	var parts := Artifacts.describe_artifact(item_id).split(" | ")
 	if parts.size() >= 4:
 		_wrapped(lines, parts[parts.size() - 1], 15, "gold")
 		_wrapped(lines, parts[parts.size() - 2], 14, "body")
@@ -735,13 +838,17 @@ func _show_artifact(detail: PanelContainer) -> void:
 	else:
 		_wrapped(lines, " | ".join(parts), 14, "body")
 	# For an item in the backpack: what wearing it would change.
-	if _picked_slot == "":
-		_wrapped(lines, DecisionDetails.artifact_comparison(hero, _picked_artifact), 13, "muted")
-	var order_id := "unequip_artifact:%s" % _picked_slot if _picked_slot != "" else "equip_artifact:%s" % _picked_artifact
+	if at_slot == "":
+		_wrapped(lines, DecisionDetails.artifact_comparison(hero, item_id), 13, "muted")
+	var order_id := "unequip_artifact:%s" % at_slot if at_slot != "" else "equip_artifact:%s" % item_id
 	var order := _action("artifact_actions", order_id)
-	if not order.is_empty():
+	# The button belongs to what is picked; a hovered item only reads.
+	if hovering and (item_id != _picked_artifact or at_slot != _picked_slot):
+		if _can_order_artifacts():
+			_wrapped(column, "Drag it, or click to pick it.", 12, "muted")
+	elif not order.is_empty():
 		var label := String(order.get("label", ""))
-		var verb := "Stow" if _picked_slot != "" else ("Swap in" if label.begins_with("Swap In") else "Wear")
+		var verb := "Stow" if at_slot != "" else ("Swap in" if label.begins_with("Swap In") else "Wear")
 		var order_button := _button(column, verb, String(order.get("summary", label)), "primary", Vector2(150.0, 36.0))
 		order_button.name = "ArtifactOrder_%s" % order_id.replace(":", "_")
 		order_button.accessibility_name = label
@@ -945,17 +1052,28 @@ func _build_spells(page: VBoxContainer) -> void:
 			(tiles[spell_id] as Button).set_pressed_no_signal(spell_id == _picked_spell)
 		_show_spell(detail)
 	for spell_id in tiles:
-		(tiles[spell_id] as Button).pressed.connect(func():
+		var tile := tiles[spell_id] as Button
+		tile.pressed.connect(func():
 			_picked_spell = spell_id
 			show.call())
+		tile.mouse_entered.connect(func():
+			_hover_spell = spell_id
+			_show_spell(detail))
+		tile.mouse_exited.connect(func():
+			_hover_spell = ""
+			_show_spell(detail))
+	_hover_spell = ""
 	show.call()
 
 func _spell_text(spell: Dictionary) -> String:
 	return "%s — %s\n%s" % [String(spell.get("name", "Spell")), Spells._spell_effect_summary(spell, hero), String(spell.get("description", ""))]
 
 func _show_spell(detail: PanelContainer) -> void:
+	if not is_instance_valid(detail):
+		return
 	_clear(detail)
-	var spell := ContentService.get_spell(_picked_spell) if _picked_spell != "" else {}
+	var spell_id := _hover_spell if _hover_spell != "" else _picked_spell
+	var spell := ContentService.get_spell(spell_id) if spell_id != "" else {}
 	if spell.is_empty():
 		return
 	var column := VBoxContainer.new()
@@ -964,7 +1082,7 @@ func _show_spell(detail: PanelContainer) -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 12)
 	column.add_child(head)
-	head.add_child(_frame(_texture(Spells.spell_icon_path(_picked_spell)), Vector2(84.0, 84.0), false))
+	head.add_child(_frame(_texture(Spells.spell_icon_path(spell_id)), Vector2(84.0, 84.0), false))
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.add_theme_constant_override("separation", 2)
@@ -982,7 +1100,7 @@ func _show_spell(detail: PanelContainer) -> void:
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var on_map := String(spell.get("context", "")) == "overworld"
-	var order := _action("spell_actions", "cast_spell:%s" % _picked_spell)
+	var order := _action("spell_actions", "cast_spell:%s" % spell_id)
 	if on_map and not order.is_empty():
 		var reason := String(order.get("invalid_reason", ""))
 		var ready_text := reason if reason != "" else String(order.get("readiness", ""))
@@ -993,7 +1111,7 @@ func _show_spell(detail: PanelContainer) -> void:
 		cast.name = "PrepareSpell"
 		cast.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		cast.disabled = bool(order.get("disabled", false))
-		cast.pressed.connect(func(): spell_cast_requested.emit(_picked_spell))
+		cast.pressed.connect(func(): spell_cast_requested.emit(spell_id))
 	else:
 		var note := _label(column, "Cast in battle, from the battle's spell book." if not on_map else "Cast from the hero menu on the map.", 12, "muted")
 		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
