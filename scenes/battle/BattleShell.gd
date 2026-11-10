@@ -21,6 +21,7 @@ const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 const BattleHeroFigureScript = preload("res://scripts/ui/BattleHeroFigure.gd")
 const BattleCommandButtonScript = preload("res://scripts/ui/BattleCommandButton.gd")
 const BattleDetailsCardScript = preload("res://scripts/ui/BattleDetailsCard.gd")
+const SpellGrimoireScript = preload("res://scenes/shared/SpellGrimoire.gd")
 
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. Previous speed restored."
@@ -53,8 +54,8 @@ const BAR_HEIGHT := 64.0
 const BAR_BOTTOM := 12.0
 const POPOVER_GAP := 12.0
 const OPTIONS_WIDTH := 360.0
-const SPELLBOOK_WIDTH := 440.0
-const SPELLBOOK_MAX_HEIGHT := 560.0
+## The open spell book's width; its height follows the picture.
+const SPELLBOOK_WIDTH := 880.0
 const LOG_WIDTH := 660.0
 const LOG_HEIGHT := 340.0
 const BANNER_TOP := 116.0
@@ -122,12 +123,7 @@ const AUTO_BATTLE_DELAY_SECONDS := 0.3
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _spellbook_popover: PanelContainer = %SpellbookPopover
-@onready var _spellbook_portrait: TextureRect = %SpellbookPortrait
-@onready var _spellbook_hero_name: Label = %SpellbookHeroName
-@onready var _spellbook_hero_stats: Label = %SpellbookHeroStats
-@onready var _spellbook_note: Label = %SpellbookNote
-@onready var _spell_scroll: ScrollContainer = %SpellScroll
-@onready var _spell_list: VBoxContainer = %SpellList
+@onready var _spell_book: TextureRect = %SpellBook
 @onready var _log_popover: PanelContainer = %LogPopover
 @onready var _log_box: VBoxContainer = %LogBox
 @onready var _log_title: Label = %LogTitle
@@ -276,6 +272,7 @@ func _ready() -> void:
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
 	resized.connect(_layout_hud)
+	_spell_book.cast_requested.connect(_on_spell_chosen)
 	for panel in [_result_panel, _options_popover, _spellbook_popover, _log_popover, _player_plate, _enemy_plate, _show_result_button, _details_card]:
 		panel.minimum_size_changed.connect(_queue_hud_layout)
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -1608,40 +1605,20 @@ func _spellbook_blocked_reason(hero: Dictionary) -> String:
 	return ""
 
 
-## The spellbook lists the commander's battle spells. One that cannot be cast
-## now says why; choosing one that can lights its targets on the field.
+## The spell book (SpellGrimoire) lies open on the commander's battle spells.
+## One that cannot be cast now is pale and says why; a click on one that can
+## lights its targets on the field.
 func _rebuild_spellbook() -> void:
-	for child in _spell_list.get_children():
-		_spell_list.remove_child(child)
-		child.queue_free()
 	if _session == null or _session.battle.is_empty():
 		return
 	var hero_state: Dictionary = BattleRules._player_commander_state(_session)
 	var hero := BattleRules.hero_presentation(_session.battle, "player")
-	var portrait_path := BattleHeroFigureScript.portrait_path(String(hero.get("hero_id", "")))
-	_spellbook_portrait.texture = load(portrait_path) as Texture2D if portrait_path != "" else null
-	_spellbook_portrait.visible = _spellbook_portrait.texture != null
-	_spellbook_hero_name.text = String(hero.get("name", "Commander"))
 	var command: Dictionary = hero_state.get("command", {}) if hero_state.get("command", {}) is Dictionary else {}
 	var mana_current := int(hero.get("mana_current", 0))
-	_spellbook_hero_stats.text = "Power %d · Knowledge %d · Mana %d/%d" % [
-		SpellRules.spell_power(hero_state),
-		maxi(0, int(command.get("knowledge", 0))),
-		mana_current,
-		int(hero.get("mana_max", 0)),
-	]
 	var blocked_reason := _spellbook_blocked_reason(hero)
-	_spellbook_note.text = blocked_reason if blocked_reason != "" else "One spell a round. The stack keeps its turn."
-	_spellbook_note.add_theme_color_override("font_color", MUTED if blocked_reason != "" else READY_TEXT)
-	var spells := SpellRules.known_spells(hero_state, "battle")
-	if spells.is_empty():
-		var empty := Label.new()
-		empty.text = "Your commander knows no battle spells."
-		empty.add_theme_color_override("font_color", MUTED)
-		empty.add_theme_font_size_override("font_size", _font_size(14.0))
-		_spell_list.add_child(empty)
-		return
-	for spell_value in spells:
+	var spells: Array = []
+	var availability := {}
+	for spell_value in SpellRules.known_spells(hero_state, "battle"):
 		if not (spell_value is Dictionary):
 			continue
 		var spell: Dictionary = spell_value
@@ -1652,117 +1629,25 @@ func _rebuild_spellbook() -> void:
 			reason = "Needs %d mana; %d left." % [cost, mana_current]
 		if reason == "" and BattleRules.spell_target_ids(_session, spell_id).is_empty():
 			reason = "No target for it on the field now."
-		_spell_list.add_child(_spell_row(spell, hero_state, cost, reason))
-
-
-func _spell_row(spell: Dictionary, hero_state: Dictionary, cost: int, reason: String) -> Button:
-	var k := _hud_scale
-	var spell_id := String(spell.get("id", ""))
-	var row := Button.new()
-	row.name = "Spell_%s" % spell_id
-	row.custom_minimum_size = Vector2(0.0, 66.0 * k)
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.focus_mode = Control.FOCUS_ALL
-	row.disabled = reason != ""
-	row.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if reason == "" else Control.CURSOR_ARROW
-	row.set_meta("spell_id", spell_id)
-	row.set_meta("blocked_reason", reason)
-	row.accessibility_name = "%s, %d mana" % [String(spell.get("name", spell_id)), cost]
-	var effect := SpellRules._spell_effect_summary(spell, hero_state).strip_edges()
-	row.tooltip_text = "%s · %s · %d mana\n%s%s" % [
-		String(spell.get("name", spell_id)),
-		SpellRules.spell_category_label(spell),
-		cost,
-		effect,
-		"\n%s" % reason if reason != "" else "",
-	]
-	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
-		row.add_theme_stylebox_override(state, _spell_row_style(state, k))
-	row.pressed.connect(_on_spell_chosen.bind(spell_id))
-	var columns := HBoxContainer.new()
-	columns.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	columns.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	columns.offset_left = 8.0 * k
-	columns.offset_right = -10.0 * k
-	columns.offset_top = 6.0 * k
-	columns.offset_bottom = -6.0 * k
-	columns.add_theme_constant_override("separation", int(round(12.0 * k)))
-	columns.modulate = Color(1.0, 1.0, 1.0, 0.55) if reason != "" else Color.WHITE
-	row.add_child(columns)
-	var icon := TextureRect.new()
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon.custom_minimum_size = Vector2(48.0, 48.0) * k
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var icon_path := SpellRules.spell_icon_path(spell_id)
-	if icon_path != "" and ResourceLoader.exists(icon_path):
-		icon.texture = load(icon_path) as Texture2D
-	columns.add_child(icon)
-	var text := VBoxContainer.new()
-	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	text.alignment = BoxContainer.ALIGNMENT_CENTER
-	text.add_theme_constant_override("separation", int(round(2.0 * k)))
-	columns.add_child(text)
-	var name_label := Label.new()
-	name_label.text = String(spell.get("name", spell_id))
-	name_label.add_theme_color_override("font_color", GOLD_HI)
-	name_label.add_theme_font_size_override("font_size", _font_size(15.5))
-	if _title_font != null:
-		name_label.add_theme_font_override("font", _title_font)
-	text.add_child(name_label)
-	var effect_label := Label.new()
-	effect_label.text = reason if reason != "" else effect
-	effect_label.add_theme_color_override("font_color", Color(0.95, 0.70, 0.62) if reason != "" else MUTED)
-	effect_label.add_theme_font_size_override("font_size", _font_size(13.0))
-	effect_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	effect_label.max_lines_visible = 2
-	effect_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	text.add_child(effect_label)
-	var cost_label := Label.new()
-	cost_label.text = str(cost)
-	cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cost_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	cost_label.custom_minimum_size = Vector2(30.0, 30.0) * k
-	cost_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	cost_label.add_theme_color_override("font_color", BattleCommandButtonScript.BADGE_TEXT)
-	cost_label.add_theme_font_size_override("font_size", _font_size(13.0))
-	var cost_style := StyleBoxFlat.new()
-	cost_style.bg_color = BattleCommandButtonScript.BADGE_FILL
-	cost_style.border_color = BattleCommandButtonScript.BADGE_BORDER
-	cost_style.set_border_width_all(maxi(1, int(round(k))))
-	cost_style.set_corner_radius_all(int(round(15.0 * k)))
-	cost_label.add_theme_stylebox_override("normal", cost_style)
-	cost_label.tooltip_text = "%d mana" % cost
-	columns.add_child(cost_label)
-	return row
-
-
-func _spell_row_style(state: String, k: float) -> StyleBox:
-	var style := StyleBoxFlat.new()
-	style.set_corner_radius_all(int(round(10.0 * k)))
-	style.set_content_margin_all(0.0)
-	match state:
-		"hover", "hover_pressed":
-			style.bg_color = Color(0.208, 0.173, 0.118, 0.9)
-			style.border_color = GOLD
-		"pressed":
-			style.bg_color = Color(0.110, 0.090, 0.059, 0.95)
-			style.border_color = BattleCommandButtonScript.ACTIVE
-		"focus":
-			style.draw_center = false
-			style.border_color = BattleCommandButtonScript.ACTIVE
-			style.set_border_width_all(maxi(2, int(round(2.0 * k))))
-			return style
-		"disabled":
-			style.bg_color = Color(0.0, 0.0, 0.0, 0.16)
-			style.border_color = Color(GOLD_DIM, 0.12)
-		_:
-			style.bg_color = Color(0.0, 0.0, 0.0, 0.22)
-			style.border_color = Color(GOLD_DIM, 0.25)
-	style.set_border_width_all(maxi(1, int(round(k))))
-	return style
+		spells.append(spell)
+		availability[spell_id] = {"enabled": reason == "", "message": reason}
+	_spell_book.show_book({
+		"hero": hero_state,
+		"spells": spells,
+		"contexts": [["battle", "Battle"]],
+		"availability": availability,
+		"click_casts": true,
+		"empty_text": "Your commander knows no battle spells.",
+		"facts": "Power %d · Knowledge %d · Mana %d/%d" % [
+			SpellRules.spell_power(hero_state),
+			maxi(0, int(command.get("knowledge", 0))),
+			mana_current,
+			int(hero.get("mana_max", 0)),
+		],
+		"status": blocked_reason if blocked_reason != "" else "One spell a round. The stack keeps its turn.",
+		"status_blocked": blocked_reason != "",
+		"scale": _hud_scale,
+	})
 
 
 func _on_spell_chosen(spell_id: String) -> void:
@@ -2956,8 +2841,11 @@ func _layout_hud() -> void:
 	_layout_plate(_player_plate, "player", k)
 	_layout_plate(_enemy_plate, "enemy", k)
 	_layout_popover(_options_popover, OPTIONS_WIDTH * k, bar_rect, "left", k)
-	_spell_scroll.custom_minimum_size.y = minf(_spell_list.get_combined_minimum_size().y, SPELLBOOK_MAX_HEIGHT * k - 110.0 * k)
-	_layout_popover(_spellbook_popover, SPELLBOOK_WIDTH * k, bar_rect, "right", k)
+	# The open book lies over the middle of the field, whole.
+	var book_width := minf(minf(SPELLBOOK_WIDTH * k, view.x - 24.0 * k), (bar_rect.position.y - 24.0 * k) * SpellGrimoireScript.ASPECT)
+	_spell_book.custom_minimum_size = Vector2(book_width, book_width / SpellGrimoireScript.ASPECT).floor()
+	_layout_popover(_spellbook_popover, book_width, bar_rect, "center", k)
+	_spellbook_popover.position.y = round(maxf(8.0 * k, (bar_rect.position.y - _spellbook_popover.size.y) * 0.5))
 	_log_popover.custom_minimum_size = Vector2(minf(LOG_WIDTH * k, view.x - 24.0 * k), LOG_HEIGHT * k)
 	_layout_popover(_log_popover, _log_popover.custom_minimum_size.x, bar_rect, "center", k)
 	_banner.size = Vector2(view.x, 0.0)
@@ -3087,20 +2975,17 @@ func _apply_hud_scale(k: float) -> void:
 		status_label.add_theme_font_size_override("font_size", _font_size(12.5))
 		(plate.get_child(0).get_child(1) as VBoxContainer).add_theme_constant_override("separation", int(round(3.0 * k)))
 	for popover in [_options_popover, _spellbook_popover, _log_popover]:
-		popover.add_theme_stylebox_override("panel", _hud_panel_style(PANEL_FILL, 12.0, Vector4(14.0, 14.0, 14.0, 14.0), k))
+		# The spell book is its own picture: no panel behind it.
+		popover.add_theme_stylebox_override("panel", StyleBoxEmpty.new() if popover == _spellbook_popover else _hud_panel_style(PANEL_FILL, 12.0, Vector4(14.0, 14.0, 14.0, 14.0), k))
 		var box := popover.get_child(0) as VBoxContainer
 		box.add_theme_constant_override("separation", int(round(10.0 * k)))
-	for title in [_options_title, _log_title, _spellbook_hero_name]:
-		title.add_theme_font_size_override("font_size", _font_size(15.0 if title != _spellbook_hero_name else 16.0))
+	for title in [_options_title, _log_title]:
+		title.add_theme_font_size_override("font_size", _font_size(15.0))
 		title.add_theme_color_override("font_color", GOLD_HI)
 		if _title_font != null:
 			title.add_theme_font_override("font", _title_font)
-	_spellbook_portrait.custom_minimum_size = Vector2(54.0, 72.0) * k
-	_spellbook_hero_stats.add_theme_font_size_override("font_size", _font_size(13.0))
-	_spellbook_hero_stats.add_theme_color_override("font_color", MANA_TEXT)
-	_spellbook_note.add_theme_font_size_override("font_size", _font_size(13.0))
-	(_spellbook_portrait.get_parent() as HBoxContainer).add_theme_constant_override("separation", int(round(12.0 * k)))
-	_spell_list.add_theme_constant_override("separation", int(round(6.0 * k)))
+	if _spellbook_popover.visible:
+		_rebuild_spellbook()
 	for label in [_speed_label, _grid_label]:
 		label.add_theme_font_size_override("font_size", _font_size(13.5))
 		label.add_theme_color_override("font_color", CREAM)
@@ -3517,7 +3402,7 @@ func _preferred_battle_keyboard_focus() -> Control:
 	if _options_popover.visible:
 		return _first_enabled_speed_button()
 	if _spellbook_popover.visible:
-		for row in _spell_list.get_children():
+		for row in _spell_book.spell_buttons():
 			if row is Button and FrontierVisualKit.is_keyboard_focusable(row):
 				return row
 		return null
@@ -4011,7 +3896,7 @@ func validation_hud_snapshot() -> Dictionary:
 			"figure": _battle_board_view.hero_figure_layout(side),
 		}
 	var spell_rows := []
-	for row in _spell_list.get_children():
+	for row in _spell_book.spell_buttons():
 		if row is Button:
 			spell_rows.append({
 				"spell_id": String(row.get_meta("spell_id", "")),

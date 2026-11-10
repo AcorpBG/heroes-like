@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=9 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 [ext_resource type="Script" path="res://scripts/ui/BattleCommandButton.gd" id="7_command_button"]
 [ext_resource type="Script" path="res://scripts/ui/BattleDetailsCard.gd" id="8_details_card"]
+[ext_resource type="Script" path="res://scenes/shared/SpellGrimoire.gd" id="9_spell_grimoire"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -401,43 +402,10 @@ layout_mode = 0
 [node name="SpellbookBox" type="VBoxContainer" parent="Hud/SpellbookPopover"]
 layout_mode = 2
 
-[node name="SpellbookHeader" type="HBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox"]
-layout_mode = 2
-
-[node name="SpellbookPortrait" type="TextureRect" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(54, 72)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="SpellbookHeroText" type="VBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="SpellbookHeroName" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
+[node name="SpellBook" type="TextureRect" parent="Hud/SpellbookPopover/SpellbookBox"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="SpellbookHeroStats" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SpellbookNote" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-
-[node name="SpellScroll" type="ScrollContainer" parent="Hud/SpellbookPopover/SpellbookBox"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="SpellList" type="VBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox/SpellScroll"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
+script = ExtResource("9_spell_grimoire")
 
 [node name="LogPopover" type="PanelContainer" parent="Hud"]
 unique_name_in_owner = true

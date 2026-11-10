@@ -52,13 +52,24 @@ Pages:
   and a grimoire, the grimoire). The left page lists the known spells of one
   school by tier, as icons with their names; round badges at its head open a
   school (basic, beacon, furnace, root, veil; only those the hero knows a spell
-  of), and Battle and Map at its foot switch the kind. A spell the hero has not
-  the mana for is paler. The right page writes out the spell under the mouse,
-  else the chosen one: its picture, name, school, tier and cost, what it does,
+  of), and Battle and Map at its foot switch the kind. Each icon carries the
+  spell's mana cost; a spell the hero has not the mana for is paler. The right
+  page writes out the spell under the mouse or the keyboard focus, else the
+  chosen one: its picture, name, school, tier and cost, what it does,
   its story, and for a map spell whether it can be cast now, with the Cast
   button. The book opens at the map spells when the hero knows one, and stays
   where it was left. The picture on the right page is the spell's 128 pixel
   icon; larger illustrations for the 139 spells are not painted.
+
+The book is one view, `scenes/shared/SpellGrimoire.gd`, and the battle's spell
+book is the same book (owner, 2026-11-10). In battle it lies over the middle of
+the field and lists the commander's battle spells only: no Battle and Map
+switch. A click on a spell that can be cast closes the book and lights its
+targets; one that cannot (no mana, no target on the field, a spell already cast
+this round, not the player's turn) is pale, cannot be clicked, and says why on
+the right page. The foot of the left page gives the commander's Power,
+Knowledge and mana, and the one-spell-a-round rule or what holds every spell
+back.
 
 The menu never changes the session: it emits what was asked and its owning screen
 runs the order and hands back a fresh snapshot (`refresh_hero`), which keeps the

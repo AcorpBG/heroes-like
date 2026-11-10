@@ -20,6 +20,7 @@ const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const Spells = preload("res://scripts/core/SpellRules.gd")
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
+const SpellGrimoireScript = preload("res://scenes/shared/SpellGrimoire.gd")
 const DecisionDetails = preload("res://scripts/ui/DecisionDetails.gd")
 
 const ICON_PATH := "res://art/ui/runtime/hero_menu/%s.png"
@@ -66,16 +67,6 @@ const TILE_FILL := Color(0.075, 0.062, 0.05, 0.96)
 const TILE_HOVER := Color(0.14, 0.115, 0.085, 0.98)
 const CARD_FILL := Color(0.06, 0.05, 0.04, 0.6)
 const DRAG_ARTIFACT := "hero_menu_artifact"
-## The spell page is an open book (art/ui/runtime/hero_menu/spell_book.png): where
-## its two pages lie in the picture, as fractions of it.
-const BOOK_LEFT_PAGE := Rect2(0.062, 0.070, 0.412, 0.805)
-const BOOK_RIGHT_PAGE := Rect2(0.530, 0.070, 0.412, 0.805)
-const SPELL_SCHOOLS := ["basic", "beacon", "furnace", "root", "veil"]
-const SPELL_CONTEXTS := [["battle", "Battle"], ["overworld", "Map"]]
-const INK := Color(0.21, 0.13, 0.07)
-const INK_SOFT := Color(0.36, 0.25, 0.15)
-const INK_RED := Color(0.47, 0.10, 0.06)
-const INK_LINE := Color(0.33, 0.22, 0.12, 0.55)
 
 var hero: Dictionary = {}
 ## Live orders for an interactive menu: spell_actions, artifact_actions,
@@ -95,15 +86,10 @@ var _page_holder: MarginContainer
 var _picked_stack := -1
 var _picked_slot := ""
 var _picked_artifact := ""
-var _picked_spell := ""
 # What the mouse is over, shown in the page's card until it leaves.
 var _hover_stack := -1
-var _hover_spell := ""
-# The school and the kind (battle or map) the book is open at.
-var _spell_school := ""
-var _spell_context := ""
-# Lays the two leaves over the open book's pages.
-var _place_spell_pages := Callable()
+# Where the spell book is open: its school, kind (battle or map) and spell.
+var _spell_view := {}
 var _last_focus: Control
 # The worn slots' tiles, and the kind of the artifact being dragged.
 var _slot_tiles := {}
@@ -134,7 +120,7 @@ func open_hero(snapshot: Dictionary, return_control: Control, live_orders: Dicti
 		_picked_stack = -1
 		_picked_slot = ""
 		_picked_artifact = ""
-		_picked_spell = ""
+		_spell_view["picked"] = ""
 	if tab != "":
 		_page_id = tab
 	_rebuild(snapshot, live_orders)
@@ -999,294 +985,37 @@ func _terrain_names(terrain_ids: Array) -> String:
 
 # --- Spells -----------------------------------------------------------------------
 
-## The spell page: an open book. The left page lists the known spells of one
-## school by tier, battle or map; the right page writes out the spell under the
-## mouse, else the chosen one, and casts a map spell.
+## The spell page is the open spell book (SpellGrimoire): every spell the hero
+## knows, battle or map; a map spell is cast from its page.
 func _build_spells(page: VBoxContainer) -> void:
-	var known: Array = Spells.known_spells(hero)
-	var book := _picture(_icon("spell_book"), false)
+	var book: TextureRect = SpellGrimoireScript.new()
 	book.name = "SpellBook"
 	book.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	book.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	book.mouse_filter = Control.MOUSE_FILTER_PASS
 	page.add_child(book)
-	var left := VBoxContainer.new()
-	left.name = "SpellList"
-	left.clip_contents = true
-	left.add_theme_constant_override("separation", 6)
-	book.add_child(left)
-	var right := VBoxContainer.new()
-	right.name = "SpellEntry"
-	right.clip_contents = true
-	right.add_theme_constant_override("separation", 6)
-	book.add_child(right)
-	var place := func():
-		# The picture keeps its shape inside the page, so the leaves follow it.
-		var texture_size := Vector2(book.texture.get_size()) if book.texture != null else book.size
-		var fit := minf(book.size.x / texture_size.x, book.size.y / texture_size.y)
-		var drawn := texture_size * fit
-		var origin := (book.size - drawn) * 0.5
-		for entry in [[left, BOOK_LEFT_PAGE], [right, BOOK_RIGHT_PAGE]]:
-			var leaf: Control = entry[0]
-			var rect: Rect2 = entry[1]
-			leaf.position = origin + rect.position * drawn
-			leaf.size = rect.size * drawn
-	book.resized.connect(place)
-	# A wrapped line is tall until it is given its width, and a leaf grows with
-	# it; the leaf is put back once the lines have settled.
-	for leaf in [left, right]:
-		leaf.minimum_size_changed.connect(func(): place.call_deferred())
-	_place_spell_pages = place
-	place.call_deferred()
-
-	if known.is_empty():
-		var none := _ink(left, "No spell is written here yet. A town of yours with spell archives teaches its visitors.", 15, INK_SOFT, true)
-		none.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		return
-	# The book opens where it was left; first at the map spells, if there are any.
-	var ids := known.map(func(spell): return String(spell.get("id", "")))
-	if _picked_spell not in ids:
-		_picked_spell = ""
-	if _spell_context == "":
-		_spell_context = "overworld" if known.any(func(spell): return String(spell.get("context", "")) == "overworld") else "battle"
-	var schools := SPELL_SCHOOLS.filter(func(school): return known.any(func(spell): return String(spell.get("school_id", "")) == school))
-	for spell in known:
-		var school := String(spell.get("school_id", ""))
-		if school not in schools: schools.append(school)
-	if _spell_school not in schools:
-		_spell_school = ""
-		for spell in known:
-			if String(spell.get("context", "")) == _spell_context:
-				_spell_school = String(spell.get("school_id", ""))
-				break
-		if _spell_school == "":
-			_spell_school = String(schools[0])
-
-	var tabs := HBoxContainer.new()
-	tabs.name = "SpellSchools"
-	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
-	tabs.add_theme_constant_override("separation", 10)
-	left.add_child(tabs)
-	for school in schools:
-		var count := known.filter(func(spell): return String(spell.get("school_id", "")) == school).size()
-		var tab := Button.new()
-		tab.name = "School_%s" % school
-		tab.toggle_mode = true
-		tab.custom_minimum_size = Vector2(44.0, 44.0)
-		tab.tooltip_text = "%s · %d spell%s" % [Spells._school_label(String(school)), count, "" if count == 1 else "s"]
-		tab.accessibility_name = tab.tooltip_text
-		# The school's badge is the button; the open school's has a bright ring.
-		for state in ["normal", "hover", "disabled"]:
-			tab.add_theme_stylebox_override(state, _box(Color(0, 0, 0, 0), 0, 22, Color(0, 0, 0, 0)))
-		for state in ["pressed", "hover_pressed"]:
-			tab.add_theme_stylebox_override(state, _box(INK_RED, 3, 22, Color(0, 0, 0, 0)))
-		tab.add_theme_stylebox_override("focus", _box(INK, 2, 22, Color(0, 0, 0, 0)))
-		var sigil := _picture(_icon("school_%s" % String(school)), false)
-		sigil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 2)
-		sigil.modulate = Color(1.0, 1.0, 1.0, 1.0) if school == _spell_school else Color(0.78, 0.74, 0.68, 0.72)
-		tab.add_child(sigil)
-		tab.set_pressed_no_signal(school == _spell_school)
-		tab.pressed.connect(func():
-			_spell_school = String(school)
-			_show_page())
-		tabs.add_child(tab)
-	var school_name := _ink(left, Spells._school_label(_spell_school), 13, INK_SOFT)
-	school_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-
-	var scroll := ScrollContainer.new()
-	scroll.name = "SpellPages"
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.follow_focus = true
-	left.add_child(scroll)
-	var tiers := VBoxContainer.new()
-	tiers.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tiers.add_theme_constant_override("separation", 6)
-	scroll.add_child(tiers)
-	var listed := known.filter(func(spell): return String(spell.get("school_id", "")) == _spell_school and String(spell.get("context", "")) == _spell_context)
-	listed.sort_custom(func(a, b): return String(a.get("name", "")).naturalnocasecmp_to(String(b.get("name", ""))) < 0)
-	var mana := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))
-	var tiles := {}
-	for tier in range(1, 8):
-		var members := listed.filter(func(spell): return Spells.spell_tier(spell) == tier)
-		if members.is_empty(): continue
-		_ink_heading(tiers, "Tier %d" % tier)
-		var flow := HFlowContainer.new()
-		flow.alignment = FlowContainer.ALIGNMENT_CENTER
-		flow.add_theme_constant_override("h_separation", 6)
-		flow.add_theme_constant_override("v_separation", 6)
-		tiers.add_child(flow)
-		for spell in members:
-			var spell_id := String(spell.get("id", ""))
-			var cost := Spells.adjusted_spell_mana_cost(hero, spell)
-			var cell := VBoxContainer.new()
-			cell.add_theme_constant_override("separation", 0)
-			flow.add_child(cell)
-			var tile := _tile(Vector2(62.0, 62.0), _texture(Spells.spell_icon_path(spell_id)), null)
-			tile.name = spell_id
-			tile.set_meta("spell_id", spell_id)
-			tile.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-			tile.tooltip_text = "%s · %d mana\n%s" % [String(spell.get("name", "Spell")), cost, Spells._spell_effect_summary(spell, hero)]
-			tile.accessibility_name = "%s, %d mana" % [String(spell.get("name", "Spell")), cost]
-			# A spell the hero has not the mana for is paler.
-			if cost > mana:
-				tile.modulate = Color(1.0, 1.0, 1.0, 0.55)
-			cell.add_child(tile)
-			var caption := _ink(cell, String(spell.get("name", "Spell")), 12, INK)
-			caption.custom_minimum_size.x = 84.0
-			caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			caption.clip_text = true
-			caption.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-			tiles[spell_id] = tile
-	if tiles.is_empty():
-		var empty := _ink(tiers, "No %s spells of this school." % ("map" if _spell_context == "overworld" else "battle"), 14, INK_SOFT, true)
-		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	elif _picked_spell not in tiles:
-		_picked_spell = String(tiles.keys()[0])
-
-	var contexts := HBoxContainer.new()
-	contexts.name = "SpellContexts"
-	contexts.alignment = BoxContainer.ALIGNMENT_CENTER
-	contexts.add_theme_constant_override("separation", 26)
-	left.add_child(contexts)
-	for entry in SPELL_CONTEXTS:
-		var context_id := String(entry[0])
-		var count := known.filter(func(spell): return String(spell.get("context", "")) == context_id).size()
-		var chosen := context_id == _spell_context
-		var tab := Button.new()
-		tab.name = "Context_%s" % context_id
-		tab.text = String(entry[1])
-		tab.tooltip_text = "%d %s spell%s known" % [count, String(entry[1]).to_lower(), "" if count == 1 else "s"]
-		tab.add_theme_font_size_override("font_size", 17)
-		for color_name in ["font_color", "font_focus_color", "font_pressed_color"]:
-			tab.add_theme_color_override(color_name, INK if chosen else INK_SOFT)
-		tab.add_theme_color_override("font_hover_color", INK_RED)
-		var underline := StyleBoxFlat.new()
-		underline.bg_color = Color(0, 0, 0, 0)
-		underline.border_color = INK if chosen else Color(0, 0, 0, 0)
-		underline.border_width_bottom = 2
-		underline.content_margin_left = 6.0
-		underline.content_margin_right = 6.0
-		for state in ["normal", "hover", "pressed", "focus"]:
-			tab.add_theme_stylebox_override(state, underline)
-		tab.pressed.connect(func():
-			_spell_context = context_id
-			_spell_school = ""
-			_show_page())
-		contexts.add_child(tab)
-
-	var show := func():
-		for spell_id in tiles:
-			(tiles[spell_id] as Button).set_pressed_no_signal(spell_id == _picked_spell)
-		_show_spell(right)
-	for spell_id in tiles:
-		var tile := tiles[spell_id] as Button
-		tile.pressed.connect(func():
-			_picked_spell = spell_id
-			show.call())
-		tile.mouse_entered.connect(func():
-			_hover_spell = spell_id
-			_show_spell(right))
-		tile.mouse_exited.connect(func():
-			_hover_spell = ""
-			_show_spell(right))
-	_hover_spell = ""
-	show.call()
-
-## The right page: the spell under the mouse, else the chosen one, written out.
-func _show_spell(entry: Control) -> void:
-	if not is_instance_valid(entry):
-		return
-	_clear(entry)
-	var spell_id := _hover_spell if _hover_spell != "" else _picked_spell
-	var spell := ContentService.get_spell(spell_id) if spell_id != "" else {}
-	if spell.is_empty():
-		return
-	var frame := _frame(_texture(Spells.spell_icon_path(spell_id)), Vector2(148.0, 148.0), false)
-	frame.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	entry.add_child(frame)
-	var title := _ink(entry, String(spell.get("name", "Spell")).to_upper(), 24, INK_RED, true)
-	title.name = "SpellTitle"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var facts := _ink(entry, "%s · Tier %d · %d mana" % [Spells._school_label(String(spell.get("school_id", ""))), Spells.spell_tier(spell), Spells.adjusted_spell_mana_cost(hero, spell)], 15, INK)
-	facts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_ink_rule(entry)
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	entry.add_child(scroll)
-	var lines := VBoxContainer.new()
-	lines.name = "SpellDescription"
-	lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lines.add_theme_constant_override("separation", 8)
-	scroll.add_child(lines)
-	var effect := _ink(lines, Spells._spell_effect_summary(spell, hero), 16, INK, true)
-	effect.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var story := _ink(lines, String(spell.get("description", "")), 14, INK_SOFT, true)
-	story.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var on_map := String(spell.get("context", "")) == "overworld"
-	var order := _action("spell_actions", "cast_spell:%s" % spell_id)
-	var foot := HBoxContainer.new()
-	foot.alignment = BoxContainer.ALIGNMENT_CENTER
-	foot.add_theme_constant_override("separation", 14)
-	entry.add_child(foot)
-	if on_map and not order.is_empty():
-		var reason := String(order.get("invalid_reason", ""))
-		var ready_text := reason if reason != "" else String(order.get("readiness", ""))
-		var blocked := bool(order.get("disabled", false))
-		var state := _ink(foot, ready_text, 13, INK_RED if blocked else INK, true)
-		state.custom_minimum_size.x = 150.0
-		state.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		state.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		var cast := _button(foot, "Cast", ready_text if ready_text != "" else "Cast this spell on the map.", "primary", Vector2(130.0, 40.0))
-		cast.name = "PrepareSpell"
-		cast.disabled = blocked
-		# The button casts what is picked; a spell only pointed at is read.
-		cast.visible = spell_id == _picked_spell
-		cast.pressed.connect(func(): spell_cast_requested.emit(spell_id))
-	else:
-		var note := _ink(foot, "Cast in battle, from the battle's spell book." if not on_map else "Cast from the hero menu on the map.", 13, INK_SOFT, true)
-		note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	# A line that was added before it wrapped can have widened the leaf.
-	if _place_spell_pages.is_valid():
-		_place_spell_pages.call()
-
-## Dark ink on the book's parchment. A line that may be long is told to wrap
-## before it is added, or its full length would widen the page it lies on.
-func _ink(parent: Node, text: String, font_size: int, color: Color, wraps: bool = false) -> Label:
-	var label := Label.new()
-	if wraps:
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.text = text
-	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", color)
-	parent.add_child(label)
-	return label
-
-func _ink_rule(parent: Node) -> void:
-	var line := ColorRect.new()
-	line.color = INK_LINE
-	line.custom_minimum_size.y = 1.0
-	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(line)
-
-## A heading between two ink lines.
-func _ink_heading(parent: Node, text: String) -> void:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	parent.add_child(row)
-	for index in range(3):
-		if index == 1:
-			_ink(row, text, 16, INK)
+	# What the map lets the hero cast now, and why not.
+	var availability := {}
+	for action in orders.get("spell_actions", []):
+		var action_id := String(action.get("id", ""))
+		if not action_id.begins_with("cast_spell:"):
 			continue
-		var line := ColorRect.new()
-		line.color = INK_LINE
-		line.custom_minimum_size.y = 1.0
-		line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		line.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(line)
+		var spell_id := action_id.trim_prefix("cast_spell:")
+		if String(ContentService.get_spell(spell_id).get("context", "")) != "overworld":
+			continue
+		var reason := String(action.get("invalid_reason", ""))
+		availability[spell_id] = {
+			"enabled": not bool(action.get("disabled", false)),
+			"message": reason if reason != "" else String(action.get("readiness", "")),
+		}
+	book.cast_requested.connect(func(spell_id: String): spell_cast_requested.emit(spell_id))
+	book.show_book({
+		"hero": hero,
+		"spells": Spells.known_spells(hero),
+		"availability": availability,
+		"notes": {"battle": "Cast in battle, from the battle's spell book.", "overworld": "Cast from the hero menu on the map."},
+		"empty_text": "No spell is written here yet. A town of yours with spell archives teaches its visitors.",
+		"view": _spell_view,
+	})
 
 # --- Pieces -------------------------------------------------------------------------
 
