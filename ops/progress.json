@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-hero-exchange-look-20261110",
- "currentSliceTitle": "Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.",
+ "currentSliceId": "ui-hero-spell-book-20261110",
+ "currentSliceTitle": "The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T16:39:04Z",
+ "updatedAt": "2026-11-10T17:20:46Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ui-hero-spell-book-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.",
+   "commit": "45e75ab76"
+  },
   {
    "id": "ui-hero-exchange-look-20261110",
    "status": "completed",

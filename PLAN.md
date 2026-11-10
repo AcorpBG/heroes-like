@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-hero-spell-book-20261110` (45e75ab76): The hero menu's spell page is an open grimoire: a school's spells by tier on the left, the chosen spell written out on the right.
 - 2026-11-10 `ui-hero-exchange-look-20261110` (27ebb2940): Hero trading screen wears the hero menu's look: card frame, a figure with slots per hero, unit close-ups.
 - 2026-11-10 `ui-hero-menu-rework-20261110` (1d47aabab): Hero menu rebuilt: large portrait, four pages, artifacts on a figure with 14 slots (27 artifacts moved), usable in town.
 - 2026-11-10 `ui-window-card-frames-20261110` (08774ca13): In-game settings window, every confirmation window and the hero keys window wear the card frame.
