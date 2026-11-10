@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-art-shipyards-20261110",
- "currentSliceTitle": "Shipyard art in the Brasshollow and Veilmourn towns",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T07:04:02Z",
+ "currentSliceTitle": "Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T07:06:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-art-shipyards-20261110",
-   "title": "Shipyard art in the Brasshollow and Veilmourn towns",
-   "status": "in_progress",
-   "goal": "Paint the Shipyard into the two repainted towns as masked edits of their backdrops: Brasshollow a boatworks down the cliff under the market terrace, hulls on rails toward the slag river; Veilmourn a boatyard at the sea stack's foot, the moored ship there painted out of the backdrop, its fx mask water and stage glow moved with it. Packets, layers, manifests. Owner, 2026-11-10: paint both.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.",
+   "commit": "097ec7b06"
   },
   {
    "id": "ai-shipyard-main-army-20261110",

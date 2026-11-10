@@ -48,7 +48,6 @@ None open.
 
 ## Open work
 
-- `town-art-shipyards-20261110` (in progress): Paint the Shipyard into the two repainted towns as masked edits of their backdrops: Brasshollow a boatworks down the cliff under the market terrace, hulls on rails toward the slag river; Veilmourn a boatyard at the sea stack's foot, the moored ship there painted out of the backdrop, its fx mask water and stage glow moved with it. Packets, layers, manifests. Owner, 2026-11-10: paint both. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -58,6 +57,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-shipyards-20261110` (097ec7b06): Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.
 - 2026-11-10 `ai-shipyard-main-army-20261110` (882bf8251): Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, at that army's worth against the Shipyard and boat price, and build none before day 8. Any idle hero set it off before.
 - 2026-11-10 `feature-town-shipyards-20261109` (bc92c5fa9): Harbour towns (open sea within 6 steps of the gate) build a Shipyard and launch boats there for 1,000 gold and 10 wood; computer players sail from theirs and build one when an army is stuck. Opens from its board slot until the art rework.
 - 2026-11-09 `town-stage-effects-veilmourn-20261109` (6cbb8b52e): Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.
