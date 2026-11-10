@@ -65,7 +65,7 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-65a29ea7
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-8f6ec28f
 ```
 
 ## Incremental snapshots, 2026-10-14
@@ -124,6 +124,8 @@ python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-ar
 
 `2026-11-10-65a29ea7` extends `2026-11-10-e6897156`, from the owner's checkout at Git revision `65a29ea78` after level ground was painted in at the town plots (slice `town-plot-shelves-20261110`): 1 archive, 28 files, 33,186,630 bytes. 20 are binary sources under `art/towns/source/generated/overhaul`: for each of Sunvault, Veilmourn, Thornwake and Embercourt the new backdrop master, the edit it was blended from, and the marks, bands and keep mask of `tools/town_plot_shelves.py`; 8 are the changed tracked packets and the new prompts as backup copies. Every payload was read back against its SHA-256 and ZIP CRC. For the work all six towns' sources had been restored into the worktree `encounter-reward-surface-errors-d6ed09`; after the snapshot `tools/restore_archived_source_material.py --remove --apply` removed the loose copies again, 20 files from the owner's checkout and 2,089 from that worktree, each only after its local copy matched the archived payload; none differed. The worktree's 317 leftover `.import` sidecars, in no snapshot, were deleted as orphans, and the content check passes.
 
+`2026-11-10-8f6ec28f` extends `2026-11-10-65a29ea7`, from the owner's checkout at Git revision `8f6ec28fb` after the hero menu rework (slice `ui-hero-menu-rework-20261110`): 1 archive, 10 files, 4,704,811 bytes. Four are the paintings under `art/ui/source/generated/hero_menu_20261110`: the sheet of gold emblems, the sheet of empty-slot outlines and the figure that `tools/build_hero_menu_icons.py` cuts into `art/ui/runtime/hero_menu`, and the layout mockup the owner picked; six are the tracked prompts, provenance note and `.gdignore` as backup copies. Every payload was read back against its SHA-256 and ZIP CRC. The four paintings were then removed from the owner's checkout and the worktree `neutral-encounters-retreat-bug-cd04af` with the restore tool's `--remove --apply`, each only after its local copy matched the archived payload.
+
 ## Tests never need archived sources
 
 The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
@@ -142,7 +144,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-65a29ea7 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-8f6ec28f --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.
