@@ -26,6 +26,8 @@ const TOWN_FX_PARAMETERS := {
 	"falls": [[&"backdrop", &"falls_strength"]],
 	"mist": [[&"backdrop", &"mist_strength"]],
 	"lanterns": [[&"backdrop", &"lantern_strength"], [&"buildings", &"lantern_strength"]],
+	# Fire baskets painted on the backdrop, where the mask puts them; the buildings keep "windows".
+	"beacons": [[&"backdrop", &"lantern_strength"]],
 	"wisps": [[&"heat", &"wisp_strength"]],
 }
 

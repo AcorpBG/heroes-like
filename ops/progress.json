@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-art-embercourt-lock-gorge-20261110",
- "currentSliceTitle": "Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T08:42:24Z",
+ "currentSliceId": "town-stage-effects-embercourt-20261110",
+ "currentSliceTitle": "Embercourt town: moving water, falls and fires in the lock gorge",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T08:53:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-stage-effects-embercourt-20261110",
+   "title": "Embercourt town: moving water, falls and fires in the lock gorge",
+   "status": "in_progress",
+   "goal": "Stage effects for the lock gorge: an effect mask (water, the four lock falls, the lock fire baskets) built by lock_gorge_fx_mask.py, water and falls from the existing shader, a backdrop-only beacons effect for the painted fires, building fire light at 0.6. Owner, 2026-11-10: yes, add effects.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "town-art-embercourt-lock-gorge-20261110",
    "status": "completed",

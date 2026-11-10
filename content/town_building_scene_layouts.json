@@ -17,6 +17,13 @@
         0.76,
         0.96
       ],
+      "stage_effects": {
+        "water": 1.0,
+        "falls": 1.0,
+        "beacons": 1.0,
+        "windows": 0.6
+      },
+      "stage_effects_mask": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_lock_gorge_fx_mask.png",
       "plots": [
         {
           "plot_id": "hall",
