@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-shared-tile-description-20261110",
- "currentSliceTitle": "Map hover, right-click and Sites labels read one description",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T08:56:57Z",
+ "currentSliceTitle": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T09:08:01Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-shared-tile-description-20261110",
-   "title": "Map hover, right-click and Sites labels read one description",
-   "status": "in_progress",
-   "goal": "Hover, the right-click report and the Sites (Alt) labels each built their own text and state. One description of a tile (scripts/ui/OverworldInspection.gd) feeds all three: what it is, what it gives, how often, ready or used for the selected hero, guard, owner (owner, 2026-11-10).",
-   "docs": [
-    "docs/overworld-tile-description.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.",
+   "commit": "4e55b993d"
   },
   {
    "id": "town-stage-effects-embercourt-20261110",
