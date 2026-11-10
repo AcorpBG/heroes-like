@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-art-mireclaw-backdrop-v2-20261110",
- "currentSliceTitle": "Mireclaw backdrop repainted without its vertical hatching",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T10:23:05Z",
+ "currentSliceTitle": "Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T10:24:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-art-mireclaw-backdrop-v2-20261110",
-   "title": "Mireclaw backdrop repainted without its vertical hatching",
-   "status": "in_progress",
-   "goal": "The owner found the dusk fen backdrop very streaky, with vertical lines all over: its floor was thin upright reed strokes. Repaint the floor in one edit that keeps the layout (owner's pick, candidate 1), keep the 52 building layers by cutting them against the master they were painted on (backdrop.painted_on in both tools), rebuild the built picture and the effect mask.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.",
+   "commit": "b876ba799"
   },
   {
    "id": "ui-map-info-card-art-20261110",

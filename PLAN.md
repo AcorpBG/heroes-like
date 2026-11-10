@@ -52,7 +52,6 @@ None open.
 
 ## Open work
 
-- `town-art-mireclaw-backdrop-v2-20261110` (in progress): The owner found the dusk fen backdrop very streaky, with vertical lines all over: its floor was thin upright reed strokes. Repaint the floor in one edit that keeps the layout (owner's pick, candidate 1), keep the 52 building layers by cutting them against the master they were painted on (backdrop.painted_on in both tools), rebuild the built picture and the effect mask. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -62,6 +61,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-mireclaw-backdrop-v2-20261110` (b876ba799): Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.
 - 2026-11-10 `ui-map-info-card-art-20261110` (e6fcbbbd4): The map's right-click report and hover card use the sidebar's dark-and-gold frame (imggen mockup B), fit their content, and show unit icons cut from the existing portraits at 56 px instead of the whole figure at 36.
 - 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.
 - 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.
