@@ -3,7 +3,7 @@
   "faction_id": "faction_brasshollow",
   "scene_id": "slag_canyon",
   "stage": "village",
-  "owner_decision": "2026-11-09: the owner chose the slag canyon (concept B) and approved painting the full Brasshollow set into it.",
+  "owner_decision": "2026-11-09: the owner chose the slag canyon (concept B) and approved painting the full Brasshollow set into it. 2026-11-10: the owner had a Shipyard painted as a boatworks down the cliff under the market terrace, its hulls running on rails toward the slag river; the canyon has no water.",
   "generation": {
     "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
     "date": "2026-11-09"
@@ -15,7 +15,8 @@
     "weights_sha256": "9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154",
     "network_code": "ZhengPeng7/BiRefNet-matting birefnet.py, revision eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
     "input": "1024x1024, ImageNet mean and std, averaged with the mirrored window",
-    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows"
+    "window": "the building BiRefNet finds touching the plot in a first look (plot box and paint change over 70, margin 0.4), then margin 0.12, grown by 0.25 on a side the building covers over 0.02 of, at most 4 windows",
+    "passes": "a building with matte_passes is looked at that many times, each time with what was found (grown by 6 px) painted back to the empty backdrop, and its matte is the union"
   },
   "backdrop": {
     "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
@@ -178,6 +179,12 @@
       855,
       240,
       185
+    ],
+    "building_dev_shipyard": [
+      180,
+      766,
+      375,
+      168
     ]
   },
   "buildings": [
@@ -1846,6 +1853,40 @@
           582,
           394,
           356
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        180,
+        766,
+        375,
+        168
+      ],
+      "crop": [
+        0,
+        598,
+        930,
+        504
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.png",
+      "source_sha256": "904cf83bc4ab17f1d2a32073055deea2dfd026304145504b0c3d4057abc04615",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
+        "art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_shipyard_style.png"
+      ],
+      "generation_date": "2026-11-10",
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon_matte.png",
+        "sha256": "60c47e4634426a8f0a2ddd7f07f77626b1cd95bf9c216921aaab866cebb517b0",
+        "window": [
+          54,
+          607,
+          736,
+          495
         ]
       }
     }

@@ -123,10 +123,11 @@ const SCENIC_AMBIENT_LIGHTS := {
 		{"position": Vector2(0.24, 0.84), "radius": 0.090, "color": Color(1.0, 0.30, 0.05), "strength": 0.94},
 	],
 	"faction_veilmourn": [
-		# On the lights of the bell fjord: the sunset on the channel, the falls, a moored ship's lanterns.
+		# On the lights of the bell fjord: the sunset on the channel, the falls, the deck lanterns of
+		# the ship moored at the left edge.
 		{"position": Vector2(0.092, 0.19), "radius": 0.075, "color": Color(1.0, 0.60, 0.28), "strength": 0.72},
 		{"position": Vector2(0.55, 0.49), "radius": 0.075, "color": Color(0.66, 0.80, 1.0), "strength": 0.66},
-		{"position": Vector2(0.156, 0.664), "radius": 0.055, "color": Color(1.0, 0.66, 0.24), "strength": 0.78},
+		{"position": Vector2(0.028, 0.456), "radius": 0.045, "color": Color(1.0, 0.66, 0.24), "strength": 0.78},
 	],
 }
 const STATUS_ACCENT_WIDTH := 5.0

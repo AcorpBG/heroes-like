@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-shipyard-main-army-20261110",
- "currentSliceTitle": "Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, at that army's worth against the Shipyard and boat price, and build none before day 8. Any idle hero set it off before.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T06:52:17Z",
+ "currentSliceId": "town-art-shipyards-20261110",
+ "currentSliceTitle": "Shipyard art in the Brasshollow and Veilmourn towns",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T07:04:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-shipyards-20261110",
+   "title": "Shipyard art in the Brasshollow and Veilmourn towns",
+   "status": "in_progress",
+   "goal": "Paint the Shipyard into the two repainted towns as masked edits of their backdrops: Brasshollow a boatworks down the cliff under the market terrace, hulls on rails toward the slag river; Veilmourn a boatyard at the sea stack's foot, the moored ship there painted out of the backdrop, its fx mask water and stage glow moved with it. Packets, layers, manifests. Owner, 2026-11-10: paint both.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ai-shipyard-main-army-20261110",
    "status": "completed",

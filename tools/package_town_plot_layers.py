@@ -289,7 +289,8 @@ def main():
         rows[bid] = {
             'source_path': uri(source), 'source_sha256': digest(source), 'source_size': list(Image.open(source).size),
             'prompt_path': uri(prompt), 'prompt_sha256': digest(prompt),
-            'generation_date': generation['date'], 'generation_tool': generation['tool'],
+            # A building painted after the set keeps its own date.
+            'generation_date': item.get('generation_date', generation['date']), 'generation_tool': generation['tool'],
             'reference_inputs': ['res://' + path for path in item['reference_inputs']],
             'processing_tool': 'tools/package_town_plot_layers.py',
             'asset_id': faction + '_' + bid,

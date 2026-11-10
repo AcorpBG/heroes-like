@@ -3,15 +3,15 @@
   "faction_id": "faction_veilmourn",
   "scene_id": "bell_fjord",
   "stage": "village",
-  "owner_decision": "2026-11-09: the owner had the 23 plots planned before the painting, chose the planned fjord (concept B) and approved painting the full Veilmourn set into it.",
+  "owner_decision": "2026-11-09: the owner had the 23 plots planned before the painting, chose the planned fjord (concept B) and approved painting the full Veilmourn set into it. 2026-11-10: the owner had a Shipyard painted at the sea stack's foot, in the place of the moored ship there, which leaves the backdrop.",
   "generation": {
     "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
     "date": "2026-11-09"
   },
   "method": "Each building is a masked edit of the empty fjord (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the fjord around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the fjord was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records. Two buildings the model painted wider than their plot were repainted into a narrower box, which box records; their earlier stages scale from it.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
-    "source_sha256": "6d997eec4f4ee3e294d5387dde1354d0f92cb6a0ec670274b268cc3ce4ca6c85",
+    "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
+    "source_sha256": "df9bd04fcf1e72c50c5c19258352e3df302775288fb7183041ac301f4ec82ff1",
     "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_concept.png",
@@ -25,7 +25,31 @@
         "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/first_concept.png"
       ],
       "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the first fjord concept (first_concept.png, prompt bell_fjord_first_concept.prompt.txt), used for style and building designs only."
-    }
+    },
+    "revisions": [
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord.png",
+        "from_sha256": "6d997eec4f4ee3e294d5387dde1354d0f92cb6a0ec670274b268cc3ce4ca6c85",
+        "change": "The moored ship at the sea stack's foot painted out, so the shipyard has open water to stand on. A masked edit of a close-up crop (mirrored past the left edge) with the ship's box as the mask, blended back into the master inside that box only.",
+        "box": [
+          176,
+          600,
+          280,
+          274
+        ],
+        "crop": [
+          0,
+          326,
+          736,
+          822
+        ],
+        "edit_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2_edit.png",
+        "edit_sha256": "f9f98666133528ab54082386b035beaeae0370b8247e81048662350e7d3eb9b0",
+        "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.prompt.txt",
+        "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+        "date": "2026-11-10"
+      }
+    ]
   },
   "cut": {
     "plot_reach": 20,
@@ -175,6 +199,12 @@
       112,
       265,
       210
+    ],
+    "building_dev_shipyard": [
+      186,
+      596,
+      266,
+      254
     ]
   },
   "buildings": [
@@ -1860,6 +1890,40 @@
           792,
           520,
           353
+        ]
+      }
+    },
+    {
+      "id": "building_dev_shipyard",
+      "plot_id": "building_dev_shipyard",
+      "box": [
+        186,
+        596,
+        266,
+        254
+      ],
+      "crop": [
+        0,
+        342,
+        718,
+        762
+      ],
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_shipyard_fjord.png",
+      "source_sha256": "7f39ca849057aa21a17b1ac8823e46ea1d173494c3f897ea62f895391363076d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_shipyard_fjord.prompt.txt",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
+        "art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_shipyard_style.png"
+      ],
+      "generation_date": "2026-11-10",
+      "matte": {
+        "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_shipyard_fjord_matte.png",
+        "sha256": "e8cf6d7b7e0d39c1e085368dff959b4eaf3999e6066236ebddc85f2451e799bd",
+        "window": [
+          65,
+          518,
+          570,
+          387
         ]
       }
     }

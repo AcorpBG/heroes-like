@@ -3061,14 +3061,14 @@
         "processing_tool": "tools/package_town_plot_layers.py",
         "asset_id": "faction_veilmourn_building_dev_veilmourn_t6_1_upgrade",
         "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade.png",
-        "runtime_sha256": "acdae97c86c1f17caf98797becadb1636c8be2f054079ab0f2f9e6c48d556949",
+        "runtime_sha256": "84a51e078db817186705bff5bc28d2591b5d366427f78ccc262e1b0a7377ebd6",
         "runtime_size": [
           512,
           350
         ],
         "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade_hit.png",
         "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade.png",
-        "icon_sha256": "0ef10b6db3b47404f715ac2e04f47a32839f652bbb092727751db742c16df6f1",
+        "icon_sha256": "c08b0de2905481c54abf1cab80e13f95b2ef8ad38a00b31f129d00f5346646cf",
         "normalized_rect": [
           0.170898,
           0.572049,
@@ -3492,6 +3492,52 @@
         "ground_anchor": [
           0.163086,
           0.467882
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Painted into the empty fjord on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+        "curation": "Owner-approved bell-fjord set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
+      },
+      "building_dev_shipyard": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_shipyard_fjord.png",
+        "source_sha256": "7f39ca849057aa21a17b1ac8823e46ea1d173494c3f897ea62f895391363076d",
+        "source_size": [
+          921,
+          976
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_shipyard_fjord.prompt.txt",
+        "prompt_sha256": "a988a7859f5bb0bb2156c35a93879ec686d51fad9081ae1eee05d5cf300fbe6c",
+        "generation_date": "2026-11-10",
+        "generation_tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_v2.png",
+          "res://art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_refs/building_dev_shipyard_style.png"
+        ],
+        "processing_tool": "tools/package_town_plot_layers.py",
+        "asset_id": "faction_veilmourn_building_dev_shipyard",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_veilmourn/building_dev_shipyard.png",
+        "runtime_sha256": "f3593b59acae4b79ba075a3a4a9ec1a048a478ebcc674494c00b7335d2d95ef2",
+        "runtime_size": [
+          488,
+          285
+        ],
+        "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_veilmourn/building_dev_shipyard_hit.png",
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_veilmourn/building_dev_shipyard.png",
+        "icon_sha256": "7bd0dd8f7a3550ea596fd6c63ad61f6b7a6b5141fe72fca600489d479497b90a",
+        "normalized_rect": [
+          0.053223,
+          0.496528,
+          0.238281,
+          0.247396
+        ],
+        "ground_anchor": [
+          0.172119,
+          0.733507
         ],
         "modulate": [
           1,
@@ -22600,6 +22646,52 @@
         "ground_anchor": [
           0.504639,
           0.481771
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Painted into the empty slag canyon on its own plot by a masked edit; the layer is the building as BiRefNet marks it, with a short soft skirt of its painted foundation, and later stages keep the plot's ground line.",
+        "curation": "Owner-approved slag-canyon set (2026-11-09); layers draw under the stage tint and light, clicks follow the building-only hit mask."
+      },
+      "building_dev_shipyard": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.png",
+        "source_sha256": "904cf83bc4ab17f1d2a32073055deea2dfd026304145504b0c3d4057abc04615",
+        "source_size": [
+          1270,
+          688
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_shipyard_canyon.prompt.txt",
+        "prompt_sha256": "82647c0bc73b982f3d58e7d00e7fc1c94753d5f82e91ad1f3a49a5d160ac27d3",
+        "generation_date": "2026-11-10",
+        "generation_tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon.png",
+          "res://art/towns/source/generated/overhaul/faction_brasshollow/slag_canyon_refs/building_dev_shipyard_style.png"
+        ],
+        "processing_tool": "tools/package_town_plot_layers.py",
+        "asset_id": "faction_brasshollow_building_dev_shipyard",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_shipyard.png",
+        "runtime_sha256": "2fec6ca520351c1ae0c88102a52f87e34339458ab99df576583852e7c33b25d4",
+        "runtime_size": [
+          512,
+          303
+        ],
+        "hit_mask_path": "res://art/towns/runtime/scene_layers/overhaul/faction_brasshollow/building_dev_shipyard_hit.png",
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_brasshollow/building_dev_shipyard.png",
+        "icon_sha256": "c67ab466d739bc5481456a351b55552eb8b44bcbe74857536d4a3eb73b1dd385",
+        "normalized_rect": [
+          0.055664,
+          0.588542,
+          0.300781,
+          0.315972
+        ],
+        "ground_anchor": [
+          0.205811,
+          0.894097
         ],
         "modulate": [
           1,
