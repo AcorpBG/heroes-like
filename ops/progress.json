@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-map-info-card-art-20261110",
- "currentSliceTitle": "The map's right-click report and hover card use the sidebar's dark-and-gold frame (imggen mockup B), fit their content, and show unit icons cut from the existing portraits at 56 px instead of the whole figure at 36.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T10:19:37Z",
+ "currentSliceId": "town-art-mireclaw-backdrop-v2-20261110",
+ "currentSliceTitle": "Mireclaw backdrop repainted without its vertical hatching",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-10T10:23:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-mireclaw-backdrop-v2-20261110",
+   "title": "Mireclaw backdrop repainted without its vertical hatching",
+   "status": "in_progress",
+   "goal": "The owner found the dusk fen backdrop very streaky, with vertical lines all over: its floor was thin upright reed strokes. Repaint the floor in one edit that keeps the layout (owner's pick, candidate 1), keep the 52 building layers by cutting them against the master they were painted on (backdrop.painted_on in both tools), rebuild the built picture and the effect mask.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-10"
+  },
   {
    "id": "ui-map-info-card-art-20261110",
    "status": "completed",

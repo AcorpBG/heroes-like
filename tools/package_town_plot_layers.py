@@ -237,8 +237,16 @@ def main():
     if digest(master_path) != backdrop['source_sha256']:
         raise ValueError('Changed backdrop master: ' + str(master_path))
     master_image = Image.open(master_path).convert('RGB')
-    master = np.asarray(master_image).astype(np.float32)
     width, height = master_image.size
+    # A backdrop repainted after its buildings names the master they were painted on: the
+    # buildings are cut against that one, and drawn over the new one.
+    painted_image = master_image
+    if backdrop.get('painted_on'):
+        painted_path = ROOT / backdrop['painted_on']['source_path']
+        if digest(painted_path) != backdrop['painted_on']['source_sha256']:
+            raise ValueError('Changed painted-on master: ' + str(painted_path))
+        painted_image = Image.open(painted_path).convert('RGB')
+    master = np.asarray(painted_image).astype(np.float32)
     scene, layout = read(SCENE), read(LAYOUT)
     generation = packet['generation']
 
@@ -259,7 +267,7 @@ def main():
             raise ValueError('Changed matte: ' + str(matte_path))
         with Image.open(matte_path) as matte_image:
             matte = np.asarray(matte_image.convert('L')).astype(np.float32) / 255.0
-        (cx0, cy0), edit, alpha, building, solid = cut(master, full_edit(master_image, item), item, matte, settings)
+        (cx0, cy0), edit, alpha, building, solid = cut(master, full_edit(painted_image, item), item, matte, settings)
         ys, xs = np.nonzero(alpha > 0.004)
         ly0, ly1, lx0, lx1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
         layer = Image.fromarray(np.dstack([edit, alpha * 255.0])[ly0:ly1, lx0:lx1].round().astype(np.uint8), 'RGBA')

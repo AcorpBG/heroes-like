@@ -52,6 +52,7 @@ None open.
 
 ## Open work
 
+- `town-art-mireclaw-backdrop-v2-20261110` (in progress): The owner found the dusk fen backdrop very streaky, with vertical lines all over: its floor was thin upright reed strokes. Repaint the floor in one edit that keeps the layout (owner's pick, candidate 1), keep the 52 building layers by cutting them against the master they were painted on (backdrop.painted_on in both tools), rebuild the built picture and the effect mask. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

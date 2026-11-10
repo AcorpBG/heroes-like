@@ -23,9 +23,10 @@ OUT = ROOT / 'art/towns/runtime/backdrops/overhaul/faction_mireclaw_dusk_fen_fx_
 # All shapes in backdrop pixels (1600x900).
 # The swamp floor, where pools may lie: below the far tree line, left of the foreground tree.
 ZONE = [(0, 250), (1380, 250), (1400, 420), (1380, 560), (1300, 700), (1180, 790), (1060, 860), (980, 900), (0, 900)]
-SURE_WATER = [(60, 575, 250, 620), (640, 630, 780, 700), (380, 720, 700, 780), (150, 650, 280, 690)]
-SURE_LAND = [(170, 280, 540, 400), (450, 510, 880, 560), (300, 630, 590, 690), (1080, 545, 1320, 590), (0, 700, 200, 900),
-             (700, 800, 1000, 900), (840, 720, 1180, 790)]
+SURE_WATER = [(30, 470, 230, 560), (300, 560, 560, 610), (620, 650, 800, 700), (240, 740, 520, 860), (700, 440, 860, 465),
+              (880, 395, 960, 425)]
+SURE_LAND = [(120, 270, 620, 420), (420, 480, 960, 555), (290, 632, 590, 700), (20, 395, 120, 455), (0, 690, 200, 900),
+             (560, 790, 1100, 900), (940, 380, 1340, 455), (830, 330, 1100, 390), (1000, 540, 1400, 780), (660, 240, 980, 300)]
 # Far pools under the dusk glow shine paler than the reeds around them: inside this box, water is
 # the paint lighter than FAR_LIGHT.
 FAR_POOLS = (900, 130, 1410, 330)

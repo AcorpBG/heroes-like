@@ -3,15 +3,15 @@
   "faction_id": "faction_mireclaw",
   "scene_id": "dusk_fen",
   "stage": "village",
-  "owner_decision": "2026-11-10: the owner chose Mireclaw next and rejected the first concepts, a river gorge with the antlered beast in the water: Mireclaw should feel more swampy and less like a river, and the elk should not be in the water. The owner then chose concept D (a bog of still pools, reeds and hummocks, the beast on a dry island) and approved painting the full set into it.",
+  "owner_decision": "2026-11-10: the owner chose Mireclaw next and rejected the first concepts, a river gorge with the antlered beast in the water: Mireclaw should feel more swampy and less like a river, and the elk should not be in the water. The owner then chose concept D (a bog of still pools, reeds and hummocks, the beast on a dry island) and approved painting the full set into it. Later the same day the owner found the backdrop very streaky, with vertical lines all over, and chose candidate 1 of two repaints of the swamp floor.",
   "generation": {
     "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, masked edit, quality medium, complexity low",
     "date": "2026-11-10"
   },
   "method": "Each building is a masked edit of the empty swamp (image 1) with its box as the mask and a reference (image 2): a crop of the concept painting for the buildings the concept designed, a detail of it for style only, or the next stage's painting for earlier stages. Image 1 was a crop of the swamp around the box, scaled to the edit size, so the box filled about a third of it. The crop is centred on the box; where it ran past the frame, the swamp was mirrored at the edge for the edit, and the painting is the edit's part inside the frame, which crop records.",
   "backdrop": {
-    "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
-    "source_sha256": "a8c0718f864acb822ec9a4f1b49251d443dfaa8063cbc6b72a6af0e7093b4090",
+    "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v2.png",
+    "source_sha256": "8594482de210c40d4f774c3bdb8182f445fff6401936659679b3322372221f23",
     "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.prompt.txt",
     "reference_inputs": [
       "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_concept.png"
@@ -24,7 +24,21 @@
         "art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png"
       ],
       "note": "Image 1 was the plot plan sketch (plan_sketch.png), image 2 the earlier Mireclaw town painting, used for style and building designs only."
-    }
+    },
+    "painted_on": {
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+      "source_sha256": "a8c0718f864acb822ec9a4f1b49251d443dfaa8063cbc6b72a6af0e7093b4090"
+    },
+    "revisions": [
+      {
+        "from_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen.png",
+        "from_sha256": "a8c0718f864acb822ec9a4f1b49251d443dfaa8063cbc6b72a6af0e7093b4090",
+        "change": "The whole swamp floor repainted without its fine vertical hatching: the first backdrop drew the ground as thousands of thin upright reed strokes with upright reflections. One unmasked edit of the first backdrop (complexity high) that keeps the layout: the stump, the root mound, the island, the mere and the foreground tree. The buildings were painted on the first backdrop and are cut against it (painted_on); they are drawn over this one.",
+        "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_v2.prompt.txt",
+        "tool": "imggen: OpenAI Images API, gpt-image-2.6-sunburst, edit, quality medium, complexity high",
+        "date": "2026-11-10"
+      }
+    ]
   },
   "cut": {
     "plot_reach": 20,

@@ -148,8 +148,10 @@ def main():
     args = parser.parse_args()
     packet_path = (ROOT / args.packet).resolve()
     packet = json.loads(packet_path.read_text(encoding='utf-8'))
-    master_path = ROOT / packet['backdrop']['source_path']
-    if digest(master_path) != packet['backdrop']['source_sha256']:
+    # The master the buildings were painted on: the backdrop's own, unless it was repainted after them.
+    painted = packet['backdrop'].get('painted_on') or packet['backdrop']
+    master_path = ROOT / painted['source_path']
+    if digest(master_path) != painted['source_sha256']:
         raise ValueError('Changed backdrop master: ' + str(master_path))
     master = Image.open(master_path).convert('RGB')
     width, height = master.size
