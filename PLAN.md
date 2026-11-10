@@ -54,7 +54,6 @@ None open.
 
 ## Open work
 
-- `town-plot-shelves-20261110` (in progress): Owner: buildings still float and stand out of place (Sunvault, Thornwake, Veilmourn). Paint level natural ground into the backdrops at every plot so each building stands; tools/town_plot_shelves.py, the four town packets, runtime backdrops. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -64,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.
 - 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Hero portrait in the skirmish setup keeps one size (249x332); built maps window shows each map as a picture with seats, commander and setting chips.
 - 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card (stats, specialties, spells, starting troops), map settings as pills; built maps behind a button.

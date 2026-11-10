@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-plot-shelves-20261110",
- "currentSliceTitle": "Town buildings stand on level ground",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T14:48:23Z",
+ "currentSliceTitle": "Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T14:48:30Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-plot-shelves-20261110",
-   "title": "Town buildings stand on level ground",
-   "status": "in_progress",
-   "goal": "Owner: buildings still float and stand out of place (Sunvault, Thornwake, Veilmourn). Paint level natural ground into the backdrops at every plot so each building stands; tools/town_plot_shelves.py, the four town packets, runtime backdrops.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.",
+   "commit": "0d4db024b"
   },
   {
    "id": "ui-built-maps-pictures-20261110",
