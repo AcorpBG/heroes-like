@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "art-unit-icon-closeups-20261110",
- "currentSliceTitle": "Close-up icons for creatures, machines and failed crops",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T10:40:16Z",
+ "currentSliceTitle": "Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T10:53:25Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "art-unit-icon-closeups-20261110",
-   "title": "Close-up icons for creatures, machines and failed crops",
-   "status": "in_progress",
-   "goal": "Every unit's small icon is a head-and-shoulders close-up (owner, 2026-11-10: all units should look consistent). 75 beasts, winged and plant creatures, machines and failed crops get an imggen close-up made from their own portrait; six soldier units get a forced crop. Files: art/units/icon_busts, content/unit_bust_regions.json, tools.",
-   "docs": [
-    "docs/overworld-info-card.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Every unit's small icon is a head-and-shoulders close-up: 75 beasts, winged and plant creatures, machines and failed crops get an icon painted with imggen from their own portrait; 157 soldiers keep the portrait crop.",
+   "commit": "9325c50c4"
   },
   {
    "id": "town-art-mireclaw-foreground-20261110",
