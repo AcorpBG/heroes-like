@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "ui-army-size-bands-20261110",
- "currentSliceTitle": "Other armies' numbers shown as size bands",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-10T09:39:13Z",
+ "currentSliceTitle": "The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-10T09:48:17Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "ui-army-size-bands-20261110",
-   "title": "Other armies' numbers shown as size bands",
-   "status": "in_progress",
-   "goal": "The map no longer tells the exact count of another side's creatures: hover, the right-click report, the rules' army, readiness, dwelling-guard and enemy-garrison texts use nine size bands (owner, 2026-11-10; ranges picked by the agent). Battles and the player's own armies stay exact.",
-   "docs": [
-    "docs/army-size-bands.md"
-   ],
-   "updatedAt": "2026-11-10"
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.",
+   "commit": "cd8c4ec8d"
   },
   {
    "id": "town-stage-haze-embercourt-20261110",

@@ -51,7 +51,6 @@ None open.
 
 ## Open work
 
-- `ui-army-size-bands-20261110` (in progress): The map no longer tells the exact count of another side's creatures: hover, the right-click report, the rules' army, readiness, dwelling-guard and enemy-garrison texts use nine size bands (owner, 2026-11-10; ranges picked by the agent). Battles and the player's own armies stay exact. See `docs/army-size-bands.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -61,6 +60,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few 1-3 up to Countless 501+) in hover, the right-click report and the rules' army, readiness, dwelling-guard and garrison texts. Own armies and battles stay exact.
 - 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile: what it is, what it gives, ready or used for the selected hero, guard and owner. Used buildings no longer read Available; towns and artifacts work.
 - 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.
