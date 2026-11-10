@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "tooling-source-archive-snapshot-20261110",
- "currentSliceTitle": "Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.",
+ "currentSliceId": "town-art-thornwake-20261110",
+ "currentSliceTitle": "Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T11:48:42Z",
+ "updatedAt": "2026-11-10T12:09:21Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-art-thornwake-20261110",
+   "status": "completed",
+   "completedAt": "2026-11-10",
+   "summary": "Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.",
+   "commit": "00ffec2ea"
+  },
   {
    "id": "tooling-source-archive-snapshot-20261110",
    "status": "completed",

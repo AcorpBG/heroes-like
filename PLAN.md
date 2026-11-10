@@ -62,6 +62,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October (town repaints, spell and battle effect art, unit icon close-ups, information card), verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip of the game and its F1 full-text window take the map information card's dark-and-gold frames: a gold heading for a short first line, a Close button, and a window only as tall as its text.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.
