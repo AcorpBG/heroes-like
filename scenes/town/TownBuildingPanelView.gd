@@ -20,10 +20,14 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
 const Widgets = preload("res://scenes/town/TownPanelWidgets.gd")
 const RecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
+const SpellGrimoireScript = preload("res://scenes/shared/SpellGrimoire.gd")
 
 const STATUS_TONES := {"ready": "green", "trade": "teal", "short": "red", "locked": "muted", "tomorrow": "muted", "complete": "gold"}
 const SIDE_WIDTH := 372.0
-const SPELL_CARD_HEIGHT := 58.0
+## The magic guild's open book: its widest, and the room the rest of the screen
+## and the popout's own frame take from the height.
+const GUILD_BOOK_WIDTH := 1010.0
+const GUILD_BOOK_ROOM := 380.0
 const GRID_GAP := 8
 const TILE_WIDTH := 148.0
 const TILE_HEIGHT := 48.0
@@ -36,8 +40,13 @@ var _recruit_note: Label
 var _validation_in_place_refresh_count := 0
 var _hire_buttons: Dictionary = {}
 var _service_buttons: Dictionary = {}
-var _spell_cards: Dictionary = {}
-var _level_buttons: Array = []
+var _guild_book: TextureRect
+var _guild_desk: VBoxContainer
+var _guild_rise: Control
+var _guild_state: Dictionary = {}
+# Where the guild's book is open; kept through a refresh after an order.
+var _guild_view: Dictionary = {}
+var _identity: HBoxContainer
 var _upgrade_button: Button
 var _trade_button: Button
 var _painting: TextureRect
@@ -47,8 +56,6 @@ var _subtitle_label: Label
 var _columns: HBoxContainer
 var _body: VBoxContainer
 var _side: VBoxContainer
-var _spell_note: Label
-var _spell_grid: GridContainer
 var _hero_grid: GridContainer
 var _market_give := ""
 var _market_receive := ""
@@ -73,6 +80,7 @@ func _init() -> void:
 	identity.name = "BuildingIdentity"
 	identity.add_theme_constant_override("separation", 18)
 	add_child(identity)
+	_identity = identity
 	_painting = TextureRect.new()
 	_painting.name = "BuildingPainting"
 	_painting.custom_minimum_size = Vector2(96, 96)
@@ -127,6 +135,7 @@ func configure(model: Dictionary, fresh: bool = false) -> void:
 	_resources = model.get("resources", {}) if model.get("resources", {}) is Dictionary else {}
 	if not same_building or fresh:
 		_guild_level = 0
+		_guild_view = {}
 		_market_give = ""
 		_market_receive = ""
 		_market_amount = 1
@@ -138,6 +147,8 @@ func configure(model: Dictionary, fresh: bool = false) -> void:
 	for line in model.get("effects", []):
 		_effects_box.add_child(_chip(String(line), "gold"))
 	_effects_box.visible = _effects_box.get_child_count() > 0
+	# The magic guild is its book: no painting and description above it.
+	_identity.visible = String(model.get("kind", "")) != "guild"
 	_rebuild_body()
 
 ## A recruit in an open dwelling popout changes the reserve, the stores and
@@ -229,13 +240,12 @@ func _rebuild_body() -> void:
 	_recruit_note = null
 	_hire_buttons.clear()
 	_service_buttons.clear()
-	_spell_cards.clear()
-	_level_buttons.clear()
+	_guild_book = null
+	_guild_desk = null
+	_guild_rise = null
 	_upgrade_button = null
 	_trade_button = null
-	_spell_grid = null
 	_hero_grid = null
-	_spell_note = null
 	_market_give_tiles.clear()
 	_market_grids.clear()
 	_market_receive_tiles.clear()
@@ -252,7 +262,10 @@ func _rebuild_body() -> void:
 		"market":
 			_build_market()
 	_build_services()
-	_build_upgrade()
+	if String(_model.get("kind", "")) == "guild":
+		_build_guild_next()
+	else:
+		_build_upgrade()
 	var has_body := _body.get_child_count() > 0
 	var has_side := _side.get_child_count() > 0
 	_body.visible = has_body
@@ -309,114 +322,165 @@ func _build_recruitment() -> void:
 
 # --- magic guild ----------------------------------------------------------------
 
+## The guild is the open spell book (SpellGrimoire) with a bookmark for each
+## level: the level's spells on the left page, the one under the mouse written
+## out on the right. Under the book, the next level and its build order.
 func _build_guild() -> void:
 	var guild: Dictionary = _model.get("guild", {})
-	var visitor := String(guild.get("visitor_name", ""))
-	var note := "%s learns every spell of the built levels." % visitor if visitor != "" else "Heroes learn every spell of the built levels when they visit."
-	var section := _section("Spells", note)
-	section.name = "Spells"
-	_spell_note = section.get_child(0).get_child(1) as Label
 	var levels: Array = guild.get("levels", [])
 	if levels.is_empty():
-		section.add_child(_label("This town has no spell library.", "muted", 14))
+		_body.add_child(_label("This town has no spell library.", "muted", 14))
 		return
 	if _guild_level <= 0:
 		_guild_level = max(1, int(guild.get("current_level", 1)))
-	var tabs := HBoxContainer.new()
-	tabs.name = "Levels"
-	tabs.add_theme_constant_override("separation", 6)
-	section.add_child(tabs)
-	var group := ButtonGroup.new()
+	if not _guild_view.has("bookmark"):
+		_guild_view["bookmark"] = str(_guild_level)
+	var visitor := String(guild.get("visitor_name", ""))
+	var taught := "%s learns every spell of the built levels." % visitor if visitor != "" else "Heroes learn every spell of the built levels when they visit."
+	var bookmarks := []
+	var details := {}
+	var marks := {}
+	var notes := {}
 	for level_value in levels:
 		var level: Dictionary = level_value
 		var number := int(level.get("level", 0))
-		var button := Button.new()
-		button.name = "Level%d" % number
-		button.toggle_mode = true
-		button.button_group = group
-		button.button_pressed = number == _guild_level
-		button.text = "Level %s · %d%s" % [Board.roman(number), level.get("spells", []).size(), "" if bool(level.get("built", false)) else " · locked"]
-		button.tooltip_text = "%s — %s" % [String(level.get("building_name", "")), "built" if bool(level.get("built", false)) else "not built yet"]
-		FrontierVisualKit.apply_button(button, "primary" if number == _guild_level else "secondary", 118, 32, 13)
-		button.pressed.connect(_on_guild_level_pressed.bind(number))
-		tabs.add_child(button)
-		_level_buttons.append(button)
-	_spell_grid = GridContainer.new()
-	_spell_grid.name = "SpellGrid"
-	_spell_grid.add_theme_constant_override("h_separation", GRID_GAP)
-	_spell_grid.add_theme_constant_override("v_separation", GRID_GAP)
-	section.add_child(_spell_grid)
-	_show_guild_level()
+		var built := bool(level.get("built", false))
+		var building_name := String(level.get("building_name", ""))
+		var rows := []
+		for spell in level.get("spells", []):
+			var spell_id := String(spell.get("id", ""))
+			rows.append(ContentService.get_spell(spell_id))
+			details[spell_id] = {"cost": int(spell.get("mana", 0)), "effect": String(spell.get("summary", ""))}
+			if bool(spell.get("known", false)):
+				marks[spell_id] = true
+				notes[spell_id] = {"text": "%s knows this spell." % visitor, "tone": "good"}
+			elif not built:
+				notes[spell_id] = {"text": "Taught once %s is built." % building_name}
+			else:
+				notes[spell_id] = {"text": "%s has not learned this spell." % visitor if visitor != "" else "Taught to heroes who visit."}
+		bookmarks.append({
+			"id": str(number),
+			"text": Board.roman(number),
+			"tooltip": "%s · %d spell%s · %s" % [building_name, rows.size(), "" if rows.size() == 1 else "s", "built" if built else "not built yet"],
+			"locked": not built,
+			"heading": "Level %s" % Board.roman(number),
+			"status": taught if built else "Build %s to teach these spells." % building_name,
+			"spells": rows,
+		})
+	_guild_desk = VBoxContainer.new()
+	_guild_desk.name = "Spells"
+	_guild_desk.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_guild_desk.add_theme_constant_override("separation", 10)
+	_body.add_child(_guild_desk)
+	# Room for the bookmarks, which rise above the book.
+	_guild_rise = Control.new()
+	_guild_rise.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_guild_desk.add_child(_guild_rise)
+	_guild_book = SpellGrimoireScript.new()
+	_guild_book.name = "GuildBook"
+	_guild_desk.add_child(_guild_book)
+	_guild_book.page_turned.connect(func():
+		_guild_level = int(String(_guild_view.get("bookmark", "0")))
+		controls_changed.emit())
+	_guild_state = {
+		"bookmarks": bookmarks,
+		"details": details,
+		"marks": marks,
+		"entry_notes": notes,
+		"view": _guild_view,
+	}
+	_size_guild_book(true)
 
-func _on_guild_level_pressed(level: int) -> void:
-	_guild_level = level
-	for button in _level_buttons:
-		FrontierVisualKit.apply_button(button, "primary" if button.name == "Level%d" % level else "secondary", 118, 32, 13)
-	_show_guild_level()
-	controls_changed.emit()
-
-func _show_guild_level() -> void:
-	if _spell_grid == null:
+## The book takes what the screen leaves it, and its lettering follows.
+func _size_guild_book(fresh: bool = false) -> void:
+	if not is_instance_valid(_guild_book):
 		return
-	_clear(_spell_grid)
-	_spell_cards.clear()
-	var level := _guild_level_model(_guild_level)
-	var built := bool(level.get("built", false))
-	if _spell_note != null:
-		var guild: Dictionary = _model.get("guild", {})
-		var visitor := String(guild.get("visitor_name", ""))
-		var taught := ("%s learns every spell of the built levels." % visitor) if visitor != "" else "Heroes learn every spell of the built levels when they visit."
-		_spell_note.text = taught if built else "Build %s to teach these spells." % String(level.get("building_name", ""))
-		_spell_note.tooltip_text = _spell_note.text
-		_spell_note.add_theme_color_override("font_color", FrontierVisualKit.text_color("muted" if built else "gold"))
-	for spell in level.get("spells", []):
-		var card := _spell_card(spell, built)
-		_spell_grid.add_child(card)
-		_spell_cards[String(spell.get("id", ""))] = card
-	_apply_columns()
+	var screen := get_viewport_rect().size if is_inside_tree() else Vector2(1920.0, 1080.0)
+	var width := floorf(clampf(minf(screen.x - 140.0, (screen.y - GUILD_BOOK_ROOM) * SpellGrimoireScript.ASPECT), 520.0, GUILD_BOOK_WIDTH))
+	if not fresh and is_equal_approx(width, _guild_book.custom_minimum_size.x):
+		return
+	var height := floorf(width / SpellGrimoireScript.ASPECT)
+	_guild_book.custom_minimum_size = Vector2(width, height)
+	_guild_rise.custom_minimum_size.y = ceilf(SpellGrimoireScript.BOOKMARK_RISE * height)
+	_guild_desk.custom_minimum_size.x = width
+	_guild_state["scale"] = clampf(width / 900.0, 0.72, 1.0)
+	_guild_book.show_book(_guild_state)
 
-func _guild_level_model(level: int) -> Dictionary:
-	for entry in _model.get("guild", {}).get("levels", []):
-		if int(entry.get("level", 0)) == level:
-			return entry
-	return {}
-
-func _spell_card(spell: Dictionary, built: bool) -> PanelContainer:
-	var card := PanelContainer.new()
-	card.name = String(spell.get("id", "Spell"))
-	_apply_card(card, "ink" if built else "earth")
-	card.modulate = Color(1, 1, 1, 1) if built else Color(1, 1, 1, 0.6)
-	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card.custom_minimum_size.y = SPELL_CARD_HEIGHT
-	card.tooltip_text = "%s — %s\n%s\n%s · %s · level %d · %d mana" % [String(spell.get("name", "")), String(spell.get("summary", "")), String(spell.get("description", "")), String(spell.get("school_name", "")), String(spell.get("context", "")), int(spell.get("tier", 0)), int(spell.get("mana", 0))]
-	card.mouse_filter = Control.MOUSE_FILTER_PASS
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(row)
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(38, 38)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	icon.texture = _texture(String(spell.get("icon_path", "")))
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(icon)
+## Under the book: the next level, what it costs, and the order to build it.
+func _build_guild_next() -> void:
+	var upgrade: Dictionary = _model.get("upgrade", {})
+	if _guild_desk == null or not bool(upgrade.get("has_line", false)):
+		return
+	var panel := PanelContainer.new()
+	panel.name = "NextStage"
+	panel.add_theme_stylebox_override("panel", FrontierVisualKit.info_card_style(true))
+	_guild_desk.add_child(panel)
+	# On a narrow book the cost and the order wrap under the name.
+	var row := HFlowContainer.new()
+	row.alignment = FlowContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("h_separation", 18)
+	row.add_theme_constant_override("v_separation", 6)
+	panel.add_child(row)
+	if bool(upgrade.get("complete", false)):
+		var done := _label("Every level of the guild is built.", "gold", 15)
+		done.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(done)
+		return
+	var next_id := String(upgrade.get("next_id", ""))
+	var what := String(upgrade.get("next_name", ""))
+	for level in _model.get("guild", {}).get("levels", []):
+		if String(level.get("building_id", "")) == next_id:
+			var count: int = level.get("spells", []).size()
+			what += " · %d spell%s of tier %d" % [count, "" if count == 1 else "s", int(level.get("level", 0))]
 	var copy := VBoxContainer.new()
+	copy.custom_minimum_size.x = 300.0
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy.add_theme_constant_override("separation", 1)
-	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	copy.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	copy.add_theme_constant_override("separation", 2)
 	row.add_child(copy)
-	var title := _label(String(spell.get("name", "")), "title", 13)
-	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	copy.add_child(title)
-	var meta := _label("%d mana · %s · %s%s" % [int(spell.get("mana", 0)), String(spell.get("context", "")), String(spell.get("school_name", "")), " · known" if bool(spell.get("known", false)) else ""], "gold", 12)
-	meta.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	copy.add_child(meta)
-	var summary := _label(String(spell.get("summary", "")), "muted", 12)
-	summary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	copy.add_child(summary)
-	return card
+	var next_line := HBoxContainer.new()
+	next_line.add_theme_constant_override("separation", 8)
+	copy.add_child(next_line)
+	next_line.add_child(_label("Next", "gold", 15))
+	var name_label := _label(what, "title", 15)
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	next_line.add_child(name_label)
+	var status_id := String(upgrade.get("status", ""))
+	var missing: Array = upgrade.get("missing_requirements", [])
+	var why := "Requires %s." % ", ".join(missing) if not missing.is_empty() else (String(upgrade.get("status_detail", "")) if status_id in ["short", "tomorrow", "locked"] else "")
+	var status := _label(String(upgrade.get("status_text", "")) if why == "" else why, String(STATUS_TONES.get(status_id, "muted")), 13)
+	status.name = "UpgradeStatus"
+	status.visible = status_id != "ready" and status.text != ""
+	status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	status.tooltip_text = String(upgrade.get("status_detail", ""))
+	status.mouse_filter = Control.MOUSE_FILTER_PASS
+	copy.add_child(status)
+	var cost := _cost_row(upgrade.get("cost", {}), 1)
+	cost.name = "CostLine"
+	cost.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(cost)
+	_upgrade_button = Button.new()
+	_upgrade_button.name = "UpgradeButton"
+	_upgrade_button.text = "Build %s" % String(upgrade.get("next_name", ""))
+	_upgrade_button.disabled = status_id != "ready"
+	_upgrade_button.tooltip_text = String(upgrade.get("status_detail", ""))
+	_upgrade_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	FrontierVisualKit.apply_button(_upgrade_button, "primary", 220, 38, 14)
+	_upgrade_button.pressed.connect(func(): build_requested.emit(next_id))
+	row.add_child(_upgrade_button)
+	if status_id == "trade":
+		_trade_button = _trade_link("Trade for it", upgrade.get("cost", {}))
+		_trade_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(_trade_button)
+
+## The spells on the open page of the guild's book.
+func _guild_spells_shown() -> Array:
+	var shown := []
+	if is_instance_valid(_guild_book):
+		for button in _guild_book.spell_buttons():
+			shown.append(String(button.get_meta("spell_id", "")))
+	return shown
 
 # --- tavern ---------------------------------------------------------------------
 
@@ -1036,14 +1100,7 @@ func _clear(node: Node) -> void:
 
 func _apply_columns() -> void:
 	var width := _body.size.x if _body.size.x > 0.0 else 800.0
-	if _spell_grid != null:
-		_spell_grid.columns = 3 if width >= 640.0 else 2
-		# Reserve the tallest level so switching levels never resizes the popout.
-		var most := 0
-		for level in _model.get("guild", {}).get("levels", []):
-			most = maxi(most, level.get("spells", []).size())
-		var rows := ceili(float(most) / float(_spell_grid.columns))
-		_spell_grid.custom_minimum_size.y = rows * SPELL_CARD_HEIGHT + maxi(0, rows - 1) * GRID_GAP
+	_size_guild_book()
 	if _hero_grid != null:
 		_hero_grid.columns = 2 if width >= 640.0 else 1
 	for grid in _market_grids:
@@ -1079,7 +1136,7 @@ func validation_snapshot() -> Dictionary:
 		"heroes": heroes,
 		"guild_levels": levels,
 		"guild_level_shown": _guild_level,
-		"spell_cards_shown": _spell_cards.keys(),
+		"spell_cards_shown": _guild_spells_shown(),
 		"services": services,
 		"upgrade": {
 			"has_line": bool(upgrade.get("has_line", false)),
@@ -1208,9 +1265,4 @@ func validation_press_recruit_trade(unit_id: String) -> bool:
 	return true
 
 func validation_show_guild_level(level: int) -> bool:
-	for button in _level_buttons:
-		if button.name == "Level%d" % level:
-			button.button_pressed = true
-			_on_guild_level_pressed(level)
-			return true
-	return false
+	return is_instance_valid(_guild_book) and _guild_book.open_bookmark(str(level))

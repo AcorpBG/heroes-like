@@ -1,0 +1,21 @@
+{
+ "purpose": "The town's magic guild window (docs/town-building-popouts.md, Magic guild): guild_mockup.png is the layout the owner picked (the great book, of three: five shelves, the great book, a painted hall); a reference for scenes/town/TownBuildingPanelView.gd and scenes/shared/SpellGrimoire.gd, nothing is cut from it. The window draws the hero menu's open book (art/ui/runtime/hero_menu/spell_book.png) and draws its bookmarks itself.",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-10",
+ "quality": "medium",
+ "note": "The PNG is not tracked (art/*/source/**/*.png is ignored); it is in the source art archive (docs/source-material-storage-map.md) and comes back with tools/restore_archived_source_material.py.",
+ "items": [
+  {
+   "source": "guild_mockup.png",
+   "size": "1920x1088",
+   "prompt_file": "guild_mockup.prompt.txt",
+   "inputs": [
+    "image 1: a screenshot of the old magic guild popout at guild level 3",
+    "image 2: a screenshot of the hero menu in town",
+    "image 3: art/ui/runtime/hero_menu/spell_book.png"
+   ],
+   "sha256": "946699c18f019ebcad1d31b779ea8463fc1a5aa2c6273c7c2be93130387f721d"
+  }
+ ]
+}

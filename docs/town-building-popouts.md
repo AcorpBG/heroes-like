@@ -10,7 +10,7 @@ Popouts fit on screen without scrolling at 1280×720 and above:
 
 - A compact header row: the building's painting, its kind and stage, the description and short effect tags (income, defense, readiness, spell level, weekly growth, visit rewards, services).
 - Two columns below it. The main column holds the building's own orders; a 372-pixel side column holds its upgrade line. Buildings with no orders of their own use the full width for the upgrade line.
-- The magic guild's spell grid reserves room for its largest level, so switching level tabs never resizes the popout.
+- The magic guild's book keeps one size, so turning to another level never resizes the popout.
 - Popouts may grow to 1280×900 on large screens and shrink to their content, so plain buildings do not cover the town with an empty sheet. A scrollbar appears only if a window is smaller than the supported 1280×720.
 
 ## What each building shows
@@ -18,7 +18,7 @@ Popouts fit on screen without scrolling at 1280×720 and above:
 | Building | Main column |
 | --- | --- |
 | Creature dwelling | One recruit card per creature the dwelling offers now: portrait, tier and drawn melee/ranged badge, attack, defense, damage, health, speed, initiative, shots and abilities. An amount slider with **Max** sets how many to hire; the button shows the total cost. Stationed troops of the base creature can be upgraded here once the upgraded dwelling stands. |
-| Magic guild | Spells by guild level (tabs I–V). Each spell shows its icon, mana, adventure or battle use, school and effect. Built levels list what visiting heroes learn; unbuilt levels are dimmed and name the guild stage that teaches them. |
+| Magic guild | The open spell book (owner, 2026-11-10: of five shelves, the great book and a painted hall, the book). A ribbon bookmark for each guild level, I to V, grey with a padlock while unbuilt. The left page shows the open level's spells as icons with mana cost and name, a tick on those the visiting hero knows, pale for an unbuilt level; the right page writes out the spell under the mouse or the chosen one: picture, school, tier, mana, battle or map, effect, story, and whether the visitor knows it. Under the book: the next level, how many spells it adds, its cost and the order to build it. No painting and description above the book. |
 | Tavern | This week's two heroes: portrait, level chip, class, summary, attack, defense, power, knowledge, movement and specialties at the offered level, battle traits, starting army (creature portraits with counts), starting spells and cost, with **Hire**. A full command or short gold disables Hire with the reason. |
 | Market | The trading desk: buy and sell for gold, or convert one resource into another (`docs/town-market.md`). |
 | Artifact exchange | The week's buy offers and sell orders for the visiting hero. |

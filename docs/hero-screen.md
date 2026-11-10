@@ -61,8 +61,9 @@ Pages:
   where it was left. The picture on the right page is the spell's 128 pixel
   icon; larger illustrations for the 139 spells are not painted.
 
-The book is one view, `scenes/shared/SpellGrimoire.gd`, and the battle's spell
-book is the same book (owner, 2026-11-10). In battle it lies over the middle of
+The book is one view, `scenes/shared/SpellGrimoire.gd`; the battle's spell book
+and the town's magic guild are the same book (owner, 2026-11-10; the guild is
+in `docs/town-building-popouts.md`: bookmarks for its levels instead of schools). In battle it lies over the middle of
 the field and lists the commander's battle spells only: no Battle and Map
 switch. A click on a spell that can be cast closes the book and lights its
 targets; one that cannot (no mana, no target on the field, a spell already cast
