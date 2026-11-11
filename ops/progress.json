@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "artifact-bonus-rules-20261111",
- "currentSliceTitle": "Artifacts give every kind of bonus a specialty gives, plus Knowledge, home lines and prices; today's games play the same.",
+ "currentSliceId": "artifact-icons-20261111",
+ "currentSliceTitle": "Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T11:27:06Z",
+ "updatedAt": "2026-11-11T11:38:35Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -39,19 +39,16 @@
   },
   {
    "id": "artifact-icons-20261111",
-   "title": "Artifact icons",
-   "status": "pending",
-   "goal": "six trial icons, then the 150 once the owner approves the quoted cost.",
-   "docs": [
-    "docs/artifact-system.md"
-   ],
-   "updatedAt": "2026-11-11"
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.",
+   "commit": "501e5e506"
   },
   {
    "id": "artifact-bonus-rules-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "Artifacts give every kind of bonus a specialty gives, plus Knowledge, home lines and prices; today's games play the same.",
+   "summary": "Artifacts can give any specialty bonus, Knowledge, home lines and prices.",
    "commit": "b142e4114"
   },
   {
@@ -65,7 +62,7 @@
    "id": "ui-battle-spell-book-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Battle spell book is the hero menu's open grimoire, one shared view.",
+   "summary": "Battle spell book is the hero menu's open grimoire.",
    "commit": "62e6143ae"
   },
   {
@@ -86,7 +83,7 @@
    "id": "ui-hero-menu-rework-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure, usable in town.",
+   "summary": "Hero menu rebuilt: large portrait, four pages, artifacts on a 14-slot figure.",
    "commit": "1d47aabab"
   },
   {
