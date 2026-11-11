@@ -63,9 +63,10 @@ None open.
 
 ## Recently completed
 
-- 2026-11-11 `artifact-special-effects-20261111` (094b9e31a): the 32 special effects of epics and full sets are native rules, named on their rows by special_id; computer heroes keep unused movement; the content check knows the new slots
-- 2026-11-11 `artifact-catalogue-switch-20261111` (a9384fcdf): The 150 new artifacts and ten sets replace the 69: content from the catalogue, hero menu card, old saves drop old artifacts.
-- 2026-11-11 `artifact-icons-20261111` (501e5e506): Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.
+- 2026-11-11 `artifact-stories-20261111` (8fd349a98): a story for each of the 150 artifacts, shown last on the hero menu card
+- 2026-11-11 `artifact-special-effects-20261111` (094b9e31a): the 32 special effects are native rules, named by special_id; computer heroes keep unused movement
+- 2026-11-11 `artifact-catalogue-switch-20261111` (a9384fcdf): The 150 new artifacts and ten sets replace the 69; old saves drop old artifacts.
+- 2026-11-11 `artifact-icons-20261111` (501e5e506): Icons for the 150 new artifacts.
 - 2026-11-11 `artifact-bonus-rules-20261111` (b142e4114): Artifacts can give any specialty bonus, Knowledge, home lines and prices.
 - 2026-11-10 `ui-magic-guild-book-20261110` (a37aea861): Town's magic guild is the open spell book: a bookmark per level, the build order under it.
 - 2026-11-10 `ui-battle-spell-book-20261110` (62e6143ae): Battle spell book is the hero menu's open grimoire.

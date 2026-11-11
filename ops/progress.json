@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "artifact-special-effects-20261111",
- "currentSliceTitle": "the 32 special effects of epics and full sets are native rules, named on their rows by special_id; computer heroes keep unused movement; the content check knows the new slots",
+ "currentSliceId": "artifact-stories-20261111",
+ "currentSliceTitle": "a story for each of the 150 artifacts (tools/artifact_stories.py), shown last on the hero menu card",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T14:04:51Z",
+ "updatedAt": "2026-11-11T14:37:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,17 +18,24 @@
  },
  "plannedSlices": [
   {
+   "id": "artifact-stories-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "a story for each of the 150 artifacts (tools/artifact_stories.py), shown last on the hero menu card",
+   "commit": "8fd349a98"
+  },
+  {
    "id": "artifact-special-effects-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "the 32 special effects of epics and full sets are native rules, named on their rows by special_id; computer heroes keep unused movement; the content check knows the new slots",
+   "summary": "the 32 special effects are native rules, named by special_id; computer heroes keep unused movement",
    "commit": "094b9e31a"
   },
   {
    "id": "artifact-catalogue-switch-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "The 150 new artifacts and ten sets replace the 69: content from the catalogue, hero menu card, old saves drop old artifacts.",
+   "summary": "The 150 new artifacts and ten sets replace the 69; old saves drop old artifacts.",
    "commit": "a9384fcdf"
   },
   {
