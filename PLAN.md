@@ -39,9 +39,9 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-06: Cartwheel, Inner Keeps, Pilgrim Roads, Trefoil Fields and Five Gates are setup choices outside H3MapEd's template roll, a deliberate departure; the recovered generator builds a chosen one from its own rows (`docs/rmg-setup-choice-templates.md`).
 - 2026-11-09: Battle movement counts a creature's full speed, with no cap at 6: fast units are the counter to ranged armies.
 - 2026-11-09: Generated water maps get sea content (pickups, guarded wrecks, tide bells, whirlpools) on open sea that a shipyard serves, placed after H3MapEd's finished map, a deliberate departure (`docs/rmg-sea-content.md`).
-- 2026-11-10: Menus, tooltips, windows and the hero menu wear the dark-and-gold card look; the skirmish setup, save menu and settings are a left column that leaves the scene in view; every unit's small icon is a head-and-shoulders close-up (`docs/overworld-info-card.md`, `docs/skirmish-setup-screen.md`).
+- 2026-11-10: Menus, tooltips, windows and the hero menu wear the dark-and-gold card look; skirmish setup, saves and settings are a left column that leaves the scene in view; unit icons are head-and-shoulders close-ups (`docs/overworld-info-card.md`, `docs/skirmish-setup-screen.md`).
 - 2026-11-10: Source art goes into the source art archive on N: with an incremental snapshot from the owner's checkout; it does not stay in temp folders, worktrees or as loose untracked files (`docs/source-material-storage-map.md`).
-- 2026-11-10: A hero wears artifacts in fourteen slots laid out on a figure (head, neck, cloak, chest, two hands, two rings, feet, banner, four trinkets); a page of the hero menu shows only its own content; the town's hero menu wears and stows artifacts too (`docs/hero-screen.md`).
+- 2026-11-11: Artifacts are rebuilt as 150 new ones for the fourteen slots on the hero's figure, none of the 69 reused: strength by rarity, home lines, faction-free sets, special effects on epics and full sets; old saves lose old artifacts (`docs/artifact-system.md`). A hero menu page shows only its own content; the town's hero menu wears artifacts too (`docs/hero-screen.md`).
 - 2026-11-10: The map tells another side's unit numbers as size bands, never as counts; battles and the player's own armies stay exact (`docs/army-size-bands.md`).
 - 2026-11-10: The map's Wayside Exchange serves each player one trade a week (`docs/visit-buildings.md`).
 - 2026-11-10: Every Veilmourn town with a harbour has the Shipyard built from the start, and boats there cost half (`docs/water-travel.md`).
@@ -54,6 +54,10 @@ None open.
 
 ## Open work
 
+- `artifact-special-effects-20261111` (pending): the 32 special effects of epics and full sets, in batches. See `docs/artifact-system.md`.
+- `artifact-catalogue-switch-20261111` (pending): the 150 replace the 69: sets, reward lists, old saves, hero menu, AI values. See `docs/artifact-system-catalogue.md`.
+- `artifact-icons-20261111` (pending): six trial icons, then the 150 once the owner approves the quoted cost. See `docs/artifact-system.md`.
+- `artifact-bonus-rules-20261111` (in progress): one sum of bonuses for specialties and artifacts; Knowledge as a bonus; home lines; prices. See `docs/artifact-system.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -358,10 +362,3 @@ None open.
 - 2026-10-14 `art-overworld-soft-fog-shadows-20261014`: Soft fog of war and object shadows on the overworld.
 - 2026-10-14 `art-h3-kilnelk-facing-20261014`: Make the Ashcrown Kilnelk face its opponent in every clip.
 - 2026-10-14 `art-h3-green-plate-edge-spill-20261014`: Remove the green tint on thin and blurred edges of gold units keyed on a green plate.
-- 2026-10-11 `tooling-source-material-archive-incremental-20261011`: Archive new art sources in an incremental snapshot.
-- 2026-10-11 `tests-fluid-render-check-stale-20261011`: Bring the fluid animation render check up to date.
-- 2026-10-11 `art-idle-rife-integration-20261011`: RIFE idle loops in the game.
-- 2026-10-11 `art-idle-rife-inbetween-tool-20261011`: RIFE in-between tool for smoother creature idle loops.
-- 2026-10-11 `art-h3-painted-units-20261011`: Convert the painted creature clips to H3 video.
-- 2026-10-11 `art-h3-painted-unit-pilot-20261011`: Profile one painted unit converted to H3 video.
-- 2026-10-11 `art-blue-plate-edge-rematte-20261011`: Clean purple edges on blue-backdrop creature clips.

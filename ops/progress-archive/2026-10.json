@@ -1,6 +1,48 @@
 {
  "plannedSlices": [
   {
+   "id": "tooling-source-material-archive-incremental-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Archive new art sources in an incremental snapshot."
+  },
+  {
+   "id": "tests-fluid-render-check-stale-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Bring the fluid animation render check up to date."
+  },
+  {
+   "id": "art-idle-rife-integration-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "RIFE idle loops in the game."
+  },
+  {
+   "id": "art-idle-rife-inbetween-tool-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "RIFE in-between tool for smoother creature idle loops."
+  },
+  {
+   "id": "art-h3-painted-units-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Convert the painted creature clips to H3 video."
+  },
+  {
+   "id": "art-h3-painted-unit-pilot-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Profile one painted unit converted to H3 video."
+  },
+  {
+   "id": "art-blue-plate-edge-rematte-20261011",
+   "status": "completed",
+   "completedAt": "2026-10-11",
+   "summary": "Clean purple edges on blue-backdrop creature clips."
+  },
+  {
    "id": "tests-validation-budget-20261010",
    "status": "completed",
    "completedAt": "2026-10-10",

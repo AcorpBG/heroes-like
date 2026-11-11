@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ui-magic-guild-book-20261110",
- "currentSliceTitle": "Town's magic guild is the open spell book: a bookmark per level, the build order under it.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-10T18:20:15Z",
+ "currentSliceId": "artifact-special-effects-20261111",
+ "currentSliceTitle": "Artifact special effects",
+ "currentSliceStatus": "pending",
+ "updatedAt": "2026-11-11T11:04:44Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,46 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "artifact-special-effects-20261111",
+   "title": "Artifact special effects",
+   "status": "pending",
+   "goal": "the 32 special effects of epics and full sets, in batches.",
+   "docs": [
+    "docs/artifact-system.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
+  {
+   "id": "artifact-catalogue-switch-20261111",
+   "title": "The 150 artifacts replace the 69",
+   "status": "pending",
+   "goal": "the 150 replace the 69: sets, reward lists, old saves, hero menu, AI values.",
+   "docs": [
+    "docs/artifact-system-catalogue.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
+  {
+   "id": "artifact-icons-20261111",
+   "title": "Artifact icons",
+   "status": "pending",
+   "goal": "six trial icons, then the 150 once the owner approves the quoted cost.",
+   "docs": [
+    "docs/artifact-system.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
+  {
+   "id": "artifact-bonus-rules-20261111",
+   "title": "Artifact bonuses: one sum with specialties",
+   "status": "in_progress",
+   "goal": "one sum of bonuses for specialties and artifacts; Knowledge as a bonus; home lines; prices.",
+   "docs": [
+    "docs/artifact-system.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
   {
    "id": "ui-magic-guild-book-20261110",
    "status": "completed",
@@ -1966,48 +2006,6 @@
    "status": "completed",
    "completedAt": "2026-10-14",
    "summary": "Remove the green tint on thin and blurred edges of gold units keyed on a green plate."
-  },
-  {
-   "id": "tooling-source-material-archive-incremental-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "Archive new art sources in an incremental snapshot."
-  },
-  {
-   "id": "tests-fluid-render-check-stale-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "Bring the fluid animation render check up to date."
-  },
-  {
-   "id": "art-idle-rife-integration-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "RIFE idle loops in the game."
-  },
-  {
-   "id": "art-idle-rife-inbetween-tool-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "RIFE in-between tool for smoother creature idle loops."
-  },
-  {
-   "id": "art-h3-painted-units-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "Convert the painted creature clips to H3 video."
-  },
-  {
-   "id": "art-h3-painted-unit-pilot-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "Profile one painted unit converted to H3 video."
-  },
-  {
-   "id": "art-blue-plate-edge-rematte-20261011",
-   "status": "completed",
-   "completedAt": "2026-10-11",
-   "summary": "Clean purple edges on blue-backdrop creature clips."
   }
  ]
 }

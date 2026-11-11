@@ -1,0 +1,134 @@
+# Artifact system
+
+The owner reworked the artifacts on 2026-11-11, after the hero menu gave a hero fourteen places to wear them (`docs/hero-screen.md`). It was settled in two drafts on a local plan page (`.artifacts/artifact_plan/artifact_plan.html`, built by `.artifacts/artifact_plan/build/plan.py`; plan pages stay local views, never published). This doc holds the rules, the decisions and the build order. The 150 artifacts and ten sets are in `docs/artifact-system-catalogue.md`.
+
+Nothing here is in the game until its slice is closed; the build order at the end says what is.
+
+## Why
+
+The 69 artifacts were written for five slots. Head and ring had one artifact each for three places. Every artifact gave +1 or +2 to the same seven numbers, one touched spells, none had a drawback, and the four rarities were about equally strong (2.8, 1.6, 2.2 and 3.1 points on average, see Points). On a large generated map 25 of 69 pickups repeated an artifact already placed.
+
+## The owner's decisions
+
+First draft, 2026-11-11:
+
+1. Strength follows rarity: 1, 2, 3 and 5 points, and each epic also bends one rule.
+2. Each slot has a character (see Slots).
+3. About 150 artifacts.
+4. None of the 69 is reused, by name, id or icon.
+5. A faction artifact works for any hero and gives one more bonus, its home line, to heroes of its faction.
+6. Sets are more inventive than three-piece faction kits, and no set belongs to a faction.
+7. Each epic and each full set has one special effect.
+8. Six to eight rares give more than their band for a price.
+9. Repeats stay as they are: a map may place an artifact twice, and a hero that claims one it holds gets nothing.
+
+Second draft, 2026-11-11: the list is built as drafted (no notes, no special effect struck); six icons are painted as a trial and the rest quoted before the full run; saved games made before the switch lose their old artifacts.
+
+## Points
+
+One point is one rank of a hero specialty (`content/hero_specialties.json`). A hero has six specialties of four ranks, so at most 24 points of its own. A band's budget is exact: the plan page's build refuses an artifact that misses it.
+
+| Band | Points | Lines | In the catalogue |
+|---|---|---|---|
+| Common | 1 | one | 36 |
+| Uncommon | 2 | one or two | 44 |
+| Rare | 3 | two or three | 48 |
+| Rare with a price | 5, and one drawback | two or three | 7 of the 48 |
+| Epic | 5, and one special effect | two to four | 22 |
+
+Rare is the largest band because generated maps place rares most: one large map held 6 common, 21 uncommon, 36 rare and 6 epic pickups.
+
+## Bonuses
+
+An artifact may give anything a specialty gives, and Knowledge. The artifact code read ten kinds of bonus; the rules know the rest through specialties. A bonus on an artifact row uses the specialty's own key, so a new artifact is content, not code.
+
+| On the page | Key in the rules | One point |
+|---|---|---|
+| Attack, Defense | `battle_attack`, `battle_defense` | +2 of one (a specialty rank gives +1 of both) |
+| Power | `battle_power` | +1 |
+| Knowledge | `knowledge` (new) | +1 |
+| Max mana | `max_mana` | +3 |
+| Initiative, cohesion, momentum | `battle_initiative`, `battle_cohesion`, `battle_momentum` | +1 |
+| Melee damage, ranged damage | `melee_damage_pct`, `ranged_damage_pct` | +5% |
+| Troops take less damage | `damage_taken_pct` (negative) | 4% |
+| Defending stacks' Defense | `defend_defense_bonus` | +1 |
+| Retaliation damage, damage when assaulting a town | `retaliation_damage_pct`, `siege_damage_pct` | +10% |
+| Fallen that recover after a won battle | `victory_recovery_pct` | 5% |
+| Creature health | `creature_health_pct` | +3% |
+| Spell damage | `spell_damage_pct` | +5% |
+| Boosts last longer, curses last longer | `buff_duration_bonus`, `debuff_duration_bonus` | 1 turn |
+| Spell resistance, control resistance | `battle_spell_resistance_pct`, `battle_control_resistance_pct` | +5% |
+| Mana after a won battle | `mana_after_victory` | 2 |
+| A school's damage and healing | `school_potency_pct` | +8% |
+| A school's spells cost less | `school_mana_discount` | 1 |
+| All spells cost less | `mana_cost_discount` | 1 costs two points |
+| Map movement, scouting | `overworld_movement`, `scouting_radius` | +1 |
+| Movement kept for the next day | `movement_carry` | 1 |
+| Gold a day | `daily_income.gold` | 75 |
+| Wood and ore a day | `daily_income.wood`, `.ore` | 1 of each |
+| The wearer's faction's rare resource a day | `daily_income.faction_rare_main` | 1 |
+| Creature growth and recruit cost | `recruit_growth_multiplier`, `recruit_cost_delta` | +10% growth, 5% cheaper |
+| Gold and resources from pickups and won battles | `reward_bonus_pct` | +10% |
+| Experience | `experience_bonus_pct` | +5% |
+
+Rules:
+
+- **One sum.** A hero's bonuses are its specialties' and its worn artifacts' added together, read through the same call. A bonus kind the artifact code already summed on its own (Attack, Defense, initiative, movement, scouting, income, the two resistances) is counted once.
+- **Knowledge** raises the hero's Knowledge wherever it is read: the mana maximum (8 + 4 a point) and the resistance its side has against enemy spells in battle.
+- **A price** is a bonus with the opposite sign on the same row (−1 Knowledge, −2 map movement, troops take 4% more damage). The hero menu shows it apart from what the artifact gives.
+- **A home line** is a second list of bonuses on a faction artifact, added only while the wearer's faction is the artifact's.
+
+## Slots
+
+| Slot | Places | Artifacts | Mostly gives |
+|---|---|---|---|
+| Head | 1 | 12 | Knowledge, mana, experience |
+| Neck | 1 | 12 | Power, spell damage, one school's spells |
+| Cloak | 1 | 12 | Spell and control resistance, scouting |
+| Armor | 1 | 12 | Defense, creature health, less damage taken |
+| Hand | 2 | 26 | Weapons: Attack, melee and ranged damage. Instruments: scouting, movement |
+| Ring | 2 | 16 | Spell cost, spell length, income |
+| Boots | 1 | 10 | Map movement, movement kept for the next day |
+| Banner | 1 | 14 | The whole army: initiative, cohesion, momentum, creature growth |
+| Trinket | 4 | 36 | Income, rewards, oddities; worn scrolls go here too |
+
+45 of the 150 touch magic. A set piece may cross its slot's character.
+
+## Factions
+
+48 artifacts belong to a faction, eight each: two common, two uncommon, three rare and one epic. The other 102 belong to none. A set piece never belongs to a faction. Income of a rare resource pays the wearer's own faction's resource, whoever made the artifact.
+
+## Sets
+
+Ten sets, 31 pieces, in `docs/artifact-system-catalogue.md`. A set's steps apply while that many of its pieces are worn; the last step is its special effect.
+
+- Three pairs: two rings, a sword and its left-hand blade, a ring and a pendant.
+- The Four Chimes fill every trinket place, so their wearer wears no scroll.
+- The Regalia of the Empty Throne has five pieces, from an uncommon banner to an epic crown.
+- The Penitent's Burden is three rares with a price; worn together the three prices no longer apply.
+- Four sets are made mostly of commons and uncommons.
+
+## Special effects
+
+32 in all: one on each of the 22 epics and one for each full set. Each is a small rule of its own and they are built in batches after the numbers. Their wording is in the catalogue. Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
+
+## Getting them
+
+Unchanged: a generated map sorts its artifact pickups into the four bands and draws each on its own from all artifacts of that band, never a scroll. With 150 artifacts the large map above would repeat about 16 of its 69 pickups. Guarded sites, markets and battle salvage draw from their reward lists, which are rewritten for the new catalogue at the switch.
+
+## Saved games
+
+A save made before the switch loses its old artifacts: what its heroes wear and carry, and the pickups still on its map. Nothing is converted.
+
+## Build order
+
+1. `artifact-bonus-rules-20261111`: one sum of bonuses for specialties and artifacts, Knowledge as a bonus, the home line, prices. It runs on today's artifacts, which use none of it.
+2. `artifact-icons-20261111`: six trial icons, then the rest once the owner approves the quoted cost.
+3. `artifact-catalogue-switch-20261111`: the 150 replace the 69 with their icons; the sets' steps; reward lists, sites and markets draw from the new catalogue; old saves drop old artifacts; the hero menu shows an artifact's band, price and home line and a set's progress; the computer players value the new kinds.
+4. `artifact-special-effects-20261111`: the 32 special effects, in batches.
+
+Measuring balance with a batch of games waits for the owner's ask.
+
+## Not in the plan
+
+Repeats on a map and what a second copy gives (decision 9), artifact merchants and their prices, artifacts a hero starts with.
