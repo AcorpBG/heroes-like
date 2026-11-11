@@ -4,8 +4,8 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-cuts-four-towns-20261111",
- "currentSliceTitle": "Town cuts checked in the other four towns",
- "currentSliceStatus": "in_progress",
+ "currentSliceTitle": "Other four towns' cuts checked; three forts re-cut.",
+ "currentSliceStatus": "completed",
  "updatedAt": "2026-11-11T15:32:38Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-cuts-four-towns-20261111",
-   "title": "Town cuts checked in the other four towns",
-   "status": "in_progress",
-   "goal": "Owner: yes, check them. Compare every layer of Sunvault, Veilmourn, Embercourt and Brasshollow with its painting and mend the bad cuts with tools/town_plot_matte_patches.py; matte patch files beside the packets, layers repackaged.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-11"
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Other four towns' cuts checked; three forts re-cut.",
+   "commit": "5e7874f80"
   },
   {
    "id": "town-mireclaw-cuts-20261111",
@@ -178,7 +175,7 @@
    "id": "town-art-sunvault-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.",
+   "summary": "Sunvault repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; effects.",
    "commit": "711b60cb0"
   },
   {
