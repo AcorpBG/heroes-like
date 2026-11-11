@@ -4,7 +4,7 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "artifact-stories-20261111",
- "currentSliceTitle": "a story for each of the 150 artifacts (tools/artifact_stories.py), shown last on the hero menu card",
+ "currentSliceTitle": "a story for each of the 150 artifacts, shown last on the hero menu card",
  "currentSliceStatus": "completed",
  "updatedAt": "2026-11-11T14:37:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
@@ -21,7 +21,7 @@
    "id": "artifact-stories-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "a story for each of the 150 artifacts (tools/artifact_stories.py), shown last on the hero menu card",
+   "summary": "a story for each of the 150 artifacts, shown last on the hero menu card",
    "commit": "8fd349a98"
   },
   {
@@ -42,7 +42,7 @@
    "id": "artifact-icons-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.",
+   "summary": "Icons for the 150 new artifacts.",
    "commit": "501e5e506"
   },
   {
