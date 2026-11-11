@@ -36,6 +36,23 @@ uniform vec2 shore_sea = vec2(0.5, 0.58);
 // it (shore_shallow is how much of the sea covers it there).
 uniform vec2 shore_deep = vec2(0.55, 0.92);
 uniform float shore_shallow = 0.55;
+// Moving water (owner request, 2026-11-11): the painted sea drifts and swells
+// with glints passing over its net of light, and waves run in on every
+// shore, break into foam on the sand and slide back. Every rate divides the
+// hour TIME wraps at (the drift by the 4-tile painting), so nothing jumps.
+// With motion off the sea stands still under a thin line of foam.
+uniform bool motion_enabled = true;
+uniform float clock_override = -1.0;
+uniform vec2 sea_drift = vec2(0.08, 0.03);
+uniform float sea_swell = 0.07;
+uniform float sea_glint = 0.3;
+uniform float sea_roll = 0.07;
+uniform float wave_seconds = 4.5;
+uniform float wave_runup = 0.07;
+uniform float wave_foam = 0.9;
+uniform float wave_crest = 0.8;
+uniform float wave_reach = 0.9;
+uniform float wave_face = 0.28;
 // Ground detail decals, scattered here so they share the ground's light and
 // blend: a 16x16 atlas of 128 px cells, 16 decals per ground set (rows 1-2
 // tiny, row 3 medium, row 4 large). terrain_data blue marks road tiles.
@@ -201,6 +218,42 @@ float known_slot(vec2 cell, float own_slot) {
 
 float is_water(float slot) {
 	return any(lessThan(abs(water_slots - vec3(slot)), vec3(0.5))) ? 1.0 : 0.0;
+}
+
+// The sea at a point: each patch rises and falls on its own beat (its phase
+// from still noise), so the swell rolls across the painting instead of
+// pulsing; the painting drifts with the wind, glints pass over its net of
+// light, and long low swells roll through, lighter on their backs.
+vec3 sea_paint(float slot, vec2 world, float t) {
+	float phase = 6.2832 * value_noise(world * 0.55 + vec2(5.3, 9.1));
+	vec2 swell = vec2(sin(t * 1.3963 + phase), cos(t * 1.0472 + phase * 1.7)) * sea_swell;
+	vec3 sea = ground(slot, world + swell + sea_drift * t);
+	float lift = 0.5 + 0.5 * sin(t * 2.0944 + phase * 2.3 + dot(world, vec2(1.9, 1.3)));
+	float net = smoothstep(0.02, 0.2, dot(sea, vec3(0.299, 0.587, 0.114)) - average_luma(slot));
+	float roll = sin(dot(world, vec2(0.9, 1.4)) * 1.7 - t * 1.0472 + phase * 0.8);
+	return (sea + sea * net * lift * sea_glint) * (1.0 + sea_roll * roll);
+}
+
+// A ground's colour: the sea moves, the land stands.
+vec3 ground_now(float slot, vec2 world, float t) {
+	return is_water(slot) > 0.5 ? sea_paint(slot, world, t) : ground(slot, world);
+}
+
+// The share of water in the 3x3 tiles round a point, by smooth (quadratic
+// B-spline) weights: 0.5 on a straight tile edge, 1 a tile out to sea, and
+// without the corners the four-tile weights keep on a stepped coast.
+float coast_share(vec2 p, float own_slot) {
+	vec2 cell = floor(p);
+	vec2 f = fract(p) - vec2(0.5);
+	vec3 wx = vec3(0.5 * (0.5 - f.x) * (0.5 - f.x), 0.75 - f.x * f.x, 0.5 * (0.5 + f.x) * (0.5 + f.x));
+	vec3 wy = vec3(0.5 * (0.5 - f.y) * (0.5 - f.y), 0.75 - f.y * f.y, 0.5 * (0.5 + f.y) * (0.5 + f.y));
+	float share = 0.0;
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 3; i++) {
+			share += wx[i] * wy[j] * is_water(known_slot(cell + vec2(float(i - 1), float(j - 1)), own_slot));
+		}
+	}
+	return share;
 }
 
 float void_flag(vec2 cell, float own_void) {
@@ -395,18 +448,36 @@ void fragment() {
 		float wet_tiles = wet_corner.x + wet_corner.y + wet_corner.z + wet_corner.w;
 		bool shore = wet_tiles > 0.5 && wet_tiles < 3.5;
 		vec3 sea = vec3(0.0);
+		float clock = motion_enabled ? (clock_override >= 0.0 ? clock_override : TIME) : 0.0;
+		// Waves. Stretches of coast run out of step (lag); along one, a wave's
+		// life is run 0 to 1: its crest comes in from the open sea, breaks on
+		// the sand at 0.5 and the water runs up (up), then slides back.
+		// Foam (lace) is dabbed and broken, not a drawn line. All of this only
+		// where water lies round the point.
+		float run = 0.8;
+		float up = 0.0;
+		float lace = 0.0;
+		float foam = 0.0;
+		if (wet_tiles > 0.5) {
+			float lag = 0.7 * value_noise(world * 0.1 + vec2(31.7, 4.2));
+			run = motion_enabled ? fract(clock / wave_seconds + lag) : 0.8;
+			up = smoothstep(0.3, 0.5, run) * (1.0 - smoothstep(0.5, 1.0, run));
+			lace = smoothstep(0.32, 0.62, value_noise(world * 5.5 + vec2(lag * 3.0, 1.7)) * 0.6 + value_noise(world * 13.0 + vec2(4.4, lag)) * 0.4);
+		}
+		// How much of the point is under the sea: all of it on open water.
+		float afloat = wet_tiles > 3.5 ? 1.0 : 0.0;
 		vec3 surface;
 		// Each corner's share of the final colour, for decals and the beach.
 		vec4 share = vec4(1.0, 0.0, 0.0, 0.0);
 		if (all(equal(slots, vec4(slots.x)))) {
-			surface = ground(slots.x, world);
+			surface = ground_now(slots.x, world, clock);
 		} else {
 			// Each material's merged corner weight, its priority and its own
 			// painted detail compete; the winner shows with a narrow soft zone.
 			vec3 color[4];
 			vec4 score;
 			for (int i = 0; i < 4; i++) {
-				color[i] = ground(slots[i], world);
+				color[i] = ground_now(slots[i], world, clock);
 				float merged = dot(vec4(equal(slots, vec4(slots[i]))), corner);
 				float height = (dot(color[i], vec3(0.299, 0.587, 0.114)) - average_luma(slots[i])) * (1.0 - is_water(slots[i]));
 				score[i] = merged + border_priority[int(clamp(slots[i], 0.0, 15.0))] + height * height_strength;
@@ -433,10 +504,39 @@ void fragment() {
 			vec3 sand = ground(beach_slot, world);
 			sand *= mix(vec3(1.0), vec3(0.68, 0.75, 0.78), smoothstep(shore_wet.x, shore_wet.y, water));
 			surface = mix(surface, sand, smoothstep(shore_sand.x, shore_sand.y, water));
-			float waterline = smoothstep(shore_sea.x, shore_sea.y, water);
+			float line = shore_sea.x - wave_runup * (up - 0.35);
+			float waterline = smoothstep(line, line + shore_sea.y - shore_sea.x, water);
 			float deep = smoothstep(shore_deep.x, shore_deep.y, water);
 			surface = mix(surface, sea, waterline * mix(shore_shallow, 1.0, deep));
+			afloat = waterline;
+			// On the water's edge: thick as the wave breaks, thinning as it
+			// drains, and left behind in patches on the backwash.
+			foam = waterline * (1.0 - smoothstep(line + 0.03, line + 0.08 + 0.14 * up, water)) * mix(0.45, 1.0, up) * mix(0.3, 1.0, lace);
+			float drain = smoothstep(0.5, 0.6, run) * (1.0 - smoothstep(0.6, 0.98, run));
+			foam += waterline * (1.0 - smoothstep(line + 0.1, line + 0.3, water)) * drain * lace * 0.55;
 		}
+		// The crests coming in, by the distance out from the shore in tiles:
+		// the wave that breaks, and a smaller one between two of them that
+		// dies on the way.
+		float coast = afloat > 0.0 && motion_enabled ? coast_share(sample_position + vec2(0.5), own_slot) : 1.0;
+		if (coast < 0.9995) {
+			float out_to_sea = 1.0 - sqrt(max(2.0 - 2.0 * coast, 0.0));
+			float near = 1.0 - smoothstep(0.45, 0.8, out_to_sea);
+			float reach = smoothstep(0.0, 0.5, run);
+			float front = mix(wave_reach, 0.05, reach);
+			float alive = smoothstep(0.02, 0.25, run) * (1.0 - smoothstep(0.46, 0.58, run)) * near * afloat;
+			// A wave's lit face, then foam along its top that thickens as it nears the sand.
+			surface += surface * exp(-pow((out_to_sea - front - 0.03) / 0.11, 2.0)) * alive * wave_face;
+			float crest = exp(-pow((out_to_sea - front) / mix(0.03, 0.06, reach), 2.0)) * alive * mix(0.25, 1.0, reach);
+			float run_b = fract(run + 0.5);
+			float reach_b = smoothstep(0.0, 0.5, run_b);
+			float front_b = mix(wave_reach, 0.4, reach_b);
+			float alive_b = smoothstep(0.02, 0.2, run_b) * (1.0 - smoothstep(0.3, 0.5, run_b)) * near * afloat;
+			surface += surface * exp(-pow((out_to_sea - front_b - 0.03) / 0.1, 2.0)) * alive_b * wave_face * 0.7;
+			float crest_b = exp(-pow((out_to_sea - front_b) / 0.035, 2.0)) * alive_b * 0.35;
+			foam += (crest * mix(0.2, 1.0, lace) + crest_b * lace) * wave_crest;
+		}
+		surface = mix(surface, vec3(0.93, 0.97, 0.96), clamp(foam, 0.0, 1.0) * wave_foam);
 		surface = river_paint(surface, world, warp);
 		vec2 off_center = abs(from_center);
 		surface = rock_void(surface, world, warp, smoothstep(0.05, 0.3, max(off_center.x, off_center.y)), own_void);

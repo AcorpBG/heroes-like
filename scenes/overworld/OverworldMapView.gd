@@ -975,6 +975,8 @@ func _ready() -> void:
 
 func _on_settings_changed(_settings: Dictionary) -> void:
 	_scenery_batches.set_motion_enabled(_scenery_motion_enabled())
+	if _ground_surface != null:
+		_ground_surface.set_motion_enabled(_scenery_motion_enabled())
 	if not _overworld_terrain_ambient_should_animate():
 		_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
 	_invalidate_terrain_ambient_layer("accessibility_settings_changed")
@@ -12704,6 +12706,7 @@ func _load_overworld_art_manifest() -> void:
 	var ground_payload = JSON.parse_string(FileAccess.get_file_as_string(GROUND_MATERIAL_MANIFEST_PATH))
 	var ground_config: Dictionary = ground_payload if ground_payload is Dictionary else {}
 	_ground_surface.configure(ground_config, _texture_from_path(str(ground_config.get("atlas", ""))))
+	_ground_surface.set_motion_enabled(_scenery_motion_enabled())
 	_ground_surface.is_void_terrain = _terrain_is_walled_void
 	_fog_surface.configure(_unexplored_shroud_texture(), UNEXPLORED_COLOR, UNEXPLORED_SHROUD_BASE, UNEXPLORED_SHROUD_TEXTURE_MODULATE)
 	var decal_config: Dictionary = ContentService.load_json(TERRAIN_DECAL_MANIFEST_PATH)

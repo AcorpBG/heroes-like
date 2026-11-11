@@ -56,6 +56,12 @@ func configure(config: Dictionary, atlas: Texture2D) -> void:
 	lookup_bytes = PackedByteArray()
 	visible = false
 
+## The sea drifts and waves break on the shores; with motion off (the reduced
+## motion and high contrast settings) it stands still.
+func set_motion_enabled(enabled: bool) -> void:
+	if material != null:
+		material.set_shader_parameter("motion_enabled", enabled)
+
 ## Ground detail decals (art/overworld/terrain_decals_v4.json): which decal
 ## set each material slot uses and how densely it is scattered. The shader
 ## places them; a ground without a set (water) stays clean.

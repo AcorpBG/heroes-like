@@ -16,6 +16,20 @@ The ground shader cross-faded the four nearest tile materials over about half a 
 
 Presentation only: the per-tile lookup, fog, gameplay and saves are unchanged.
 
+## Moving water
+
+Slice: `ground-moving-water-20261111` (owner request, 2026-11-11: make the water move and waves crash on the shores into foam).
+
+All of it is in the ground shader; the painted water material is unchanged.
+
+- **Open sea** (`sea_paint`): each patch rises and falls on its own beat (its phase from still noise), so a swell rolls across the painting instead of pulsing (`sea_swell`); the painting drifts with the wind (`sea_drift`, tiles a second); glints pass over its net of light (`sea_glint`); long low swells roll through, lighter on their backs (`sea_roll`).
+- **Waves on a shore**: a wave's life is `run` 0 to 1 over `wave_seconds`. Its crest comes in from `wave_reach` tiles out, a lit face (`wave_face`) with foam along its top that thickens toward the sand (`wave_crest`); at 0.5 it breaks, the waterline runs up the sand (`wave_runup`) under thick foam, then slides back leaving patches on the backwash. A smaller wave between two of them dies on the way in. Foam is broken by a lace noise so it reads as dabbed, not as a drawn line (`wave_foam`). Stretches of coast run slightly out of step (a slow noise, at most 0.7 of a wave over about ten tiles).
+- **Distance from the shore** for the crests is the share of water in the 3x3 tiles round a point by quadratic B-spline weights (`coast_share`), turned into tiles (`1 - sqrt(2 - 2 share)`, exact on a straight coast). The four-tile weights the beach uses keep corners on a stepped coast, and crests drawn from them kinked.
+- **Time**: `TIME`, or `clock_override` when it is 0 or more (captures). Every rate divides the hour `TIME` wraps at, the drift by the 4-tile painting, so nothing jumps at the wrap.
+- **Motion off** (`motion_enabled`, set by `OverworldGroundSurface.set_motion_enabled` from the reduced motion and high contrast settings, as for scenery): the sea stands still under a thin line of foam.
+
+Rivers and lava do not move. Measured on the owner's machine (RTX 5090, 1600x900): 0.24 to 0.25 ms of GPU time a frame before and after, no difference; not measured on a weaker card.
+
 ## Border noise: integer lattice hash
 
 Slice: `ground-border-noise-seams-20261111` (owner report, 2026-11-11: the beach to water transition looked bad).
