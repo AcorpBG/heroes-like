@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-thornwake-cuts-20261111",
- "currentSliceTitle": "Four Thornwake buildings re-cut whole.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T14:48:43Z",
+ "currentSliceId": "town-mireclaw-cuts-20261111",
+ "currentSliceTitle": "Mireclaw: four bad building cuts mended",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-11T15:12:13Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-mireclaw-cuts-20261111",
+   "title": "Mireclaw: four bad building cuts mended",
+   "status": "in_progress",
+   "goal": "Owner: yes, fix Mireclaw. Fort stages 1-3 lost their palisade and the upgraded stag ring its posts; tools/town_plot_matte_patches.py with hand shapes beside each packet, matte_open in the cut, layers repackaged.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
   {
    "id": "town-thornwake-cuts-20261111",
    "status": "completed",

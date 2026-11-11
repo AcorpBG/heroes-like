@@ -5,7 +5,9 @@ mask is the building's plot box. For a small plot the edit was a close-up crop o
 backdrop, so the model painted the building at the plot's size; this step scales such
 an edit back into the full scene. It cuts the building along its matte, which
 tools/town_plot_mattes.py made with BiRefNet: the parts that touch the plot, holes such
-as arches filled, with a short soft skirt of the painted ground at its foot. It writes:
+as arches filled (a building whose packet entry sets matte_open keeps its holes and all
+its parts: a ring of posts), with a short soft skirt of the painted ground at its foot. It
+writes:
 
 - the runtime layer (at most 512 px) and, beside it, a hit mask of the building alone,
   so clicks and the hover outline follow the building rather than its ground,
@@ -165,7 +167,12 @@ def cut(master, edit, item, matte, settings):
     if not len(touching):
         raise ValueError('no building in the matte: ' + item['id'])
     sizes = ndimage.sum(solid, labels, touching)
-    solid = ndimage.binary_fill_holes(np.isin(labels, touching[sizes >= 0.02 * sizes.max()]))
+    if item.get('matte_open'):
+        # A ring of posts round a creature: every part of the matte, the ground inside left out.
+        parts = np.arange(1, labels.max() + 1)
+        solid = np.isin(labels, parts[ndimage.sum(solid, labels, parts) >= 0.002 * sizes.max()])
+    else:
+        solid = ndimage.binary_fill_holes(np.isin(labels, touching[sizes >= 0.02 * sizes.max()]))
     building = smoothstep(settings['alpha_low'], settings['alpha_high'], a) * ndimage.binary_dilation(solid, iterations=3)
     building = np.maximum(building, ndimage.binary_erosion(solid, iterations=2).astype(np.float32))
     ys, xs = np.nonzero(building > 0.004)

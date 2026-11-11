@@ -371,13 +371,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3_fen_matte.png",
-        "sha256": "da9cc3b05ee665e290e0735d216a7b5cbd2c0c36543738d0aaf5669b769c9e30",
+        "sha256": "8139c58b7406006e5ad0db7fe529e2269efe05cea6ae1a8506cc8c1fef638ba9",
         "window": [
           1260,
           80,
           310,
           155
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_matte_patches.json"
       }
     },
     {
@@ -404,13 +405,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2_fen_matte.png",
-        "sha256": "5dfe60e07a7e864a87056f4d1a46ac2295322535b1b952e22f342bceaaf833a2",
+        "sha256": "1af6e4b267c54e09d254a7b7ac67f81597610132272e7f4d5872ff53b9b5439f",
         "window": [
           1260,
           95,
           310,
           140
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_matte_patches.json"
       }
     },
     {
@@ -437,13 +439,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1_fen_matte.png",
-        "sha256": "985bbf7c2be5775f7cb5daa601af70dfad80619d016758bf8f5b956f5d71d4d4",
+        "sha256": "eef8a63142559bb18cd36ba6fe259667a3e1e3f2ad3586e0ceab5f02a6f7946c",
         "window": [
           1259,
           114,
           315,
           121
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_matte_patches.json"
       }
     },
     {
@@ -1861,14 +1864,16 @@
       "matte_passes": 3,
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade_fen_matte.png",
-        "sha256": "63131fe8f8a67ec4a43d97969358abdddb592291e87b39f24b6a96c3d06342b8",
+        "sha256": "5204ae8aea3e53b3d77832334c429967350a8fb59ba07d27629373246f96c2bb",
         "window": [
           466,
           425,
-          602,
+          690,
           369
-        ]
-      }
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_mireclaw/dusk_fen_matte_patches.json"
+      },
+      "matte_open": true
     },
     {
       "id": "building_dev_mireclaw_t7_1",
