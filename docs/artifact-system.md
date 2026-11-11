@@ -201,7 +201,7 @@ Measuring balance with a batch of games waits for the owner's ask.
 - `tools/build_artifact_icons.py` writes the icon sheets' prompts and cuts the sheets.
 - The computer players weigh the new kinds by `loadout_values` in `content/ai_hero_weights.json`, on the sum `artifact_rules::worn_specialty_bonuses` gives.
 - An artifact's description is the line that says what the object is; stories are not written.
-- The 69 old icons and map sprites are still in the repository, unused.
+- The 69 old artifacts' icons and map sprites are removed (git history keeps them); a pickup's sprite is its artifact's icon.
 
 ## Not in the plan
 

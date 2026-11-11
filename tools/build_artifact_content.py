@@ -251,6 +251,9 @@ def map_manifest():
     with io.open(MAP_MANIFEST, encoding="utf-8") as handle:
         manifest = json.load(handle)
     sprites = {}
+    # Only the catalogue's artifacts have a pickup sprite: an entry for any other artifact goes.
+    for asset in [name for name in manifest["object_assets"] if name.startswith("artifact_field_")]:
+        del manifest["object_assets"][asset]
     for row in catalogue.ARTIFACTS:
         asset = "artifact_field_" + slug(row[0])
         sprites[artifact_id(row[0])] = asset
