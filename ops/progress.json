@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-sites-on-the-way-20261111",
- "currentSliceTitle": "Computer heroes take a site beside their way on any plan when it costs no day of arrival.",
+ "currentSliceId": "town-hero-trade-button-20261112",
+ "currentSliceTitle": "Town: a trade button between the two heroes' portraits opens their meeting screen.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T21:37:45Z",
+ "updatedAt": "2026-11-11T22:27:48Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,17 +18,24 @@
  },
  "plannedSlices": [
   {
+   "id": "town-hero-trade-button-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "Town: a trade button between the two heroes' portraits opens their meeting screen.",
+   "commit": "d079e9bba"
+  },
+  {
    "id": "ai-sites-on-the-way-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "Computer heroes take a site beside their way on any plan when it costs no day of arrival.",
+   "summary": "Computer heroes take sites beside their way when it costs no arrival day.",
    "commit": "2d280ed67"
   },
   {
    "id": "town-artifact-exchange-cards-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "The Artifact Exchange shows artifact cards with icon, effects and story.",
+   "summary": "Artifact Exchange shows artifact cards with icon, effects and story.",
    "commit": "f811642c4"
   },
   {

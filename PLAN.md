@@ -63,8 +63,9 @@ None open.
 
 ## Recently completed
 
-- 2026-11-11 `ai-sites-on-the-way-20261111` (2d280ed67): Computer heroes take a site beside their way on any plan when it costs no day of arrival.
-- 2026-11-11 `town-artifact-exchange-cards-20261111` (f811642c4): The Artifact Exchange shows artifact cards with icon, effects and story.
+- 2026-11-12 `town-hero-trade-button-20261112` (d079e9bba): Town: a trade button between the two heroes' portraits opens their meeting screen.
+- 2026-11-11 `ai-sites-on-the-way-20261111` (2d280ed67): Computer heroes take sites beside their way when it costs no arrival day.
+- 2026-11-11 `town-artifact-exchange-cards-20261111` (f811642c4): Artifact Exchange shows artifact cards with icon, effects and story.
 - 2026-11-11 `ground-moving-rivers-lava-20261111` (2660acaaf): Rivers flow downstream and lava glows in its cracks.
 - 2026-11-11 `ground-moving-water-20261111` (5577e658e): The sea moves and waves break into foam on the shores.
 - 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers with a fold-free bend: no notches or blotches.
