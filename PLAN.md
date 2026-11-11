@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.
 - 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.
 - 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.
 - 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.
@@ -101,9 +102,9 @@ None open.
 - 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: 52 stages on 24 plots, Shipyard on the near shore.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week (visit cadence weekly_per_side).
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood; computer players plan with that price.
-- 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.
+- 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted under the market terrace, so the four T3 hall stages show whole.
 - 2026-11-10 `ai-shipyard-needs-20261110` (e3eb20d58): A harbour town's unbuilt Shipyard no longer counts as a wood and gold shortage for the player's heroes unless its main army wants one.
-- 2026-11-10 `town-art-shipyards-20261110` (097ec7b06): Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.
+- 2026-11-10 `town-art-shipyards-20261110` (097ec7b06): Shipyard painted into Brasshollow (boatworks on rails) and Veilmourn (boatyard at the sea stack's foot).
 - 2026-11-10 `ai-shipyard-main-army-20261110` (882bf8251): Computer players weigh a Shipyard only when their main army has nothing in reach and no shipyard, and build none before day 8.
 - 2026-11-10 `feature-town-shipyards-20261109` (bc92c5fa9): Harbour towns (open sea within 6 steps of the gate) build a Shipyard and launch boats there for 1,000 gold and 10 wood; computer players sail from theirs and build one when an army is stuck. Opens from its board slot until the art rework.
 - 2026-11-09 `town-stage-effects-veilmourn-20261109` (6cbb8b52e): Veilmourn's bell fjord gets the owner's stage effects: swaying, glinting water, streaming falls, fog streamers drifting down the slopes, flickering lanterns and pale wisps, placed by a backdrop effect mask.

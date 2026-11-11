@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "water-beach-attacks-boats-20261111",
- "currentSliceTitle": "A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.",
+ "currentSliceId": "ground-border-noise-seams-20261111",
+ "currentSliceTitle": "Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T19:14:25Z",
+ "updatedAt": "2026-11-11T19:32:31Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ground-border-noise-seams-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.",
+   "commit": "7ad3f7554"
+  },
   {
    "id": "water-beach-attacks-boats-20261111",
    "status": "completed",
@@ -287,7 +294,7 @@
    "id": "town-art-brasshollow-boatworks-lower-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.",
+   "summary": "Brasshollow boatworks repainted under the market terrace, so the four T3 hall stages show whole.",
    "commit": "06e7f1832"
   },
   {
@@ -301,7 +308,7 @@
    "id": "town-art-shipyards-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Shipyard painted into Brasshollow (a boatworks on rails down to the slag river) and Veilmourn (a boatyard at the sea stack's foot, its moored ship painted out); layers, icons, manifests, built pictures; Veilmourn's fx mask and glow follow.",
+   "summary": "Shipyard painted into Brasshollow (boatworks on rails) and Veilmourn (boatyard at the sea stack's foot).",
    "commit": "097ec7b06"
   },
   {
