@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.
 - 2026-11-11 `town-cuts-four-towns-20261111` (5e7874f80): Other four towns' cuts checked; three forts re-cut.
 - 2026-11-11 `town-mireclaw-cuts-20261111` (de6b0cc36): Four Mireclaw buildings re-cut.
 - 2026-11-11 `town-thornwake-cuts-20261111` (b4a1695c3): Four Thornwake buildings re-cut.
@@ -87,10 +88,10 @@ None open.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip and its F1 full-text window take the map information card's dark-and-gold frames, with a gold heading and a Close button.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; effects.
 - 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 painted with imggen, 157 portrait crops.
-- 2026-11-10 `town-art-mireclaw-foreground-20261110` (598dc4ee3): Mireclaw's den and the other layers now stay behind the great tree painted in the backdrop's foreground: a mask of the tree in the packet (backdrop.foreground), cut out of every layer and hit mask by the packaging tool.
-- 2026-11-10 `town-art-mireclaw-backdrop-v2-20261110` (b876ba799): Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.
+- 2026-11-10 `town-art-mireclaw-foreground-20261110` (598dc4ee3): Mireclaw's layers stay behind the backdrop's great tree (backdrop.foreground mask).
+- 2026-11-10 `town-art-mireclaw-backdrop-v2-20261110` (b876ba799): Mireclaw's swamp floor repainted without reed hatching; the 52 layers kept (backdrop.painted_on).
 - 2026-11-10 `ui-map-info-card-art-20261110` (e6fcbbbd4): The map's right-click report and hover card use the sidebar's dark-and-gold frame, fit their content, and show unit icons cut from the portraits at 56 px.
-- 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.
+- 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: 52 stages, ferry yard as Shipyard, mist and water effects.
 - 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few to Countless); own armies and battles stay exact.
 - 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile.

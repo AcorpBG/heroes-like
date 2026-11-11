@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-cuts-four-towns-20261111",
- "currentSliceTitle": "Other four towns' cuts checked; three forts re-cut.",
+ "currentSliceId": "whirlpool-maelstrom-20261111",
+ "currentSliceTitle": "A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T15:32:38Z",
+ "updatedAt": "2026-11-11T17:58:27Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "whirlpool-maelstrom-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.",
+   "commit": "3c2057365"
+  },
   {
    "id": "town-cuts-four-towns-20261111",
    "status": "completed",
@@ -189,14 +196,14 @@
    "id": "town-art-mireclaw-foreground-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Mireclaw's den and the other layers now stay behind the great tree painted in the backdrop's foreground: a mask of the tree in the packet (backdrop.foreground), cut out of every layer and hit mask by the packaging tool.",
+   "summary": "Mireclaw's layers stay behind the backdrop's great tree (backdrop.foreground mask).",
    "commit": "598dc4ee3"
   },
   {
    "id": "town-art-mireclaw-backdrop-v2-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Mireclaw's swamp floor repainted without its vertical reed hatching (owner: very streaky); the 52 building layers are kept, cut against the master they were painted on (backdrop.painted_on in both tools); built picture, mask rebuilt.",
+   "summary": "Mireclaw's swamp floor repainted without reed hatching; the 52 layers kept (backdrop.painted_on).",
    "commit": "b876ba799"
   },
   {
@@ -210,7 +217,7 @@
    "id": "town-art-mireclaw-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Mireclaw repainted as a dusk fen: a bog of still pools, reeds and hummocks with no river, the antlered beast on a dry island, the ferry yard as its Shipyard, all 52 stages as masked edits; mist, wisps and water effects on.",
+   "summary": "Mireclaw repainted as a dusk fen: 52 stages, ferry yard as Shipyard, mist and water effects.",
    "commit": "c393e0abd"
   },
   {
