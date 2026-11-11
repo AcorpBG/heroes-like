@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "whirlpool-maelstrom-20261111",
- "currentSliceTitle": "A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.",
+ "currentSliceId": "water-attack-boat-heroes-20261111",
+ "currentSliceTitle": "A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T17:58:27Z",
+ "updatedAt": "2026-11-11T18:17:29Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "water-attack-boat-heroes-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.",
+   "commit": "d759667ba"
+  },
   {
    "id": "whirlpool-maelstrom-20261111",
    "status": "completed",
@@ -231,7 +238,7 @@
    "id": "town-stage-haze-embercourt-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).",
+   "summary": "Embercourt's gorge gets moving gold haze and spray; mist colour, wind and cover set per town (stage_mist).",
    "commit": "174f2b80a"
   },
   {
@@ -245,14 +252,14 @@
    "id": "town-stage-effects-embercourt-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.",
+   "summary": "Embercourt's lock gorge moves: water sways and glints, lock falls stream, fire baskets flicker (beacons effect).",
    "commit": "589d79c1e"
   },
   {
    "id": "town-art-embercourt-lock-gorge-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.",
+   "summary": "Embercourt repainted as a lock gorge: 52 stages on 24 plots, Shipyard on the near shore.",
    "commit": "0e5018b71"
   },
   {

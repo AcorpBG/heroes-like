@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.
 - 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.
 - 2026-11-11 `town-cuts-four-towns-20261111` (5e7874f80): Other four towns' cuts checked; three forts re-cut.
 - 2026-11-11 `town-mireclaw-cuts-20261111` (de6b0cc36): Four Mireclaw buildings re-cut.
@@ -93,10 +94,10 @@ None open.
 - 2026-11-10 `ui-map-info-card-art-20261110` (e6fcbbbd4): The map's right-click report and hover card use the sidebar's dark-and-gold frame, fit their content, and show unit icons cut from the portraits at 56 px.
 - 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: 52 stages, ferry yard as Shipyard, mist and water effects.
 - 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few to Countless); own armies and battles stay exact.
-- 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets a wide moving layer: pale gold haze bands through the far gorge and across the locks, spray at the falls; the mist's colour, wind and cover are now set per town (layout stage_mist).
+- 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets moving gold haze and spray; mist colour, wind and cover set per town (stage_mist).
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile.
-- 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: basin and far river sway and glint, the four lock falls stream, the lock fire baskets flicker (new backdrop-only beacons effect), building fire light shimmers at 0.6; mask from lock_gorge_fx_mask.py.
-- 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: a river falling through four locks into a harbour basin, 24 plots planned with the Shipyard on the near shore, all 52 stages as masked edits with BiRefNet mattes; stage backdrop and glows set.
+- 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: water sways and glints, lock falls stream, fire baskets flicker (beacons effect).
+- 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: 52 stages on 24 plots, Shipyard on the near shore.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week (visit cadence weekly_per_side).
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood; computer players plan with that price.
 - 2026-11-10 `town-art-brasshollow-boatworks-lower-20261110` (06e7f1832): Brasshollow boatworks repainted on the cliff face under the market terrace, nothing above the cliff lip, so all four T3 hall stages show whole (the first hid 27-49%); matte, layer, icon, manifests, built picture redone.
