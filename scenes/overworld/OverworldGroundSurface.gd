@@ -106,7 +106,7 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 		return
 	var start := Time.get_ticks_usec()
 	# One RGBA8 texel per tile: red is the material slot, green is exploration,
-	# alpha is 0 on impassable land.
+	# alpha is 0 on impassable land (and just under 255 on a river tile, below).
 	# Fill a byte buffer and upload it once instead of per-pixel Color calls.
 	if map_changed:
 		missing_terrain_ids.clear()
@@ -136,10 +136,15 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 				offset += 4
 		# Blue: bits 0-6 are the river mask (see OverworldMapView
 		# _river_masks_for_level), bit 7 marks road tiles. Both keep decals off.
+		# Alpha, on land that can be walked: 255 less the side a river tile's
+		# water flows out of (1 north, 2 east, 3 south, 4 west; mask bits 8-10).
 		for river in river_masks:
 			var tile: Vector2i = river
 			if tile.x >= 0 and tile.y >= 0 and tile.x < dimensions.x and tile.y < dimensions.y:
-				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = int(river_masks[river]) & 127
+				var at := (tile.y * dimensions.x + tile.x) * 4
+				lookup_bytes[at + 2] = int(river_masks[river]) & 127
+				if lookup_bytes[at + 3] == 255:
+					lookup_bytes[at + 3] = 255 - ((int(river_masks[river]) >> 8) & 7)
 		for road in road_tiles:
 			var tile: Vector2i = road
 			if tile.x >= 0 and tile.y >= 0 and tile.x < dimensions.x and tile.y < dimensions.y:

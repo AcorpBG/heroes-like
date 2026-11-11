@@ -11502,7 +11502,48 @@ func _river_masks_for_level(signature: int) -> Dictionary:
 					mask |= 1 << bit
 					break
 		_river_masks[tile] = mask | 16 | (clampi(river_type - 1, 0, 3) << 5)
+	_set_river_flow_sides()
 	return _river_masks
+
+## Which way each river tile's water runs, for the moving stream: bits 8-10 of
+## its mask hold 1 + the side (RIVER_DIRECTIONS) it flows out of. A river runs
+## to its mouth, a join that leads to no river tile (the sea or the map's
+## edge); from there every tile upstream flows toward the tile it was reached
+## from. A river with no mouth runs to its lowest dead end on the map.
+func _set_river_flow_sides() -> void:
+	var out_side := {}
+	var queue: Array[Vector2i] = []
+	var tiles: Array = _river_masks.keys()
+	tiles.sort()
+	for tile: Vector2i in tiles:
+		for bit in range(4):
+			if int(_river_masks[tile]) & (1 << bit) != 0 and not _river_masks.has(tile + RIVER_DIRECTIONS[bit]) and not out_side.has(tile):
+				out_side[tile] = bit
+				queue.append(tile)
+	var ends: Array = tiles.filter(func(tile: Vector2i) -> bool: return _river_join_count(int(_river_masks[tile])) <= 1)
+	ends.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y > b.y or (a.y == b.y and a.x > b.x))
+	var spare := 0
+	while true:
+		while not queue.is_empty():
+			var tile: Vector2i = queue.pop_front()
+			for bit in range(4):
+				var upstream: Vector2i = tile + RIVER_DIRECTIONS[bit]
+				if int(_river_masks[tile]) & (1 << bit) == 0 or not _river_masks.has(upstream) or out_side.has(upstream):
+					continue
+				if int(_river_masks[upstream]) & (1 << ((bit + 2) % 4)) == 0:
+					continue
+				out_side[upstream] = (bit + 2) % 4
+				queue.append(upstream)
+		while spare < ends.size() and out_side.has(ends[spare]):
+			spare += 1
+		if spare >= ends.size():
+			break
+		var end: Vector2i = ends[spare]
+		var joined := int(_river_masks[end]) & 15
+		out_side[end] = (_river_single_bit(joined) + 2) % 4 if joined != 0 else 2
+		queue.append(end)
+	for tile: Vector2i in out_side:
+		_river_masks[tile] = int(_river_masks[tile]) | ((int(out_side[tile]) + 1) << 8)
 
 ## Each closed 2x2 block of joined river tiles is opened into a path: drop
 ## one inner join, then drop block tiles the river no longer needs (no join

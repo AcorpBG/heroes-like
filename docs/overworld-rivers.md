@@ -18,13 +18,23 @@ Each water wheel (type 109) starts a river in `0x4ac4ae`. When `0x4ab6ac`'s sear
 
 Presentation only: rivers do not change movement (as in HoMM3), and the river data and saves are untouched.
 
+## Flow
+
+Slice: `ground-moving-rivers-lava-20261111` (owner request, 2026-11-11: make rivers and lava move too).
+
+- The river data has no direction. `OverworldMapView._set_river_flow_sides` works one out: a river runs to its mouth, a join that leads to no river tile (the sea or the map's edge); from there every tile upstream flows toward the tile it was reached from. A river with no mouth runs to its lowest dead end on the map. The side a tile flows out of (1 + its `RIVER_DIRECTIONS` index) is in bits 8-10 of its mask and goes to the shader in the lookup's alpha, as 255 less that number (alpha 0 still marks impassable land).
+- `river_field` also returns how far along its tile's run a point lies, in tiles downstream: -0.5 where the water comes in, 0.5 where it leaves, round a turn by its angle. A tile's 0.5 meets the next one's -0.5, so anything with a whole number of periods a tile runs on unbroken.
+- `river_paint` slides lights down the middle of the stream on that coordinate: three to a tile passing at `river_speed` a second and two slower ones under them, each bent and broken by still noise, with the water a little darker between them (`river_lights`). Lava rivers get the same lights in fire colours. Not seen in the game: no sampled map had a lava river.
+- Lava ground (`lava_paint`): the crust stands; the fire the painting shows in its cracks swells and fades in slow patches that wander over the field, with a soft glow round it taken from a blurred look at the same painting (`lava_glow`).
+- With motion off both stand still.
+
 ## Bridges
 
 Slice: `art-overworld-river-bridges-20261015` (owner pick A, a timber bridge, from four in-game looks: timber bridge, stone bridge, stepping-stone ford, shallow ford).
 
 Where a straight road crosses a river (the road joins two opposite sides of the tile and the river joins neither of those sides), `OverworldMapView._road_bridge_axis` gives the road's axis and `_draw_road_bridge` draws a plank deck on end beams with rails, posts and a shadow on the water, over the road. Other road and river overlaps (a road running along the river, or turning on a river tile) keep the road drawn over the water. The ground shader straightens the stream's meander near any tile with both the road and river bits, so the water runs through the tile centre under the bridge. The generator places few such crossings: one on each of the two sampled maps that have them.
 
-Uniforms: `river_half_width`, `river_bank`, `river_meander`, `lava_slot`.
+Uniforms: `river_half_width`, `river_bank`, `river_meander`, `lava_slot`, `river_speed`, `river_lights`, `lava_glow`.
 
 ## Validation
 

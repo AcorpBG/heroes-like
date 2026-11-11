@@ -53,6 +53,14 @@ uniform float wave_foam = 0.9;
 uniform float wave_crest = 0.8;
 uniform float wave_reach = 0.9;
 uniform float wave_face = 0.28;
+// Rivers run downstream (the lookup's alpha holds the side each river tile
+// flows out of): lights slide along the stream, river_speed of them a second
+// past a point, three to a tile. Lava burns in its cracks: the fire the
+// painting shows there swells and fades in slow patches, with a soft glow
+// round it (lava_glow).
+uniform float river_speed = 1.2;
+uniform float river_lights = 0.5;
+uniform float lava_glow = 0.9;
 // Ground detail decals, scattered here so they share the ground's light and
 // blend: a 16x16 atlas of 128 px cells, 16 decals per ground set (rows 1-2
 // tiny, row 3 medium, row 4 large). terrain_data blue marks road tiles.
@@ -234,9 +242,24 @@ vec3 sea_paint(float slot, vec2 world, float t) {
 	return (sea + sea * net * lift * sea_glint) * (1.0 + sea_roll * roll);
 }
 
-// A ground's colour: the sea moves, the land stands.
+// Lava: the crust stands, the fire in its cracks breathes. The glow round a
+// crack is a blurred look at the same painting.
+vec3 lava_paint(float slot, vec2 world, float t) {
+	vec3 crust = ground(slot, world);
+	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
+	vec3 soft = textureLod(materials, (cell * 512.0 + vec2(24.0) + fract(world / material_span_tiles) * 464.0) / 2048.0, 3.5).rgb;
+	float fire = smoothstep(0.06, 0.25, crust.r - max(crust.g, crust.b));
+	float glow = smoothstep(0.04, 0.1, soft.r - max(soft.g, soft.b));
+	float phase = 6.2832 * value_noise(world * 0.8 + vec2(2.9, 6.3));
+	float pulse = 0.5 + 0.5 * sin(t * 1.0472 + phase + dot(world, vec2(0.7, 1.1)));
+	float heat = pulse * (0.8 + 0.2 * sin(t * 4.1888 + phase * 3.1));
+	return crust + vec3(1.0, 0.42, 0.08) * (fire * (0.25 + 0.75 * heat) + glow * 0.35 * heat) * lava_glow;
+}
+
+// A ground's colour: the sea and the fire move, the land stands.
 vec3 ground_now(float slot, vec2 world, float t) {
-	return is_water(slot) > 0.5 ? sea_paint(slot, world, t) : ground(slot, world);
+	if (is_water(slot) > 0.5) { return sea_paint(slot, world, t); }
+	return abs(slot - lava_slot) < 0.5 ? lava_paint(slot, world, t) : ground(slot, world);
 }
 
 // The share of water in the 3x3 tiles round a point, by smooth (quadratic
@@ -285,6 +308,13 @@ int river_bits(vec2 cell) {
 	return int(texture(terrain_data, (clamp(cell, vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size).b * 255.0 + 0.5);
 }
 
+// The side a river tile's water flows out of: 0 unknown, 1 north, 2 east,
+// 3 south, 4 west.
+int river_out(vec2 cell) {
+	int code = int((1.0 - texture(terrain_data, (clamp(cell, vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size).a) * 255.0 + 0.5);
+	return code <= 4 ? code : 0;
+}
+
 float segment_distance(vec2 p, vec2 a, vec2 b) {
 	vec2 ab = b - a;
 	float t = clamp(dot(p - a, ab) / max(dot(ab, ab), 0.0001), 0.0, 1.0);
@@ -294,10 +324,15 @@ float segment_distance(vec2 p, vec2 a, vec2 b) {
 // Distance from p to the river network in the 3x3 tiles around it, each
 // river tile running from its centre to the edges it joins, divided by the
 // local half-width (springs taper). y: the river's type bits of the nearest.
-vec2 river_field(vec2 p) {
+// z: how far along that tile's run the point lies, in tiles downstream, from
+// -0.5 where the water comes in to 0.5 where it leaves: a tile's 0.5 meets
+// the next one's -0.5, so anything with a whole number of periods a tile
+// runs on unbroken.
+vec3 river_field(vec2 p) {
 	vec2 base = floor(p);
 	float best = 1e5;
 	float type_bits = 0.0;
+	float best_along = 0.0;
 	for (int dy = -1; dy <= 1; dy++) {
 		for (int dx = -1; dx <= 1; dx++) {
 			vec2 cell = base + vec2(float(dx), float(dy));
@@ -307,6 +342,8 @@ vec2 river_field(vec2 p) {
 			int joins = bits & 15;
 			int count = (joins & 1) + ((joins >> 1) & 1) + ((joins >> 2) & 1) + ((joins >> 3) & 1);
 			float d = length(p - centre) / (count == 0 ? 0.7 : 1.0);
+			float along = 0.0;
+			int out_side = river_out(cell);
 			bool bend = count == 2 && joins != 5 && joins != 10;
 			if (bend) {
 				// A turn sweeps round the corner between its two edges.
@@ -315,11 +352,20 @@ vec2 river_field(vec2 p) {
 				vec2 inward = centre - corner;
 				d = (local.x * inward.x >= 0.0 && local.y * inward.y >= 0.0) ? abs(length(local) - 0.5)
 					: min(length(p - (centre + (corner - centre) * vec2(1.0, 0.0))), length(p - (centre + (corner - centre) * vec2(0.0, 1.0))));
+				// Round the turn, from its north or south side (0) to its east or west side (1).
+				float turn = atan(abs(local.y), max(abs(local.x), 0.0001)) / 1.5708;
+				along = (out_side == 2 || out_side == 4) ? turn - 0.5 : 0.5 - turn;
 			} else {
-				if ((joins & 1) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.0, -0.5))); }
-				if ((joins & 2) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.5, 0.0))); }
-				if ((joins & 4) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.0, 0.5))); }
-				if ((joins & 8) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(-0.5, 0.0))); }
+				for (int side = 0; side < 4; side++) {
+					if ((joins & (1 << side)) == 0) { continue; }
+					vec2 dir = side == 0 ? vec2(0.0, -1.0) : (side == 1 ? vec2(1.0, 0.0) : (side == 2 ? vec2(0.0, 1.0) : vec2(-1.0, 0.0)));
+					float arm = segment_distance(p, centre, centre + dir * 0.5);
+					if (arm < d) {
+						d = arm;
+						float reach = clamp(dot(p - centre, dir), 0.0, 0.5);
+						along = out_side == side + 1 ? reach : -reach;
+					}
+				}
 			}
 			if (count == 1) {
 				// A spring: narrow at its source, full width by the tile edge.
@@ -330,13 +376,14 @@ vec2 river_field(vec2 p) {
 			if (d < best) {
 				best = d;
 				type_bits = float((bits >> 5) & 3);
+				best_along = along;
 			}
 		}
 	}
-	return vec2(best, type_bits);
+	return vec3(best, type_bits, best_along);
 }
 
-vec3 river_paint(vec3 surface, vec2 world, vec2 warp) {
+vec3 river_paint(vec3 surface, vec2 world, vec2 warp, float t) {
 	// Where a road crosses (road and river on one tile) the stream runs
 	// straight through the tile centre, so the crossing sits on the water.
 	float straight = 1.0;
@@ -352,7 +399,7 @@ vec3 river_paint(vec3 surface, vec2 world, vec2 warp) {
 	}
 	vec2 p = world + (vec2(value_noise(world * 0.7 + vec2(3.1, 7.7)), value_noise(world * 0.7 + vec2(-5.3, 1.9))) * 2.0 * river_meander - vec2(river_meander)
 		+ warp * 0.15) * straight;
-	vec2 field = river_field(p);
+	vec3 field = river_field(p);
 	float half_width = river_half_width;
 	float bank = river_bank;
 	// Banks wobble a little; the width breathes along the river.
@@ -378,9 +425,14 @@ vec3 river_paint(vec3 surface, vec2 world, vec2 warp) {
 	}
 	float centre = 1.0 - smoothstep(0.0, half_width, d);
 	vec3 water = mix(shallow, deep, smoothstep(0.1, 0.85, centre));
-	// A soft light glint down the middle, broken up along the river.
-	float glint = smoothstep(0.55, 0.95, centre) * smoothstep(0.45, 0.8, value_noise(world * 5.0 + vec2(1.3, 4.1)));
-	water += vec3(0.08, 0.09, 0.08) * glint;
+	// The stream runs: lights slide down its middle, three to a tile and two
+	// slower ones under them, each bent and broken by still noise so they do
+	// not march in step.
+	float lights = pow(0.5 + 0.5 * sin(6.2832 * (field.z * 3.0 - t * river_speed) + 2.5 * value_noise(world * 4.0 + vec2(1.3, 4.1))), 4.0) * 0.75
+		+ pow(0.5 + 0.5 * sin(6.2832 * (field.z * 2.0 - t * river_speed * 0.5) + 4.0 * value_noise(world * 2.3 + vec2(7.0, 2.2))), 2.0) * 0.25;
+	float glint = smoothstep(0.15, 0.85, centre) * lights * mix(0.6, 1.0, value_noise(world * 5.0 + vec2(1.3, 4.1)));
+	water *= mix(0.78, 1.02, lights);
+	water += (type_bits > 2.5 ? vec3(0.55, 0.22, 0.03) : vec3(0.9, 1.0, 0.95)) * glint * river_lights;
 	vec3 bank_color = surface * vec3(0.55, 0.52, 0.48);
 	float in_bank = 1.0 - smoothstep(half_width + bank - aa, half_width + bank + 0.06, d);
 	vec3 result = mix(surface, bank_color, in_bank * 0.85);
@@ -537,7 +589,7 @@ void fragment() {
 			foam += (crest * mix(0.2, 1.0, lace) + crest_b * lace) * wave_crest;
 		}
 		surface = mix(surface, vec3(0.93, 0.97, 0.96), clamp(foam, 0.0, 1.0) * wave_foam);
-		surface = river_paint(surface, world, warp);
+		surface = river_paint(surface, world, warp, clock);
 		vec2 off_center = abs(from_center);
 		surface = rock_void(surface, world, warp, smoothstep(0.05, 0.3, max(off_center.x, off_center.y)), own_void);
 		COLOR = vec4(surface, 1.0);
