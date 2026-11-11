@@ -65,7 +65,7 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-10-2b149cc1
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-11-11-d3bab4c9
 ```
 
 ## Incremental snapshots, 2026-10-14
@@ -130,6 +130,8 @@ python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-ar
 
 `2026-11-10-2b149cc1` extends `2026-11-10-26e45010`, from the owner's checkout at Git revision `2b149cc12` after the town's magic guild window (slice `ui-magic-guild-book-20261110`): 1 archive, 4 files, 2,614,149 bytes. One is the painting under `art/ui/source/generated/magic_guild_20261110`, the layout mockup the owner picked; three are the tracked prompt, provenance note and `.gdignore` as backup copies. Every payload was read back against its SHA-256 and ZIP CRC, and the painting was then removed from the owner's checkout and the worktree `neutral-encounters-retreat-bug-cd04af` with the restore tool's `--remove --apply`.
 
+`2026-11-11-d3bab4c9` extends `2026-11-10-2b149cc1`, from the owner's checkout at Git revision `d3bab4c95` after the icons of the artifact rework (slice `artifact-icons-20261111`): 1 archive, 56 files, 61,188,312 bytes. 26 are the paintings under `art/artifacts/source/generated/artifact_rework_20261111`: 25 sheets of six artifact icons and one fix sheet of three; 30 are the tracked prompts, `sheets.json`, `fixes.json`, provenance note and `.gdignore` as backup copies. Every payload was read back against its SHA-256 and ZIP CRC, and the 26 paintings were then removed from the owner's checkout and the worktree `neutral-encounters-retreat-bug-cd04af` with the restore tool's `--remove --apply`. `tools/build_artifact_icons.py cut` needs them restored.
+
 ## Tests never need archived sources
 
 The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
@@ -148,7 +150,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-10-2b149cc1 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-11-11-d3bab4c9 --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.
