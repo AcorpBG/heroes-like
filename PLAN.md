@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers (land, sand, sea) with a fold-free border bend: no square notches or dark blotches.
 - 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.
 - 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.
 - 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ground-border-noise-seams-20261111",
- "currentSliceTitle": "Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.",
+ "currentSliceId": "ground-shore-layers-20261111",
+ "currentSliceTitle": "Shore redrawn in layers (land, sand, sea) with a fold-free border bend: no square notches or dark blotches.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T19:32:31Z",
+ "updatedAt": "2026-11-11T19:44:36Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ground-shore-layers-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Shore redrawn in layers (land, sand, sea) with a fold-free border bend: no square notches or dark blotches.",
+   "commit": "d106c7c2d"
+  },
   {
    "id": "ground-border-noise-seams-20261111",
    "status": "completed",
