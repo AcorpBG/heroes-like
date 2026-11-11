@@ -1,6 +1,6 @@
 # Artifact catalogue
 
-The 150 artifacts of the artifact rework, as the owner accepted them on 2026-11-11 (second draft, no notes). The rules are in `docs/artifact-system.md`. This file is exported from the plan page's data (`.artifacts/artifact_plan/build/export_doc.py`); change the data and export again, do not edit the tables by hand.
+The 150 artifacts of the artifact rework, as the owner accepted them on 2026-11-11 (second draft, no notes). The rules are in `docs/artifact-system.md`. This file is exported from `tools/artifact_catalogue.py`, the one copy of the data, by the plan page's exporter (`.artifacts/artifact_plan/build/export_doc.py`); change the data and export again, do not edit the tables by hand.
 
 Bands: common 1 point, uncommon 2, rare 3, epic 5 and one special effect. An artifact with a price is a rare worth 5 points. A faction artifact gives its bonuses to any hero and its home line to heroes of that faction.
 
@@ -33,7 +33,7 @@ Bands: common 1 point, uncommon 2, rare 3, epic 5 and one special effect. An art
 | Daybreak Torc | uncommon |  | +1 Power; Beacon spells: +8% damage and healing |  |  |  |  | a gold torc ending in two small suns |
 | Collar of the Loud Voice | rare |  | +2 Power; +5% spell damage |  |  |  |  | a stiff silver collar engraved with open mouths |
 | Thornmother's Necklace | rare | Thornwake | +1 Power; Root spells: +16% damage and healing | 5% of the fallen recover after a won battle |  |  |  | a string of rose hips and long thorns |
-| Penitent's Chain | rare |  | +3 Power; +10% spell damage |  | −1 Knowledge |  | The Penitent's Burden | a rusted chain with a lead weight |
+| Penitent's Chain | rare |  | +3 Power; +10% spell damage |  | −1 Knowledge |  | The Penitent's Burden | a rusted iron neck chain carrying a plain square block of lead |
 | Bog-Witch Teeth | rare | Mireclaw | +2 Power; spell curses last 1 turn longer | Veil spells: +8% damage and healing |  |  |  | a necklace of yellow teeth and reed knots |
 | The Unanswered Word | epic |  | +3 Power; +10% spell damage |  |  | Your spells count only half of the enemy hero's Knowledge. |  | a silver tongue on a black ribbon |
 | The Flame | epic |  | +2 Power; +9 max mana |  |  | The first spell of each battle costs no mana. | Lens and Flame | a small flame that burns inside a crystal drop |
@@ -189,14 +189,14 @@ Bands: common 1 point, uncommon 2, rare 3, epic 5 and one special effect. An art
 | Medal of the Thirty | rare |  | +1 cohesion; +1 momentum; +2 Attack |  |  |  |  | a bronze medal with thirty tiny shields |
 | Wardstone | rare |  | +10% spell resistance; +5% control resistance |  |  |  |  | a flat river stone cut with a ward |
 | Assayer's Scales | rare | Embercourt | +150 gold a day; +10% gold and resources from pickups and won battles | +1 of the wearer's faction's rare resource a day |  |  |  | folding brass scales in a red case |
-| Hunt-Tally Cord | rare | Mireclaw | +1 momentum; +20% gold and resources from pickups and won battles | +1 initiative |  |  |  | a knotted cord hung with claws |
+| Hunt-Tally Cord | rare | Mireclaw | +1 momentum; +20% gold and resources from pickups and won battles | +1 initiative |  |  |  | a short straight tally cord with knots and three claws tied along it |
 | Tuning Crystal | rare | Sunvault | +1 Power; spell boosts last 1 turn longer; +5% spell damage | Beacon spells: +8% damage and healing |  |  |  | a humming crystal fork |
 | Seedbank Reliquary | rare | Thornwake | +10% creature growth, recruits cost 5% less; 10% of the fallen recover after a won battle | +3% creature health |  |  |  | a wooden box of labelled seeds |
 | The Reader's Case | epic |  | +2 Knowledge; +6 max mana; +1 Power |  |  | Worn scrolls are cast at +2 Power. |  | a tooled leather scroll case with four tubes |
 | The Ever-Coal | epic |  | +2 Power; Furnace spells: +16% damage and healing; +5% spell damage |  |  | The hero casts Second Sun as if it knew it. |  | a coal that burns white and never shrinks |
 | Mirror of the Far Shore | epic |  | +2 Power; Veil spells: +16% damage and healing; spell curses last 1 turn longer |  |  | The hero casts Hollow Crown as if it knew it. |  | a black hand mirror showing another coast |
 | The Standing Order | epic | Brasshollow | +4 Defense; troops take 8% less damage; +10% damage when assaulting a town | +10% damage when assaulting a town |  | A stack of yours that has not moved this round takes 25% less damage. |  | a brass plaque engraved with one command |
-| Writ of Relief | epic | Embercourt | +2 cohesion; +4 Defense; +75 gold a day | +1 cohesion |  | A stack of yours that defends also gives +2 Defense to your stacks beside it. |  | a sealed charter with seven lock stamps |
+| Writ of Relief | epic | Embercourt | +2 cohesion; +4 Defense; +75 gold a day | +1 cohesion |  | A stack of yours that defends also gives +2 Defense to your stacks beside it. |  | a rolled parchment charter tied with ribbon and hung with seven wax seals |
 | The Prime Lens | epic | Sunvault | +2 Power; spell boosts last 1 turn longer; +10% spell damage | +1 Power |  | Boosts the hero casts in the first round last the whole battle. |  | a flawless lens in a gold ring stand |
 
 ## Sets

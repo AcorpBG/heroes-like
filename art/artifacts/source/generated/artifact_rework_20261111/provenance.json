@@ -1,0 +1,447 @@
+{
+ "purpose": "The icons of the 150 artifacts of the artifact rework (docs/artifact-system.md), six to a sheet. tools/build_artifact_icons.py writes the prompts and cuts the sheets into art/artifacts/runtime/<name>.png at 128 pixels. A fix sheet repaints single icons (fixes.json).",
+ "generator": "imggen skill (OpenAI Images API)",
+ "model": "gpt-image-2.6-sunburst",
+ "created": "2026-11-11",
+ "quality": "medium",
+ "note": "The PNGs are not tracked (art/*/source/**/*.png is ignored); they are in the source art archive (docs/source-material-storage-map.md) and come back with tools/restore_archived_source_material.py.",
+ "items": [
+  {
+   "source": "sheet_00.png",
+   "prompt_file": "sheet_00.prompt.txt",
+   "names": [
+    "Scribe's Cap",
+    "Cinder Pendant",
+    "The Question",
+    "Roadeater Boots",
+    "Shroud of the Unseen Fleet",
+    "Dawn Chime"
+   ],
+   "inputs": [],
+   "transparent": true,
+   "sha256": "f47802ae27398529a50bfc64f8c3604f62892a1cb42d4ce661e79d6fec962820"
+  },
+  {
+   "source": "sheet_01.png",
+   "prompt_file": "sheet_01.prompt.txt",
+   "names": [
+    "Novice Circlet",
+    "Surveyor's Cap",
+    "Lector's Hood",
+    "Candlewright's Coif",
+    "Drum-Speaker's Mask",
+    "Lens-Reader's Spectacles"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "87f8be4739c020f9bb7c90ed33c139584f19e5c6cdfa1a4b891a872af3bfd258"
+  },
+  {
+   "source": "sheet_02.png",
+   "prompt_file": "sheet_02.prompt.txt",
+   "names": [
+    "Helm of Quiet Counsel",
+    "Furnace-Seer's Visor",
+    "Crown of Green Wood",
+    "Twofold Diadem",
+    "Crown of the Empty Throne",
+    "Prism Bead"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "7c97ac76c73ae63a6f5169305e1022194bf6967e15822b560274858cc11e3f28"
+  },
+  {
+   "source": "sheet_03.png",
+   "prompt_file": "sheet_03.prompt.txt",
+   "names": [
+    "Ember Locket",
+    "Seedling Pendant",
+    "Mist Vial",
+    "Daybreak Torc",
+    "Collar of the Loud Voice",
+    "Thornmother's Necklace"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "b81dc48b5ed9d4a150fa539c206e40580ecc4ee419c10ec99bdc00a9bf8a0cd3"
+  },
+  {
+   "source": "sheet_04.png",
+   "prompt_file": "sheet_04.prompt.txt",
+   "names": [
+    "Penitent's Chain",
+    "Bog-Witch Teeth",
+    "The Unanswered Word",
+    "The Flame",
+    "Traveller's Cloak",
+    "Warded Shawl"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "611934f2d3c69c5e5433c9c040913d725f915466af17b1ece0aa24c27e215280"
+  },
+  {
+   "source": "sheet_05.png",
+   "prompt_file": "sheet_05.prompt.txt",
+   "names": [
+    "Reedskin Mantle",
+    "Fogcutter Cape",
+    "Watchman's Greatcoat",
+    "Mirrorweave Cloak",
+    "Oathkeeper's Mantle",
+    "Cloak of Turned Words"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "a48ed5f89057a6c418788ea2ef3b2ce592e37ec6ca395c8ba680e943631c029e"
+  },
+  {
+   "source": "sheet_06.png",
+   "prompt_file": "sheet_06.prompt.txt",
+   "names": [
+    "Mantle of the Empty Throne",
+    "Stalker's Pelt",
+    "Cinderproof Cape",
+    "Padded Jack",
+    "Drover's Vest",
+    "Pikeward Plate"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "1bca973b53136d1132d3d52f7e9da4819be5bca5279b6fe173cdbd58d1cd6e15"
+  },
+  {
+   "source": "sheet_07.png",
+   "prompt_file": "sheet_07.prompt.txt",
+   "names": [
+    "Banded Hauberk",
+    "Boilerplate Cuirass",
+    "Barkskin Vest",
+    "Relief-Line Breastplate",
+    "Penitent's Hairshirt",
+    "Wardens' Lamellar"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "a46270a21bdb3a4f0f05f975beee47cf4f2e94482109df2df7517d0af97588df"
+  },
+  {
+   "source": "sheet_08.png",
+   "prompt_file": "sheet_08.prompt.txt",
+   "names": [
+    "Prismatic Harness",
+    "The Unbroken Wall",
+    "Mother-Graft Mail",
+    "Soldier's Sidearm",
+    "Hunter's Bow",
+    "Foot Lantern"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "b9dfdc473721f0a9d37dc61861945b514312d25a5c1a1c4289e62c86964957b9"
+  },
+  {
+   "source": "sheet_09.png",
+   "prompt_file": "sheet_09.prompt.txt",
+   "names": [
+    "Pocket Compass",
+    "Rivet Hammer",
+    "Reed Spear",
+    "Captain's Sabre",
+    "Longwatch Spyglass",
+    "Yew Warbow"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "49276d219cc74c0b478fffd6e6cb1ab27b1998bf8e71b765cfee0d8730d5a668"
+  },
+  {
+   "source": "sheet_10.png",
+   "prompt_file": "sheet_10.prompt.txt",
+   "names": [
+    "Parrying Dagger",
+    "Lockkeeper's Pike",
+    "Harpoon of the Wake",
+    "Signal Mirror",
+    "Pruning Hook",
+    "The Answer"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "8a75aee0e4774428086820e7a90208405b2716e76fd1f6d34d59f948995e5fe6"
+  },
+  {
+   "source": "sheet_11.png",
+   "prompt_file": "sheet_11.prompt.txt",
+   "names": [
+    "Sceptre of the Empty Throne",
+    "Stormcaller's Horn",
+    "Astrolabe of Far Roads",
+    "Butcher's Maul",
+    "Siege Mattock",
+    "Boarding Axe"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "71bddc1e54ad593b75c26a1195201d7e1f1a69ac785b967e66d6e51dc7a67317"
+  },
+  {
+   "source": "sheet_12.png",
+   "prompt_file": "sheet_12.prompt.txt",
+   "names": [
+    "The Last Gate",
+    "Never-Empty Quiver",
+    "Staff of the First Tree",
+    "The Opening Cut",
+    "Copper Signet",
+    "Bosun's Ring"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "200a1a33fbc2de4d4ca33e71552a0b9ebeb78311df46cde6bacb455b05db0688"
+  },
+  {
+   "source": "sheet_13.png",
+   "prompt_file": "sheet_13.prompt.txt",
+   "names": [
+    "Apprentice's Band",
+    "Knot Ring",
+    "Vow of Giving",
+    "Vow of Keeping",
+    "Merchant's Seal",
+    "Hexwright's Loop"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "95422de54e6dd89a969e26361b09958eea7851f0d4d0d698d4c424229e28f865"
+  },
+  {
+   "source": "sheet_14.png",
+   "prompt_file": "sheet_14.prompt.txt",
+   "names": [
+    "Granary Seal",
+    "Ring of the Short Road",
+    "Signet of the Empty Throne",
+    "The Lens",
+    "Debtor's Band",
+    "Saltcounter's Ring"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "316f8a02029fa252418c07e3e5d4e3de5e10f895e69158108f645ce875c571c0"
+  },
+  {
+   "source": "sheet_15.png",
+   "prompt_file": "sheet_15.prompt.txt",
+   "names": [
+    "Ring of the Noon Hour",
+    "The Open Hand",
+    "Marching Boots",
+    "Surveyor's Boots",
+    "Night Watch Boots",
+    "Fenwalkers"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "3c448a15b9f9314b5c911f7eab4211e6fa3de2ad5ef2d77927c90443a6c52821"
+  },
+  {
+   "source": "sheet_16.png",
+   "prompt_file": "sheet_16.prompt.txt",
+   "names": [
+    "Courier's Spurs",
+    "Longstride Greaves",
+    "Penitent's Sandals",
+    "Deckhand's Seaboots",
+    "Rail-Walker's Boots",
+    "Company Pennant"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "89bd1f3ad5c05ae110a100cf7b8d0c544785a4d86ccaec08e8a435c6269ee433"
+  },
+  {
+   "source": "sheet_17.png",
+   "prompt_file": "sheet_17.prompt.txt",
+   "names": [
+    "Drummer's Guidon",
+    "Harvest Flag",
+    "Banner of the Empty Throne",
+    "Recruiter's Colours",
+    "Charge Standard",
+    "Herald's Ensign"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "181cbf99aa6f58240cd1e6c6701ae770a7e6f4895e6390fa449c50b7b9c0256c"
+  },
+  {
+   "source": "sheet_18.png",
+   "prompt_file": "sheet_18.prompt.txt",
+   "names": [
+    "Standard of the Long March",
+    "War-Drum of the Red Hour",
+    "Oathfire Standard",
+    "Wake-Lantern Ensign",
+    "Colours of the Sworn",
+    "Vanguard's Thunder"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "f670c25757cf97d53700fee38f1c701fb98b84eda6959f73a87b35696057c1c0"
+  },
+  {
+   "source": "sheet_19.png",
+   "prompt_file": "sheet_19.prompt.txt",
+   "names": [
+    "The Blood-Drum",
+    "First Coin",
+    "Second Coin",
+    "Tin Cup",
+    "Field Journal",
+    "Sun Dial Charm"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "dd338aa83709421648c25eda8c41f0fcd6ce36396303e25e5ff2ca275898699d"
+  },
+  {
+   "source": "sheet_20.png",
+   "prompt_file": "sheet_20.prompt.txt",
+   "names": [
+    "Salt Pouch",
+    "Toll Token",
+    "Seed Purse",
+    "Pressure Whistle",
+    "Ember Chime",
+    "Leaf Chime"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "d876f40c4e513a192eaf1598c2ba1b02fca590c94b550c7b6bfe1a1123e5e85a"
+  },
+  {
+   "source": "sheet_21.png",
+   "prompt_file": "sheet_21.prompt.txt",
+   "names": [
+    "Mist Chime",
+    "Quartermaster's Ledger",
+    "Trophy Belt",
+    "Old Campaign Map",
+    "Surgeon's Roll",
+    "Guild Stamp"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "92ff8697157de557e5358fa6ad2fe5930cc2272603924119f766a89523ee6c66"
+  },
+  {
+   "source": "sheet_22.png",
+   "prompt_file": "sheet_22.prompt.txt",
+   "names": [
+    "Gauge of Fair Weight",
+    "Herbalist's Satchel",
+    "Tax-Farmer's Strongbox",
+    "Hourglass of the Second Wind",
+    "Master's Primer",
+    "Brimming Horn"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "6fd5220ffe700ca7e5f6d500bcb3e5c595e4a351b5998bd55cd29a5b139f6bee"
+  },
+  {
+   "source": "sheet_23.png",
+   "prompt_file": "sheet_23.prompt.txt",
+   "names": [
+    "Medal of the Thirty",
+    "Wardstone",
+    "Assayer's Scales",
+    "Hunt-Tally Cord",
+    "Tuning Crystal",
+    "Seedbank Reliquary"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "ecc3ab1d572ab0aca7e2969269284a4e979c2ed83658b3cc38de39e5fe91433e"
+  },
+  {
+   "source": "sheet_24.png",
+   "prompt_file": "sheet_24.prompt.txt",
+   "names": [
+    "The Reader's Case",
+    "The Ever-Coal",
+    "Mirror of the Far Shore",
+    "The Standing Order",
+    "Writ of Relief",
+    "The Prime Lens"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "beb53f1734a6e95fd18b2570d842a5d6d73ecc6a3005cddafe14830a4799ba5c"
+  },
+  {
+   "source": "fix_01.png",
+   "prompt_file": "fix_01.prompt.txt",
+   "names": [
+    "Penitent's Chain",
+    "Writ of Relief",
+    "Hunt-Tally Cord"
+   ],
+   "inputs": [
+    "image 1: sheet_00.png, for the style"
+   ],
+   "transparent": true,
+   "sha256": "a273dd161cde73d2e07cf8a085d37f3a60b00027e1c9f0815a6189c68e2126b5"
+  }
+ ]
+}
