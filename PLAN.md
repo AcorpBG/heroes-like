@@ -57,7 +57,6 @@ None open.
 - `artifact-special-effects-20261111` (pending): the 32 special effects of epics and full sets, in batches. See `docs/artifact-system.md`.
 - `artifact-catalogue-switch-20261111` (pending): the 150 replace the 69: sets, reward lists, old saves, hero menu, AI values. See `docs/artifact-system-catalogue.md`.
 - `artifact-icons-20261111` (pending): six trial icons, then the 150 once the owner approves the quoted cost. See `docs/artifact-system.md`.
-- `artifact-bonus-rules-20261111` (in progress): one sum of bonuses for specialties and artifacts; Knowledge as a bonus; home lines; prices. See `docs/artifact-system.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -67,6 +66,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `artifact-bonus-rules-20261111` (b142e4114): Artifacts give every kind of bonus a specialty gives, plus Knowledge, home lines and prices; today's games play the same.
 - 2026-11-10 `ui-magic-guild-book-20261110` (a37aea861): Town's magic guild is the open spell book: a bookmark per level, the build order under it.
 - 2026-11-10 `ui-battle-spell-book-20261110` (62e6143ae): Battle spell book is the hero menu's open grimoire, one shared view.
 - 2026-11-10 `ui-hero-spell-book-20261110` (45e75ab76): Hero menu's spell page is an open grimoire: a school's spells by tier, the chosen one written out.

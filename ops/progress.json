@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "artifact-special-effects-20261111",
- "currentSliceTitle": "Artifact special effects",
- "currentSliceStatus": "pending",
- "updatedAt": "2026-11-11T11:04:44Z",
+ "currentSliceId": "artifact-bonus-rules-20261111",
+ "currentSliceTitle": "Artifacts give every kind of bonus a specialty gives, plus Knowledge, home lines and prices; today's games play the same.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-11T11:27:06Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -49,13 +49,10 @@
   },
   {
    "id": "artifact-bonus-rules-20261111",
-   "title": "Artifact bonuses: one sum with specialties",
-   "status": "in_progress",
-   "goal": "one sum of bonuses for specialties and artifacts; Knowledge as a bonus; home lines; prices.",
-   "docs": [
-    "docs/artifact-system.md"
-   ],
-   "updatedAt": "2026-11-11"
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Artifacts give every kind of bonus a specialty gives, plus Knowledge, home lines and prices; today's games play the same.",
+   "commit": "b142e4114"
   },
   {
    "id": "ui-magic-guild-book-20261110",
