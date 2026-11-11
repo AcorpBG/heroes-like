@@ -1627,8 +1627,8 @@ func _rebuild_spellbook() -> void:
 		var reason := blocked_reason
 		if reason == "" and cost > mana_current:
 			reason = "Needs %d mana; %d left." % [cost, mana_current]
-		if reason == "" and BattleRules.spell_target_ids(_session, spell_id).is_empty():
-			reason = "No target for it on the field now."
+		if reason == "":
+			reason = _spell_no_target_reason(spell)
 		spells.append(spell)
 		availability[spell_id] = {"enabled": reason == "", "message": reason}
 	_spell_book.show_book({
@@ -1648,6 +1648,18 @@ func _rebuild_spellbook() -> void:
 		"status_blocked": blocked_reason != "",
 		"scale": _hud_scale,
 	})
+
+
+## Why the spell has nothing to be cast on now, or "". A spell is aimed as
+## _begin_spell_targeting aims it: at a hex, at the whole battle, or at a stack.
+func _spell_no_target_reason(spell: Dictionary) -> String:
+	var spell_id := String(spell.get("id", ""))
+	match String(spell.get("target_mode", "")):
+		"hex_selected":
+			return "" if not BattleRules.spell_ground_hexes(_session, spell_id).is_empty() else "No hex for it on the field now."
+		"battle":
+			return ""
+	return "" if not BattleRules.spell_target_ids(_session, spell_id).is_empty() else "No target for it on the field now."
 
 
 func _on_spell_chosen(spell_id: String) -> void:
