@@ -807,6 +807,12 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 			const double gate_score = gd::to_float(gd::index(state, gate, str(key::score)));
 			const double far_score = gd::float_field(state, far, key::score, 0.0);
 			if (gate_score > compat::engine_max(near_score, far_score) && _gate_fight_looks_good(state, session, context, entry, gate)) {
+				// On the walk to the gate too: a site beside it that costs no day.
+				const DictRef detour = state.has(gate, str(key::past_path)) ? state.new_dict() : _on_the_way(state, session, context, entry, search, gate, wide, movement_max);
+				if (!gd::is_empty(state, detour)) {
+					set_path(state, detour, search);
+					return detour;
+				}
 				_close_decision_memos(state, context);
 				return _gate_walk(state, session, context, entry, gate, wide);
 			}
@@ -905,7 +911,18 @@ DictRef _by_the_way(State &state, DictRef session, DictRef context, DictRef entr
 DictRef _on_the_way(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, DictRef plan, DictRef plan_search, int64_t movement_max) {
 	const Atom kind = ai::string_or_empty(state, plan, key::kind);
 	const int64_t distance = gd::int_field(state, plan, key::distance, 0);
-	if ((kind != key::meet && kind != key::town_own) || distance <= 0 || !state.has(plan, str(key::tile_index))) {
+	if (distance <= 0 || !state.has(plan, str(key::tile_index))) {
+		return state.new_dict();
+	}
+	// Troops to hand over or pick up, however near; and any plan the hero
+	// cannot finish today (a town, a hero, a guard, a gate, a far site, ground
+	// to explore): until 2026-11-11 a hero on one of those walked past free
+	// mines a step off its way (owner report; 305 times in 12 games to day 60).
+	const bool troops = kind == key::meet || kind == key::town_own;
+	const int64_t left = movement_int(state, entry, key::current, 0);
+	const bool far_plan = distance > left && (kind == key::town_hostile || kind == key::town_neutral || kind == key::hero || kind == key::ai_hero
+			|| kind == key::encounter || kind == key::gate || kind == key::resource || kind == key::artifact || kind == key::explore);
+	if (!troops && !far_plan) {
 		return state.new_dict();
 	}
 	// The way there: each tile and how far along it lies.
@@ -925,6 +942,8 @@ DictRef _on_the_way(State &state, DictRef session, DictRef context, DictRef entr
 	state.set(errand, str(key::value), float_value(gd::float_field(state, plan, key::value, 0.0)));
 	state.set(errand, str(key::distance), int_value(distance));
 	state.set(errand, str(key::way), array_value(way));
+	state.set(errand, str(key::kind), str(kind));
+	state.set(errand, str(key::current), int_value(left));
 	// The detours are not this decision's alternatives.
 	const Value logged = state.get(context, str(key::decision_alternatives), Value());
 	state.erase(context, str(key::decision_alternatives));

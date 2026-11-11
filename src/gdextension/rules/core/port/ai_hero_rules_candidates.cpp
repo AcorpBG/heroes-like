@@ -279,12 +279,22 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 		avoid = found.ref;
 		has_avoid = true;
 	}
-	// On the way to hand troops over or pick them up (`_on_the_way`): only
-	// what doing first adds to the errand's value per day of travel counts.
+	// On the way to an errand (`_on_the_way`): only what doing first adds to
+	// the errand's value per day of travel counts. Travel is counted in whole
+	// days after today, as the hero arrives: a site a step off the way that
+	// does not move the day of arrival costs the errand nothing. On the way to
+	// troops a fight may be picked too; on any other errand the army is kept
+	// whole for it.
 	const Value errand = state.get(context, str(key::on_the_way), Value());
 	const bool on_the_way = gd::is_dict(errand);
 	const double errand_value = on_the_way ? gd::float_field(state, errand.ref, key::value, 0.0) : 0.0;
 	const int64_t errand_distance = on_the_way ? gd::int_field(state, errand.ref, key::distance, 0) : 0;
+	const Atom errand_kind = on_the_way ? ai::string_or_empty(state, errand.ref, key::kind) : Atom(key::empty);
+	const bool errand_troops = errand_kind == key::meet || errand_kind == key::town_own;
+	const int64_t errand_left = on_the_way ? gd::int_field(state, errand.ref, key::current, 0) : 0;
+	const auto days_after_today = [errand_left, movement_max](int64_t walk) {
+		return walk <= errand_left ? int64_t{0} : (walk - errand_left + movement_max - 1) / movement_max;
+	};
 	const ArrayRef way = on_the_way ? gd::as_array(gd::index(state, errand.ref, str(key::way))) : 0;
 	const DictRef seen = state.new_dict();
 	DictRef best = state.new_dict();
@@ -387,6 +397,9 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					if ((candidate_kind != key::resource && candidate_kind != key::artifact && candidate_kind != key::encounter) || distance >= errand_distance) {
 						continue;
 					}
+					if (candidate_kind == key::encounter && !errand_troops) {
+						continue;
+					}
 					// The detour: there, then to the nearest tile of the way, then
 					// on along the way.
 					int64_t extra = std::numeric_limits<int64_t>::max();
@@ -398,8 +411,7 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 						extra = compat::engine_min<int64_t>(extra, gd::sub(gd::add(distance, step), gd::to_int(state, state.at(way, at + 2))));
 					}
 					const int64_t total = gd::add(errand_distance, compat::engine_max<int64_t>(0, extra));
-					const double moves = static_cast<double>(movement_max);
-					score = (value + errand_value) / (1.0 + static_cast<double>(total) / moves) - errand_value / (1.0 + static_cast<double>(errand_distance) / moves);
+					score = (value + errand_value) / (1.0 + static_cast<double>(days_after_today(total))) - errand_value / (1.0 + static_cast<double>(days_after_today(errand_distance)));
 					if (score <= 0.0) {
 						continue;
 					}
