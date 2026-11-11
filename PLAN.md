@@ -63,11 +63,12 @@ None open.
 
 ## Recently completed
 
-- 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers (land, sand, sea) with a fold-free border bend: no square notches or dark blotches.
-- 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, biome borders and fog edges no longer cut into straight wedges: integer lattice hash in the ground and fog shaders.
-- 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.
-- 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.
-- 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.
+- 2026-11-11 `ground-moving-water-20261111` (5577e658e): The sea drifts and swells; waves run in, break into foam on the sand and slide back; still under reduced motion.
+- 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers with a fold-free bend: no notches or blotches.
+- 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, borders and fog edges no longer cut into wedges: integer lattice hash.
+- 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it: beach armies attack it.
+- 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero can attack a computer hero aboard a boat.
+- 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles, entered on any; no rocks.
 - 2026-11-11 `town-cuts-four-towns-20261111` (5e7874f80): Other four towns' cuts checked; three forts re-cut.
 - 2026-11-11 `town-mireclaw-cuts-20261111` (de6b0cc36): Four Mireclaw buildings re-cut.
 - 2026-11-11 `town-thornwake-cuts-20261111` (b4a1695c3): Four Thornwake buildings re-cut.
