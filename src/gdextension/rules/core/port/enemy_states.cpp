@@ -934,7 +934,9 @@ bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id
 	if (rank >= max_rank_for_specialty(state, specialty_id)) {
 		return false;
 	}
-	return rank > 0 || _distinct_specialty_count(state, hero_state) < max_specialties_per_hero(state);
+	// Crown of the Empty Throne: its wearer may hold a seventh specialty.
+	const int64_t most = gd::add(max_specialties_per_hero(state), artifact_rules::hero_has_special(state, hero_state, key::special_seventh_specialty) ? 1 : 0);
+	return rank > 0 || _distinct_specialty_count(state, hero_state) < most;
 }
 
 ArrayRef available_specialty_ids(State &state, DictRef hero_state) {

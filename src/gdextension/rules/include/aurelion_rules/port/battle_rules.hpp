@@ -101,6 +101,18 @@ inline State::MemoKey board_read_key(BoardRead kind, DictRef battle, uint64_t fi
 // The commander payload: a side's hero payload, its specialty bonuses and
 // difficulty terms (commander_payload.cpp).
 bool _hero_has_trait(State &state, DictRef battle, Atom side, Atom trait_id);
+// The special effects of a side's hero's artifacts (artifact_rules::worn_special_ids), kept in its payload.
+bool _hero_has_special(State &state, DictRef battle, Atom side, Atom special);
+bool _payload_has_special(State &state, DictRef hero_payload, Atom special);
+// The Last Gate: the other side's hero wears it, so this side cannot retreat or surrender.
+bool _escape_barred(State &state, DictRef battle, Atom side);
+bool _enemy_may_leave(State &state, DictRef battle, Atom allowed_flag);
+// Lens and Flame: a side's mana as its battle copy of the hero holds it, and half a cast's mana back when the
+// cast destroyed a stack.
+int64_t _side_mana_current(State &state, DictRef battle, Atom side);
+void _refund_spell_for_kill(State &state, const Value &session, Atom side, int64_t living_before, int64_t mana_before);
+// What the two heroes' special effects do to a blow (Blood-Drum, Shroud of the Unseen Fleet, The Standing Order).
+double _artifact_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, DictRef attacker_hero, DictRef defender_hero, bool is_ranged, int64_t attack_distance);
 Value _hero_battle_traits(State &state, DictRef battle, Atom side);
 DictRef _hero_payload_for_side(State &state, DictRef battle, Atom side);
 DictRef _side_payload_with_commander_fallback(State &state, const Value &existing_payload_value, const Value &commander_state_value, Atom side);

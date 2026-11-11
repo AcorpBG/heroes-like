@@ -1221,7 +1221,7 @@ void Check::artifact(const Value &artifact, const RowIndex &spell_index) {
 	const std::string slot = text(artifact, "slot");
 	if (slot.empty()) {
 		warn("Artifact " + artifact_id + " must define a slot.");
-	} else if (!one_of(slot, {"boots", "banner", "armor", "trinket"})) {
+	} else if (!one_of(slot, {"boots", "banner", "armor", "trinket", "head", "neck", "cloak", "hand", "ring"})) {
 		warn("Artifact " + artifact_id + " uses unsupported slot " + slot + ".");
 	}
 	// A scroll lends its spell instead of a bonus (docs/magic-system.md).

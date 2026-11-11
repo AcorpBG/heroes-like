@@ -959,9 +959,6 @@ func _set_steps_text(artifact_set: Dictionary, worn: int) -> String:
 	var steps := PackedStringArray()
 	for step in artifact_set.get("piece_thresholds", []):
 		steps.append("%s %d pieces: %s" % ["✓" if worn >= int(step.get("count", 0)) else "·", int(step.get("count", 0)), String(step.get("summary", ""))])
-	if bool(artifact_set.get("special_live", false)):
-		var all: int = (artifact_set.get("piece_ids", []) as Array).size()
-		steps.append("%s All %d: %s" % ["✓" if worn >= all else "·", all, String(artifact_set.get("special_text", ""))])
 	return "\n".join(steps)
 
 ## One row per artifact set the hero wears pieces of: its name and how many.

@@ -4,6 +4,7 @@
 // cast's own kind in the result's extra_resolutions, which battle_rules::_apply_spell_resolution applies after
 // the target's own.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -178,10 +179,13 @@ void add_damage_reach(State &state, DictRef hero, DictRef battle, DictRef target
 			}
 		}
 	}
+	// The Open Hand: its wearer's spells that strike an area do not hurt its own stacks.
+	const bool spares_own = artifact_rules::hero_has_special(state, hero, key::special_area_spares_own);
 	// Cinder Spray: every stack next to the target takes as much, the caster's own included.
 	if (gd::string_field(state, effect, key::splash, key::empty) == key::adjacent) {
 		for (const DictRef stack : living_stacks(state, battle, key::empty)) {
-			if (battle_id_of(state, stack) != battle_id_of(state, target) && battle_rules::_stack_hex_distance(state, stack, target) == 1) {
+			if (battle_id_of(state, stack) != battle_id_of(state, target) && battle_rules::_stack_hex_distance(state, stack, target) == 1
+					&& !(spares_own && side_of(state, stack) != side_of(state, target))) {
 				state.append(extras, dict_value(damage_hit(state, stack, damage_at(state, hero, battle, stack, spell, power_against))));
 			}
 		}
@@ -436,7 +440,9 @@ int64_t spell_mastery_rank(State &state, DictRef hero_state, DictRef spell) {
 	if (school == key::empty || gd::is_empty(state, hero_state)) {
 		return 0;
 	}
-	return hero_progression_rules::specialty_rank(state, hero_state, state.intern("mastery_" + state.text(school)));
+	// The Four Chimes: every spell is cast as if the hero had one more rank of its school's mastery.
+	const int64_t chimes = artifact_rules::hero_has_special(state, hero_state, key::special_mastery_plus_one) ? 1 : 0;
+	return gd::add(hero_progression_rules::specialty_rank(state, hero_state, state.intern("mastery_" + state.text(school))), chimes);
 }
 
 void add_reach_resolutions(State &state, DictRef hero, DictRef battle, DictRef target, DictRef spell, DictRef result, const Value &second_pick) {

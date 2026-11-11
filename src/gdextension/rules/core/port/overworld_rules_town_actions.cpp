@@ -3,6 +3,7 @@
 // the market's cover. HeroCommandRules.town_recruitment_destination and
 // HeroProgressionRules.scale_recruit_cost are here too.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_context.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
@@ -179,7 +180,7 @@ DictRef build_in_active_town(State &state, DictRef session, Atom building_id) {
 	state.append(built_buildings, str(building_id));
 	state.set(town, str(key::built_buildings), array_value(built_buildings));
 	town_development_rules::migrate_town(state, town);
-	state.set(town, str(key::last_build_day), int_value(ai::session_int(state, session, key::day)));
+	mark_town_built(state, session, town);
 	// town.get("available_recruits", {}): only read, so a missing one adds as {} does (as null).
 	const Value base_recruits = state.get(town, str(key::available_recruits), Value());
 	const DictRef scaling_hero = _town_scaling_hero(state, session, town);
@@ -282,6 +283,17 @@ DictRef recruit_in_active_town(State &state, DictRef session, Atom unit_id, int6
 	return _finalize_action_result(state, session, true, join_atoms(state, key::space, message_parts), true, false, state.new_dict());
 }
 
+void mark_town_built(State &state, DictRef session, DictRef town) {
+	const int64_t day = ai::session_int(state, session, key::day);
+	// Regalia of the Empty Throne: the town its wearer stands in builds twice a day, so the day's first build
+	// there is not yet the town's build of the day.
+	if (gd::int_field(state, town, key::second_build_day, 0) != day
+			&& artifact_rules::hero_has_special(state, _town_scaling_hero(state, session, town), key::special_second_build)) {
+		state.set(town, str(key::second_build_day), int_value(day));
+		return;
+	}
+	state.set(town, str(key::last_build_day), int_value(day));
+}
 bool town_built_today(State &state, DictRef town, int64_t day) {
 	return day > 0 && gd::int_field(state, town, key::last_build_day, 0) == day;
 }

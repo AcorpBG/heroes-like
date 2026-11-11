@@ -2,6 +2,7 @@
 // the helpers that set up its sides, names, stacks, obstacles and seed, and
 // TownDevelopmentRules.apply_defender_bonus.
 
+#include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/battle_payload.hpp"
 
 #include "aurelion_rules/battle_hex.hpp"
@@ -203,6 +204,9 @@ DictRef create_battle_payload(State &state, const Value &session, DictRef encoun
 	state.set(battle, str(key::player_commander_state),
 			gd::is_dict(player_commander_state) ? dict_value(gd::deep_duplicate_dict(state, player_commander_state.ref)) : dict_value(state.new_dict()));
 	state.set(battle, str(key::player_commander_source), field_or_new_dict(state, player_setup, key::commander_source));
+	// The Flame: the first spell of the battle costs its wearer no mana.
+	spell_rules::mark_battle_start(state, gd::as_dict(gd::index(state, battle, str(key::player_commander_state))));
+	spell_rules::mark_battle_start(state, enemy_hero_state);
 	{
 		const DictRef commander = gd::as_dict(player_commander_state);
 		const DictRef bonuses = artifact_rules::aggregate_bonuses(state, gd::as_dict(player_commander_state));

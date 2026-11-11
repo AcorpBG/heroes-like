@@ -23,6 +23,9 @@ using state::Value;
 
 // Ported in hero_command_rules_ai.cpp.
 int64_t movement_max_for_hero(State &state, DictRef hero_state, const Value &movement_source = Value());
+// What a hero brings into a new day from the day before, kept in its movement_carry: unused movement up to its
+// carry bonus (all of the day's own under Night Watch) and Camp Kit's three points after a day without a battle.
+int64_t movement_kept_for_day(State &state, DictRef hero_state, int64_t leftover, int64_t previous_max, int64_t day);
 int64_t _week_bonus(State &state, DictRef hero_state, Atom key);
 bool within_scout_radius(State &state, int64_t dx, int64_t dy, int64_t radius);
 DictRef army_addition_plan(State &state, const Value &stacks_value, DictRef additions);

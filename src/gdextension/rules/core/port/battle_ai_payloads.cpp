@@ -4,6 +4,7 @@
 // withdrawal decision that weighs its commander.
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -259,6 +260,10 @@ DictRef _enemy_withdrawal_action(State &state, DictRef battle, DictRef active_st
 	}
 	// Neutral guards and town battles fight to the end (BattleRules._enemy_withdrawal_allowed).
 	if (!gd::bool_field(state, battle, key::enemy_withdrawal_allowed, false)) {
+		return state.new_dict();
+	}
+	// The Last Gate on the player's hero: the enemy cannot leave.
+	if (battle_rules::_escape_barred(state, battle, key::enemy)) {
 		return state.new_dict();
 	}
 	const bool retreat_allowed = gd::bool_field(state, battle, key::retreat_allowed, true);

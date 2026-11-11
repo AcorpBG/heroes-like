@@ -290,10 +290,18 @@ DictRef stack_strike_backs(State &state, DictRef battle, DictRef stack) {
 }
 
 void _consume_retaliation(State &state, DictRef battle, Atom battle_id) {
+	// Question and Answer: the side's stacks strike back at every attack.
+	if (_hero_has_special(state, battle, gd::string_field(state, _get_stack_by_id(state, battle, battle_id), key::side, key::empty), key::special_endless_strike_back)) {
+		return;
+	}
 	consume_stack_count(state, battle, battle_id, key::retaliations_left);
 }
 
 void _consume_shot(State &state, DictRef battle, Atom battle_id) {
+	// Never-Empty Quiver: the side's shooters never run out of shots.
+	if (_hero_has_special(state, battle, gd::string_field(state, _get_stack_by_id(state, battle, battle_id), key::side, key::empty), key::special_endless_shots)) {
+		return;
+	}
 	consume_stack_count(state, battle, battle_id, key::shots_remaining);
 }
 

@@ -1,6 +1,7 @@
 // AiHeroRules: one computer hero's day: the plan it chooses (Phase 3's native
 // candidate scoring under it), the walk that follows and what it does on arrival.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
@@ -1349,8 +1350,14 @@ DictRef _follow_plan(State &state, DictRef session, DictRef context, int64_t ind
 		}
 		if (shore) {
 			sailing = !sailing;
-			state.set(movement, str(key::current), int_value(0));
-			map_spells::set_banked_half(state, commander, 0);
+			// Ferryman's Fare: boarding and leaving a ship costs its wearer no movement.
+			const bool free_boarding = artifact_rules::hero_has_special(state, commander, key::special_free_boarding);
+			if (!free_boarding) {
+				state.set(movement, str(key::current), int_value(0));
+			}
+			if (!free_boarding) {
+				map_spells::set_banked_half(state, commander, 0);
+			}
 			arrived = step_index == last;
 			break;
 		}

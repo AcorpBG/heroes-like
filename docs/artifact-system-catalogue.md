@@ -70,7 +70,7 @@ Bands: common 1 point, uncommon 2, rare 3, epic 5 and one special effect. An art
 | Wardens' Lamellar | rare |  | +4 Defense; +3% creature health |  |  |  |  | laced lamellar in green lacquer |
 | Prismatic Harness | rare | Sunvault | +2 Defense; +10% spell resistance | +1 Knowledge |  |  |  | a harness of crystal plates over white leather |
 | The Unbroken Wall | epic |  | +4 Defense; troops take 8% less damage; +1 cohesion |  |  | Your stacks' cohesion never falls below where it began the battle. |  | a tower-breastplate built like dressed stone |
-| Mother-Graft Mail | epic | Thornwake | +4 Defense; +6% creature health; 5% of the fallen recover after a won battle | 5% of the fallen recover after a won battle |  | As each round begins, your most wounded stack heals the health of one creature. |  | mail of woven roots with green shoots |
+| Mother-Graft Mail | epic | Thornwake | +4 Defense; +6% creature health; 5% of the fallen recover after a won battle | 5% of the fallen recover after a won battle |  | As each round begins, your most wounded stack heals up to the health of one creature. |  | mail of woven roots with green shoots |
 
 ## Hand (26: 6 common, 8 uncommon, 8 rare, 4 epic)
 
@@ -214,4 +214,4 @@ No set belongs to a faction. A step applies while that many pieces are worn; the
 | Cartographer's Table: A surveyor's cap, compass and boots: three commons. | Surveyor's Cap (head, common); Pocket Compass (hand, common); Surveyor's Boots (boots, common) | 2: +1 scouting; 3: Sand, swamp, snow, rough ground and lava cost the army no more than grass. |
 | Camp Kit: Four commons any army has lying about. | Traveller's Cloak (cloak, common); Padded Jack (armor, common); Marching Boots (boots, common); Tin Cup (trinket, common) | 2: +1 map movement; 4: After a day without a battle the hero starts the next day with +3 map movement. |
 | Ferryman's Fare: Two coins for the ferryman and a pair of sea boots. | Deckhand's Seaboots (boots, rare); First Coin (trinket, common); Second Coin (trinket, common) | 2: +75 gold a day; 3: Boarding and leaving a ship costs no movement. |
-| Night Watch: A watchman's coat, lantern and boots. | Watchman's Greatcoat (cloak, uncommon); Foot Lantern (hand, common); Night Watch Boots (boots, uncommon) | 2: +1 scouting; 3: All unused movement is kept for the next day. |
+| Night Watch: A watchman's coat, lantern and boots. | Watchman's Greatcoat (cloak, uncommon); Foot Lantern (hand, common); Night Watch Boots (boots, uncommon) | 2: +1 scouting; 3: All of a day's unused movement is kept for the next day. |

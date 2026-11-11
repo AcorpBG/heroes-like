@@ -341,7 +341,14 @@ void _adjust_stack_cohesion(State &state, DictRef battle, Atom battle_id, int64_
 			// The inner get (the fallback) is evaluated first; clamp of ints is an int.
 			const Value fallback = state.get(stack.ref, str(key::cohesion_base), int_value(5));
 			const int64_t cohesion = gd::to_int(state, state.get(stack.ref, str(key::cohesion), fallback));
-			state.set(stack.ref, str(key::cohesion), int_value(engine_clamp<int64_t>(gd::add(cohesion, amount), COHESION_MIN, COHESION_MAX)));
+			int64_t changed = gd::add(cohesion, amount);
+			// The Unbroken Wall: no loss takes a stack below where it began the battle.
+			if (amount < 0 && _hero_has_special(state, battle, gd::string_field(state, stack.ref, key::side, key::empty), key::special_cohesion_floor)) {
+				const int64_t began = gd::to_int(state, fallback);
+				const int64_t floor = cohesion < began ? cohesion : began;
+				changed = changed < floor ? floor : changed;
+			}
+			state.set(stack.ref, str(key::cohesion), int_value(engine_clamp<int64_t>(changed, COHESION_MIN, COHESION_MAX)));
 			untyped_set_at(state, stacks, index, stack);
 			break;
 		}

@@ -536,16 +536,17 @@ void _refresh_all_player_heroes_for_new_day(State &state, DictRef session) {
 		// The map spells' terms of the day before end with it.
 		map_spells::clear_day_terms(state, hero_value.ref);
 		const DictRef hero = spell_rules::regain_daily_mana(state, hero_value.ref, starts_day_in_guild_town(state, session, hero_value.ref));
-		const int64_t carry_limit = gd::int_field(state, hero_progression_rules::aggregate_bonuses(state, hero), key::movement_carry, 0);
-		// int(hero.get("movement", {}).get("current", 0)) if hero.get("movement", {}) is Dictionary else 0
+		// What the day before leaves the hero (hero_command_rules::movement_kept_for_day).
+		int64_t previous_max = 0;
 		int64_t leftover = 0;
 		Value movement;
 		if (state.lookup(hero, str(key::movement), movement)) {
 			if (gd::is_dict(movement)) {
 				leftover = gd::int_field(state, movement.ref, key::current, 0);
+				previous_max = gd::int_field(state, movement.ref, key::max, 0);
 			}
 		}
-		state.set(hero, str(key::movement_carry), int_value(compat::engine_clamp<int64_t>(leftover, 0, carry_limit)));
+		state.set(hero, str(key::movement_carry), int_value(hero_command_rules::movement_kept_for_day(state, hero, leftover, previous_max, day)));
 		// _movement_max_from_hero(hero, session).
 		const int64_t movement_max = hero_command_rules::movement_max_for_hero(state, hero, dict_value(session));
 		const DictRef refreshed_movement = state.new_dict();
@@ -970,7 +971,9 @@ gd::DictRef regain_daily_mana(State &state, gd::DictRef hero_state, bool full) {
 	int64_t current = max_mana;
 	if (!full) {
 		// A fifth of the maximum, rounded up, and never past the maximum.
-		const int64_t regained = compat::int_div(gd::add(max_mana, DAILY_MANA_SHARE_DIVISOR - 1), DAILY_MANA_SHARE_DIVISOR);
+		// Twin Vows: mana comes back twice as fast.
+		const int64_t share = compat::int_div(gd::add(max_mana, DAILY_MANA_SHARE_DIVISOR - 1), DAILY_MANA_SHARE_DIVISOR);
+		const int64_t regained = artifact_rules::hero_has_special(state, hero, key::special_mana_double) ? gd::mul(share, 2) : share;
 		current = compat::engine_min<int64_t>(max_mana, gd::add(compat::engine_max<int64_t>(0, gd::int_field(state, gd::as_dict(mana), key::current, 0)), regained));
 	}
 	state.set(gd::as_dict(mana), str(key::current), int_value(current));

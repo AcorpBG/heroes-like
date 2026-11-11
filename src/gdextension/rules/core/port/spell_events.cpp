@@ -2,6 +2,7 @@
 // resistance roll, and the cast's animation states and presentation events; the player's cast resolved against its
 // target.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
@@ -249,11 +250,69 @@ void _mark_commander_spell_cast(State &state, DictRef battle, Atom side) {
 	if (gd::is_empty(state, battle) || side == key::empty) {
 		return;
 	}
+	// Twofold Diadem: its wearer's first cast of the first round leaves it a second one.
+	if (gd::int_field(state, battle, key::round, 1) == 1 && _hero_has_special(state, battle, side, key::special_second_spell)) {
+		Value granted;
+		if (!state.lookup(battle, str(key::second_casts_granted), granted) || !gd::is_dict(granted)) {
+			granted = dict_value(state.new_dict());
+			state.set(battle, str(key::second_casts_granted), granted);
+		}
+		if (!gd::bool_field(state, granted.ref, side, false)) {
+			state.set(granted.ref, str(side), gd::bool_value(true));
+			return;
+		}
+	}
 	const DictRef cast_rounds = _normalize_commander_spell_cast_rounds(state, get_or_new_dict(state, battle, key::commander_spell_cast_rounds));
 	state.set(cast_rounds, str(side), int_value(gd::int_field(state, battle, key::round, 1)));
 	state.set(battle, str(key::commander_spell_cast_rounds), dict_value(cast_rounds));
 }
 
+int64_t _side_mana_current(State &state, DictRef battle, Atom side) {
+	Value commander;
+	Value spellbook;
+	Value mana;
+	if (!state.lookup(battle, str(side == key::player ? key::player_commander_state : key::enemy_hero), commander) || !gd::is_dict(commander)
+			|| !state.lookup(commander.ref, str(key::spellbook), spellbook) || !gd::is_dict(spellbook)
+			|| !state.lookup(spellbook.ref, str(key::mana), mana) || !gd::is_dict(mana)) {
+		return 0;
+	}
+	return gd::int_field(state, mana.ref, key::current, 0);
+}
+
+// Lens and Flame: a spell that destroys a stack returns half its mana.
+void _refund_spell_for_kill(State &state, const Value &session, Atom side, int64_t living_before, int64_t mana_before) {
+	const DictRef battle = session_battle(state, session);
+	if (gd::is_empty(state, battle) || !_hero_has_special(state, battle, side, key::special_kill_refund)) {
+		return;
+	}
+	if (state.array_size(_alive_stacks_for_side(state, battle, side == key::player ? key::enemy : key::player)) >= living_before) {
+		return;
+	}
+	Value commander;
+	Value spellbook;
+	Value mana;
+	if (!state.lookup(battle, str(side == key::player ? key::player_commander_state : key::enemy_hero), commander) || !gd::is_dict(commander)
+			|| !state.lookup(commander.ref, str(key::spellbook), spellbook) || !gd::is_dict(spellbook)
+			|| !state.lookup(spellbook.ref, str(key::mana), mana) || !gd::is_dict(mana)) {
+		return;
+	}
+	const int64_t current = gd::int_field(state, mana.ref, key::current, 0);
+	const int64_t refund = gd::sub(mana_before, current) / 2;
+	if (refund <= 0) {
+		return;
+	}
+	const int64_t most = gd::int_field(state, mana.ref, key::max, current);
+	const int64_t after = gd::add(current, refund);
+	state.set(mana.ref, str(key::current), int_value(after > most && most >= current ? most : after));
+	if (side == key::player) {
+		const DictRef bonuses = artifact_rules::aggregate_bonuses(state, commander.ref);
+		state.set(battle, str(key::player_hero), dict_value(_hero_payload_from_state(state, commander.ref, bonuses, session, key::player)));
+	} else {
+		const Value existing = get_or_new_dict(state, battle, key::enemy_hero_payload);
+		state.set(battle, str(key::enemy_hero_payload), dict_value(_enemy_hero_payload_from_state(state, commander.ref, existing, session)));
+	}
+	_record_event(state, battle, gd::format(state, state.intern("The Lens returns %d mana from The Flame."), { int_value(refund) }));
+}
 Atom hero_actor_id(State &state, Atom side) {
 	return state.intern(state.text(key::hero_actor_prefix) + state.text(side));
 }

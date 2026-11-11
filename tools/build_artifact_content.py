@@ -11,9 +11,10 @@ list. This tool turns them into the rows the rules read:
   opposite sign, its home line as home_bonuses, its set as set_id;
 - effect_text and ui.effect_lines / price_lines / home_lines: the wording the
   game shows, the same as the catalogue doc's;
-- a special effect's text with special_live false until its rule is built
-  (LIVE_SPECIALS below): the game shows only live ones;
-- a set's numeric steps as piece_thresholds;
+- a special effect's text, and once its rule is built (SPECIAL_IDS below) the
+  id the rules read: special_id on an artifact's row, and on the last of a
+  set's piece_thresholds; the game shows only those;
+- a set's steps as piece_thresholds;
 - each reward list's artifacts, chosen by band and faction.
 
 It also points the map at each artifact's icon for its pickup
@@ -34,8 +35,50 @@ OUT = os.path.join(ROOT, "content", "artifacts.json")
 TABLES = os.path.join(os.path.dirname(__file__), "artifact_reward_tables.json")
 MAP_MANIFEST = os.path.join(ROOT, "art", "overworld", "manifest.json")
 
-# The special effects whose rules are in the game: an artifact's or a set's name.
-LIVE_SPECIALS = set()
+# The special effects whose rules are in the game, by the artifact's or the set's name: the id the rules read
+# (special_id on an artifact's row, and on the step a set's last piece reaches). The game shows only these.
+SPECIAL_IDS = {
+    "Twofold Diadem": "second_spell_first_round",
+    "Crown of the Empty Throne": "seventh_specialty",
+    "The Unanswered Word": "half_enemy_knowledge",
+    "The Flame": "first_spell_free",
+    "Shroud of the Unseen Fleet": "far_shots_halved",
+    "The Unbroken Wall": "cohesion_floor",
+    "Mother-Graft Mail": "round_graft_heal",
+    "The Last Gate": "no_escape",
+    "Never-Empty Quiver": "endless_shots",
+    "Staff of the First Tree": "grants_spell",
+    "The Opening Cut": "first_strike_unanswered",
+    "Ring of the Noon Hour": "grants_spell",
+    "The Open Hand": "area_spares_own",
+    "Roadeater Boots": "roads_half",
+    "Vanguard's Thunder": "first_round_first",
+    "The Blood-Drum": "blood_scent",
+    "The Reader's Case": "scroll_power",
+    "The Ever-Coal": "grants_spell",
+    "Mirror of the Far Shore": "grants_spell",
+    "The Standing Order": "stand_fast",
+    "Writ of Relief": "shield_neighbours",
+    "The Prime Lens": "first_round_boosts_last",
+    "Twin Vows": "mana_double",
+    "Question and Answer": "endless_strike_back",
+    "Lens and Flame": "kill_refund",
+    "The Four Chimes": "mastery_plus_one",
+    "Regalia of the Empty Throne": "second_build",
+    "The Penitent's Burden": "prices_lifted",
+    "Cartographer's Table": "flat_ground",
+    "Camp Kit": "rested_march",
+    "Ferryman's Fare": "free_boarding",
+    "Night Watch": "keep_all_movement",
+}
+# The spell an artifact lets its wearer cast as if it knew it (grants_spell_id).
+GRANTED_SPELLS = {
+    "Staff of the First Tree": "spell_green_return",
+    "Ring of the Noon Hour": "spell_eternal_noon",
+    "The Ever-Coal": "spell_second_sun",
+    "Mirror of the Far Shore": "spell_hollow_crown",
+}
+LIVE_SPECIALS = set(SPECIAL_IDS)
 
 FACTION_SCHOOL = {"Embercourt": "beacon", "Mireclaw": "veil", "Sunvault": "beacon", "Thornwake": "root", "Brasshollow": "furnace", "Veilmourn": "veil"}
 ROLES = {
@@ -102,18 +145,32 @@ def artifact_row(row):
     if extra.get("special"):
         item["ui"]["special_text"] = extra["special"]
         item["ui"]["special_live"] = name in LIVE_SPECIALS
+        if name in LIVE_SPECIALS:
+            item["special_id"] = SPECIAL_IDS[name]
+            if name in GRANTED_SPELLS:
+                item["grants_spell_id"] = GRANTED_SPELLS[name]
     return item
 
 
 def set_row(entry):
     name, blurb, steps = entry
     pieces = [row[0] for row in catalogue.ARTIFACTS if row[4].get("set") == name]
+    thresholds = [{"count": count, "summary": "; ".join(catalogue.line(bonus) for bonus in step), "bonuses": catalogue.rules_bonuses(step)} for count, step in steps if not isinstance(step, str)]
+    if name in LIVE_SPECIALS:
+        # The full set's step: its special effect, by the id the rules read. The Penitent's Burden lifts its
+        # pieces' prices, which is the same bonuses with the sign turned back.
+        lifted = []
+        if SPECIAL_IDS[name] == "prices_lifted":
+            for row in catalogue.ARTIFACTS:
+                if row[4].get("set") == name:
+                    lifted += [(price[0], -price[1]) + tuple(price[2:]) for price in row[4].get("price", [])]
+        thresholds.append({"count": len(pieces), "summary": steps[-1][1], "bonuses": catalogue.rules_bonuses(lifted), "special_id": SPECIAL_IDS[name]})
     return {
         "id": "set_" + slug(name),
         "name": name,
         "identity": blurb,
         "piece_ids": [artifact_id(piece) for piece in pieces],
-        "piece_thresholds": [{"count": count, "summary": "; ".join(catalogue.line(bonus) for bonus in step), "bonuses": catalogue.rules_bonuses(step)} for count, step in steps if not isinstance(step, str)],
+        "piece_thresholds": thresholds,
         "special_text": steps[-1][1],
         "special_live": name in LIVE_SPECIALS,
         "runtime_policy": {"set_bonuses_active": True, "source_reward_tables_active": False, "derived_from_equipped_pieces": True},

@@ -98,6 +98,43 @@ DictRef turn_order_keys_of(const State &state, DictRef keys, const Value &id) {
 
 } // namespace
 
+// Mother-Graft Mail: as each round begins, the side's most wounded stack heals up to the health of one creature.
+// A heal, as the Rootbound Ward's: it mends the living and raises nobody.
+static void graft_heal_round(State &state, DictRef battle, int64_t round_number) {
+	if (round_number < 2) {
+		return;
+	}
+	for (const Atom side : { key::player, key::enemy }) {
+		if (!_hero_has_special(state, battle, side, key::special_graft_heal)) {
+			continue;
+		}
+		Atom worst_id = key::empty;
+		int64_t worst_missing = 0;
+		int64_t worst_hp = 0;
+		for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+			if (!gd::is_dict(stack) || gd::string_field(state, stack.ref, key::side, key::empty) != side || _alive_count(state, stack.ref) <= 0
+					|| spell_rules::is_decoy(state, stack.ref)) {
+				continue;
+			}
+			const int64_t unit_hp = engine_max<int64_t>(1, gd::int_field(state, stack.ref, key::unit_hp, 1));
+			const int64_t health = gd::int_field(state, stack.ref, key::total_health, 0);
+			const int64_t missing = gd::sub(gd::mul(gd::add(health, unit_hp - 1) / unit_hp, unit_hp), health);
+			if (missing > worst_missing) {
+				worst_missing = missing;
+				worst_hp = unit_hp;
+				worst_id = gd::string_field(state, stack.ref, key::battle_id, key::empty);
+			}
+		}
+		if (worst_id == key::empty) {
+			continue;
+		}
+		const Atom label = _stack_label(state, _get_stack_by_id(state, battle, worst_id));
+		const int64_t restored = _restore_stack_health(state, battle, worst_id, worst_missing < worst_hp ? worst_missing : worst_hp);
+		if (restored > 0) {
+			_record_event(state, battle, gd::format(state, state.intern("Mother-Graft Mail restores %d health to %s."), { int_value(restored), str(label) }));
+		}
+	}
+}
 void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	_ensure_battle_hex_state(state, battle);
 	state.set(battle, str(key::round), int_value(round_number));
@@ -148,6 +185,7 @@ void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	}
 	// Watchful Light heals its side's most wounded stack.
 	spell_rules::round_start_auras(state, battle, round_number);
+	graft_heal_round(state, battle, round_number);
 	// Shadow Ranks: the shadows of the round before come back.
 	spell_rules::shadows_return(state, battle);
 	_sync_occupied_hexes(state, battle);
@@ -172,6 +210,20 @@ void _prepare_round(State &state, DictRef battle, int64_t round_number) {
 	}
 }
 
+// A stack's place in the round: its initiative, and in the first round Vanguard's Thunder puts its side's
+// stacks before every enemy stack (when only one side's hero wears it).
+static int64_t turn_order_score(State &state, DictRef battle, DictRef stack) {
+	const int64_t score = _stack_initiative_total(state, stack, battle);
+	if (gd::int_field(state, battle, key::round, 1) != 1) {
+		return score;
+	}
+	const Atom side = gd::string_field(state, stack, key::side, key::empty);
+	if (_hero_has_special(state, battle, side, key::special_first_round_first)
+			&& !_hero_has_special(state, battle, side == key::player ? key::enemy : key::player, key::special_first_round_first)) {
+		return gd::add(score, 1000);
+	}
+	return score;
+}
 ArrayRef _sorted_turn_order(State &state, DictRef battle) {
 	const ArrayRef candidates = state.new_array();
 	// candidates is a new node: walking the stacks while it grows is safe.
@@ -191,7 +243,7 @@ ArrayRef _sorted_turn_order(State &state, DictRef battle) {
 		const Value battle_id = state.at(candidates, index);
 		const DictRef stack = _get_stack_by_id(state, battle, gd::to_string(battle_id));
 		// The literal's values in order: score, speed, player.
-		const int64_t score = _stack_initiative_total(state, stack, battle);
+		const int64_t score = turn_order_score(state, battle, stack);
 		const int64_t speed = gd::int_field(state, stack, key::speed, 0);
 		const bool player = gd::string_field(state, stack, key::side, key::empty) == key::player;
 		const DictRef entry = state.new_dict();
@@ -359,7 +411,7 @@ ArrayRef _ordered_remaining_actors(State &state, DictRef battle, ArrayRef battle
 		const Atom battle_id = gd::to_string(state.at(battle_ids, index));
 		const DictRef stack = _get_stack_by_id(state, battle, battle_id);
 		// The literal's values in order: score, speed, player, order, waited.
-		const int64_t score = !gd::is_empty(state, stack) ? _stack_initiative_total(state, stack, battle) : -999;
+		const int64_t score = !gd::is_empty(state, stack) ? turn_order_score(state, battle, stack) : -999;
 		const int64_t speed = gd::int_field(state, stack, key::speed, 0);
 		const bool player = gd::string_field(state, stack, key::side, key::empty) == key::player;
 		const int64_t waited_at = gd::array_find(state, waited, str(battle_id));
@@ -512,6 +564,10 @@ Atom _resolve_wait(State &state, DictRef battle, DictRef active_stack) {
 }
 
 bool _battle_retreat_allowed(State &state, DictRef battle) {
+	// The Last Gate on the enemy hero: the player's side cannot leave.
+	if (!gd::is_empty(state, battle) && _escape_barred(state, battle, key::player)) {
+		return false;
+	}
 	if (gd::is_empty(state, battle) || _is_town_defense_context(state, turn_field_or_new_dict(state, battle, key::context))) {
 		return false;
 	}
@@ -519,12 +575,21 @@ bool _battle_retreat_allowed(State &state, DictRef battle) {
 }
 
 bool _battle_surrender_allowed(State &state, DictRef battle) {
+	if (!gd::is_empty(state, battle) && _escape_barred(state, battle, key::player)) {
+		return false;
+	}
 	if (gd::is_empty(state, battle) || _is_town_defense_context(state, turn_field_or_new_dict(state, battle, key::context))) {
 		return false;
 	}
 	return gd::bool_field(state, battle, key::surrender_allowed, true);
 }
 
+bool _enemy_may_leave(State &state, DictRef battle, Atom allowed_flag) {
+	if (gd::is_empty(state, battle) || _is_town_defense_context(state, turn_field_or_new_dict(state, battle, key::context))) {
+		return false;
+	}
+	return gd::bool_field(state, battle, allowed_flag, true) && !_escape_barred(state, battle, key::enemy);
+}
 DictRef action_availability(State &state, DictRef battle) {
 	const DictRef active_stack = get_active_stack(state, battle);
 	const DictRef selected_target = get_selected_target(state, battle);

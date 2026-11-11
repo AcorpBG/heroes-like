@@ -152,7 +152,7 @@ ARTIFACTS = [
     ("Wardens' Lamellar", "armor", "rare", [("def", 4), ("health", 3)], {"what": "laced lamellar in green lacquer"}),
     ("Prismatic Harness", "armor", "rare", [("def", 2), ("sres", 10)], {"faction": SU, "home": [("kno", 1)], "what": "a harness of crystal plates over white leather"}),
     ("The Unbroken Wall", "armor", "epic", [("def", 4), ("taken", 8), ("coh", 1)], {"special": "Your stacks' cohesion never falls below where it began the battle.", "what": "a tower-breastplate built like dressed stone"}),
-    ("Mother-Graft Mail", "armor", "epic", [("def", 4), ("health", 6), ("recover", 5)], {"faction": TH, "home": [("recover", 5)], "special": "As each round begins, your most wounded stack heals the health of one creature.", "what": "mail of woven roots with green shoots"}),
+    ("Mother-Graft Mail", "armor", "epic", [("def", 4), ("health", 6), ("recover", 5)], {"faction": TH, "home": [("recover", 5)], "special": "As each round begins, your most wounded stack heals up to the health of one creature.", "what": "mail of woven roots with green shoots"}),
 
     # --- Hand: weapons (Attack, melee, ranged) and instruments (scouting, movement) ---
     ("Soldier's Sidearm", "hand", "common", [("atk", 2)], {"what": "a short plain sword"}),
@@ -279,5 +279,5 @@ SETS = [
     (CARTO, "A surveyor's cap, compass and boots: three commons.", [(2, [("scout", 1)]), (3, "Sand, swamp, snow, rough ground and lava cost the army no more than grass.")]),
     (CAMP, "Four commons any army has lying about.", [(2, [("move", 1)]), (4, "After a day without a battle the hero starts the next day with +3 map movement.")]),
     (FERRY, "Two coins for the ferryman and a pair of sea boots.", [(2, [("gold", 75)]), (3, "Boarding and leaving a ship costs no movement.")]),
-    (WATCH, "A watchman's coat, lantern and boots.", [(2, [("scout", 1)]), (3, "All unused movement is kept for the next day.")]),
+    (WATCH, "A watchman's coat, lantern and boots.", [(2, [("scout", 1)]), (3, "All of a day's unused movement is kept for the next day.")]),
 ]

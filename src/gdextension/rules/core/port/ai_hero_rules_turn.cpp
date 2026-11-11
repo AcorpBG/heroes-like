@@ -2,6 +2,7 @@
 // result, the weight sets in the static vars, the decision context and what the
 // player sees and remembers.
 
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
@@ -504,6 +505,13 @@ void _start_heroes_day(State &state, DictRef session, Atom controller) {
 		const DictRef commander = _wear_best_artifacts(state, spell_rules::regain_daily_mana(state, held_commander, guild_home));
 		state.set(entry.ref, str(key::enemy_commander_state), dict_value(commander));
 		const DictRef block = dict_or_new(state, entry.ref, key::ai_hero);
+		// What the day before leaves the hero (hero_command_rules::movement_kept_for_day).
+		{
+			Value before;
+			const DictRef old_movement = state.lookup(block, str(key::movement), before) && gd::is_dict(before) ? before.ref : state.new_dict();
+			state.set(commander, str(key::movement_carry), int_value(hero_command_rules::movement_kept_for_day(state, commander,
+					gd::int_field(state, old_movement, key::current, 0), gd::int_field(state, old_movement, key::max, 0), day)));
+		}
 		const int64_t movement_max = _movement_max(state, entry.ref);
 		const DictRef movement = state.new_dict();
 		// Half of it after an enemy's wardwood stopped the army yesterday.

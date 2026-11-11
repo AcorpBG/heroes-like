@@ -3,6 +3,7 @@
 // and its fog, and the rules profile. NativeTransitRules.network_colour and
 // OverworldLevelRules.moved_position are here too.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_move.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -545,10 +546,14 @@ ArrayRef _apply_water_route_arrival(State &state, DictRef session, ArrayRef path
 		water::embark(state, dict_value(session), boat);
 		state.append(messages, str(gd::format(state, key::s_boards_the_boat, {str(hero_name)})));
 	}
+	// Ferryman's Fare: boarding and leaving a ship costs its wearer no movement.
+	const bool free_boarding = artifact_rules::hero_has_special(state, sub_dict(state, session_view::overworld(state, session), key::hero), key::special_free_boarding);
 	const DictRef movement = sub_dict(state, session_view::overworld(state, session), key::movement);
-	state.set(movement, str(key::current), int_value(0));
+	state.set(movement, str(key::current), int_value(free_boarding ? gd::int_field(state, movement, key::current, 0) : 0));
 	state.set(session_view::overworld(state, session), str(key::movement), dict_value(movement));
-	map_spells::set_banked_half(state, sub_dict(state, session_view::overworld(state, session), key::hero), 0);
+	if (!free_boarding) {
+		map_spells::set_banked_half(state, sub_dict(state, session_view::overworld(state, session), key::hero), 0);
+	}
 	hero_command_rules::commit_active_hero(state, session);
 	return messages;
 }

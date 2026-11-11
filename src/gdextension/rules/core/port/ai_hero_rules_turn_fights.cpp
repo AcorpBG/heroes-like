@@ -1541,6 +1541,8 @@ DictRef _auto_resolve(State &state, DictRef session, DictRef context, int64_t in
 		state.set(army, str(key::stacks), array_value(hero_survivors));
 		state.set(entry, str(key::enemy_army), dict_value(army));
 		DictRef commander = dict_field(state, entry, key::enemy_commander_state);
+		spell_rules::clear_battle_marks(state, commander);
+		state.set(commander, str(key::last_battle_day), int_value(ai::session_int(state, session, key::day)));
 		for (const Atom field : {key::level, key::experience, key::next_level_experience, key::command, key::spellbook, key::artifacts, key::specialties, key::pending_specialty_choices}) {
 			if (state.has(hero_after, str(field))) {
 				state.set(commander, str(field), gd::index(state, hero_after, str(field)));

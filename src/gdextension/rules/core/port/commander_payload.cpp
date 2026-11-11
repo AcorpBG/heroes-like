@@ -217,6 +217,27 @@ bool _hero_has_trait(State &state, DictRef battle, Atom side, Atom trait_id) {
 	return false;
 }
 
+bool _payload_has_special(State &state, DictRef hero_payload, Atom special) {
+	Value specials;
+	return state.lookup(hero_payload, str(key::artifact_specials), specials) && gd::is_array(specials) && gd::array_has(state, specials.ref, str(special));
+}
+
+bool _hero_has_special(State &state, DictRef battle, Atom side, Atom special) {
+	if (side != key::player && side != key::enemy) {
+		return false;
+	}
+	// The side's stored payload (create_battle_payload and each cast build it from the hero): two lookups, since
+	// the battle's scoring asks this for every blow it weighs.
+	Value payload;
+	if (!state.lookup(battle, str(side == key::player ? key::player_hero : key::enemy_hero_payload), payload) || !gd::is_dict(payload)) {
+		return false;
+	}
+	return _payload_has_special(state, payload.ref, special);
+}
+
+bool _escape_barred(State &state, DictRef battle, Atom side) {
+	return _hero_has_special(state, battle, side == key::player ? key::enemy : key::player, key::special_no_escape);
+}
 Value _hero_battle_traits(State &state, DictRef battle, Atom side) {
 	return get_or_new_array(state, _hero_payload_for_side(state, battle, side), key::battle_traits);
 }
@@ -273,6 +294,7 @@ DictRef _side_payload_with_commander_fallback(State &state, const Value &existin
 	for (const Atom field : kHeroSpecialtyBattleKeys) {
 		copy_missing(field);
 	}
+	copy_missing(key::artifact_specials);
 	return merged;
 }
 
@@ -367,6 +389,11 @@ DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonus
 	state.set(payload, str(key::mana_current), int_value(mana_current));
 	state.set(payload, str(key::mana_max), int_value(mana_max));
 	state.set(payload, str(key::battle_traits), array_value(battle_traits));
+	// The special effects of what the hero wears, for the battle's rules to read (docs/artifact-system.md).
+	const ArrayRef specials = artifact_rules::worn_special_ids(state, hero_state);
+	if (state.array_size(specials) != 0) {
+		state.set(payload, str(key::artifact_specials), array_value(specials));
+	}
 	for (const Atom field : kHeroSpecialtyBattleKeys) {
 		state.set(payload, str(field), int_value(gd::int_field(state, specialty_bonuses, field, 0)));
 	}

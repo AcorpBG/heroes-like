@@ -542,6 +542,9 @@ void _sync_player_force_from_battle(State &state, const Value &session) {
 	const Value commander_source = get_or_new_dict(state, session_battle(state, session), key::player_commander_source);
 	const Atom commander_type = vtext(state, commander_source, key::type, str(key::empty));
 	const DictRef commander_state = gd::deep_duplicate_dict(state, _player_commander_state(state, session));
+	// What the battle leaves on the hero: no free first spell (The Flame), and the day it fought (Camp Kit).
+	spell_rules::clear_battle_marks(state, commander_state);
+	state.set(commander_state, str(key::last_battle_day), gd::member(state, session, key::day));
 	// Garrison creatures merged into the hero's stacks (town_defense_force): their
 	// share of the survivors goes back to the garrison.
 	const ArrayRef back_to_garrison = state.new_array();

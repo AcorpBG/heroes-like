@@ -191,6 +191,9 @@ ArrayRef _normalize_towns(State &state, ArrayRef towns, int64_t current_day) {
 		state.set(normalized_town, str(key::front), dict_value(_normalize_town_front_state(state, get_or_new_dict(state, town, key::front))));
 		state.set(normalized_town, str(key::occupation), dict_value(_normalize_town_occupation_state(state, get_or_new_dict(state, town, key::occupation))));
 		state.set(normalized_town, str(key::last_build_day), int_value(count_field(state, town, key::last_build_day)));
+		if (count_field(state, town, key::second_build_day) > 0) {
+			state.set(normalized_town, str(key::second_build_day), int_value(count_field(state, town, key::second_build_day)));
+		}
 		state.set(normalized_town, str(key::market_usage), dict_value(_normalize_town_market_usage_state(state, get_or_new_dict(state, town, key::market_usage), current_day)));
 		_copy_town_runtime_metadata(state, normalized_town, town);
 		town_development_rules::migrate_town(state, normalized_town);

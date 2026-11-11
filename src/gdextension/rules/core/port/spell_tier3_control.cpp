@@ -96,6 +96,11 @@ Atom strike_back_refused_reason(State &state, DictRef battle, DictRef defender) 
 	if (gd::is_empty(state, active) || side_of(state, active) == side_of(state, defender) || side_of(state, active) == key::empty) {
 		return key::empty;
 	}
+	// The Opening Cut: the first strike of each of its side's stacks in a battle, or the one it has just made.
+	if (battle_rules::_hero_has_special(state, battle, side_of(state, active), key::special_first_strike)
+			&& (!gd::bool_field(state, active, key::first_strike_made, false) || gd::string_field(state, battle, key::unanswered_blow_by, key::empty) == active_id)) {
+		return key::opening_cut_text;
+	}
 	if (gd::string_field(state, battle, key::unanswered_blow_by, key::empty) == active_id || stack_mechanic_int(state, active, battle, key::no_strike_back) > 0) {
 		return key::blow_from_the_fog_text;
 	}
@@ -112,7 +117,11 @@ void note_blow_for_strike_back(State &state, DictRef battle, Atom attacker_id, b
 	}
 	const DictRef attacker = battle_rules::_get_stack_by_id(state, battle, attacker_id);
 	const DictRef fog = gd::is_empty(state, attacker) ? state.new_dict() : stack_mechanic_effect(state, attacker, battle, key::no_strike_back);
-	if (!gd::is_empty(state, fog) && gd::int_field(state, effect_mechanic(state, fog), key::no_strike_back, 0) > 0) {
+	if (!gd::is_empty(state, attacker) && !gd::bool_field(state, attacker, key::first_strike_made, false)
+			&& battle_rules::_hero_has_special(state, battle, side_of(state, attacker), key::special_first_strike)) {
+		state.set(attacker, str(key::first_strike_made), gd::bool_value(true));
+		state.set(battle, str(key::unanswered_blow_by), str(attacker_id));
+	} else if (!gd::is_empty(state, fog) && gd::int_field(state, effect_mechanic(state, fog), key::no_strike_back, 0) > 0) {
 		state.set(effect_mechanic(state, fog), str(key::no_strike_back), int_value(0));
 		state.set(battle, str(key::unanswered_blow_by), str(attacker_id));
 	} else if (state.has(battle, str(key::unanswered_blow_by))) {

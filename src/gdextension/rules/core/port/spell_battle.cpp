@@ -2,6 +2,7 @@
 // the damage, recovery and duration of a cast, the effect payloads and the status resistance roll; a hero's known
 // spells, the validation and resolution of a cast and the mana it spends.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -601,7 +602,15 @@ int64_t spell_power(State &state, DictRef hero_state, DictRef spell) {
 	const Value command = get_or_new_dict(state, hero_state, key::command);
 	const int64_t power = gd::is_dict(command) ? engine_max<int64_t>(0, gd::int_field(state, command.ref, key::power, 0)) : 0;
 	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
-	return gd::add(gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0))), preferred_school_power(state, hero_state, spell));
+	int64_t total = gd::add(gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0))), preferred_school_power(state, hero_state, spell));
+	// The Reader's Case: a worn scroll's spell is cast at +2 Power.
+	if (!gd::is_empty(state, spell) && artifact_rules::hero_has_special(state, hero_state, key::special_scroll_power)) {
+		const Atom spell_id = gd::string_field(state, spell, key::id, key::empty);
+		if (!_knows_spell(state, hero_state, spell_id) && gd::array_has(state, worn_scroll_spell_ids(state, hero_state), str(spell_id))) {
+			total = gd::add(total, 2);
+		}
+	}
+	return total;
 }
 
 int64_t preferred_school_power(State &state, DictRef hero_state, DictRef spell) {
@@ -632,7 +641,12 @@ int64_t target_side_knowledge(State &state, DictRef battle, DictRef target_stack
 }
 
 int64_t spell_power_against(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell) {
-	return engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state, spell), target_side_knowledge(state, battle, target_stack)));
+	int64_t knowledge = target_side_knowledge(state, battle, target_stack);
+	// The Unanswered Word: its wearer's spells count only half of the enemy hero's Knowledge.
+	if (knowledge > 1 && artifact_rules::hero_has_special(state, hero_state, key::special_half_knowledge)) {
+		knowledge = knowledge / 2;
+	}
+	return engine_max<int64_t>(0, gd::sub(spell_power(state, hero_state, spell), knowledge));
 }
 
 int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell) {
@@ -738,6 +752,11 @@ DictRef _effect_payload_for(State &state, DictRef spell, DictRef effect, DictRef
 			&& gd::bool_field(state, raw_mechanic.ref, key::uses_enemy_power, false) && !gd::is_empty(state, target_stack);
 	const int64_t mechanic_power = against_enemy ? engine_max<int64_t>(0, gd::sub(power, opposing_side_knowledge(state, battle, side_of(state, target_stack)))) : power;
 	set_effect_mechanic(state, built, effect, mechanic_power);
+	// The Prime Lens: a boost its wearer casts in the first round lasts the whole battle.
+	if (!gd::is_empty(state, battle) && gd::int_field(state, battle, key::round, 1) == 1 && artifact_rules::hero_has_special(state, hero_state, key::special_boosts_last)) {
+		state.set(built, str(key::expires_after_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
+		return built;
+	}
 	// Grave Edge lasts until its blows are spent.
 	if (gd::bool_field(state, effect, key::battle_long, false)) {
 		state.set(built, str(key::expires_after_round), int_value(TURN_EFFECT_ROUND_SENTINEL));
@@ -981,7 +1000,7 @@ ArrayRef learned_spells(State &state, DictRef hero_state, Atom context_filter) {
 ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
 	const ArrayRef results = learned_spells(state, hero_state, context_filter);
 	// The spells worn scrolls lend follow the learned ones (docs/magic-system.md).
-	for (const Value &spell_id_value : gd::items(state, array_value(worn_scroll_spell_ids(state, hero_state)))) {
+	for (const Value &spell_id_value : gd::items(state, array_value(lent_spell_ids(state, hero_state)))) {
 		const Atom spell_id = gd::stringify(state, spell_id_value);
 		if (_knows_spell(state, hero_state, spell_id)) {
 			continue;
@@ -1711,6 +1730,8 @@ DictRef _consume_mana(State &state, DictRef hero_state, int64_t cost) {
 	state.set(mana.ref, str(key::current), int_value(current));
 	state.set(spellbook.ref, str(key::mana), mana);
 	state.set(hero, str(key::spellbook), spellbook);
+	// The Flame's free first spell goes with the cast that used it.
+	clear_battle_marks(state, hero);
 	return hero;
 }
 

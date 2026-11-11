@@ -1,6 +1,7 @@
 // AiHeroRules: the computer heroes' map search (the search kernel's inputs and
 // tables, the walk, the route-ending stops reached) and the route helpers.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
 
 #include "aurelion_rules/ai_search.hpp"
@@ -621,6 +622,12 @@ DictRef _search(State &state, DictRef session, DictRef context, DictRef entry, i
 		const double share = ai::static_float(state, key::ai_hero_rules_script, key::SHORE_STEP_SHARE);
 		shore_cost = compat::engine_max<int64_t>(1, compat::float_to_int(compat::godot_round(static_cast<double>(movement_max) * share)));
 		dock_cost = gd::add(shore_cost, movement_max);
+		// Ferryman's Fare: the shore costs its wearer nothing.
+		Value held;
+		if (state.lookup(entry, str(key::enemy_commander_state), held) && gd::is_dict(held) && artifact_rules::hero_has_special(state, held.ref, key::special_free_boarding)) {
+			shore_cost = 0;
+			dock_cost = movement_max;
+		}
 	}
 	const bool native_corners = native_transit_rules::uses_native_adjacency(state, dict_value(session));
 	bool has_portals = false;

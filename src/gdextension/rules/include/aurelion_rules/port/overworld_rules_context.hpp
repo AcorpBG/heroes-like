@@ -88,6 +88,8 @@ int64_t _scenario_unit_growth(State &state, Atom unit_id);
 DictRef build_in_active_town(State &state, DictRef session, Atom building_id);
 DictRef recruit_in_active_town(State &state, DictRef session, Atom unit_id, int64_t requested_count = -1, bool runtime_normalized = false);
 bool town_built_today(State &state, DictRef town, int64_t day);
+// A build done in the town today: its build of the day, or, under the Regalia of the Empty Throne, the first of two.
+void mark_town_built(State &state, DictRef session, DictRef town);
 DictRef town_cost_readiness(State &state, DictRef town, DictRef pool, const Value &cost, int64_t current_day = -1);
 DictRef town_recruit_cost(State &state, DictRef session, DictRef town, Atom unit_id);
 ArrayRef _market_buy_resources(State &state, DictRef market_state);

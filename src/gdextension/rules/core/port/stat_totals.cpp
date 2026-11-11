@@ -140,7 +140,13 @@ int64_t _stack_cohesion_total(State &state, DictRef stack, DictRef battle) {
 	int64_t total = gd::to_int(state, state.get(stack, str(key::cohesion), fallback));
 	total = gd::add(total, spell_rules::effect_bonus_for_kind(state, stack, battle, key::cohesion));
 	total = gd::add(total, _contextual_cohesion_bonus(state, stack, battle));
-	return engine_clamp<int64_t>(total, COHESION_MIN, COHESION_MAX);
+	total = engine_clamp<int64_t>(total, COHESION_MIN, COHESION_MAX);
+	// The Unbroken Wall: nothing holds its side's stack below where it began the battle.
+	const int64_t began = engine_clamp<int64_t>(gd::to_int(state, fallback), COHESION_MIN, COHESION_MAX);
+	if (total < began && _hero_has_special(state, battle, gd::string_field(state, stack, key::side, key::empty), key::special_cohesion_floor)) {
+		return began;
+	}
+	return total;
 }
 
 int64_t _stack_momentum_total(State &state, DictRef stack, DictRef battle) {

@@ -22,6 +22,12 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state);
 // their home lines and their sets' steps. HeroProgressionRules.aggregate_bonuses
 // adds it to the specialties' (docs/artifact-system.md, Bonuses).
 DictRef worn_specialty_bonuses(State &state, DictRef hero_state);
+// The special effects of what the hero wears (docs/artifact-system.md, Special effects): the special_id of each
+// worn artifact and of each set step its worn pieces reach. A row names one only once its rule is in the game.
+ArrayRef worn_special_ids(State &state, DictRef hero_state);
+bool hero_has_special(State &state, DictRef hero_state, Atom special);
+// The spells worn artifacts let the hero cast as if it knew them (grants_spell_id).
+ArrayRef granted_spell_ids(State &state, DictRef hero_state);
 DictRef ensure_hero_artifacts(State &state, DictRef hero_state);
 DictRef normalize_hero_artifacts(State &state, const Value &value);
 DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Value &imported_artifacts);

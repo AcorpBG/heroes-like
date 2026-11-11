@@ -16,6 +16,7 @@
 // field, each next to the one before; a longer line (Boundary Line's 4) runs one more hex down. A "blob" is the picked
 // hex and the nearest hexes around it, in the board's neighbour order, up to the cast's count.
 
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/battle_hex.hpp"
@@ -413,6 +414,10 @@ DictRef ground_entry_for_cast(State &state, DictRef hero, DictRef battle, DictRe
 	state.set(entry, str(key::spell_id), str(gd::string_field(state, spell, key::id, key::empty)));
 	state.set(entry, str(key::ground), str(ground));
 	state.set(entry, str(key::side), str(side));
+	// The Open Hand: its wearer's burning ground does not burn its own stacks.
+	if (artifact_rules::hero_has_special(state, hero, key::special_area_spares_own)) {
+		state.set(entry, str(key::spares_side), str(side));
+	}
 	state.set(entry, str(key::cells), array_value(gd::duplicate_array(state, cells)));
 	const int64_t round = gd::int_field(state, battle, key::round, 1);
 	// A seed waits until it goes off; mire lasts the battle.
@@ -1064,7 +1069,7 @@ void end_of_turn_ground(State &state, DictRef battle, Atom battle_id) {
 	if (burning == NONE && !fire.empty()) {
 		burning = entry_under(state, fire, stack);
 	}
-	if (burning != NONE) {
+	if (burning != NONE && gd::string_field(state, burning, key::spares_side, key::empty) != side_of(state, stack)) {
 		hurt(state, battle, battle_id, burning, key::burning_ground_text);
 	}
 	if (!walked) {

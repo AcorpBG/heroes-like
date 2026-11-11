@@ -5,6 +5,7 @@
 // _scoring_threats, as the GDScript does.
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules_ai.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
@@ -246,6 +247,7 @@ int64_t _estimate_damage_on(State &state, DictRef attacker, DictRef defender, Di
 	// The arguments in the GDScript order: the payload reads keep _scoring_payloads.
 	const DictRef attacker_hero = _hero_payload_for_side(state, battle, side_of(state, attacker));
 	const DictRef defender_hero = _hero_payload_for_side(state, battle, side_of(state, defender));
+	modifier *= battle_rules::_artifact_damage_modifier(state, attacker, defender, battle, attacker_hero, defender_hero, is_ranged, resolved_distance);
 	const Atom assault_side = battle_damage_rules::town_assault_side(state, battle);
 	const bool is_town_assault = assault_side == side_of(state, attacker);
 	modifier *= battle_damage_rules::hero_damage_multiplier(state, attacker_hero, defender_hero, is_ranged, is_retaliation, is_town_assault);

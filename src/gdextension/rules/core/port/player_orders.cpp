@@ -196,6 +196,8 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	_mark_commander_spell_cast(state, session_battle(state, session), key::player);
 
 	// The assignments read session.battle, then the value.
+	const int64_t mana_before_cast = _side_mana_current(state, session_battle(state, session), key::player);
+	const int64_t living_before_cast = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::enemy));
 	const DictRef commander_battle = session_battle(state, session);
 	const Value commander_state = state.get(resolution, str(key::hero), dict_value(_player_commander_state(state, session)));
 	state.set(commander_battle, str(key::player_commander_state), commander_state);
@@ -216,6 +218,7 @@ DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Ato
 	}
 	// Echo: the side's last spell of the battle (spell_tier45_turns.cpp).
 	spell_rules::record_last_cast(state, session_battle(state, session), key::player, spell_id, resolution, destination);
+	_refund_spell_for_kill(state, session, key::player, living_before_cast, mana_before_cast);
 	// Prism Array: the side's crystals answer a damage spell (an echo's spell too).
 	const Atom fired_id = string_or_empty(state, resolution, key::echo_of) != key::empty ? string_or_empty(state, resolution, key::echo_of) : spell_id;
 	message = concat(state, message, spell_rules::fire_prisms(state, session_battle(state, session), key::player, gd::content_row(state, state::ContentTable::Spell, fired_id)));

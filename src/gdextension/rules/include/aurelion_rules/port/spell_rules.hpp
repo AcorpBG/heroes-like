@@ -66,6 +66,13 @@ bool _knows_spell(State &state, DictRef hero_state, Atom spell_id);
 ArrayRef worn_scroll_spell_ids(State &state, DictRef hero_state);
 bool can_cast_spell(State &state, DictRef hero_state, Atom spell_id);
 ArrayRef castable_spell_ids(State &state, DictRef hero_state);
+// The spells the hero casts without knowing them: its worn scrolls' and the ones its artifacts grant
+// (docs/artifact-system.md, Special effects).
+ArrayRef lent_spell_ids(State &state, DictRef hero_state);
+// The Flame: the first spell of a battle costs its wearer no mana. The battle's copy of the hero carries the mark
+// from the battle's start until its first cast; the hero that returns to the map does not.
+void mark_battle_start(State &state, DictRef hero_state);
+void clear_battle_marks(State &state, DictRef hero_state);
 
 // Layer 5: a battle effect built from an ability (attack_effects.cpp).
 DictRef build_battle_effect(State &state, Atom effect_id, Atom label, const Value &modifiers, int64_t duration_rounds, DictRef battle, Atom source_type, Atom source_id, const Value &status_immunity_ids);

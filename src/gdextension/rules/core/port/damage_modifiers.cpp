@@ -84,6 +84,41 @@ double ambush_retention(State &state, DictRef flare) {
 
 } // namespace
 
+double _artifact_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, DictRef attacker_hero, DictRef defender_hero, bool is_ranged, int64_t attack_distance) {
+	double modifier = 1.0;
+	if (state.has(attacker_hero, str(key::artifact_specials))) {
+		// The Blood-Drum: more damage to a stack that has lost creatures in this battle.
+		if (_payload_has_special(state, attacker_hero, key::special_blood_scent) && _alive_count(state, defender) < gd::int_field(state, defender, key::base_count, 0)) {
+			modifier *= 1.15;
+		}
+	}
+	if (state.has(defender_hero, str(key::artifact_specials))) {
+		// Shroud of the Unseen Fleet: a shot from more than five hexes away does half damage.
+		if (is_ranged && attack_distance > 5 && _payload_has_special(state, defender_hero, key::special_far_shots)) {
+			modifier *= 0.5;
+		}
+		// The Standing Order: a stack that has not moved this round takes a quarter less.
+		if (_payload_has_special(state, defender_hero, key::special_stand_fast) && gd::int_field(state, defender, key::moved_round, 0) != gd::int_field(state, battle, key::round, 1)) {
+			modifier *= 0.75;
+		}
+	}
+	return modifier;
+}
+
+// Writ of Relief: a defending stack of the side gives +2 Defense to the side's stacks beside it.
+static int64_t relief_defense_bonus(State &state, DictRef defender, DictRef battle, DictRef defender_hero) {
+	if (!_payload_has_special(state, defender_hero, key::special_shield_neighbours)) {
+		return 0;
+	}
+	const Atom defender_id = gd::string_field(state, defender, key::battle_id, key::empty);
+	for (const Value &ally : gd::items(state, array_value(_alive_stacks_for_side(state, battle, gd::string_field(state, defender, key::side, key::empty))))) {
+		if (gd::is_dict(ally) && gd::bool_field(state, ally.ref, key::defending, false) && gd::string_field(state, ally.ref, key::battle_id, key::empty) != defender_id
+				&& _stack_hex_distance(state, defender, ally.ref) == 1) {
+			return 2;
+		}
+	}
+	return 0;
+}
 int64_t _damage_for_roll(State &state, DictRef attacker, DictRef defender, DictRef battle, int64_t base_roll, bool is_ranged, bool is_retaliation, int64_t attack_distance) {
 	const int64_t base_damage = gd::mul(engine_max<int64_t>(1, _alive_count(state, attacker)), base_roll);
 	const double modifier = _damage_modifier(state, attacker, defender, battle, is_ranged, is_retaliation, attack_distance);
@@ -101,6 +136,7 @@ double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRe
 	if (gd::bool_field(state, defender, key::defending, false)) {
 		defense_stat = gd::add(defense_stat, gd::add(2, gd::int_field(state, defender_hero, key::defend_defense_bonus, 0)));
 	}
+	defense_stat = gd::add(defense_stat, relief_defense_bonus(state, defender, battle, defender_hero));
 	// Grave Edge: the target's defense does not count.
 	if (spell_rules::pierces_defense(state, battle, attacker)) {
 		defense_stat = 0;
@@ -128,6 +164,7 @@ double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRe
 	modifier *= _field_objective_cover_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);
 	modifier *= _faction_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);
 	modifier *= _commander_damage_modifier(state, attacker, defender, battle, is_ranged, resolved_distance);
+	modifier *= _artifact_damage_modifier(state, attacker, defender, battle, attacker_hero, defender_hero, is_ranged, resolved_distance);
 	modifier *= town_battle_rules::damage_multiplier(state, battle, attacker, defender, is_ranged);
 	const Atom assault_side = battle_damage_rules::town_assault_side(state, battle);
 	const bool is_town_assault = assault_side == gd::string_field(state, attacker, key::side, key::empty);

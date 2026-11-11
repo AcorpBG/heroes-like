@@ -231,6 +231,10 @@ void _set_stack_hex(State &state, DictRef battle, Atom battle_id, DictRef cell) 
 		const Value stack = untyped_at(state, stacks, index);
 		if (gd::is_dict(stack) && gd::string_field(state, stack.ref, key::battle_id, key::empty) == battle_id) {
 			state.set(stack.ref, str(key::hex), dict_value(normalized));
+			// Its first place on the board is no move.
+			if (!gd::is_empty(state, from_hex) && !gd::equal(state, dict_value(from_hex), dict_value(normalized))) {
+				state.set(stack.ref, str(key::moved_round), int_value(gd::int_field(state, battle, key::round, 1)));
+			}
 			untyped_set_at(state, stacks, index, stack);
 			break;
 		}

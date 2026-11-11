@@ -7,6 +7,7 @@
 // for some days, Green Path and Mire Stride make their ground cost no more than grass for some days, Scorched Earth
 // doubles enemy steps near where it was cast, and a wardwood stops enemy armies that come near it (StepCosts). A
 // Firebreak's mark closes its tile to every army. The spells aimed at a tile find their tiles in spell_map_tiles.cpp.
+#include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/map_spells.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -394,6 +395,17 @@ StepCosts::StepCosts(State &state, DictRef session, const Mover &mover) : state_
 	grass_halves_ = terrain_halves(state, key::grass);
 	if (mover.hero != 0) {
 		road_halves_ = gd::int_field(state, mover.hero, key::map_road_until_day, 0) >= mover.day ? 1 : 2;
+		// Roadeater Boots: roads cost half. Cartographer's Table: slow ground costs no more than grass.
+		const ArrayRef specials = artifact_rules::worn_special_ids(state, mover.hero);
+		if (gd::array_has(state, specials, gd::str(key::special_roads_half))) {
+			road_halves_ = 1;
+		}
+		if (gd::array_has(state, specials, gd::str(key::special_flat_ground))) {
+			const Atom slow_ground[] = { key::sand, key::swamp, key::snow, key::rough, key::lava };
+			for (const Atom terrain : slow_ground) {
+				easy_.insert(content_service::normalize_terrain_id(state, terrain));
+			}
+		}
 		// Green Path and Mire Stride: the ground the mover walks like grass, by terrain until its last day.
 		const Value ways = gd::field(state, mover.hero, key::map_ground_ways);
 		if (gd::is_dict(ways)) {

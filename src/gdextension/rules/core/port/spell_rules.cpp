@@ -70,6 +70,10 @@ int64_t adjusted_spell_mana_cost(State &state, DictRef hero_state, const Value &
 	if (gd::is_empty(state, spell_dict)) {
 		return 0;
 	}
+	// The Flame: its wearer's first spell of a battle costs no mana (mark_battle_start).
+	if (gd::bool_field(state, hero_state, key::first_spell_free, false) && string_of_field(state, spell_dict, key::context, key::empty) == key::battle) {
+		return 0;
+	}
 	// The cost reads the hero's specialties and artifacts, not its spellbook. The artifact bonuses normalize the
 	// hero's top-level artifacts key in place, so they get a shallow copy.
 	const DictRef hero = gd::duplicate_dict(state, hero_state);
@@ -148,8 +152,31 @@ ArrayRef worn_scroll_spell_ids(State &state, DictRef hero_state) {
 	return spell_ids;
 }
 
+ArrayRef lent_spell_ids(State &state, DictRef hero_state) {
+	const ArrayRef spell_ids = worn_scroll_spell_ids(state, hero_state);
+	for (const Value &spell_id : gd::items(state, array_value(artifact_rules::granted_spell_ids(state, hero_state)))) {
+		if (!gd::array_has(state, spell_ids, spell_id)) {
+			state.append(spell_ids, spell_id);
+		}
+	}
+	return spell_ids;
+}
+
+void mark_battle_start(State &state, DictRef hero_state) {
+	if (artifact_rules::hero_has_special(state, hero_state, key::special_first_spell_free)) {
+		state.set(hero_state, str(key::first_spell_free), gd::bool_value(true));
+	} else {
+		clear_battle_marks(state, hero_state);
+	}
+}
+
+void clear_battle_marks(State &state, DictRef hero_state) {
+	if (state.has(hero_state, str(key::first_spell_free))) {
+		state.erase(hero_state, str(key::first_spell_free));
+	}
+}
 bool can_cast_spell(State &state, DictRef hero_state, Atom spell_id) {
-	return _knows_spell(state, hero_state, spell_id) || gd::array_has(state, worn_scroll_spell_ids(state, hero_state), str(spell_id));
+	return _knows_spell(state, hero_state, spell_id) || gd::array_has(state, lent_spell_ids(state, hero_state), str(spell_id));
 }
 
 ArrayRef castable_spell_ids(State &state, DictRef hero_state) {
@@ -162,7 +189,7 @@ ArrayRef castable_spell_ids(State &state, DictRef hero_state) {
 			state.append(spell_ids, spell_id);
 		}
 	}
-	for (const Value &spell_id : gd::items(state, array_value(worn_scroll_spell_ids(state, hero_state)))) {
+	for (const Value &spell_id : gd::items(state, array_value(lent_spell_ids(state, hero_state)))) {
 		if (!gd::array_has(state, spell_ids, spell_id)) {
 			state.append(spell_ids, spell_id);
 		}

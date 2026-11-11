@@ -243,14 +243,14 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 	const ArrayRef targets = _alive_stacks_for_side(state, session_battle(state, session), key::player);
 	const Atom order = string_or_empty(state, action, key::action);
 	if (order == key::retreat) {
-		if (!_battle_retreat_allowed(state, session_battle(state, session)) || !gd::bool_field(state, session_battle(state, session), key::enemy_withdrawal_allowed, false)) {
+		if (!_enemy_may_leave(state, session_battle(state, session), key::retreat_allowed) || !gd::bool_field(state, session_battle(state, session), key::enemy_withdrawal_allowed, false)) {
 			return action_result(state, false, key::enemy_retreat_locked_text, key::invalid);
 		}
 		_mark_side_animation_event(state, session_battle(state, session), key::enemy, key::battle_unit_retreat);
 		return _finalize_enemy_withdrawal(state, session, key::enemy_retreat);
 	}
 	if (order == key::surrender) {
-		if (!_battle_surrender_allowed(state, session_battle(state, session)) || !gd::bool_field(state, session_battle(state, session), key::enemy_withdrawal_allowed, false)) {
+		if (!_enemy_may_leave(state, session_battle(state, session), key::surrender_allowed) || !gd::bool_field(state, session_battle(state, session), key::enemy_withdrawal_allowed, false)) {
 			return action_result(state, false, key::enemy_surrender_locked_text, key::invalid);
 		}
 		_mark_side_animation_event(state, session_battle(state, session), key::enemy, key::battle_unit_surrender);
@@ -373,6 +373,8 @@ DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_sta
 	_mark_commander_spell_cast(state, session_battle(state, session), key::enemy);
 	state.set(session_battle(state, session), str(key::_enemy_commander_spell_cast_in_drain), bool_value(true));
 
+	const int64_t mana_before_cast = _side_mana_current(state, session_battle(state, session), key::enemy);
+	const int64_t living_before_cast = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::player));
 	const Value hero = state.get(resolution, str(key::hero), get_or_new_dict(state, session_battle(state, session), key::enemy_hero));
 	state.set(session_battle(state, session), str(key::enemy_hero), hero);
 	// The arguments in the GDScript order: the hero state, then the existing payload.
@@ -391,6 +393,7 @@ DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_sta
 	}
 	// Echo: the side's last spell of the battle (spell_tier45_turns.cpp).
 	spell_rules::record_last_cast(state, session_battle(state, session), key::enemy, string_or_empty(state, action, key::spell_id), resolution, destination);
+	_refund_spell_for_kill(state, session, key::enemy, living_before_cast, mana_before_cast);
 	// Prism Array: the side's crystals answer a damage spell (an echo's spell too).
 	const Atom fired_id = string_or_empty(state, resolution, key::echo_of) != key::empty ? string_or_empty(state, resolution, key::echo_of) : string_or_empty(state, action, key::spell_id);
 	message = concat(state, message, spell_rules::fire_prisms(state, session_battle(state, session), key::enemy, gd::content_row(state, state::ContentTable::Spell, fired_id)));

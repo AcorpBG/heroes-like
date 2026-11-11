@@ -1,6 +1,7 @@
 // AiHeroRules: a computer player's towns on its day: the opening stockpile and
 // start hero, the tavern, hires, recruits and the day's construction.
 
+#include "aurelion_rules/port/overworld_rules_context.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
@@ -639,7 +640,7 @@ DictRef build_in_town(State &state, DictRef session, DictRef context, int64_t to
 	state.append(built, str(building_id));
 	state.set(town, str(key::built_buildings), array_value(built));
 	town_development_rules::migrate_town(state, town);
-	state.set(town, str(key::last_build_day), int_value(ai::session_int(state, session, key::day)));
+	overworld_rules::mark_town_built(state, session, town);
 	const Value recruits = field_or_new_dict(state, town, key::available_recruits);
 	const DictRef growth = hero_progression_rules::scale_recruit_growth(state, overworld_rules::_town_scaling_hero(state, session, town), dict_value(enemy_turn_rules::_building_growth_payload(state, building_id)));
 	state.set(town, str(key::available_recruits), dict_value(enemy_turn_rules::_merge_recruits(state, recruits, dict_value(growth))));

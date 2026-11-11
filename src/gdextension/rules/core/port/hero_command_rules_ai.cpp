@@ -77,6 +77,22 @@ int64_t movement_max_for_hero(State &state, DictRef hero_state, const Value &mov
 	return compat::engine_max<int64_t>(1, total);
 }
 
+int64_t movement_kept_for_day(State &state, DictRef hero_state, int64_t leftover, int64_t previous_max, int64_t day) {
+	const ArrayRef specials = artifact_rules::worn_special_ids(state, hero_state);
+	int64_t kept = compat::engine_max<int64_t>(0, leftover);
+	if (gd::array_has(state, specials, gd::str(key::special_keep_movement))) {
+		// Night Watch: all of the day's own movement that went unused, not what earlier days had already kept.
+		const int64_t own = compat::engine_max<int64_t>(0, gd::sub(previous_max, compat::engine_max<int64_t>(0, gd::int_field(state, hero_state, key::movement_carry, 0))));
+		kept = kept < own ? kept : own;
+	} else {
+		kept = compat::engine_clamp<int64_t>(kept, 0, gd::int_field(state, hero_progression_rules::aggregate_bonuses(state, hero_state), key::movement_carry, 0));
+	}
+	// Camp Kit: three more points after a day without a battle.
+	if (gd::array_has(state, specials, gd::str(key::special_rested_march)) && gd::int_field(state, hero_state, key::last_battle_day, 0) < gd::sub(day, 1)) {
+		kept = gd::add(kept, 3);
+	}
+	return kept;
+}
 int64_t _week_bonus(State &state, DictRef hero_state, Atom bonus_key) {
 	// hero_state.get("week_bonuses", {}): a missing entry reads as {}, so 0.
 	Value bonuses;

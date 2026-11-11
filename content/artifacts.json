@@ -8,9 +8,16 @@
         "artifact_vow_of_giving",
         "artifact_vow_of_keeping"
       ],
-      "piece_thresholds": [],
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Mana comes back twice as fast each day.",
+          "bonuses": {},
+          "special_id": "mana_double"
+        }
+      ],
       "special_text": "Mana comes back twice as fast each day.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -25,9 +32,16 @@
         "artifact_the_question",
         "artifact_the_answer"
       ],
-      "piece_thresholds": [],
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Your stacks strike back at every attack, not only the first each round.",
+          "bonuses": {},
+          "special_id": "endless_strike_back"
+        }
+      ],
       "special_text": "Your stacks strike back at every attack, not only the first each round.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -42,9 +56,16 @@
         "artifact_the_flame",
         "artifact_the_lens"
       ],
-      "piece_thresholds": [],
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "A spell that destroys a stack returns half its mana.",
+          "bonuses": {},
+          "special_id": "kill_refund"
+        }
+      ],
       "special_text": "A spell that destroys a stack returns half its mana.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -75,10 +96,16 @@
           "bonuses": {
             "battle_power": 1
           }
+        },
+        {
+          "count": 4,
+          "summary": "Every spell is cast as if the hero had one more rank of its school's mastery.",
+          "bonuses": {},
+          "special_id": "mastery_plus_one"
         }
       ],
       "special_text": "Every spell is cast as if the hero had one more rank of its school's mastery.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -111,10 +138,16 @@
             "battle_attack": 1,
             "battle_defense": 1
           }
+        },
+        {
+          "count": 5,
+          "summary": "The town the hero stands in may build twice a day.",
+          "bonuses": {},
+          "special_id": "second_build"
         }
       ],
       "special_text": "The town the hero stands in may build twice a day.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -130,9 +163,20 @@
         "artifact_penitents_hairshirt",
         "artifact_penitents_sandals"
       ],
-      "piece_thresholds": [],
+      "piece_thresholds": [
+        {
+          "count": 3,
+          "summary": "The three prices no longer apply.",
+          "bonuses": {
+            "knowledge": 1,
+            "overworld_movement": 2,
+            "battle_initiative": 1
+          },
+          "special_id": "prices_lifted"
+        }
+      ],
       "special_text": "The three prices no longer apply.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -155,10 +199,16 @@
           "bonuses": {
             "scouting_radius": 1
           }
+        },
+        {
+          "count": 3,
+          "summary": "Sand, swamp, snow, rough ground and lava cost the army no more than grass.",
+          "bonuses": {},
+          "special_id": "flat_ground"
         }
       ],
       "special_text": "Sand, swamp, snow, rough ground and lava cost the army no more than grass.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -182,10 +232,16 @@
           "bonuses": {
             "overworld_movement": 1
           }
+        },
+        {
+          "count": 4,
+          "summary": "After a day without a battle the hero starts the next day with +3 map movement.",
+          "bonuses": {},
+          "special_id": "rested_march"
         }
       ],
       "special_text": "After a day without a battle the hero starts the next day with +3 map movement.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -210,10 +266,16 @@
               "gold": 75
             }
           }
+        },
+        {
+          "count": 3,
+          "summary": "Boarding and leaving a ship costs no movement.",
+          "bonuses": {},
+          "special_id": "free_boarding"
         }
       ],
       "special_text": "Boarding and leaving a ship costs no movement.",
-      "special_live": false,
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -236,10 +298,16 @@
           "bonuses": {
             "scouting_radius": 1
           }
+        },
+        {
+          "count": 3,
+          "summary": "All of a day's unused movement is kept for the next day.",
+          "bonuses": {},
+          "special_id": "keep_all_movement"
         }
       ],
-      "special_text": "All unused movement is kept for the next day.",
-      "special_live": false,
+      "special_text": "All of a day's unused movement is kept for the next day.",
+      "special_live": true,
       "runtime_policy": {
         "set_bonuses_active": true,
         "source_reward_tables_active": false,
@@ -1791,8 +1859,9 @@
           "+3 max mana"
         ],
         "special_text": "The hero may cast a second spell in the first round of each battle.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "second_spell_first_round"
     },
     {
       "id": "artifact_crown_of_the_empty_throne",
@@ -1837,9 +1906,10 @@
           "+2 Defense"
         ],
         "special_text": "The hero may hold a seventh specialty.",
-        "special_live": false
+        "special_live": true
       },
-      "set_id": "set_regalia_of_the_empty_throne"
+      "set_id": "set_regalia_of_the_empty_throne",
+      "special_id": "seventh_specialty"
     },
     {
       "id": "artifact_prism_bead",
@@ -2293,8 +2363,9 @@
           "+10% spell damage"
         ],
         "special_text": "Your spells count only half of the enemy hero's Knowledge.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "half_enemy_knowledge"
     },
     {
       "id": "artifact_the_flame",
@@ -2333,9 +2404,10 @@
           "+9 max mana"
         ],
         "special_text": "The first spell of each battle costs no mana.",
-        "special_live": false
+        "special_live": true
       },
-      "set_id": "set_lens_and_flame"
+      "set_id": "set_lens_and_flame",
+      "special_id": "first_spell_free"
     },
     {
       "id": "artifact_travellers_cloak",
@@ -2836,11 +2908,12 @@
           "+1 scouting"
         ],
         "special_text": "Enemy shots from more than five hexes away do half damage to your stacks.",
-        "special_live": false
+        "special_live": true
       },
       "home_bonuses": {
         "scouting_radius": 1
-      }
+      },
+      "special_id": "far_shots_halved"
     },
     {
       "id": "artifact_padded_jack",
@@ -3306,8 +3379,9 @@
           "+1 cohesion"
         ],
         "special_text": "Your stacks' cohesion never falls below where it began the battle.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "cohesion_floor"
     },
     {
       "id": "artifact_mother_graft_mail",
@@ -3352,12 +3426,13 @@
         "home_lines": [
           "5% of the fallen recover after a won battle"
         ],
-        "special_text": "As each round begins, your most wounded stack heals the health of one creature.",
-        "special_live": false
+        "special_text": "As each round begins, your most wounded stack heals up to the health of one creature.",
+        "special_live": true
       },
       "home_bonuses": {
         "victory_recovery_pct": 5
-      }
+      },
+      "special_id": "round_graft_heal"
     },
     {
       "id": "artifact_soldiers_sidearm",
@@ -4303,8 +4378,9 @@
           "+1 cohesion"
         ],
         "special_text": "The enemy cannot retreat or surrender.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "no_escape"
     },
     {
       "id": "artifact_never_empty_quiver",
@@ -4343,8 +4419,9 @@
           "+2 initiative"
         ],
         "special_text": "Your shooters never run out of shots.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "endless_shots"
     },
     {
       "id": "artifact_staff_of_the_first_tree",
@@ -4387,8 +4464,10 @@
           "+3 max mana"
         ],
         "special_text": "The hero casts Green Return as if it knew it.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "grants_spell",
+      "grants_spell_id": "spell_green_return"
     },
     {
       "id": "artifact_the_opening_cut",
@@ -4429,8 +4508,9 @@
           "+1 momentum"
         ],
         "special_text": "The first strike of each of your stacks in a battle is not struck back.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "first_strike_unanswered"
     },
     {
       "id": "artifact_copper_signet",
@@ -5033,8 +5113,10 @@
           "Beacon spells cost 1 less"
         ],
         "special_text": "The hero casts Eternal Noon as if it knew it.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "grants_spell",
+      "grants_spell_id": "spell_eternal_noon"
     },
     {
       "id": "artifact_the_open_hand",
@@ -5075,8 +5157,9 @@
           "spell boosts last 1 turn longer"
         ],
         "special_text": "Your spells that strike an area do not hurt your own stacks.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "area_spares_own"
     },
     {
       "id": "artifact_marching_boots",
@@ -5473,8 +5556,9 @@
           "carry 1 unused movement into the next day"
         ],
         "special_text": "Movement on roads costs half.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "roads_half"
     },
     {
       "id": "artifact_company_pennant",
@@ -6001,8 +6085,9 @@
           "+2 momentum"
         ],
         "special_text": "Your stacks act before every enemy stack in the first round.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "first_round_first"
     },
     {
       "id": "artifact_the_blood_drum",
@@ -6048,11 +6133,12 @@
           "+1 momentum"
         ],
         "special_text": "Your stacks do 15% more damage to stacks that have lost creatures in this battle.",
-        "special_live": false
+        "special_live": true
       },
       "home_bonuses": {
         "battle_momentum": 1
-      }
+      },
+      "special_id": "blood_scent"
     },
     {
       "id": "artifact_first_coin",
@@ -7362,8 +7448,9 @@
           "+1 Power"
         ],
         "special_text": "Worn scrolls are cast at +2 Power.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "scroll_power"
     },
     {
       "id": "artifact_the_ever_coal",
@@ -7406,8 +7493,10 @@
           "+5% spell damage"
         ],
         "special_text": "The hero casts Second Sun as if it knew it.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "grants_spell",
+      "grants_spell_id": "spell_second_sun"
     },
     {
       "id": "artifact_mirror_of_the_far_shore",
@@ -7450,8 +7539,10 @@
           "spell curses last 1 turn longer"
         ],
         "special_text": "The hero casts Hollow Crown as if it knew it.",
-        "special_live": false
-      }
+        "special_live": true
+      },
+      "special_id": "grants_spell",
+      "grants_spell_id": "spell_hollow_crown"
     },
     {
       "id": "artifact_the_standing_order",
@@ -7498,11 +7589,12 @@
           "+10% damage when assaulting a town"
         ],
         "special_text": "A stack of yours that has not moved this round takes 25% less damage.",
-        "special_live": false
+        "special_live": true
       },
       "home_bonuses": {
         "siege_damage_pct": 10
-      }
+      },
+      "special_id": "stand_fast"
     },
     {
       "id": "artifact_writ_of_relief",
@@ -7551,11 +7643,12 @@
           "+1 cohesion"
         ],
         "special_text": "A stack of yours that defends also gives +2 Defense to your stacks beside it.",
-        "special_live": false
+        "special_live": true
       },
       "home_bonuses": {
         "battle_cohesion": 1
-      }
+      },
+      "special_id": "shield_neighbours"
     },
     {
       "id": "artifact_the_prime_lens",
@@ -7601,11 +7694,12 @@
           "+1 Power"
         ],
         "special_text": "Boosts the hero casts in the first round last the whole battle.",
-        "special_live": false
+        "special_live": true
       },
       "home_bonuses": {
         "battle_power": 1
-      }
+      },
+      "special_id": "first_round_boosts_last"
     }
   ]
 }

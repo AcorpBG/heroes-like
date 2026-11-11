@@ -2,7 +2,7 @@
 
 The owner reworked the artifacts on 2026-11-11, after the hero menu gave a hero fourteen places to wear them (`docs/hero-screen.md`). It was settled in two drafts on a local plan page (`.artifacts/artifact_plan/artifact_plan.html`, built by `.artifacts/artifact_plan/build/plan.py`; plan pages stay local views, never published). This doc holds the rules, the decisions and the build order. The 150 artifacts and ten sets are in `docs/artifact-system-catalogue.md`.
 
-The 150 artifacts, their icons and their sets' numeric steps are in the game since `artifact-catalogue-switch-20261111`. The 32 special effects are not: the build order at the end says what is.
+The 150 artifacts, their icons and their sets' steps are in the game since `artifact-catalogue-switch-20261111`, and the 32 special effects since `artifact-special-effects-20261111`.
 
 ## Why
 
@@ -118,7 +118,60 @@ Ten sets, 31 pieces, in `docs/artifact-system-catalogue.md`. A set's steps apply
 
 ## Special effects
 
-32 in all: one on each of the 22 epics and one for each full set. Each is a small rule of its own and they are built in batches after the numbers. An artifact's row carries its special effect's text with `special_live` false until the rule exists (`LIVE_SPECIALS` in `tools/build_artifact_content.py`), and the game shows only live ones: until then an epic is its five points and a full set its numeric steps. Their wording is in the catalogue. Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
+32 in all: one on each of the 22 epics and one for each full set. Each is a small rule of its own; their wording is in the catalogue. All 32 are in the game.
+
+How a row names its rule:
+
+- An artifact's row carries `special_id`, and `ui.special_text` with `ui.special_live` true for the hero menu. A set's last step (the `piece_thresholds` entry all its pieces reach) carries the set's `special_id` and the effect's text as its `summary`.
+- `tools/build_artifact_content.py` holds the ids (`SPECIAL_IDS`) and the four granted spells (`GRANTED_SPELLS`, written as `grants_spell_id`). A special effect without an id there is not shown in the game.
+- `artifact_rules::worn_special_ids` gives the ids of what a hero wears. A battle keeps each side's ids in its hero payload (`artifact_specials`; `battle_rules::_hero_has_special`), so the battle's rules read them without the hero.
+- The Penitent's Burden needs no rule: its last step gives back exactly what its three prices take.
+
+| Effect | Id | Where the rule is |
+|---|---|---|
+| Twofold Diadem: a second spell in the first round | `second_spell_first_round` | `_mark_commander_spell_cast` (spell_events.cpp) |
+| Crown of the Empty Throne: a seventh specialty | `seventh_specialty` | `_specialty_is_available` (enemy_states.cpp) |
+| The Unanswered Word: half the enemy hero's Knowledge | `half_enemy_knowledge` | `spell_power_against` (spell_battle.cpp) |
+| The Flame: the first spell of a battle is free | `first_spell_free` | `mark_battle_start`, `adjusted_spell_mana_cost` (spell_rules.cpp) |
+| Shroud of the Unseen Fleet: shots from more than five hexes do half | `far_shots_halved` | `_artifact_damage_modifier` (damage_modifiers.cpp) |
+| The Unbroken Wall: cohesion never below where it began | `cohesion_floor` | `_adjust_stack_cohesion`, `_stack_cohesion_total` |
+| Mother-Graft Mail: a heal as each round begins | `round_graft_heal` | `graft_heal_round` (turn_order.cpp) |
+| The Last Gate: the enemy cannot retreat or surrender | `no_escape` | `_escape_barred`, `_enemy_may_leave` (turn_order.cpp) |
+| Never-Empty Quiver: shots never run out | `endless_shots` | `_consume_shot` (attack_effects.cpp) |
+| The Opening Cut: each stack's first strike is not struck back | `first_strike_unanswered` | `strike_back_refused_reason`, `note_blow_for_strike_back` |
+| The Open Hand: area spells spare the caster's stacks | `area_spares_own` | Cinder Spray's splash (spell_reach.cpp), Flame Furrow's fire (spell_ground.cpp) |
+| Roadeater Boots: roads cost half | `roads_half` | `StepCosts` (spell_map.cpp) |
+| Vanguard's Thunder: its side acts first in round 1 | `first_round_first` | `turn_order_score` (turn_order.cpp) |
+| The Blood-Drum: 15% more damage to a stack that lost creatures | `blood_scent` | `_artifact_damage_modifier` |
+| The Reader's Case: worn scrolls at +2 Power | `scroll_power` | `spell_power` (spell_battle.cpp) |
+| The Standing Order: 25% less damage while it has not moved this round | `stand_fast` | `_artifact_damage_modifier`; a stack's `moved_round` (`_set_stack_hex`) |
+| Writ of Relief: a defending stack gives +2 Defense to those beside it | `shield_neighbours` | `relief_defense_bonus` (damage_modifiers.cpp) |
+| The Prime Lens: boosts cast in round 1 last the battle | `first_round_boosts_last` | `_effect_payload_for` (spell_battle.cpp) |
+| Staff of the First Tree, Ring of the Noon Hour, The Ever-Coal, Mirror of the Far Shore: a tier-5 spell as if known | `grants_spell` | `lent_spell_ids` (spell_rules.cpp) |
+| Twin Vows: mana comes back twice as fast | `mana_double` | `regain_daily_mana` (day_economy.cpp) |
+| Question and Answer: a strike-back at every attack | `endless_strike_back` | `_consume_retaliation` (attack_effects.cpp) |
+| Lens and Flame: half the mana back when a spell destroys a stack | `kill_refund` | `_refund_spell_for_kill` (spell_events.cpp) |
+| The Four Chimes: one more rank of each school's mastery | `mastery_plus_one` | `spell_mastery_rank` (spell_reach.cpp) |
+| Regalia of the Empty Throne: the town its wearer stands in builds twice a day | `second_build` | `mark_town_built` (overworld_rules_town_actions.cpp) |
+| The Penitent's Burden: the three prices are lifted | `prices_lifted` | the set's last step |
+| Cartographer's Table: sand, swamp, snow, rough ground and lava at grass cost | `flat_ground` | `StepCosts` |
+| Camp Kit: +3 map movement after a day without a battle | `rested_march` | `movement_kept_for_day` (hero_command_rules_ai.cpp); a hero's `last_battle_day` |
+| Ferryman's Fare: boarding and leaving a ship costs no movement | `free_boarding` | the human's and the computer's shore step, the computer's route search |
+| Night Watch: all of a day's unused movement is kept | `keep_all_movement` | `movement_kept_for_day` |
+
+Readings where the wording left room:
+
+- Mother-Graft Mail heals as the Rootbound Ward does: up to one creature's health on the living creatures of the stack that misses most, raising nobody.
+- Night Watch keeps what the day's own movement left, not movement already kept from earlier days, so an idle hero has at most two days' movement.
+- The Opening Cut covers a stack's first melee strike of the battle; a shot does not spend it.
+- The Standing Order counts any change of hex in the round, a pull or a push too.
+- The Flame's free spell is the first the hero casts in the battle; the mark lives on the battle's copy of the hero.
+- The Unbroken Wall holds a stack's cohesion at its starting value against losses and against curses. The computer's own damage estimates still read the stored value.
+- A computer hero keeps unused movement for the next day as a human's does (`movement_carry`), which it did not before this slice.
+
+The computer players wear the artifacts and their rules apply to them, but they do not yet plan around a special effect (a second cast in round 1, a second build): `loadout_values` weigh an artifact by its bonuses.
+
+Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
 
 ## Getting them
 
@@ -135,13 +188,15 @@ A save made before the switch loses its old artifacts: what its heroes wear and 
 1. `artifact-bonus-rules-20261111`: one sum of bonuses for specialties and artifacts, Knowledge as a bonus, the home line, prices. It runs on today's artifacts, which use none of it.
 2. `artifact-icons-20261111`: six trial icons, then the rest once the owner approves the quoted cost.
 3. `artifact-catalogue-switch-20261111`: the 150 replace the 69 with their icons; the sets' steps; reward lists, sites and markets draw from the new catalogue; old saves drop old artifacts; the hero menu shows an artifact's band, price and home line and a set's progress; the computer players value the new kinds.
-4. `artifact-special-effects-20261111`: the 32 special effects, in batches.
+4. `artifact-special-effects-20261111`: the 32 special effects.
+
+All four are done.
 
 Measuring balance with a batch of games waits for the owner's ask.
 
 ## Content and tools
 
-- `tools/artifact_catalogue.py` is the one copy of the artifacts and sets. Change it, then run `python tools/build_artifact_content.py` (writes `content/artifacts.json` and the map's pickup sprites; `--check` fails when they differ) and re-export `docs/artifact-system-catalogue.md`.
+- `tools/artifact_catalogue.py` is the one copy of the artifacts and sets; the content tool adds the special effects' ids. Change it, then run `python tools/build_artifact_content.py` (writes `content/artifacts.json` and the map's pickup sprites; `--check` fails when they differ) and re-export `docs/artifact-system-catalogue.md`.
 - A row's `effect_text` and `ui.effect_lines`, `ui.price_lines` and `ui.home_lines` are the wording the game shows: `ArtifactRules.artifact_effect_summary` returns `effect_text`, the hero menu reads the lines.
 - `tools/build_artifact_icons.py` writes the icon sheets' prompts and cuts the sheets.
 - The computer players weigh the new kinds by `loadout_values` in `content/ai_hero_weights.json`, on the sum `artifact_rules::worn_specialty_bonuses` gives.
