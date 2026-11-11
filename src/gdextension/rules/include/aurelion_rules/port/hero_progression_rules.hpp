@@ -2,7 +2,8 @@
 
 // scripts/core/HeroProgressionRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md, Phase 1). Layer 2:
-// aggregate_bonuses, a hero's specialty bonuses.
+// aggregate_bonuses, a hero's specialty bonuses, and with them the bonuses of
+// those kinds its worn artifacts give (docs/artifact-system.md, Bonuses).
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -30,14 +31,16 @@ DictRef _rank_bonuses(State &state, DictRef row, int64_t rank);
 int64_t _rank_in_array(State &state, ArrayRef specialty_ids, Atom specialty_id);
 DictRef _specialty_catalog(State &state);
 Atom _resolve_bonus_key(State &state, Atom key, DictRef hero_state);
+// The hero's faction: its state's, else its content row's; empty when neither names one.
+Atom hero_faction_id(State &state, DictRef hero_state);
 Value _sum_bonus(State &state, const Value &current, const Value &added);
 
 // A spell's mana cost after the hero's specialty discounts, shared with the
 // battle port (hero_progression_rules.cpp).
 int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, Atom school_id);
 
-// A hero's extra maximum mana from its specialties, shared with the battle
-// port (hero_progression_rules.cpp).
+// A hero's extra maximum mana from its specialties and worn artifacts: their
+// max mana, and 4 for each point of Knowledge they give (hero_progression_rules.cpp).
 int64_t mana_max_bonus(State &state, DictRef hero_state);
 
 // A hero's daily income from artifacts and specialties (day_economy.cpp).

@@ -2,6 +2,7 @@
 
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/artifact_slots.hpp"
+#include "aurelion_rules/port/hero_progression_rules.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
 
@@ -80,6 +81,129 @@ int64_t clamp_resistance(int64_t amount) {
 
 } // namespace
 
+// The kinds of bonus aggregate_bonuses sums itself; every other key on a
+// bonus payload is a specialty's kind (or Knowledge).
+constexpr Atom kOwnBonusKeys[] = {
+	key::overworld_movement,
+	key::scouting_radius,
+	key::battle_attack,
+	key::battle_defense,
+	key::battle_initiative,
+	key::battle_spell_resistance_pct,
+	key::battle_control_resistance_pct,
+	key::battle_school_resistance_pct,
+	key::daily_income,
+	key::spell_modifiers,
+};
+
+namespace {
+
+// Whether the hero's faction is one the artifact names as its own.
+bool is_home(State &state, DictRef artifact, DictRef hero_state) {
+	Value factions;
+	if (!state.lookup(artifact, str(key::faction_affinity), factions) || !gd::is_array(factions)) {
+		return false;
+	}
+	const Atom faction_id = hero_progression_rules::hero_faction_id(state, hero_state);
+	return faction_id != key::empty && gd::array_has(state, factions.ref, str(faction_id));
+}
+
+// A payload whose daily income names "the wearer's faction's rare resource"
+// with that resource written in; any other payload as it is.
+Value with_resolved_income(State &state, const Value &payload, DictRef hero_state) {
+	Value income;
+	if (!gd::is_dict(payload) || !state.lookup(payload.ref, str(key::daily_income), income) || !gd::is_dict(income)) {
+		return payload;
+	}
+	if (!state.has(income.ref, str(key::faction_rare_main)) && !state.has(income.ref, str(key::faction_rare_secondary))) {
+		return payload;
+	}
+	const DictRef resolved = state.new_dict();
+	for (const Value &resource_key : gd::items(state, income)) {
+		const Atom resource = hero_progression_rules::_resolve_bonus_key(state, gd::stringify(state, resource_key), hero_state);
+		if (resource == key::empty) {
+			continue;
+		}
+		state.set(resolved, str(resource), int_value(gd::add(gd::int_field(state, resolved, resource, 0), gd::to_int(state, gd::index(state, income.ref, resource_key)))));
+	}
+	const DictRef copy = gd::deep_duplicate_dict(state, payload.ref);
+	state.set(copy, str(key::daily_income), dict_value(resolved));
+	return dict_value(copy);
+}
+
+// A payload's bonuses of the kinds a specialty gives: empty for most.
+DictRef specialty_kinds(State &state, const Value &payload) {
+	const DictRef kinds = state.new_dict();
+	if (!gd::is_dict(payload)) {
+		return kinds;
+	}
+	for (const Value &bonus_key : gd::items(state, payload)) {
+		const Atom bonus = gd::stringify(state, bonus_key);
+		bool own = false;
+		for (const Atom own_key : kOwnBonusKeys) {
+			own = own || own_key == bonus;
+		}
+		if (!own) {
+			state.set(kinds, str(bonus), gd::index(state, payload.ref, bonus_key));
+		}
+	}
+	return kinds;
+}
+
+} // namespace
+
+DictRef worn_specialty_bonuses(State &state, DictRef hero_state) {
+	const DictRef totals = state.new_dict();
+	// Read as stored: a hero that wears nothing costs two lookups.
+	Value artifacts;
+	Value equipped;
+	if (!state.lookup(hero_state, str(key::artifacts), artifacts) || !gd::is_dict(artifacts)
+			|| !state.lookup(artifacts.ref, str(key::equipped), equipped) || !gd::is_dict(equipped)) {
+		return totals;
+	}
+	const auto add = [&](const Value &payload) {
+		const DictRef kinds = specialty_kinds(state, payload);
+		if (!gd::is_empty(state, kinds)) {
+			hero_progression_rules::_merge_bonuses(state, totals, kinds, hero_state);
+		}
+	};
+	int64_t set_pieces = 0;
+	for (const Atom slot : artifact_slots::kEquipment) {
+		const Atom artifact_id = string_of_field(state, equipped.ref, slot, key::empty);
+		if (artifact_id == key::empty) {
+			continue;
+		}
+		const DictRef artifact = gd::content_row(state, ContentTable::Artifact, artifact_id);
+		if (gd::is_empty(state, artifact)) {
+			continue;
+		}
+		add(get_or_new_dict(state, artifact, key::bonuses));
+		Value home;
+		if (state.lookup(artifact, str(key::home_bonuses), home) && gd::is_dict(home) && is_home(state, artifact, hero_state)) {
+			add(home);
+		}
+		if (string_of_field(state, artifact, key::set_id, key::empty) != key::empty) {
+			set_pieces = gd::add(set_pieces, 1);
+		}
+	}
+	// A set's steps begin at two pieces, and a piece names its set.
+	if (set_pieces < 2) {
+		return totals;
+	}
+	for (const Value &set_state : gd::items(state, array_value(_set_states_for_equipped(state, equipped)))) {
+		Value thresholds;
+		if (!gd::is_dict(set_state) || !state.lookup(set_state.ref, str(key::active_thresholds), thresholds)) {
+			continue;
+		}
+		for (const Value &threshold : gd::items(state, thresholds)) {
+			if (gd::is_dict(threshold)) {
+				add(get_or_new_dict(state, threshold.ref, key::bonuses));
+			}
+		}
+	}
+	return totals;
+}
+
 DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 	hero_state = ensure_hero_artifacts(state, hero_state);
 	const DictRef totals = _blank_bonus_totals(state);
@@ -95,7 +219,12 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 			continue;
 		}
 		const DictRef artifact = gd::content_row(state, ContentTable::Artifact, artifact_id);
-		_apply_bonus_payload(state, totals, get_or_new_dict(state, artifact, key::bonuses), artifact, artifact_id);
+		_apply_bonus_payload(state, totals, with_resolved_income(state, get_or_new_dict(state, artifact, key::bonuses), hero_state), artifact, artifact_id);
+		// A faction artifact's home line, for a hero of its faction.
+		Value home;
+		if (state.lookup(artifact, str(key::home_bonuses), home) && gd::is_dict(home) && is_home(state, artifact, hero_state)) {
+			_apply_bonus_payload(state, totals, with_resolved_income(state, home, hero_state), state.new_dict(), artifact_id);
+		}
 	}
 
 	// The artifacts were just normalized in place, and normalizing them again

@@ -78,6 +78,14 @@ Rules:
 - **A price** is a bonus with the opposite sign on the same row (−1 Knowledge, −2 map movement, troops take 4% more damage). The hero menu shows it apart from what the artifact gives.
 - **A home line** is a second list of bonuses on a faction artifact, added only while the wearer's faction is the artifact's.
 
+In `content/artifacts.json` (rules in `artifact_rules.cpp` and `hero_progression_rules.cpp`, since `artifact-bonus-rules-20261111`):
+
+- `bonuses` holds any key of the table. `ArtifactRules.aggregate_bonuses` sums the ten kinds it always did (Attack, Defense, initiative, movement, scouting, the two resistances, a school's resistance, daily income, spell modifiers); every other key is added to the specialties' by `HeroProgressionRules.aggregate_bonuses` (`artifact_rules::worn_specialty_bonuses`), so every reader of a specialty bonus counts it.
+- `home_bonuses` is the home line; it applies when the hero's faction is in the row's `faction_affinity`.
+- A set piece names its set in `set_id`; a set's steps are its `piece_thresholds`, whose `bonuses` take the same keys.
+- `daily_income` may name `faction_rare_main` or `faction_rare_secondary`: the wearer's faction's resources.
+- A price is a negative amount (a positive `damage_taken_pct`). Bonus Knowledge never takes a hero's Knowledge below 0.
+
 ## Slots
 
 | Slot | Places | Artifacts | Mostly gives |

@@ -17,6 +17,11 @@ using state::State;
 using state::Value;
 
 DictRef aggregate_bonuses(State &state, DictRef hero_state);
+// What the hero's worn artifacts give of the kinds aggregate_bonuses does not
+// sum itself: a specialty's kinds and Knowledge, from the artifacts' bonuses,
+// their home lines and their sets' steps. HeroProgressionRules.aggregate_bonuses
+// adds it to the specialties' (docs/artifact-system.md, Bonuses).
+DictRef worn_specialty_bonuses(State &state, DictRef hero_state);
 DictRef ensure_hero_artifacts(State &state, DictRef hero_state);
 DictRef normalize_hero_artifacts(State &state, const Value &value);
 DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Value &imported_artifacts);

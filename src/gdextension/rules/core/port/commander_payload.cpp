@@ -321,7 +321,8 @@ DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonus
 	const DictRef resolved_bonuses = gd::deep_duplicate_dict(state, bonuses);
 	const DictRef specialty_bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
 	const ArrayRef battle_traits = _normalized_battle_traits(state, dict_value(hero_state));
-	const int64_t knowledge = variant_max_int(0, gd::to_int(state, variant_get(state, command, key::knowledge, int_value(0))));
+	// The hero's own Knowledge and what its specialties and worn artifacts add or take.
+	const int64_t knowledge = variant_max_int(0, gd::add(gd::to_int(state, variant_get(state, command, key::knowledge, int_value(0))), gd::int_field(state, specialty_bonuses, key::knowledge, 0)));
 	const auto add_specialty = [&](Atom field) {
 		const int64_t resolved = gd::int_field(state, resolved_bonuses, field, 0);
 		const int64_t specialty = gd::int_field(state, specialty_bonuses, field, 0);

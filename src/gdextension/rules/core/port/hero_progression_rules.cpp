@@ -5,6 +5,8 @@
 
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 
+#include "aurelion_rules/port/artifact_rules.hpp"
+
 #include <string>
 
 namespace aurelion::rules::port {
@@ -93,9 +95,18 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 	state.set(bonuses, str(key::battle_initiative), int_value(0));
 	state.set(bonuses, str(key::recruit_growth_multiplier), gd::float_value(0.0));
 	state.set(bonuses, str(key::recruit_cost_delta), gd::float_value(0.0));
+	// Worn artifacts give these kinds too (a set's steps and a home line with
+	// them): one sum, whoever gives the bonus.
+	const auto with_worn = [&]() {
+		const DictRef worn = artifact_rules::worn_specialty_bonuses(state, hero_state);
+		if (!gd::is_empty(state, worn)) {
+			_merge_bonuses(state, bonuses, worn, hero_state);
+		}
+		return bonuses;
+	};
 	const Value raw_specialty_ids = get_or_new_array(state, hero_state, key::specialties);
 	if (!gd::is_array(raw_specialty_ids) || state.array_size(raw_specialty_ids.ref) == 0) {
-		return bonuses;
+		return with_worn();
 	}
 	const DictRef catalog = _specialty_catalog(state);
 	const ArrayRef specialty_ids = _normalize_specialties_in(state, catalog, raw_specialty_ids);
@@ -112,7 +123,7 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 		const int64_t rank = _rank_in_array(state, specialty_ids, specialty_id);
 		_merge_bonuses(state, bonuses, _rank_bonuses(state, row, rank), hero_state);
 	}
-	return bonuses;
+	return with_worn();
 }
 
 void _merge_bonuses(State &state, DictRef target, DictRef source, DictRef hero_state) {
@@ -207,6 +218,16 @@ Atom _resolve_bonus_key(State &state, Atom bonus_key, DictRef hero_state) {
 	if (bonus_key != key::faction_rare_main && bonus_key != key::faction_rare_secondary) {
 		return bonus_key;
 	}
+	const Atom faction_id = hero_faction_id(state, hero_state);
+	const DictRef faction = gd::content_row(state, state::ContentTable::Faction, faction_id);
+	const Value resources = get_or_new_dict(state, faction, key::town_resources);
+	if (!gd::is_dict(resources)) {
+		return key::empty;
+	}
+	return gd::string_field(state, resources.ref, bonus_key == key::faction_rare_main ? key::main : key::secondary, key::empty);
+}
+
+Atom hero_faction_id(State &state, DictRef hero_state) {
 	Atom faction_id = gd::string_field(state, hero_state, key::faction_id, key::empty);
 	if (faction_id == key::empty) {
 		for (const Atom id_key : kHeroIdKeys) {
@@ -218,12 +239,7 @@ Atom _resolve_bonus_key(State &state, Atom bonus_key, DictRef hero_state) {
 			}
 		}
 	}
-	const DictRef faction = gd::content_row(state, state::ContentTable::Faction, faction_id);
-	const Value resources = get_or_new_dict(state, faction, key::town_resources);
-	if (!gd::is_dict(resources)) {
-		return key::empty;
-	}
-	return gd::string_field(state, resources.ref, bonus_key == key::faction_rare_main ? key::main : key::secondary, key::empty);
+	return faction_id;
 }
 
 Value _sum_bonus(State &state, const Value &current, const Value &added) {
@@ -246,7 +262,14 @@ int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, 
 }
 
 int64_t mana_max_bonus(State &state, DictRef hero_state) {
-	return gd::int_field(state, aggregate_bonuses(state, hero_state), key::max_mana, 0);
+	const DictRef bonuses = aggregate_bonuses(state, hero_state);
+	// A point of Knowledge from an artifact or a specialty is worth what a
+	// point of the hero's own is: 4 mana (SpellRules.mana_max_from_command).
+	// A price can take Knowledge away, never below none.
+	const Value command = get_or_new_dict(state, hero_state, key::command);
+	const int64_t own = gd::is_dict(command) ? compat::engine_max<int64_t>(0, gd::int_field(state, command.ref, key::knowledge, 0)) : 0;
+	const int64_t given = gd::sub(compat::engine_max<int64_t>(0, gd::add(own, gd::int_field(state, bonuses, key::knowledge, 0))), own);
+	return gd::add(gd::int_field(state, bonuses, key::max_mana, 0), gd::mul(given, 4));
 }
 
 } // namespace hero_progression_rules

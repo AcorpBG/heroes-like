@@ -278,6 +278,8 @@ AURELION_KEY(generated_reward_translation, "generated_reward_translation")
 AURELION_KEY(hero_progression_rules_script, "res://scripts/core/HeroProgressionRules.gd")
 AURELION_KEY(_catalog_source, "_catalog_source")
 AURELION_KEY(_catalog_index, "_catalog_index")
+// A faction artifact's extra bonuses for heroes of its faction (docs/artifact-system.md).
+AURELION_KEY(home_bonuses, "home_bonuses")
 
 // Also in battle_keys.inc on native-phase1-battle, which drops them when it takes main.
 AURELION_KEY(archetype, "archetype")
