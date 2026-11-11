@@ -1725,6 +1725,9 @@ const Function kFunctions[] = {
 	NATIVE(BattleRules, spell_target_ids, 2, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(battle_rules::spell_target_ids(s, D(a, 0), S(a, 1)))),
+	NATIVE(BattleRules, spell_no_target_reason, 2, true,
+			if (nil(a, 0)) return gd::str(state::key::empty);
+			return gd::str(battle_rules::spell_no_target_reason(s, D(a, 0), S(a, 1)))),
 	NATIVE(BattleRules, spell_destination_hexes, 3, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(battle_rules::spell_destination_hexes(s, D(a, 0), S(a, 1), S(a, 2)))),

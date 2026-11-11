@@ -14,6 +14,7 @@
 #include "aurelion_rules/port/session_view.hpp"
 
 #include <string>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -266,6 +267,56 @@ ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id) {
 		}
 	}
 	return ids;
+}
+
+Atom spell_no_target_reason(State &state, DictRef session, Atom spell_id) {
+	const DictRef battle = session_battle(state, session);
+	const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
+	Value effect;
+	if (gd::is_empty(state, battle) || gd::is_empty(state, spell) || !state.lookup(spell, str(key::effect), effect) || !gd::is_dict(effect)) {
+		return key::empty;
+	}
+	const Atom type = gd::string_field(state, effect.ref, key::type, key::empty);
+	if (type != key::swap_enemy && type != key::swap_allies) {
+		return key::empty;
+	}
+	// The stacks a swap pairs: one of the player's with an enemy's (Changeling Swap) or with another of its own
+	// (Signal Swap).
+	std::vector<DictRef> own;
+	std::vector<DictRef> enemies;
+	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+		if (!gd::is_dict(stack) || _alive_count(state, stack.ref) <= 0) {
+			continue;
+		}
+		const Atom side = text_field(state, stack.ref, key::side);
+		if (side == key::player) {
+			own.push_back(stack.ref);
+		} else if (side == key::enemy) {
+			enemies.push_back(stack.ref);
+		}
+	}
+	const std::vector<DictRef> &firsts = type == key::swap_enemy ? enemies : own;
+	const DictRef hero_state = _player_commander_state(state, dict_value(session));
+	int64_t reach = 0;
+	bool in_reach = false;
+	for (const DictRef first : firsts) {
+		const int64_t range = spell_rules::spell_swap_range(state, hero_state, battle, spell, first);
+		reach = range > reach ? range : reach;
+		for (const DictRef stack : own) {
+			if (text_field(state, stack, key::battle_id) != text_field(state, first, key::battle_id) && _stack_hex_distance(state, first, stack) <= range) {
+				in_reach = true;
+			}
+		}
+	}
+	if (firsts.empty() || own.empty()) {
+		return key::empty;
+	}
+	if (in_reach) {
+		// Close enough and still no pair: one is rooted, or the two bodies do not fit each other's places.
+		return state.intern("The stacks within its reach cannot trade places.");
+	}
+	return gd::format(state, state.intern(type == key::swap_enemy ? "No enemy within %d hexes of one of your stacks." : "No two of your stacks within %d hexes of each other."),
+			{ int_value(reach) });
 }
 
 ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, Atom target_id) {

@@ -246,6 +246,10 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 static func spell_target_ids(session: SessionStateStoreScript.SessionData, spell_id: String) -> Array:
 	return HumanEngine.native_writing(&"BattleRules.spell_target_ids", [session, spell_id])
 
+## Why a spell aimed at a stack has none now, where the rules can say more than "no target" (a swap's reach), or "".
+static func spell_no_target_reason(session: SessionStateStoreScript.SessionData, spell_id: String) -> String:
+	return HumanEngine.native_writing(&"BattleRules.spell_no_target_reason", [session, spell_id])
+
 static func spell_destination_hexes(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String) -> Array:
 	return HumanEngine.native_writing(&"BattleRules.spell_destination_hexes", [session, spell_id, target_id])
 

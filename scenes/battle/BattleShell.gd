@@ -1659,7 +1659,11 @@ func _spell_no_target_reason(spell: Dictionary) -> String:
 			return "" if not BattleRules.spell_ground_hexes(_session, spell_id).is_empty() else "No hex for it on the field now."
 		"battle":
 			return ""
-	return "" if not BattleRules.spell_target_ids(_session, spell_id).is_empty() else "No target for it on the field now."
+	if not BattleRules.spell_target_ids(_session, spell_id).is_empty():
+		return ""
+	# A swap says how close the two stacks must be.
+	var why := BattleRules.spell_no_target_reason(_session, spell_id)
+	return why if why != "" else "No target for it on the field now."
 
 
 func _on_spell_chosen(spell_id: String) -> void:

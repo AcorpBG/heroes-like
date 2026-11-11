@@ -34,6 +34,9 @@ DictRef battle_hex_state_summary(State &state, DictRef battle);
 ArrayRef target_cycle_ids(State &state, DictRef battle);
 void cycle_target(State &state, DictRef session, int64_t direction);
 ArrayRef spell_target_ids(State &state, DictRef session, Atom spell_id);
+// Why a spell aimed at a stack has none to be cast on now, where the rules can say more than "no target": a swap
+// names the reach no pair of stacks is within. "" for any other spell.
+Atom spell_no_target_reason(State &state, DictRef session, Atom spell_id);
 // The empty hexes the player's move spell can take that stack to ([] for any
 // other spell, or a stack it cannot move).
 ArrayRef spell_destination_hexes(State &state, DictRef session, Atom spell_id, Atom target_id);
