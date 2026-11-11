@@ -89,6 +89,41 @@ void fragment() {
 			+ metal_glint(original, glint_2, t * 1.7 + 4.2);
 		pixel.rgb = mix(pixel.rgb, shine_color, clamp(band * strength * metal + glints * sparkle_strength, 0.0, 0.95));
 	}
+	if (motion_enabled && mode == 8) {
+		// A whirlpool turns fast at its eye and not at all at its rim, so the
+		// painted outline stays where it meets the sea. activity_region is the
+		// oval of the swirl around the eye; upper and anchor are the distances
+		// from the eye (1 = the oval's edge) where the turning starts to slow and
+		// where it stops. Water turning at different rates would wind the
+		// painting up without end, so two copies are shown, each wound a little
+		// behind and then a little ahead of the painting, one fading in while the
+		// other fades out. The cycle divides the hour TIME wraps at.
+		const float cycle = 1.5;
+		vec2 radii = activity_region.zw * 0.5;
+		vec2 eye = activity_region.xy + radii;
+		vec2 from_eye = (original - eye) / radii;
+		float reach = length(from_eye);
+		float pull = 1.0 - smoothstep(upper, anchor, reach);
+		// Positive speed turns the water clockwise on screen. The cube keeps
+		// the outer foam and driftwood nearly in place: what moves far between
+		// the two copies shows double while they cross.
+		float wind = -speed * cycle * pull * pull * pull;
+		// Staggered around the swirl, so it never blurs and clears as a whole.
+		float stagger = 0.16 * sin(atan(from_eye.y, from_eye.x) * 2.0 + reach * 6.0);
+		float first = fract(t / cycle + stagger);
+		float second = fract(first + 0.5);
+		vec4 wound = vec4(0.0);
+		for (int copy = 0; copy < 2; copy++) {
+			float turn = wind * ((copy == 0 ? first : second) - 0.5);
+			vec2 turned = mat2(vec2(cos(turn), sin(turn)), vec2(-sin(turn), cos(turn))) * from_eye;
+			vec2 turned_uv = (eye + turned * radii - source_region.xy) / source_region.zw;
+			float held = step(0.0, turned_uv.x) * step(0.0, turned_uv.y) * step(turned_uv.x, 1.0) * step(turned_uv.y, 1.0);
+			vec4 copy_pixel = texture(TEXTURE, texture_region.xy + clamp(turned_uv, half_pixel, vec2(1.0) - half_pixel) * texture_region.zw);
+			float share = copy == 0 ? 1.0 - abs(2.0 * first - 1.0) : abs(2.0 * first - 1.0);
+			wound += vec4(copy_pixel.rgb * copy_pixel.a, copy_pixel.a) * held * share;
+		}
+		pixel = vec4(wound.rgb / max(wound.a, 0.0001), wound.a);
+	}
 	float inside = step(0.0, uv.x) * step(0.0, uv.y) * step(uv.x, 1.0) * step(uv.y, 1.0);
 	COLOR = vec4(pixel.rgb * brightness, pixel.a * inside) * paint_tint;
 }

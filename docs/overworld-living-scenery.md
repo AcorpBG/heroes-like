@@ -2,6 +2,22 @@
 
 Owner-directed Phase 6 slice `animation-overworld-living-scenery-20260912`, derived from `project.md` and `PLAN.md`.
 
+## Whirlpool (2026-11-12)
+
+With the sea moving, the painted whirlpool stood still on it. Profile
+`whirlpool` (mode 8 of `OverworldScenery.gdshader`) turns the painting around
+its eye: `region` is the oval of the swirl with the eye at its centre, `speed`
+the turn rate at the eye in radians a second (positive is clockwise, the way
+the painted arms run inward), `upper` and `anchor` the distances from the eye
+(1 is the oval's edge) where the turning starts to slow and where it stops.
+The rim does not move, so the outline keeps meeting the sea where it was
+painted. Water turning at different rates would wind the painting up without
+end; the shader shows two copies, each wound from a little behind the painting
+to a little ahead of it, and fades one in as the other fades out. The turn
+falls with the cube of the distance factor: anything that moves far between
+the two copies (driftwood most of all) shows double while they cross.
+Reduced motion leaves the painting still.
+
 ## Current formation integration (2026-09-19)
 
 Slice `art-scenery-motion-20260919` reconnects the expanded scenery library.

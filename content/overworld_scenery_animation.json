@@ -227,6 +227,18 @@
         0.245486
       ],
       "scroll_glow_strength": 0.52
+    },
+    "whirlpool": {
+      "mode": 8,
+      "speed": 2.0,
+      "upper": 0.08,
+      "anchor": 0.92,
+      "region": [
+        0.227,
+        0.387,
+        0.6,
+        0.37
+      ]
     }
   },
   "assets": {
@@ -246,7 +258,8 @@
     "resource_site_neutral_charcoal_burners_claimed": "claimed_charcoal",
     "mapobj_road_writ_purse": "gold_pickup_shine",
     "mapobj_quarry_chip_hod": "ore_pickup_sheen",
-    "mapobj_waystone_cache": "treasure_chest"
+    "mapobj_waystone_cache": "treasure_chest",
+    "mapobj_whirlpool": "whirlpool"
   },
   "asset_rules": [
     {

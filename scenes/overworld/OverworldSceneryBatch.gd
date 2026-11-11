@@ -79,8 +79,8 @@ func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, so
 	var batch := _next()
 	# Transparent margin lets canopy tips move without clipping the tight crop.
 	var displacement := float(profile.get("strength", 0.0)) * maxf(rect.size.x / source_region.size.x, rect.size.y / source_region.size.y)
-	if int(profile.get("mode", 0)) in [6, 7]:
-		displacement = 0.0 # Metallic shine changes colour, not vertex/UV position.
+	if int(profile.get("mode", 0)) in [6, 7, 8]:
+		displacement = 0.0 # Metallic shine changes colour; a swirl turns inside its own outline.
 	var margin := ceilf(displacement) + 2.0
 	var padding := Vector2(margin, margin) / rect.size
 	batch.material = _material(texture, profile, source_region, asset_id, tile, level, enabled, padding)
