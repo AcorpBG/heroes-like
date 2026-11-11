@@ -12,6 +12,8 @@
 #include "aurelion_rules/port/water_travel_rules_ai.hpp"
 #include "aurelion_rules/port/water_travel_rules_turn.hpp"
 
+#include <vector>
+
 namespace aurelion::rules::port {
 
 namespace {
@@ -221,16 +223,25 @@ DictRef whirlpool_exit(State &state, const Value &session, DictRef node, const s
 		const int64_t center_x = gd::to_int(state, has_visit ? state.get(visit.ref, str(key::x), target_x) : target_x);
 		const Value target_y = gd::field_or(state, target, key::y, int_value(0));
 		const int64_t center_y = gd::to_int(state, has_visit ? state.get(visit.ref, str(key::y), target_y) : target_y);
-		const Vector2i center = Vector2i::of(center_x, center_y);
-		for (const Vector2i delta : kNeighbors) {
-			const Vector2i tile = center + delta;
-			if (is_water(state, session, tile.x, tile.y, level) && !any_boat_at(state, session, tile, level) && !hero_at(state, session, tile, level) && !blocked(tile, level)) {
-				const DictRef exit = state.new_dict();
-				state.set(exit, str(key::x), int_value(tile.x));
-				state.set(exit, str(key::y), int_value(tile.y));
-				state.set(exit, str(key::level), int_value(level));
-				state.set(exit, str(key::whirlpool), str(ai::string_or_empty(state, target, key::placement_id)));
-				return exit;
+		// The boat comes up beside the whirlpool: by its first tile if water is free
+		// there, else by any other tile of it.
+		std::vector<Vector2i> centers{Vector2i::of(center_x, center_y)};
+		for (const Value &tile : gd::field_items(state, target, str(key::package_visit_tiles))) {
+			if (gd::is_dict(tile)) {
+				centers.push_back(Vector2i::of(gd::int_field(state, tile.ref, key::x, center_x), gd::int_field(state, tile.ref, key::y, center_y)));
+			}
+		}
+		for (const Vector2i center : centers) {
+			for (const Vector2i delta : kNeighbors) {
+				const Vector2i tile = center + delta;
+				if (is_water(state, session, tile.x, tile.y, level) && !any_boat_at(state, session, tile, level) && !hero_at(state, session, tile, level) && !blocked(tile, level)) {
+					const DictRef exit = state.new_dict();
+					state.set(exit, str(key::x), int_value(tile.x));
+					state.set(exit, str(key::y), int_value(tile.y));
+					state.set(exit, str(key::level), int_value(level));
+					state.set(exit, str(key::whirlpool), str(ai::string_or_empty(state, target, key::placement_id)));
+					return exit;
+				}
 			}
 		}
 	}

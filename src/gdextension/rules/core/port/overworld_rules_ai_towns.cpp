@@ -72,6 +72,18 @@ ArrayRef _resource_node_world_interaction_tiles(State &state, DictRef map_object
 		return tiles;
 	}
 	if (_resource_node_has_runtime_visit_tile(state, placement)) {
+		if (ai::string_or_empty(state, placement, key::site_id) == key::site_whirlpool) {
+			// A whirlpool is water all over: a boat sails in on any tile of it.
+			const ArrayRef tiles = state.new_array();
+			for (const Value &tile : gd::field_items(state, placement, str(key::package_visit_tiles))) {
+				if (gd::is_dict(tile)) {
+					state.append(tiles, tile_of(state, tile.ref));
+				}
+			}
+			if (state.array_size(tiles) > 0) {
+				return tiles;
+			}
+		}
 		// Present and a Dictionary: _resource_node_has_runtime_visit_tile checked it.
 		const DictRef visit_tile = gd::as_dict(gd::index(state, placement, str(key::visit_tile)));
 		const ArrayRef tiles = state.new_array();

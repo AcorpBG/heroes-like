@@ -48375,17 +48375,18 @@
       "primary_class": "interactable_site",
       "secondary_tags": [
         "water_travel",
-        "sea_hazard"
+        "sea_hazard",
+        "lies_flat"
       ],
       "resource_site_id": "site_whirlpool",
       "biome_ids": [
         "biome_coast_archipelago"
       ],
       "footprint": {
-        "width": 1,
-        "height": 1,
+        "width": 3,
+        "height": 2,
         "anchor": "bottom_center",
-        "tier": "micro"
+        "tier": "medium"
       },
       "passable": false,
       "visitable": true,

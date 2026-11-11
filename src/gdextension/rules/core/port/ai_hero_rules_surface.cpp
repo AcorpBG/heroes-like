@@ -346,6 +346,11 @@ DictRef _level_surface(State &state, DictRef session, DictRef context, int64_t l
 		if (!gd::is_dict(node) || level_rules::level_of(state, node) != level) {
 			continue;
 		}
+		// Computer heroes do not sail into whirlpools: its tiles stay blocked sea
+		// for them, not a site a boat could cross or rest on.
+		if (ai::string_or_empty(state, node.ref, key::site_id) == key::site_whirlpool) {
+			continue;
+		}
 		const DictRef map_object = overworld_rules::_map_object_for_resource_node(state, node.ref);
 		for (const Value &tile : gd::items(state, array_value(overworld_rules::_resource_node_world_interaction_tiles(state, map_object, node.ref)))) {
 			if (gd::is_vector2i(tile)) {

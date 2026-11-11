@@ -294,6 +294,10 @@ const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_CAP_STEP_TILES := 0.14
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.16
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 1.35
 const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
+## Map objects with this secondary tag lie flat on the ground or water (a
+## whirlpool): the painting fills the footprint and has no foot, shadow or door.
+const OBJECT_LIES_FLAT_TAG := "lies_flat"
+const OBJECT_LIES_FLAT_OVERSCAN := 1.06
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
@@ -5374,6 +5378,12 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center, Vector2.ZERO))
+	if _object_lies_flat(profile):
+		var was_muted := _object_shadows_muted
+		_object_shadows_muted = true
+		_draw_living_scenery(asset_id, draw_texture, _object_flat_sprite_rect(draw_payload, rect), _mapped_object_sprite_modulate(profile, remembered), tile)
+		_object_shadows_muted = was_muted
+		return true
 	if _object_is_portable(profile):
 		# A legacy mine footprint may back a loose reward. Its shadow belongs to
 		# the painted item, not to that unchanged gameplay/interaction footprint.
@@ -5393,6 +5403,21 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 
 func _object_is_portable(profile: Dictionary) -> bool:
 	return _semantic_visual_scale_class(profile) in ["handheld_artifact", "loose_pickup"]
+
+func _object_lies_flat(profile: Dictionary) -> bool:
+	var tags = profile.get("secondary_tags", [])
+	return tags is Array and tags.has(OBJECT_LIES_FLAT_TAG)
+
+## Where a painting that lies flat is drawn: its painted part fitted into the
+## footprint, a little over the edge so loose spray does not shrink the body.
+func _object_flat_sprite_rect(draw_payload: Dictionary, footprint_rect: Rect2) -> Rect2:
+	var aspect := float(draw_payload.get("source_aspect", 1.0))
+	var size := footprint_rect.size * OBJECT_LIES_FLAT_OVERSCAN
+	if size.x > size.y * aspect:
+		size.x = size.y * aspect
+	else:
+		size.y = size.x / aspect
+	return Rect2(footprint_rect.get_center() - size * 0.5, size)
 
 func _object_silhouette_width(profile: Dictionary, sprite_extent: float) -> float:
 	if _object_is_portable(profile):
@@ -6789,6 +6814,8 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 	var profile := _resource_object_profile(node)
 	var footprint := _object_profile_footprint(profile)
 	var body := _resource_body_bounds(node)
+	if body.size != Vector2i.ZERO and _object_lies_flat(profile):
+		return Rect2(anchor_rect.position + Vector2(body.position - anchor_tile) * anchor_rect.size, Vector2(body.size) * anchor_rect.size)
 	if body.size != Vector2i.ZERO:
 		# Generated objects carry their real footprint, and their x/y is its
 		# bottom-right tile (HoMM3 placement), not the art profile's anchor. The
@@ -6898,6 +6925,8 @@ func _resource_painted_rect(node: Dictionary, rect: Rect2, tile: Vector2i) -> Re
 	var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0
 	var metrics := _object_sprite_visual_metrics(rect, _resource_object_profile(node), 0.0, Rect2(), town_adjunct_cap_tiles)
 	var payload := _object_painted_sprite_draw_payload(asset_id, texture, metrics.get("sprite_center", rect.get_center()), float(metrics.get("sprite_extent_px", 12.0)))
+	if _object_lies_flat(_resource_object_profile(node)):
+		return _object_flat_sprite_rect(payload, rect)
 	return payload.get("draw_rect", Rect2())
 
 func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
