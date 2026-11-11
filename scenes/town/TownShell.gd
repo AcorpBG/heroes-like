@@ -14,6 +14,7 @@ const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd
 const TownBuildingPanelViewScript = preload("res://scenes/town/TownBuildingPanelView.gd")
 const TownArmyRowsScript = preload("res://scenes/town/TownArmyRows.gd")
 const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
+const HeroExchangeScreenScript = preload("res://scenes/overworld/HeroExchangeScreen.gd")
 const TownRecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
@@ -361,6 +362,8 @@ static var _town_entity_cache_by_session: Dictionary = {}
 # HoMM-style town layout (docs/town-garrison-rows.md): army rows bottom left,
 # the overworld resource bar along the bottom edge, the town list top right.
 var _army_rows: PanelContainer
+var _hero_exchange: Control
+var _hero_exchange_partner_id := ""
 var _resource_bar_panel: PanelContainer
 var _town_switcher: VBoxContainer
 var _hero_sheet: Control
@@ -1119,6 +1122,7 @@ func _build_garrison_rows_layout() -> void:
 	_army_rows.slot_order_requested.connect(_on_army_slot_operation_requested)
 	_army_rows.garrison_hero_requested.connect(_on_garrison_hero_requested)
 	_army_rows.hero_sheet_requested.connect(_open_town_hero_sheet)
+	_army_rows.hero_trade_requested.connect(_open_town_hero_exchange)
 	_army_rows.z_index = 16
 	_resource_bar_panel = PanelContainer.new()
 	_resource_bar_panel.name = "TownResourceBar"
@@ -1257,6 +1261,64 @@ func _on_garrison_hero_requested(hero_id: String) -> void:
 	_army_rows.clear_selection()
 	if bool(result.get("ok", false)):
 		_invalidate_active_town_entity_cache("garrison_hero", ["town", "hero_army"])
+	_refresh()
+
+## The garrison's hero and the one at the gate meet on the hero meeting screen,
+## as two heroes on one tile do on the map: the same state and the same orders
+## (HeroCommandRules.field_exchange_state, OverworldRules.perform_rendezvous_action).
+func _open_town_hero_exchange() -> void:
+	if _session == null:
+		return
+	var town := TownRules.get_active_town(_session)
+	var commanded := String(_session.overworld.get("active_hero_id", ""))
+	var garrison_id := String(HeroCommandRules.town_garrison_hero(_session, town).get("id", ""))
+	var visiting_id := String(HeroCommandRules.town_visiting_hero(_session, town).get("id", ""))
+	# Those rules pair the hero the player commands with another on its tile.
+	# With a third hero in command elsewhere, the one at the gate takes over
+	# first, as the town's own switch command does.
+	if garrison_id != "" and visiting_id != "" and not (commanded in [garrison_id, visiting_id]):
+		if bool(TownRules.switch_active_hero_at_town(_session, visiting_id).get("ok", false)):
+			_invalidate_active_town_entity_cache("hero_switch", ["town", "hero_army"])
+			commanded = String(_session.overworld.get("active_hero_id", ""))
+	var partner_id := garrison_id if commanded == visiting_id else (visiting_id if commanded == garrison_id else "")
+	var state: Dictionary = HeroCommandRules.field_exchange_state(_session, partner_id) if partner_id != "" else {}
+	if state.is_empty() or String(state.get("partner_id", "")) != partner_id:
+		_last_message = "These two heroes cannot trade here."
+		_refresh()
+		return
+	_hero_exchange_partner_id = partner_id
+	if not is_instance_valid(_hero_exchange):
+		_hero_exchange = HeroExchangeScreenScript.new()
+		_hero_exchange.name = "HeroExchange"
+		add_child(_hero_exchange)
+		_hero_exchange.order_requested.connect(_on_town_hero_exchange_order)
+		_hero_exchange.partner_requested.connect(_on_town_hero_exchange_partner)
+		_hero_exchange.closed.connect(_on_town_hero_exchange_closed)
+	_hero_exchange.z_index = 60
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		_hero_sheet.close_sheet()
+	_army_rows.clear_selection()
+	_hero_exchange.open_exchange(state, _army_rows.trade_button())
+
+func _on_town_hero_exchange_order(action_id: String) -> void:
+	var result := OverworldRules.perform_rendezvous_action(_session, action_id)
+	_last_message = String(result.get("message", ""))
+	if bool(result.get("ok", false)):
+		_invalidate_active_town_entity_cache("hero_exchange", ["town", "hero_army"])
+	var state: Dictionary = HeroCommandRules.field_exchange_state(_session, _hero_exchange_partner_id)
+	if state.is_empty():
+		_hero_exchange.close_exchange()
+		return
+	_hero_exchange.refresh_exchange(state, result)
+
+func _on_town_hero_exchange_partner(hero_id: String) -> void:
+	var state: Dictionary = HeroCommandRules.field_exchange_state(_session, hero_id)
+	if state.is_empty():
+		return
+	_hero_exchange_partner_id = String(state.get("partner_id", ""))
+	_hero_exchange.refresh_exchange(state)
+
+func _on_town_hero_exchange_closed() -> void:
 	_refresh()
 
 func _open_town_hero_sheet(hero_id: String) -> void:
@@ -1655,6 +1717,9 @@ func _input(event: InputEvent) -> void:
 		return
 	# The hero sheet closes itself on Escape; the town must not leave under it.
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		return
+	# So does the meeting screen of the two heroes in town.
+	if is_instance_valid(_hero_exchange) and _hero_exchange.visible:
 		return
 	if event.is_action_pressed("ui_cancel") and _army_rows != null and _army_rows.cancel_transient():
 		get_viewport().set_input_as_handled()

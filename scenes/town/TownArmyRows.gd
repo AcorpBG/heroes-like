@@ -11,11 +11,13 @@ const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 signal slot_order_requested(source_holder_id: String, source_slot: int, target_holder_id: String, target_slot: int, amount_token: String)
 signal garrison_hero_requested(hero_id: String)
 signal hero_sheet_requested(hero_id: String)
+signal hero_trade_requested
 
 const CellScript = preload("res://scenes/overworld/HeroExchangeSlot.gd")
 const SIDES := ["garrison", "visiting"]
 const CELL_SIZE := Vector2(70, 70)
 const GAP := 5
+const TRADE_SIZE := 30.0
 const COMMAND_EMBLEM_REGION := Rect2(18, 18, 92, 92)
 const GOLD := Color(0.88, 0.70, 0.32)
 const GOLD_DIM := Color(0.46, 0.37, 0.19)
@@ -35,6 +37,7 @@ var _split_slider: HSlider
 var _split_label: Label
 var _split_order := {}
 var _last_refusal := ""
+var _trade: Button
 
 func _ready() -> void:
 	add_theme_stylebox_override("panel", _box(FILL, GOLD_DIM, 2, 6, 8))
@@ -67,6 +70,7 @@ func _ready() -> void:
 			cells.append(cell)
 		_cells[side] = cells
 	_build_split_popup()
+	_build_trade_button()
 
 ## Moves the town's command buttons into the 3x2 command block as rounded
 ## squares the size of an army slot, cropped to their emblems so they read.
@@ -118,6 +122,7 @@ func configure(state: Dictionary) -> void:
 				cell.show_item(String(slot.get("unit_id", "")), UnitPortraits.for_unit(String(slot.get("unit_id", "")), "portrait"), int(slot.get("count", 0)), "", "%s x%d\nClick, then click a slot to move, merge or swap. Shift splits." % [String(slot.get("unit_name", "")), int(slot.get("count", 0))])
 			else:
 				cell.show_item("", null, 0, "", "Empty slot")
+	_show_trade_button()
 	_sync_marks()
 
 func clear_selection() -> void:
@@ -155,6 +160,7 @@ func validation_snapshot() -> Dictionary:
 		"command_count": _command_grid.get_child_count(),
 		"selection": _selection.duplicate(true),
 		"last_refusal": _last_refusal,
+		"trade_visible": _trade != null and _trade.visible,
 		"visible": is_visible_in_tree(),
 	}
 
@@ -169,6 +175,12 @@ func validation_press_portrait(side: String, double_click: bool = false) -> void
 func validation_confirm_split(count: int) -> void:
 	_split_slider.value = count
 	_confirm_split()
+
+func validation_press_trade() -> bool:
+	if _trade == null or not _trade.visible:
+		return false
+	hero_trade_requested.emit()
+	return true
 
 # --- HeroExchangeSlot owner protocol ----------------------------------------
 
@@ -265,6 +277,72 @@ func _update_split_label() -> void:
 	var available := _slot_count(String(_split_order.from_side), int(_split_order.from_slot))
 	var moving := int(_split_slider.value)
 	_split_label.text = "%d  |  %d" % [available - moving, moving]
+
+# --- hero trade -------------------------------------------------------------------
+
+## The round button between the two portraits, shown while a hero holds the
+## garrison and another waits at the gate: it opens the hero meeting screen for
+## the two (troops, artifacts, spells). It floats over the gap between the
+## rows: a plain node holds it, so the panel does not lay it out as a child.
+func _build_trade_button() -> void:
+	var holder := Node2D.new()
+	holder.name = "HeroTradeHolder"
+	add_child(holder)
+	_trade = Button.new()
+	_trade.name = "HeroTrade"
+	_trade.size = Vector2(TRADE_SIZE, TRADE_SIZE)
+	_trade.focus_mode = Control.FOCUS_ALL
+	_trade.visible = false
+	_trade.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var radius := int(TRADE_SIZE * 0.5)
+	_trade.add_theme_stylebox_override("normal", _box(Color(0.10, 0.09, 0.07, 1.0), GOLD, 2, radius, 0))
+	_trade.add_theme_stylebox_override("hover", _box(Color(0.17, 0.13, 0.08, 1.0), SELECTED, 2, radius, 0))
+	_trade.add_theme_stylebox_override("pressed", _box(Color(0.20, 0.15, 0.08, 1.0), SELECTED, 3, radius, 0))
+	_trade.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), SELECTED, 2, radius, 0))
+	_trade.draw.connect(_draw_trade_arrows)
+	_trade.pressed.connect(func(): hero_trade_requested.emit())
+	_trade.mouse_entered.connect(_trade.queue_redraw)
+	_trade.mouse_exited.connect(_trade.queue_redraw)
+	holder.add_child(_trade)
+	item_rect_changed.connect(_place_trade_button)
+
+## Where the meeting screen hands the keyboard back when it closes.
+func trade_button() -> Button:
+	return _trade
+
+func _show_trade_button() -> void:
+	if _trade == null:
+		return
+	var garrison_name := String(_state.get("garrison", {}).get("hero_name", ""))
+	var visiting_name := String(_state.get("visiting", {}).get("hero_name", ""))
+	var both := String(_state.get("garrison", {}).get("hero_id", "")) != "" and String(_state.get("visiting", {}).get("hero_id", "")) != ""
+	_trade.visible = both
+	_trade.tooltip_text = "%s and %s trade troops, artifacts and spells." % [garrison_name, visiting_name]
+	_trade.accessibility_name = "Trade between %s and %s" % [garrison_name, visiting_name]
+	_trade.queue_redraw()
+	_place_trade_button.call_deferred()
+
+func _place_trade_button() -> void:
+	if _trade == null or not _portraits.has("garrison") or not _portraits.has("visiting"):
+		return
+	var above: Control = _portraits["garrison"]
+	var below: Control = _portraits["visiting"]
+	var to_panel := get_global_transform().affine_inverse()
+	# On the corner the two portraits share with the first troop slots: centred
+	# on the portraits it would cover the lower hero's face.
+	var between: Vector2 = to_panel * ((above.global_position + above.size + below.global_position + Vector2(below.size.x, 0.0)) * 0.5 + Vector2(GAP * 0.5, 0.0))
+	_trade.position = (between - _trade.size * 0.5).round()
+
+## Two arrows passing each other, one up and one down, as the heroes stand.
+func _draw_trade_arrows() -> void:
+	var color := SELECTED if _trade.is_hovered() else GOLD
+	var center := _trade.size * 0.5
+	var reach := _trade.size.y * 0.22
+	for direction in [-1.0, 1.0]:
+		var x: float = center.x + direction * _trade.size.x * 0.15
+		var tip: float = center.y + direction * reach
+		_trade.draw_line(Vector2(x, center.y - direction * reach), Vector2(x, tip - direction * 2.0), color, 2.0, true)
+		_trade.draw_colored_polygon(PackedVector2Array([Vector2(x, tip + direction * 3.0), Vector2(x - 4.0, tip - direction * 3.0), Vector2(x + 4.0, tip - direction * 3.0)]), color)
 
 # --- hero portraits -------------------------------------------------------------
 
