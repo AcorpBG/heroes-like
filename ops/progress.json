@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-hero-trade-button-20261112",
- "currentSliceTitle": "Town: a trade button between the two heroes' portraits opens their meeting screen.",
+ "currentSliceId": "whirlpool-turns-20261112",
+ "currentSliceTitle": "The whirlpool turns around its eye.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T22:27:48Z",
+ "updatedAt": "2026-11-11T22:55:44Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,10 +18,17 @@
  },
  "plannedSlices": [
   {
+   "id": "whirlpool-turns-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "The whirlpool turns around its eye.",
+   "commit": "50d613a55"
+  },
+  {
    "id": "town-hero-trade-button-20261112",
    "status": "completed",
    "completedAt": "2026-11-12",
-   "summary": "Town: a trade button between the two heroes' portraits opens their meeting screen.",
+   "summary": "Town: a trade button between the two hero portraits opens trading.",
    "commit": "d079e9bba"
   },
   {
@@ -56,21 +63,21 @@
    "id": "ground-shore-layers-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "Shore redrawn in layers with a fold-free bend: no notches or blotches.",
+   "summary": "Shore redrawn in layers: no notches or blotches.",
    "commit": "d106c7c2d"
   },
   {
    "id": "ground-border-noise-seams-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "Shores, borders and fog edges no longer cut into wedges: integer lattice hash.",
+   "summary": "Shores, borders and fog edges no longer cut into wedges.",
    "commit": "7ad3f7554"
   },
   {
    "id": "water-beach-attacks-boats-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "A hero aboard a boat guards the shore beside it: beach armies attack it.",
+   "summary": "Beach armies can attack a hero aboard a boat.",
    "commit": "3eec5b6b3"
   },
   {
@@ -84,7 +91,7 @@
    "id": "whirlpool-maelstrom-20261111",
    "status": "completed",
    "completedAt": "2026-11-11",
-   "summary": "A whirlpool is one swirl over its six sea tiles, entered on any; no rocks.",
+   "summary": "A whirlpool is one swirl over its six sea tiles, entered on any.",
    "commit": "3c2057365"
   },
   {

@@ -63,16 +63,17 @@ None open.
 
 ## Recently completed
 
-- 2026-11-12 `town-hero-trade-button-20261112` (d079e9bba): Town: a trade button between the two heroes' portraits opens their meeting screen.
+- 2026-11-12 `whirlpool-turns-20261112` (50d613a55): The whirlpool turns around its eye.
+- 2026-11-12 `town-hero-trade-button-20261112` (d079e9bba): Town: a trade button between the two hero portraits opens trading.
 - 2026-11-11 `ai-sites-on-the-way-20261111` (2d280ed67): Computer heroes take sites beside their way when it costs no arrival day.
 - 2026-11-11 `town-artifact-exchange-cards-20261111` (f811642c4): Artifact Exchange shows artifact cards with icon, effects and story.
 - 2026-11-11 `ground-moving-rivers-lava-20261111` (2660acaaf): Rivers flow downstream and lava glows in its cracks.
 - 2026-11-11 `ground-moving-water-20261111` (5577e658e): The sea moves and waves break into foam on the shores.
-- 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers with a fold-free bend: no notches or blotches.
-- 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, borders and fog edges no longer cut into wedges: integer lattice hash.
-- 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it: beach armies attack it.
+- 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers: no notches or blotches.
+- 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, borders and fog edges no longer cut into wedges.
+- 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): Beach armies can attack a hero aboard a boat.
 - 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero can attack a computer hero aboard a boat.
-- 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles, entered on any; no rocks.
+- 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles, entered on any.
 - 2026-11-11 `town-cuts-four-towns-20261111` (5e7874f80): Other four towns' cuts checked; three forts re-cut.
 - 2026-11-11 `town-mireclaw-cuts-20261111` (de6b0cc36): Four Mireclaw buildings re-cut.
 - 2026-11-11 `town-thornwake-cuts-20261111` (b4a1695c3): Four Thornwake buildings re-cut.
