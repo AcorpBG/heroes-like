@@ -193,6 +193,11 @@ func press_cell(cell, shift: bool) -> void:
 func hover_cell(_cell) -> void:
 	pass
 
+## The slot tells its owner when the pointer leaves it; the hero meeting screen
+## clears what it was reading out, the town's rows read nothing out.
+func leave_cell(_cell) -> void:
+	pass
+
 func begin_cell_drag(cell) -> Dictionary:
 	if not _slot_occupied(String(cell.side), int(cell.key)):
 		return {}
