@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "water-attack-boat-heroes-20261111",
- "currentSliceTitle": "A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.",
+ "currentSliceId": "water-beach-attacks-boats-20261111",
+ "currentSliceTitle": "A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T18:17:29Z",
+ "updatedAt": "2026-11-11T19:14:25Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "water-beach-attacks-boats-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.",
+   "commit": "3eec5b6b3"
+  },
   {
    "id": "water-attack-boat-heroes-20261111",
    "status": "completed",

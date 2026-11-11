@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `water-beach-attacks-boats-20261111` (3eec5b6b3): A hero aboard a boat guards the shore beside it too: armies on the beach attack it, players and computer players alike.
 - 2026-11-11 `water-attack-boat-heroes-20261111` (d759667ba): A sailing hero gets a route to a computer hero aboard a boat and the fight starts; the approach route uses the mover's own blocked test.
 - 2026-11-11 `whirlpool-maelstrom-20261111` (3c2057365): A whirlpool is one swirl over its six sea tiles: a boat sails in on any of them; no rocks; computer heroes keep off its tiles.
 - 2026-11-11 `town-cuts-four-towns-20261111` (5e7874f80): Other four towns' cuts checked; three forts re-cut.
