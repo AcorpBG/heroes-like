@@ -54,7 +54,6 @@ None open.
 
 ## Open work
 
-- `town-mireclaw-cuts-20261111` (in progress): Owner: yes, fix Mireclaw. Fort stages 1-3 lost their palisade and the upgraded stag ring its posts; tools/town_plot_matte_patches.py with hand shapes beside each packet, matte_open in the cut, layers repackaged. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -64,7 +63,8 @@ None open.
 
 ## Recently completed
 
-- 2026-11-11 `town-thornwake-cuts-20261111` (b4a1695c3): Four Thornwake buildings re-cut whole.
+- 2026-11-11 `town-mireclaw-cuts-20261111` (de6b0cc36): Four Mireclaw buildings re-cut.
+- 2026-11-11 `town-thornwake-cuts-20261111` (b4a1695c3): Four Thornwake buildings re-cut.
 - 2026-11-11 `artifact-stories-20261111` (8fd349a98): a story for each of the 150 artifacts, shown last on the hero menu card
 - 2026-11-11 `artifact-special-effects-20261111` (094b9e31a): the 32 special effects are native rules, named by special_id; computer heroes keep unused movement
 - 2026-11-11 `artifact-catalogue-switch-20261111` (a9384fcdf): The 150 new artifacts and ten sets replace the 69; old saves drop old artifacts.
@@ -79,7 +79,7 @@ None open.
 - 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground at the plots of four towns.
 - 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Skirmish hero portrait keeps one size; the built maps window shows map pictures.
-- 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze in three towns, crisper ground for Sunvault, Mireclaw and Veilmourn (buildings kept), short edge skirts, ten lodges repainted lighter.
+- 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze, crisper ground in three towns, ten lodges lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.
 - 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October, verified; provenance and the storage map name it.
