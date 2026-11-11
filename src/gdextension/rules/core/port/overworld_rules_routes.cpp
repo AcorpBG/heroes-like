@@ -848,9 +848,13 @@ ArrayRef guard_engagement_approach_route(State &state, DictRef session, DictRef 
 	if (state.array_size(engagement) == 0 && _ai_hero_guards_against_player(state, session, encounter)) {
 		engagement = hero_guard_zone_tiles(state, session, anchor, level);
 	}
+	// An entry the mover can stand on: open ground for a walker, open water for a
+	// boat (hero_route_tile_blocked), and open shore a boat's hero steps onto.
+	const bool sailing = water::is_sailing(state, dict_value(session));
 	for (const Value &tile_entry : gd::items(state, array_value(engagement))) {
 		const Vector2i tile = as_vector2i(tile_entry);
-		if (tile_is_blocked(state, session, tile.x, tile.y, level) && !(tile == anchor)) {
+		const bool landing = sailing && !water::is_water(state, dict_value(session), tile.x, tile.y, level) && !tile_is_blocked(state, session, tile.x, tile.y, level);
+		if (hero_route_tile_blocked(state, session, tile.x, tile.y, level) && !landing && !(tile == anchor)) {
 			continue;
 		}
 		const DictRef owner = guard_engagement_encounter_at_tile(state, session, tile.x, tile.y, level);
@@ -887,7 +891,7 @@ ArrayRef guard_engagement_approach_route(State &state, DictRef session, DictRef 
 			if (tile_step_cuts_blocked_corner(state, session, current, next, level)) {
 				continue;
 			}
-			if (tile_is_blocked(state, session, next.x, next.y, level) && targets.count(tile_id(next)) == 0) {
+			if (hero_route_tile_blocked(state, session, next.x, next.y, level) && targets.count(tile_id(next)) == 0) {
 				continue;
 			}
 			if (tile_has_route_interaction(state, session, next.x, next.y, level) && targets.count(tile_id(next)) == 0) {
