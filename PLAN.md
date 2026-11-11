@@ -54,6 +54,7 @@ None open.
 
 ## Open work
 
+- `town-thornwake-cuts-20261111` (in progress): Owner: the hall's cut is bad in Thornwake (moss roof missing between dome and arcade). Mend the mattes BiRefNet got wrong: hall stages 2 and 3, first white-hart lodge, root bastion den; root_ravine_matte_patches.py, layers repackaged. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.

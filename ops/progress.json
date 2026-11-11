@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "artifact-stories-20261111",
- "currentSliceTitle": "a story for each of the 150 artifacts, shown last on the hero menu card",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T14:37:13Z",
+ "currentSliceId": "town-thornwake-cuts-20261111",
+ "currentSliceTitle": "Thornwake: four bad building cuts mended",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-11T14:48:30Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-thornwake-cuts-20261111",
+   "title": "Thornwake: four bad building cuts mended",
+   "status": "in_progress",
+   "goal": "Owner: the hall's cut is bad in Thornwake (moss roof missing between dome and arcade). Mend the mattes BiRefNet got wrong: hall stages 2 and 3, first white-hart lodge, root bastion den; root_ravine_matte_patches.py, layers repackaged.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
   {
    "id": "artifact-stories-20261111",
    "status": "completed",
