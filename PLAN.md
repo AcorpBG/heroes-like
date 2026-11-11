@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `ground-moving-rivers-lava-20261111` (2660acaaf): Rivers run downstream with lights sliding along them; lava ground glows and pulses in its cracks; still under reduced motion.
 - 2026-11-11 `ground-moving-water-20261111` (5577e658e): The sea drifts and swells; waves run in, break into foam on the sand and slide back; still under reduced motion.
 - 2026-11-11 `ground-shore-layers-20261111` (d106c7c2d): Shore redrawn in layers with a fold-free bend: no notches or blotches.
 - 2026-11-11 `ground-border-noise-seams-20261111` (7ad3f7554): Shores, borders and fog edges no longer cut into wedges: integer lattice hash.
