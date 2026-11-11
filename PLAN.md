@@ -54,7 +54,6 @@ None open.
 
 ## Open work
 
-- `artifact-special-effects-20261111` (pending): the 32 special effects of epics and full sets, in batches. See `docs/artifact-system.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -64,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `artifact-special-effects-20261111` (094b9e31a): the 32 special effects of epics and full sets are native rules, named on their rows by special_id; computer heroes keep unused movement; the content check knows the new slots
 - 2026-11-11 `artifact-catalogue-switch-20261111` (a9384fcdf): The 150 new artifacts and ten sets replace the 69: content from the catalogue, hero menu card, old saves drop old artifacts.
 - 2026-11-11 `artifact-icons-20261111` (501e5e506): Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.
 - 2026-11-11 `artifact-bonus-rules-20261111` (b142e4114): Artifacts can give any specialty bonus, Knowledge, home lines and prices.
