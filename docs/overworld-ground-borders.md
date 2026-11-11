@@ -8,10 +8,10 @@ The ground shader cross-faded the four nearest tile materials over about half a 
 
 ## Model (`scenes/overworld/overworld_ground_surface.gdshader`)
 
-- **Bending**: the corner-weight lookup is offset by three octaves of value noise on rotated lattices (`border_warp`; about 0.36 tile broad, plus finer detail), so borders meander and corners round into lobes. The bend fades out within 0.3 tile of every tile centre (`bend`), so each tile's middle keeps its own ground and terrain stays readable per tile.
+- **Bending**: the corner-weight lookup is offset by three octaves of value noise on rotated lattices (`border_warp`; about 0.36 tile broad, plus finer detail), so borders meander and corners round into lobes. The bend fades out toward every tile centre (`bend`), so each tile's middle keeps its own ground and terrain stays readable per tile. Since 2026-11-11 it grows with the distance from the centre, nothing at the centre and full at the tile's corners, and the warp is held under `warp_reach` (0.4 tile): slow enough that the bent lookup never folds over itself. Before, it rose from 0.05 to 0.3 tile inside a square and the warp reached 0.67 tile, so a strong warp folded the lookup and left square teeth and holes of a tile's own ground inside its neighbour's, clearest as square notches of water in the beach.
 - **Height and priority blend**: where grounds meet, each candidate material scores its merged corner weight, its border priority and its own painted detail (luminance above the material's average acts as height). The winner shows crisply with a narrow soft zone (`blend_depth`), so blades, pebbles and drifts of one ground fringe the other instead of a ghosted mix.
 - **Priority** (`art/overworld/ground_materials.json`, `border_priority` by material slot): snow, grass and forest spill over swamp, plains, rough, dirt, sand and rock; water is lowest.
-- **Beach**: the sandy coastal band uses the same bent corner weights, so shores curve too.
+- **Beach** (reworked 2026-11-11, slice `ground-shore-layers-20261111`, owner report): by the share of water round a point (0.5 on a straight tile edge), dry sand comes in over the land (`shore_sand`), darkens to wet sand toward the waterline (`shore_wet`), and the sea is laid over the sand from the waterline out (`shore_sea`), letting the sand show through in the shallows (`shore_shallow`, `shore_deep`). At a shore the grounds compete only among themselves and the sea is not part of that blend, so nothing of the land shows past the sand. Before, the sand faded out over the water side while land and sea still competed underneath by priority and detail: dark lava or grass showed through the half-faded sand as blotches. A shore is found from the four tiles, not their weights (rounding leaves four water tiles a hair under one).
 - Decals (`docs/overworld-terrain-decals.md`) fade with each ground's final share of the blend, so they never cross a border.
 
 Presentation only: the per-tile lookup, fog, gameplay and saves are unchanged.
@@ -37,7 +37,7 @@ Uniforms: `rock_warp_scale`, `rock_crag`, `rock_ledge_start`, `rock_ledge_end`, 
 
 ## Tuning
 
-Shader uniforms: `warp_tiles`, `warp_frequency`, `warp_detail_tiles` (how far borders wander), `height_strength` (how much a ground's own detail shapes the fringe), `blend_depth` (edge softness). `border_priority` in the ground manifest.
+Shader uniforms: `warp_tiles`, `warp_frequency`, `warp_detail_tiles` (how far borders wander), `warp_reach` (the most a border is bent), `shore_sand`, `shore_wet`, `shore_sea`, `shore_deep`, `shore_shallow` (the beach), `height_strength` (how much a ground's own detail shapes the fringe), `blend_depth` (edge softness). `border_priority` in the ground manifest.
 
 ## Validation
 

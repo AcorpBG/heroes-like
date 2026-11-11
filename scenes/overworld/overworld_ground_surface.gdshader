@@ -21,6 +21,21 @@ uniform float warp_frequency = 0.55;
 uniform float warp_detail_tiles = 0.12;
 uniform float height_strength = 1.3;
 uniform float blend_depth = 0.26;
+// The bend grows from nothing at a tile's centre to full at its corners, and
+// the warp is held under warp_reach: together slow enough that the bent
+// lookup never folds over itself (reach x steepest bend < 1). A fold showed
+// as square teeth and holes of a tile's own ground inside its neighbour's.
+uniform float warp_reach = 0.4;
+// The shore, by the share of water round a point (0.5 on a straight tile
+// edge): dry sand comes in over the land, wet sand darkens toward the
+// waterline, and the sea is laid over the sand, clear in the shallows.
+uniform vec2 shore_sand = vec2(0.015, 0.16);
+uniform vec2 shore_wet = vec2(0.34, 0.52);
+uniform vec2 shore_sea = vec2(0.5, 0.58);
+// Past the waterline the sea deepens: in the shallows the sand shows through
+// it (shore_shallow is how much of the sea covers it there).
+uniform vec2 shore_deep = vec2(0.55, 0.92);
+uniform float shore_shallow = 0.55;
 // Ground detail decals, scattered here so they share the ground's light and
 // blend: a 16x16 atlas of 128 px cells, 16 decals per ground set (rows 1-2
 // tiny, row 3 medium, row 4 large). terrain_data blue marks road tiles.
@@ -363,15 +378,23 @@ void fragment() {
 	} else {
 		// The bend fades out near tile centres, so every tile's middle keeps
 		// its own ground and stays readable.
-		vec2 from_center = abs(fract(world) - vec2(0.5));
-		float bend = smoothstep(0.05, 0.3, max(from_center.x, from_center.y));
+		vec2 from_center = fract(world) - vec2(0.5);
+		float bend = smoothstep(0.0, 0.7071, length(from_center));
 		vec2 warp = border_warp(world);
-		vec2 sample_position = world - vec2(0.5) + warp * bend;
+		vec2 held = warp / sqrt(1.0 + dot(warp, warp) / (warp_reach * warp_reach));
+		vec2 sample_position = world - vec2(0.5) + held * bend;
 		vec2 cell = floor(sample_position);
 		vec2 w = fract(sample_position);
 		vec4 slots = vec4(known_slot(cell, own_slot), known_slot(cell + vec2(1.0, 0.0), own_slot),
 			known_slot(cell + vec2(0.0, 1.0), own_slot), known_slot(cell + vec2(1.0), own_slot));
 		vec4 corner = vec4((1.0 - w.x) * (1.0 - w.y), w.x * (1.0 - w.y), (1.0 - w.x) * w.y, w.x * w.y);
+		vec4 wet_corner = vec4(is_water(slots.x), is_water(slots.y), is_water(slots.z), is_water(slots.w));
+		float water = dot(wet_corner, corner);
+		// A shore by the tiles themselves, not their weights: rounding leaves the
+		// weights of four water tiles a hair under one.
+		float wet_tiles = wet_corner.x + wet_corner.y + wet_corner.z + wet_corner.w;
+		bool shore = wet_tiles > 0.5 && wet_tiles < 3.5;
+		vec3 sea = vec3(0.0);
 		vec3 surface;
 		// Each corner's share of the final colour, for decals and the beach.
 		vec4 share = vec4(1.0, 0.0, 0.0, 0.0);
@@ -387,6 +410,12 @@ void fragment() {
 				float merged = dot(vec4(equal(slots, vec4(slots[i]))), corner);
 				float height = (dot(color[i], vec3(0.299, 0.587, 0.114)) - average_luma(slots[i])) * (1.0 - is_water(slots[i]));
 				score[i] = merged + border_priority[int(clamp(slots[i], 0.0, 15.0))] + height * height_strength;
+				// At a shore the sea is laid over the land below, not blended with
+				// it: the grounds compete among themselves.
+				if (shore && wet_corner[i] > 0.5) {
+					score[i] = -10.0;
+					sea += color[i] * corner[i] / max(water, 0.0001);
+				}
 			}
 			float best = max(max(score.x, score.y), max(score.z, score.w));
 			share = max(score - vec4(best - blend_depth), vec4(0.0));
@@ -396,18 +425,21 @@ void fragment() {
 		if (decals_enabled) {
 			surface = decal_layer(world, max(fwidth(world.x), fwidth(world.y)), slots, share, surface).rgb;
 		}
-		// A coastal material band, not new terrain: the same fog-safe four
-		// samples join straight shores, concave inlets and diagonal islands.
-		float water = dot(vec4(is_water(slots.x), is_water(slots.y), is_water(slots.z), is_water(slots.w)), corner);
-		if (water > 0.0 && water < 1.0) {
+		// A coastal band, not new terrain: the same fog-safe four samples join
+		// straight shores, concave inlets and diagonal islands. Nothing of the
+		// land shows past the sand, and the sea covers the sand from the
+		// waterline out.
+		if (shore) {
 			vec3 sand = ground(beach_slot, world);
-			float wet = smoothstep(0.38, 0.82, water);
-			sand *= mix(vec3(1.0), vec3(0.68, 0.75, 0.78), wet);
-			float beach = smoothstep(0.015, 0.16, water) * (1.0 - smoothstep(0.52, 0.94, water));
-			surface = mix(surface, sand, beach);
+			sand *= mix(vec3(1.0), vec3(0.68, 0.75, 0.78), smoothstep(shore_wet.x, shore_wet.y, water));
+			surface = mix(surface, sand, smoothstep(shore_sand.x, shore_sand.y, water));
+			float waterline = smoothstep(shore_sea.x, shore_sea.y, water);
+			float deep = smoothstep(shore_deep.x, shore_deep.y, water);
+			surface = mix(surface, sea, waterline * mix(shore_shallow, 1.0, deep));
 		}
 		surface = river_paint(surface, world, warp);
-		surface = rock_void(surface, world, warp, bend, own_void);
+		vec2 off_center = abs(from_center);
+		surface = rock_void(surface, world, warp, smoothstep(0.05, 0.3, max(off_center.x, off_center.y)), own_void);
 		COLOR = vec4(surface, 1.0);
 	}
 }
