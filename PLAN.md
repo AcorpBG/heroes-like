@@ -54,6 +54,7 @@ None open.
 
 ## Open work
 
+- `town-cuts-four-towns-20261111` (in progress): Owner: yes, check them. Compare every layer of Sunvault, Veilmourn, Embercourt and Brasshollow with its painting and mend the bad cuts with tools/town_plot_matte_patches.py; matte patch files beside the packets, layers repackaged. See `docs/common-town-building-template.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -81,7 +82,7 @@ None open.
 - 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Skirmish hero portrait keeps one size; the built maps window shows map pictures.
 - 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze, crisper ground in three towns, ten lodges lighter.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.
-- 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.
+- 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots, Shipyard on a river bend; effects.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October, verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip and its F1 full-text window take the map information card's dark-and-gold frames, with a gold heading and a Close button.
 - 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault town repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; lake, fall and vapour effects; packet faction_sunvault/sun_cirque.json.

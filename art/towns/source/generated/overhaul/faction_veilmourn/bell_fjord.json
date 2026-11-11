@@ -430,13 +430,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2_fjord_matte.png",
-        "sha256": "f164691ebbead2362512fcb1078211c847e0795e79e9782e4ddbb96dbade8eab",
+        "sha256": "4d8cfefc6b089bf0ab1bfb5124ab34ff2b8b5c732bc68bebc2bd6e7fac38bafb",
         "window": [
           0,
           92,
           479,
           207
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_matte_patches.json"
       }
     },
     {
@@ -463,13 +464,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1_fjord_matte.png",
-        "sha256": "b3ed233b0067d14d236e6a1a5dc0effbc5b4f7c918cffbe4bdc62ca371320abc",
+        "sha256": "3933ac412a26b0218350f926742f48275bd6526c4bf29c13d1a6ca0437cf0778",
         "window": [
           0,
           118,
           479,
           181
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_veilmourn/bell_fjord_matte_patches.json"
       }
     },
     {

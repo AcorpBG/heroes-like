@@ -1,0 +1,17 @@
+{
+ "note": "Shapes in master pixels (2048x1152) for tools/town_plot_matte_patches.py. BiRefNet sees no object in a timber weir far up the river.",
+ "buildings": {
+  "building_dev_fort_1": {
+   "why": "The timber weir between and beside the two watchtowers; BiRefNet kept the towers and the two piers alone. The painted weir runs on into the slopes, so its ends fade out.",
+   "seal": 5,
+   "add": [
+    {
+     "fade": 14,
+     "outline": [
+      [408, 236], [668, 236], [668, 262], [408, 262]
+     ]
+    }
+   ]
+  }
+ }
+}

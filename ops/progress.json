@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-mireclaw-cuts-20261111",
- "currentSliceTitle": "Four Mireclaw buildings re-cut.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T15:12:22Z",
+ "currentSliceId": "town-cuts-four-towns-20261111",
+ "currentSliceTitle": "Town cuts checked in the other four towns",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-11T15:32:38Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "town-cuts-four-towns-20261111",
+   "title": "Town cuts checked in the other four towns",
+   "status": "in_progress",
+   "goal": "Owner: yes, check them. Compare every layer of Sunvault, Veilmourn, Embercourt and Brasshollow with its painting and mend the bad cuts with tools/town_plot_matte_patches.py; matte patch files beside the packets, layers repackaged.",
+   "docs": [
+    "docs/common-town-building-template.md"
+   ],
+   "updatedAt": "2026-11-11"
+  },
   {
    "id": "town-mireclaw-cuts-20261111",
    "status": "completed",
@@ -147,7 +157,7 @@
    "id": "town-art-thornwake-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Thornwake repainted as a root ravine: 52 stages on 24 plots round a mother tree, Shipyard on a river bend; river, falls and haze effects; packet faction_thornwake/root_ravine.json.",
+   "summary": "Thornwake repainted as a root ravine: 52 stages on 24 plots, Shipyard on a river bend; effects.",
    "commit": "00ffec2ea"
   },
   {

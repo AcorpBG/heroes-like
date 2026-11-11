@@ -428,13 +428,14 @@
       ],
       "matte": {
         "path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1_gorge_matte.png",
-        "sha256": "4b2a0f85ef964971fa9d7a9cb04389e93560a0b5012ac694f2a4accdda65fd6f",
+        "sha256": "16ffac1e25dd2cbac403bc0e8457e54224b83f6284ce38ad5204b11ece483f05",
         "window": [
           385,
           179,
           315,
           121
-        ]
+        ],
+        "tool": "tools/town_plot_matte_patches.py with art/towns/source/generated/overhaul/faction_embercourt/lock_gorge_matte_patches.json"
       }
     },
     {

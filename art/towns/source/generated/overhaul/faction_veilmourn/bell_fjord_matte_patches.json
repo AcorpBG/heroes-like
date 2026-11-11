@@ -1,0 +1,31 @@
+{
+ "note": "Shapes in master pixels (2048x1152) for tools/town_plot_matte_patches.py. BiRefNet kept the sea fort's right stack whole and lost the left one's rock in the haze.",
+ "buildings": {
+  "building_dev_fort_1": {
+   "why": "The left sea stack under its tower and the first links of the chain; BiRefNet kept the tower's roof alone.",
+   "seal": 5,
+   "add": [
+    [
+     [66, 210], [57, 221], [46, 231], [32, 243], [26, 247], [120, 247], [112, 236], [106, 232], [100, 229], [96, 214], [94, 208]
+    ]
+   ],
+   "lines": [
+    {
+     "width": 4,
+     "points": [
+      [96, 224], [104, 229], [112, 233], [120, 237]
+     ]
+    }
+   ]
+  },
+  "building_dev_fort_2": {
+   "why": "The left sea stack under its tower; BiRefNet kept the tower alone.",
+   "seal": 5,
+   "add": [
+    [
+     [92, 205], [84, 208], [76, 214], [68, 220], [60, 227], [52, 232], [42, 236], [160, 236], [146, 229], [138, 218], [133, 218], [128, 208]
+    ]
+   ]
+  }
+ }
+}
