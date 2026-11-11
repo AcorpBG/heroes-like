@@ -21,6 +21,8 @@ const Board = preload("res://scripts/core/TownConstructionBoard.gd")
 const Widgets = preload("res://scenes/town/TownPanelWidgets.gd")
 const RecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
 const SpellGrimoireScript = preload("res://scenes/shared/SpellGrimoire.gd")
+const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
+const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
 
 const STATUS_TONES := {"ready": "green", "trade": "teal", "short": "red", "locked": "muted", "tomorrow": "muted", "complete": "gold"}
 const SIDE_WIDTH := 372.0
@@ -57,6 +59,7 @@ var _columns: HBoxContainer
 var _body: VBoxContainer
 var _side: VBoxContainer
 var _hero_grid: GridContainer
+var _artifact_grids: Array = []
 var _market_give := ""
 var _market_receive := ""
 var _market_amount := 1
@@ -246,6 +249,7 @@ func _rebuild_body() -> void:
 	_upgrade_button = null
 	_trade_button = null
 	_hero_grid = null
+	_artifact_grids.clear()
 	_market_give_tiles.clear()
 	_market_grids.clear()
 	_market_receive_tiles.clear()
@@ -921,8 +925,146 @@ func _build_services() -> void:
 	if services.is_empty():
 		section.add_child(_label("Bring a hero into town to use this building.", "muted", 14))
 		return
+	if kind == "artifact_exchange":
+		_build_artifact_exchange(section, services)
+		return
 	for action in services:
 		section.add_child(_service_row(action))
+
+## The offers of the exchange and the backpack of the visiting hero as artifact
+## cards, read like the card of the hero menu: the icon in its band colour, kind
+## and band, what it gives, its price, its special effect and its story, with
+## the order under them. An order that is neither a purchase nor a sale keeps a
+## plain row.
+func _build_artifact_exchange(section: VBoxContainer, services: Array) -> void:
+	var groups := {"town_buy": [], "town_sell": []}
+	for action in services:
+		var verb := String(action.get("id", "")).get_slice(":", 0)
+		if groups.has(verb):
+			(groups[verb] as Array).append(action)
+		else:
+			section.add_child(_service_row(action))
+	for verb in ["town_buy", "town_sell"]:
+		var actions: Array = groups[verb]
+		if actions.is_empty():
+			continue
+		var caption := _label("For sale this week" if verb == "town_buy" else "Sell from the backpack, at half price", "gold", 14)
+		caption.name = "Caption_%s" % verb
+		section.add_child(caption)
+		var grid := GridContainer.new()
+		grid.name = "Artifacts_%s" % verb
+		grid.columns = 3
+		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		grid.add_theme_constant_override("h_separation", 10)
+		grid.add_theme_constant_override("v_separation", 10)
+		section.add_child(grid)
+		_artifact_grids.append(grid)
+		for action in actions:
+			grid.add_child(_artifact_card(action, verb == "town_sell"))
+
+func _artifact_card(action: Dictionary, selling: bool) -> PanelContainer:
+	var action_id := String(action.get("id", ""))
+	var artifact_id := action_id.get_slice(":", 1)
+	var artifact := ContentService.get_artifact(artifact_id)
+	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
+	var band: Color = HeroSheetScript.BAND_COLORS.get(String(artifact.get("rarity", "")), FrontierVisualKit.text_color("muted"))
+	var panel := PanelContainer.new()
+	panel.name = "Artifact_%s" % artifact_id
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.size_flags_vertical = Control.SIZE_FILL
+	_apply_card(panel, "ink")
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	panel.add_child(column)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	column.add_child(head)
+	var frame := PanelContainer.new()
+	frame.name = "Icon"
+	frame.custom_minimum_size = Vector2(76, 76)
+	frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var frame_style := StyleBoxFlat.new()
+	frame_style.bg_color = Color(0.16, 0.14, 0.115)
+	frame_style.border_color = band
+	frame_style.set_border_width_all(2)
+	frame_style.set_corner_radius_all(5)
+	frame_style.set_content_margin_all(4)
+	frame.add_theme_stylebox_override("panel", frame_style)
+	var picture := TextureRect.new()
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.texture = _texture(Artifacts.artifact_icon_path(artifact_id))
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(picture)
+	head.add_child(frame)
+	var titles := VBoxContainer.new()
+	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titles.add_theme_constant_override("separation", 2)
+	head.add_child(titles)
+	var title := _wrapped(Artifacts.artifact_name(artifact_id), "title", 16)
+	title.name = "Name"
+	titles.add_child(title)
+	var kind_line := _label("%s · %s" % [String(HeroSheetScript.KIND_NAMES.get(Artifacts.artifact_slot(artifact_id), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], "muted", 13)
+	kind_line.add_theme_color_override("font_color", band)
+	titles.add_child(kind_line)
+	var set_id := String(artifact.get("set_id", ""))
+	if set_id != "":
+		for artifact_set in ContentService.load_json(ContentService.ARTIFACTS_PATH).get("sets", []):
+			if artifact_set is Dictionary and String(artifact_set.get("id", "")) == set_id:
+				titles.add_child(_wrapped("Part of %s" % String(artifact_set.get("name", "a set")), "green", 13))
+	# What a choice is made on, as on the card of the hero menu: what it gives,
+	# its price in red, its home line, a special effect that is in the game.
+	var gives: Array = ui.get("effect_lines", []) if ui.get("effect_lines", []) is Array else []
+	var gives_label := _wrapped("\n".join(PackedStringArray(gives)) if not gives.is_empty() else Artifacts.artifact_effect_summary(artifact_id), "gold", 14)
+	gives_label.name = "Gives"
+	column.add_child(gives_label)
+	for price in ui.get("price_lines", []):
+		column.add_child(_wrapped("Price: %s" % String(price), "red", 13))
+	var home: Array = ui.get("home_lines", []) if ui.get("home_lines", []) is Array else []
+	if not home.is_empty():
+		var factions: Array = artifact.get("faction_affinity", []) if artifact.get("faction_affinity", []) is Array else []
+		var faction_name := String(ContentService.get_faction(String(factions[0])).get("name", "its faction")) if not factions.is_empty() else "its faction"
+		column.add_child(_wrapped("For heroes of the %s: %s" % [faction_name, "; ".join(PackedStringArray(home))], "muted", 13))
+	if bool(ui.get("special_live", false)) and String(ui.get("special_text", "")) != "":
+		column.add_child(_wrapped(String(ui.get("special_text", "")), "body", 13))
+	var story_text := String(artifact.get("description", ""))
+	if story_text != "" and not selling:
+		var story := _wrapped(story_text, "muted", 12)
+		story.name = "Story"
+		story.max_lines_visible = 3
+		story.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		story.tooltip_text = story_text
+		story.mouse_filter = Control.MOUSE_FILTER_PASS
+		column.add_child(story)
+	var filler := Control.new()
+	filler.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	filler.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(filler)
+	# The label from the rules reads "Buy <name> — <price> gold"; the card names it already.
+	var label := String(action.get("label", action_id))
+	var price_text := label.get_slice(" — ", 1) if label.contains(" — ") else ""
+	var button := Button.new()
+	button.name = action_id.replace(":", "_")
+	button.text = "%s · %s" % ["Sell" if selling else "Buy", price_text] if price_text != "" else label
+	button.accessibility_name = label
+	button.disabled = bool(action.get("disabled", false))
+	# Why an offer cannot be bought: the treasury is short, or it is gone for
+	# the week or the hero has one already (the rules say only that it is closed).
+	var short := not selling and button.disabled and price_text.to_int() > 0 and int(_resources.get("gold", 0)) < price_text.to_int()
+	var closed_note := "" if selling or not button.disabled else ("Not enough gold" if short else "Sold this week or already owned")
+	button.tooltip_text = String(action.get("summary", "")) if selling else (closed_note if closed_note != "" else label)
+	FrontierVisualKit.apply_button(button, "secondary" if selling else "primary", 180, 34, 14)
+	button.pressed.connect(func(): service_requested.emit(action_id))
+	var order := HBoxContainer.new()
+	order.add_theme_constant_override("separation", 10)
+	column.add_child(order)
+	order.add_child(button)
+	if closed_note != "":
+		var note := _label(closed_note, "red" if short else "muted", 13)
+		note.name = "Closed"
+		order.add_child(note)
+	_service_buttons[action_id] = button
+	return panel
 
 func _service_row(action: Dictionary) -> HBoxContainer:
 	var row := HBoxContainer.new()
@@ -1103,6 +1245,8 @@ func _apply_columns() -> void:
 	_size_guild_book()
 	if _hero_grid != null:
 		_hero_grid.columns = 2 if width >= 640.0 else 1
+	for grid in _artifact_grids:
+		(grid as GridContainer).columns = 3 if width >= 1040.0 else (2 if width >= 640.0 else 1)
 	for grid in _market_grids:
 		(grid as GridContainer).columns = _market_tile_columns()
 

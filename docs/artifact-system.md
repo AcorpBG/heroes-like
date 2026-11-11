@@ -189,6 +189,8 @@ Unchanged: a generated map sorts its artifact pickups into the four bands and dr
 
 Guarded sites, markets and battle salvage draw from their reward lists (`tools/artifact_reward_tables.json` says who draws from each; the content tool fills in the artifacts): neutral commons for small caches; neutral commons, uncommons and rares for ordinary guarded sites; all 22 epics for the heaviest ones, where a hero is offered its own faction's epic and the 16 neutral ones; one faction rare for each of the faction services.
 
+The Artifact Exchange window (`TownBuildingPanelView._build_artifact_exchange`, owner request 2026-11-11) shows its three offers and the visiting hero's backpack as artifact cards, read like the hero menu's card: the icon framed in its band colour, kind and band, its set, what it gives (`ui.effect_lines`), its price lines in red, its home line, a live special effect, and for an offer its story (three lines, the rest on hover). The order sits under them as `Buy · price` or `Sell · price`; a closed offer says whether the treasury is short or it is sold or owned. The orders are the rules' `town_buy:` and `town_sell:` actions, unchanged.
+
 ## Saved games
 
 A save made before the switch loses its old artifacts: what its heroes wear and carry, and the pickups still on its map. Nothing is converted: loading drops every artifact the game no longer has (`normalize_hero_artifacts`, `build_artifact_nodes`).
