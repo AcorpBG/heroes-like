@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "town-artifact-exchange-cards-20261111",
- "currentSliceTitle": "The Artifact Exchange shows artifact cards with icon, effects and story.",
+ "currentSliceId": "ai-sites-on-the-way-20261111",
+ "currentSliceTitle": "Computer heroes take a site beside their way on any plan when it costs no day of arrival.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T20:26:01Z",
+ "updatedAt": "2026-11-11T21:37:45Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-sites-on-the-way-20261111",
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Computer heroes take a site beside their way on any plan when it costs no day of arrival.",
+   "commit": "2d280ed67"
+  },
   {
    "id": "town-artifact-exchange-cards-20261111",
    "status": "completed",
@@ -196,7 +203,7 @@
    "id": "town-art-quality-pass-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Town quality pass: soft haze, crisper ground in three towns, ten lodges lighter.",
+   "summary": "Town quality pass: haze, ground, lodges.",
    "commit": "f59c98e13"
   },
   {
@@ -210,7 +217,7 @@
    "id": "town-art-thornwake-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Thornwake repainted as a root ravine: 52 stages on 24 plots, Shipyard on a river bend; effects.",
+   "summary": "Thornwake repainted as a root ravine: 52 stages on 24 plots.",
    "commit": "00ffec2ea"
   },
   {
@@ -231,7 +238,7 @@
    "id": "town-art-sunvault-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Sunvault repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; effects.",
+   "summary": "Sunvault repainted as a sun cirque: 52 stages on 24 plots.",
    "commit": "711b60cb0"
   },
   {
@@ -280,7 +287,7 @@
    "id": "town-stage-haze-embercourt-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Embercourt's gorge gets moving gold haze and spray; mist colour, wind and cover set per town (stage_mist).",
+   "summary": "Embercourt's gorge gets moving haze; mist set per town.",
    "commit": "174f2b80a"
   },
   {
@@ -294,7 +301,7 @@
    "id": "town-stage-effects-embercourt-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Embercourt's lock gorge moves: water sways and glints, lock falls stream, fire baskets flicker (beacons effect).",
+   "summary": "Embercourt's lock gorge moves: water, falls, fire baskets.",
    "commit": "589d79c1e"
   },
   {

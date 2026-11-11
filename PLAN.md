@@ -63,6 +63,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-11 `ai-sites-on-the-way-20261111` (2d280ed67): Computer heroes take a site beside their way on any plan when it costs no day of arrival.
 - 2026-11-11 `town-artifact-exchange-cards-20261111` (f811642c4): The Artifact Exchange shows artifact cards with icon, effects and story.
 - 2026-11-11 `ground-moving-rivers-lava-20261111` (2660acaaf): Rivers flow downstream and lava glows in its cracks.
 - 2026-11-11 `ground-moving-water-20261111` (5577e658e): The sea moves and waves break into foam on the shores.
@@ -88,21 +89,21 @@ None open.
 - 2026-11-10 `ui-settings-column-20261110` (e75200d7f): Settings are a left column in the dark-and-gold look.
 - 2026-11-10 `town-plot-shelves-20261110` (0d4db024b): Level ground at the plots of four towns.
 - 2026-11-10 `ui-built-maps-pictures-20261110` (715d958f0): Skirmish hero portrait keeps one size; the built maps window shows map pictures.
-- 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: soft haze, crisper ground in three towns, ten lodges lighter.
+- 2026-11-10 `town-art-quality-pass-20261110` (f59c98e13): Town quality pass: haze, ground, lodges.
 - 2026-11-10 `ui-skirmish-setup-rework-20261110` (36c648462): Skirmish setup and save menu are one tall left column in the dark-and-gold look: faction crests, hero portraits, a hero card, map settings as pills; built maps behind a button.
-- 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots, Shipyard on a river bend; effects.
+- 2026-11-10 `town-art-thornwake-20261110` (00ffec2ea): Thornwake repainted as a root ravine: 52 stages on 24 plots.
 - 2026-11-10 `tooling-source-archive-snapshot-20261110` (2e3c36a9e): Snapshot 2026-11-10-2e3c36a9 on N: holds the 1,088 source paintings made since 14 October, verified; provenance and the storage map name it.
 - 2026-11-10 `ui-tooltip-card-art-20261110` (80c713f87): Every tooltip and its F1 full-text window take the map information card's dark-and-gold frames, with a gold heading and a Close button.
-- 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault repainted as a sun cirque: 52 stages on 24 plots round a glacial lake, Shipyard on its shore; effects.
+- 2026-11-10 `town-art-sunvault-20261110` (711b60cb0): Sunvault repainted as a sun cirque: 52 stages on 24 plots.
 - 2026-11-10 `art-unit-icon-closeups-20261110` (9325c50c4): Every unit's small icon is a head-and-shoulders close-up: 75 painted with imggen, 157 portrait crops.
 - 2026-11-10 `town-art-mireclaw-foreground-20261110` (598dc4ee3): Mireclaw's layers stay behind the backdrop's great tree (backdrop.foreground mask).
 - 2026-11-10 `town-art-mireclaw-backdrop-v2-20261110` (b876ba799): Mireclaw's swamp floor repainted without reed hatching; the 52 layers kept (backdrop.painted_on).
 - 2026-11-10 `ui-map-info-card-art-20261110` (e6fcbbbd4): The map's right-click report and hover card use the sidebar's dark-and-gold frame, fit their content, and show unit icons cut from the portraits at 56 px.
 - 2026-11-10 `town-art-mireclaw-20261110` (c393e0abd): Mireclaw repainted as a dusk fen: 52 stages, ferry yard as Shipyard, mist and water effects.
 - 2026-11-10 `ui-army-size-bands-20261110` (cd8c4ec8d): The map tells another side's unit numbers as nine size bands (Few to Countless); own armies and battles stay exact.
-- 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets moving gold haze and spray; mist colour, wind and cover set per town (stage_mist).
+- 2026-11-10 `town-stage-haze-embercourt-20261110` (174f2b80a): Embercourt's gorge gets moving haze; mist set per town.
 - 2026-11-10 `ui-shared-tile-description-20261110` (4e55b993d): Hover, the right-click report and the Sites (Alt) labels read one description of a tile.
-- 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: water sways and glints, lock falls stream, fire baskets flicker (beacons effect).
+- 2026-11-10 `town-stage-effects-embercourt-20261110` (589d79c1e): Embercourt's lock gorge moves: water, falls, fire baskets.
 - 2026-11-10 `town-art-embercourt-lock-gorge-20261110` (0e5018b71): Embercourt repainted as a lock gorge: 52 stages on 24 plots, Shipyard on the near shore.
 - 2026-11-10 `rule-wayside-exchange-weekly-20261110` (da8233868): The map's Wayside Exchange serves each player one trade a week (visit cadence weekly_per_side).
 - 2026-11-10 `feature-veilmourn-harbor-shipyards-20261110` (466f6281a): Every Veilmourn town with a harbour has the Shipyard built from the start (also in older saves), and boats there cost 500 gold and 5 wood; computer players plan with that price.
