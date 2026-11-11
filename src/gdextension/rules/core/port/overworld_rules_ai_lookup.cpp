@@ -474,7 +474,11 @@ ArrayRef hero_guard_zone_tiles(State &state, DictRef session, Vector2i tile, int
 		if (next.x < 0 || next.y < 0 || next.x >= size.x || next.y >= size.y) {
 			continue;
 		}
-		if (water_travel_rules::is_water(state, session_value, next.x, next.y, level) != on_water) {
+		// A hero on land guards the ground around it. A hero aboard a boat guards
+		// the water around it and the shore beside it, so an army on the beach
+		// can attack the boat (owner decision, 2026-11-11); a boat's hero attacks
+		// a hero on the shore by stepping onto the ground it guards.
+		if (!on_water && water_travel_rules::is_water(state, session_value, next.x, next.y, level)) {
 			continue;
 		}
 		state.append(tiles, Value::of_vector2i(next.x, next.y));
