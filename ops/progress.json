@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "artifact-icons-20261111",
- "currentSliceTitle": "Icons for the 150 new artifacts (tools/build_artifact_icons.py); unused until the switch.",
+ "currentSliceId": "artifact-catalogue-switch-20261111",
+ "currentSliceTitle": "The 150 new artifacts and ten sets replace the 69: content from the catalogue, hero menu card, old saves drop old artifacts.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T11:38:35Z",
+ "updatedAt": "2026-11-11T12:11:46Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -29,13 +29,10 @@
   },
   {
    "id": "artifact-catalogue-switch-20261111",
-   "title": "The 150 artifacts replace the 69",
-   "status": "pending",
-   "goal": "the 150 replace the 69: sets, reward lists, old saves, hero menu, AI values.",
-   "docs": [
-    "docs/artifact-system-catalogue.md"
-   ],
-   "updatedAt": "2026-11-11"
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "The 150 new artifacts and ten sets replace the 69: content from the catalogue, hero menu card, old saves drop old artifacts.",
+   "commit": "a9384fcdf"
   },
   {
    "id": "artifact-icons-20261111",
