@@ -675,6 +675,12 @@ Atom _artifact_effect_summary(State &state, DictRef artifact) {
 		const DictRef spell = gd::content_row(state, ContentTable::Spell, spell_id);
 		return gd::format(state, key::lends_s_while_worn, {str(string_of_field(state, spell, key::name, spell_id))});
 	}
+	// A row that words its own effects is read as written: it may give kinds
+	// this summary has no pattern for (docs/artifact-system.md, Bonuses).
+	const Atom written = gd::strip_edges(state, string_of_field(state, artifact, key::effect_text, key::empty));
+	if (written != key::empty) {
+		return written;
+	}
 	const DictRef bonuses = get_target(get_or_new_dict(state, artifact, key::bonuses));
 	const ArrayRef parts = state.new_array();
 	const struct {

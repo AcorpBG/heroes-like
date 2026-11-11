@@ -218,6 +218,8 @@ Atom describe_set_bonus_summary(State &state, DictRef hero_state) {
 			}
 			const DictRef payload = state.new_dict();
 			state.set(payload, str(key::bonuses), bonuses);
+			// A step that words what it gives is read as written.
+			state.set(payload, str(key::effect_text), str(text_or(state, threshold, key::summary, key::empty)));
 			const Atom effect = _artifact_effect_summary(state, payload);
 			state.append(threshold_parts, str(gd::format(state, key::dpc_s, {int_value(count), str(effect)})));
 		}

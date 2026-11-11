@@ -35,10 +35,15 @@ Pages:
 - **Artifacts**: the figure with a slot where each thing is worn (head, neck,
   cloak, chest, two hands, two rings, feet, a banner beside it), four trinket
   slots, the sets the hero has pieces of, and the backpack as a row along the
-  foot. An empty slot shows the outline of what it takes. The card at the right
-  reads whatever the mouse is over, at once: what it gives, its story, its
-  family, and for a backpack item what wearing it would change; the tile's
-  tooltip says the same. A click picks a slot or an item, and the card returns to
+  foot. An empty slot shows the outline of what it takes. A tile carries a dot
+  in its artifact's band colour (grey common, green uncommon, blue rare, purple
+  epic). The card at the right reads whatever the mouse is over, at once: its
+  band, what it gives, its price in red, its home line (green when this hero is
+  of the artifact's faction), its set with how many pieces are worn and which
+  steps are reached, what the object is, and for a backpack item what wearing
+  it would change; the tile's tooltip says the same in short. Under the
+  trinkets, each set the hero wears pieces of is named with its count
+  (`docs/artifact-system.md`). A click picks a slot or an item, and the card returns to
   it when the mouse leaves, with its Wear, Swap in or Stow button; a double click
   does the same. Picking an empty slot dims what in the backpack does not fit it.
   Artifacts are dragged: from the backpack onto a slot of their kind, from a slot

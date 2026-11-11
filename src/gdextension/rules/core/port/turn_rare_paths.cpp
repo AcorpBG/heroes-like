@@ -329,6 +329,20 @@ double loadout_value(State &state, DictRef hero) {
 	for (const Value &value_key : gd::items(state, dict_value(loadout_values))) {
 		score += gd::to_float(state.get(bonuses, value_key, int_value(0))) * gd::to_float(gd::index(state, loadout_values, value_key));
 	}
+	// The kinds a specialty also gives (Knowledge, Power, mana, cohesion and the
+	// rest), by the same weights; a school's bonus counts once for each school.
+	const DictRef kinds = artifact_rules::worn_specialty_bonuses(state, hero);
+	for (const Value &kind : gd::items(state, dict_value(kinds))) {
+		const double weight = gd::to_float(state.get(loadout_values, kind, int_value(0)));
+		const Value amount = gd::index(state, kinds, kind);
+		if (gd::is_dict(amount)) {
+			for (const Value &school : gd::items(state, amount)) {
+				score += gd::to_float(gd::index(state, amount.ref, school)) * weight;
+			}
+		} else {
+			score += gd::to_float(amount) * weight;
+		}
+	}
 	for (const Value &income_key : gd::field_items(state, bonuses, str(key::daily_income))) {
 		const Value amount = ai::vindex(state, gd::index(state, bonuses, str(key::daily_income)), income_key);
 		const double weight = gd::equal(state, income_key, str(key::gold)) ? ai::static_float(state, script, key::LOADOUT_GOLD_INCOME_VALUE) : ai::static_float(state, script, key::LOADOUT_INCOME_VALUE);

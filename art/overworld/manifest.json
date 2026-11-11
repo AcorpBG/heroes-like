@@ -42300,6 +42300,606 @@
       "presentation_role": "castaway_artifact_pickup",
       "accessible_description": "A lashed log raft with a ragged sail, a lantern, a bundle and a small chest, a silver amulet hanging from its mast.",
       "runtime_sha256": "1646e00de80319675dae9e02ccb40050c8ae80bd03d5f88f9d259fd8122f49e5"
+    },
+    "artifact_field_scribes_cap": {
+      "path": "res://art/artifacts/runtime/scribes_cap.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_novice_circlet": {
+      "path": "res://art/artifacts/runtime/novice_circlet.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_surveyors_cap": {
+      "path": "res://art/artifacts/runtime/surveyors_cap.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_lectors_hood": {
+      "path": "res://art/artifacts/runtime/lectors_hood.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_candlewrights_coif": {
+      "path": "res://art/artifacts/runtime/candlewrights_coif.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_drum_speakers_mask": {
+      "path": "res://art/artifacts/runtime/drum_speakers_mask.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_lens_readers_spectacles": {
+      "path": "res://art/artifacts/runtime/lens_readers_spectacles.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_helm_of_quiet_counsel": {
+      "path": "res://art/artifacts/runtime/helm_of_quiet_counsel.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_furnace_seers_visor": {
+      "path": "res://art/artifacts/runtime/furnace_seers_visor.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_crown_of_green_wood": {
+      "path": "res://art/artifacts/runtime/crown_of_green_wood.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_twofold_diadem": {
+      "path": "res://art/artifacts/runtime/twofold_diadem.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_crown_of_the_empty_throne": {
+      "path": "res://art/artifacts/runtime/crown_of_the_empty_throne.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_prism_bead": {
+      "path": "res://art/artifacts/runtime/prism_bead.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_ember_locket": {
+      "path": "res://art/artifacts/runtime/ember_locket.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_seedling_pendant": {
+      "path": "res://art/artifacts/runtime/seedling_pendant.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_cinder_pendant": {
+      "path": "res://art/artifacts/runtime/cinder_pendant.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mist_vial": {
+      "path": "res://art/artifacts/runtime/mist_vial.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_daybreak_torc": {
+      "path": "res://art/artifacts/runtime/daybreak_torc.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_collar_of_the_loud_voice": {
+      "path": "res://art/artifacts/runtime/collar_of_the_loud_voice.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_thornmothers_necklace": {
+      "path": "res://art/artifacts/runtime/thornmothers_necklace.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_penitents_chain": {
+      "path": "res://art/artifacts/runtime/penitents_chain.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_bog_witch_teeth": {
+      "path": "res://art/artifacts/runtime/bog_witch_teeth.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_unanswered_word": {
+      "path": "res://art/artifacts/runtime/the_unanswered_word.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_flame": {
+      "path": "res://art/artifacts/runtime/the_flame.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_travellers_cloak": {
+      "path": "res://art/artifacts/runtime/travellers_cloak.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_warded_shawl": {
+      "path": "res://art/artifacts/runtime/warded_shawl.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_reedskin_mantle": {
+      "path": "res://art/artifacts/runtime/reedskin_mantle.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_fogcutter_cape": {
+      "path": "res://art/artifacts/runtime/fogcutter_cape.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_watchmans_greatcoat": {
+      "path": "res://art/artifacts/runtime/watchmans_greatcoat.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mirrorweave_cloak": {
+      "path": "res://art/artifacts/runtime/mirrorweave_cloak.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_oathkeepers_mantle": {
+      "path": "res://art/artifacts/runtime/oathkeepers_mantle.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_cloak_of_turned_words": {
+      "path": "res://art/artifacts/runtime/cloak_of_turned_words.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mantle_of_the_empty_throne": {
+      "path": "res://art/artifacts/runtime/mantle_of_the_empty_throne.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_stalkers_pelt": {
+      "path": "res://art/artifacts/runtime/stalkers_pelt.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_cinderproof_cape": {
+      "path": "res://art/artifacts/runtime/cinderproof_cape.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_shroud_of_the_unseen_fleet": {
+      "path": "res://art/artifacts/runtime/shroud_of_the_unseen_fleet.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_padded_jack": {
+      "path": "res://art/artifacts/runtime/padded_jack.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_drovers_vest": {
+      "path": "res://art/artifacts/runtime/drovers_vest.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_pikeward_plate": {
+      "path": "res://art/artifacts/runtime/pikeward_plate.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_banded_hauberk": {
+      "path": "res://art/artifacts/runtime/banded_hauberk.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_boilerplate_cuirass": {
+      "path": "res://art/artifacts/runtime/boilerplate_cuirass.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_barkskin_vest": {
+      "path": "res://art/artifacts/runtime/barkskin_vest.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_relief_line_breastplate": {
+      "path": "res://art/artifacts/runtime/relief_line_breastplate.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_penitents_hairshirt": {
+      "path": "res://art/artifacts/runtime/penitents_hairshirt.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_wardens_lamellar": {
+      "path": "res://art/artifacts/runtime/wardens_lamellar.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_prismatic_harness": {
+      "path": "res://art/artifacts/runtime/prismatic_harness.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_unbroken_wall": {
+      "path": "res://art/artifacts/runtime/the_unbroken_wall.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mother_graft_mail": {
+      "path": "res://art/artifacts/runtime/mother_graft_mail.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_soldiers_sidearm": {
+      "path": "res://art/artifacts/runtime/soldiers_sidearm.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_hunters_bow": {
+      "path": "res://art/artifacts/runtime/hunters_bow.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_foot_lantern": {
+      "path": "res://art/artifacts/runtime/foot_lantern.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_pocket_compass": {
+      "path": "res://art/artifacts/runtime/pocket_compass.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_rivet_hammer": {
+      "path": "res://art/artifacts/runtime/rivet_hammer.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_reed_spear": {
+      "path": "res://art/artifacts/runtime/reed_spear.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_captains_sabre": {
+      "path": "res://art/artifacts/runtime/captains_sabre.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_longwatch_spyglass": {
+      "path": "res://art/artifacts/runtime/longwatch_spyglass.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_yew_warbow": {
+      "path": "res://art/artifacts/runtime/yew_warbow.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_parrying_dagger": {
+      "path": "res://art/artifacts/runtime/parrying_dagger.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_lockkeepers_pike": {
+      "path": "res://art/artifacts/runtime/lockkeepers_pike.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_harpoon_of_the_wake": {
+      "path": "res://art/artifacts/runtime/harpoon_of_the_wake.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_signal_mirror": {
+      "path": "res://art/artifacts/runtime/signal_mirror.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_pruning_hook": {
+      "path": "res://art/artifacts/runtime/pruning_hook.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_question": {
+      "path": "res://art/artifacts/runtime/the_question.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_answer": {
+      "path": "res://art/artifacts/runtime/the_answer.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_sceptre_of_the_empty_throne": {
+      "path": "res://art/artifacts/runtime/sceptre_of_the_empty_throne.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_stormcallers_horn": {
+      "path": "res://art/artifacts/runtime/stormcallers_horn.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_astrolabe_of_far_roads": {
+      "path": "res://art/artifacts/runtime/astrolabe_of_far_roads.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_butchers_maul": {
+      "path": "res://art/artifacts/runtime/butchers_maul.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_siege_mattock": {
+      "path": "res://art/artifacts/runtime/siege_mattock.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_boarding_axe": {
+      "path": "res://art/artifacts/runtime/boarding_axe.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_last_gate": {
+      "path": "res://art/artifacts/runtime/the_last_gate.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_never_empty_quiver": {
+      "path": "res://art/artifacts/runtime/never_empty_quiver.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_staff_of_the_first_tree": {
+      "path": "res://art/artifacts/runtime/staff_of_the_first_tree.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_opening_cut": {
+      "path": "res://art/artifacts/runtime/the_opening_cut.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_copper_signet": {
+      "path": "res://art/artifacts/runtime/copper_signet.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_bosuns_ring": {
+      "path": "res://art/artifacts/runtime/bosuns_ring.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_apprentices_band": {
+      "path": "res://art/artifacts/runtime/apprentices_band.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_knot_ring": {
+      "path": "res://art/artifacts/runtime/knot_ring.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_vow_of_giving": {
+      "path": "res://art/artifacts/runtime/vow_of_giving.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_vow_of_keeping": {
+      "path": "res://art/artifacts/runtime/vow_of_keeping.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_merchants_seal": {
+      "path": "res://art/artifacts/runtime/merchants_seal.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_hexwrights_loop": {
+      "path": "res://art/artifacts/runtime/hexwrights_loop.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_granary_seal": {
+      "path": "res://art/artifacts/runtime/granary_seal.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_ring_of_the_short_road": {
+      "path": "res://art/artifacts/runtime/ring_of_the_short_road.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_signet_of_the_empty_throne": {
+      "path": "res://art/artifacts/runtime/signet_of_the_empty_throne.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_lens": {
+      "path": "res://art/artifacts/runtime/the_lens.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_debtors_band": {
+      "path": "res://art/artifacts/runtime/debtors_band.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_saltcounters_ring": {
+      "path": "res://art/artifacts/runtime/saltcounters_ring.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_ring_of_the_noon_hour": {
+      "path": "res://art/artifacts/runtime/ring_of_the_noon_hour.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_open_hand": {
+      "path": "res://art/artifacts/runtime/the_open_hand.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_marching_boots": {
+      "path": "res://art/artifacts/runtime/marching_boots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_surveyors_boots": {
+      "path": "res://art/artifacts/runtime/surveyors_boots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_night_watch_boots": {
+      "path": "res://art/artifacts/runtime/night_watch_boots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_fenwalkers": {
+      "path": "res://art/artifacts/runtime/fenwalkers.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_couriers_spurs": {
+      "path": "res://art/artifacts/runtime/couriers_spurs.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_longstride_greaves": {
+      "path": "res://art/artifacts/runtime/longstride_greaves.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_penitents_sandals": {
+      "path": "res://art/artifacts/runtime/penitents_sandals.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_deckhands_seaboots": {
+      "path": "res://art/artifacts/runtime/deckhands_seaboots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_rail_walkers_boots": {
+      "path": "res://art/artifacts/runtime/rail_walkers_boots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_roadeater_boots": {
+      "path": "res://art/artifacts/runtime/roadeater_boots.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_company_pennant": {
+      "path": "res://art/artifacts/runtime/company_pennant.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_drummers_guidon": {
+      "path": "res://art/artifacts/runtime/drummers_guidon.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_harvest_flag": {
+      "path": "res://art/artifacts/runtime/harvest_flag.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_banner_of_the_empty_throne": {
+      "path": "res://art/artifacts/runtime/banner_of_the_empty_throne.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_recruiters_colours": {
+      "path": "res://art/artifacts/runtime/recruiters_colours.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_charge_standard": {
+      "path": "res://art/artifacts/runtime/charge_standard.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_heralds_ensign": {
+      "path": "res://art/artifacts/runtime/heralds_ensign.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_standard_of_the_long_march": {
+      "path": "res://art/artifacts/runtime/standard_of_the_long_march.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_war_drum_of_the_red_hour": {
+      "path": "res://art/artifacts/runtime/war_drum_of_the_red_hour.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_oathfire_standard": {
+      "path": "res://art/artifacts/runtime/oathfire_standard.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_wake_lantern_ensign": {
+      "path": "res://art/artifacts/runtime/wake_lantern_ensign.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_colours_of_the_sworn": {
+      "path": "res://art/artifacts/runtime/colours_of_the_sworn.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_vanguards_thunder": {
+      "path": "res://art/artifacts/runtime/vanguards_thunder.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_blood_drum": {
+      "path": "res://art/artifacts/runtime/the_blood_drum.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_first_coin": {
+      "path": "res://art/artifacts/runtime/first_coin.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_second_coin": {
+      "path": "res://art/artifacts/runtime/second_coin.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_tin_cup": {
+      "path": "res://art/artifacts/runtime/tin_cup.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_field_journal": {
+      "path": "res://art/artifacts/runtime/field_journal.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_sun_dial_charm": {
+      "path": "res://art/artifacts/runtime/sun_dial_charm.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_salt_pouch": {
+      "path": "res://art/artifacts/runtime/salt_pouch.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_toll_token": {
+      "path": "res://art/artifacts/runtime/toll_token.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_seed_purse": {
+      "path": "res://art/artifacts/runtime/seed_purse.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_pressure_whistle": {
+      "path": "res://art/artifacts/runtime/pressure_whistle.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_dawn_chime": {
+      "path": "res://art/artifacts/runtime/dawn_chime.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_ember_chime": {
+      "path": "res://art/artifacts/runtime/ember_chime.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_leaf_chime": {
+      "path": "res://art/artifacts/runtime/leaf_chime.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mist_chime": {
+      "path": "res://art/artifacts/runtime/mist_chime.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_quartermasters_ledger": {
+      "path": "res://art/artifacts/runtime/quartermasters_ledger.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_trophy_belt": {
+      "path": "res://art/artifacts/runtime/trophy_belt.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_old_campaign_map": {
+      "path": "res://art/artifacts/runtime/old_campaign_map.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_surgeons_roll": {
+      "path": "res://art/artifacts/runtime/surgeons_roll.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_guild_stamp": {
+      "path": "res://art/artifacts/runtime/guild_stamp.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_gauge_of_fair_weight": {
+      "path": "res://art/artifacts/runtime/gauge_of_fair_weight.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_herbalists_satchel": {
+      "path": "res://art/artifacts/runtime/herbalists_satchel.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_tax_farmers_strongbox": {
+      "path": "res://art/artifacts/runtime/tax_farmers_strongbox.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_hourglass_of_the_second_wind": {
+      "path": "res://art/artifacts/runtime/hourglass_of_the_second_wind.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_masters_primer": {
+      "path": "res://art/artifacts/runtime/masters_primer.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_brimming_horn": {
+      "path": "res://art/artifacts/runtime/brimming_horn.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_medal_of_the_thirty": {
+      "path": "res://art/artifacts/runtime/medal_of_the_thirty.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_wardstone": {
+      "path": "res://art/artifacts/runtime/wardstone.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_assayers_scales": {
+      "path": "res://art/artifacts/runtime/assayers_scales.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_hunt_tally_cord": {
+      "path": "res://art/artifacts/runtime/hunt_tally_cord.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_tuning_crystal": {
+      "path": "res://art/artifacts/runtime/tuning_crystal.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_seedbank_reliquary": {
+      "path": "res://art/artifacts/runtime/seedbank_reliquary.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_readers_case": {
+      "path": "res://art/artifacts/runtime/the_readers_case.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_ever_coal": {
+      "path": "res://art/artifacts/runtime/the_ever_coal.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_mirror_of_the_far_shore": {
+      "path": "res://art/artifacts/runtime/mirror_of_the_far_shore.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_standing_order": {
+      "path": "res://art/artifacts/runtime/the_standing_order.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_writ_of_relief": {
+      "path": "res://art/artifacts/runtime/writ_of_relief.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
+    },
+    "artifact_field_the_prime_lens": {
+      "path": "res://art/artifacts/runtime/the_prime_lens.png",
+      "source_model": "artifact_rework_20261111_inventory_icon"
     }
   },
   "resource_site_sprites": {
@@ -44227,75 +44827,156 @@
     "background": "transparent"
   },
   "artifact_field_sprites": {
-    "artifact_trailsinger_boots": "artifact_field_trailsinger_boots",
-    "artifact_quarry_tally_rod": "artifact_field_quarry_tally_rod",
-    "artifact_warcrest_pennon": "artifact_field_warcrest_pennon",
-    "artifact_bastion_gorget": "artifact_field_bastion_gorget",
-    "artifact_waymark_compass": "artifact_field_waymark_compass",
-    "artifact_milepost_lantern": "artifact_field_milepost_lantern",
-    "artifact_tollstone_ring": "artifact_field_tollstone_ring",
-    "artifact_mudglass_beads": "artifact_field_mudglass_beads",
-    "artifact_choir_tuning_fork": "artifact_field_choir_tuning_fork",
-    "artifact_living_bridge_knot": "artifact_field_living_bridge_knot",
-    "artifact_pressure_gauge_reliquary": "artifact_field_pressure_gauge_reliquary",
-    "artifact_black_sail_compass": "artifact_field_black_sail_compass",
-    "artifact_rainstar_sextant": "artifact_field_rainstar_sextant",
-    "artifact_asterfall_mantle": "artifact_field_asterfall_mantle",
-    "artifact_cometwake_pennon": "artifact_field_cometwake_pennon",
-    "artifact_bridgefire_standard": "artifact_field_bridgefire_standard",
-    "artifact_reedshadow_waders": "artifact_field_reedshadow_waders",
-    "artifact_prismward_mantle": "artifact_field_prismward_mantle",
-    "artifact_graftbark_cuirass": "artifact_field_graftbark_cuirass",
-    "artifact_quenchplate_vambrace": "artifact_field_quenchplate_vambrace",
-    "artifact_fogwake_deckboots": "artifact_field_fogwake_deckboots",
-    "artifact_lockflame_writ_banner": "artifact_field_lockflame_writ_banner",
-    "artifact_mirechain_hunt_totem": "artifact_field_mirechain_hunt_totem",
-    "artifact_zenith_prism_pennon": "artifact_field_zenith_prism_pennon",
-    "artifact_briarcrown_covenant_standard": "artifact_field_briarcrown_covenant_standard",
-    "artifact_redline_warrant_gonfalon": "artifact_field_redline_warrant_gonfalon",
-    "artifact_wakebell_mourning_ensign": "artifact_field_wakebell_mourning_ensign",
-    "artifact_lockward_beacon_key": "artifact_field_lockward_beacon_key",
-    "artifact_fenhound_scent_bell": "artifact_field_fenhound_scent_bell",
-    "artifact_meridian_relay_lens": "artifact_field_meridian_relay_lens",
-    "artifact_rootpath_seed_compass": "artifact_field_rootpath_seed_compass",
-    "artifact_redline_survey_dial": "artifact_field_redline_survey_dial",
-    "artifact_drowned_star_astrolabe": "artifact_field_drowned_star_astrolabe",
-    "artifact_lockfire_assize_seal": "artifact_field_lockfire_assize_seal",
-    "artifact_rainwrit_beacon_seal": "artifact_field_rainwrit_beacon_seal",
-    "artifact_ashcrown_crownring": "artifact_field_ashcrown_crownring",
-    "artifact_miremoon_hunt_drum": "artifact_field_miremoon_hunt_drum",
-    "artifact_hollowreed_moonfang_drum": "artifact_field_hollowreed_moonfang_drum",
-    "artifact_miremoon_crown_tooth": "artifact_field_miremoon_crown_tooth",
-    "artifact_noonglass_orrery": "artifact_field_noonglass_orrery",
-    "artifact_meridian_choir_prism": "artifact_field_meridian_choir_prism",
-    "artifact_noonshard_facet_pinion": "artifact_field_noonshard_facet_pinion",
-    "artifact_worldroot_covenant_heartwood": "artifact_field_worldroot_covenant_heartwood",
-    "artifact_crownroot_oathseed_censer": "artifact_field_crownroot_oathseed_censer",
-    "artifact_rootvault_heartgrain_mantle": "artifact_field_rootvault_heartgrain_mantle",
-    "artifact_seventh_clause_pressure_key": "artifact_field_seventh_clause_pressure_key",
-    "artifact_blackbell_verdict_gauge": "artifact_field_blackbell_verdict_gauge",
-    "artifact_quenchbell_red_gauge_plate": "artifact_field_quenchbell_red_gauge_plate",
-    "artifact_last_bell_tideglass": "artifact_field_last_bell_tideglass",
-    "artifact_pale_sounding_memory_bell": "artifact_field_pale_sounding_memory_bell",
-    "artifact_saltwake_resonance_bell": "artifact_field_saltwake_resonance_bell",
-    "artifact_amberweir_lockpike_tallychain": "artifact_field_amberweir_lockpike_tallychain",
-    "artifact_moonbite_votive_drumkey": "artifact_field_moonbite_votive_drumkey",
-    "artifact_splitprism_parallax_duelglass": "artifact_field_splitprism_parallax_duelglass",
-    "artifact_woundroot_hearthseed_slingknot": "artifact_field_woundroot_hearthseed_slingknot",
-    "artifact_whitegauge_datum_spur": "artifact_field_whitegauge_datum_spur",
-    "artifact_dreamwake_tideglass_sounding": "artifact_field_dreamwake_tideglass_sounding",
-    "artifact_blackgauge_muster_bell": "artifact_field_blackgauge_muster_bell",
-    "artifact_varn_switchrail_compass": "artifact_field_varn_switchrail_compass",
-    "artifact_valechant_star_cadence_astrolabe": "artifact_field_valechant_star_cadence_astrolabe",
-    "artifact_ashgrove_millward_lantern": "artifact_field_ashgrove_millward_lantern",
-    "artifact_reedcaller_circle_horn": "artifact_field_reedcaller_circle_horn",
-    "artifact_muckscribe_fen_ink_reliquary": "artifact_field_muckscribe_fen_ink_reliquary",
-    "artifact_sevenfold_reserve_prism": "artifact_field_sevenfold_reserve_prism",
-    "artifact_glasswind_sightline_fan": "artifact_field_glasswind_sightline_fan",
-    "artifact_boltroot_quiver_loom": "artifact_field_boltroot_quiver_loom",
-    "artifact_pollenglass_spore_ampoule": "artifact_field_pollenglass_spore_ampoule",
-    "artifact_oriflag_stolen_signal_pennon": "artifact_field_oriflag_stolen_signal_pennon",
-    "artifact_tidehook_memory_bosun_bell": "artifact_field_tidehook_memory_bosun_bell"
+    "artifact_scribes_cap": "artifact_field_scribes_cap",
+    "artifact_novice_circlet": "artifact_field_novice_circlet",
+    "artifact_surveyors_cap": "artifact_field_surveyors_cap",
+    "artifact_lectors_hood": "artifact_field_lectors_hood",
+    "artifact_candlewrights_coif": "artifact_field_candlewrights_coif",
+    "artifact_drum_speakers_mask": "artifact_field_drum_speakers_mask",
+    "artifact_lens_readers_spectacles": "artifact_field_lens_readers_spectacles",
+    "artifact_helm_of_quiet_counsel": "artifact_field_helm_of_quiet_counsel",
+    "artifact_furnace_seers_visor": "artifact_field_furnace_seers_visor",
+    "artifact_crown_of_green_wood": "artifact_field_crown_of_green_wood",
+    "artifact_twofold_diadem": "artifact_field_twofold_diadem",
+    "artifact_crown_of_the_empty_throne": "artifact_field_crown_of_the_empty_throne",
+    "artifact_prism_bead": "artifact_field_prism_bead",
+    "artifact_ember_locket": "artifact_field_ember_locket",
+    "artifact_seedling_pendant": "artifact_field_seedling_pendant",
+    "artifact_cinder_pendant": "artifact_field_cinder_pendant",
+    "artifact_mist_vial": "artifact_field_mist_vial",
+    "artifact_daybreak_torc": "artifact_field_daybreak_torc",
+    "artifact_collar_of_the_loud_voice": "artifact_field_collar_of_the_loud_voice",
+    "artifact_thornmothers_necklace": "artifact_field_thornmothers_necklace",
+    "artifact_penitents_chain": "artifact_field_penitents_chain",
+    "artifact_bog_witch_teeth": "artifact_field_bog_witch_teeth",
+    "artifact_the_unanswered_word": "artifact_field_the_unanswered_word",
+    "artifact_the_flame": "artifact_field_the_flame",
+    "artifact_travellers_cloak": "artifact_field_travellers_cloak",
+    "artifact_warded_shawl": "artifact_field_warded_shawl",
+    "artifact_reedskin_mantle": "artifact_field_reedskin_mantle",
+    "artifact_fogcutter_cape": "artifact_field_fogcutter_cape",
+    "artifact_watchmans_greatcoat": "artifact_field_watchmans_greatcoat",
+    "artifact_mirrorweave_cloak": "artifact_field_mirrorweave_cloak",
+    "artifact_oathkeepers_mantle": "artifact_field_oathkeepers_mantle",
+    "artifact_cloak_of_turned_words": "artifact_field_cloak_of_turned_words",
+    "artifact_mantle_of_the_empty_throne": "artifact_field_mantle_of_the_empty_throne",
+    "artifact_stalkers_pelt": "artifact_field_stalkers_pelt",
+    "artifact_cinderproof_cape": "artifact_field_cinderproof_cape",
+    "artifact_shroud_of_the_unseen_fleet": "artifact_field_shroud_of_the_unseen_fleet",
+    "artifact_padded_jack": "artifact_field_padded_jack",
+    "artifact_drovers_vest": "artifact_field_drovers_vest",
+    "artifact_pikeward_plate": "artifact_field_pikeward_plate",
+    "artifact_banded_hauberk": "artifact_field_banded_hauberk",
+    "artifact_boilerplate_cuirass": "artifact_field_boilerplate_cuirass",
+    "artifact_barkskin_vest": "artifact_field_barkskin_vest",
+    "artifact_relief_line_breastplate": "artifact_field_relief_line_breastplate",
+    "artifact_penitents_hairshirt": "artifact_field_penitents_hairshirt",
+    "artifact_wardens_lamellar": "artifact_field_wardens_lamellar",
+    "artifact_prismatic_harness": "artifact_field_prismatic_harness",
+    "artifact_the_unbroken_wall": "artifact_field_the_unbroken_wall",
+    "artifact_mother_graft_mail": "artifact_field_mother_graft_mail",
+    "artifact_soldiers_sidearm": "artifact_field_soldiers_sidearm",
+    "artifact_hunters_bow": "artifact_field_hunters_bow",
+    "artifact_foot_lantern": "artifact_field_foot_lantern",
+    "artifact_pocket_compass": "artifact_field_pocket_compass",
+    "artifact_rivet_hammer": "artifact_field_rivet_hammer",
+    "artifact_reed_spear": "artifact_field_reed_spear",
+    "artifact_captains_sabre": "artifact_field_captains_sabre",
+    "artifact_longwatch_spyglass": "artifact_field_longwatch_spyglass",
+    "artifact_yew_warbow": "artifact_field_yew_warbow",
+    "artifact_parrying_dagger": "artifact_field_parrying_dagger",
+    "artifact_lockkeepers_pike": "artifact_field_lockkeepers_pike",
+    "artifact_harpoon_of_the_wake": "artifact_field_harpoon_of_the_wake",
+    "artifact_signal_mirror": "artifact_field_signal_mirror",
+    "artifact_pruning_hook": "artifact_field_pruning_hook",
+    "artifact_the_question": "artifact_field_the_question",
+    "artifact_the_answer": "artifact_field_the_answer",
+    "artifact_sceptre_of_the_empty_throne": "artifact_field_sceptre_of_the_empty_throne",
+    "artifact_stormcallers_horn": "artifact_field_stormcallers_horn",
+    "artifact_astrolabe_of_far_roads": "artifact_field_astrolabe_of_far_roads",
+    "artifact_butchers_maul": "artifact_field_butchers_maul",
+    "artifact_siege_mattock": "artifact_field_siege_mattock",
+    "artifact_boarding_axe": "artifact_field_boarding_axe",
+    "artifact_the_last_gate": "artifact_field_the_last_gate",
+    "artifact_never_empty_quiver": "artifact_field_never_empty_quiver",
+    "artifact_staff_of_the_first_tree": "artifact_field_staff_of_the_first_tree",
+    "artifact_the_opening_cut": "artifact_field_the_opening_cut",
+    "artifact_copper_signet": "artifact_field_copper_signet",
+    "artifact_bosuns_ring": "artifact_field_bosuns_ring",
+    "artifact_apprentices_band": "artifact_field_apprentices_band",
+    "artifact_knot_ring": "artifact_field_knot_ring",
+    "artifact_vow_of_giving": "artifact_field_vow_of_giving",
+    "artifact_vow_of_keeping": "artifact_field_vow_of_keeping",
+    "artifact_merchants_seal": "artifact_field_merchants_seal",
+    "artifact_hexwrights_loop": "artifact_field_hexwrights_loop",
+    "artifact_granary_seal": "artifact_field_granary_seal",
+    "artifact_ring_of_the_short_road": "artifact_field_ring_of_the_short_road",
+    "artifact_signet_of_the_empty_throne": "artifact_field_signet_of_the_empty_throne",
+    "artifact_the_lens": "artifact_field_the_lens",
+    "artifact_debtors_band": "artifact_field_debtors_band",
+    "artifact_saltcounters_ring": "artifact_field_saltcounters_ring",
+    "artifact_ring_of_the_noon_hour": "artifact_field_ring_of_the_noon_hour",
+    "artifact_the_open_hand": "artifact_field_the_open_hand",
+    "artifact_marching_boots": "artifact_field_marching_boots",
+    "artifact_surveyors_boots": "artifact_field_surveyors_boots",
+    "artifact_night_watch_boots": "artifact_field_night_watch_boots",
+    "artifact_fenwalkers": "artifact_field_fenwalkers",
+    "artifact_couriers_spurs": "artifact_field_couriers_spurs",
+    "artifact_longstride_greaves": "artifact_field_longstride_greaves",
+    "artifact_penitents_sandals": "artifact_field_penitents_sandals",
+    "artifact_deckhands_seaboots": "artifact_field_deckhands_seaboots",
+    "artifact_rail_walkers_boots": "artifact_field_rail_walkers_boots",
+    "artifact_roadeater_boots": "artifact_field_roadeater_boots",
+    "artifact_company_pennant": "artifact_field_company_pennant",
+    "artifact_drummers_guidon": "artifact_field_drummers_guidon",
+    "artifact_harvest_flag": "artifact_field_harvest_flag",
+    "artifact_banner_of_the_empty_throne": "artifact_field_banner_of_the_empty_throne",
+    "artifact_recruiters_colours": "artifact_field_recruiters_colours",
+    "artifact_charge_standard": "artifact_field_charge_standard",
+    "artifact_heralds_ensign": "artifact_field_heralds_ensign",
+    "artifact_standard_of_the_long_march": "artifact_field_standard_of_the_long_march",
+    "artifact_war_drum_of_the_red_hour": "artifact_field_war_drum_of_the_red_hour",
+    "artifact_oathfire_standard": "artifact_field_oathfire_standard",
+    "artifact_wake_lantern_ensign": "artifact_field_wake_lantern_ensign",
+    "artifact_colours_of_the_sworn": "artifact_field_colours_of_the_sworn",
+    "artifact_vanguards_thunder": "artifact_field_vanguards_thunder",
+    "artifact_the_blood_drum": "artifact_field_the_blood_drum",
+    "artifact_first_coin": "artifact_field_first_coin",
+    "artifact_second_coin": "artifact_field_second_coin",
+    "artifact_tin_cup": "artifact_field_tin_cup",
+    "artifact_field_journal": "artifact_field_field_journal",
+    "artifact_sun_dial_charm": "artifact_field_sun_dial_charm",
+    "artifact_salt_pouch": "artifact_field_salt_pouch",
+    "artifact_toll_token": "artifact_field_toll_token",
+    "artifact_seed_purse": "artifact_field_seed_purse",
+    "artifact_pressure_whistle": "artifact_field_pressure_whistle",
+    "artifact_dawn_chime": "artifact_field_dawn_chime",
+    "artifact_ember_chime": "artifact_field_ember_chime",
+    "artifact_leaf_chime": "artifact_field_leaf_chime",
+    "artifact_mist_chime": "artifact_field_mist_chime",
+    "artifact_quartermasters_ledger": "artifact_field_quartermasters_ledger",
+    "artifact_trophy_belt": "artifact_field_trophy_belt",
+    "artifact_old_campaign_map": "artifact_field_old_campaign_map",
+    "artifact_surgeons_roll": "artifact_field_surgeons_roll",
+    "artifact_guild_stamp": "artifact_field_guild_stamp",
+    "artifact_gauge_of_fair_weight": "artifact_field_gauge_of_fair_weight",
+    "artifact_herbalists_satchel": "artifact_field_herbalists_satchel",
+    "artifact_tax_farmers_strongbox": "artifact_field_tax_farmers_strongbox",
+    "artifact_hourglass_of_the_second_wind": "artifact_field_hourglass_of_the_second_wind",
+    "artifact_masters_primer": "artifact_field_masters_primer",
+    "artifact_brimming_horn": "artifact_field_brimming_horn",
+    "artifact_medal_of_the_thirty": "artifact_field_medal_of_the_thirty",
+    "artifact_wardstone": "artifact_field_wardstone",
+    "artifact_assayers_scales": "artifact_field_assayers_scales",
+    "artifact_hunt_tally_cord": "artifact_field_hunt_tally_cord",
+    "artifact_tuning_crystal": "artifact_field_tuning_crystal",
+    "artifact_seedbank_reliquary": "artifact_field_seedbank_reliquary",
+    "artifact_the_readers_case": "artifact_field_the_readers_case",
+    "artifact_the_ever_coal": "artifact_field_the_ever_coal",
+    "artifact_mirror_of_the_far_shore": "artifact_field_mirror_of_the_far_shore",
+    "artifact_the_standing_order": "artifact_field_the_standing_order",
+    "artifact_writ_of_relief": "artifact_field_writ_of_relief",
+    "artifact_the_prime_lens": "artifact_field_the_prime_lens"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

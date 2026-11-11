@@ -280,6 +280,8 @@ AURELION_KEY(_catalog_source, "_catalog_source")
 AURELION_KEY(_catalog_index, "_catalog_index")
 // A faction artifact's extra bonuses for heroes of its faction (docs/artifact-system.md).
 AURELION_KEY(home_bonuses, "home_bonuses")
+// What an artifact gives, as its row words it (tools/build_artifact_content.py).
+AURELION_KEY(effect_text, "effect_text")
 
 // Also in battle_keys.inc on native-phase1-battle, which drops them when it takes main.
 AURELION_KEY(archetype, "archetype")

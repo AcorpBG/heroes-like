@@ -2,7 +2,7 @@
 
 The owner reworked the artifacts on 2026-11-11, after the hero menu gave a hero fourteen places to wear them (`docs/hero-screen.md`). It was settled in two drafts on a local plan page (`.artifacts/artifact_plan/artifact_plan.html`, built by `.artifacts/artifact_plan/build/plan.py`; plan pages stay local views, never published). This doc holds the rules, the decisions and the build order. The 150 artifacts and ten sets are in `docs/artifact-system-catalogue.md`.
 
-Nothing here is in the game until its slice is closed; the build order at the end says what is.
+The 150 artifacts, their icons and their sets' numeric steps are in the game since `artifact-catalogue-switch-20261111`. The 32 special effects are not: the build order at the end says what is.
 
 ## Why
 
@@ -118,15 +118,17 @@ Ten sets, 31 pieces, in `docs/artifact-system-catalogue.md`. A set's steps apply
 
 ## Special effects
 
-32 in all: one on each of the 22 epics and one for each full set. Each is a small rule of its own and they are built in batches after the numbers. Their wording is in the catalogue. Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
+32 in all: one on each of the 22 epics and one for each full set. Each is a small rule of its own and they are built in batches after the numbers. An artifact's row carries its special effect's text with `special_live` false until the rule exists (`LIVE_SPECIALS` in `tools/build_artifact_content.py`), and the game shows only live ones: until then an epic is its five points and a full set its numeric steps. Their wording is in the catalogue. Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
 
 ## Getting them
 
-Unchanged: a generated map sorts its artifact pickups into the four bands and draws each on its own from all artifacts of that band, never a scroll. With 150 artifacts the large map above would repeat about 16 of its 69 pickups. Guarded sites, markets and battle salvage draw from their reward lists, which are rewritten for the new catalogue at the switch.
+Unchanged: a generated map sorts its artifact pickups into the four bands and draws each on its own from all artifacts of that band, never a scroll. With 150 artifacts the large map above would repeat about 16 of its 69 pickups. A pickup is drawn on the map as the artifact's own icon (`artifact_field_sprites` in `art/overworld/manifest.json`).
+
+Guarded sites, markets and battle salvage draw from their reward lists (`tools/artifact_reward_tables.json` says who draws from each; the content tool fills in the artifacts): neutral commons for small caches; neutral commons, uncommons and rares for ordinary guarded sites; all 22 epics for the heaviest ones, where a hero is offered its own faction's epic and the 16 neutral ones; one faction rare for each of the faction services.
 
 ## Saved games
 
-A save made before the switch loses its old artifacts: what its heroes wear and carry, and the pickups still on its map. Nothing is converted.
+A save made before the switch loses its old artifacts: what its heroes wear and carry, and the pickups still on its map. Nothing is converted: loading drops every artifact the game no longer has (`normalize_hero_artifacts`, `build_artifact_nodes`).
 
 ## Build order
 
@@ -136,6 +138,15 @@ A save made before the switch loses its old artifacts: what its heroes wear and 
 4. `artifact-special-effects-20261111`: the 32 special effects, in batches.
 
 Measuring balance with a batch of games waits for the owner's ask.
+
+## Content and tools
+
+- `tools/artifact_catalogue.py` is the one copy of the artifacts and sets. Change it, then run `python tools/build_artifact_content.py` (writes `content/artifacts.json` and the map's pickup sprites; `--check` fails when they differ) and re-export `docs/artifact-system-catalogue.md`.
+- A row's `effect_text` and `ui.effect_lines`, `ui.price_lines` and `ui.home_lines` are the wording the game shows: `ArtifactRules.artifact_effect_summary` returns `effect_text`, the hero menu reads the lines.
+- `tools/build_artifact_icons.py` writes the icon sheets' prompts and cuts the sheets.
+- The computer players weigh the new kinds by `loadout_values` in `content/ai_hero_weights.json`, on the sum `artifact_rules::worn_specialty_bonuses` gives.
+- An artifact's description is the line that says what the object is; stories are not written.
+- The 69 old icons and map sprites are still in the repository, unused.
 
 ## Not in the plan
 

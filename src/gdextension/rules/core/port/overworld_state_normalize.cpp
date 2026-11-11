@@ -681,6 +681,12 @@ ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenar
 			}
 		}
 
+		// A pickup of an artifact the game no longer has (a save from before the
+		// artifact rework, docs/artifact-system.md) is gone from the map.
+		if (artifact_id != key::empty && gd::is_empty(state, gd::content_row(state, state::ContentTable::Artifact, artifact_id))) {
+			continue;
+		}
+
 		const DictRef node = state.new_dict();
 		state.set(node, str(key::placement_id), str(placement_id));
 		state.set(node, str(key::artifact_id), str(artifact_id));

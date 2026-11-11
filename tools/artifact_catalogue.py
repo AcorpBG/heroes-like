@@ -6,8 +6,83 @@ Each row: (name, slot, band, bonuses, extras). Bonuses are (kind, amount) or
 (kind, amount, school); the plan page's build prices them (one point is one
 rank of a hero specialty) and refuses a row that misses its band's budget. Extras: faction (with
 "home", the extra line for that faction's heroes), set, special (an epic's rule),
-price (a drawback), what (the object, in a few words).
+price (a drawback: bonuses with the opposite sign), what (the object, in a few
+words). A set's steps are (pieces worn, bonuses) and, last, (all pieces, the
+special effect's text).
 """
+
+# kind: (points for one unit, the rules' bonus key, text). One point is one rank
+# of a specialty (content/hero_specialties.json).
+KINDS = {
+    "atk": (0.5, "battle_attack", "+{n} Attack"), "def": (0.5, "battle_defense", "+{n} Defense"),
+    "pow": (1, "battle_power", "+{n} Power"), "kno": (1, "knowledge", "+{n} Knowledge"),
+    "mana": (1 / 3, "max_mana", "+{n} max mana"), "init": (1, "battle_initiative", "+{n} initiative"),
+    "coh": (1, "battle_cohesion", "+{n} cohesion"), "mom": (1, "battle_momentum", "+{n} momentum"),
+    "melee": (0.2, "melee_damage_pct", "+{n}% melee damage"), "ranged": (0.2, "ranged_damage_pct", "+{n}% ranged damage"),
+    "taken": (0.25, "damage_taken_pct", "troops take {n}% less damage"),
+    "guard": (1, "defend_defense_bonus", "defending stacks get +{n} more Defense"),
+    "retal": (0.1, "retaliation_damage_pct", "+{n}% retaliation damage"),
+    "siege": (0.1, "siege_damage_pct", "+{n}% damage when assaulting a town"),
+    "recover": (0.2, "victory_recovery_pct", "{n}% of the fallen recover after a won battle"),
+    "health": (1 / 3, "creature_health_pct", "+{n}% creature health"), "sdmg": (0.2, "spell_damage_pct", "+{n}% spell damage"),
+    "boost": (1, "buff_duration_bonus", "spell boosts last {n} turn longer"),
+    "curse": (1, "debuff_duration_bonus", "spell curses last {n} turn longer"),
+    "sres": (0.2, "battle_spell_resistance_pct", "+{n}% spell resistance"),
+    "cres": (0.2, "battle_control_resistance_pct", "+{n}% control resistance"),
+    "mvic": (0.5, "mana_after_victory", "regain {n} mana after a won battle"),
+    "school": (0.125, "school_potency_pct", "{s} spells: +{n}% damage and healing"),
+    "scost": (1, "school_mana_discount", "{s} spells cost {n} less"), "cost": (2, "mana_cost_discount", "all spells cost {n} less"),
+    "move": (1, "overworld_movement", "+{n} map movement"), "scout": (1, "scouting_radius", "+{n} scouting"),
+    "carry": (1, "movement_carry", "carry {n} unused movement into the next day"),
+    "gold": (1 / 75, "daily_income", "+{n} gold a day"), "woodore": (1, "daily_income", "+{n} wood and +{n} ore a day"),
+    "rare": (1, "daily_income", "+{n} of the wearer's faction's rare resource a day"),
+    "muster": (0.1, "recruit_growth_multiplier", "+{n}% creature growth, recruits cost {h}% less"),
+    "plunder": (0.1, "reward_bonus_pct", "+{n}% gold and resources from pickups and won battles"),
+    "exp": (0.2, "experience_bonus_pct", "+{n}% experience"),
+}
+MAGIC = {"pow", "kno", "mana", "sdmg", "boost", "curse", "mvic", "school", "scost", "cost"}
+
+
+def worth(bonuses):
+    """Points: one is one rank of a specialty. A price counts against."""
+    return sum(KINDS[bonus[0]][0] * bonus[1] for bonus in bonuses)
+
+
+def line(bonus):
+    """A bonus as the player reads it; a negative amount is a price."""
+    kind, amount = bonus[0], bonus[1]
+    school = bonus[2].capitalize() if len(bonus) > 2 else ""
+    if amount < 0:
+        if kind == "taken":
+            return "your troops take %d%% more damage" % -amount
+        return KINDS[kind][2].format(n=-amount, s=school, h=-amount // 2).replace("+", "-", 1)
+    return KINDS[kind][2].format(n=amount, s=school, h=amount // 2)
+
+
+def rules_bonuses(bonuses):
+    """The bonuses as an artifact row holds them: the rules' keys (docs/artifact-system.md, Bonuses)."""
+    row = {}
+    for bonus in bonuses:
+        kind, amount = bonus[0], bonus[1]
+        key = KINDS[kind][1]
+        if kind in ("school", "scost"):
+            row.setdefault(key, {})[bonus[2]] = row.get(key, {}).get(bonus[2], 0) + amount
+        elif kind == "gold":
+            row.setdefault(key, {})["gold"] = row.get(key, {}).get("gold", 0) + amount
+        elif kind == "woodore":
+            for resource in ("wood", "ore"):
+                row.setdefault(key, {})[resource] = row.get(key, {}).get(resource, 0) + amount
+        elif kind == "rare":
+            row.setdefault(key, {})["faction_rare_main"] = row.get(key, {}).get("faction_rare_main", 0) + amount
+        elif kind == "muster":
+            row["recruit_growth_multiplier"] = round(row.get("recruit_growth_multiplier", 0) + amount / 100.0, 4)
+            row["recruit_cost_delta"] = round(row.get("recruit_cost_delta", 0) - amount / 200.0, 4)
+        elif kind == "taken":
+            row[key] = row.get(key, 0) - amount
+        else:
+            row[key] = row.get(key, 0) + amount
+    return row
+
 
 EM, MI, SU, TH, BR, VE = "Embercourt", "Mireclaw", "Sunvault", "Thornwake", "Brasshollow", "Veilmourn"
 
@@ -46,7 +121,7 @@ ARTIFACTS = [
     ("Daybreak Torc", "neck", "uncommon", [("pow", 1), ("school", 8, "beacon")], {"what": "a gold torc ending in two small suns"}),
     ("Collar of the Loud Voice", "neck", "rare", [("pow", 2), ("sdmg", 5)], {"what": "a stiff silver collar engraved with open mouths"}),
     ("Thornmother's Necklace", "neck", "rare", [("pow", 1), ("school", 16, "root")], {"faction": TH, "home": [("recover", 5)], "what": "a string of rose hips and long thorns"}),
-    ("Penitent's Chain", "neck", "rare", [("pow", 3), ("sdmg", 10)], {"set": PENITENT, "price": "-1 Knowledge", "what": "a rusted iron neck chain carrying a plain square block of lead"}),
+    ("Penitent's Chain", "neck", "rare", [("pow", 3), ("sdmg", 10)], {"set": PENITENT, "price": [("kno", -1)], "what": "a rusted iron neck chain carrying a plain square block of lead"}),
     ("Bog-Witch Teeth", "neck", "rare", [("pow", 2), ("curse", 1)], {"faction": MI, "home": [("school", 8, "veil")], "what": "a necklace of yellow teeth and reed knots"}),
     ("The Unanswered Word", "neck", "epic", [("pow", 3), ("sdmg", 10)], {"special": "Your spells count only half of the enemy hero's Knowledge.", "what": "a silver tongue on a black ribbon"}),
     ("The Flame", "neck", "epic", [("pow", 2), ("mana", 9)], {"set": LENS, "special": "The first spell of each battle costs no mana.", "what": "a small flame that burns inside a crystal drop"}),
@@ -73,7 +148,7 @@ ARTIFACTS = [
     ("Boilerplate Cuirass", "armor", "uncommon", [("def", 2), ("taken", 4)], {"faction": BR, "home": [("health", 3)], "what": "a riveted cuirass cut from boiler plate"}),
     ("Barkskin Vest", "armor", "uncommon", [("health", 3), ("recover", 5)], {"faction": TH, "home": [("def", 2)], "what": "a vest of overlapping living bark"}),
     ("Relief-Line Breastplate", "armor", "rare", [("def", 2), ("guard", 1), ("coh", 1)], {"faction": EM, "home": [("taken", 4)], "what": "a breastplate stamped with a river lock"}),
-    ("Penitent's Hairshirt", "armor", "rare", [("def", 4), ("taken", 8), ("coh", 1)], {"set": PENITENT, "price": "-2 map movement", "what": "a coarse shirt sewn with iron plates"}),
+    ("Penitent's Hairshirt", "armor", "rare", [("def", 4), ("taken", 8), ("coh", 1)], {"set": PENITENT, "price": [("move", -2)], "what": "a coarse shirt sewn with iron plates"}),
     ("Wardens' Lamellar", "armor", "rare", [("def", 4), ("health", 3)], {"what": "laced lamellar in green lacquer"}),
     ("Prismatic Harness", "armor", "rare", [("def", 2), ("sres", 10)], {"faction": SU, "home": [("kno", 1)], "what": "a harness of crystal plates over white leather"}),
     ("The Unbroken Wall", "armor", "epic", [("def", 4), ("taken", 8), ("coh", 1)], {"special": "Your stacks' cohesion never falls below where it began the battle.", "what": "a tower-breastplate built like dressed stone"}),
@@ -99,7 +174,7 @@ ARTIFACTS = [
     ("Sceptre of the Empty Throne", "hand", "rare", [("atk", 2), ("coh", 1), ("init", 1)], {"set": REGALIA, "what": "a gold sceptre with a cracked orb"}),
     ("Stormcaller's Horn", "hand", "rare", [("init", 2), ("mom", 1)], {"what": "a great ram's horn bound in silver"}),
     ("Astrolabe of Far Roads", "hand", "rare", [("move", 2), ("scout", 1)], {"what": "a brass astrolabe engraved with roads"}),
-    ("Butcher's Maul", "hand", "rare", [("atk", 4), ("melee", 15)], {"price": "your troops take 4% more damage", "what": "a huge spiked maul, stained dark"}),
+    ("Butcher's Maul", "hand", "rare", [("atk", 4), ("melee", 15)], {"price": [("taken", -4)], "what": "a huge spiked maul, stained dark"}),
     ("Siege Mattock", "hand", "rare", [("atk", 2), ("siege", 20)], {"faction": BR, "home": [("melee", 5)], "what": "a heavy mattock with a steel beak"}),
     ("Boarding Axe", "hand", "rare", [("atk", 2), ("mom", 1), ("init", 1)], {"faction": VE, "home": [("retal", 10)], "what": "a hooked ship's axe hung with rope"}),
     ("The Last Gate", "hand", "epic", [("atk", 4), ("def", 4), ("coh", 1)], {"special": "The enemy cannot retreat or surrender.", "what": "a tall shield shaped like a barred gate"}),
@@ -120,7 +195,7 @@ ARTIFACTS = [
     ("Ring of the Short Road", "ring", "rare", [("cost", 1), ("mana", 3)], {"what": "a ring cut with a straight line through a maze"}),
     ("Signet of the Empty Throne", "ring", "rare", [("gold", 150), ("coh", 1)], {"set": REGALIA, "what": "a gold signet with a throne and no king"}),
     ("The Lens", "ring", "rare", [("pow", 1), ("sdmg", 10)], {"set": LENS, "what": "a ring set with a clear round lens"}),
-    ("Debtor's Band", "ring", "rare", [("cost", 2), ("mana", 3)], {"price": "-1 Power", "what": "a tight iron band stamped with tally marks"}),
+    ("Debtor's Band", "ring", "rare", [("cost", 2), ("mana", 3)], {"price": [("pow", -1)], "what": "a tight iron band stamped with tally marks"}),
     ("Saltcounter's Ring", "ring", "rare", [("gold", 150), ("plunder", 10)], {"faction": VE, "home": [("rare", 1)], "what": "a pale ring crusted with salt crystals"}),
     ("Ring of the Noon Hour", "ring", "epic", [("pow", 2), ("school", 16, "beacon"), ("scost", 1, "beacon")], {"special": "The hero casts Eternal Noon as if it knew it.", "what": "a gold ring holding a tiny sun at its height"}),
     ("The Open Hand", "ring", "epic", [("cost", 1), ("mana", 6), ("boost", 1)], {"special": "Your spells that strike an area do not hurt your own stacks.", "what": "a white ring shaped like fingers spread wide"}),
@@ -132,7 +207,7 @@ ARTIFACTS = [
     ("Fenwalkers", "boots", "uncommon", [("move", 2)], {"faction": MI, "home": [("scout", 1)], "what": "wide boots webbed like a frog's feet"}),
     ("Courier's Spurs", "boots", "uncommon", [("move", 2)], {"what": "riding boots with silver spurs"}),
     ("Longstride Greaves", "boots", "rare", [("move", 3)], {"what": "steel greaves with winged ankles"}),
-    ("Penitent's Sandals", "boots", "rare", [("move", 3), ("carry", 2)], {"set": PENITENT, "price": "-1 initiative", "what": "rope sandals worn thin"}),
+    ("Penitent's Sandals", "boots", "rare", [("move", 3), ("carry", 2)], {"set": PENITENT, "price": [("init", -1)], "what": "rope sandals worn thin"}),
     ("Deckhand's Seaboots", "boots", "rare", [("move", 2), ("scout", 1)], {"set": FERRY, "what": "tarred sea boots folded at the knee"}),
     ("Rail-Walker's Boots", "boots", "rare", [("move", 2), ("carry", 1)], {"faction": BR, "home": [("move", 1)], "what": "iron-shod boots with a wheel at the heel"}),
     ("Roadeater Boots", "boots", "epic", [("move", 4), ("carry", 1)], {"special": "Movement on roads costs half.", "what": "boots whose soles are a strip of paved road"}),
@@ -146,7 +221,7 @@ ARTIFACTS = [
     ("Charge Standard", "banner", "uncommon", [("mom", 1), ("init", 1)], {"what": "a red standard with a lance head"}),
     ("Herald's Ensign", "banner", "uncommon", [("init", 1), ("sres", 5)], {"what": "a white ensign with a silver trumpet"}),
     ("Standard of the Long March", "banner", "rare", [("init", 1), ("coh", 1), ("move", 1)], {"what": "a dust-brown standard sewn with road names"}),
-    ("War-Drum of the Red Hour", "banner", "rare", [("mom", 2), ("init", 2), ("atk", 2)], {"price": "-1 cohesion", "what": "a red war drum on a banner pole"}),
+    ("War-Drum of the Red Hour", "banner", "rare", [("mom", 2), ("init", 2), ("atk", 2)], {"price": [("coh", -1)], "what": "a red war drum on a banner pole"}),
     ("Oathfire Standard", "banner", "rare", [("coh", 2), ("guard", 1)], {"faction": EM, "home": [("def", 2)], "what": "a standard topped with a lit brazier"}),
     ("Wake-Lantern Ensign", "banner", "rare", [("init", 2), ("scout", 1)], {"faction": VE, "home": [("mom", 1)], "what": "a black ensign under a pale ship's lantern"}),
     ("Colours of the Sworn", "banner", "rare", [("coh", 2), ("recover", 5)], {"what": "a blue banner covered in signed names"}),
@@ -174,7 +249,7 @@ ARTIFACTS = [
     ("Guild Stamp", "trinket", "uncommon", [("gold", 150)], {"what": "a carved seal stamp and red wax"}),
     ("Gauge of Fair Weight", "trinket", "uncommon", [("woodore", 1), ("rare", 1)], {"faction": BR, "home": [("gold", 75)], "what": "a brass dial gauge with two needles"}),
     ("Herbalist's Satchel", "trinket", "uncommon", [("recover", 5), ("health", 3)], {"what": "a satchel stuffed with dried herbs"}),
-    ("Tax-Farmer's Strongbox", "trinket", "rare", [("gold", 300), ("woodore", 1)], {"price": "-1 map movement", "what": "an iron strongbox with three locks"}),
+    ("Tax-Farmer's Strongbox", "trinket", "rare", [("gold", 300), ("woodore", 1)], {"price": [("move", -1)], "what": "an iron strongbox with three locks"}),
     ("Hourglass of the Second Wind", "trinket", "rare", [("init", 1), ("carry", 1), ("move", 1)], {"what": "an hourglass whose sand runs upward"}),
     ("Master's Primer", "trinket", "rare", [("exp", 10), ("kno", 1)], {"what": "a small book with a hundred bookmarks"}),
     ("Brimming Horn", "trinket", "rare", [("gold", 150), ("rare", 1)], {"what": "a drinking horn spilling grain and coins"}),
@@ -198,11 +273,11 @@ SETS = [
     (VOWS, "Two rings made as a pair; they fill both ring places.", [(2, "Mana comes back twice as fast each day.")]),
     (QA, "A sword and its left-hand blade; they fill both hands.", [(2, "Your stacks strike back at every attack, not only the first each round.")]),
     (LENS, "A ring and a pendant: the lens gathers what the flame gives.", [(2, "A spell that destroys a stack returns half its mana.")]),
-    (CHIMES, "One chime for each school. All four fill every trinket place, so the hero wears no scroll.", [(2, "+3 max mana"), (3, "+1 Power"), (4, "Every spell is cast as if the hero had one more rank of its school's mastery.")]),
-    (REGALIA, "Five pieces of a lost king's regalia, from an uncommon banner up to the epic crown.", [(2, "+1 cohesion"), (3, "+1 Attack and +1 Defense"), (5, "The town the hero stands in may build twice a day.")]),
+    (CHIMES, "One chime for each school. All four fill every trinket place, so the hero wears no scroll.", [(2, [("mana", 3)]), (3, [("pow", 1)]), (4, "Every spell is cast as if the hero had one more rank of its school's mastery.")]),
+    (REGALIA, "Five pieces of a lost king's regalia, from an uncommon banner up to the epic crown.", [(2, [("coh", 1)]), (3, [("atk", 1), ("def", 1)]), (5, "The town the hero stands in may build twice a day.")]),
     (PENITENT, "Three strong rares, each with a price. Worn together the prices are lifted.", [(3, "The three prices no longer apply.")]),
-    (CARTO, "A surveyor's cap, compass and boots: three commons.", [(2, "+1 scouting"), (3, "Sand, swamp, snow, rough ground and lava cost the army no more than grass.")]),
-    (CAMP, "Four commons any army has lying about.", [(2, "+1 map movement"), (4, "After a day without a battle the hero starts the next day with +3 map movement.")]),
-    (FERRY, "Two coins for the ferryman and a pair of sea boots.", [(2, "+75 gold a day"), (3, "Boarding and leaving a ship costs no movement.")]),
-    (WATCH, "A watchman's coat, lantern and boots.", [(2, "+1 scouting"), (3, "All unused movement is kept for the next day.")]),
+    (CARTO, "A surveyor's cap, compass and boots: three commons.", [(2, [("scout", 1)]), (3, "Sand, swamp, snow, rough ground and lava cost the army no more than grass.")]),
+    (CAMP, "Four commons any army has lying about.", [(2, [("move", 1)]), (4, "After a day without a battle the hero starts the next day with +3 map movement.")]),
+    (FERRY, "Two coins for the ferryman and a pair of sea boots.", [(2, [("gold", 75)]), (3, "Boarding and leaving a ship costs no movement.")]),
+    (WATCH, "A watchman's coat, lantern and boots.", [(2, [("scout", 1)]), (3, "All unused movement is kept for the next day.")]),
 ]

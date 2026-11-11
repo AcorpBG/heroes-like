@@ -62,6 +62,13 @@ const KIND_NAMES := {
 const GOLD := Color(0.84, 0.67, 0.31)
 const GOLD_DIM := Color(0.55, 0.44, 0.24)
 const GOLD_BRIGHT := Color(1.0, 0.93, 0.70)
+## An artifact's band (docs/artifact-system.md): its colour on tiles and cards.
+const BAND_COLORS := {
+	"common": Color(0.66, 0.68, 0.70),
+	"uncommon": Color(0.46, 0.76, 0.48),
+	"rare": Color(0.38, 0.66, 0.90),
+	"epic": Color(0.78, 0.56, 0.94),
+}
 const HAIRLINE := Color(0.83, 0.68, 0.36, 0.45)
 const TILE_FILL := Color(0.075, 0.062, 0.05, 0.96)
 const TILE_HOVER := Color(0.14, 0.115, 0.085, 0.98)
@@ -290,7 +297,8 @@ func _build_identity() -> void:
 	var specialty_bonuses := Progression.aggregate_bonuses(hero)
 	for stat in ["attack", "defense", "power", "knowledge"]:
 		var base := int(hero.get("command", {}).get(stat, 0))
-		var bonus := int(artifact_bonuses.get("battle_" + stat, 0)) + int(specialty_bonuses.get("battle_" + stat, 0)) if stat in ["attack", "defense"] else 0
+		var bonus := int(artifact_bonuses.get("battle_" + stat, 0)) + int(specialty_bonuses.get("battle_" + stat, 0)) if stat in ["attack", "defense"] else int(specialty_bonuses.get("battle_power" if stat == "power" else "knowledge", 0))
+		bonus = maxi(bonus, -base)
 		var tile := PanelContainer.new()
 		tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tile.add_theme_stylebox_override("panel", _card_style())
@@ -306,7 +314,7 @@ func _build_identity() -> void:
 		column.add_child(glyph)
 		var caption := _label(column, String(stat).capitalize(), 12, "muted")
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		var number := _label(column, str(base + bonus), 24, "green" if bonus > 0 else "body")
+		var number := _label(column, str(base + bonus), 24, "green" if bonus > 0 else ("red" if bonus < 0 else "body"))
 		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func _calling_line() -> String:
@@ -638,6 +646,7 @@ func _build_artifacts(page: VBoxContainer) -> void:
 	for artifact_id_value in inventory:
 		var artifact_id := String(artifact_id_value)
 		var tile := _tile(Vector2(56.0, 56.0), _texture(Artifacts.artifact_icon_path(artifact_id)), null)
+		_band_pip(tile, artifact_id)
 		tile.name = "Pack_%s" % artifact_id
 		tile.set_meta("artifact_id", artifact_id)
 		tile.tooltip_text = _artifact_tooltip(artifact_id)
@@ -748,6 +757,21 @@ func _mark_drop_slots() -> void:
 
 ## What an artifact gives and its story: the hover text of its tile.
 func _artifact_tooltip(artifact_id: String) -> String:
+	var artifact := ContentService.get_artifact(artifact_id)
+	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
+	if ui.get("effect_lines", []) is Array and not (ui.get("effect_lines", []) as Array).is_empty():
+		var lines := PackedStringArray([Artifacts.artifact_name(artifact_id), "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(artifact_id), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()]])
+		lines.append_array(PackedStringArray(ui.effect_lines))
+		for price in ui.get("price_lines", []):
+			lines.append("Price: %s" % String(price))
+		if _is_home(artifact):
+			lines.append("At home: %s" % "; ".join(PackedStringArray(ui.get("home_lines", []))))
+		if bool(ui.get("special_live", false)):
+			lines.append(String(ui.get("special_text", "")))
+		var artifact_set := _artifact_set(String(artifact.get("set_id", "")))
+		if not artifact_set.is_empty():
+			lines.append("Set: %s" % String(artifact_set.get("name", "")))
+		return "\n".join(lines)
 	var parts := Artifacts.describe_artifact(artifact_id).split(" | ")
 	if parts.size() >= 4:
 		return "%s\n%s\n%s" % [Artifacts.artifact_name(artifact_id), parts[parts.size() - 1], parts[parts.size() - 2]]
@@ -763,6 +787,8 @@ func _slot_kind(slot: String) -> String:
 func _slot_tile(slot: String, artifact_id: String, tile_size: Vector2) -> Button:
 	var ghost := _icon("slot_" + _slot_kind(slot))
 	var tile := _tile(tile_size, _texture(Artifacts.artifact_icon_path(artifact_id)) if artifact_id != "" else null, ghost if artifact_id == "" else null)
+	if artifact_id != "":
+		_band_pip(tile, artifact_id)
 	tile.name = "Slot_%s" % slot
 	tile.set_meta("slot", slot)
 	tile.set_meta("artifact_id", artifact_id)
@@ -819,7 +845,8 @@ func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_
 	head.add_child(titles)
 	var title := _label(titles, Artifacts.artifact_name(item_id), 19, "gold")
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_label(titles, "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(item_id), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], 13, "muted")
+	var band := _label(titles, "%s · %s" % [String(KIND_NAMES.get(Artifacts.artifact_slot(item_id), "item")).capitalize(), String(artifact.get("rarity", "common")).capitalize()], 13, "muted")
+	band.add_theme_color_override("font_color", BAND_COLORS.get(String(artifact.get("rarity", "")), Visuals.text_color("muted")))
 	_label(titles, "Worn: %s" % String(SLOT_NAMES.get(at_slot, "")) if at_slot != "" else "In the backpack", 13, "body")
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -830,9 +857,12 @@ func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_
 	lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lines.add_theme_constant_override("separation", 8)
 	scroll.add_child(lines)
+	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
 	# The rules' line reads "name | rarity and family | roles | story | what it gives".
 	var parts := Artifacts.describe_artifact(item_id).split(" | ")
-	if parts.size() >= 4:
+	if ui.get("effect_lines", []) is Array and not (ui.get("effect_lines", []) as Array).is_empty():
+		_show_artifact_lines(lines, artifact, ui)
+	elif parts.size() >= 4:
 		_wrapped(lines, parts[parts.size() - 1], 15, "gold")
 		_wrapped(lines, parts[parts.size() - 2], 14, "body")
 		_wrapped(lines, " · ".join(parts.slice(1, parts.size() - 2)), 12, "muted")
@@ -860,12 +890,95 @@ func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_
 		var note := _label(column, "Artifacts are worn and stowed from the hero menu on the map.", 12, "muted")
 		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
-## One insignia row per artifact set the hero carries pieces of.
+## What an artifact gives, line by line: its bonuses, its price in red, its
+## home line (green for a hero of its faction), a special effect that is in the
+## game, its set and how far the hero is with it, then what the object is.
+func _show_artifact_lines(lines: VBoxContainer, artifact: Dictionary, ui: Dictionary) -> void:
+	_wrapped(lines, "\n".join(PackedStringArray(ui.effect_lines)), 15, "gold").name = "ArtifactGives"
+	for price in ui.get("price_lines", []):
+		_wrapped(lines, "Price: %s" % String(price), 14, "red").name = "ArtifactPrice"
+	if ui.get("home_lines", []) is Array and not (ui.get("home_lines", []) as Array).is_empty():
+		var factions: Array = artifact.get("faction_affinity", [])
+		var faction_name := String(ContentService.get_faction(String(factions[0])).get("name", "Its faction")) if not factions.is_empty() else "Its faction"
+		var at_home := _is_home(artifact)
+		_wrapped(lines, "%s: %s" % ["At home with this hero" if at_home else "For heroes of the %s" % faction_name, "; ".join(PackedStringArray(ui.home_lines))], 14, "green" if at_home else "muted").name = "ArtifactHome"
+	if bool(ui.get("special_live", false)):
+		_wrapped(lines, String(ui.get("special_text", "")), 14, "body").name = "ArtifactSpecial"
+	var artifact_set := _artifact_set(String(artifact.get("set_id", "")))
+	if not artifact_set.is_empty():
+		var worn := _set_pieces_worn(artifact_set)
+		var pieces: Array = artifact_set.get("piece_ids", [])
+		_wrapped(lines, "%s · %d of %d worn" % [String(artifact_set.get("name", "Set")), worn, pieces.size()], 14, "green" if worn >= pieces.size() else "gold").name = "ArtifactSet"
+		var steps := _set_steps_text(artifact_set, worn)
+		if steps != "":
+			_wrapped(lines, steps, 13, "muted")
+	_wrapped(lines, String(artifact.get("description", "")), 13, "muted")
+
+## A dot in the artifact's band colour, in the tile's corner.
+func _band_pip(tile: Button, artifact_id: String) -> void:
+	var color: Color = BAND_COLORS.get(String(ContentService.get_artifact(artifact_id).get("rarity", "")), Color(0, 0, 0, 0))
+	if color.a <= 0.0:
+		return
+	var pip := Panel.new()
+	pip.name = "BandPip"
+	pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pip.add_theme_stylebox_override("panel", _box(Color(0.05, 0.04, 0.03), 1, 5, color))
+	pip.position = Vector2(4.0, 4.0)
+	pip.size = Vector2(10.0, 10.0)
+	tile.add_child(pip)
+
+## Whether the hero's faction is the artifact's own.
+func _is_home(artifact: Dictionary) -> bool:
+	var factions: Array = artifact.get("faction_affinity", []) if artifact.get("faction_affinity", []) is Array else []
+	if factions.is_empty() or not artifact.has("home_bonuses"):
+		return false
+	var faction_id := String(hero.get("faction_id", ""))
+	if faction_id == "":
+		faction_id = String(Heroes.hero_template(hero).get("faction_id", ""))
+	return faction_id != "" and faction_id in factions
+
+## A set's row in the artifact content, or {}.
+func _artifact_set(set_id: String) -> Dictionary:
+	if set_id == "":
+		return {}
+	for artifact_set in ContentService.load_json(ContentService.ARTIFACTS_PATH).get("sets", []):
+		if artifact_set is Dictionary and String(artifact_set.get("id", "")) == set_id:
+			return artifact_set
+	return {}
+
+func _set_pieces_worn(artifact_set: Dictionary) -> int:
+	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
+	var worn := 0
+	for piece_id in artifact_set.get("piece_ids", []):
+		if String(piece_id) in equipped.values():
+			worn += 1
+	return worn
+
+## A set's steps, one a line; the ones the hero has reached are ticked.
+func _set_steps_text(artifact_set: Dictionary, worn: int) -> String:
+	var steps := PackedStringArray()
+	for step in artifact_set.get("piece_thresholds", []):
+		steps.append("%s %d pieces: %s" % ["✓" if worn >= int(step.get("count", 0)) else "·", int(step.get("count", 0)), String(step.get("summary", ""))])
+	if bool(artifact_set.get("special_live", false)):
+		var all: int = (artifact_set.get("piece_ids", []) as Array).size()
+		steps.append("%s All %d: %s" % ["✓" if worn >= all else "·", all, String(artifact_set.get("special_text", ""))])
+	return "\n".join(steps)
+
+## One row per artifact set the hero wears pieces of: its name and how many.
 func _build_artifact_sets(box: VBoxContainer) -> void:
 	for set_state in Artifacts.artifact_set_runtime_state(hero):
-		if not (set_state is Dictionary) or not (set_state.get("insignia", {}) is Dictionary): continue
-		var texture := _insignia_texture(set_state.insignia)
-		if texture == null: continue
+		if not (set_state is Dictionary): continue
+		var texture := _insignia_texture(set_state.insignia) if set_state.get("insignia", {}) is Dictionary else null
+		if texture == null:
+			var artifact_set := _artifact_set(String(set_state.get("set_id", "")))
+			var worn := int(set_state.get("equipped_piece_count", 0))
+			var line := _label(box, "%s %d/%d" % [String(set_state.get("name", "Set")), worn, int(set_state.get("piece_count", 0))], 13, "green" if bool(set_state.get("complete", false)) else "gold")
+			line.name = "ArtifactSet_%s" % String(set_state.get("set_id", "set"))
+			line.custom_minimum_size.x = 136.0
+			line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			line.mouse_filter = Control.MOUSE_FILTER_STOP
+			line.tooltip_text = "%s\n%s" % [String(artifact_set.get("identity", "")), _set_steps_text(artifact_set, worn)]
+			continue
 		var row := HBoxContainer.new()
 		row.name = "ArtifactSetInsignia_%s" % String(set_state.get("set_id", "set"))
 		row.set_meta("artifact_set_id", String(set_state.get("set_id", "")))
