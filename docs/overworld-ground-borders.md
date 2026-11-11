@@ -16,6 +16,14 @@ The ground shader cross-faded the four nearest tile materials over about half a 
 
 Presentation only: the per-tile lookup, fog, gameplay and saves are unchanged.
 
+## Border noise: integer lattice hash
+
+Slice: `ground-border-noise-seams-20261111` (owner report, 2026-11-11: the beach to water transition looked bad).
+
+Shores, biome borders and fog edges were cut into straight-edged wedges. The value noise behind `border_warp` (and the fog shader's `fbm`) hashed its lattice points with `fract(p * vec2(123.34, 456.21))`, then a dot product and a second `fract`: products in the thousands, squared, so one bit of rounding changes the result completely. A lattice corner is read by the four cells round it, each through a different expression (`i`, `i + vec2(1, 0)`, ...), and the GPU compiler may fold the constant offset into the multiply. The same corner then got different values in neighbouring cells, the noise jumped along the lattice lines (60, 20 and 75 degrees off the grid, the three rotated lattices), and the sand band, drawn from thresholds on the bent weights, broke there. With the warp at zero the shore was clean, which located it.
+
+`border_hash` and the fog's `hash` now work on integer lattice coordinates (`uvec2`, multiply and xor): the same point gives the same value everywhere. The meander's character and all tuning values are unchanged; the exact shapes of borders differ from before.
+
 ## Impassable land: walled void
 
 Slice: `art-overworld-impassable-rock-void-20261015` (owner pick C, thicker, from in-game comparison sheets, 2026-10-15). Rock looked like walkable gravel, so blocked ground could not be told apart from cave floor.

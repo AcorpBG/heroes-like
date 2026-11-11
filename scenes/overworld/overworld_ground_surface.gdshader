@@ -81,9 +81,14 @@ float average_luma(float slot) {
 }
 
 float border_hash(vec2 p) {
-	p = fract(p * vec2(123.34, 456.21));
-	p += dot(p, p + 45.32);
-	return fract(p.x * p.y);
+	// Integer arithmetic on the lattice point: every fragment gets the same
+	// value for the same point. The float hash used before amplified rounding
+	// (fract of products in the thousands, then squared), and its result at a
+	// shared corner differed between the two cells that read it, which cut
+	// the noise, and every border bent by it, along straight lattice lines.
+	uvec2 q = uvec2(ivec2(p)) * uvec2(1597334673u, 3812015801u);
+	uint n = (q.x ^ q.y) * 1597334673u;
+	return float(n >> 8u) * (1.0 / 16777216.0);
 }
 
 float border_noise(vec2 p) {
