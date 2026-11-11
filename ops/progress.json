@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "town-thornwake-cuts-20261111",
- "currentSliceTitle": "Thornwake: four bad building cuts mended",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-11T14:48:30Z",
+ "currentSliceTitle": "Four Thornwake buildings re-cut whole.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-11T14:48:43Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "town-thornwake-cuts-20261111",
-   "title": "Thornwake: four bad building cuts mended",
-   "status": "in_progress",
-   "goal": "Owner: the hall's cut is bad in Thornwake (moss roof missing between dome and arcade). Mend the mattes BiRefNet got wrong: hall stages 2 and 3, first white-hart lodge, root bastion den; root_ravine_matte_patches.py, layers repackaged.",
-   "docs": [
-    "docs/common-town-building-template.md"
-   ],
-   "updatedAt": "2026-11-11"
+   "status": "completed",
+   "completedAt": "2026-11-11",
+   "summary": "Four Thornwake buildings re-cut whole.",
+   "commit": "b4a1695c3"
   },
   {
    "id": "artifact-stories-20261111",
@@ -115,7 +112,7 @@
    "id": "town-plot-shelves-20261110",
    "status": "completed",
    "completedAt": "2026-11-10",
-   "summary": "Level ground painted in at the plots of four towns: buildings no longer hang over cliffs.",
+   "summary": "Level ground at the plots of four towns.",
    "commit": "0d4db024b"
   },
   {
