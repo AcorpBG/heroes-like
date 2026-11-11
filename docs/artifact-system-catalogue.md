@@ -199,6 +199,205 @@ Bands: common 1 point, uncommon 2, rare 3, epic 5 and one special effect. An art
 | Writ of Relief | epic | Embercourt | +2 cohesion; +4 Defense; +75 gold a day | +1 cohesion |  | A stack of yours that defends also gives +2 Defense to your stacks beside it. |  | a rolled parchment charter tied with ribbon and hung with seven wax seals |
 | The Prime Lens | epic | Sunvault | +2 Power; spell boosts last 1 turn longer; +10% spell damage | +1 Power |  | Boosts the hero casts in the first round last the whole battle. |  | a flawless lens in a gold ring stand |
 
+## Stories
+
+What the hero menu shows under each artifact's numbers (`tools/artifact_stories.py`; the rules for writing one are in `docs/artifact-system.md`).
+
+### Head
+
+| Artifact | Story |
+|---|---|
+| Scribe's Cap | Lock-court clerks keep the quill in its loop and the day's spells in their heads. The cap is said to help with the second. |
+| Novice Circlet | Copper, because a novice has not earned silver. It turns green long before its wearer turns wise, and is handed on. |
+| Surveyor's Cap | The brass ring is for sighting a far hill against a near one. The crews who redrew the basin after the Shattering wore out thousands of these. |
+| Lector's Hood | A Compact lector reads the day's calibrations to the choir from under this hood. The glass thread keeps the glare off the page and the mind on it. |
+| Candlewright's Coif | A candlewright works late and learns by the light she makes. Every wax spot is an hour somebody studied. |
+| Drum-Speaker's Mask | The shrine drums speak for the marsh and the mask speaks for the drummer. Behind the painted mouth nobody can make its wearer say otherwise. |
+| Lens-Reader's Spectacles | Three lenses: one for the page, one for the sky, one for what the first two disagree about. Upland relay governors read every report through all three. |
+| Helm of Quiet Counsel | A helm for the officer who listens. The blue felt keeps the noise of the field out and leaves room for a second thought. |
+| Furnace-Seer's Visor | Furnace chapels read a melt by its colour, and the smoked glass lets a seer look long enough to be sure. What they have seen in the fire they can ask of it more cheaply. |
+| Crown of Green Wood | A seed judge is crowned with whatever is budding that week. The twigs go on growing, and so, the Concord says, should the judgment. |
+| Twofold Diadem | One face watches the enemy and one watches the hour. Whoever made it, before the Shattering, understood that the first moments of a battle are worth two of any other. |
+| Crown of the Empty Throne | It still waits for its king. |
+
+### Neck
+
+| Artifact | Story |
+|---|---|
+| Prism Bead | Every child of the Glass Uplands is given one cut bead from the orchard where they were born. Most keep it for luck; a few learn what it can focus. |
+| Ember Locket | Somebody shut a live ember in iron to carry a hearth across the flood years. The hearth is long gone and the ember has not noticed. |
+| Seedling Pendant | The acorn sprouted in its cage and has never been planted. It leans toward any working of root and leaf like a plant toward a window. |
+| Cinder Pendant | A coal from a seam in the Brass Deeps that was sealed while still burning. Near a furnace spell its heart brightens. |
+| Mist Vial | Fog from a morning when a whole Veilmourn harbour went missing. The stopper has never been drawn, and nobody is sure what else is in there. |
+| Daybreak Torc | Two suns, one for each end of the day. Beacon keepers wore these through the night watch as a promise that the second would come. |
+| Collar of the Loud Voice | Made for a herald who had to be heard across a flooded valley. It does not make the voice louder. It makes whatever is spoken harder to ignore. |
+| Thornmother's Necklace | Hips for what the Walking Green gives and thorns for what it takes back. A thornmother wears both and is not asked which she prefers. |
+| Penitent's Chain | A judge who sold a verdict hung his own lead seal round his neck and walked out of the court. The chain lends great force to a spell and dulls the mind that shapes it. |
+| Bog-Witch Teeth | Each tooth was given, not taken, by someone who wanted a rival's bad luck to last. The reed knots keep count of how long. |
+| The Unanswered Word | A silver tongue cut for an orator nobody could out-argue. Spells cast under it are heard before the other side has finished thinking of a reply. |
+| The Flame | It was lit before the sky mirrors broke and has needed nothing since. Mages who carry it say the first spell of a fight is already burning when they reach for it. |
+
+### Cloak
+
+| Artifact | Story |
+|---|---|
+| Traveller's Cloak | Grey so the dust does not show, and patched so often that little of the first cloak is left. It has seen more of the Reach than most maps. |
+| Warded Shawl | A grandmother's ward, stitched along the hem in the same thread as the mending. Plain work, and it has turned more hexes than many a mage's robe. |
+| Reedskin Mantle | Woven green and worn green: when it dries out, the marsh has let you go too far from home. Nothing takes hold of a mind that still smells of reeds. |
+| Fogcutter Cape | Bell crews wear oilcloth because fog on the Veil Coast is not only water. The cape sheds whatever the mist is carrying that day. |
+| Watchman's Greatcoat | The collar turns up past the ears and the pockets hold a night's bread. Its owner walked the same wall for thirty years and was never once surprised. |
+| Mirrorweave Cloak | Tin thread, woven by someone who had seen what a shard of sky mirror does to a spell. It is a dull thing, and it gives magic a dull answer. |
+| Oathkeeper's Mantle | The clasp is a lock because an Embercourt oath is meant to hold water. Soldiers stand closer to the officer who wears one. |
+| Cloak of Turned Words | Every line on it is a curse somebody once spoke, sewn backwards. A spell that reads the cloak forgets what it came to say. |
+| Mantle of the Empty Throne | The last king left it on the throne when he rode north to mend a sky mirror. It has greyed since, and still makes a room behave. |
+| Stalker's Pelt | The marsh cat hunted one ferry lane for nine winters before a Mireclaw tracker out-waited it. She left the head on so it could go on watching. |
+| Cinderproof Cape | Felted from the ash of a slag storm, which has burned once already and will not do it again. Crews marching under it take the heat a little better too. |
+| Shroud of the Unseen Fleet | The black-sail houses sewed one shroud for a fleet that sailed into the fog and is still listed as at sea. An army under it is hard to pick out from afar. |
+
+### Armor
+
+| Artifact | Story |
+|---|---|
+| Padded Jack | Twenty layers of linen and somebody else's name inked in the collar. Every army in the Charter War has a heap of these. |
+| Drover's Vest | Cut for a man who walks behind cattle all day and means to do it again tomorrow. The horn buttons came from his own herd. |
+| Pikeward Plate | League issue, with a rest for the pike so the arm lasts a whole watch on the lock wall. It is not handsome and it is never left behind. |
+| Banded Hauberk | Mail for the blow that lands, steel bands for the one that would have gone through. A caravan guard's armour: heavy, honest, and paid off in one bad afternoon. |
+| Boilerplate Cuirass | When a boiler is retired in the Brass Deeps, its plate is entered as still owing service. This one has been working off the debt as armour. |
+| Barkskin Vest | The bark was asked for, not cut, and it has gone on living. Wounds taken beside it close the way a tree closes over a nail. |
+| Relief-Line Breastplate | Stamped with the lock that held for eleven days in the first flood of the war. The relief line that arrived on the twelfth wore these, and stood where it was put. |
+| Penitent's Hairshirt | A deserter sewed iron into his shirt and went back to the line he had left. It keeps a company alive, and makes every mile heavier. |
+| Wardens' Lamellar | Green lacquer, relaced every spring by the border wardens who share it. No one remembers who wore it first. All of them came home. |
+| Prismatic Harness | Crystal over white leather, tuned so that a spell striking it breaks into colours and little else. Mirror duelists wear it to settle arguments about theory. |
+| The Unbroken Wall | The masons of a river fort built their captain a breastplate the way they built the wall, course on course. The fort has fallen since. Nobody standing behind the armour has. |
+| Mother-Graft Mail | Grown from the root of the oldest graft-tree. It mends itself every morning, and its wearer's army too. |
+
+### Hand
+
+| Artifact | Story |
+|---|---|
+| Soldier's Sidearm | Short, plain, and sharpened by a hundred owners. It was made to be lost in a ditch and has been found again every time. |
+| Hunter's Bow | It fed a family through three flood winters. War is easier: the targets are bigger and stand closer together. |
+| Foot Lantern | The ring is for hanging it from a spear butt on the march. By its light a sentry sees the next ten paces, which is usually enough. |
+| Pocket Compass | The lid is scratched with the initials of four surveyors. The needle finds north more slowly since the mirrors fell, and still gets there. |
+| Rivet Hammer | A long handle, so the striker can stand clear of the heat. In the Combine a hammer is signed for at the start of a shift. This one never came back. |
+| Reed Spear | A marsh reed hardened in peat smoke and tipped with heron bone. It weighs nothing, which is the point when the ground will not hold you. |
+| Captain's Sabre | The grip is worn to the shape of one hand and fits most others well enough. It has led more charges than its last three owners together. |
+| Longwatch Spyglass | Four draws of brass. At full length it shows a rider's face at a league, and whether he has seen you. |
+| Yew Warbow | Taller than the archer and older than the war. The yew was cut before the forests began to walk, and there will be no more like it. |
+| Parrying Dagger | For the left hand. The basket has turned so many blades that it is more dent than guard, and every dent was followed by an answer. |
+| Lockkeeper's Pike | The hook was for hauling lock gates shut against a flood. It hauls riders out of the saddle just as well, and the keepers kept the name. |
+| Harpoon of the Wake | A harpoon captain's vow is tied into the line: what it strikes, it brings home. It has been thrown at worse things than soldiers. |
+| Signal Mirror | Sight through the hole, catch the sun, and a relay tower three ridges off knows what you know. The Compact wins skirmishes this way before they start. |
+| Pruning Hook | A graftwright cuts so that the tree grows back stronger. The Concord's wardens say the same of a company, and carry the same tool. |
+| The Question | A duellist of the old river courts had two blades made and never lost with both in hand. The long one asks: its hooked point makes the other man move first. |
+| The Answer | The left-hand blade of the pair. Every notch caught a sword that came looking for its owner, and what went back along that sword was final. |
+| Sceptre of the Empty Throne | The orb cracked on the day the sky mirrors did, in the king's own hand. Orders given with it are still obeyed a little faster than they should be. |
+| Stormcaller's Horn | Blown from a ridge, it sounds like weather coming. Troops who hear it behind them move before they have decided to. |
+| Astrolabe of Far Roads | Its plates are engraved with roads instead of stars, some of them drowned, some not yet built. The fastest way between two towns is always on it somewhere. |
+| Butcher's Maul | It belonged to a slaughterman who joined a militia and saw no reason to change tools. Nobody has cleaned it, on the theory that it helps. |
+| Siege Mattock | Quarry syndicates open a mountain with these. A town wall is thinner than a mountain and puts up about as much argument. |
+| Boarding Axe | The hook takes the rail, the rope takes your weight, and the blade is for whoever is waiting on the other deck. Black-sail crews do not carry it ashore without a reason. |
+| The Last Gate | When a lock city fell in the first year of the Charter War, its captain took the inner gate off its hinges and carried it out on his arm. No enemy he met afterwards was let through it. |
+| Never-Empty Quiver | An upland fletcher filled it once, during the Salvage Peace, and went home. Archers have been drawing from it ever since, and no one has yet seen the bottom. |
+| Staff of the First Tree | Cut, with permission, from the first tree that walked. It has kept one leaf through every winter, and it remembers a spell of return that no guild teaches. |
+| The Opening Cut | So thin that the first stroke is over before it is seen. The smith ground it for a champion who held that a fight belongs to whoever is hurt second. |
+
+### Ring
+
+| Artifact | Story |
+|---|---|
+| Copper Signet | A small trader's mark, pressed into a thousand bills of sale. People along the river still honour it out of habit. |
+| Bosun's Ring | Iron worked to look like rope, given to the hand who keeps a ship's stores. Timber and iron turn up for its wearer the way they do for any good bosun. |
+| Apprentice's Band | One rune, the first any apprentice is taught, cut by the apprentice. The silver holds a little of every lesson that followed. |
+| Knot Ring | Tied, not forged: a knot for remembering. A working made while wearing it stays tied a little longer too. |
+| Vow of Giving | One of a pair, made for two mages who swore to share whatever power either had. This is the hand that offers. |
+| Vow of Keeping | The other ring of the pair: the hand that holds. Worn together, the two are never both empty. |
+| Merchant's Seal | The scales are level, which is the whole of the guild's promise. Goods under this seal are bought unopened from one end of the basin to the other. |
+| Hexwright's Loop | Twisted from a single nail drawn out of a gallows. Its makers call it a tool like any other, and wear gloves to pick it up. |
+| Granary Seal | Whoever holds the seal opens the granary, and whoever opens the granary is owed. The debt is paid in whatever the land there grows. |
+| Ring of the Short Road | A maze with a line cut straight through it. The mage who had it made was tired of spells that took the long way round. |
+| Signet of the Empty Throne | A throne and no king. Tax collectors still stamp receipts with it, and the money still arrives, addressed to nobody. |
+| The Lens | Ground to gather whatever light it is given. Set before The Flame it wastes nothing: what a spell destroys comes back through the glass. |
+| Debtor's Band | A debt band from the Brass Deeps, each mark a year of service owed. Its wearer found that power, like credit, comes cheaper to those already bound. |
+| Saltcounter's Ring | Memory salt is counted grain by grain, and the counter is paid in what clings to the ring. On the Veil Coast that is a good living. |
+| Ring of the Noon Hour | The little sun in it stands at its height and has never moved. The ring keeps the one spell of an order of beacon keepers whose towers are all dark now. |
+| The Open Hand | Carved from one piece of white stone as a hand that holds nothing back. A spell loosed from it knows friend from enemy. |
+
+### Boots
+
+| Artifact | Story |
+|---|---|
+| Marching Boots | Hobnails, three layers of sole, and room for a second sock. The quartermaster's answer to every complaint. |
+| Surveyor's Boots | Marked up the leg in hands and spans, for wading a ford and writing down how deep. They are waxed every night, however long the day was. |
+| Night Watch Boots | Felt soles, for the watchman who would rather hear than be heard. A round walked in these leaves the legs fresh for the next. |
+| Fenwalkers | Marsh families make them wide and webbed, after the frogs that never sink. In them the Drowned Marches are a road like any other. |
+| Courier's Spurs | The League pays its couriers by the mile and fines them by the hour. These spurs have never been fined. |
+| Longstride Greaves | The wings at the ankle are only decoration, the smith insisted. Nobody who has marched in them believes him. |
+| Penitent's Sandals | A messenger who came too late to stop a battle walked the Reach in these until the rope wore thin. They cover ground like nothing else, and are last to be ready. |
+| Deckhand's Seaboots | Tarred against salt and folded down for running on a wet deck. They keep their feet on anything and miss nothing on the horizon. |
+| Rail-Walker's Boots | Pressure-rail inspectors walk the line every day and coast the downhill stretches on the heel wheel. What is saved on one stretch is spent on the next. |
+| Roadeater Boots | Soled with a strip of the old royal highway, lifted stone by stone. Wherever a road still runs, the boots remember being part of it and hurry to rejoin. |
+
+### Banner
+
+| Artifact | Story |
+|---|---|
+| Company Pennant | Small enough to roll into a pack and bright enough to find in smoke. A company that can see its pennant stays a company. |
+| Drummer's Guidon | The drummer's stick does double duty as its staff. Where the flag dips the beat follows, and the line steps off together. |
+| Harvest Flag | Raised over an orchard caravan to say the fruit is in and hands are wanted. People come to it, and some of them stay. |
+| Banner of the Empty Throne | Someone cut the royal arms out and left the border. Soldiers follow the hole in it as readily as they once followed what filled it. |
+| Recruiter's Colours | The coins sewn to it are real, and the first one is yours when you sign. Recruiters swear by it. So do the recruits, later, in a different tone. |
+| Charge Standard | A lance head on a red field: go forward. It has never been carried in a retreat, because nobody can remember the signal for one. |
+| Herald's Ensign | A herald under the white ensign may cross any line unharmed. Some of that protection rubs off on the army behind him. |
+| Standard of the Long March | Every road the regiment has walked is sewn on it, in thread the colour of that road's dust. There is still room at the bottom. |
+| War-Drum of the Red Hour | The red hour is the one before dark, when a tired army either breaks or goes in once more. This drum was made to settle which. |
+| Oathfire Standard | The brazier is lit from a beacon court's fire, and the oath is simple: the line holds while it burns. League regiments carry spare coal. |
+| Wake-Lantern Ensign | A ship's lantern hung under black cloth, the mark the Armada follows through fog. An army behind it is already moving when the other side first sees the light. |
+| Colours of the Sworn | Each soldier signs the banner on joining, and the names of the dead are not struck out. On a bad day the living read it and stay. |
+| Vanguard's Thunder | It cracks in still air, and regiments drilled under it learned to move on the sound. By the time the enemy has heard it, the first rank is already across the field. |
+| The Blood-Drum | Each red hand on the hide was pressed there by a clan that drew first blood. When it sounds, the Mireclaw press wherever the enemy already bleeds. |
+
+### Trinket
+
+| Artifact | Story |
+|---|---|
+| First Coin | The fare for going across. Ferrymen on the old river took it in advance, and people who carried one found that luck was inclined to pay them the same way. |
+| Second Coin | The fare for coming back, which the careful paid at the same time. It has been spent a hundred times and is in the purse again every morning. |
+| Tin Cup | Dented on the day its owner should have died and didn't. It has been passed round a great many fires since, with whatever was going. |
+| Field Journal | Half sketches, half lists of what went wrong. An officer who writes the day down seldom has to learn it twice. |
+| Sun Dial Charm | Upland children learn to tell the hour from a pocket dial before they can read. A mage who always knows where the sun stands has a little more to draw on. |
+| Salt Pouch | It leaks, and its owner never minds: a bell crew leaves a little salt wherever it means to come back to. The pouch is never quite empty. |
+| Toll Token | Proof that the toll is paid, good at every League crossing. A fair number of crossings find it simpler to pay the bearer instead. |
+| Seed Purse | A Concord pilgrim plants one seed from it at every camp and takes one from every orchard passed. The count comes out ahead. |
+| Pressure Whistle | One long blast means the shift starts now. Combine crews have been on their feet at that sound since before they could walk. |
+| Dawn Chime | One of four chimes cast to ring the hours for a school of magic that no longer exists. This one is struck at first light, and beacon spells answer it. |
+| Ember Chime | The noon chime of the four, cast in iron and never quite cool. Furnace workings come quicker to a hand that carries it. |
+| Leaf Chime | The evening chime of the four, carved from wood that was still green. It makes no sound a person can hear, and roots turn toward it. |
+| Mist Chime | The night chime of the four, blown from glass with fog sealed inside. Veil spells gather round it the way mist gathers in a hollow. |
+| Quartermaster's Ledger | Locked, because whoever keeps the ledger keeps the army. Stores entered in it have a way of actually being there. |
+| Trophy Belt | A buckle from every officer its owners have beaten, and holes punched for more. Soldiers fight harder for a general who shares out the takings. |
+| Old Campaign Map | Creased along the same folds by three generations of officers. The battles marked on it were lost and won on ground that has not moved. |
+| Surgeon's Roll | Bone needles, gut thread, a flask, and a saw nobody likes to see. A company with a surgeon buries fewer of its own. |
+| Guild Stamp | A stamp, a stick of red wax, and the right to say a thing is worth what you say it is. The guild charges for the use of it, daily. |
+| Gauge of Fair Weight | Two needles: what the load weighs, and what the contract says it weighs. A Combine yard where both agree gets the best of every delivery. |
+| Herbalist's Satchel | Yarrow for bleeding, willow for fever, and something bitter for those who will not rest. The smell alone puts heart into a sick tent. |
+| Tax-Farmer's Strongbox | Three locks, three keys, three men who do not trust each other. That is how a district's taxes arrive whole. |
+| Hourglass of the Second Wind | The sand runs up. Turn it at the end of a hard march, and part of the hour you have just spent is given back. |
+| Master's Primer | The first book a master ever wrote, read to pieces by a hundred pupils who each left a marker where they finally understood. |
+| Brimming Horn | Carried round at a harvest feast in the first good year after the Shattering, and never yet set down empty. |
+| Medal of the Thirty | Thirty held a ford against a host for a day, and the League struck one medal for all of them. Whoever wears it is expected to make it thirty-one. |
+| Wardstone | Taken from a riverbed where three currents meet, and cut with a ward older than the League's alphabet. It has sat in a great many pockets. |
+| Assayer's Scales | A League assayer weighs the spoils before anyone else touches them, and these scales have never been caught out. Honest weight turns out to be the larger share. |
+| Hunt-Tally Cord | A knot for each hunt, a claw for each one worth boasting of. Marsh clans read a stranger's cord before they decide what to offer. |
+| Tuning Crystal | Struck once, it hums the note a Compact choir tunes to. A working begun on that note holds its shape longer. |
+| Seedbank Reliquary | The orchard caravans bound their seed vaults together to found the Concord. This box is one of the first, and what is planted from it comes up crowded. |
+| The Reader's Case | Four tubes, tooled by a librarian who spent a lifetime reading other people's spells aloud. A scroll carried in it is cast as if by its author. |
+| The Ever-Coal | Raked out of the deepest furnace in the Brass Deeps on the day that furnace was finally let go cold. It still holds the spell that kept the fire: the one that raises a second sun. |
+| Mirror of the Far Shore | It shows a coast nobody has charted, at night, with fires on it. Obituary mages say the dead are called back from there, and that the mirror knows how. |
+| The Standing Order | One command, engraved when a furnace town was told to hold: REMAIN. It has no end date. |
+| Writ of Relief | Seven courts sealed it: any League force that stands its ground is owed relief by all the others. Soldiers who have read it close up around whoever is hardest pressed. |
+| The Prime Lens | The first lens ground after the Shattering without a single flaw, and the measure for every one since. What is cast through it at the outset does not fade. |
+
 ## Sets
 
 No set belongs to a faction. A step applies while that many pieces are worn; the last step is the full set's special effect.

@@ -871,6 +871,9 @@ func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_
 	# For an item in the backpack: what wearing it would change.
 	if at_slot == "":
 		_wrapped(lines, DecisionDetails.artifact_comparison(hero, item_id), 13, "muted")
+	# Its story comes last: the lines a choice is made on stay above it.
+	if not ui.get("effect_lines", []).is_empty() and String(artifact.get("description", "")) != "":
+		_wrapped(lines, String(artifact.get("description", "")), 13, "muted").name = "ArtifactStory"
 	var order_id := "unequip_artifact:%s" % at_slot if at_slot != "" else "equip_artifact:%s" % item_id
 	var order := _action("artifact_actions", order_id)
 	# The button belongs to what is picked; a hovered item only reads.
@@ -892,7 +895,7 @@ func _show_artifact(detail: PanelContainer, hovered_slot: String = "?", hovered_
 
 ## What an artifact gives, line by line: its bonuses, its price in red, its
 ## home line (green for a hero of its faction), a special effect that is in the
-## game, its set and how far the hero is with it, then what the object is.
+## game, its set and how far the hero is with it. Its story follows in _show_artifact.
 func _show_artifact_lines(lines: VBoxContainer, artifact: Dictionary, ui: Dictionary) -> void:
 	_wrapped(lines, "\n".join(PackedStringArray(ui.effect_lines)), 15, "gold").name = "ArtifactGives"
 	for price in ui.get("price_lines", []):
@@ -912,7 +915,6 @@ func _show_artifact_lines(lines: VBoxContainer, artifact: Dictionary, ui: Dictio
 		var steps := _set_steps_text(artifact_set, worn)
 		if steps != "":
 			_wrapped(lines, steps, 13, "muted")
-	_wrapped(lines, String(artifact.get("description", "")), 13, "muted")
 
 ## A dot in the artifact's band colour, in the tile's corner.
 func _band_pip(tile: Button, artifact_id: String) -> void:

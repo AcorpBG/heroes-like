@@ -7,6 +7,7 @@ The catalogue (tools/artifact_catalogue.py) is the one copy of the artifacts
 and sets; tools/artifact_reward_tables.json says who draws from each reward
 list. This tool turns them into the rows the rules read:
 
+- an artifact's story (tools/artifact_stories.py) as its description;
 - an artifact's bonuses under the rules' keys, a price among them with the
   opposite sign, its home line as home_bonuses, its set as set_id;
 - effect_text and ui.effect_lines / price_lines / home_lines: the wording the
@@ -29,6 +30,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 import artifact_catalogue as catalogue  # noqa: E402
+from artifact_stories import STORIES  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = os.path.join(ROOT, "content", "artifacts.json")
@@ -100,10 +102,6 @@ def faction_id(name):
     return "faction_" + name.lower()
 
 
-def sentence(text):
-    return text[0].upper() + text[1:] + "."
-
-
 def artifact_row(row):
     name, slot_name, band, bonuses, extra = row
     faction = extra.get("faction", "")
@@ -125,7 +123,7 @@ def artifact_row(row):
         "faction_affinity": [faction_id(faction)] if faction else [],
         "source_tags": ["pickup", "guarded_site", "artifact_cache"],
         "risk": {"cursed": False, "tradeoff": bool(price), "warning_tags": []},
-        "description": sentence(extra["what"]),
+        "description": STORIES[name],
         "bonuses": catalogue.rules_bonuses(list(bonuses) + list(price)),
         "effect_text": "; ".join(lines + ["price: " + text for text in price_lines]),
         "ui": {
@@ -239,6 +237,8 @@ def build():
         "source_reward_tables": reward_tables(),
         "items": [artifact_row(row) for row in catalogue.ARTIFACTS],
     }
+    names = {row[0] for row in catalogue.ARTIFACTS}
+    assert set(STORIES) == names, "stories and artifacts differ: %s" % sorted(set(STORIES) ^ names)
     ids = [item["id"] for item in data["items"]]
     assert len(set(ids)) == len(ids) == 150
     for item in data["items"]:

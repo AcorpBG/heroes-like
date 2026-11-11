@@ -173,6 +173,16 @@ The computer players wear the artifacts and their rules apply to them, but they 
 
 Four epics, one for each school, let the hero cast that school's tier-5 scroll-only spell as if it knew it (Second Sun, Eternal Noon, Green Return, Hollow Crown); those spells have no other source (`docs/magic-system.md`).
 
+## Stories
+
+Each of the 150 artifacts has a story: what the thing is and where it has been, in one to three short sentences (93 to 193 characters). The hero menu shows it under the artifact's numbers, and a pickup's message carries it.
+
+- The voice is the world's (`docs/factions-content-bible.md`): Aurelion Reach after the Long Shattering, the Charter War, the six powers and their trades. A faction artifact speaks from its faction's life; a neutral one from the roads, courts, guilds and armies all six share.
+- A story may hint at what the artifact does. It gives no numbers and no rules words: those have their own lines.
+- A set's pieces refer to each other (the Twin Vows, The Question and The Answer, The Lens and The Flame, the four chimes, the Empty Throne's regalia, the three penitents).
+- The stories invent no place or person by name beyond what the faction bible has.
+- They are in `tools/artifact_stories.py`, by artifact name; the content tool writes each as its row's `description` and refuses an artifact without one. The line that says what the object looks like (`what` in the catalogue) stays for the icon tool.
+
 ## Getting them
 
 Unchanged: a generated map sorts its artifact pickups into the four bands and draws each on its own from all artifacts of that band, never a scroll. With 150 artifacts the large map above would repeat about 16 of its 69 pickups. A pickup is drawn on the map as the artifact's own icon (`artifact_field_sprites` in `art/overworld/manifest.json`).
@@ -200,7 +210,7 @@ Measuring balance with a batch of games waits for the owner's ask.
 - A row's `effect_text` and `ui.effect_lines`, `ui.price_lines` and `ui.home_lines` are the wording the game shows: `ArtifactRules.artifact_effect_summary` returns `effect_text`, the hero menu reads the lines.
 - `tools/build_artifact_icons.py` writes the icon sheets' prompts and cuts the sheets.
 - The computer players weigh the new kinds by `loadout_values` in `content/ai_hero_weights.json`, on the sum `artifact_rules::worn_specialty_bonuses` gives.
-- An artifact's description is the line that says what the object is; stories are not written.
+- An artifact's description is its story (`tools/artifact_stories.py`, see Stories).
 - The 69 old artifacts' icons and map sprites are removed (git history keeps them); a pickup's sprite is its artifact's icon.
 
 ## Not in the plan

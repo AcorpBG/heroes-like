@@ -1415,7 +1415,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A felt cap with a quill loop.",
+      "description": "Lock-court clerks keep the quill in its loop and the day's spells in their heads. The cap is said to help with the second.",
       "bonuses": {
         "max_mana": 3
       },
@@ -1451,7 +1451,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A thin copper circlet.",
+      "description": "Copper, because a novice has not earned silver. It turns green long before its wearer turns wise, and is handed on.",
       "bonuses": {
         "knowledge": 1
       },
@@ -1487,7 +1487,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A peaked cap with a brass sighting ring.",
+      "description": "The brass ring is for sighting a far hill against a near one. The crews who redrew the basin after the Shattering wore out thousands of these.",
       "bonuses": {
         "scouting_radius": 1
       },
@@ -1526,7 +1526,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A white hood stitched with glass thread.",
+      "description": "A Compact lector reads the day's calibrations to the choir from under this hood. The glass thread keeps the glare off the page and the mind on it.",
       "bonuses": {
         "knowledge": 1,
         "max_mana": 3
@@ -1571,7 +1571,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A linen coif spotted with wax.",
+      "description": "A candlewright works late and learns by the light she makes. Every wax spot is an hour somebody studied.",
       "bonuses": {
         "knowledge": 1,
         "experience_bonus_pct": 5
@@ -1612,7 +1612,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A hide mask with a painted open mouth.",
+      "description": "The shrine drums speak for the marsh and the mask speaks for the drummer. Behind the painted mouth nobody can make its wearer say otherwise.",
       "bonuses": {
         "knowledge": 1,
         "battle_control_resistance_pct": 5
@@ -1659,7 +1659,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Spectacles with three stacked lenses.",
+      "description": "Three lenses: one for the page, one for the sky, one for what the first two disagree about. Upland relay governors read every report through all three.",
       "bonuses": {
         "knowledge": 2,
         "experience_bonus_pct": 5
@@ -1703,7 +1703,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A plain helm lined with blue felt.",
+      "description": "A helm for the officer who listens. The blue felt keeps the noise of the field out and leaves room for a second thought.",
       "bonuses": {
         "knowledge": 1,
         "max_mana": 6
@@ -1743,7 +1743,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A smoked-glass visor in a brass frame.",
+      "description": "Furnace chapels read a melt by its colour, and the smoked glass lets a seer look long enough to be sure. What they have seen in the fire they can ask of it more cheaply.",
       "bonuses": {
         "knowledge": 1,
         "battle_power": 1,
@@ -1796,7 +1796,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A living wreath of budding twigs.",
+      "description": "A seed judge is crowned with whatever is budding that week. The twigs go on growing, and so, the Concord says, should the judgment.",
       "bonuses": {
         "knowledge": 2,
         "victory_recovery_pct": 5
@@ -1842,7 +1842,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A diadem with two faces looking opposite ways.",
+      "description": "One face watches the enemy and one watches the hour. Whoever made it, before the Shattering, understood that the first moments of a battle are worth two of any other.",
       "bonuses": {
         "knowledge": 2,
         "battle_power": 2,
@@ -1887,7 +1887,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A heavy gold crown with one stone missing.",
+      "description": "It still waits for its king.",
       "bonuses": {
         "knowledge": 2,
         "battle_cohesion": 1,
@@ -1935,7 +1935,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A single cut-glass bead on a cord.",
+      "description": "Every child of the Glass Uplands is given one cut bead from the orchard where they were born. Most keep it for luck; a few learn what it can focus.",
       "bonuses": {
         "battle_power": 1
       },
@@ -1977,7 +1977,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "An iron locket that glows at the seam.",
+      "description": "Somebody shut a live ember in iron to carry a hearth across the flood years. The hearth is long gone and the ember has not noticed.",
       "bonuses": {
         "spell_damage_pct": 5
       },
@@ -2013,7 +2013,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A sprouting acorn in a wire cage.",
+      "description": "The acorn sprouted in its cage and has never been planted. It leans toward any working of root and leaf like a plant toward a window.",
       "bonuses": {
         "school_potency_pct": {
           "root": 8
@@ -2051,7 +2051,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A black coal with a red heart.",
+      "description": "A coal from a seam in the Brass Deeps that was sealed while still burning. Near a furnace spell its heart brightens.",
       "bonuses": {
         "battle_power": 1,
         "school_potency_pct": {
@@ -2091,7 +2091,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A stoppered vial of grey fog.",
+      "description": "Fog from a morning when a whole Veilmourn harbour went missing. The stopper has never been drawn, and nobody is sure what else is in there.",
       "bonuses": {
         "battle_power": 1,
         "school_potency_pct": {
@@ -2131,7 +2131,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold torc ending in two small suns.",
+      "description": "Two suns, one for each end of the day. Beacon keepers wore these through the night watch as a promise that the second would come.",
       "bonuses": {
         "battle_power": 1,
         "school_potency_pct": {
@@ -2171,7 +2171,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A stiff silver collar engraved with open mouths.",
+      "description": "Made for a herald who had to be heard across a flooded valley. It does not make the voice louder. It makes whatever is spoken harder to ignore.",
       "bonuses": {
         "battle_power": 2,
         "spell_damage_pct": 5
@@ -2211,7 +2211,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A string of rose hips and long thorns.",
+      "description": "Hips for what the Walking Green gives and thorns for what it takes back. A thornmother wears both and is not asked which she prefers.",
       "bonuses": {
         "battle_power": 1,
         "school_potency_pct": {
@@ -2257,7 +2257,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "A rusted iron neck chain carrying a plain square block of lead.",
+      "description": "A judge who sold a verdict hung his own lead seal round his neck and walked out of the court. The chain lends great force to a spell and dulls the mind that shapes it.",
       "bonuses": {
         "battle_power": 3,
         "spell_damage_pct": 10,
@@ -2302,7 +2302,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A necklace of yellow teeth and reed knots.",
+      "description": "Each tooth was given, not taken, by someone who wanted a rival's bad luck to last. The reed knots keep count of how long.",
       "bonuses": {
         "battle_power": 2,
         "debuff_duration_bonus": 1
@@ -2348,7 +2348,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A silver tongue on a black ribbon.",
+      "description": "A silver tongue cut for an orator nobody could out-argue. Spells cast under it are heard before the other side has finished thinking of a reply.",
       "bonuses": {
         "battle_power": 3,
         "spell_damage_pct": 10
@@ -2389,7 +2389,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A small flame that burns inside a crystal drop.",
+      "description": "It was lit before the sky mirrors broke and has needed nothing since. Mages who carry it say the first spell of a fight is already burning when they reach for it.",
       "bonuses": {
         "battle_power": 2,
         "max_mana": 9
@@ -2431,7 +2431,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A patched grey travelling cloak.",
+      "description": "Grey so the dust does not show, and patched so often that little of the first cloak is left. It has seen more of the Reach than most maps.",
       "bonuses": {
         "scouting_radius": 1
       },
@@ -2468,7 +2468,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A wool shawl with a stitched ward along the hem.",
+      "description": "A grandmother's ward, stitched along the hem in the same thread as the mending. Plain work, and it has turned more hexes than many a mage's robe.",
       "bonuses": {
         "battle_spell_resistance_pct": 5
       },
@@ -2506,7 +2506,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A mantle woven of green reeds.",
+      "description": "Woven green and worn green: when it dries out, the marsh has let you go too far from home. Nothing takes hold of a mind that still smells of reeds.",
       "bonuses": {
         "battle_control_resistance_pct": 5
       },
@@ -2551,7 +2551,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "An oilcloth cape beaded with mist.",
+      "description": "Bell crews wear oilcloth because fog on the Veil Coast is not only water. The cape sheds whatever the mist is carrying that day.",
       "bonuses": {
         "scouting_radius": 1,
         "battle_spell_resistance_pct": 5
@@ -2596,7 +2596,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A long dark coat with a high collar.",
+      "description": "The collar turns up past the ears and the pockets hold a night's bread. Its owner walked the same wall for thirty years and was never once surprised.",
       "bonuses": {
         "scouting_radius": 1,
         "movement_carry": 1
@@ -2635,7 +2635,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A cloak that shines like dull tin.",
+      "description": "Tin thread, woven by someone who had seen what a shard of sky mirror does to a spell. It is a dull thing, and it gives magic a dull answer.",
       "bonuses": {
         "battle_spell_resistance_pct": 10
       },
@@ -2674,7 +2674,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A red mantle pinned with a lock-shaped clasp.",
+      "description": "The clasp is a lock because an Embercourt oath is meant to hold water. Soldiers stand closer to the officer who wears one.",
       "bonuses": {
         "battle_control_resistance_pct": 5,
         "battle_cohesion": 1
@@ -2718,7 +2718,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A cloak embroidered with mirrored writing.",
+      "description": "Every line on it is a curse somebody once spoke, sewn backwards. A spell that reads the cloak forgets what it came to say.",
       "bonuses": {
         "battle_spell_resistance_pct": 10,
         "battle_control_resistance_pct": 5
@@ -2757,7 +2757,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "An ermine mantle gone grey with age.",
+      "description": "The last king left it on the throne when he rode north to mend a sky mirror. It has greyed since, and still makes a room behave.",
       "bonuses": {
         "battle_spell_resistance_pct": 5,
         "battle_control_resistance_pct": 5,
@@ -2801,7 +2801,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A mottled marsh-cat pelt with the head on.",
+      "description": "The marsh cat hunted one ferry lane for nine winters before a Mireclaw tracker out-waited it. She left the head on so it could go on watching.",
       "bonuses": {
         "scouting_radius": 2,
         "battle_initiative": 1
@@ -2846,7 +2846,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A cape of grey felted ash-cloth.",
+      "description": "Felted from the ash of a slag storm, which has burned once already and will not do it again. Crews marching under it take the heat a little better too.",
       "bonuses": {
         "battle_spell_resistance_pct": 10,
         "damage_taken_pct": -4
@@ -2888,7 +2888,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A sailcloth shroud that trails thick fog.",
+      "description": "The black-sail houses sewed one shroud for a fleet that sailed into the fog and is still listed as at sea. An army under it is hard to pick out from afar.",
       "bonuses": {
         "battle_spell_resistance_pct": 10,
         "scouting_radius": 2,
@@ -2937,7 +2937,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A quilted soldier's jacket.",
+      "description": "Twenty layers of linen and somebody else's name inked in the collar. Every army in the Charter War has a heap of these.",
       "bonuses": {
         "battle_defense": 2
       },
@@ -2974,7 +2974,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A thick leather vest with horn buttons.",
+      "description": "Cut for a man who walks behind cattle all day and means to do it again tomorrow. The horn buttons came from his own herd.",
       "bonuses": {
         "creature_health_pct": 3
       },
@@ -3012,7 +3012,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A plain breastplate with a pike rest.",
+      "description": "League issue, with a rest for the pike so the arm lasts a whole watch on the lock wall. It is not handsome and it is never left behind.",
       "bonuses": {
         "battle_defense": 2
       },
@@ -3054,7 +3054,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A mail shirt banded with steel.",
+      "description": "Mail for the blow that lands, steel bands for the one that would have gone through. A caravan guard's armour: heavy, honest, and paid off in one bad afternoon.",
       "bonuses": {
         "battle_defense": 2,
         "creature_health_pct": 3
@@ -3094,7 +3094,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A riveted cuirass cut from boiler plate.",
+      "description": "When a boiler is retired in the Brass Deeps, its plate is entered as still owing service. This one has been working off the debt as armour.",
       "bonuses": {
         "battle_defense": 2,
         "damage_taken_pct": -4
@@ -3140,7 +3140,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A vest of overlapping living bark.",
+      "description": "The bark was asked for, not cut, and it has gone on living. Wounds taken beside it close the way a tree closes over a nail.",
       "bonuses": {
         "creature_health_pct": 3,
         "victory_recovery_pct": 5
@@ -3186,7 +3186,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A breastplate stamped with a river lock.",
+      "description": "Stamped with the lock that held for eleven days in the first flood of the war. The relief line that arrived on the twelfth wore these, and stood where it was put.",
       "bonuses": {
         "battle_defense": 2,
         "defend_defense_bonus": 1,
@@ -3232,7 +3232,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "A coarse shirt sewn with iron plates.",
+      "description": "A deserter sewed iron into his shirt and went back to the line he had left. It keeps a company alive, and makes every mile heavier.",
       "bonuses": {
         "battle_defense": 4,
         "damage_taken_pct": -8,
@@ -3277,7 +3277,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Laced lamellar in green lacquer.",
+      "description": "Green lacquer, relaced every spring by the border wardens who share it. No one remembers who wore it first. All of them came home.",
       "bonuses": {
         "battle_defense": 4,
         "creature_health_pct": 3
@@ -3318,7 +3318,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A harness of crystal plates over white leather.",
+      "description": "Crystal over white leather, tuned so that a spell striking it breaks into colours and little else. Mirror duelists wear it to settle arguments about theory.",
       "bonuses": {
         "battle_defense": 2,
         "battle_spell_resistance_pct": 10
@@ -3362,7 +3362,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A tower-breastplate built like dressed stone.",
+      "description": "The masons of a river fort built their captain a breastplate the way they built the wall, course on course. The fort has fallen since. Nobody standing behind the armour has.",
       "bonuses": {
         "battle_defense": 4,
         "damage_taken_pct": -8,
@@ -3407,7 +3407,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Mail of woven roots with green shoots.",
+      "description": "Grown from the root of the oldest graft-tree. It mends itself every morning, and its wearer's army too.",
       "bonuses": {
         "battle_defense": 4,
         "creature_health_pct": 6,
@@ -3456,7 +3456,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A short plain sword.",
+      "description": "Short, plain, and sharpened by a hundred owners. It was made to be lost in a ditch and has been found again every time.",
       "bonuses": {
         "battle_attack": 2
       },
@@ -3492,7 +3492,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A short hunting bow.",
+      "description": "It fed a family through three flood winters. War is easier: the targets are bigger and stand closer together.",
       "bonuses": {
         "ranged_damage_pct": 5
       },
@@ -3528,7 +3528,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A tin lantern on a carrying ring.",
+      "description": "The ring is for hanging it from a spear butt on the march. By its light a sentry sees the next ten paces, which is usually enough.",
       "bonuses": {
         "scouting_radius": 1
       },
@@ -3565,7 +3565,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A small brass compass with a lid.",
+      "description": "The lid is scratched with the initials of four surveyors. The needle finds north more slowly since the mirrors fell, and still gets there.",
       "bonuses": {
         "overworld_movement": 1
       },
@@ -3604,7 +3604,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A long-handled foundry hammer.",
+      "description": "A long handle, so the striker can stand clear of the heat. In the Combine a hammer is signed for at the start of a shift. This one never came back.",
       "bonuses": {
         "melee_damage_pct": 5
       },
@@ -3648,7 +3648,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A light spear with a bone point.",
+      "description": "A marsh reed hardened in peat smoke and tipped with heron bone. It weighs nothing, which is the point when the ground will not hold you.",
       "bonuses": {
         "battle_attack": 2
       },
@@ -3690,7 +3690,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A curved sabre with a worn grip.",
+      "description": "The grip is worn to the shape of one hand and fits most others well enough. It has led more charges than its last three owners together.",
       "bonuses": {
         "battle_attack": 2,
         "melee_damage_pct": 5
@@ -3728,7 +3728,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A four-draw brass spyglass.",
+      "description": "Four draws of brass. At full length it shows a rider's face at a league, and whether he has seen you.",
       "bonuses": {
         "scouting_radius": 2
       },
@@ -3764,7 +3764,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A tall yew bow.",
+      "description": "Taller than the archer and older than the war. The yew was cut before the forests began to walk, and there will be no more like it.",
       "bonuses": {
         "ranged_damage_pct": 10
       },
@@ -3801,7 +3801,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A dagger with a wide basket guard.",
+      "description": "For the left hand. The basket has turned so many blades that it is more dent than guard, and every dent was followed by an answer.",
       "bonuses": {
         "battle_defense": 2,
         "retaliation_damage_pct": 10
@@ -3842,7 +3842,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A pike with a hooked lock-gate blade.",
+      "description": "The hook was for hauling lock gates shut against a flood. It hauls riders out of the saddle just as well, and the keepers kept the name.",
       "bonuses": {
         "battle_attack": 2,
         "defend_defense_bonus": 1
@@ -3888,7 +3888,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A barbed harpoon on a coiled line.",
+      "description": "A harpoon captain's vow is tied into the line: what it strikes, it brings home. It has been thrown at worse things than soldiers.",
       "bonuses": {
         "ranged_damage_pct": 5,
         "battle_initiative": 1
@@ -3935,7 +3935,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A round hand mirror with a sighting hole.",
+      "description": "Sight through the hole, catch the sun, and a relay tower three ridges off knows what you know. The Compact wins skirmishes this way before they start.",
       "bonuses": {
         "scouting_radius": 1,
         "battle_initiative": 1
@@ -3982,7 +3982,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A curved pruning blade on a staff.",
+      "description": "A graftwright cuts so that the tree grows back stronger. The Concord's wardens say the same of a company, and carry the same tool.",
       "bonuses": {
         "battle_attack": 2,
         "victory_recovery_pct": 5
@@ -4026,7 +4026,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A slim duelling sword with a hooked point.",
+      "description": "A duellist of the old river courts had two blades made and never lost with both in hand. The long one asks: its hooked point makes the other man move first.",
       "bonuses": {
         "battle_attack": 2,
         "melee_damage_pct": 10
@@ -4066,7 +4066,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A left-hand blade with a notched edge.",
+      "description": "The left-hand blade of the pair. Every notch caught a sword that came looking for its owner, and what went back along that sword was final.",
       "bonuses": {
         "battle_defense": 2,
         "retaliation_damage_pct": 20
@@ -4106,7 +4106,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold sceptre with a cracked orb.",
+      "description": "The orb cracked on the day the sky mirrors did, in the king's own hand. Orders given with it are still obeyed a little faster than they should be.",
       "bonuses": {
         "battle_attack": 2,
         "battle_cohesion": 1,
@@ -4147,7 +4147,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A great ram's horn bound in silver.",
+      "description": "Blown from a ridge, it sounds like weather coming. Troops who hear it behind them move before they have decided to.",
       "bonuses": {
         "battle_initiative": 2,
         "battle_momentum": 1
@@ -4186,7 +4186,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A brass astrolabe engraved with roads.",
+      "description": "Its plates are engraved with roads instead of stars, some of them drowned, some not yet built. The fastest way between two towns is always on it somewhere.",
       "bonuses": {
         "overworld_movement": 2,
         "scouting_radius": 1
@@ -4224,7 +4224,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "A huge spiked maul, stained dark.",
+      "description": "It belonged to a slaughterman who joined a militia and saw no reason to change tools. Nobody has cleaned it, on the theory that it helps.",
       "bonuses": {
         "battle_attack": 4,
         "melee_damage_pct": 15,
@@ -4268,7 +4268,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A heavy mattock with a steel beak.",
+      "description": "Quarry syndicates open a mountain with these. A town wall is thinner than a mountain and puts up about as much argument.",
       "bonuses": {
         "battle_attack": 2,
         "siege_damage_pct": 20
@@ -4314,7 +4314,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A hooked ship's axe hung with rope.",
+      "description": "The hook takes the rail, the rope takes your weight, and the blade is for whoever is waiting on the other deck. Black-sail crews do not carry it ashore without a reason.",
       "bonuses": {
         "battle_attack": 2,
         "battle_momentum": 1,
@@ -4361,7 +4361,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A tall shield shaped like a barred gate.",
+      "description": "When a lock city fell in the first year of the Charter War, its captain took the inner gate off its hinges and carried it out on his arm. No enemy he met afterwards was let through it.",
       "bonuses": {
         "battle_attack": 4,
         "battle_defense": 4,
@@ -4404,7 +4404,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A quiver packed with white-fletched arrows.",
+      "description": "An upland fletcher filled it once, during the Salvage Peace, and went home. Archers have been drawing from it ever since, and no one has yet seen the bottom.",
       "bonuses": {
         "ranged_damage_pct": 15,
         "battle_initiative": 2
@@ -4445,7 +4445,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gnarled staff with one green leaf.",
+      "description": "Cut, with permission, from the first tree that walked. It has kept one leaf through every winter, and it remembers a spell of return that no guild teaches.",
       "bonuses": {
         "battle_power": 2,
         "school_potency_pct": {
@@ -4491,7 +4491,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A long thin blade, bright as a razor.",
+      "description": "So thin that the first stroke is over before it is seen. The smith ground it for a champion who held that a fight belongs to whoever is hurt second.",
       "bonuses": {
         "battle_attack": 4,
         "melee_damage_pct": 10,
@@ -4534,7 +4534,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A copper ring with a merchant's mark.",
+      "description": "A small trader's mark, pressed into a thousand bills of sale. People along the river still honour it out of habit.",
       "bonuses": {
         "daily_income": {
           "gold": 75
@@ -4574,7 +4574,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A rope-pattern iron ring.",
+      "description": "Iron worked to look like rope, given to the hand who keeps a ship's stores. Timber and iron turn up for its wearer the way they do for any good bosun.",
       "bonuses": {
         "daily_income": {
           "wood": 1,
@@ -4619,7 +4619,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A plain silver band with one rune.",
+      "description": "One rune, the first any apprentice is taught, cut by the apprentice. The silver holds a little of every lesson that followed.",
       "bonuses": {
         "max_mana": 3
       },
@@ -4655,7 +4655,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A ring tied from red cord.",
+      "description": "Tied, not forged: a knot for remembering. A working made while wearing it stays tied a little longer too.",
       "bonuses": {
         "buff_duration_bonus": 1
       },
@@ -4691,7 +4691,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold ring with an open hand.",
+      "description": "One of a pair, made for two mages who swore to share whatever power either had. This is the hand that offers.",
       "bonuses": {
         "max_mana": 6
       },
@@ -4728,7 +4728,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold ring with a closed hand.",
+      "description": "The other ring of the pair: the hand that holds. Worn together, the two are never both empty.",
       "bonuses": {
         "mana_after_victory": 4
       },
@@ -4765,7 +4765,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A heavy seal ring with a set of scales.",
+      "description": "The scales are level, which is the whole of the guild's promise. Goods under this seal are bought unopened from one end of the basin to the other.",
       "bonuses": {
         "daily_income": {
           "gold": 150
@@ -4803,7 +4803,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A twisted black ring.",
+      "description": "Twisted from a single nail drawn out of a gallows. Its makers call it a tool like any other, and wear gloves to pick it up.",
       "bonuses": {
         "debuff_duration_bonus": 1,
         "spell_damage_pct": 5
@@ -4841,7 +4841,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A bronze ring with a wheat sheaf.",
+      "description": "Whoever holds the seal opens the granary, and whoever opens the granary is owed. The debt is paid in whatever the land there grows.",
       "bonuses": {
         "daily_income": {
           "gold": 75,
@@ -4881,7 +4881,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A ring cut with a straight line through a maze.",
+      "description": "A maze with a line cut straight through it. The mage who had it made was tired of spells that took the long way round.",
       "bonuses": {
         "mana_cost_discount": 1,
         "max_mana": 3
@@ -4920,7 +4920,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold signet with a throne and no king.",
+      "description": "A throne and no king. Tax collectors still stamp receipts with it, and the money still arrives, addressed to nobody.",
       "bonuses": {
         "daily_income": {
           "gold": 150
@@ -4961,7 +4961,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A ring set with a clear round lens.",
+      "description": "Ground to gather whatever light it is given. Set before The Flame it wastes nothing: what a spell destroys comes back through the glass.",
       "bonuses": {
         "battle_power": 1,
         "spell_damage_pct": 10
@@ -5000,7 +5000,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "A tight iron band stamped with tally marks.",
+      "description": "A debt band from the Brass Deeps, each mark a year of service owed. Its wearer found that power, like credit, comes cheaper to those already bound.",
       "bonuses": {
         "mana_cost_discount": 2,
         "max_mana": 3,
@@ -5044,7 +5044,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A pale ring crusted with salt crystals.",
+      "description": "Memory salt is counted grain by grain, and the counter is paid in what clings to the ring. On the Veil Coast that is a good living.",
       "bonuses": {
         "daily_income": {
           "gold": 150
@@ -5092,7 +5092,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold ring holding a tiny sun at its height.",
+      "description": "The little sun in it stands at its height and has never moved. The ring keeps the one spell of an order of beacon keepers whose towers are all dark now.",
       "bonuses": {
         "battle_power": 2,
         "school_potency_pct": {
@@ -5140,7 +5140,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A white ring shaped like fingers spread wide.",
+      "description": "Carved from one piece of white stone as a hand that holds nothing back. A spell loosed from it knows friend from enemy.",
       "bonuses": {
         "mana_cost_discount": 1,
         "max_mana": 6,
@@ -5183,7 +5183,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Hobnailed army boots.",
+      "description": "Hobnails, three layers of sole, and room for a second sock. The quartermaster's answer to every complaint.",
       "bonuses": {
         "overworld_movement": 1
       },
@@ -5220,7 +5220,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Tall waxed boots with measuring marks.",
+      "description": "Marked up the leg in hands and spans, for wading a ford and writing down how deep. They are waxed every night, however long the day was.",
       "bonuses": {
         "movement_carry": 1
       },
@@ -5257,7 +5257,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Soft black boots with felt soles.",
+      "description": "Felt soles, for the watchman who would rather hear than be heard. A round walked in these leaves the legs fresh for the next.",
       "bonuses": {
         "overworld_movement": 1,
         "movement_carry": 1
@@ -5298,7 +5298,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Wide boots webbed like a frog's feet.",
+      "description": "Marsh families make them wide and webbed, after the frogs that never sink. In them the Drowned Marches are a road like any other.",
       "bonuses": {
         "overworld_movement": 2
       },
@@ -5340,7 +5340,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Riding boots with silver spurs.",
+      "description": "The League pays its couriers by the mile and fines them by the hour. These spurs have never been fined.",
       "bonuses": {
         "overworld_movement": 2
       },
@@ -5376,7 +5376,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Steel greaves with winged ankles.",
+      "description": "The wings at the ankle are only decoration, the smith insisted. Nobody who has marched in them believes him.",
       "bonuses": {
         "overworld_movement": 3
       },
@@ -5412,7 +5412,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "Rope sandals worn thin.",
+      "description": "A messenger who came too late to stop a battle walked the Reach in these until the rope wore thin. They cover ground like nothing else, and are last to be ready.",
       "bonuses": {
         "overworld_movement": 3,
         "movement_carry": 2,
@@ -5456,7 +5456,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Tarred sea boots folded at the knee.",
+      "description": "Tarred against salt and folded down for running on a wet deck. They keep their feet on anything and miss nothing on the horizon.",
       "bonuses": {
         "overworld_movement": 2,
         "scouting_radius": 1
@@ -5497,7 +5497,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Iron-shod boots with a wheel at the heel.",
+      "description": "Pressure-rail inspectors walk the line every day and coast the downhill stretches on the heel wheel. What is saved on one stretch is spent on the next.",
       "bonuses": {
         "overworld_movement": 2,
         "movement_carry": 1
@@ -5541,7 +5541,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Boots whose soles are a strip of paved road.",
+      "description": "Soled with a strip of the old royal highway, lifted stone by stone. Wherever a road still runs, the boots remember being part of it and hurry to rejoin.",
       "bonuses": {
         "overworld_movement": 4,
         "movement_carry": 1
@@ -5582,7 +5582,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A small swallow-tailed pennant.",
+      "description": "Small enough to roll into a pack and bright enough to find in smoke. A company that can see its pennant stays a company.",
       "bonuses": {
         "battle_cohesion": 1
       },
@@ -5618,7 +5618,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A short flag on a drumstick staff.",
+      "description": "The drummer's stick does double duty as its staff. Where the flag dips the beat follows, and the line steps off together.",
       "bonuses": {
         "battle_initiative": 1
       },
@@ -5656,7 +5656,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A green flag with a fruiting branch.",
+      "description": "Raised over an orchard caravan to say the fruit is in and hands are wanted. People come to it, and some of them stay.",
       "bonuses": {
         "recruit_growth_multiplier": 0.1,
         "recruit_cost_delta": -0.05
@@ -5700,7 +5700,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A faded royal banner with the arms cut out.",
+      "description": "Someone cut the royal arms out and left the border. Soldiers follow the hole in it as readily as they once followed what filled it.",
       "bonuses": {
         "battle_cohesion": 1,
         "battle_momentum": 1
@@ -5739,7 +5739,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A bright flag hung with coins.",
+      "description": "The coins sewn to it are real, and the first one is yours when you sign. Recruiters swear by it. So do the recruits, later, in a different tone.",
       "bonuses": {
         "recruit_growth_multiplier": 0.2,
         "recruit_cost_delta": -0.1
@@ -5776,7 +5776,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A red standard with a lance head.",
+      "description": "A lance head on a red field: go forward. It has never been carried in a retreat, because nobody can remember the signal for one.",
       "bonuses": {
         "battle_momentum": 1,
         "battle_initiative": 1
@@ -5815,7 +5815,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A white ensign with a silver trumpet.",
+      "description": "A herald under the white ensign may cross any line unharmed. Some of that protection rubs off on the army behind him.",
       "bonuses": {
         "battle_initiative": 1,
         "battle_spell_resistance_pct": 5
@@ -5855,7 +5855,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A dust-brown standard sewn with road names.",
+      "description": "Every road the regiment has walked is sewn on it, in thread the colour of that road's dust. There is still room at the bottom.",
       "bonuses": {
         "battle_initiative": 1,
         "battle_cohesion": 1,
@@ -5895,7 +5895,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "A red war drum on a banner pole.",
+      "description": "The red hour is the one before dark, when a tired army either breaks or goes in once more. This drum was made to settle which.",
       "bonuses": {
         "battle_momentum": 2,
         "battle_initiative": 2,
@@ -5941,7 +5941,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A standard topped with a lit brazier.",
+      "description": "The brazier is lit from a beacon court's fire, and the oath is simple: the line holds while it burns. League regiments carry spare coal.",
       "bonuses": {
         "battle_cohesion": 2,
         "defend_defense_bonus": 1
@@ -5988,7 +5988,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A black ensign under a pale ship's lantern.",
+      "description": "A ship's lantern hung under black cloth, the mark the Armada follows through fog. An army behind it is already moving when the other side first sees the light.",
       "bonuses": {
         "battle_initiative": 2,
         "scouting_radius": 1
@@ -6032,7 +6032,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A blue banner covered in signed names.",
+      "description": "Each soldier signs the banner on joining, and the names of the dead are not struck out. On a bad day the living read it and stay.",
       "bonuses": {
         "battle_cohesion": 2,
         "victory_recovery_pct": 5
@@ -6070,7 +6070,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A storm-grey banner that cracks like a whip.",
+      "description": "It cracks in still air, and regiments drilled under it learned to move on the sound. By the time the enemy has heard it, the first rank is already across the field.",
       "bonuses": {
         "battle_initiative": 3,
         "battle_momentum": 2
@@ -6113,7 +6113,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A hide drum on a pole, painted with red hands.",
+      "description": "Each red hand on the hide was pressed there by a clan that drew first blood. When it sounds, the Mireclaw press wherever the enemy already bleeds.",
       "bonuses": {
         "battle_momentum": 2,
         "battle_initiative": 2,
@@ -6162,7 +6162,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A worn silver coin with a boat.",
+      "description": "The fare for going across. Ferrymen on the old river took it in advance, and people who carried one found that luck was inclined to pay them the same way.",
       "bonuses": {
         "reward_bonus_pct": 10
       },
@@ -6199,7 +6199,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A worn silver coin with an oar.",
+      "description": "The fare for coming back, which the careful paid at the same time. It has been spent a hundred times and is in the purse again every morning.",
       "bonuses": {
         "daily_income": {
           "gold": 75
@@ -6238,7 +6238,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A dented tin camp cup.",
+      "description": "Dented on the day its owner should have died and didn't. It has been passed round a great many fires since, with whatever was going.",
       "bonuses": {
         "victory_recovery_pct": 5
       },
@@ -6275,7 +6275,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A small notebook tied with string.",
+      "description": "Half sketches, half lists of what went wrong. An officer who writes the day down seldom has to learn it twice.",
       "bonuses": {
         "experience_bonus_pct": 5
       },
@@ -6313,7 +6313,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A pocket sundial of white stone.",
+      "description": "Upland children learn to tell the hour from a pocket dial before they can read. A mage who always knows where the sun stands has a little more to draw on.",
       "bonuses": {
         "max_mana": 3
       },
@@ -6357,7 +6357,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A grey pouch leaking salt.",
+      "description": "It leaks, and its owner never minds: a bell crew leaves a little salt wherever it means to come back to. The pouch is never quite empty.",
       "bonuses": {
         "daily_income": {
           "faction_rare_main": 1
@@ -6403,7 +6403,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A stamped brass toll disc.",
+      "description": "Proof that the toll is paid, good at every League crossing. A fair number of crossings find it simpler to pay the bearer instead.",
       "bonuses": {
         "daily_income": {
           "gold": 75
@@ -6452,7 +6452,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A leaf-wrapped purse of seeds.",
+      "description": "A Concord pilgrim plants one seed from it at every camp and takes one from every orchard passed. The count comes out ahead.",
       "bonuses": {
         "daily_income": {
           "faction_rare_main": 1
@@ -6499,7 +6499,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A brass steam whistle on a chain.",
+      "description": "One long blast means the shift starts now. Combine crews have been on their feet at that sound since before they could walk.",
       "bonuses": {
         "battle_initiative": 1
       },
@@ -6541,7 +6541,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A gold chime shaped like a sunrise.",
+      "description": "One of four chimes cast to ring the hours for a school of magic that no longer exists. This one is struck at first light, and beacon spells answer it.",
       "bonuses": {
         "school_potency_pct": {
           "beacon": 8
@@ -6584,7 +6584,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "An iron chime that glows at the rim.",
+      "description": "The noon chime of the four, cast in iron and never quite cool. Furnace workings come quicker to a hand that carries it.",
       "bonuses": {
         "school_potency_pct": {
           "furnace": 8
@@ -6627,7 +6627,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A wooden chime carved as a leaf.",
+      "description": "The evening chime of the four, carved from wood that was still green. It makes no sound a person can hear, and roots turn toward it.",
       "bonuses": {
         "school_potency_pct": {
           "root": 8
@@ -6670,7 +6670,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A glass chime filled with fog.",
+      "description": "The night chime of the four, blown from glass with fog sealed inside. Veil spells gather round it the way mist gathers in a hollow.",
       "bonuses": {
         "school_potency_pct": {
           "veil": 8
@@ -6713,7 +6713,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A thick ledger with a brass lock.",
+      "description": "Locked, because whoever keeps the ledger keeps the army. Stores entered in it have a way of actually being there.",
       "bonuses": {
         "daily_income": {
           "gold": 75,
@@ -6754,7 +6754,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A belt hung with captured buckles.",
+      "description": "A buckle from every officer its owners have beaten, and holes punched for more. Soldiers fight harder for a general who shares out the takings.",
       "bonuses": {
         "reward_bonus_pct": 20
       },
@@ -6791,7 +6791,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A creased map marked with old battles.",
+      "description": "Creased along the same folds by three generations of officers. The battles marked on it were lost and won on ground that has not moved.",
       "bonuses": {
         "scouting_radius": 1,
         "experience_bonus_pct": 5
@@ -6829,7 +6829,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A canvas roll of bone needles and thread.",
+      "description": "Bone needles, gut thread, a flask, and a saw nobody likes to see. A company with a surgeon buries fewer of its own.",
       "bonuses": {
         "victory_recovery_pct": 10
       },
@@ -6865,7 +6865,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A carved seal stamp and red wax.",
+      "description": "A stamp, a stick of red wax, and the right to say a thing is worth what you say it is. The guild charges for the use of it, daily.",
       "bonuses": {
         "daily_income": {
           "gold": 150
@@ -6905,7 +6905,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A brass dial gauge with two needles.",
+      "description": "Two needles: what the load weighs, and what the contract says it weighs. A Combine yard where both agree gets the best of every delivery.",
       "bonuses": {
         "daily_income": {
           "wood": 1,
@@ -6954,7 +6954,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A satchel stuffed with dried herbs.",
+      "description": "Yarrow for bleeding, willow for fever, and something bitter for those who will not rest. The smell alone puts heart into a sick tent.",
       "bonuses": {
         "victory_recovery_pct": 5,
         "creature_health_pct": 3
@@ -6992,7 +6992,7 @@
         "tradeoff": true,
         "warning_tags": []
       },
-      "description": "An iron strongbox with three locks.",
+      "description": "Three locks, three keys, three men who do not trust each other. That is how a district's taxes arrive whole.",
       "bonuses": {
         "daily_income": {
           "gold": 300,
@@ -7038,7 +7038,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "An hourglass whose sand runs upward.",
+      "description": "The sand runs up. Turn it at the end of a hard march, and part of the hour you have just spent is given back.",
       "bonuses": {
         "battle_initiative": 1,
         "movement_carry": 1,
@@ -7079,7 +7079,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A small book with a hundred bookmarks.",
+      "description": "The first book a master ever wrote, read to pieces by a hundred pupils who each left a marker where they finally understood.",
       "bonuses": {
         "experience_bonus_pct": 10,
         "knowledge": 1
@@ -7117,7 +7117,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A drinking horn spilling grain and coins.",
+      "description": "Carried round at a harvest feast in the first good year after the Shattering, and never yet set down empty.",
       "bonuses": {
         "daily_income": {
           "gold": 150,
@@ -7158,7 +7158,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A bronze medal with thirty tiny shields.",
+      "description": "Thirty held a ford against a host for a day, and the League struck one medal for all of them. Whoever wears it is expected to make it thirty-one.",
       "bonuses": {
         "battle_cohesion": 1,
         "battle_momentum": 1,
@@ -7198,7 +7198,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A flat river stone cut with a ward.",
+      "description": "Taken from a riverbed where three currents meet, and cut with a ward older than the League's alphabet. It has sat in a great many pockets.",
       "bonuses": {
         "battle_spell_resistance_pct": 10,
         "battle_control_resistance_pct": 5
@@ -7238,7 +7238,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "Folding brass scales in a red case.",
+      "description": "A League assayer weighs the spoils before anyone else touches them, and these scales have never been caught out. Honest weight turns out to be the larger share.",
       "bonuses": {
         "daily_income": {
           "gold": 150
@@ -7289,7 +7289,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A short straight tally cord with knots and three claws tied along it.",
+      "description": "A knot for each hunt, a claw for each one worth boasting of. Marsh clans read a stranger's cord before they decide what to offer.",
       "bonuses": {
         "battle_momentum": 1,
         "reward_bonus_pct": 20
@@ -7335,7 +7335,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A humming crystal fork.",
+      "description": "Struck once, it hums the note a Compact choir tunes to. A working begun on that note holds its shape longer.",
       "bonuses": {
         "battle_power": 1,
         "buff_duration_bonus": 1,
@@ -7386,7 +7386,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A wooden box of labelled seeds.",
+      "description": "The orchard caravans bound their seed vaults together to found the Concord. This box is one of the first, and what is planted from it comes up crowded.",
       "bonuses": {
         "recruit_growth_multiplier": 0.1,
         "recruit_cost_delta": -0.05,
@@ -7431,7 +7431,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A tooled leather scroll case with four tubes.",
+      "description": "Four tubes, tooled by a librarian who spent a lifetime reading other people's spells aloud. A scroll carried in it is cast as if by its author.",
       "bonuses": {
         "knowledge": 2,
         "max_mana": 6,
@@ -7474,7 +7474,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A coal that burns white and never shrinks.",
+      "description": "Raked out of the deepest furnace in the Brass Deeps on the day that furnace was finally let go cold. It still holds the spell that kept the fire: the one that raises a second sun.",
       "bonuses": {
         "battle_power": 2,
         "school_potency_pct": {
@@ -7520,7 +7520,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A black hand mirror showing another coast.",
+      "description": "It shows a coast nobody has charted, at night, with fires on it. Obituary mages say the dead are called back from there, and that the mirror knows how.",
       "bonuses": {
         "battle_power": 2,
         "school_potency_pct": {
@@ -7569,7 +7569,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A brass plaque engraved with one command.",
+      "description": "One command, engraved when a furnace town was told to hold: REMAIN. It has no end date.",
       "bonuses": {
         "battle_defense": 4,
         "damage_taken_pct": -8,
@@ -7621,7 +7621,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A rolled parchment charter tied with ribbon and hung with seven wax seals.",
+      "description": "Seven courts sealed it: any League force that stands its ground is owed relief by all the others. Soldiers who have read it close up around whoever is hardest pressed.",
       "bonuses": {
         "battle_cohesion": 2,
         "battle_defense": 4,
@@ -7674,7 +7674,7 @@
         "tradeoff": false,
         "warning_tags": []
       },
-      "description": "A flawless lens in a gold ring stand.",
+      "description": "The first lens ground after the Shattering without a single flaw, and the measure for every one since. What is cast through it at the outset does not fade.",
       "bonuses": {
         "battle_power": 2,
         "buff_duration_bonus": 1,
