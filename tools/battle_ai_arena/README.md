@@ -89,6 +89,11 @@ separately from repeated dice. These are paired observations of selected fights,
 not independent full-game balance samples. Keep original armies, commanders and
 side assignment when testing a mechanic.
 
+A custom job (`arena.run_cli` with your own groups) holds every battle of the call in memory, about 20 MB each,
+in the setup and in `battle_sim_cli`: 3,168 battles took 29 GB, and one 6,000-battle call froze a 64 GB machine.
+Split such a job into calls of 150 to 240 battles, pass `threads`, and stop the simulators if they pass a memory
+limit. In chunks it plays about 40 battles a second.
+
 ## Tuning the weights
 
 ```
