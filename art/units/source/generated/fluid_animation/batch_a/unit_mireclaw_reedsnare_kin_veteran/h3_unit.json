@@ -165,6 +165,42 @@
         0,
         0
       ]
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": [
+        "idle_h3_v1_000",
+        "attack_h3_v1_018"
+      ],
+      "guides": [
+        [
+          24,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Cast the noose ONCE toward screen right, the way an angler casts a line. He swings the hooked pole up and back over his shoulder, then whips it forward and down until the pole points level at screen right and the noose flicks out ahead of the hook on its rope, holds the reach for an instant, then lifts the pole back to its angle and settles into the original stance. Both boots stay planted the whole time: no step and no lunge. The noose stays tied to the hook, the rope coil stays in the other hand and nothing is thrown away."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_h3_v1_000",
+        "attack_h3_v1_018"
+      ],
+      "guides": [
+        [
+          24,
+          1
+        ]
+      ],
+      "last": 0,
+      "pad": [
+        0,
+        160,
+        160,
+        0
+      ],
+      "action": "Cast the noose ONCE toward screen right, the way an angler casts a line. He swings the hooked pole up and back over his shoulder, then whips it forward and down until the pole points level at screen right and the noose flicks out ahead of the hook on its rope, holds the reach for an instant, then lifts the pole back to its angle and settles into the original stance. Both boots stay planted the whole time: no step and no lunge. The noose stays tied to the hook, the rope coil stays in the other hand and nothing is thrown away."
     }
   }
 }

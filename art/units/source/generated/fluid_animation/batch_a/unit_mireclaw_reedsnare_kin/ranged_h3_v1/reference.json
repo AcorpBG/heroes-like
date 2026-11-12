@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "guides": [
+    {
+      "frame": "attack_h3_012",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_012.png",
+      "source_sha256": "0f155bea4297f45926419f2536bb91a4907fa4193a4ea152d1de51b5a537ec35",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b380ec493e07693c6fea6925ba30f0ef5fd3d8a837e4c1598f7bac653077ac4c"
+    },
+    {
+      "frame": "cast_h3_056",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_056.png",
+      "source_sha256": "add9df23f92d7f813079a129c608b05832ee3d1b7f417501400e3bf61d611498",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bfa3834f62a7566becd1330b9cc62434b43b10650f26d4e9a802c0fa13b86bfd"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    474,
+    538
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    224,
+    94,
+    225,
+    95
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

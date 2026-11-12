@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "guides": [
+    {
+      "frame": "idle_h3_v1_000",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_h3_v1/matte/rgba_000.png",
+      "source_sha256": "f20ed55f697f76dc8d490d9689844314c1e2efc7f4a1fad642813fb0314c8582",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c999af7bc562bcf993e807bc8a574bf2cc8c0f75b0de62283d2e7ec901311892"
+    },
+    {
+      "frame": "attack_h3_v1_018",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/attack_h3_v1/matte/rgba_018.png",
+      "source_sha256": "d3f984cddf963cc338a7424f3b7778b8b3dbb1ae9166a5d85f536359c4013a55",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2655b7e719c80e68733b6f953d131069996d2ebdb67bdb4afbade1a522786763"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    408,
+    592
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    47,
+    95,
+    48
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

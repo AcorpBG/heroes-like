@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "guides": [
+    {
+      "frame": "attack_h3_012",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_012.png",
+      "source_sha256": "0f155bea4297f45926419f2536bb91a4907fa4193a4ea152d1de51b5a537ec35",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "163710698573e40f015312d294bdbfd8b6af182a9c138cbebca6195610936e69"
+    },
+    {
+      "frame": "cast_h3_036",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_036.png",
+      "source_sha256": "149bc3371087b3655756db9e1cf03881453168551d72110c2408915e5f0d3baa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "09607aac1f7ae98d2d325b591304969c96eefac125a47e23255ae14167fd54d3"
+    },
+    {
+      "frame": "cast_h3_056",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_056.png",
+      "source_sha256": "add9df23f92d7f813079a129c608b05832ee3d1b7f417501400e3bf61d611498",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c08f7354d3db788580280e9da0845a19d5d4be4fb105703e60d657b89bb6d5c8"
+    },
+    {
+      "frame": "attack_h3_080",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_080.png",
+      "source_sha256": "6931055ebe07c053f90bc8505b149398d22a691c25c6f968f84c2321b47f3268",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f1bf494a061e5e3f6ace7064b89f41a3c0276cbd40b5e16f68cb6a493fa54afe"
+    },
+    {
+      "frame": "attack_h3_096",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_096.png",
+      "source_sha256": "ad79a00136c57c6d06d6a2aa42116ce14856003438bc15c487c8bb57e88ad739",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "ff074b1195865b513937244bba97d8b5c5599677f6191307491eaa713b86a561"
+    }
+  ],
+  "canvas": [
+    1088,
+    768
+  ],
+  "ground_anchor": [
+    474,
+    666
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    224,
+    222,
+    353,
+    95
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

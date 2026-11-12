@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    469,
+    560
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026111210,
+  "references": [
+    "attack_h3_000"
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "ONE original ivory, gold and deep-blue mechanical quadruped, the Solar Array Strider, facing screen right in elevated three-quarter view. Exactly FOUR articulated metal legs: near front, far front, near rear, far rear, each with fixed gold-and-ivory armour plates, blue circular joint bearings and one broad pointed triangular metal foot. The compact ivory chassis has gold sun engravings and short hanging blue cloth strips. On top is the rigid inclined array of three blue triangular sail-like panels in gold frames, ONE large round blue lens in a gold ring, and the gold forward curved bracket carrying exactly three smaller round lenses. No rider and no humanoid arms. Preserve the four legs, the leg lengths, the plates, the lens sizes, the panel count and the gold braces. The blue lenses stay solid painted glass. Fire ONE shot from the large round lens toward screen right, shown only by the motion of the machine itself. All four feet plant a little wider and the knees lock. The rigid lens array swivels on its mount until the large round lens faces screen right, with the three blue panels tilting back behind it, and it holds dead still, aiming. Then the whole chassis jolts backward in one short sharp recoil, the knees absorb it and the cloth strips swing, the array rocks once, and the machine settles back into the original stance. One shot only; nothing leaves the lens. Locked orthographic camera, fixed scale and centred body. Keep the full panel array, the lens bracket and all four feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, flashes, sparks, glow, motion trails, particles or extra legs. The machine moves at its joints and hinges; the panels, lenses and armour stay rigid and never bend or morph.",
+  "protected_foreground_chroma": 32,
+  "edge_threshold": 155,
+  "edge_spill_threshold": 18,
+  "palette_measurement": {
+    "bluest_opaque": 30.0,
+    "blue_minus_green_p999": 149.0,
+    "bluest_p999": 12.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "guides": [
+    {
+      "frame": "idle_h3_v1_020",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_h3_v1/matte/rgba_020.png",
+      "source_sha256": "7b94dc435aff31acf274728ae522fd8a571fc7e78a68c85186659129eacf5c19",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bcc3811da4ad9b82342187a583e5e88e9015eeda76ac4c2e2dca7342b46ed9a2"
+    },
+    {
+      "frame": "attack_h3_v1_043",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_h3_v1/matte/rgba_043.png",
+      "source_sha256": "6f3f0fc62823788f66c4bafcc942292843290e28ae20510bf4f31ade5f1d55d7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "01b3baeb58d2e66106d49ccb850108b595390406d20b6fae3b656502a97a6e38"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    453,
+    586
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    114,
+    52,
+    114,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

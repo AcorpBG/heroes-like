@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "guides": [
+    {
+      "frame": "attack_h3_000",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/attack_v1/matte/rgba_000.png",
+      "source_sha256": "b24c46db227a0e3497f4349b97c3bc3b075521da8402350924e9c808328fe4a8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f6034eac1d7af1fb9616952f719b589da383c2cc746db972cd7b3dfbf13fb771"
+    },
+    {
+      "frame": "cast_h3_032",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/cast_v1/matte/rgba_032.png",
+      "source_sha256": "ab9d99ab7f12da7aa90cdfa9d40803c4c28995f87176a52a850e62346e7396e4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "41ec2d9855ebb92dce4c50967b774e83df24f381ac173866de22870b26d43df0"
+    },
+    {
+      "frame": "attack_h3_022",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/attack_v1/matte/rgba_022.png",
+      "source_sha256": "7f3bcbadde38def3df9bb69d5a22c65b0b3108c43ed493e6bffee5a436edd81d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "203e16d32790cfd2175bb539e230406e902508ba95b45a00719e25808476deb1"
+    },
+    {
+      "frame": "attack_h3_098",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/attack_v1/matte/rgba_098.png",
+      "source_sha256": "77507fe6deec77942ac53e63b74ea85921ab39bfbb194a4c8b2412969346daa0",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f3a217345acbf6ed6e06280b1d0dcf332be31d4abe709aa354e229fa32517049"
+    }
+  ],
+  "canvas": [
+    1152,
+    704
+  ],
+  "ground_anchor": [
+    565,
+    624
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    316,
+    140,
+    345,
+    77
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

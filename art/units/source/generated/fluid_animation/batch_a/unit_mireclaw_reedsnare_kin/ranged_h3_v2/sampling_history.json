@@ -1,0 +1,331 @@
+{
+  "prompt": [
+    8,
+    "8fb92337-0af8-4b62-8402-551acc021ed7",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original Reedsnare Kin swamp hunter, facing screen right in elevated three-quarter view. Keep the brown hair tied in a small topknot with loose side locks, the olive green layered leather tunic and leggings, the ochre-yellow reed fringe on shoulders and knees, the wrapped brown-green boots and the rope coil tied at the screen-LEFT hip. Exactly two arms, two hands and two legs. Both bare hands hold ONE straight wooden trapping pole ending in exactly TWO curved bronze fork tips pointing toward screen right; ONE weighted rope loop hangs beneath the fork on its cord, its small dark weight tied to the rope. The screen-left hand holds the rear of the shaft, the screen-right hand the forward shaft before the fork. Preserve both grips, the pole length, the fork tips, the rope coil, the clothing, the face and adult proportions. The pole stays one rigid solid object. Cast the weighted snare ONCE toward screen right, the way an angler casts a line. She lifts the pole in both hands up over her head with the weighted loop swinging behind her, then whips the pole forward and down until it points level at screen right and the loop snaps out ahead of the fork on its cord, holds the reach for an instant, then draws the pole back to her hip and settles into the original stance. Both boots stay planted the whole time: no step and no lunge. The loop stays tied to the fork and nothing is thrown away. Only the body and the pole move; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full topknot, the whole pole with its fork and hanging loop, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the pole or rope.",
+          "width": 1088,
+          "height": 768,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026111201
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_mireclaw_reedsnare_kin/ranged_h3_v2/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_mireclaw_reedsnare_kin_ranged_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_mireclaw_reedsnare_kin_ranged_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_mireclaw_reedsnare_kin_ranged_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_mireclaw_reedsnare_kin_ranged_h3_v2_guide_3.png"
+        }
+      },
+      "34": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_mireclaw_reedsnare_kin_ranged_h3_v2_guide_4.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 14,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 46,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "34",
+            0
+          ]
+        }
+      },
+      "44": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "43",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 80,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "44",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1794484365678
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_mireclaw_reedsnare_kin\\ranged_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "8fb92337-0af8-4b62-8402-551acc021ed7",
+          "timestamp": 1794484365680
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "3"
+          ],
+          "prompt_id": "8fb92337-0af8-4b62-8402-551acc021ed7",
+          "timestamp": 1794484365970
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "8fb92337-0af8-4b62-8402-551acc021ed7",
+          "timestamp": 1794484653095
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

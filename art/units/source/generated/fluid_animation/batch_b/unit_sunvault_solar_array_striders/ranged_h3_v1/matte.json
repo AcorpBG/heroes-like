@@ -1,0 +1,633 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "50879b9c8159ac90b1c602fb094723d0f76b348a9d4d470b6515be69b017d87f",
+    "da33c6ca8f6d5a2bd1251473c44eeecd0683bd7ddef0152965fc1388fd77552f",
+    "459e149f7af6dae3bd5861269821999856934be65d8a93199d27afd56a9290b5",
+    "f655653f92cf67da8119aa22e82edeef242705d03d8469cd539a76ed8b1b6407",
+    "626c6e19b38ea1deb465143d06636084a039f897e459f26f05b29aceccce223a",
+    "ec4627822980914b26bfb5e8013f5f76c87c4bae972229bf6adcd8037b0c2e46",
+    "e30c6e98f30a67981965a76a85c6f69077a29231dada581f37c9970ecaf12ae1",
+    "a2471d9881d10b2a2358476b0c39f3babb2e7fb667825f12e8a72552568a1b2c",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "1251cb47e107157cd6c156c1aa82ed824c041b38c8c2cb80265e5ad2f5713ff0",
+    "1fc632a0d8455f9f21c9dcf81d041e1164187d2e037074b30ff5c8c11102ded0",
+    "d9555ad9930d610b590ab63a4e9359b20ed4876e5cf0478331e5406061391e1c",
+    "beee13bbda3348e0eae6021cc88190a6598ccf1c25a860679f028d68ecbe7260",
+    "c195988e2bfcac8f634085405bb88b1fde0abb1207d5ba8ed846099cf785f7a2",
+    "8216b60e38b92530850826abd67c13912d106fdad318ee932bcfb0b4ff1ddf21",
+    "c7ce4232014dda18433a5b85e9892c72d40da61037a434185310bfd5bd164161"
+  ],
+  "frame_details": [
+    {
+      "fixed_pixels": 14172,
+      "opacity_removed": 0.01044,
+      "background_rgb": [
+        5.0,
+        253.5,
+        1.5
+      ],
+      "corner_median_spread": 1.225,
+      "haze": 0.123
+    },
+    {
+      "fixed_pixels": 14163,
+      "opacity_removed": 0.01068,
+      "background_rgb": [
+        4.5,
+        252.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.124
+    },
+    {
+      "fixed_pixels": 14242,
+      "opacity_removed": 0.01074,
+      "background_rgb": [
+        5.0,
+        252.0,
+        0.5
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.124
+    },
+    {
+      "fixed_pixels": 14182,
+      "opacity_removed": 0.0107,
+      "background_rgb": [
+        5.0,
+        252.0,
+        0.5
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.124
+    },
+    {
+      "fixed_pixels": 14385,
+      "opacity_removed": 0.01067,
+      "background_rgb": [
+        5.0,
+        252.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.126
+    },
+    {
+      "fixed_pixels": 15018,
+      "opacity_removed": 0.01112,
+      "background_rgb": [
+        10.0,
+        255.0,
+        3.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.131
+    },
+    {
+      "fixed_pixels": 14614,
+      "opacity_removed": 0.0112,
+      "background_rgb": [
+        12.5,
+        255.0,
+        5.5
+      ],
+      "corner_median_spread": 1.225,
+      "haze": 0.127
+    },
+    {
+      "fixed_pixels": 15297,
+      "opacity_removed": 0.01151,
+      "background_rgb": [
+        13.5,
+        255.0,
+        5.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.132
+    },
+    {
+      "rejected": "plate [1.5, 0.0, 0.5] spread 1.2 separation -1.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 0.0] spread 0.0 separation 0.0"
+    },
+    {
+      "rejected": "plate [0.0, 2.0, 1.0] spread 1.0 separation -1.0"
+    },
+    {
+      "rejected": "plate [1.0, 2.0, 3.5] spread 1.1 separation 1.5"
+    },
+    {
+      "fixed_pixels": 17743,
+      "opacity_removed": 0.01162,
+      "background_rgb": [
+        9.0,
+        251.5,
+        3.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.152
+    },
+    {
+      "fixed_pixels": 18525,
+      "opacity_removed": 0.01138,
+      "background_rgb": [
+        8.0,
+        255.0,
+        4.5
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.162
+    },
+    {
+      "fixed_pixels": 14538,
+      "opacity_removed": 0.01103,
+      "background_rgb": [
+        5.0,
+        249.5,
+        1.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.126
+    },
+    {
+      "fixed_pixels": 14412,
+      "opacity_removed": 0.01121,
+      "background_rgb": [
+        5.0,
+        249.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.125
+    },
+    {
+      "fixed_pixels": 14299,
+      "opacity_removed": 0.01131,
+      "background_rgb": [
+        5.0,
+        248.5,
+        1.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.124
+    },
+    {
+      "fixed_pixels": 14242,
+      "opacity_removed": 0.01127,
+      "background_rgb": [
+        5.0,
+        248.0,
+        0.5
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.123
+    },
+    {
+      "fixed_pixels": 14188,
+      "opacity_removed": 0.01122,
+      "background_rgb": [
+        5.5,
+        247.5,
+        0.5
+      ],
+      "corner_median_spread": 1.658,
+      "haze": 0.123
+    }
+  ],
+  "protected_foreground_chroma": 32,
+  "edge_threshold": 155,
+  "edge_spill_threshold": 18,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. A green plate swaps green and blue before these rules and back after them, and its edge band also re-solves pixels whose green over max(red, blue) exceeds edge_spill_threshold (guide p99.9 + 6), keeping re-solved green at most that far above max(red, blue), translucent pixels no higher than it. A frame whose alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected as a plate pulse."
+}

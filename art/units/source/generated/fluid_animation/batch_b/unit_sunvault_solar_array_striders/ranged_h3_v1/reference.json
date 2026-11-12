@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "guides": [
+    {
+      "frame": "attack_h3_000",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/attack_v1/matte/rgba_000.png",
+      "source_sha256": "b24c46db227a0e3497f4349b97c3bc3b075521da8402350924e9c808328fe4a8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "19ef0fc30be79c4801fa04e1b3a961798038c101eaa10749cfcbb85561ba5ddc"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    469,
+    560
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    249,
+    76,
+    249,
+    77
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
