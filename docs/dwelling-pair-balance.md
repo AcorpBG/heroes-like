@@ -57,6 +57,17 @@ Slice `faction-army-level-20261112`. With every line at one par the six towns' a
 - **Check on dice the search never used** (1,440 fights each): before, Embercourt 69%, Brasshollow 64%, Thornwake 53%, Sunvault 47%, Mireclaw 40%, Veilmourn 27% of even fights (standard deviation 0.142). After: Mireclaw 57%, Sunvault 56%, Embercourt 50%, Thornwake 46%, Veilmourn 46%, Brasshollow 45% (0.048). By week the towns range 41–59% at week 2, 41–68% at week 4 and 35–65% at week 6; Mireclaw's week 4 (68%) and Thornwake's week 6 (35%) are the widest. With twice the gold the attacker wins 95% and loses 21% of its army, as before.
 - **Limits.** This levels one model of a town army: troops only, no spells, skills or artifacts, gold spent top tier first. Whole games are not measured. Mireclaw's and Thornwake's tier VI–VII factors sit near the ±22% limit, so their late armies are not fully level.
 
+## Creature health doubled (owner decision, 2026-11-12)
+
+Slice `double-creature-health-20261112`. A 540-game batch on the levelled numbers had Sunvault, the town with three shooter tiers, at 125% of a fair score: it lost 2.0% of its army in a won guard fight against 2.9 to 3.7% for the others. The owner doubled the health of every creature (all 232 rows of `content/units.json`, neutral ones included), so the volleys a shooter gets before the melee arrives kill half as many. Nothing else changed: damage, prices, growth, spells and abilities keep their numbers.
+
+Town-army fights before and after (1,440 each, the model of the sections above):
+- **Shooters.** In an even fight the side with clearly more shooters won 46% before and 37% after (56% → 58% at week 2, 51% → 38% at week 4, 36% → 23% at week 6). With twice the gold an army under 40% shooters loses 21% of its value where it lost 24%; one over 55% shooters loses 27% as before. A win without any loss fell from 5.5% of those fights to 0.7%.
+- **Length.** A fight takes 5.6 rounds on average where it took 3.8 (nine in ten end by round 9, the longest ran 15). 5 of 720 even fights reached the round cap and ended in a stalemate; none of the fights with twice the gold did. Retreats and surrenders are about three times as common.
+- **Flat numbers count half.** Damage and healing spells, and abilities that deal or restore a fixed amount, are worth half as much against a creature as before.
+- **Levelling drifts.** The faction factors above were found on the old health: the spread of the six towns' even-fight win rates went from 0.054 to 0.100 (Embercourt 65%, Thornwake 33%).
+- Whole games on the new health are not measured; the batch above (plan seed 202265212) is the comparison to rerun.
+
 ## Rule (2026-10-06)
 
 Every faction town offers two exclusive dwelling lines at tiers I–V, and each line has a base unit and an upgrade. The two lines of one tier must be a real trade-off, never one line that is a little better at everything:
