@@ -222,10 +222,10 @@
       {
         "tier": 2,
         "branch": 2,
-        "unit_id": "unit_embercourt_lantern_sappers",
-        "upgraded_unit_id": "unit_embercourt_lantern_sappers_veteran",
-        "building_id": "building_dev_embercourt_t2_2",
-        "upgrade_building_id": "building_dev_embercourt_t2_2_upgrade"
+        "unit_id": "unit_embercourt_bargebow_crews",
+        "upgraded_unit_id": "unit_embercourt_bargebow_crews_veteran",
+        "building_id": "building_dev_embercourt_t3_2",
+        "upgrade_building_id": "building_dev_embercourt_t3_2_upgrade"
       },
       {
         "tier": 3,
@@ -238,18 +238,18 @@
       {
         "tier": 3,
         "branch": 2,
-        "unit_id": "unit_embercourt_bargebow_crews",
-        "upgraded_unit_id": "unit_embercourt_bargebow_crews_veteran",
-        "building_id": "building_dev_embercourt_t3_2",
-        "upgrade_building_id": "building_dev_embercourt_t3_2_upgrade"
+        "unit_id": "unit_embercourt_lantern_sappers",
+        "upgraded_unit_id": "unit_embercourt_lantern_sappers_veteran",
+        "building_id": "building_dev_embercourt_t2_2",
+        "upgrade_building_id": "building_dev_embercourt_t2_2_upgrade"
       },
       {
         "tier": 4,
         "branch": 1,
-        "unit_id": "unit_embercourt_ash_oath_bailiffs",
-        "upgraded_unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
-        "building_id": "building_dev_embercourt_t4_1",
-        "upgrade_building_id": "building_dev_embercourt_t4_1_upgrade"
+        "unit_id": "unit_embercourt_beacon_lectors",
+        "upgraded_unit_id": "unit_embercourt_beacon_lectors_veteran",
+        "building_id": "building_dev_embercourt_t5_1",
+        "upgrade_building_id": "building_dev_embercourt_t5_1_upgrade"
       },
       {
         "tier": 4,
@@ -262,10 +262,10 @@
       {
         "tier": 5,
         "branch": 1,
-        "unit_id": "unit_embercourt_beacon_lectors",
-        "upgraded_unit_id": "unit_embercourt_beacon_lectors_veteran",
-        "building_id": "building_dev_embercourt_t5_1",
-        "upgrade_building_id": "building_dev_embercourt_t5_1_upgrade"
+        "unit_id": "unit_embercourt_ash_oath_bailiffs",
+        "upgraded_unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+        "building_id": "building_dev_embercourt_t4_1",
+        "upgrade_building_id": "building_dev_embercourt_t4_1_upgrade"
       },
       {
         "tier": 5,
@@ -304,18 +304,18 @@
       {
         "tier": 1,
         "branch": 2,
-        "unit_id": "unit_mireclaw_reedsnare_kin",
-        "upgraded_unit_id": "unit_mireclaw_reedsnare_kin_veteran",
-        "building_id": "building_dev_mireclaw_t1_2",
-        "upgrade_building_id": "building_dev_mireclaw_t1_2_upgrade"
-      },
-      {
-        "tier": 2,
-        "branch": 1,
         "unit_id": "unit_bog_brute",
         "upgraded_unit_id": "unit_bog_brute_veteran",
         "building_id": "building_dev_mireclaw_t2_1",
         "upgrade_building_id": "building_dev_mireclaw_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_mireclaw_reedsnare_kin",
+        "upgraded_unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+        "building_id": "building_dev_mireclaw_t1_2",
+        "upgrade_building_id": "building_dev_mireclaw_t1_2_upgrade"
       },
       {
         "tier": 2,
@@ -352,10 +352,10 @@
       {
         "tier": 4,
         "branch": 2,
-        "unit_id": "unit_mireclaw_mireglass_reedcasters",
-        "upgraded_unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
-        "building_id": "building_dev_mireclaw_t4_2",
-        "upgrade_building_id": "building_dev_mireclaw_t4_2_upgrade"
+        "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+        "upgraded_unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+        "building_id": "building_dev_mireclaw_t5_2",
+        "upgrade_building_id": "building_dev_mireclaw_t5_2_upgrade"
       },
       {
         "tier": 5,
@@ -368,10 +368,10 @@
       {
         "tier": 5,
         "branch": 2,
-        "unit_id": "unit_mireclaw_fenbell_chainstalkers",
-        "upgraded_unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
-        "building_id": "building_dev_mireclaw_t5_2",
-        "upgrade_building_id": "building_dev_mireclaw_t5_2_upgrade"
+        "unit_id": "unit_mireclaw_mireglass_reedcasters",
+        "upgraded_unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+        "building_id": "building_dev_mireclaw_t4_2",
+        "upgrade_building_id": "building_dev_mireclaw_t4_2_upgrade"
       },
       {
         "tier": 6,
@@ -434,18 +434,18 @@
       {
         "tier": 3,
         "branch": 2,
-        "unit_id": "unit_sunvault_mirror_duelists",
-        "upgraded_unit_id": "unit_sunvault_mirror_duelists_veteran",
-        "building_id": "building_dev_sunvault_t3_2",
-        "upgrade_building_id": "building_dev_sunvault_t3_2_upgrade"
-      },
-      {
-        "tier": 4,
-        "branch": 1,
         "unit_id": "unit_sunvault_resonant_choristers",
         "upgraded_unit_id": "unit_sunvault_resonant_choristers_veteran",
         "building_id": "building_dev_sunvault_t4_1",
         "upgrade_building_id": "building_dev_sunvault_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_sunvault_mirror_duelists",
+        "upgraded_unit_id": "unit_sunvault_mirror_duelists_veteran",
+        "building_id": "building_dev_sunvault_t3_2",
+        "upgrade_building_id": "building_dev_sunvault_t3_2_upgrade"
       },
       {
         "tier": 4,
@@ -508,10 +508,10 @@
       {
         "tier": 2,
         "branch": 1,
-        "unit_id": "unit_thornwake_thornwhip_carriers",
-        "upgraded_unit_id": "unit_thornwake_thornwhip_carriers_veteran",
-        "building_id": "building_dev_thornwake_t2_1",
-        "upgrade_building_id": "building_dev_thornwake_t2_1_upgrade"
+        "unit_id": "unit_thornwake_sporeglass_menders",
+        "upgraded_unit_id": "unit_thornwake_sporeglass_menders_veteran",
+        "building_id": "building_dev_thornwake_t3_1",
+        "upgrade_building_id": "building_dev_thornwake_t3_1_upgrade"
       },
       {
         "tier": 2,
@@ -524,10 +524,10 @@
       {
         "tier": 3,
         "branch": 1,
-        "unit_id": "unit_thornwake_sporeglass_menders",
-        "upgraded_unit_id": "unit_thornwake_sporeglass_menders_veteran",
-        "building_id": "building_dev_thornwake_t3_1",
-        "upgrade_building_id": "building_dev_thornwake_t3_1_upgrade"
+        "unit_id": "unit_thornwake_thornwhip_carriers",
+        "upgraded_unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+        "building_id": "building_dev_thornwake_t2_1",
+        "upgrade_building_id": "building_dev_thornwake_t2_1_upgrade"
       },
       {
         "tier": 3,
@@ -540,10 +540,10 @@
       {
         "tier": 4,
         "branch": 1,
-        "unit_id": "unit_thornwake_barkmantle_rams",
-        "upgraded_unit_id": "unit_thornwake_barkmantle_rams_veteran",
-        "building_id": "building_dev_thornwake_t4_1",
-        "upgrade_building_id": "building_dev_thornwake_t4_1_upgrade"
+        "unit_id": "unit_thornwake_seedglass_cantors",
+        "upgraded_unit_id": "unit_thornwake_seedglass_cantors_veteran",
+        "building_id": "building_dev_thornwake_t5_2",
+        "upgrade_building_id": "building_dev_thornwake_t5_2_upgrade"
       },
       {
         "tier": 4,
@@ -564,10 +564,10 @@
       {
         "tier": 5,
         "branch": 2,
-        "unit_id": "unit_thornwake_seedglass_cantors",
-        "upgraded_unit_id": "unit_thornwake_seedglass_cantors_veteran",
-        "building_id": "building_dev_thornwake_t5_2",
-        "upgrade_building_id": "building_dev_thornwake_t5_2_upgrade"
+        "unit_id": "unit_thornwake_barkmantle_rams",
+        "upgraded_unit_id": "unit_thornwake_barkmantle_rams_veteran",
+        "building_id": "building_dev_thornwake_t4_1",
+        "upgrade_building_id": "building_dev_thornwake_t4_1_upgrade"
       },
       {
         "tier": 6,
@@ -598,14 +598,6 @@
       {
         "tier": 1,
         "branch": 2,
-        "unit_id": "unit_brasshollow_tallyspring_throwers",
-        "upgraded_unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
-        "building_id": "building_dev_brasshollow_t1_2",
-        "upgrade_building_id": "building_dev_brasshollow_t1_2_upgrade"
-      },
-      {
-        "tier": 2,
-        "branch": 1,
         "unit_id": "unit_brasshollow_rivet_hounds",
         "upgraded_unit_id": "unit_brasshollow_rivet_hounds_veteran",
         "building_id": "building_dev_brasshollow_t2_1",
@@ -613,11 +605,19 @@
       },
       {
         "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_tallyspring_throwers",
+        "upgraded_unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+        "building_id": "building_dev_brasshollow_t1_2",
+        "upgrade_building_id": "building_dev_brasshollow_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
         "branch": 2,
-        "unit_id": "unit_brasshollow_quenchspool_slingers",
-        "upgraded_unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
-        "building_id": "building_dev_brasshollow_t2_2",
-        "upgrade_building_id": "building_dev_brasshollow_t2_2_upgrade"
+        "unit_id": "unit_brasshollow_gaugefire_arbalists",
+        "upgraded_unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+        "building_id": "building_dev_brasshollow_t3_2",
+        "upgrade_building_id": "building_dev_brasshollow_t3_2_upgrade"
       },
       {
         "tier": 3,
@@ -630,10 +630,10 @@
       {
         "tier": 3,
         "branch": 2,
-        "unit_id": "unit_brasshollow_gaugefire_arbalists",
-        "upgraded_unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
-        "building_id": "building_dev_brasshollow_t3_2",
-        "upgrade_building_id": "building_dev_brasshollow_t3_2_upgrade"
+        "unit_id": "unit_brasshollow_quenchspool_slingers",
+        "upgraded_unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+        "building_id": "building_dev_brasshollow_t2_2",
+        "upgrade_building_id": "building_dev_brasshollow_t2_2_upgrade"
       },
       {
         "tier": 4,
@@ -646,10 +646,10 @@
       {
         "tier": 4,
         "branch": 2,
-        "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
-        "upgraded_unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
-        "building_id": "building_dev_brasshollow_t4_2",
-        "upgrade_building_id": "building_dev_brasshollow_t4_2_upgrade"
+        "unit_id": "unit_brasshollow_quenchbell_mortars",
+        "upgraded_unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+        "building_id": "building_dev_brasshollow_t5_2",
+        "upgrade_building_id": "building_dev_brasshollow_t5_2_upgrade"
       },
       {
         "tier": 5,
@@ -662,10 +662,10 @@
       {
         "tier": 5,
         "branch": 2,
-        "unit_id": "unit_brasshollow_quenchbell_mortars",
-        "upgraded_unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
-        "building_id": "building_dev_brasshollow_t5_2",
-        "upgrade_building_id": "building_dev_brasshollow_t5_2_upgrade"
+        "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+        "upgraded_unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+        "building_id": "building_dev_brasshollow_t4_2",
+        "upgrade_building_id": "building_dev_brasshollow_t4_2_upgrade"
       },
       {
         "tier": 6,
@@ -696,10 +696,10 @@
       {
         "tier": 1,
         "branch": 2,
-        "unit_id": "unit_veilmourn_saltbell_casters",
-        "upgraded_unit_id": "unit_veilmourn_saltbell_casters_veteran",
-        "building_id": "building_dev_veilmourn_t1_2",
-        "upgrade_building_id": "building_dev_veilmourn_t1_2_upgrade"
+        "unit_id": "unit_veilmourn_tidehook_deckhands",
+        "upgraded_unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+        "building_id": "building_dev_veilmourn_t2_2",
+        "upgrade_building_id": "building_dev_veilmourn_t2_2_upgrade"
       },
       {
         "tier": 2,
@@ -712,10 +712,10 @@
       {
         "tier": 2,
         "branch": 2,
-        "unit_id": "unit_veilmourn_tidehook_deckhands",
-        "upgraded_unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
-        "building_id": "building_dev_veilmourn_t2_2",
-        "upgrade_building_id": "building_dev_veilmourn_t2_2_upgrade"
+        "unit_id": "unit_veilmourn_saltbell_casters",
+        "upgraded_unit_id": "unit_veilmourn_saltbell_casters_veteran",
+        "building_id": "building_dev_veilmourn_t1_2",
+        "upgrade_building_id": "building_dev_veilmourn_t1_2_upgrade"
       },
       {
         "tier": 3,
@@ -744,18 +744,18 @@
       {
         "tier": 4,
         "branch": 2,
-        "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
-        "upgraded_unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
-        "building_id": "building_dev_veilmourn_t4_2",
-        "upgrade_building_id": "building_dev_veilmourn_t4_2_upgrade"
-      },
-      {
-        "tier": 5,
-        "branch": 1,
         "unit_id": "unit_veilmourn_obituary_scribes",
         "upgraded_unit_id": "unit_veilmourn_obituary_scribes_veteran",
         "building_id": "building_dev_veilmourn_t5_1",
         "upgrade_building_id": "building_dev_veilmourn_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+        "upgraded_unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+        "building_id": "building_dev_veilmourn_t4_2",
+        "upgrade_building_id": "building_dev_veilmourn_t4_2_upgrade"
       },
       {
         "tier": 5,

@@ -2,12 +2,35 @@
 
 Slice: `balance-dwelling-pairs-20261006` (owner-directed, 2026-10-06).
 
-## Rule
+## Single-type tiers (owner decision, 2026-11-12)
+
+Slice `single-type-dwelling-tiers-20261112`. Armies had become all shooters: 24 of the 30 tier I–V choices set a melee line against a ranged one, and a ranged army wins its fights without losses while a melee army's losses add up over a game. Since this slice every tier I–V choice is between two lines of one attack type, so a town fields shooters only from its ranged tiers.
+
+The owner chose to regroup the lines that exist, not to redesign units. 24 lines moved one tier up or down. Four units changed attack type, because their towns had an odd number of melee and ranged lines: Reedsnare Kin and Solar Array Striders became ranged, Pollenhook Whistlers and Quenchspool Slingers melee (each with its upgrade).
+
+| Town | I | II | III | IV | V |
+| --- | --- | --- | --- | --- | --- |
+| Embercourt | melee: River Guard / Fordhook Cadets | ranged: Ember Archer / Bargebow Crews (from III) | melee: Citadel Pikeward / Lantern Sappers (from II) | ranged: Beacon Lectors (from V) / Lockglass Writcasters | melee: Ash-Oath Bailiffs (from IV) / Beaconline Writguard |
+| Mireclaw | melee: Blackbranch Cutthroat / Bog Brute (from II) | ranged: Reedsnare Kin (from I) (now ranged) / Mudglass Slingers | melee: Gorefen Ripper / Bogplate Maulers | melee: Ferrychain Lashers / Fenbell Chainstalkers (from V) | ranged: Sporewake Chanters / Mireglass Reedcasters (from IV) |
+| Sunvault | melee: Shard Pavise Guard / Shard Wardens | ranged: Prism Harrier / Prism Adepts | ranged: Aurora Ballista / Resonant Choristers (from IV) | melee: Mirror Duelists (from III) / Noonfacet Sentinels | ranged: Solar Array Striders (now ranged) / Zenith Lensbearers |
+| Thornwake | melee: Seedcutters / Pollenhook Whistlers (now melee) | ranged: Sporeglass Menders (from III) / Bramblekite Needlers | melee: Thornwhip Carriers (from II) / Seedshield Wardens | ranged: Seedglass Cantors (from V) / Dawnseed Bolters | melee: Stag-Knot Runners / Barkmantle Rams (from IV) |
+| Brasshollow | melee: Scrip Haulers / Rivet Hounds (from II) | ranged: Tallyspring Throwers (from I) / Gaugefire Arbalists (from III) | melee: Furnace Pavis Teams / Quenchspool Slingers (from II) (now melee) | ranged: Boiler Rivetcasters / Quenchbell Mortars (from V) | melee: Debt-Engine Exactors / Gaugeplate Bailiffs (from IV) |
+| Veilmourn | melee: Bellwake Oars / Tidehook Deckhands (from II) | ranged: Mourning Lanterns / Saltbell Casters (from I) | melee: Maskglass Corsairs / Wakechain Boarders | ranged: Undertow Harpooners / Obituary Scribes (from V) | melee: Gloamkeel Bulwarks (from IV) / Wakeglass Navigators |
+
+- **A moved line** keeps its unit ids, names, art, abilities, speed and initiative, and its two dwelling buildings with their ids, art and plots (`building_dev_embercourt_t3_2` is now a tier II dwelling). Its buildings take the new tier's cost, requirements, `dwelling_tier`, `choice_group` and `choice_branch`.
+- **Numbers.** Health and damage scale by the ratio of today's medians of the new and old tier for that attack type; attack and defense shift by the difference of the medians. The price starts at the tier's median gold per strength (`army_power` terms without a commander). Weekly growth makes a week of the line cost what a week of its tier and attack type costs.
+- **Balance.** Each pair was duelled on `battle_sim_cli` through the battle arena's setup (`tools/battle_ai_arena`): one stack against one at seven budget ratios, from both sides, three dice, level 1 heroes with no mana, 2,520 fights a round. The ratio at which the lines tie is one line's strength per gold against the other's. Over six rounds the moved lines' prices were corrected (within 0.75–1.35 of the rule price, the rest from health and damage, an upgrade costing 1.2–1.75 times its base). Of the 50 changed pair stages, 40 tie within 10% and all but 4 within 15% (embercourt:t3:upgrade 0.82, embercourt:t5:base 0.81, mireclaw:t2:base 0.78, veilmourn:t1:base 0.80); the ten untouched same-type stages read 0.93 to 1.29 on the same measure, so this is the harness's resolution.
+- **Converted abilities.** Bloomchime Echo and Quenchspool Redline became melee blows against rooted or staggered targets (`backstab`); Heliostat Pathfinders' reach became Survey Beam (`volley`). The two new shooters play their melee animation when they shoot until their shooting art is made (`pose_aliases`).
+- **Derived content.** `content/generated_neutral_companies.json` was rebuilt, map dwellings hire the new weekly growth, and each faction's `unit_ladder_ids` holds a unit of the slot's tier again.
+- **Saves.** A town keeps what it built. Where it had built two lines that now share a tier, the one built first stays active (the standing rule for exclusive branches); the other line's stored recruits stay hireable and its troops stay in the armies.
+- `tests/unit_pair_duel_report.tscn` below no longer runs: it sets its duels up in an archived authored scenario.
+
+## Rule (2026-10-06)
 
 Every faction town offers two exclusive dwelling lines at tiers I–V, and each line has a base unit and an upgrade. The two lines of one tier must be a real trade-off, never one line that is a little better at everything:
 
 - Two melee lines (or two ranged lines) at the same tier split into a **tank** (more defense and health, less attack and top damage) and a **striker** (more attack and top damage, less defense), and trade evenly per gold.
-- When one line shoots and the other fights in melee, the melee line is always the bulkier one (health weighted by defense). The shooter keeps a head-on edge per gold, because a duel cannot credit the melee line for screening, blocking and closing on shooters in a real army.
+- (No pair is mixed since 2026-11-12; kept for the record.) When one line shoots and the other fights in melee, the melee line is always the bulkier one (health weighted by defense). The shooter keeps a head-on edge per gold, because a duel cannot credit the melee line for screening, blocking and closing on shooters in a real army.
 - An upgrade stays at least as strong as its base on every stat and costs at least 20% more gold. It always gains health and at least one of attack, defense or damage; tank upgrades such as Ledgerwall Porters and Kilnwall Wardens gain defense instead of attack by design. `tests/town_development_regression.py` checks this for all 72 upgrades.
 
 Tiers VI and VII are single dwellings and neutral units are not part of this pass.

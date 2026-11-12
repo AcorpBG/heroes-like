@@ -88,10 +88,10 @@
       ],
       "unit_ladder_ids": [
         "unit_embercourt_fordhook_cadets",
-        "unit_embercourt_lantern_sappers",
         "unit_embercourt_bargebow_crews",
-        "unit_embercourt_ash_oath_bailiffs",
+        "unit_embercourt_lantern_sappers",
         "unit_embercourt_beacon_lectors",
+        "unit_embercourt_ash_oath_bailiffs",
         "unit_embercourt_sluicefire_lindworms",
         "unit_embercourt_charter_colossus"
       ],
@@ -251,7 +251,7 @@
         "hero_mireclaw_rhask_reedcaller"
       ],
       "unit_ladder_ids": [
-        "unit_mireclaw_reedsnare_kin",
+        "unit_bog_brute",
         "unit_mireclaw_mudglass_slingers",
         "unit_mireclaw_bogplate_maulers",
         "unit_mireclaw_ferrychain_lashers",
@@ -420,8 +420,8 @@
       "unit_ladder_ids": [
         "unit_sunvault_shard_wardens",
         "unit_sunvault_prism_adepts",
-        "unit_sunvault_mirror_duelists",
         "unit_sunvault_resonant_choristers",
+        "unit_sunvault_mirror_duelists",
         "unit_sunvault_solar_array_striders",
         "unit_sunvault_aurora_ballistae",
         "unit_sunvault_daybreak_colossus"
@@ -587,9 +587,9 @@
       ],
       "unit_ladder_ids": [
         "unit_thornwake_seedcutters",
-        "unit_thornwake_thornwhip_carriers",
         "unit_thornwake_sporeglass_menders",
-        "unit_thornwake_barkmantle_rams",
+        "unit_thornwake_thornwhip_carriers",
+        "unit_thornwake_seedglass_cantors",
         "unit_thornwake_stagknot_runners",
         "unit_thornwake_graft_matriarchs",
         "unit_thornwake_worldroot_bastion"
@@ -745,7 +745,7 @@
       ],
       "unit_ladder_ids": [
         "unit_brasshollow_scrip_haulers",
-        "unit_brasshollow_rivet_hounds",
+        "unit_brasshollow_tallyspring_throwers",
         "unit_brasshollow_furnace_pavis_teams",
         "unit_brasshollow_boiler_rivetcasters",
         "unit_brasshollow_debt_engine_exactors",
@@ -907,7 +907,7 @@
         "unit_veilmourn_mourning_lanterns",
         "unit_veilmourn_maskglass_corsairs",
         "unit_veilmourn_undertow_harpooners",
-        "unit_veilmourn_obituary_scribes",
+        "unit_veilmourn_gloamkeel_bulwarks",
         "unit_veilmourn_mirrorkeel_reavers",
         "unit_veilmourn_fogbound_leviathan"
       ],

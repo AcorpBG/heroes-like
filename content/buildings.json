@@ -4852,32 +4852,32 @@
       "name": "Lantern Sappers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
-        "building_town_hall"
+        "building_dev_hall_2"
       ],
       "development_version": 1,
       "description": "Recruits Lantern Sappers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t2_2",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "embercourt_t2",
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
       "choice_branch": 2,
       "unlock_unit_id": "unit_embercourt_lantern_sappers",
-      "requires_dwelling_tier": 1
+      "requires_dwelling_tier": 2
     },
     {
       "id": "building_dev_embercourt_t2_2_upgrade",
       "name": "Lantern Sappers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
       },
       "requires": [
         "building_dev_embercourt_t2_2"
@@ -4887,8 +4887,8 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t2_2",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "embercourt_t2",
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
       "choice_branch": 2,
       "unlock_unit_id": "unit_embercourt_lantern_sappers_veteran",
       "upgrade_from": "building_dev_embercourt_t2_2"
@@ -4944,32 +4944,32 @@
       "name": "Bargebow Crews Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 2000,
-        "wood": 6,
-        "ore": 6
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
-        "building_dev_hall_2"
+        "building_town_hall"
       ],
       "development_version": 1,
       "description": "Recruits Bargebow Crews. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t3_2",
       "stage": 1,
-      "dwelling_tier": 3,
-      "choice_group": "embercourt_t3",
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
       "choice_branch": 2,
       "unlock_unit_id": "unit_embercourt_bargebow_crews",
-      "requires_dwelling_tier": 2
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_embercourt_t3_2_upgrade",
       "name": "Bargebow Crews Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 1500,
-        "wood": 5,
-        "ore": 5
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_embercourt_t3_2"
@@ -4979,8 +4979,8 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t3_2",
       "stage": 2,
-      "dwelling_tier": 3,
-      "choice_group": "embercourt_t3",
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
       "choice_branch": 2,
       "unlock_unit_id": "unit_embercourt_bargebow_crews_veteran",
       "upgrade_from": "building_dev_embercourt_t3_2"
@@ -4990,9 +4990,9 @@
       "name": "Ash-Oath Bailiffs Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
       },
       "requires": [
         "building_dev_hall_2"
@@ -5002,20 +5002,20 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t4_1",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "embercourt_t4",
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
       "choice_branch": 1,
       "unlock_unit_id": "unit_embercourt_ash_oath_bailiffs",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 4
     },
     {
       "id": "building_dev_embercourt_t4_1_upgrade",
       "name": "Ash-Oath Bailiffs Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_embercourt_t4_1"
@@ -5025,8 +5025,8 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t4_1",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "embercourt_t4",
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
       "choice_branch": 1,
       "unlock_unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
       "upgrade_from": "building_dev_embercourt_t4_1"
@@ -5082,9 +5082,9 @@
       "name": "Beacon Lectors Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 4500,
-        "wood": 10,
-        "ore": 10
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -5094,20 +5094,20 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t5_1",
       "stage": 1,
-      "dwelling_tier": 5,
-      "choice_group": "embercourt_t5",
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
       "choice_branch": 1,
       "unlock_unit_id": "unit_embercourt_beacon_lectors",
-      "requires_dwelling_tier": 4
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_embercourt_t5_1_upgrade",
       "name": "Beacon Lectors Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 3375,
-        "wood": 8,
-        "ore": 8
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_embercourt_t5_1"
@@ -5117,8 +5117,8 @@
       "faction_id": "faction_embercourt",
       "line_id": "embercourt_t5_1",
       "stage": 2,
-      "dwelling_tier": 5,
-      "choice_group": "embercourt_t5",
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
       "choice_branch": 1,
       "unlock_unit_id": "unit_embercourt_beacon_lectors_veteran",
       "upgrade_from": "building_dev_embercourt_t5_1"
@@ -5418,9 +5418,9 @@
       "name": "Reedsnare Kin Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 600,
-        "wood": 2,
-        "ore": 2
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
         "building_town_hall"
@@ -5430,19 +5430,20 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t1_2",
       "stage": 1,
-      "dwelling_tier": 1,
-      "choice_group": "mireclaw_t1",
-      "choice_branch": 2,
-      "unlock_unit_id": "unit_mireclaw_reedsnare_kin"
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_reedsnare_kin",
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_mireclaw_t1_2_upgrade",
       "name": "Reedsnare Kin Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 450,
-        "wood": 2,
-        "ore": 2
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_mireclaw_t1_2"
@@ -5452,9 +5453,9 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t1_2",
       "stage": 2,
-      "dwelling_tier": 1,
-      "choice_group": "mireclaw_t1",
-      "choice_branch": 2,
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_mireclaw_reedsnare_kin_veteran",
       "upgrade_from": "building_dev_mireclaw_t1_2"
     },
@@ -5463,9 +5464,9 @@
       "name": "Bog Brute Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_town_hall"
@@ -5475,20 +5476,19 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t2_1",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "mireclaw_t2",
-      "choice_branch": 1,
-      "unlock_unit_id": "unit_bog_brute",
-      "requires_dwelling_tier": 1
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_bog_brute"
     },
     {
       "id": "building_dev_mireclaw_t2_1_upgrade",
       "name": "Bog Brute Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_dev_mireclaw_t2_1"
@@ -5498,9 +5498,9 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t2_1",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "mireclaw_t2",
-      "choice_branch": 1,
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_bog_brute_veteran",
       "upgrade_from": "building_dev_mireclaw_t2_1"
     },
@@ -5693,9 +5693,9 @@
       "name": "Mireglass Reedcasters Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
       },
       "requires": [
         "building_dev_hall_2"
@@ -5705,20 +5705,20 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t4_2",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "mireclaw_t4",
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
       "choice_branch": 2,
       "unlock_unit_id": "unit_mireclaw_mireglass_reedcasters",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 4
     },
     {
       "id": "building_dev_mireclaw_t4_2_upgrade",
       "name": "Mireglass Reedcasters Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_mireclaw_t4_2"
@@ -5728,8 +5728,8 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t4_2",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "mireclaw_t4",
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
       "choice_branch": 2,
       "unlock_unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
       "upgrade_from": "building_dev_mireclaw_t4_2"
@@ -5785,9 +5785,9 @@
       "name": "Fenbell Chainstalkers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 4500,
-        "wood": 10,
-        "ore": 10
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -5797,20 +5797,20 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t5_2",
       "stage": 1,
-      "dwelling_tier": 5,
-      "choice_group": "mireclaw_t5",
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
       "choice_branch": 2,
       "unlock_unit_id": "unit_mireclaw_fenbell_chainstalkers",
-      "requires_dwelling_tier": 4
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_mireclaw_t5_2_upgrade",
       "name": "Fenbell Chainstalkers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 3375,
-        "wood": 8,
-        "ore": 8
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_mireclaw_t5_2"
@@ -5820,8 +5820,8 @@
       "faction_id": "faction_mireclaw",
       "line_id": "mireclaw_t5_2",
       "stage": 2,
-      "dwelling_tier": 5,
-      "choice_group": "mireclaw_t5",
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
       "choice_branch": 2,
       "unlock_unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
       "upgrade_from": "building_dev_mireclaw_t5_2"
@@ -6231,9 +6231,9 @@
       "name": "Mirror Duelists Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 2000,
-        "wood": 6,
-        "ore": 6
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -6243,20 +6243,20 @@
       "faction_id": "faction_sunvault",
       "line_id": "sunvault_t3_2",
       "stage": 1,
-      "dwelling_tier": 3,
-      "choice_group": "sunvault_t3",
-      "choice_branch": 2,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_sunvault_mirror_duelists",
-      "requires_dwelling_tier": 2
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_sunvault_t3_2_upgrade",
       "name": "Mirror Duelists Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 1500,
-        "wood": 5,
-        "ore": 5
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_sunvault_t3_2"
@@ -6266,9 +6266,9 @@
       "faction_id": "faction_sunvault",
       "line_id": "sunvault_t3_2",
       "stage": 2,
-      "dwelling_tier": 3,
-      "choice_group": "sunvault_t3",
-      "choice_branch": 2,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_sunvault_mirror_duelists_veteran",
       "upgrade_from": "building_dev_sunvault_t3_2"
     },
@@ -6277,9 +6277,9 @@
       "name": "Resonant Choristers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_hall_2"
@@ -6289,20 +6289,20 @@
       "faction_id": "faction_sunvault",
       "line_id": "sunvault_t4_1",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "sunvault_t4",
-      "choice_branch": 1,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_sunvault_resonant_choristers",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 2
     },
     {
       "id": "building_dev_sunvault_t4_1_upgrade",
       "name": "Resonant Choristers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
       },
       "requires": [
         "building_dev_sunvault_t4_1"
@@ -6312,9 +6312,9 @@
       "faction_id": "faction_sunvault",
       "line_id": "sunvault_t4_1",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "sunvault_t4",
-      "choice_branch": 1,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_sunvault_resonant_choristers_veteran",
       "upgrade_from": "building_dev_sunvault_t4_1"
     },
@@ -6720,32 +6720,32 @@
       "name": "Thornwhip Carriers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
-        "building_town_hall"
+        "building_dev_hall_2"
       ],
       "development_version": 1,
       "description": "Recruits Thornwhip Carriers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t2_1",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "thornwake_t2",
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
       "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_thornwhip_carriers",
-      "requires_dwelling_tier": 1
+      "requires_dwelling_tier": 2
     },
     {
       "id": "building_dev_thornwake_t2_1_upgrade",
       "name": "Thornwhip Carriers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
       },
       "requires": [
         "building_dev_thornwake_t2_1"
@@ -6755,8 +6755,8 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t2_1",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "thornwake_t2",
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
       "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_thornwhip_carriers_veteran",
       "upgrade_from": "building_dev_thornwake_t2_1"
@@ -6812,32 +6812,32 @@
       "name": "Sporeglass Menders Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 2000,
-        "wood": 6,
-        "ore": 6
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
-        "building_dev_hall_2"
+        "building_town_hall"
       ],
       "development_version": 1,
       "description": "Recruits Sporeglass Menders. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t3_1",
       "stage": 1,
-      "dwelling_tier": 3,
-      "choice_group": "thornwake_t3",
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
       "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_sporeglass_menders",
-      "requires_dwelling_tier": 2
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_thornwake_t3_1_upgrade",
       "name": "Sporeglass Menders Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 1500,
-        "wood": 5,
-        "ore": 5
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_thornwake_t3_1"
@@ -6847,8 +6847,8 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t3_1",
       "stage": 2,
-      "dwelling_tier": 3,
-      "choice_group": "thornwake_t3",
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
       "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_sporeglass_menders_veteran",
       "upgrade_from": "building_dev_thornwake_t3_1"
@@ -6904,9 +6904,9 @@
       "name": "Barkmantle Rams Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
       },
       "requires": [
         "building_dev_hall_2"
@@ -6916,20 +6916,20 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t4_1",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "thornwake_t4",
-      "choice_branch": 1,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_thornwake_barkmantle_rams",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 4
     },
     {
       "id": "building_dev_thornwake_t4_1_upgrade",
       "name": "Barkmantle Rams Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_thornwake_t4_1"
@@ -6939,9 +6939,9 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t4_1",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "thornwake_t4",
-      "choice_branch": 1,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_thornwake_barkmantle_rams_veteran",
       "upgrade_from": "building_dev_thornwake_t4_1"
     },
@@ -7042,9 +7042,9 @@
       "name": "Seedglass Cantors Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 4500,
-        "wood": 10,
-        "ore": 10
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -7054,20 +7054,20 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t5_2",
       "stage": 1,
-      "dwelling_tier": 5,
-      "choice_group": "thornwake_t5",
-      "choice_branch": 2,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_seedglass_cantors",
-      "requires_dwelling_tier": 4
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_thornwake_t5_2_upgrade",
       "name": "Seedglass Cantors Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 3375,
-        "wood": 8,
-        "ore": 8
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_thornwake_t5_2"
@@ -7077,9 +7077,9 @@
       "faction_id": "faction_thornwake",
       "line_id": "thornwake_t5_2",
       "stage": 2,
-      "dwelling_tier": 5,
-      "choice_group": "thornwake_t5",
-      "choice_branch": 2,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_thornwake_seedglass_cantors_veteran",
       "upgrade_from": "building_dev_thornwake_t5_2"
     },
@@ -7308,9 +7308,9 @@
       "name": "Tallyspring Throwers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 600,
-        "wood": 2,
-        "ore": 2
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
         "building_town_hall"
@@ -7320,19 +7320,20 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t1_2",
       "stage": 1,
-      "dwelling_tier": 1,
-      "choice_group": "brasshollow_t1",
-      "choice_branch": 2,
-      "unlock_unit_id": "unit_brasshollow_tallyspring_throwers"
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_tallyspring_throwers",
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_brasshollow_t1_2_upgrade",
       "name": "Tallyspring Throwers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 450,
-        "wood": 2,
-        "ore": 2
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_brasshollow_t1_2"
@@ -7342,9 +7343,9 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t1_2",
       "stage": 2,
-      "dwelling_tier": 1,
-      "choice_group": "brasshollow_t1",
-      "choice_branch": 2,
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
       "upgrade_from": "building_dev_brasshollow_t1_2"
     },
@@ -7353,9 +7354,9 @@
       "name": "Rivet Hounds Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_town_hall"
@@ -7365,20 +7366,19 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t2_1",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "brasshollow_t2",
-      "choice_branch": 1,
-      "unlock_unit_id": "unit_brasshollow_rivet_hounds",
-      "requires_dwelling_tier": 1
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_rivet_hounds"
     },
     {
       "id": "building_dev_brasshollow_t2_1_upgrade",
       "name": "Rivet Hounds Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_dev_brasshollow_t2_1"
@@ -7388,9 +7388,9 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t2_1",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "brasshollow_t2",
-      "choice_branch": 1,
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_rivet_hounds_veteran",
       "upgrade_from": "building_dev_brasshollow_t2_1"
     },
@@ -7399,32 +7399,32 @@
       "name": "Quenchspool Slingers Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
-        "building_town_hall"
+        "building_dev_hall_2"
       ],
       "development_version": 1,
       "description": "Recruits Quenchspool Slingers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t2_2",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "brasshollow_t2",
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_quenchspool_slingers",
-      "requires_dwelling_tier": 1
+      "requires_dwelling_tier": 2
     },
     {
       "id": "building_dev_brasshollow_t2_2_upgrade",
       "name": "Quenchspool Slingers Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
       },
       "requires": [
         "building_dev_brasshollow_t2_2"
@@ -7434,8 +7434,8 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t2_2",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "brasshollow_t2",
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
       "upgrade_from": "building_dev_brasshollow_t2_2"
@@ -7491,32 +7491,32 @@
       "name": "Gaugefire Arbalists Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 2000,
-        "wood": 6,
-        "ore": 6
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
-        "building_dev_hall_2"
+        "building_town_hall"
       ],
       "development_version": 1,
       "description": "Recruits Gaugefire Arbalists. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t3_2",
       "stage": 1,
-      "dwelling_tier": 3,
-      "choice_group": "brasshollow_t3",
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_gaugefire_arbalists",
-      "requires_dwelling_tier": 2
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_brasshollow_t3_2_upgrade",
       "name": "Gaugefire Arbalists Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 1500,
-        "wood": 5,
-        "ore": 5
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_brasshollow_t3_2"
@@ -7526,8 +7526,8 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t3_2",
       "stage": 2,
-      "dwelling_tier": 3,
-      "choice_group": "brasshollow_t3",
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
       "upgrade_from": "building_dev_brasshollow_t3_2"
@@ -7583,9 +7583,9 @@
       "name": "Gaugeplate Bailiffs Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
       },
       "requires": [
         "building_dev_hall_2"
@@ -7595,20 +7595,20 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t4_2",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "brasshollow_t4",
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_gaugeplate_bailiffs",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 4
     },
     {
       "id": "building_dev_brasshollow_t4_2_upgrade",
       "name": "Gaugeplate Bailiffs Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_brasshollow_t4_2"
@@ -7618,8 +7618,8 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t4_2",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "brasshollow_t4",
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
       "upgrade_from": "building_dev_brasshollow_t4_2"
@@ -7675,9 +7675,9 @@
       "name": "Quenchbell Mortars Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 4500,
-        "wood": 10,
-        "ore": 10
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -7687,20 +7687,20 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t5_2",
       "stage": 1,
-      "dwelling_tier": 5,
-      "choice_group": "brasshollow_t5",
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_quenchbell_mortars",
-      "requires_dwelling_tier": 4
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_brasshollow_t5_2_upgrade",
       "name": "Quenchbell Mortars Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 3375,
-        "wood": 8,
-        "ore": 8
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_brasshollow_t5_2"
@@ -7710,8 +7710,8 @@
       "faction_id": "faction_brasshollow",
       "line_id": "brasshollow_t5_2",
       "stage": 2,
-      "dwelling_tier": 5,
-      "choice_group": "brasshollow_t5",
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
       "choice_branch": 2,
       "unlock_unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
       "upgrade_from": "building_dev_brasshollow_t5_2"
@@ -7965,9 +7965,9 @@
       "name": "Saltbell Casters Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 600,
-        "wood": 2,
-        "ore": 2
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
       },
       "requires": [
         "building_town_hall"
@@ -7977,19 +7977,20 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t1_2",
       "stage": 1,
-      "dwelling_tier": 1,
-      "choice_group": "veilmourn_t1",
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
       "choice_branch": 2,
-      "unlock_unit_id": "unit_veilmourn_saltbell_casters"
+      "unlock_unit_id": "unit_veilmourn_saltbell_casters",
+      "requires_dwelling_tier": 1
     },
     {
       "id": "building_dev_veilmourn_t1_2_upgrade",
       "name": "Saltbell Casters Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 450,
-        "wood": 2,
-        "ore": 2
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
       },
       "requires": [
         "building_dev_veilmourn_t1_2"
@@ -7999,8 +8000,8 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t1_2",
       "stage": 2,
-      "dwelling_tier": 1,
-      "choice_group": "veilmourn_t1",
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
       "choice_branch": 2,
       "unlock_unit_id": "unit_veilmourn_saltbell_casters_veteran",
       "upgrade_from": "building_dev_veilmourn_t1_2"
@@ -8056,9 +8057,9 @@
       "name": "Tidehook Deckhands Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 1200,
-        "wood": 4,
-        "ore": 4
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_town_hall"
@@ -8068,20 +8069,19 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t2_2",
       "stage": 1,
-      "dwelling_tier": 2,
-      "choice_group": "veilmourn_t2",
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
       "choice_branch": 2,
-      "unlock_unit_id": "unit_veilmourn_tidehook_deckhands",
-      "requires_dwelling_tier": 1
+      "unlock_unit_id": "unit_veilmourn_tidehook_deckhands"
     },
     {
       "id": "building_dev_veilmourn_t2_2_upgrade",
       "name": "Tidehook Deckhands Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 900,
-        "wood": 3,
-        "ore": 3
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
       },
       "requires": [
         "building_dev_veilmourn_t2_2"
@@ -8091,8 +8091,8 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t2_2",
       "stage": 2,
-      "dwelling_tier": 2,
-      "choice_group": "veilmourn_t2",
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
       "choice_branch": 2,
       "unlock_unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
       "upgrade_from": "building_dev_veilmourn_t2_2"
@@ -8240,9 +8240,9 @@
       "name": "Gloamkeel Bulwarks Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 3000,
-        "wood": 8,
-        "ore": 8
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
       },
       "requires": [
         "building_dev_hall_2"
@@ -8252,20 +8252,20 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t4_2",
       "stage": 1,
-      "dwelling_tier": 4,
-      "choice_group": "veilmourn_t4",
-      "choice_branch": 2,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_veilmourn_gloamkeel_bulwarks",
-      "requires_dwelling_tier": 3
+      "requires_dwelling_tier": 4
     },
     {
       "id": "building_dev_veilmourn_t4_2_upgrade",
       "name": "Gloamkeel Bulwarks Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 2250,
-        "wood": 6,
-        "ore": 6
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_veilmourn_t4_2"
@@ -8275,9 +8275,9 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t4_2",
       "stage": 2,
-      "dwelling_tier": 4,
-      "choice_group": "veilmourn_t4",
-      "choice_branch": 2,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 1,
       "unlock_unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
       "upgrade_from": "building_dev_veilmourn_t4_2"
     },
@@ -8286,9 +8286,9 @@
       "name": "Obituary Scribes Dwelling",
       "category": "dwelling",
       "cost": {
-        "gold": 4500,
-        "wood": 10,
-        "ore": 10
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
       },
       "requires": [
         "building_dev_hall_2"
@@ -8298,20 +8298,20 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t5_1",
       "stage": 1,
-      "dwelling_tier": 5,
-      "choice_group": "veilmourn_t5",
-      "choice_branch": 1,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_veilmourn_obituary_scribes",
-      "requires_dwelling_tier": 4
+      "requires_dwelling_tier": 3
     },
     {
       "id": "building_dev_veilmourn_t5_1_upgrade",
       "name": "Obituary Scribes Lodge",
       "category": "dwelling",
       "cost": {
-        "gold": 3375,
-        "wood": 8,
-        "ore": 8
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
       },
       "requires": [
         "building_dev_veilmourn_t5_1"
@@ -8321,9 +8321,9 @@
       "faction_id": "faction_veilmourn",
       "line_id": "veilmourn_t5_1",
       "stage": 2,
-      "dwelling_tier": 5,
-      "choice_group": "veilmourn_t5",
-      "choice_branch": 1,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 2,
       "unlock_unit_id": "unit_veilmourn_obituary_scribes_veteran",
       "upgrade_from": "building_dev_veilmourn_t5_1"
     },
