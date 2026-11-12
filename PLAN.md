@@ -64,7 +64,7 @@ None open.
 
 ## Recently completed
 
-- 2026-11-12 `single-type-tier-shooting-art-20261112` (9367fb6c2): The two new shooters and their upgrades have their own shooting clips.
+- 2026-11-12 `single-type-tier-shooting-art-20261112` (9367fb6c2, 578b2ceae): The two new shooters and their upgrades have their own shooting clips; Striders aim on painted poses.
 - 2026-11-12 `single-type-dwelling-tiers-20261112` (ae0c0acd0): Each tier I-V dwelling choice is two melee lines or two shooters: 24 lines moved a tier, four units changed type.
 - 2026-11-12 `whirlpool-turns-20261112` (50d613a55): The whirlpool turns around its eye.
 - 2026-11-12 `town-hero-trade-button-20261112` (d079e9bba): Town: a trade button between the two hero portraits opens trading.
