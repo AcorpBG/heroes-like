@@ -47,6 +47,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-10: Every Veilmourn town with a harbour has the Shipyard built from the start, and boats there cost half (`docs/water-travel.md`).
 - 2026-11-10: Computer players build no Shipyard in the first week, and only their main army running out of targets makes one wanted (`docs/ai-plays-by-player-rules.md`, "Water").
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
+- 2026-11-12: Each dwelling tier 1-5 is all melee or all ranged, by moving existing units one tier (`docs/dwelling-pair-balance.md`).
 
 ## Questions for the owner
 
@@ -54,6 +55,7 @@ None open.
 
 ## Open work
 
+- `single-type-tier-shooting-art-20261112` (pending): Reedsnare Kin, Solar Array Striders and their upgrades need shooting clips and projectiles. See `docs/dwelling-pair-balance.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
@@ -63,6 +65,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-12 `single-type-dwelling-tiers-20261112` (ae0c0acd0): Each tier I-V dwelling choice is two melee lines or two shooters: 24 lines moved a tier, four units changed type.
 - 2026-11-12 `whirlpool-turns-20261112` (50d613a55): The whirlpool turns around its eye.
 - 2026-11-12 `town-hero-trade-button-20261112` (d079e9bba): Town: a trade button between the two hero portraits opens trading.
 - 2026-11-11 `ai-sites-on-the-way-20261111` (2d280ed67): Computer heroes take sites beside their way when it costs no arrival day.
@@ -373,7 +376,3 @@ None open.
 - 2026-10-15 `art-overworld-rivers-20261015`: Generated rivers are drawn on the overworld.
 - 2026-10-15 `art-overworld-river-bridges-20261015`: Roads cross rivers on timber bridges.
 - 2026-10-15 `art-overworld-impassable-rock-void-20261015`: Impassable rock reads as a walled void on the overworld.
-- 2026-10-14 `tooling-source-material-archive-incremental-20261014`: Archive the H3 video sources in incremental snapshots.
-- 2026-10-14 `art-overworld-soft-fog-shadows-20261014`: Soft fog of war and object shadows on the overworld.
-- 2026-10-14 `art-h3-kilnelk-facing-20261014`: Make the Ashcrown Kilnelk face its opponent in every clip.
-- 2026-10-14 `art-h3-green-plate-edge-spill-20261014`: Remove the green tint on thin and blurred edges of gold units keyed on a green plate.

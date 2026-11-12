@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "whirlpool-turns-20261112",
- "currentSliceTitle": "The whirlpool turns around its eye.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-11T22:55:44Z",
+ "currentSliceId": "single-type-tier-shooting-art-20261112",
+ "currentSliceTitle": "Shooting art for the two new shooters",
+ "currentSliceStatus": "pending",
+ "updatedAt": "2026-11-12T11:08:26Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,23 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "single-type-tier-shooting-art-20261112",
+   "title": "Shooting art for the two new shooters",
+   "status": "pending",
+   "goal": "Reedsnare Kin, Solar Array Striders and their upgrades need shooting clips and projectiles.",
+   "docs": [
+    "docs/dwelling-pair-balance.md"
+   ],
+   "updatedAt": "2026-11-12"
+  },
+  {
+   "id": "single-type-dwelling-tiers-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "Each tier I-V dwelling choice is two melee lines or two shooters: 24 lines moved a tier, four units changed type.",
+   "commit": "ae0c0acd0"
+  },
   {
    "id": "whirlpool-turns-20261112",
    "status": "completed",
@@ -2075,30 +2092,6 @@
    "status": "completed",
    "completedAt": "2026-10-15",
    "summary": "Impassable rock reads as a walled void on the overworld."
-  },
-  {
-   "id": "tooling-source-material-archive-incremental-20261014",
-   "status": "completed",
-   "completedAt": "2026-10-14",
-   "summary": "Archive the H3 video sources in incremental snapshots."
-  },
-  {
-   "id": "art-overworld-soft-fog-shadows-20261014",
-   "status": "completed",
-   "completedAt": "2026-10-14",
-   "summary": "Soft fog of war and object shadows on the overworld."
-  },
-  {
-   "id": "art-h3-kilnelk-facing-20261014",
-   "status": "completed",
-   "completedAt": "2026-10-14",
-   "summary": "Make the Ashcrown Kilnelk face its opponent in every clip."
-  },
-  {
-   "id": "art-h3-green-plate-edge-spill-20261014",
-   "status": "completed",
-   "completedAt": "2026-10-14",
-   "summary": "Remove the green tint on thin and blurred edges of gold units keyed on a green plate."
   }
  ]
 }

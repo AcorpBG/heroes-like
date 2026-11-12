@@ -1,6 +1,30 @@
 {
  "plannedSlices": [
   {
+   "id": "tooling-source-material-archive-incremental-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Archive the H3 video sources in incremental snapshots."
+  },
+  {
+   "id": "art-overworld-soft-fog-shadows-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Soft fog of war and object shadows on the overworld."
+  },
+  {
+   "id": "art-h3-kilnelk-facing-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Make the Ashcrown Kilnelk face its opponent in every clip."
+  },
+  {
+   "id": "art-h3-green-plate-edge-spill-20261014",
+   "status": "completed",
+   "completedAt": "2026-10-14",
+   "summary": "Remove the green tint on thin and blurred edges of gold units keyed on a green plate."
+  },
+  {
    "id": "tooling-source-material-archive-incremental-20261011",
    "status": "completed",
    "completedAt": "2026-10-11",
