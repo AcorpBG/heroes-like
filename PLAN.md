@@ -48,6 +48,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-10: Computer players build no Shipyard in the first week, and only their main army running out of targets makes one wanted (`docs/ai-plays-by-player-rules.md`, "Water").
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 - 2026-11-12: Each dwelling tier 1-5 is all melee or all ranged, by moving existing units one tier (`docs/dwelling-pair-balance.md`).
+- 2026-11-12: The moved dwelling lines are balanced against the other factions' lines of their tier, not only their pair partner.
 
 ## Questions for the owner
 
@@ -64,6 +65,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-12 `moved-lines-field-balance-20261112` (22dcc2d1a): The 26 lines the regroup changed are worth their gold against the other factions' lines of their tier; 49 units repriced or re-statted. 23 of 50 pair stages are now uneven where the untouched partner is off par.
 - 2026-11-12 `single-type-tier-shooting-art-20261112` (9367fb6c2, 578b2ceae): The two new shooters and their upgrades have their own shooting clips; Striders aim on painted poses.
 - 2026-11-12 `single-type-dwelling-tiers-20261112` (ae0c0acd0): Each tier I-V dwelling choice is two melee lines or two shooters: 24 lines moved a tier, four units changed type.
 - 2026-11-12 `whirlpool-turns-20261112` (50d613a55): The whirlpool turns around its eye.
@@ -364,15 +366,3 @@ None open.
 - 2026-10-16 `ai-free-guard-fights-20261016`: AI heroes fight weak guards they beat without losses at once.
 - 2026-10-16 `ai-army-power-refit-20261016`: Strength estimate refitted to battle outcomes.
 - 2026-10-16 `ai-army-power-ranged-calibration-20261016`: Strength estimate counts shooters at their battle performance.
-- 2026-10-15 `ux-overworld-road-diagonal-steps-20261015`: Generated roads stay joined across diagonal steps.
-- 2026-10-15 `tooling-battle-ai-arena-20261015`: Battle AI arena: head-to-head evaluation of BattleAiRules variants.
-- 2026-10-15 `debug-placement-overlay-impassable-terrain-20261015`: F4 placement overlay marks impassable terrain as blocked.
-- 2026-10-15 `battle-neutral-guards-fight-on-20261015`: Neutral guards never retreat or surrender.
-- 2026-10-15 `battle-ai-weights-cma-tuning-20261015`: Battle AI weights in data, tuned with CMA-ES in the arena.
-- 2026-10-15 `battle-ai-threat-weighted-kills-20261015`: Battle AI: AI logic moved into BattleAiRules; kills weighed by threat.
-- 2026-10-15 `battle-ai-hold-the-line-20261015`: Battle AI: melee holds its ground while its side outshoots the other.
-- 2026-10-15 `battle-ai-arena-realistic-battles-20261015`: Battle AI arena plays realistic battles; weights retuned on them.
-- 2026-10-15 `art-overworld-road-types-20261015`: Generated roads show the generator's road type.
-- 2026-10-15 `art-overworld-rivers-20261015`: Generated rivers are drawn on the overworld.
-- 2026-10-15 `art-overworld-river-bridges-20261015`: Roads cross rivers on timber bridges.
-- 2026-10-15 `art-overworld-impassable-rock-void-20261015`: Impassable rock reads as a walled void on the overworld.

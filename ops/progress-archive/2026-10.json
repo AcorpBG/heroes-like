@@ -1,6 +1,78 @@
 {
  "plannedSlices": [
   {
+   "id": "ux-overworld-road-diagonal-steps-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated roads stay joined across diagonal steps."
+  },
+  {
+   "id": "tooling-battle-ai-arena-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI arena: head-to-head evaluation of BattleAiRules variants."
+  },
+  {
+   "id": "debug-placement-overlay-impassable-terrain-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "F4 placement overlay marks impassable terrain as blocked."
+  },
+  {
+   "id": "battle-neutral-guards-fight-on-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Neutral guards never retreat or surrender."
+  },
+  {
+   "id": "battle-ai-weights-cma-tuning-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI weights in data, tuned with CMA-ES in the arena."
+  },
+  {
+   "id": "battle-ai-threat-weighted-kills-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI: AI logic moved into BattleAiRules; kills weighed by threat."
+  },
+  {
+   "id": "battle-ai-hold-the-line-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI: melee holds its ground while its side outshoots the other."
+  },
+  {
+   "id": "battle-ai-arena-realistic-battles-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Battle AI arena plays realistic battles; weights retuned on them."
+  },
+  {
+   "id": "art-overworld-road-types-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated roads show the generator's road type."
+  },
+  {
+   "id": "art-overworld-rivers-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Generated rivers are drawn on the overworld."
+  },
+  {
+   "id": "art-overworld-river-bridges-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Roads cross rivers on timber bridges."
+  },
+  {
+   "id": "art-overworld-impassable-rock-void-20261015",
+   "status": "completed",
+   "completedAt": "2026-10-15",
+   "summary": "Impassable rock reads as a walled void on the overworld."
+  },
+  {
    "id": "tooling-source-material-archive-incremental-20261014",
    "status": "completed",
    "completedAt": "2026-10-14",
