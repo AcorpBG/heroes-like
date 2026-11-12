@@ -1,0 +1,42 @@
+{
+ "ranged_key_aim": {
+  "name": "ranged_key_aim",
+  "clip": "ranged",
+  "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/aim.png",
+  "rects": [
+   [
+    0,
+    0,
+    1728,
+    1056
+   ]
+  ],
+  "anchor": [
+   836,
+   937
+  ],
+  "scale": 0.3,
+  "alpha_noise_cutoff": 8,
+  "painted_key_pose": true
+ },
+ "ranged_key_recoil": {
+  "name": "ranged_key_recoil",
+  "clip": "ranged",
+  "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/recoil.png",
+  "rects": [
+   [
+    0,
+    0,
+    1728,
+    1056
+   ]
+  ],
+  "anchor": [
+   826,
+   931
+  ],
+  "scale": 0.3,
+  "alpha_noise_cutoff": 8,
+  "painted_key_pose": true
+ }
+}

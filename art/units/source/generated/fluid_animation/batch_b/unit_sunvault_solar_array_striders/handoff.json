@@ -7,9 +7,135 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "ranged_h3_v2_015",
+          "name": "ranged_h3_v3_006",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_015.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "ranged_h3_v3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "ranged_h3_v3_011",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "ranged_h3_v3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_v3_013",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "ranged_h3_v3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "ranged_h3_v3_015",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_015.png",
           "rects": [
             [
               0,
@@ -28,9 +154,9 @@
           "video_time_seconds": 0.625
         },
         {
-          "name": "ranged_h3_v2_020",
+          "name": "ranged_h3_v3_016",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_020.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_016.png",
           "rects": [
             [
               0,
@@ -45,13 +171,13 @@
           ],
           "scale": 0.45,
           "alpha_noise_cutoff": 0,
-          "video_frame": 20,
-          "video_time_seconds": 0.8333
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "ranged_h3_v2_023",
+          "name": "ranged_h3_v3_018",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_023.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_018.png",
           "rects": [
             [
               0,
@@ -66,13 +192,34 @@
           ],
           "scale": 0.45,
           "alpha_noise_cutoff": 0,
-          "video_frame": 23,
-          "video_time_seconds": 0.9583
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "ranged_h3_v2_024",
+          "name": "ranged_h3_v3_021",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_024.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "ranged_h3_v3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_024.png",
           "rects": [
             [
               0,
@@ -91,51 +238,9 @@
           "video_time_seconds": 1.0
         },
         {
-          "name": "ranged_h3_v2_025",
+          "name": "ranged_h3_v3_027",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_025.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 25,
-          "video_time_seconds": 1.0417
-        },
-        {
-          "name": "ranged_h3_v2_026",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_026.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 26,
-          "video_time_seconds": 1.0833
-        },
-        {
-          "name": "ranged_h3_v2_027",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_027.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_027.png",
           "rects": [
             [
               0,
@@ -154,51 +259,9 @@
           "video_time_seconds": 1.125
         },
         {
-          "name": "ranged_h3_v2_028",
+          "name": "ranged_h3_v3_030",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1667
-        },
-        {
-          "name": "ranged_h3_v2_029",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_029.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 29,
-          "video_time_seconds": 1.2083
-        },
-        {
-          "name": "ranged_h3_v2_030",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_030.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_030.png",
           "rects": [
             [
               0,
@@ -217,9 +280,9 @@
           "video_time_seconds": 1.25
         },
         {
-          "name": "ranged_h3_v2_032",
+          "name": "ranged_h3_v3_033",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_032.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_033.png",
           "rects": [
             [
               0,
@@ -234,13 +297,13 @@
           ],
           "scale": 0.45,
           "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333
+          "video_frame": 33,
+          "video_time_seconds": 1.375
         },
         {
-          "name": "ranged_h3_v2_036",
+          "name": "ranged_h3_v3_035",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_036.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_035.png",
           "rects": [
             [
               0,
@@ -255,13 +318,55 @@
           ],
           "scale": 0.45,
           "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
         },
         {
-          "name": "ranged_h3_v2_041",
+          "name": "ranged_h3_v3_037",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_041.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "ranged_h3_v3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "ranged_h3_v3_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_041.png",
           "rects": [
             [
               0,
@@ -280,9 +385,51 @@
           "video_time_seconds": 1.7083
         },
         {
-          "name": "ranged_h3_v2_048",
+          "name": "ranged_h3_v3_044",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_048.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "ranged_h3_v3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "ranged_h3_v3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_048.png",
           "rects": [
             [
               0,
@@ -301,9 +448,72 @@
           "video_time_seconds": 2.0
         },
         {
-          "name": "ranged_h3_v2_055",
+          "name": "ranged_h3_v3_049",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_055.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "ranged_h3_v3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "ranged_h3_v3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              704
+            ]
+          ],
+          "anchor": [
+            565,
+            624
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "ranged_h3_v3_055",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_055.png",
           "rects": [
             [
               0,
@@ -322,93 +532,9 @@
           "video_time_seconds": 2.2917
         },
         {
-          "name": "ranged_h3_v2_056",
+          "name": "ranged_h3_v3_060",
           "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_056.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 56,
-          "video_time_seconds": 2.3333
-        },
-        {
-          "name": "ranged_h3_v2_057",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_057.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 57,
-          "video_time_seconds": 2.375
-        },
-        {
-          "name": "ranged_h3_v2_058",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_058.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 58,
-          "video_time_seconds": 2.4167
-        },
-        {
-          "name": "ranged_h3_v2_059",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_059.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 59,
-          "video_time_seconds": 2.4583
-        },
-        {
-          "name": "ranged_h3_v2_060",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_060.png",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte/rgba_060.png",
           "rects": [
             [
               0,
@@ -425,111 +551,6 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 60,
           "video_time_seconds": 2.5
-        },
-        {
-          "name": "ranged_h3_v2_061",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_061.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 61,
-          "video_time_seconds": 2.5417
-        },
-        {
-          "name": "ranged_h3_v2_062",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_062.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 62,
-          "video_time_seconds": 2.5833
-        },
-        {
-          "name": "ranged_h3_v2_063",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_063.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 63,
-          "video_time_seconds": 2.625
-        },
-        {
-          "name": "ranged_h3_v2_064",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_064.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 64,
-          "video_time_seconds": 2.6667
-        },
-        {
-          "name": "ranged_h3_v2_070",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte/rgba_070.png",
-          "rects": [
-            [
-              0,
-              0,
-              1152,
-              704
-            ]
-          ],
-          "anchor": [
-            565,
-            624
-          ],
-          "scale": 0.45,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 70,
-          "video_time_seconds": 2.9167
         }
       ],
       "clips": {
@@ -559,60 +580,61 @@
             21,
             22,
             23,
-            24
+            24,
+            25
           ],
           "frame_msec": 42,
           "loop": false,
           "static_frame": 0,
-          "contact_frame": 3
+          "contact_frame": 14
         }
       },
       "alpha_noise_cutoff": 0,
       "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
       "provenance": {
-        "ranged_h3_v2/original_lossless.mkv": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/original_lossless.mkv",
-          "sha256": "2e750a8b1a23de91a68b278e1d84a7db0530e067ac8499148d5fbee20f88ae8a"
+        "ranged_h3_v3/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/original_lossless.mkv",
+          "sha256": "54f371bad5c121dc9a411d8e75dc795fe1eca8c72be17152feab9ae461bc8ec1"
         },
-        "ranged_h3_v2/original.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/original.json",
-          "sha256": "e6d8a4e592a6c9a8d524a7e1d8966d22ecad89f454057516a50ddab7fe3c0988"
+        "ranged_h3_v3/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/original.json",
+          "sha256": "7e274c41ddb1cdbcd1cb79ac43df7e04e07c48501c9cee9f40a78c3d7e1fe900"
         },
-        "ranged_h3_v2/original.latent": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/original.latent",
-          "sha256": "233404941ba50f6cd3edb05a73ae38a13fc3b5908a56603d8fbdc097da377113"
+        "ranged_h3_v3/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/original.latent",
+          "sha256": "545ed2b10ce38731222f1abd3049a7661f700e04708f3ec1f318779ac2845727"
         },
-        "ranged_h3_v2/sampling_workflow_api.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/sampling_workflow_api.json",
-          "sha256": "cf0834122b3296bb4ee68b4ef42c50c71f672208788f977c6f87166545e4ca3f"
+        "ranged_h3_v3/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/sampling_workflow_api.json",
+          "sha256": "d96e6173b555bd19919eb98bd13d8bb0fbbc508f42d959f1f2b65a0942a88500"
         },
-        "ranged_h3_v2/decode_workflow_api.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/decode_workflow_api.json",
-          "sha256": "ffcd998270774638d321f5993d9db1ea1cf4110944a43009c407e99bd9bf26ad"
+        "ranged_h3_v3/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/decode_workflow_api.json",
+          "sha256": "1933307206bff35ee8b1fea37a6808e7fd8d447b747f65483834b1f475dffd45"
         },
-        "ranged_h3_v2/sampling_history.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/sampling_history.json",
-          "sha256": "859f50717acd129b473a43b1c57cd505b7176910b8511e8afc0bb8cbe0e25e68"
+        "ranged_h3_v3/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/sampling_history.json",
+          "sha256": "ffdc2babada3440730e1372e94d1bc309a14c458f69609ed6ebe40d42c7321b8"
         },
-        "ranged_h3_v2/generation_history.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/generation_history.json",
-          "sha256": "b6e07a9045ce25587beb461b30ae95ebfdb4206c711659dd6e28c0e2ab2a9542"
+        "ranged_h3_v3/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/generation_history.json",
+          "sha256": "c59c5185820383925a9c7446d2beecdfc050241f72c156576385091f55b4dc94"
         },
-        "ranged_h3_v2/prompt.txt": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/prompt.txt",
-          "sha256": "9b1d5daba7476f2646c4a78a0f01cce67e21872866fcdc4e73b7ac06422c925c"
+        "ranged_h3_v3/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/prompt.txt",
+          "sha256": "dc52c6efe712944905610c3cfd2f323ea5da6b948ef9adf0b809a957f7d1ddf2"
         },
-        "ranged_h3_v2/reference.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/reference.json",
-          "sha256": "ad2651df8f6462c09fbbd815a4c744b2039a29df1d6068445eb3f38390f6c792"
+        "ranged_h3_v3/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/reference.json",
+          "sha256": "f3a87460bba97b3fbc4c621d79053c7dbc0653b6db5b99aa82b7f65b26e93926"
         },
-        "ranged_h3_v2/config.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/config.json",
-          "sha256": "48a8c4fe4cebe77dbaa6493fe5c3bc8db22c5b75c273c29eee948cc1c4c27d7c"
+        "ranged_h3_v3/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/config.json",
+          "sha256": "4fb63b2fd4e6a7d85910cb7281e222b6984d54a2c0e855cab55cff0aebadf0f7"
         },
-        "ranged_h3_v2/matte.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v2/matte.json",
-          "sha256": "11e23c268558d617ce2dfe7bd8129802ba4ed51981e4f1af4a838be50a7fe2ac"
+        "ranged_h3_v3/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_h3_v3/matte.json",
+          "sha256": "059ade84fa8a1623653a480ca9597e29abfa4c5e4b070cfb2bee2a9c8a3d1493"
         }
       },
       "preserved_accepted_clips": [],

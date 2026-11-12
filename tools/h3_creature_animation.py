@@ -228,11 +228,7 @@ class Unit:
             anchor = self.cfg.get("anchor") or [round((w - (right - left)) / 2 - left), round((h - (bottom - top)) / 2 - top)]
             write(path, {"anchor": anchor, "guide_union_from_anchor": [left, top, right, bottom], "canvas": list(self.canvas),
                          "scale": self.scale, "rule": "Every guide of every take, centred once; later takes keep this anchor."})
-        w, h = self.canvas
-        room = [anchor[0] + left, anchor[1] + top, w - anchor[0] - right, h - anchor[1] - bottom]
-        if min(room) < MARGIN:
-            raise SystemExit(f"guides leave {room} px to the canvas edges (left, top, right, bottom); lower scale or widen canvas")
-        return anchor, room
+        return anchor, boxes
 
 
 GREEN_ORDER = [0, 2, 1]
@@ -286,7 +282,7 @@ def pose_distance(a, b):
 
 def prepare(unit, names, refresh=False):
     """refresh: prepare again, from the current h3_unit.json, takes the runner has not submitted yet."""
-    anchor, room = unit.layout()
+    anchor, boxes = unit.layout()
     for n, name in enumerate(unit.takes(names)):
         out = unit.dir / name
         if (out / "config.json").exists() and (not refresh or (out / "sampling_submission.json").exists()):
@@ -302,7 +298,12 @@ def prepare(unit, names, refresh=False):
         if any(v % 32 for v in pad):
             raise SystemExit(f"{name}: pad {pad} must be multiples of 32")
         w, h = unit.canvas[0] + pad[0] + pad[2], unit.canvas[1] + pad[1] + pad[3]
-        at, free = [anchor[0] + pad[0], anchor[1] + pad[1]], [r + q for r, q in zip(room, pad)]
+        at, own = [anchor[0] + pad[0], anchor[1] + pad[1]], [boxes[frame_name] for frame_name in spec["references"]]
+        # Room is the take's own: its guides on its padded canvas, so one tall pose costs the other takes nothing.
+        free = [at[0] + min(b[0] for b in own), at[1] + min(b[1] for b in own),
+                w - at[0] - max(b[2] for b in own), h - at[1] - max(b[3] for b in own)]
+        if min(free) < MARGIN:
+            raise SystemExit(f"{name}: guides leave {free} px to the canvas edges (left, top, right, bottom); pad the take, lower scale or widen canvas")
         guides, refs = [], []
         for i, frame_name in enumerate(spec["references"]):
             rgba = guide_image(unit, frame_name, (w, h), at)

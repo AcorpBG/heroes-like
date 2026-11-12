@@ -1,0 +1,35 @@
+{
+ "purpose": "Painted key poses for the ranged clip: the machine at rest gave the video nothing to aim with.",
+ "tool": "OpenAI Images API edit, gpt-image-2.6-sunburst, 1728x1056, quality medium, transparent background",
+ "date": "2026-11-12",
+ "neutral_input": {
+  "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/neutral_input.png",
+  "sha256": "16d27eea1bf931c06467595605061e6dd3238381abcef1a1f0c02fce4098ddef",
+  "made_from": "ranged_h3_v2/guide_0_rgba.png (attack_h3_000 on the padded 1152x704 canvas), enlarged 1.5x"
+ },
+ "identity_reference": "art/units/source/curated/unit_sunvault_solar_array_striders.png",
+ "poses": {
+  "aim": {
+   "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/aim.png",
+   "sha256": "6e23386072c31a007f28e2c7256e0b77276a087d41a2b248cf0866d589812a91",
+   "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/aim_prompt.txt",
+   "inputs": [
+    "neutral_input.png",
+    "curated painting"
+   ],
+   "estimated_cost_usd": 0.0569,
+   "request_id": "req_927f02b78ba24dbeaeaf8d5cde8431ff"
+  },
+  "recoil": {
+   "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/recoil.png",
+   "sha256": "f28c647d428a77686bf5fbbff8a86d7ac83bf4fdf8ccbb6b7a9b26df427327c2",
+   "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/ranged_keys_v1/recoil_prompt.txt",
+   "inputs": [
+    "aim.png",
+    "neutral_input.png"
+   ],
+   "estimated_cost_usd": 0.0603
+  }
+ },
+ "registration": "Scale 0.30 runtime px per painted px (the 0.45 video scale over the 1.5x enlargement). Anchors put the planted feet on the neutral's: neutral anchor (847.5, 936) on this canvas; the aim's feet sit 11 px left and 1 px lower, the recoil's front foot 21 px left and 5 px higher."
+}
