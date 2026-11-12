@@ -48,7 +48,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-10: Computer players build no Shipyard in the first week, and only their main army running out of targets makes one wanted (`docs/ai-plays-by-player-rules.md`, "Water").
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 - 2026-11-12: Each dwelling tier 1-5 is all melee or all ranged, by moving existing units one tier (`docs/dwelling-pair-balance.md`).
-- 2026-11-12: Every tier 1-5 dwelling line is balanced against the other factions' lines of its tier (worth per gold in arena duels), not only against its pair partner.
+- 2026-11-12: Every tier 1-5 dwelling line is balanced against the other factions' lines of its tier (worth per gold in arena duels), not only against its pair partner. Each faction carries one factor for tiers 1-5 and one for tiers 6-7 so its town army wins about half its even fights.
 
 ## Questions for the owner
 
@@ -65,6 +65,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-12 `faction-army-level-20261112` (a0cc973e0): Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).
 - 2026-11-12 `all-lines-field-balance-20261112` (83bb49f58): All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).
 - 2026-11-12 `moved-lines-field-balance-20261112` (22dcc2d1a): The 26 lines the regroup changed are worth their gold against the other factions' lines of their tier; 49 units repriced or re-statted. 23 of 50 pair stages are now uneven where the untouched partner is off par.
 - 2026-11-12 `single-type-tier-shooting-art-20261112` (9367fb6c2, 578b2ceae): The two new shooters and their upgrades have their own shooting clips; Striders aim on painted poses.

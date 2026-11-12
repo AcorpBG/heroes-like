@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "all-lines-field-balance-20261112",
- "currentSliceTitle": "All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).",
+ "currentSliceId": "faction-army-level-20261112",
+ "currentSliceTitle": "Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-12T16:56:35Z",
+ "updatedAt": "2026-11-12T17:41:02Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "faction-army-level-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).",
+   "commit": "a0cc973e0"
+  },
   {
    "id": "all-lines-field-balance-20261112",
    "status": "completed",
