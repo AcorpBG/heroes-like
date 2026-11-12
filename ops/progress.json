@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "faction-army-level-20261112",
- "currentSliceTitle": "Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).",
+ "currentSliceId": "double-creature-health-20261112",
+ "currentSliceTitle": "All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-12T17:41:02Z",
+ "updatedAt": "2026-11-12T19:00:16Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "double-creature-health-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.",
+   "commit": "b1f11e9ef"
+  },
   {
    "id": "faction-army-level-20261112",
    "status": "completed",
@@ -2008,36 +2015,6 @@
    "status": "completed",
    "completedAt": "2026-10-17",
    "summary": "AI town planner counts a dwelling upgrade's gain once."
-  },
-  {
-   "id": "battle-ai-contested-lookahead-20261016",
-   "status": "completed",
-   "completedAt": "2026-10-16",
-   "summary": "Battle AI arena tunes on contested battles; look-ahead and outshot weights tried."
-  },
-  {
-   "id": "ai-guard-passage-horizon-20261016",
-   "status": "completed",
-   "completedAt": "2026-10-16",
-   "summary": "AI guard passage value ignores ground past the search horizon."
-  },
-  {
-   "id": "ai-free-guard-fights-20261016",
-   "status": "completed",
-   "completedAt": "2026-10-16",
-   "summary": "AI heroes fight weak guards they beat without losses at once."
-  },
-  {
-   "id": "ai-army-power-refit-20261016",
-   "status": "completed",
-   "completedAt": "2026-10-16",
-   "summary": "Strength estimate refitted to battle outcomes."
-  },
-  {
-   "id": "ai-army-power-ranged-calibration-20261016",
-   "status": "completed",
-   "completedAt": "2026-10-16",
-   "summary": "Strength estimate counts shooters at their battle performance."
   }
  ]
 }

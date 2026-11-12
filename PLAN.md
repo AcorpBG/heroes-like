@@ -49,6 +49,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-11-09: Painted shipyard plots in the town scenes wait for the town art rework; until then a built Shipyard opens from its construction-board slot (`docs/water-travel.md`).
 - 2026-11-12: Each dwelling tier 1-5 is all melee or all ranged, by moving existing units one tier (`docs/dwelling-pair-balance.md`).
 - 2026-11-12: Every tier 1-5 dwelling line is balanced against the other factions' lines of its tier (worth per gold in arena duels), not only against its pair partner. Each faction carries one factor for tiers 1-5 and one for tiers 6-7 so its town army wins about half its even fights.
+- 2026-11-12: Every creature has double health, to weaken the shooters' early edge (`docs/dwelling-pair-balance.md`).
 
 ## Questions for the owner
 
@@ -65,6 +66,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-12 `double-creature-health-20261112` (b1f11e9ef): All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.
 - 2026-11-12 `faction-army-level-20261112` (a0cc973e0): Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).
 - 2026-11-12 `all-lines-field-balance-20261112` (83bb49f58): All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).
 - 2026-11-12 `moved-lines-field-balance-20261112` (22dcc2d1a): The 26 lines the regroup changed are worth their gold against the other factions' lines of their tier; 49 units repriced or re-statted. 23 of 50 pair stages are now uneven where the untouched partner is off par.
@@ -363,8 +365,3 @@ None open.
 - 2026-10-17 `ai-looted-site-crossed-by-all-20261017`: AI heroes cross looted one-time sites whoever looted them.
 - 2026-10-17 `ai-cross-level-monoliths-20261017`: AI heroes cross monoliths whose exit is on the other level.
 - 2026-10-17 `ai-build-upgrade-counted-once-20261017`: AI town planner counts a dwelling upgrade's gain once.
-- 2026-10-16 `battle-ai-contested-lookahead-20261016`: Battle AI arena tunes on contested battles; look-ahead and outshot weights tried.
-- 2026-10-16 `ai-guard-passage-horizon-20261016`: AI guard passage value ignores ground past the search horizon.
-- 2026-10-16 `ai-free-guard-fights-20261016`: AI heroes fight weak guards they beat without losses at once.
-- 2026-10-16 `ai-army-power-refit-20261016`: Strength estimate refitted to battle outcomes.
-- 2026-10-16 `ai-army-power-ranged-calibration-20261016`: Strength estimate counts shooters at their battle performance.

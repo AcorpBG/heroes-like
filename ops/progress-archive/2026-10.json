@@ -1,6 +1,36 @@
 {
  "plannedSlices": [
   {
+   "id": "battle-ai-contested-lookahead-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Battle AI arena tunes on contested battles; look-ahead and outshot weights tried."
+  },
+  {
+   "id": "ai-guard-passage-horizon-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "AI guard passage value ignores ground past the search horizon."
+  },
+  {
+   "id": "ai-free-guard-fights-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "AI heroes fight weak guards they beat without losses at once."
+  },
+  {
+   "id": "ai-army-power-refit-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Strength estimate refitted to battle outcomes."
+  },
+  {
+   "id": "ai-army-power-ranged-calibration-20261016",
+   "status": "completed",
+   "completedAt": "2026-10-16",
+   "summary": "Strength estimate counts shooters at their battle performance."
+  },
+  {
    "id": "ux-overworld-road-diagonal-steps-20261015",
    "status": "completed",
    "completedAt": "2026-10-15",
