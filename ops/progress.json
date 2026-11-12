@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "moved-lines-field-balance-20261112",
- "currentSliceTitle": "The 26 lines the regroup changed are worth their gold against the other factions' lines of their tier; 49 units repriced or re-statted. 23 of 50 pair stages are now uneven where the untouched partner is off par.",
+ "currentSliceId": "all-lines-field-balance-20261112",
+ "currentSliceTitle": "All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-12T16:34:48Z",
+ "updatedAt": "2026-11-12T16:56:35Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "all-lines-field-balance-20261112",
+   "status": "completed",
+   "completedAt": "2026-11-12",
+   "summary": "All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).",
+   "commit": "83bb49f58"
+  },
   {
    "id": "moved-lines-field-balance-20261112",
    "status": "completed",
