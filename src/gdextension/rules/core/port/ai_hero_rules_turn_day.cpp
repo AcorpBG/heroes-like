@@ -1028,7 +1028,10 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 					const bool raid = kind == kStopResource && gd::packed_int(state, known, tile_index) != 0 &&
 							((raider && _rival_held_site(state, session, context_controller(state, context), site_index)) ||
 									(claimer && _claimable_site(state, session, context_controller(state, context), site_index)));
-					if (!raid && (!state.has(_site_doors(state, search), int_value(tile_index)) || gd::packed_int(state, known, tile_index) == 0 || !(state.has(war, int_value(door)) || hunting))) {
+					// Unexplored, only as the way on to what lies out of reach past
+					// it (`_unseen_door_value`).
+					const bool unseen = gd::packed_int(state, known, tile_index) == 0;
+					if (!raid && (!state.has(_site_doors(state, search), int_value(tile_index)) || (unseen && !state.has(war, int_value(door))) || !(state.has(war, int_value(door)) || hunting))) {
 						continue;
 					}
 					if (!raid && (_site_door_value(state, session, context, entry, search, tile_index, needs) <= 0.0 || !(state.has(war, int_value(door)) || passage_unexplored(state, search, door) > 0))) {
@@ -1038,6 +1041,13 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 					filled = true;
 					if (gd::is_empty(state, candidate)) {
 						continue;
+					}
+					if (unseen) {
+						const double opened = _site_door_value(state, session, context, entry, search, tile_index, needs) - _expected_loss_value(state, power, gd::float_field(state, candidate, key::fight_power, 0.0));
+						if (opened <= 0.0) {
+							continue;
+						}
+						state.set(candidate, str(key::value), float_value(opened));
 					}
 				} else if (kind == kStopEncounter) {
 					const bool on_war_path = state.has(war, int_value(gd::to_int(state, ai::vmember(state, ref, key::index))));

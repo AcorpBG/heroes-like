@@ -330,14 +330,20 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					continue;
 				}
 				// Map objects count once explored; armies and heroes once in sight.
+				// An unexplored site the walk stops at on the way to what lies out of
+				// reach counts for that way alone (`_unseen_door_value`).
 				const int64_t kind = gd::to_int(state, ai::vmember(state, ref, key::kind));
+				double unseen_door = 0.0;
 				if (kind == kStopTown) {
 					const int64_t town_index = gd::to_int(state, ai::vmember(state, ref, key::index));
 					if (!_town_seen(state, known, overworld_town(state, session, town_index), size)) {
 						continue;
 					}
 				} else if (kind != kStopHero && kind != kStopAiHero && gd::packed_int(state, known, tile_index) == 0) {
-					continue;
+					unseen_door = _unseen_door_value(state, session, context, entry, search, kind, tile_index, needs);
+					if (unseen_door <= 0.0) {
+						continue;
+					}
 				}
 				const int64_t ref_index = gd::to_int(state, ai::vmember(state, ref, key::index));
 				const Value seen_key = str(gd::format(state, key::d_d, {int_value(kind), int_value(ref_index)}));
@@ -361,6 +367,13 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 				const DictRef candidate = _candidate(state, session, context, entry, gd::as_dict(ref), power, needs, search, tile_index);
 				if (gd::is_empty(state, candidate)) {
 					continue;
+				}
+				if (unseen_door > 0.0) {
+					const double opened = unseen_door - _expected_loss_value(state, power, gd::float_field(state, candidate, key::fight_power, 0.0));
+					if (opened <= 0.0) {
+						continue;
+					}
+					state.set(candidate, str(key::value), float_value(opened));
 				}
 				const Atom candidate_id = ai::string_or_empty(state, candidate, key::id);
 				const int64_t avoided_until = has_avoid ? gd::to_int(state, state.get(avoid, str(candidate_id), int_value(-1))) : -1;

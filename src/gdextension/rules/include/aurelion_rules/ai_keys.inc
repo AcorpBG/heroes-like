@@ -1016,3 +1016,5 @@ AURELION_KEY(d_s_s_s, "%d|%s|%s|%s")
 AURELION_KEY(still_since, "still_since")
 // Per hostile hero the threat checks walk, the steps to each tile of each level (threat_steps).
 AURELION_KEY(threat_steps, "threat_steps")
+// Per level and starting tile, the steps over the stretches' ground to each tile of the level (_ground_steps).
+AURELION_KEY(ground_steps, "ground_steps")

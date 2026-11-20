@@ -317,11 +317,20 @@ DictRef _search_tables(State &state, DictRef surface, DictRef resolved) {
 		for (const Value &site : gd::field_items(state, surface, str(key::site_stops))) {
 			gd::packed_append(state, site_tiles, gd::to_int(state, ai::vmember(state, site, key::tile)));
 		}
-		// [entrance, exit count, exits...] per portal.
+		// [entrance, exit count, exits...] per portal. A network that may send
+		// the hero to another level (`far_exits`) is not walked through: the walk
+		// came out on this level, and the hero stepping in came out at random on
+		// the other one, then crossed back. In ai-match-2813289413 heroes walking
+		// past the network at tile 10979 for a site beyond it were carried below
+		// 13 times by day 150. It is crossed as a gate (`_level_surface`), and its
+		// entrance stays a stop.
 		const PackedRef portal_list = gd::new_ints(state);
 		if (state.lookup(surface, str(key::portals), found)) {
 			const DictRef portals = gd::as_dict(found);
 			for (const Value &tile_index : gd::items(state, dict_value(portals))) {
+				if (ai::vhas(state, gd::index(state, portals, tile_index), str(key::far_exits))) {
+					continue;
+				}
 				const PackedRef exits = gd::as_ints(ai::vmember(state, gd::index(state, portals, tile_index), key::exits));
 				gd::packed_append(state, portal_list, gd::to_int(state, tile_index));
 				gd::packed_append(state, portal_list, gd::packed_size(state, exits));

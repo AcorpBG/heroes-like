@@ -407,7 +407,8 @@ DictRef _war_paths(State &state, DictRef session, DictRef context, DictRef entry
 	}
 	// Breadth-first from everything reachable today; zone tiles are walkable
 	// and the first zone entered is carried along. A portal leads on to its
-	// exits, as in the search (`_portal_exits`) and in `_level_regions`.
+	// exits, as in the search (`_portal_exits`) and in `_level_regions`, unless
+	// it may send the hero to another level.
 	Value portals_value;
 	const bool has_portals = state.lookup(_level_surface(state, session, context, level), str(key::portals), portals_value);
 	const DictRef portals = has_portals ? gd::as_dict(portals_value) : 0;
@@ -427,7 +428,7 @@ DictRef _war_paths(State &state, DictRef session, DictRef context, DictRef entry
 	if (has_portals) {
 		for (const Value &tile : gd::items(state, dict_value(portals))) {
 			const int64_t portal_tile = gd::to_int(state, tile);
-			if (portal_tile >= 0 && portal_tile < count) {
+			if (portal_tile >= 0 && portal_tile < count && !ai::vhas(state, gd::index(state, portals, tile), str(key::far_exits))) {
 				is_portal.set(portal_tile, 1);
 			}
 		}

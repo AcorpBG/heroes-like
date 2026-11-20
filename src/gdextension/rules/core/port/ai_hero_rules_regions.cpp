@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace aurelion::rules::port {
@@ -245,14 +246,15 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 	}
 	// portals.has(tile) and portals[tile] for each tile. A one-way monolith joins
 	// nothing: the way through it runs one way, as a crossing (`_route_map`,
-	// the threat checks' `steps_to_door`).
+	// the threat checks' `steps_to_door`). Nor does a network that may send the
+	// hero to another level: the search does not walk through it (`_search`).
 	std::vector<int32_t> portal_slot(tile_count, -1);
 	std::vector<Value> portal_values;
 	if (has_portals) {
 		const state::DictNode &node = state.dict(portals);
 		for (size_t slot = 0; slot < node.keys.size(); ++slot) {
 			const Value &tile = node.keys[slot];
-			if (gd::to_bool(ai::vget(state, node.values[slot], key::one_way, bool_value(false)))) {
+			if (gd::to_bool(ai::vget(state, node.values[slot], key::one_way, bool_value(false))) || ai::vhas(state, node.values[slot], str(key::far_exits))) {
 				continue;
 			}
 			if (tile.kind == Kind::Int && tile.i >= 0 && tile.i < count && portal_slot[static_cast<size_t>(tile.i)] < 0) {
@@ -362,6 +364,94 @@ DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t l
 	state.set(cache, int_value(level), dict_value(regions));
 	state.set(context, str(key::level_regions), dict_value(cache));
 	return regions;
+}
+
+PackedRef _ground_steps(State &state, DictRef session, DictRef context, int64_t level, int64_t from_tile) {
+	// The steps from `from_tile` to each tile of `level` over the ground the
+	// stretches are made of (`_level_regions`): eight ways round rock and water,
+	// with the corner rule, through a two-way portal at one step, and over the
+	// armies and sites the stretches join; -1 where it does not get. The ways
+	// through several gates (`_route_through`) measure their walks with it.
+	// Until 2026-11-20 they drew straight lines, over the walls a walk goes
+	// round, and the hero crossed a gate pair back and forth when each side's
+	// way past the other looked shorter than its own walk: in
+	// ai-match-2813289413 a hero at gate 12416 on day 120 counted the way to
+	// town 4372 through the other level at 43 tiles, then 63 from there, against
+	// walks of 66 and 64. Kept for the turn.
+	Value found;
+	const DictRef cache = state.lookup(context, str(key::ground_steps), found) ? gd::as_dict(found) : state.new_dict();
+	const Vector2i size = vector2i_of(gd::index(state, context, str(key::map_size)));
+	const int64_t count = size.x > 0 && size.y > 0 ? gd::mul(size.x, size.y) : 0;
+	const Value cache_key = int_value(gd::add(gd::mul(level, count), from_tile));
+	if (state.lookup(cache, cache_key, found)) {
+		return gd::as_ints(found);
+	}
+	std::vector<int32_t> steps(static_cast<size_t>(count), -1);
+	const PackedRef patches = gd::as_ints(gd::index(state, _level_regions(state, session, context, level), str(key::patches)));
+	if (from_tile >= 0 && from_tile < count && gd::packed_size(state, patches) >= count) {
+		const int32_t *patch_at = gd::packed_ints(state, patches);
+		const DictRef surface = _level_surface(state, session, context, level);
+		const uint8_t *blocked_at = gd::packed_bytes(state, gd::as_bytes(gd::index(state, surface, str(key::blocked))));
+		const bool native_corners = native_transit_rules::uses_native_adjacency(state, dict_value(session));
+		const int64_t width = size.x;
+		const int64_t height = size.y;
+		// A two-way portal on this level alone leads on to its exits, as in
+		// `_level_regions`.
+		std::unordered_map<int64_t, std::vector<int64_t>> portal_exits;
+		Value portals;
+		if (state.lookup(surface, str(key::portals), portals) && gd::is_dict(portals)) {
+			const state::DictNode &node = state.dict(portals.ref);
+			for (size_t slot = 0; slot < node.keys.size(); ++slot) {
+				const Value &tile = node.keys[slot];
+				if (tile.kind != Kind::Int || gd::to_bool(ai::vget(state, node.values[slot], key::one_way, bool_value(false))) || ai::vhas(state, node.values[slot], str(key::far_exits))) {
+					continue;
+				}
+				for (const Value &exit : gd::items(state, ai::vmember(state, node.values[slot], key::exits))) {
+					portal_exits[tile.i].push_back(gd::to_int(state, exit));
+				}
+			}
+		}
+		std::vector<int64_t> queue;
+		queue.reserve(static_cast<size_t>(count));
+		steps[static_cast<size_t>(from_tile)] = 0;
+		queue.push_back(from_tile);
+		for (size_t head = 0; head < queue.size(); ++head) {
+			const int64_t current = queue[head];
+			const int32_t walked = steps[static_cast<size_t>(current)];
+			const auto exits = portal_exits.find(current);
+			if (exits != portal_exits.end()) {
+				for (const int64_t exit : exits->second) {
+					if (exit >= 0 && exit < count && patch_at[exit] >= 0 && steps[static_cast<size_t>(exit)] < 0) {
+						steps[static_cast<size_t>(exit)] = walked + 1;
+						queue.push_back(exit);
+					}
+				}
+			}
+			const int64_t cx = current % width;
+			const int64_t cy = current / width;
+			for (int64_t direction = 0; direction < 8; ++direction) {
+				const int64_t nx = cx + kNeighborDx[direction];
+				const int64_t ny = cy + kNeighborDy[direction];
+				if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+					continue;
+				}
+				const int64_t next = ny * width + nx;
+				if (steps[static_cast<size_t>(next)] >= 0 || patch_at[next] < 0) {
+					continue;
+				}
+				if (nx != cx && ny != cy && !native_corners && blocked_at[cy * width + nx] != 0 && blocked_at[ny * width + cx] != 0) {
+					continue;
+				}
+				steps[static_cast<size_t>(next)] = walked + 1;
+				queue.push_back(next);
+			}
+		}
+	}
+	const PackedRef packed = gd::new_ints(state);
+	state.packed_write(packed).ints = std::move(steps);
+	state.set(cache, cache_key, gd::ints_value(packed));
+	state.set(context, str(key::ground_steps), dict_value(cache));
+	return packed;
 }
 
 PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64_t level, double power, double loss_limit, DictRef entry) {
@@ -629,6 +719,25 @@ DictRef _beyond_gate(State &state, DictRef session, DictRef context, DictRef ent
 		state.set(result, str(key::distance), int_value(distance));
 		state.set(result, str(key::far_guard), int_value(guard_index));
 		state.set(result, str(key::far_fight_power), float_value(far_fight_power));
+		// What the hero takes on first across where no guard stands at the far
+		// end, kept as found to be previewed before it crosses
+		// (`_gate_fight_looks_good`).
+		if (!gd::is_empty(state, far) && guard_index < 0) {
+			const DictRef first = state.new_dict();
+			const auto keep = [&](Atom field) {
+				Value kept;
+				if (state.lookup(far, str(field), kept)) {
+					state.set(first, str(field), kept);
+				}
+			};
+			keep(key::kind);
+			keep(key::id);
+			keep(key::index);
+			keep(key::value);
+			keep(key::fight_power);
+			keep(key::estimated_loss);
+			state.set(result, str(key::candidate), dict_value(first));
+		}
 	}
 	state.set(cache, str(beyond), dict_value(result));
 	state.set(context, str(key::gate_beyond), dict_value(cache));

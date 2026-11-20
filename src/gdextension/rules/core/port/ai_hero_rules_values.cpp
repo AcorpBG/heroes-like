@@ -428,6 +428,20 @@ double _site_door_value(State &state, DictRef session, DictRef context, DictRef 
 	return _opened_value(state, session, context, entry, search, _site_door_key(state, tile_index), origin, needs);
 }
 
+double _unseen_door_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t kind, int64_t tile_index, DictRef needs) {
+	// The search stops at a site whether it is explored or not. Out of sight it
+	// has no worth of its own to the hero, but one on the way to a town or a
+	// route's gate out of reach (`_war_paths`) is that way on: unweighed, the
+	// gate back looked better than the way the hero had crossed for.
+	if ((kind != kStopResource && kind != kStopArtifact) || gd::is_empty(state, search) || !state.has(_site_doors(state, search), int_value(tile_index))) {
+		return 0.0;
+	}
+	if (!state.has(_war_paths(state, session, context, entry, search, needs), int_value(_site_door_key(state, tile_index)))) {
+		return 0.0;
+	}
+	return _site_door_value(state, session, context, entry, search, tile_index, needs);
+}
+
 int64_t _site_door_key(State &state, int64_t tile_index) {
 	(void)state;
 	return gd::sub(-10, tile_index);

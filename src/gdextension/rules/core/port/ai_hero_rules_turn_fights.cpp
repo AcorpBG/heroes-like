@@ -728,7 +728,27 @@ bool _gate_fight_looks_good(State &state, DictRef session, DictRef context, Dict
 	DictRef fight = plan;
 	if (gd::stringify(state, gd::index(state, plan, str(key::kind))) == key::gate) {
 		if (!state.has(plan, str(key::far_guard))) {
-			return true;
+			// No guard at either end: the first fight across is what the hero
+			// crosses for, where that is a fight (`_gate_candidate`). Across, the
+			// hero previews it before walking on (`_vetted_candidate`), and so it
+			// does here, before crossing. Unpreviewed, a fight the hero then turned
+			// down was worth the gate, and it crossed back the same day: in
+			// ai-match-3232670313 a hero of the first player crossed gate 9692 on
+			// day 64 for a raider worth 541,710 three steps past it, turned the
+			// fight down there and crossed back for its own town.
+			Value across;
+			if (!state.lookup(plan, str(key::candidate), across) || !gd::is_dict(across)) {
+				return true;
+			}
+			const bool looks_good = _fight_looks_good(state, session, context, entry, across.ref);
+			_note_vetoed_need(state, session, context, entry, across.ref, looks_good);
+			if (looks_good) {
+				return true;
+			}
+			const Atom target_id = ai::string_or_empty(state, across.ref, key::id);
+			_avoid_target(state, session, ai::string_or_empty(state, entry, key::placement_id), target_id, gd::add(session_day(state, session), tunable_int(state, key::AVOID_DAYS)));
+			_forget_beyond(state, context, target_id);
+			return false;
 		}
 		const double far_power = gd::to_float(gd::index(state, plan, str(key::far_fight_power)));
 		fight = state.new_dict();

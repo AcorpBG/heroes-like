@@ -160,6 +160,32 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const Dict goal = dict_if_dict(state, block, key::goal);
 	const ArrayRef dangers = _dangers(state, session, context, entry);
 	const Vector2i size = map_size(state, context);
+	// A walk's steps to a tile or, where `beside`, to a tile beside it and one
+	// step on; -1 where it gets to neither.
+	const auto walked_to = [&](PackedRef walk, int64_t tile, bool beside) -> int64_t {
+		const int64_t tiles = gd::packed_size(state, walk);
+		if (tile < 0 || tile >= tiles) {
+			return -1;
+		}
+		int64_t best = gd::packed_int(state, walk, tile);
+		if (best >= 0 || !beside) {
+			return best;
+		}
+		for (int64_t dy = -1; dy <= 1; ++dy) {
+			for (int64_t dx = -1; dx <= 1; ++dx) {
+				const int64_t nx = tile_x(tile, size.x) + dx;
+				const int64_t ny = tile_y(tile, size.x) + dy;
+				if ((dx == 0 && dy == 0) || nx < 0 || ny < 0 || nx >= size.x || ny * size.x + nx >= tiles) {
+					continue;
+				}
+				const int64_t there = gd::packed_int(state, walk, ny * size.x + nx);
+				if (there >= 0 && (best < 0 || there + 1 < best)) {
+					best = there + 1;
+				}
+			}
+		}
+		return best;
+	};
 	const Dict stops = typed_dict(state, search, str(key::stops));
 	// For a few days after crossing a gate a hero takes another only toward the
 	// errand it crossed for: what lies beyond changes faster than it walks there
@@ -324,23 +350,51 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 		int64_t distance = gd::add(option_distance, beyond_empty ? 0 : gd::int_field(state, beyond, key::distance, 0));
 		Atom target_kind = beyond_empty ? key::empty : ai::string_or_empty(state, beyond, key::kind);
 		Atom target_id = beyond_empty ? key::empty : ai::string_or_empty(state, beyond, key::id);
+		// The route's way past the gate is not one the hero walks from its exit.
+		bool way_cut = false;
+		bool by_route = false;
 		if (!route_empty) {
-			const double route_value = near + gd::to_float(gd::index(state, route.ref, str(key::value)));
+			double route_target = gd::to_float(gd::index(state, route.ref, str(key::value)));
 			int64_t route_distance = compat::engine_max<int64_t>(option_distance, gd::to_int(state, gd::index(state, route.ref, str(key::distance))));
 			// Past this one gate the way is walked from its exit, as the hero
-			// will walk it there.
+			// will walk it there: to the objective, or to the next gate on the
+			// way, and the rest as the way counts it (`_route_through`). An army
+			// or a hero is met beside its tile, where its zone ends the walk.
 			const PackedRef far_dist = _gate_far_dist(state, context, entry, gd::as_dict(option_gate), beyond_radius);
-			if (gd::to_bool(gd::field_or(state, route.ref, key::direct, bool_value(false)))) {
-				const int64_t route_tile = gd::to_int(state, gd::index(state, route.ref, str(key::tile)));
-				if (route_tile >= 0 && route_tile < gd::packed_size(state, far_dist) && gd::packed_int(state, far_dist, route_tile) >= 0) {
-					route_distance = gd::add(gd::add(option_distance, 1), gd::packed_int(state, far_dist, route_tile));
+			const int64_t next_tile = gd::int_field(state, route.ref, key::next, -1);
+			const Atom route_kind = gd::stringify(state, gd::index(state, route.ref, str(key::kind)));
+			const bool met_beside = gd::to_bool(gd::field_or(state, route.ref, key::direct, bool_value(false))) && (route_kind == key::meet || route_kind == key::hero || route_kind == key::ai_hero);
+			const int64_t walked = walked_to(far_dist, next_tile, met_beside);
+			if (walked >= 0) {
+				route_distance = compat::float_to_int(compat::godot_ceil(static_cast<double>(option_distance + 1 + walked) + gd::float_field(state, route.ref, key::remaining, 0.0)));
+			} else if (next_tile >= 0 && next_tile < gd::packed_size(state, far_dist)) {
+				// The stretches join ground across the armies a hero beats and the
+				// sites it takes, where the walk from the exit stops. Where that
+				// walk does not get to the way's next tile, though the ground
+				// leads there within its radius, the hero there weighs the first
+				// army or site in the way, credited with the passage share of what
+				// lies past it (`_opened_value`), and so does this choice, without
+				// the errand's bonus. At full worth as the errand's way, the gate
+				// there and the gate back each beat what stood in front of the
+				// hero, which crossed back and forth: in ai-match-3232670313 a main
+				// army crossed gate 7833 six times on day 68 for a town whose way
+				// on below ran past a purse it had not seen.
+				const Value exit = as_vector3i(ai::vmember(state, option_gate, key::exit));
+				const int64_t ground = gd::packed_int(state, _ground_steps(state, session, context, exit.vz(), gd::add(gd::mul(exit.vy(), size.x), exit.vx())), next_tile);
+				if (ground >= 0 && ground <= beyond_radius) {
+					route_target *= ai::static_float(state, key::ai_hero_rules_script, key::PASSAGE_KNOWN_SITE_SHARE);
+					way_cut = true;
 				}
 			}
+			const double route_value = near + route_target;
 			if (beyond_empty || route_value / (1.0 + static_cast<double>(route_distance) / static_cast<double>(movement_max)) > value / (1.0 + static_cast<double>(distance) / static_cast<double>(movement_max))) {
 				value = route_value;
 				distance = route_distance;
 				target_kind = gd::stringify(state, gd::index(state, route.ref, str(key::kind)));
 				target_id = gd::stringify(state, gd::index(state, route.ref, str(key::id)));
+				by_route = true;
+			} else {
+				way_cut = false;
 			}
 		}
 		if (value <= 0.0) {
@@ -361,6 +415,20 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 		state.set(plan, str(key::tile_index), int_value(option_tile));
 		state.set(plan, str(key::distance), int_value(distance));
 		state.set(plan, str(key::beyond), dict_value(target));
+		// The first fight across where no guard stands at either end, kept to
+		// be previewed before the hero crosses for it (`_gate_fight_looks_good`):
+		// what it takes on first past the exit (`_beyond_gate`), or the
+		// objective a way leads straight to.
+		if (!by_route && !beyond_empty && state.has(beyond, str(key::candidate))) {
+			state.set(plan, str(key::candidate), gd::index(state, beyond, str(key::candidate)));
+		} else if (by_route && gd::to_bool(gd::field_or(state, route.ref, key::direct, bool_value(false))) && state.has(route.ref, str(key::index))) {
+			const DictRef first = state.new_dict();
+			state.set(first, str(key::kind), str(target_kind));
+			state.set(first, str(key::id), str(target_id));
+			state.set(first, str(key::index), gd::index(state, route.ref, str(key::index)));
+			state.set(first, str(key::fight_power), gd::index(state, route.ref, str(key::fight_power)));
+			state.set(plan, str(key::candidate), dict_value(first));
+		}
 		if (ai::vhas(state, option, str(key::past_path))) {
 			state.set(plan, str(key::past_path), ai::vmember(state, option, key::past_path));
 		}
@@ -392,7 +460,7 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 			}
 		}
 		const Atom goal_id = goal.present ? ai::string_or_empty(state, goal.ref, key::id) : key::empty;
-		if (goal_id != key::empty) {
+		if (goal_id != key::empty && !way_cut) {
 			const Atom option_id = gd::stringify(state, ai::vmember(state, option, key::id));
 			const Atom plan_id = gd::stringify(state, gd::index(state, plan, str(key::id)));
 			if (goal_id == option_id || goal_id == plan_id || goal_id == target_id) {
@@ -530,9 +598,20 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 	};
 	std::vector<double> cost(static_cast<size_t>(count), kInf);
 	std::vector<int64_t> first(static_cast<size_t>(count), -1);
+	// The gate a way takes next past its first gate's exit (-1 while it is the
+	// first gate): the hero walks there once through (`_gate_candidate`).
+	std::vector<int64_t> second(static_cast<size_t>(count), -1);
 	std::vector<char> settled(static_cast<size_t>(count), 0);
 	const PackedRef dist = gd::as_ints(gd::index(state, search, str(key::dist)));
 	const double detour = ai::static_float(state, key::ai_hero_rules_script, key::ROUTE_DETOUR);
+	// A walk between two tiles of a level, over the stretches' ground
+	// (`_ground_steps`): the straight line with a detour only where that ground
+	// does not join them.
+	const auto walk = [&](int64_t on_level, int64_t from_tile, int64_t to_tile) {
+		const PackedRef steps = _ground_steps(state, session, context, on_level, from_tile);
+		const int64_t walked = to_tile >= 0 && to_tile < gd::packed_size(state, steps) ? gd::packed_int(state, steps, to_tile) : -1;
+		return walked >= 0 ? static_cast<double>(walked) : _tile_span(state, from_tile, to_tile, size) * detour;
+	};
 	const auto home_gates = by_region.find(home_key);
 	if (home_gates != by_region.end()) {
 		for (const int64_t gate_index : home_gates->second) {
@@ -541,7 +620,7 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 			if (!open(gate)) {
 				continue;
 			}
-			cost[static_cast<size_t>(gate_index)] = tile < gd::packed_size(state, dist) && gd::packed_int(state, dist, tile) >= 0 ? static_cast<double>(gd::packed_int(state, dist, tile)) : _tile_span(state, start_tile, tile, size) * detour;
+			cost[static_cast<size_t>(gate_index)] = tile < gd::packed_size(state, dist) && gd::packed_int(state, dist, tile) >= 0 ? static_cast<double>(gd::packed_int(state, dist, tile)) : walk(level, start_tile, tile);
 			first[static_cast<size_t>(gate_index)] = gate_index;
 		}
 	}
@@ -570,8 +649,11 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 		const double retries = random > 1 ? static_cast<double>(random - 1) * static_cast<double>(movement_max) : 0.0;
 		const double arrived = cost[here] + 1.0 + retries;
 		const DictRef start_gate = gd::as_dict(state.at(gates, first[here]));
+		const int64_t exit_level = gd::to_int(state, gd::index(state, gate, str(key::exit_level)));
+		const int64_t exit_tile = gd::to_int(state, gd::index(state, gate, str(key::exit_tile)));
 		for (const Value &target : gd::field_items(state, targets, str(exit_key))) {
-			const double total = arrived + (gd::to_int(state, ai::vmember(state, target, key::tile)) >= 0 ? _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, target, key::tile)), size) * detour : 0.0);
+			const int64_t target_tile = gd::to_int(state, ai::vmember(state, target, key::tile));
+			const double total = arrived + (target_tile >= 0 ? walk(exit_level, exit_tile, target_tile) : 0.0);
 			double value = gd::to_float(ai::vmember(state, target, key::value));
 			// A raider is worth the odds that it still stands there when the hero
 			// arrives: one seen standing S days is still there T days on about
@@ -603,6 +685,15 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 				state.set(route, str(key::score), float_value(score));
 				state.set(route, str(key::tile), int_value(gd::to_int(state, ai::vmember(state, target, key::tile))));
 				state.set(route, str(key::direct), bool_value(first[here] == current));
+				if (ai::vhas(state, target, str(key::index))) {
+					state.set(route, str(key::index), ai::vmember(state, target, key::index));
+					state.set(route, str(key::fight_power), ai::vget(state, target, key::fight_power, float_value(0.0)));
+				}
+				// Where the walk from the first gate's exit leads, the objective or
+				// the next gate on the way, and what the way counts past it.
+				const bool direct = first[here] == current;
+				state.set(route, str(key::next), int_value(direct ? target_tile : gd::to_int(state, ai::vmember(state, state.at(gates, second[here]), key::tile))));
+				state.set(route, str(key::remaining), float_value(direct ? 0.0 : total - cost[static_cast<size_t>(second[here])]));
 				state.set(result, int_value(start_gate_tile), dict_value(route));
 			}
 		}
@@ -615,10 +706,11 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 			if (settled[next] || !open(state.at(gates, next_index))) {
 				continue;
 			}
-			const double through = arrived + _tile_span(state, gd::to_int(state, gd::index(state, gate, str(key::exit_tile))), gd::to_int(state, ai::vmember(state, state.at(gates, next_index), key::tile)), size) * detour;
+			const double through = arrived + walk(exit_level, exit_tile, gd::to_int(state, ai::vmember(state, state.at(gates, next_index), key::tile)));
 			if (through < cost[next]) {
 				cost[next] = through;
 				first[next] = first[here];
+				second[next] = first[here] == current ? next_index : second[here];
 			}
 		}
 	}
@@ -793,6 +885,8 @@ ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef en
 		state.set(town, str(key::value), float_value(gd::to_float(gd::index(state, candidate, str(key::value)))));
 		state.set(town, str(key::level), int_value(gd::to_int(state, ai::vmember(state, town_ref, key::level))));
 		state.set(town, str(key::tile), int_value(gd::to_int(state, ai::vmember(state, town_ref, key::door))));
+		state.set(town, str(key::index), gd::index(state, candidate, str(key::index)));
+		state.set(town, str(key::fight_power), float_value(gd::float_field(state, candidate, key::fight_power, 0.0)));
 		state.append(towns, dict_value(town));
 	}
 	return towns;
@@ -893,6 +987,8 @@ ArrayRef _route_raiders(State &state, DictRef session, DictRef context, DictRef 
 		state.set(target, str(key::still_since), int_value(still_since));
 		state.set(target, str(key::level), int_value(level));
 		state.set(target, str(key::tile), int_value(gd::add(gd::mul(y, size.x), x)));
+		state.set(target, str(key::index), int_value(index));
+		state.set(target, str(key::fight_power), float_value(gd::float_field(state, candidate, key::fight_power, 0.0)));
 		state.append(raiders, dict_value(target));
 	};
 	for (const Value &other : gd::items(state, array_value(active_hero_entries(state, session, key::empty)))) {

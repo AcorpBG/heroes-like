@@ -136,6 +136,7 @@ bool _can_afford(State &state, DictRef pool, DictRef cost);
 
 // Level regions, stretches and dangers (ai_hero_rules_regions.cpp).
 DictRef _level_regions(State &state, DictRef session, DictRef context, int64_t level);
+PackedRef _ground_steps(State &state, DictRef session, DictRef context, int64_t level, int64_t from_tile);
 PackedRef _level_stretches(State &state, DictRef session, DictRef context, int64_t level, double power, double loss_limit, DictRef entry);
 int64_t _patch_root(State &state, ArrayRef parent, int64_t patch);
 // The stretch (`_level_stretches`) a tile of `level` lies in, -1 on a tile no
@@ -270,6 +271,7 @@ double _site_spell_value(State &state, DictRef site, DictRef entry);
 double _site_artifact_value(State &state, DictRef site);
 double _passage_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t guard_index, DictRef needs);
 double _site_door_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t tile_index, DictRef needs);
+double _unseen_door_value(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t kind, int64_t tile_index, DictRef needs);
 int64_t _site_door_key(State &state, int64_t tile_index);
 int64_t _hero_war_key(State &state, Atom ref_kind, int64_t index);
 DictRef _site_doors(State &state, DictRef search);
