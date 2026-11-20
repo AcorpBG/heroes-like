@@ -1,0 +1,1 @@
+..\Godot_v4.6.2-stable_win64_console.exe --headless --import --path .
