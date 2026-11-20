@@ -57,12 +57,14 @@ None open.
 
 ## Open work
 
+- `ai-gate-stretch-mismatches-20261120` (pending): Two mismatches named by the archived ai-gate-recross-remaining-20261019 and never fixed: a resource site in a corridor ends a hero's search walk but not its level stretch (_level_regions and _level_stretches against the search's stop mask), and a route gate can be out of reach on arrival while the stretch counts it reached. Make the stretch agree with the search, inside the plan scoring. The 3-day gate rule of 29 Oct cut crossings back from 50% to 27%. Files: src/gdextension/rules/core/port/ai_hero_rules_regions.cpp, ai_hero_rules_search.cpp. Owner kept it open (2026-11-20). See `docs/ai-plays-by-player-rules.md`.
+- `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
 - `playable-alpha-scenario-set-10184` (paused): Phase 5 umbrella: several scenarios and skirmish setups played end to end, with save/load, outcomes, AI pressure and a viable economy. Waits for the authored-content rework.
 - `playable-alpha-ux-onboarding-10184` (paused): Phase 5 umbrella: main menu, overworld, town, battle, outcome, save/load and help, scenery-first, no panel-heavy dashboards. See `docs/screen-wireframes.md`.
 - `production-alpha-content-expansion-10184` (paused): Phase 6 umbrella: more factions and content through the established systems, campaign and skirmish breadth, difficulty and AI stability.
-- `production-alpha-packaging-settings-performance-10184` (paused): Phase 6 umbrella: packaging, settings and accessibility baseline, performance budgets. Low priority until a release (2026-10-20).
+- `production-alpha-packaging-settings-performance-10184` (paused): Phase 6 umbrella: packaging, settings and accessibility baseline, performance budgets. Low priority until a release (2026-10-20). Known from the archived native-rules-phase0-toolchain-20261020: a release export stopped at a 4.7 GB pack, over the 2 GB compact-export and 2 GiB archive-member limits.
 
 ## Recently completed
 
