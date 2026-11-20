@@ -57,7 +57,6 @@ None open.
 
 ## Open work
 
-- `ai-gate-stretch-mismatches-20261120` (pending): Two mismatches named by the archived ai-gate-recross-remaining-20261019 and never fixed: a resource site in a corridor ends a hero's search walk but not its level stretch (_level_regions and _level_stretches against the search's stop mask), and a route gate can be out of reach on arrival while the stretch counts it reached. Make the stretch agree with the search, inside the plan scoring. The 3-day gate rule of 29 Oct cut crossings back from 50% to 27%. Files: src/gdextension/rules/core/port/ai_hero_rules_regions.cpp, ai_hero_rules_search.cpp. Owner kept it open (2026-11-20). See `docs/ai-plays-by-player-rules.md`.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
@@ -68,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-20 `ai-gate-stretch-mismatches-20261120` (090f1c9c0): Gate ways count as far as the walk past the exit gets; legs walked over stretch ground; unexplored sites in the way count; fights past unguarded gates previewed; mixed-level portals only gates. Idle same-day turn-backs 11 to 0.
 - 2026-11-12 `double-creature-health-20261112` (b1f11e9ef): All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.
 - 2026-11-12 `faction-army-level-20261112` (a0cc973e0): Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).
 - 2026-11-12 `all-lines-field-balance-20261112` (83bb49f58): All 60 tier 1-5 lines are worth the same per gold against a fixed field yardstick and cost the same a week per tier; 59 of 60 pair stages within 15%. Town armies still spread 26-73% (tier 6-7, shooter tiers, duel reading).
