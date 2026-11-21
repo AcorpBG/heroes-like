@@ -192,6 +192,35 @@ double pooled_beatable_value(State &state, DictRef session, DictRef context, Dic
 	return ai_hero_rules::_newly_beatable_value(state, session, context, receiver, receiver, heroes, pooled, victory_only);
 }
 
+// Whether a rival hero that keeps each of two field armies away, and the main
+// army too (`_dangers`: one at least DANGER_RATIO times as strong as each), no
+// longer keeps away the army they pool, the receiver leading the pooled
+// troops. A rival the main army can face is the main army's to answer.
+bool pooled_past_danger(State &state, DictRef session, DictRef context, DictRef giver, DictRef receiver, DictRef main, ArrayRef pooled) {
+	const double ratio = tunable(state, key::DANGER_RATIO);
+	const double each = compat::engine_max(compat::engine_max(ai_hero_rules::hero_power(state, giver), ai_hero_rules::hero_power(state, receiver)), ai_hero_rules::hero_power(state, main)) * ratio;
+	const Value leader = state.get(receiver, str(key::enemy_commander_state), dict_value(state.new_dict()));
+	const double pooled_power = ai_hero_rules::army_power(state, array_value(pooled), leader) * ratio;
+	Value found;
+	const DictRef cache = state.lookup(context, str(key::decision), found) ? gd::as_dict(found) : state.new_dict();
+	if (!state.has(cache, str(key::hostile))) {
+		state.set(cache, str(key::hostile), array_value(ai_hero_rules::_hostile_heroes(state, session, context)));
+		state.set(context, str(key::decision), dict_value(cache));
+	}
+	// In sight, or seen out there in the last few days.
+	state::ValueList threats = gd::items(state, gd::index(state, cache, str(key::hostile))).list();
+	for (const Value &threat : gd::items(state, array_value(ai_hero_rules::_recent_hostiles(state, session, context))).list()) {
+		threats.push_back(threat);
+	}
+	for (const Value &threat : threats) {
+		const double power = gd::to_float(ai::vmember(state, threat, key::power));
+		if (power >= each && power < pooled_power) {
+			return true;
+		}
+	}
+	return false;
+}
+
 // The movement points a hero has left today.
 int64_t movement_left(State &state, DictRef entry) {
 	Value block;
@@ -744,31 +773,50 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const bool traveller = gd::to_bool(gd::field_or(state, entry, key::ai_traveller, bool_value(false)));
 	const bool today = !traveller && steps >= 0 && steps <= movement_left(state, entry) && !day_over(state, context, other_id);
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
-	if (gd::array_has(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)))) {
-		if (main_id != other_id || _is_raider(state, session, context, entry)) {
+	const int64_t own_rank = gd::array_find(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)));
+	if (own_rank >= 0) {
+		if (_is_raider(state, session, context, entry)) {
 			return state.new_dict();
 		}
 		// A field army joins the main army only when something it has to beat
 		// is beyond the main army alone: the main hero takes the stronger
 		// stacks. Otherwise it keeps its army and works on its own; seven stacks
 		// are what limit an army, not its share of the main army's strength.
-		if (_main_shortfall(state, session, context, other) <= 0.0) {
-			return state.new_dict();
+		// It joins a more experienced field army only where the two pooled are
+		// past a rival hero that keeps each of them away and the main army too,
+		// or take the town that wins the game.
+		const bool to_main = main_id == other_id;
+		if (to_main) {
+			if (_main_shortfall(state, session, context, other) <= 0.0) {
+				return state.new_dict();
+			}
+		} else {
+			const int64_t other_rank = gd::array_find(state, field_ids, str(other_id));
+			if (other_rank < 0 || other_rank >= own_rank) {
+				return state.new_dict();
+			}
 		}
 		Value found;
-		const ArrayRef main_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
+		const ArrayRef their_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
 		const ArrayRef own_stacks = nested_lookup(state, entry, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
-		const DictRef swap = _handover(state, main_stacks, own_stacks);
+		const DictRef swap = _handover(state, their_stacks, own_stacks);
 		const double gain = gd::to_float(gd::index(state, swap, str(key::gain)));
 		if (gain <= 0.0) {
 			return state.new_dict();
 		}
+		const ArrayRef pooled = gd::as_array(gd::index(state, swap, str(key::stacks)));
+		if (!to_main) {
+			const int64_t main_index = _entry_index(state, session, main_id);
+			if (main_index < 0 || (!pooled_past_danger(state, session, context, entry, other, gd::as_dict(state.at(encounters, main_index)), pooled) && pooled_beatable_value(state, session, context, entry, other, pooled, true) <= 0.0)) {
+				return state.new_dict();
+			}
+		}
 		const Atom id = ai::string_or_empty(state, other, key::placement_id);
 		const double base = tunable(state, key::JOIN_BASE_VALUE);
 		double value = base + gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
-		// And what the main army can then take that neither army can now, as a
-		// garrison taken along is worth (`_town_candidate`).
-		value += pooled_beatable_value(state, session, context, entry, other, gd::as_array(gd::index(state, swap, str(key::stacks))), !today);
+		// And what the army joined can then take that neither army can now, as
+		// a garrison taken along is worth (`_town_candidate`).
+		value += pooled_beatable_value(state, session, context, entry, other, pooled, !today);
 		const DictRef result = state.new_dict();
 		state.set(result, str(key::kind), str(key::meet));
 		state.set(result, str(key::id), str(id));
