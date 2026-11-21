@@ -1165,11 +1165,16 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	if (compat::engine_max(dx, dy) > 1) {
 		return arrived_result(state);
 	}
-	const DictRef army = dict_field_if(state, entry, key::enemy_army);
-	const DictRef other_army = dict_field_if(state, other, key::enemy_army);
 	// The armies are pooled: the hero met ends with the strongest seven stacks
 	// of both, the one that came with the rest (at least one creature). Nothing
-	// changes hands when that leaves the hero met no stronger.
+	// changes hands when that leaves the hero met no stronger. The main army
+	// that came to a field army itself takes that army's troops instead
+	// (`_meet_candidate`).
+	const bool takes = placement_is_main(state, session, context, entry);
+	const DictRef giver = takes ? other : entry;
+	const DictRef receiver = takes ? entry : other;
+	const DictRef army = dict_field_if(state, giver, key::enemy_army);
+	const DictRef other_army = dict_field_if(state, receiver, key::enemy_army);
 	const ArrayRef theirs = gd::as_array(gd::duplicate_value(state, list_field(state, other_army, key::stacks), true));
 	const ArrayRef ours = gd::as_array(gd::duplicate_value(state, list_field(state, army, key::stacks), true));
 	const DictRef swap = _handover(state, theirs, ours);
@@ -1179,16 +1184,16 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	const DictRef merged = state.new_dict();
 	state.set(merged, str(key::stacks), gd::index(state, swap, str(key::stacks)));
 	state.set(army, str(key::stacks), gd::index(state, swap, str(key::left)));
-	state.set(entry, str(key::enemy_army), dict_value(army));
+	state.set(giver, str(key::enemy_army), dict_value(army));
 	{
-		const DictRef commander = dict_field(state, entry, key::enemy_commander_state);
-		state.set(entry, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(army), key::encounter_mire_raid)));
+		const DictRef commander = dict_field(state, giver, key::enemy_commander_state);
+		state.set(giver, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(army), key::encounter_mire_raid)));
 	}
 	state.set(other_army, str(key::stacks), gd::index(state, merged, str(key::stacks)));
-	state.set(other, str(key::enemy_army), dict_value(other_army));
+	state.set(receiver, str(key::enemy_army), dict_value(other_army));
 	{
-		const DictRef commander = dict_field(state, other, key::enemy_commander_state);
-		state.set(other, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(other_army), key::encounter_mire_raid)));
+		const DictRef commander = dict_field(state, receiver, key::enemy_commander_state);
+		state.set(receiver, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(other_army), key::encounter_mire_raid)));
 	}
 	const DictRef block = dict_field(state, entry, key::ai_hero);
 	state.set(block, str(key::goal), dict_value(state.new_dict()));
@@ -1198,7 +1203,7 @@ DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index
 	state.set(session_view::overworld(state, session), str(key::encounters), array_value(encounters));
 	const DictRef target = event_target(state, key::encounter, ai::string_or_empty(state, other, key::placement_id), hero_name(state, other), gd::int_field(state, other, key::x, 0), gd::int_field(state, other, key::y, 0));
 	state.set(target, str(key::target_public_importance), str(key::low));
-	const Atom summary = gd::format(state, key::s_hands_troops_to_s, {str(hero_name(state, entry)), str(hero_name(state, other))});
+	const Atom summary = gd::format(state, key::s_hands_troops_to_s, {str(hero_name(state, giver)), str(hero_name(state, receiver))});
 	const DictRef event = _event(state, session, context, key::ai_heroes_met, entry, target, summary, string_list(state, {key::troops_handed_over}));
 	const ArrayRef events = state.new_array();
 	state.append(events, dict_value(event));

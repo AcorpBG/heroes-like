@@ -760,8 +760,35 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const DictRef other = gd::as_dict(state.at(encounters, other_index));
 	const Atom main_id = _decision_main_id(state, session, context);
 	const Atom other_id = ai::string_or_empty(state, other, key::placement_id);
-	if (main_id == key::empty || main_id == ai::string_or_empty(state, entry, key::placement_id)) {
+	if (main_id == key::empty) {
 		return state.new_dict();
+	}
+	if (main_id == ai::string_or_empty(state, entry, key::placement_id)) {
+		// The main army short of what it has to beat (`_main_shortfall`) walks to
+		// a field army as that army would walk to it: the faster of the two covers
+		// the way, and the troops change hands the same way (`_meet_hero`), the
+		// main hero keeping the strongest seven stacks. Reached today, it uses
+		// them with the movement it has left. Raiders keep their armies.
+		if (!gd::array_has(state, _decision_field_ids(state, session, context), str(other_id)) || _is_raider(state, session, context, other) || _main_shortfall(state, session, context, entry) <= 0.0) {
+			return state.new_dict();
+		}
+		Value found;
+		const ArrayRef their_stacks = nested_lookup(state, other, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
+		const ArrayRef own_stacks = nested_lookup(state, entry, key::enemy_army, key::stacks, found) ? gd::as_array(gd::duplicate_value(state, found, true)) : state.new_array();
+		const DictRef swap = _handover(state, own_stacks, their_stacks);
+		const double gain = gd::to_float(gd::index(state, swap, str(key::gain)));
+		if (gain <= 0.0) {
+			return state.new_dict();
+		}
+		const bool reached_today = !gd::to_bool(gd::field_or(state, entry, key::ai_traveller, bool_value(false))) && steps >= 0 && steps <= movement_left(state, entry);
+		double value = tunable(state, key::JOIN_BASE_VALUE) + gain * tunable(state, key::TROOP_VALUE_PER_POWER) * tunable(state, key::HANDOVER_TROOP_SHARE);
+		value += pooled_beatable_value(state, session, context, other, entry, gd::as_array(gd::index(state, swap, str(key::stacks))), !reached_today);
+		const DictRef result = state.new_dict();
+		state.set(result, str(key::kind), str(key::meet));
+		state.set(result, str(key::id), str(other_id));
+		state.set(result, str(key::index), int_value(other_index));
+		state.set(result, str(key::value), float_value(value));
+		return result;
 	}
 	// What the receiver can then take counts for a hand-over today, before its
 	// own day: it acts after the heroes bringing troops and uses them that day.
