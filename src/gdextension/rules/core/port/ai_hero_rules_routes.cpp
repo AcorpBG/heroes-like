@@ -460,7 +460,7 @@ DictRef _gate_candidate(State &state, DictRef session, DictRef context, DictRef 
 				state.set(plan, str(key::far_fight_power), float_value(beyond_far_power));
 			}
 		}
-		const Atom goal_id = goal.present ? ai::string_or_empty(state, goal.ref, key::id) : key::empty;
+		const Atom goal_id = goal.present ? _goal_errand_id(state, goal.ref) : key::empty;
 		if (goal_id != key::empty && !way_cut) {
 			const Atom option_id = gd::stringify(state, ai::vmember(state, option, key::id));
 			const Atom plan_id = gd::stringify(state, gd::index(state, plan, str(key::id)));
@@ -542,7 +542,7 @@ double _route_loss_limit(State &state, double value) {
 
 void _route_through(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, DictRef map, double power, double limit, ArrayRef towns, bool explore, DictRef result) {
 	const Dict goal = dict_if_dict(state, typed_dict(state, entry, str(key::ai_hero)), key::goal);
-	const Atom goal_id = goal.present ? ai::string_or_empty(state, goal.ref, key::id) : key::empty;
+	const Atom goal_id = goal.present ? _goal_errand_id(state, goal.ref) : key::empty;
 	const Vector2i size = map_size(state, context);
 	const int64_t level = level_rules::level_of(state, dict_value(entry));
 	const int64_t start_tile = _tile_index_of(state, entry, size);

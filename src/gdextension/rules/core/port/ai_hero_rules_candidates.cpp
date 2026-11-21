@@ -240,6 +240,13 @@ void _profile_add(State &state, DictRef context, Atom profile_key, int64_t start
 	state.set(context, str(key::profile), dict_value(profile));
 }
 
+Atom _goal_errand_id(State &state, DictRef goal) {
+	if (ai::string_or_empty(state, goal, key::kind) == key::hold) {
+		return key::empty;
+	}
+	return ai::string_or_empty(state, goal, key::id);
+}
+
 bool _keeps_away(State &state, DictRef session, DictRef entry, DictRef candidate, ArrayRef dangers) {
 	const Atom kind = ai::string_or_empty(state, candidate, key::kind);
 	const int64_t index = gd::int_field(state, candidate, key::index, -1);
@@ -428,8 +435,8 @@ DictRef _best_candidate(State &state, DictRef session, DictRef context, DictRef 
 					if (score <= 0.0) {
 						continue;
 					}
-				} else if (has_goal && ai::string_or_empty(state, goal, key::id) != key::empty) {
-					const Atom goal_id = ai::string_or_empty(state, goal, key::id);
+				} else if (has_goal && _goal_errand_id(state, goal) != key::empty) {
+					const Atom goal_id = _goal_errand_id(state, goal);
 					if (goal_id == ai::string_or_empty(state, candidate, key::id)) {
 						score *= tunable(state, key::GOAL_CONTINUITY_BONUS);
 					}

@@ -1106,7 +1106,7 @@ DictRef _strategic_candidate(State &state, DictRef session, DictRef context, Dic
 				}
 				double score = value / (1.0 + static_cast<double>(distance) / static_cast<double>(movement_max));
 				if (has_goal) {
-					const Atom goal_id = ai::string_or_empty(state, goal, key::id);
+					const Atom goal_id = _goal_errand_id(state, goal);
 					if (goal_id != key::empty && goal_id == ai::string_or_empty(state, candidate, key::id)) {
 						score *= tunable_float(state, key::GOAL_CONTINUITY_BONUS);
 					}
