@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-field-armies-pool-20261121",
- "currentSliceTitle": "A field army may pool into a more experienced one past a rival hero that keeps both and the main army away, or to take the winning town. m743 ends on day 233 (without the hold fix) or 256; mg-a loses its day-75 win.",
+ "currentSliceId": "ai-main-walks-to-field-army-20261121",
+ "currentSliceTitle": "The main army short of what it has to beat may walk to a field army and take its troops. m181 (two equal heroes trading empty towns to the 320-day cap) ends on day 197, m743 on day 137; s2 ends on day 122 instead of 70.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T17:19:19Z",
+ "updatedAt": "2026-11-21T19:12:46Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-main-walks-to-field-army-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "The main army short of what it has to beat may walk to a field army and take its troops. m181 (two equal heroes trading empty towns to the 320-day cap) ends on day 197, m743 on day 137; s2 ends on day 122 instead of 70.",
+   "commit": "c0dfb38ba"
+  },
   {
    "id": "ai-field-armies-pool-20261121",
    "status": "completed",
