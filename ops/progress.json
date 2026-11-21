@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "hero-progression-crown-rescans-20261121",
- "currentSliceTitle": "Specialty availability worked out once per scan: a crown wearer with six mastered specialties no longer makes 2M throwaway nodes per roster rebuild; XL peaks 5.4 to 4.1 GB and 8.3 to 4.4 GB, play identical.",
+ "currentSliceId": "battle-sim-throwaway-20261121",
+ "currentSliceTitle": "Battle simulations make about half the throwaway nodes: lookups without empty records, specialty, mana-cost and special-id answers kept by their inputs, effects read in place; XL peaks 3.53 to 2.26 GB and 2.89 to 1.62 GB, play identical.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T09:57:57Z",
+ "updatedAt": "2026-11-21T11:31:08Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "battle-sim-throwaway-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "Battle simulations make about half the throwaway nodes: lookups without empty records, specialty, mana-cost and special-id answers kept by their inputs, effects read in place; XL peaks 3.53 to 2.26 GB and 2.89 to 1.62 GB, play identical.",
+   "commit": "4b696e417"
+  },
   {
    "id": "hero-progression-crown-rescans-20261121",
    "status": "completed",

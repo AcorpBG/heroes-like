@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-21 `battle-sim-throwaway-20261121` (4b696e417): Battle simulations make about half the throwaway nodes: lookups without empty records, specialty, mana-cost and special-id answers kept by their inputs, effects read in place; XL peaks 3.53 to 2.26 GB and 2.89 to 1.62 GB, play identical.
 - 2026-11-21 `hero-progression-crown-rescans-20261121` (75860263a): Specialty availability worked out once per scan: a crown wearer with six mastered specialties no longer makes 2M throwaway nodes per roster rebuild; XL peaks 5.4 to 4.1 GB and 8.3 to 4.4 GB, play identical.
 - 2026-11-20 `ai-gate-stretch-mismatches-20261120` (090f1c9c0): Gate ways count as far as the walk past the exit gets; legs walked over stretch ground; unexplored sites in the way count; fights past unguarded gates previewed; mixed-level portals only gates. Idle same-day turn-backs 11 to 0.
 - 2026-11-12 `double-creature-health-20261112` (b1f11e9ef): All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.
