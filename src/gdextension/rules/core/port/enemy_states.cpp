@@ -258,13 +258,28 @@ int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
 Value specialties(State &state);
 int64_t max_specialties_per_hero(State &state);
 int64_t _distinct_specialty_count(State &state, DictRef hero_state);
+// What _specialty_is_available reads of a hero beside one specialty's rank:
+// the same for every specialty while the hero is unchanged, so a scan works it
+// out once, when first needed. (Worked out for each specialty, a level 53
+// hero with six specialties mastered who put on the Crown of the Empty Throne
+// made two million throwaway nodes each time its roster entry was rebuilt:
+// 28 queued choices, each scanning the catalog twice.)
+struct SpecialtyRoom {
+	bool has_most = false;
+	int64_t most = 0;
+	bool has_distinct = false;
+	int64_t distinct = 0;
+};
 bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id);
+bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id, SpecialtyRoom &room);
 ArrayRef available_specialty_ids(State &state, DictRef hero_state);
+ArrayRef available_specialty_ids(State &state, DictRef hero_state, SpecialtyRoom &room);
 Atom growth_seed(State &state, DictRef hero_state);
 Atom command_path(State &state, DictRef hero_state);
 ArrayRef _normalize_specialty_id_list(State &state, const Value &value);
-ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number);
+ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number, ArrayRef available);
 DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number);
+DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number, ArrayRef available);
 DictRef current_pending_choice(State &state, DictRef hero_state);
 DictRef specialty_definition(State &state, Atom specialty_id);
 // Defined in overworld_rules_hero_choices.cpp.
@@ -822,6 +837,11 @@ ArrayRef _normalize_pending_choices(State &state, const Value &value, DictRef he
 DictRef _reconcile_pending_choices(State &state, DictRef hero_state) {
 	const DictRef hero = hero_state;
 	const ArrayRef pending_choices = state.new_array();
+	// The hero does not change in the loop: what is available to it is the
+	// same on every pass, worked out on the first.
+	SpecialtyRoom room;
+	ArrayRef available = 0;
+	bool has_available = false;
 	for (const Value &pending_choice : gd::items(state, get_or_new_array(state, hero, key::pending_specialty_choices))) {
 		if (!gd::is_dict(pending_choice)) {
 			continue;
@@ -830,15 +850,18 @@ DictRef _reconcile_pending_choices(State &state, DictRef hero_state) {
 		const ArrayRef options = state.new_array();
 		for (const Value &specialty_id_value : gd::items(state, get_or_new_array(state, pending_choice.ref, key::options))) {
 			const Atom specialty_id = gd::stringify_or_fallback(state, specialty_id_value);
-			if (_specialty_is_available(state, hero, specialty_id) && !gd::array_has(state, options, str(specialty_id))) {
+			if (_specialty_is_available(state, hero, specialty_id, room) && !gd::array_has(state, options, str(specialty_id))) {
 				state.append(options, str(specialty_id));
 			}
 		}
-		const ArrayRef offer = _offer_order(state, hero, level);
+		if (!has_available) {
+			available = available_specialty_ids(state, hero, room);
+			has_available = true;
+		}
+		const ArrayRef offer = _offer_order(state, hero, level, available);
 		if (state.array_size(offer) > 0) {
-			// min(CHOICE_SIZE, available_specialty_ids(hero).size()): the same on
-			// every pass of the loop, as the hero does not change in it.
-			const int64_t wanted = std::min<int64_t>(kChoiceSize, state.array_size(available_specialty_ids(state, hero)));
+			// min(CHOICE_SIZE, available_specialty_ids(hero).size()).
+			const int64_t wanted = std::min<int64_t>(kChoiceSize, state.array_size(available));
 			for (const Value &specialty_id : gd::items(state, array_value(offer))) {
 				if (state.array_size(options) >= wanted) {
 					break;
@@ -865,8 +888,16 @@ DictRef _enqueue_missing_choice_groups(State &state, DictRef hero_state) {
 	const Value specialties = get_or_new_array(state, hero, key::specialties);
 	int64_t allocated_choices = gd::add(state.array_size(gd::as_array(specialties)), raw_pending_choices_remaining(state, hero));
 	int64_t next_level = gd::add(allocated_choices, 2);
+	// Only the queue grows in the loop: what is available is the same on every
+	// pass, worked out on the first.
+	ArrayRef available = 0;
+	bool has_available = false;
 	while (allocated_choices < expected_choices) {
-		const DictRef choice_group = _build_choice_group(state, hero, next_level);
+		if (!has_available) {
+			available = available_specialty_ids(state, hero);
+			has_available = true;
+		}
+		const DictRef choice_group = _build_choice_group(state, hero, next_level, available);
 		if (gd::is_empty(state, choice_group)) {
 			break;
 		}
@@ -927,6 +958,11 @@ int64_t _distinct_specialty_count(State &state, DictRef hero_state) {
 }
 
 bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id) {
+	SpecialtyRoom room;
+	return _specialty_is_available(state, hero_state, specialty_id, room);
+}
+
+bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id, SpecialtyRoom &room) {
 	if (gd::is_empty(state, _specialty_row(state, specialty_id))) {
 		return false;
 	}
@@ -934,16 +970,31 @@ bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id
 	if (rank >= max_rank_for_specialty(state, specialty_id)) {
 		return false;
 	}
-	// Crown of the Empty Throne: its wearer may hold a seventh specialty.
-	const int64_t most = gd::add(max_specialties_per_hero(state), artifact_rules::hero_has_special(state, hero_state, key::special_seventh_specialty) ? 1 : 0);
-	return rank > 0 || _distinct_specialty_count(state, hero_state) < most;
+	if (!room.has_most) {
+		// Crown of the Empty Throne: its wearer may hold a seventh specialty.
+		room.most = gd::add(max_specialties_per_hero(state), artifact_rules::hero_has_special(state, hero_state, key::special_seventh_specialty) ? 1 : 0);
+		room.has_most = true;
+	}
+	if (rank > 0) {
+		return true;
+	}
+	if (!room.has_distinct) {
+		room.distinct = _distinct_specialty_count(state, hero_state);
+		room.has_distinct = true;
+	}
+	return room.distinct < room.most;
 }
 
 ArrayRef available_specialty_ids(State &state, DictRef hero_state) {
+	SpecialtyRoom room;
+	return available_specialty_ids(state, hero_state, room);
+}
+
+ArrayRef available_specialty_ids(State &state, DictRef hero_state, SpecialtyRoom &room) {
 	const ArrayRef available = state.new_array();
 	for (const Value &specialty : gd::items(state, specialties(state))) {
 		const Atom specialty_id = gd::stringify_or_fallback(state, variant_get(state, specialty, key::id, str(key::empty)));
-		if (_specialty_is_available(state, hero_state, specialty_id)) {
+		if (_specialty_is_available(state, hero_state, specialty_id, room)) {
 			state.append(available, str(specialty_id));
 		}
 	}
@@ -1001,13 +1052,13 @@ ArrayRef _normalize_specialty_id_list(State &state, const Value &value) {
 	return normalized;
 }
 
-ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number) {
+ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number, ArrayRef available) {
 	// Each candidate's place is a weighted draw (Efraimidis-Spirakis keys)
 	// seeded by the hero's growth seed and the level; Godot's sort_custom
-	// orders the keys, largest first.
-	const ArrayRef available = available_specialty_ids(state, hero_state);
+	// orders the keys, largest first. available: available_specialty_ids(hero),
+	// read only.
 	if (state.array_size(available) == 0) {
-		return available;
+		return state.new_array();
 	}
 	const ArrayRef focus = _normalize_specialty_id_list(state, get_or_new_array(state, hero_state, key::specialty_focus_ids));
 	const Atom path = command_path(state, hero_state);
@@ -1049,7 +1100,11 @@ ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number) {
 }
 
 DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number) {
-	const ArrayRef options = _offer_order(state, hero_state, level_number);
+	return _build_choice_group(state, hero_state, level_number, available_specialty_ids(state, hero_state));
+}
+
+DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number, ArrayRef available) {
+	const ArrayRef options = _offer_order(state, hero_state, level_number, available);
 	const int64_t size = state.array_size(options);
 	if (size == 0) {
 		return state.new_dict();
