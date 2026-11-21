@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-21 `hero-progression-crown-rescans-20261121` (75860263a): Specialty availability worked out once per scan: a crown wearer with six mastered specialties no longer makes 2M throwaway nodes per roster rebuild; XL peaks 5.4 to 4.1 GB and 8.3 to 4.4 GB, play identical.
 - 2026-11-20 `ai-gate-stretch-mismatches-20261120` (090f1c9c0): Gate ways count as far as the walk past the exit gets; legs walked over stretch ground; unexplored sites in the way count; fights past unguarded gates previewed; mixed-level portals only gates. Idle same-day turn-backs 11 to 0.
 - 2026-11-12 `double-creature-health-20261112` (b1f11e9ef): All 232 creatures have double health; in arena town-army fights the side with more shooters wins 37% of even fights (46% before). Spells' flat numbers count half; faction levelling drifts.
 - 2026-11-12 `faction-army-level-20261112` (a0cc973e0): Each faction carries one factor for its tier 1-5 lines (price, growth following) and one for tiers 6-7 (health, damage); town armies win 45-57% of even fights on fresh dice (27-69% before).

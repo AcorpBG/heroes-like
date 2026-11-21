@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-gate-stretch-mismatches-20261120",
- "currentSliceTitle": "Gate ways count as far as the walk past the exit gets; legs walked over stretch ground; unexplored sites in the way count; fights past unguarded gates previewed; mixed-level portals only gates. Idle same-day turn-backs 11 to 0.",
+ "currentSliceId": "hero-progression-crown-rescans-20261121",
+ "currentSliceTitle": "Specialty availability worked out once per scan: a crown wearer with six mastered specialties no longer makes 2M throwaway nodes per roster rebuild; XL peaks 5.4 to 4.1 GB and 8.3 to 4.4 GB, play identical.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-20T18:10:02Z",
+ "updatedAt": "2026-11-21T09:57:57Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "hero-progression-crown-rescans-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "Specialty availability worked out once per scan: a crown wearer with six mastered specialties no longer makes 2M throwaway nodes per roster rebuild; XL peaks 5.4 to 4.1 GB and 8.3 to 4.4 GB, play identical.",
+   "commit": "75860263a"
+  },
   {
    "id": "ai-gate-stretch-mismatches-20261120",
    "status": "completed",
