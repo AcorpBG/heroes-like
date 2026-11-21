@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-hold-no-continuity-bonus-20261121",
- "currentSliceTitle": "Holding a town keeps no goal bonus (x1.25): staying is weighed afresh each day. With the doorway fix, m392 ends on day 214 and m743 on day 227 (both at the 320-day cap in the batch); all six check seeds change.",
+ "currentSliceId": "ai-field-armies-pool-20261121",
+ "currentSliceTitle": "A field army may pool into a more experienced one past a rival hero that keeps both and the main army away, or to take the winning town. m743 ends on day 233 (without the hold fix) or 256; mg-a loses its day-75 win.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T17:14:49Z",
+ "updatedAt": "2026-11-21T17:19:19Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-field-armies-pool-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "A field army may pool into a more experienced one past a rival hero that keeps both and the main army away, or to take the winning town. m743 ends on day 233 (without the hold fix) or 256; mg-a loses its day-75 win.",
+   "commit": "cad60cca7"
+  },
   {
    "id": "ai-hold-no-continuity-bonus-20261121",
    "status": "completed",
