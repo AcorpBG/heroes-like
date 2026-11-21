@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "battle-sim-throwaway-20261121",
- "currentSliceTitle": "Battle simulations make about half the throwaway nodes: lookups without empty records, specialty, mana-cost and special-id answers kept by their inputs, effects read in place; XL peaks 3.53 to 2.26 GB and 2.89 to 1.62 GB, play identical.",
+ "currentSliceId": "rmg-cut-off-one-way-monolith-20261121",
+ "currentSliceTitle": "Cut-off check counts one-way monoliths one way: areas join only when each reaches the other, so a one-way link that lost its exit triggers the repair. m502's split map: 8 towns cut off to none; other capped maps unchanged.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T11:31:08Z",
+ "updatedAt": "2026-11-21T15:55:16Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "rmg-cut-off-one-way-monolith-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "Cut-off check counts one-way monoliths one way: areas join only when each reaches the other, so a one-way link that lost its exit triggers the repair. m502's split map: 8 towns cut off to none; other capped maps unchanged.",
+   "commit": "471c14c66"
+  },
   {
    "id": "battle-sim-throwaway-20261121",
    "status": "completed",
