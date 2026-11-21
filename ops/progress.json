@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "rmg-cut-off-one-way-monolith-20261121",
- "currentSliceTitle": "Cut-off check counts one-way monoliths one way: areas join only when each reaches the other, so a one-way link that lost its exit triggers the repair. m502's split map: 8 towns cut off to none; other capped maps unchanged.",
+ "currentSliceId": "ai-route-doorway-defender-20261121",
+ "currentSliceTitle": "A hostile town's doorway defender walls no route to that town: its fight is in the town's value already. m392, capped at day 320 in the batch, now ends on day 267; six seeds identical to main.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T15:55:16Z",
+ "updatedAt": "2026-11-21T16:57:39Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-route-doorway-defender-20261121",
+   "status": "completed",
+   "completedAt": "2026-11-21",
+   "summary": "A hostile town's doorway defender walls no route to that town: its fight is in the town's value already. m392, capped at day 320 in the batch, now ends on day 267; six seeds identical to main.",
+   "commit": "ebd1ba0ff"
+  },
   {
    "id": "rmg-cut-off-one-way-monolith-20261121",
    "status": "completed",
