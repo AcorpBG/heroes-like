@@ -247,7 +247,7 @@ int64_t _contextual_attack_bonus(State &state, DictRef stack, DictRef battle) {
 	if (_battle_has_tag(state, battle, key::wall_pressure) && _stack_is_assault_side(state, stack, battle) && !is_ranged(state, stack) && round_number >= 3) {
 		bonus += 1;
 	}
-	if (_hero_has_trait(state, battle, side, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+	if (_hero_has_trait(state, battle, side, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 		bonus += 1;
 	}
 	if (_hero_has_trait(state, battle, side, key::packhunter) && _enemy_wounded_count(state, battle, side) > 0) {
@@ -256,7 +256,7 @@ int64_t _contextual_attack_bonus(State &state, DictRef stack, DictRef battle) {
 	if (_hero_has_trait(state, battle, side, key::vanguard) && !is_ranged(state, stack) && battle_round(state, battle) <= 2) {
 		bonus += 1;
 	}
-	if (_hero_has_trait(state, battle, side, key::ambusher) && !is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::ambush_cover })) && battle_round(state, battle) <= 2) {
+	if (_hero_has_trait(state, battle, side, key::ambusher) && !is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::ambush_cover }) && battle_round(state, battle) <= 2) {
 		bonus += 1;
 	}
 	if (_hero_has_trait(state, battle, side, key::bogwise) && (_battle_has_tag(state, battle, key::bog_channels) || battle_terrain_is(state, battle, key::mire)) && has_skirmish_ability(state, stack)) {
@@ -264,7 +264,7 @@ int64_t _contextual_attack_bonus(State &state, DictRef stack, DictRef battle) {
 	}
 	if (gd::string_field(state, stack, key::faction_id, key::empty) == key::faction_sunvault && _stack_has_positive_effect(state, stack, battle)) {
 		bonus += 1;
-		if (is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+		if (is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 			bonus += 1;
 		}
 	}
@@ -278,7 +278,7 @@ int64_t _contextual_defense_bonus(State &state, DictRef stack, DictRef battle) {
 	// round_number is read (and converted) but not used, as in GDScript.
 	const int64_t round_number = battle_round(state, battle);
 	static_cast<void>(round_number);
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
+	if (_battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
 		bonus += 1;
 	}
 	if (_battle_has_tag(state, battle, key::fortress_lane) && _stack_is_anchor_side(state, stack, battle) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
@@ -307,13 +307,13 @@ int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle) 
 	if (_stack_is_isolated(state, battle, stack)) {
 		bonus -= 1;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
+	if (_battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
 		bonus += 1;
 	}
 	if (_battle_has_tag(state, battle, key::fortress_lane) && _stack_is_anchor_side(state, stack, battle) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
 		bonus += 1;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane })) && is_ranged(state, stack)) {
+	if (_battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane }) && is_ranged(state, stack)) {
 		bonus += 1;
 	}
 	if (_reserve_wave_is_active_for_side(state, battle, side) && _stack_is_anchor_side(state, stack, battle) && !_stack_is_isolated(state, battle, stack)) {
@@ -328,24 +328,24 @@ int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle) 
 	if (_battle_has_tag(state, battle, key::wall_pressure) && _stack_is_assault_side(state, stack, battle) && !is_ranged(state, stack) && round_number >= 3) {
 		bonus += 1;
 	}
-	if (spell_rules::has_any_effect_ids(state, stack, battle, array_value(string_array(state, { key::status_harried, key::status_staggered })))) {
+	if (spell_rules::has_any_effect_id_in(state, stack, battle, { key::status_harried, key::status_staggered })) {
 		bonus -= 1;
 	}
-	const DictRef shielding = _ability_by_id(state, stack, key::shielding);
-	if (!gd::is_empty(state, shielding)) {
+	DictRef shielding = 0;
+	if (_find_ability(state, stack, key::shielding, shielding)) {
 		bonus = gd::add(bonus, engine_max<int64_t>(0, gd::int_field(state, shielding, key::cohesion_hold_bonus, 0)));
 	}
 	const Value traits = _hero_battle_traits(state, battle, side);
 	if (_has_battle_trait(state, traits, key::linekeeper) && (gd::bool_field(state, stack, key::defending, false) || _brace_available(state, stack, battle) || _has_ability(state, stack, key::formation_guard))) {
 		bonus = gd::add(bonus, 1);
 	}
-	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 		bonus = gd::add(bonus, 1);
 	}
 	if (_has_battle_trait(state, traits, key::bogwise) && (_battle_has_tag(state, battle, key::bog_channels) || battle_terrain_is(state, battle, key::mire)) && !_stack_is_isolated(state, battle, stack)) {
 		bonus = gd::add(bonus, 1);
 	}
-	if (_has_battle_trait(state, traits, key::ambusher) && !is_ranged(state, stack) && battle_round(state, battle) <= 2 && _battle_has_any_tags(state, battle, string_array(state, { key::ambush_cover }))) {
+	if (_has_battle_trait(state, traits, key::ambusher) && !is_ranged(state, stack) && battle_round(state, battle) <= 2 && _battle_has_any_tag_in(state, battle, { key::ambush_cover })) {
 		bonus = gd::add(bonus, 1);
 	}
 	if (gd::string_field(state, stack, key::faction_id, key::empty) == key::faction_embercourt && _side_has_role_mix(state, battle, side) && !_stack_is_isolated(state, battle, stack)) {
@@ -356,7 +356,7 @@ int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle) 
 	}
 	if (gd::string_field(state, stack, key::faction_id, key::empty) == key::faction_sunvault && _stack_has_positive_effect(state, stack, battle) && !_stack_is_isolated(state, battle, stack)) {
 		bonus = gd::add(bonus, 1);
-		if (_battle_has_any_tags(state, battle, string_array(state, { key::fortified_line, key::elevated_fire }))) {
+		if (_battle_has_any_tag_in(state, battle, { key::fortified_line, key::elevated_fire })) {
 			bonus = gd::add(bonus, 1);
 		}
 	}
@@ -374,7 +374,7 @@ int64_t _contextual_initiative_bonus(State &state, DictRef stack, DictRef battle
 	if (_battle_has_tag(state, battle, key::open_lane) && is_ranged(state, stack) && battle_round(state, battle) <= 2) {
 		bonus += 1;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
+	if (_battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
 		bonus += 1;
 	}
 	if (_battle_has_tag(state, battle, key::fortress_lane) && _stack_is_anchor_side(state, stack, battle) && !is_ranged(state, stack) && holds_line(state, stack, battle)) {
@@ -396,10 +396,10 @@ int64_t _contextual_initiative_bonus(State &state, DictRef stack, DictRef battle
 		bonus += 1;
 	}
 	const Value traits = _hero_battle_traits(state, battle, side);
-	if (_has_battle_trait(state, traits, key::linekeeper) && (gd::bool_field(state, stack, key::defending, false) || _battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })))) {
+	if (_has_battle_trait(state, traits, key::linekeeper) && (gd::bool_field(state, stack, key::defending, false) || _battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }))) {
 		bonus += 1;
 	}
-	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 		bonus += 1;
 	}
 	if (_has_battle_trait(state, traits, key::ambusher) && !is_ranged(state, stack) && (battle_terrain_is(state, battle, key::forest) || _battle_has_tag(state, battle, key::ambush_cover)) && battle_round(state, battle) <= 2) {
@@ -421,10 +421,10 @@ int64_t _contextual_momentum_bonus(State &state, DictRef stack, DictRef battle) 
 	int64_t bonus = 0;
 	const Atom side = gd::string_field(state, stack, key::side, key::empty);
 	const int64_t round_number = battle_round(state, battle);
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::ambush_cover })) && !is_ranged(state, stack) && battle_round(state, battle) <= 2) {
+	if (_battle_has_any_tag_in(state, battle, { key::ambush_cover }) && !is_ranged(state, stack) && battle_round(state, battle) <= 2) {
 		bonus += 1;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane })) && is_ranged(state, stack) && battle_round(state, battle) <= 2) {
+	if (_battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane }) && is_ranged(state, stack) && battle_round(state, battle) <= 2) {
 		bonus += 1;
 	}
 	if (_battle_has_tag(state, battle, key::bog_channels) && has_skirmish_ability(state, stack)) {
@@ -449,7 +449,7 @@ int64_t _contextual_momentum_bonus(State &state, DictRef stack, DictRef battle) 
 	if (_has_battle_trait(state, traits, key::ambusher) && !is_ranged(state, stack) && battle_round(state, battle) <= 2 && (battle_terrain_is(state, battle, key::forest) || _battle_has_tag(state, battle, key::ambush_cover))) {
 		bonus += 1;
 	}
-	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+	if (_has_battle_trait(state, traits, key::artillerist) && is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 		bonus += 1;
 	}
 	if (_has_battle_trait(state, traits, key::bogwise) && (_battle_has_tag(state, battle, key::bog_channels) || battle_terrain_is(state, battle, key::mire)) && has_skirmish_ability(state, stack)) {
@@ -461,7 +461,7 @@ int64_t _contextual_momentum_bonus(State &state, DictRef stack, DictRef battle) 
 		bool relay_holds = false;
 		if (!gd::is_empty(state, resonance_relay)) {
 			const int64_t positive_effect_count = _side_positive_effect_count(state, battle, side);
-			relay_holds = positive_effect_count >= gd::int_field(state, resonance_relay, key::minimum_calibrated_stacks, 2) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::fortified_line }));
+			relay_holds = positive_effect_count >= gd::int_field(state, resonance_relay, key::minimum_calibrated_stacks, 2) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::fortified_line });
 		}
 		if (relay_holds) {
 			bonus = gd::add(bonus, gd::int_field(state, resonance_relay, key::terrain_momentum_bonus, 0));
@@ -523,7 +523,7 @@ int64_t _faction_initiative_bonus(State &state, DictRef stack, DictRef battle) {
 		}
 		if (_stack_has_positive_effect(state, stack, battle)) {
 			bonus = gd::add(bonus, 1);
-			if (is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+			if (is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 				bonus = gd::add(bonus, 1);
 			}
 		}
@@ -540,7 +540,7 @@ int64_t _faction_initiative_bonus(State &state, DictRef stack, DictRef battle) {
 		if (gd::bool_field(state, stack, key::defending, false) && battle_round(state, battle) >= 3) {
 			bonus += 1;
 		}
-		if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::ambush_cover })) && !spell_rules::has_any_effect_ids(state, stack, battle, array_value(string_array(state, { key::status_harried, key::status_staggered })))) {
+		if (_battle_has_any_tag_in(state, battle, { key::chokepoint, key::ambush_cover }) && !spell_rules::has_any_effect_id_in(state, stack, battle, { key::status_harried, key::status_staggered })) {
 			bonus += 1;
 		}
 		return bonus;
@@ -550,14 +550,14 @@ int64_t _faction_initiative_bonus(State &state, DictRef stack, DictRef battle) {
 		if (_side_has_ability(state, battle, side, key::formation_guard) && battle_round(state, battle) >= 3) {
 			bonus += 1;
 		}
-		if (is_ranged(state, stack) && _battle_has_any_tags(state, battle, string_array(state, { key::fortress_lane, key::battery_nest }))) {
+		if (is_ranged(state, stack) && _battle_has_any_tag_in(state, battle, { key::fortress_lane, key::battery_nest })) {
 			bonus += 1;
 		}
 		return bonus;
 	}
 	if (faction_id == key::faction_veilmourn) {
 		int64_t bonus = 0;
-		if (_battle_has_any_tags(state, battle, string_array(state, { key::fog_bank, key::ambush_cover }))) {
+		if (_battle_has_any_tag_in(state, battle, { key::fog_bank, key::ambush_cover })) {
 			bonus += 1;
 		}
 		if (_stack_is_isolated(state, battle, stack)) {

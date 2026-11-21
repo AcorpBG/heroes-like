@@ -58,40 +58,88 @@ DictRef source_ability_context(State &state, const Value &source, DictRef abilit
 	return context;
 }
 
+// _alive_stacks_for_side's stacks walked where they are, in their order: each Dictionary of the side whose
+// total_health is above 0. visit returns false to stop the walk.
+template <typename Visit>
+void walk_alive_stacks(State &state, DictRef battle, Atom side, Visit visit) {
+	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+		if (gd::is_dict(stack) && gd::to_string(state.get(stack.ref, str(key::side), str(key::empty))) == side
+				&& gd::to_int(state, state.get(stack.ref, str(key::total_health), gd::int_value(0))) > 0 && !visit(stack.ref)) {
+			return;
+		}
+	}
+}
+
 } // namespace
 
-DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id) {
+bool _find_ability(State &state, DictRef stack, Atom ability_id, DictRef &found) {
 	// Censure: a Censured stack's abilities do not work.
 	if (ability_id == key::empty || spell_rules::censured(state, stack)) {
-		return state.new_dict();
+		return false;
 	}
 	for (const Value &ability : gd::field_items(state, stack, str(key::abilities))) {
 		if (gd::is_dict(ability) && gd::string_field(state, ability.ref, key::id, key::empty) == ability_id) {
-			return ability.ref;
+			found = ability.ref;
+			return true;
 		}
 	}
-	return state.new_dict();
+	return false;
 }
 
+DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id) {
+	DictRef found = 0;
+	return _find_ability(state, stack, ability_id, found) ? found : state.new_dict();
+}
+
+DictRef _ability_or_blank(State &state, DictRef stack, Atom ability_id, AbilityBlank &blank) {
+	DictRef found = 0;
+	if (_find_ability(state, stack, ability_id, found)) {
+		return found;
+	}
+	if (!blank.made) {
+		blank.node = state.new_dict();
+		blank.made = true;
+	}
+	return blank.node;
+}
+
+// The ability as the unit's content row authors it, else the stack's own.
 DictRef _authored_ability_by_id(State &state, DictRef stack, Atom ability_id) {
 	if (spell_rules::censured(state, stack)) {
 		return state.new_dict();
 	}
 	const DictRef unit = gd::content_row(state, state::ContentTable::Unit, gd::string_field(state, stack, key::unit_id, key::empty));
-	const DictRef authored = _ability_by_id(state, unit, ability_id);
-	return !gd::is_empty(state, authored) ? authored : _ability_by_id(state, stack, ability_id);
+	DictRef authored = 0;
+	return _find_ability(state, unit, ability_id, authored) ? authored : _ability_by_id(state, stack, ability_id);
+}
+
+DictRef _authored_ability_or_blank(State &state, DictRef stack, Atom ability_id, AbilityBlank &blank) {
+	if (!spell_rules::censured(state, stack)) {
+		const DictRef unit = gd::content_row(state, state::ContentTable::Unit, gd::string_field(state, stack, key::unit_id, key::empty));
+		DictRef authored = 0;
+		if (_find_ability(state, unit, ability_id, authored)) {
+			return authored;
+		}
+		return _ability_or_blank(state, stack, ability_id, blank);
+	}
+	if (!blank.made) {
+		blank.node = state.new_dict();
+		blank.made = true;
+	}
+	return blank.node;
 }
 
 bool _has_ability(State &state, DictRef stack, Atom ability_id) {
-	return !gd::is_empty(state, _ability_by_id(state, stack, ability_id));
+	DictRef found = 0;
+	return _find_ability(state, stack, ability_id, found);
 }
 
 ArrayRef _side_ability_payloads(State &state, DictRef battle, Atom side, Atom ability_id) {
 	const ArrayRef payloads = state.new_array();
 	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
 	for (const Value &stack : gd::items(state, array_value(alive))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(stack), ability_id);
-		if (!gd::is_empty(state, ability)) {
+		DictRef ability = 0;
+		if (_find_ability(state, gd::as_dict(stack), ability_id, ability)) {
 			state.append(payloads, dict_value(ability));
 		}
 	}
@@ -99,7 +147,13 @@ ArrayRef _side_ability_payloads(State &state, DictRef battle, Atom side, Atom ab
 }
 
 bool _side_has_ability(State &state, DictRef battle, Atom side, Atom ability_id) {
-	return state.array_size(_side_ability_payloads(state, battle, side, ability_id)) != 0;
+	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
+	for (const Value &stack : gd::items(state, array_value(alive))) {
+		if (_has_ability(state, gd::as_dict(stack), ability_id)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 double _side_max_ability_float(State &state, DictRef battle, Atom side, Atom ability_id, Atom key_name, double default_value) {
@@ -128,7 +182,7 @@ int64_t _side_max_authored_ability_int(State &state, DictRef battle, Atom side, 
 	int64_t best = 0;
 	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
 	for (const Value &stack : gd::items(state, array_value(alive))) {
-		if (gd::is_empty(state, _ability_by_id(state, gd::as_dict(stack), ability_id))) {
+		if (!_has_ability(state, gd::as_dict(stack), ability_id)) {
 			continue;
 		}
 		const DictRef ability = _authored_ability_by_id(state, gd::as_dict(stack), ability_id);
@@ -175,8 +229,9 @@ DictRef _charter_retaliation_aura_context(State &state, DictRef stack, DictRef b
 		if (source_id == stack_id) {
 			continue;
 		}
-		const DictRef brace = _ability_by_id(state, source_stack, key::brace);
-		if (gd::float_field(state, brace, key::ally_retaliation_multiplier, 1.0) <= 1.0) {
+		// A stack without a brace reads the default 1.0.
+		DictRef brace = 0;
+		if (!_find_ability(state, source_stack, key::brace, brace) || gd::float_field(state, brace, key::ally_retaliation_multiplier, 1.0) <= 1.0) {
 			continue;
 		}
 		const int64_t tier = gd::int_field(state, stack, key::tier, 1);
@@ -199,8 +254,8 @@ DictRef _counter_ambush_flare_context(State &state, DictRef battle, DictRef prot
 	}
 	const ArrayRef sources = _alive_stacks_for_side(state, battle, gd::string_field(state, protected_stack, key::side, key::empty));
 	for (const Value &source : gd::items(state, array_value(sources))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(source), key::counter_ambush_flare);
-		if (gd::is_empty(state, ability)) {
+		DictRef ability = 0;
+		if (!_find_ability(state, gd::as_dict(source), key::counter_ambush_flare, ability)) {
 			continue;
 		}
 		Value countered;
@@ -237,6 +292,15 @@ bool _battle_has_tag(State &state, DictRef battle, Atom tag) {
 bool _battle_has_any_tags(State &state, DictRef battle, ArrayRef tags) {
 	for (const Value &tag_value : gd::items(state, array_value(tags))) {
 		if (_battle_has_tag(state, battle, gd::to_string(tag_value))) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool _battle_has_any_tag_in(State &state, DictRef battle, std::initializer_list<Atom> tags) {
+	for (const Atom tag : tags) {
+		if (_battle_has_tag(state, battle, tag)) {
 			return true;
 		}
 	}
@@ -290,8 +354,8 @@ bool _is_town_defense_context(State &state, const Value &context) {
 }
 
 bool _reach_available(State &state, DictRef stack, DictRef battle) {
-	const DictRef reach = _ability_by_id(state, stack, key::reach);
-	if (gd::is_empty(state, reach)) {
+	DictRef reach = 0;
+	if (!_find_ability(state, stack, key::reach, reach)) {
 		return false;
 	}
 	Value held_objective_types;
@@ -306,8 +370,8 @@ bool _reach_available(State &state, DictRef stack, DictRef battle) {
 }
 
 bool _hookline_available(State &state, DictRef stack, DictRef battle) {
-	const DictRef hookline = _ability_by_id(state, stack, key::hookline);
-	if (gd::is_empty(state, hookline)) {
+	DictRef hookline = 0;
+	if (!_find_ability(state, stack, key::hookline, hookline)) {
 		return false;
 	}
 	const int64_t current_round = gd::int_field(state, battle, key::round, 1);
@@ -339,8 +403,8 @@ bool _brace_has_held_objective(State &state, DictRef stack, DictRef battle, Dict
 }
 
 bool _brace_available(State &state, DictRef stack, DictRef battle) {
-	const DictRef brace = _ability_by_id(state, stack, key::brace);
-	if (gd::is_empty(state, brace)) {
+	DictRef brace = 0;
+	if (!_find_ability(state, stack, key::brace, brace)) {
 		return false;
 	}
 	Value held_objective_types;
@@ -437,52 +501,49 @@ bool _side_has_linked_unit(State &state, DictRef battle, Atom side, const Value 
 
 int64_t _side_defending_count(State &state, DictRef battle, Atom side) {
 	int64_t total = 0;
-	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
-	for (const Value &stack : gd::items(state, array_value(alive))) {
-		if (gd::bool_field(state, gd::as_dict(stack), key::defending, false)) {
+	walk_alive_stacks(state, battle, side, [&](DictRef stack) {
+		if (gd::bool_field(state, stack, key::defending, false)) {
 			total = gd::add(total, 1);
 		}
-	}
+		return true;
+	});
 	return total;
 }
 
 int64_t _allied_melee_count(State &state, DictRef battle, Atom side) {
 	int64_t total = 0;
-	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
-	for (const Value &stack : gd::items(state, array_value(alive))) {
-		if (!gd::bool_field(state, gd::as_dict(stack), key::ranged, false)) {
+	walk_alive_stacks(state, battle, side, [&](DictRef stack) {
+		if (!gd::bool_field(state, stack, key::ranged, false)) {
 			total = gd::add(total, 1);
 		}
-	}
+		return true;
+	});
 	return total;
 }
 
 bool _side_has_role_mix(State &state, DictRef battle, Atom side) {
 	bool has_ranged = false;
 	bool has_melee = false;
-	const ArrayRef alive = _alive_stacks_for_side(state, battle, side);
-	for (const Value &stack : gd::items(state, array_value(alive))) {
-		if (gd::bool_field(state, gd::as_dict(stack), key::ranged, false)) {
+	walk_alive_stacks(state, battle, side, [&](DictRef stack) {
+		if (gd::bool_field(state, stack, key::ranged, false)) {
 			has_ranged = true;
 		} else {
 			has_melee = true;
 		}
-		if (has_ranged && has_melee) {
-			return true;
-		}
-	}
-	return false;
+		return !(has_ranged && has_melee);
+	});
+	return has_ranged && has_melee;
 }
 
 int64_t _enemy_wounded_count(State &state, DictRef battle, Atom side) {
 	const Atom target_side = side == key::player ? key::enemy : key::player;
 	int64_t total = 0;
-	const ArrayRef alive = _alive_stacks_for_side(state, battle, target_side);
-	for (const Value &stack : gd::items(state, array_value(alive))) {
-		if (_health_ratio(state, gd::as_dict(stack)) <= 0.75) {
+	walk_alive_stacks(state, battle, target_side, [&](DictRef stack) {
+		if (_health_ratio(state, stack) <= 0.75) {
 			total = gd::add(total, 1);
 		}
-	}
+		return true;
+	});
 	return total;
 }
 
@@ -491,8 +552,13 @@ bool _stack_is_isolated(State &state, DictRef battle, DictRef stack) {
 		return false;
 	}
 	const Atom side = gd::string_field(state, stack, key::side, key::empty);
-	const ArrayRef living_allies = _alive_stacks_for_side(state, battle, side);
-	if (state.array_size(living_allies) <= 1) {
+	// Whether more than one of the side lives: the walk stops at the second.
+	int64_t living_allies = 0;
+	walk_alive_stacks(state, battle, side, [&](DictRef) {
+		living_allies += 1;
+		return living_allies < 2;
+	});
+	if (living_allies <= 1) {
 		return true;
 	}
 	if (gd::bool_field(state, stack, key::ranged, false)) {

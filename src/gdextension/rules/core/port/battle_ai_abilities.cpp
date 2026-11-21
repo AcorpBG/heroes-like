@@ -221,8 +221,8 @@ DictRef _counter_ambush_flare_context(State &state, DictRef battle, DictRef prot
 	}
 	const ArrayRef sources = _alive_stacks_for_side(state, battle, gd::string_field(state, protected_stack, key::side, key::empty));
 	for (const Value &source : gd::items(state, array_value(sources))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(source), key::counter_ambush_flare);
-		if (gd::is_empty(state, ability)) {
+		DictRef ability = 0;
+		if (!rules::_find_ability(state, gd::as_dict(source), key::counter_ambush_flare, ability)) {
 			continue;
 		}
 		Value countered;

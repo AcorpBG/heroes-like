@@ -25,6 +25,13 @@ using state::Value;
 // assigns them, so a ported function that reaches it is a writing one, and its
 // shadow runs the native call first (a validating subsystem).
 DictRef aggregate_bonuses(State &state, DictRef hero_state);
+// aggregate_bonuses kept by everything it reads (State::kept_find): the hero's specialties as
+// text, what it wears and its faction. The same frozen node for every hero that reads the same:
+// for the readers that only read it (a battle's spell reads ask once per spell and target).
+DictRef kept_aggregate_bonuses(State &state, DictRef hero_state);
+// What aggregate_bonuses reads of the hero, added to a kept answer's key: the specialties as text (only a non-empty
+// Array counts), what it wears (artifact_rules::add_worn_inputs) and its faction (a home line, a faction rare resource).
+void add_bonus_inputs(State &state, DictRef hero_state, State::KeptKey &inputs);
 void _merge_bonuses(State &state, DictRef target, DictRef source, DictRef hero_state);
 ArrayRef _normalize_specialties_in(State &state, DictRef catalog, const Value &value);
 DictRef _rank_bonuses(State &state, DictRef row, int64_t rank);

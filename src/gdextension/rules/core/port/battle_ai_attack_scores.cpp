@@ -292,6 +292,7 @@ double _attack_score(State &state, DictRef attacker, DictRef target, DictRef bat
 }
 
 double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef battle, bool is_ranged) {
+	battle_rules::AbilityBlank blank;
 	const int64_t attack_distance = _attack_distance_for_action(state, attacker, target, battle, is_ranged);
 	const int64_t damage = _estimate_damage(state, attacker, target, battle, is_ranged, false, attack_distance);
 	const int64_t target_health = engine_max<int64_t>(1, gd::int_field(state, target, key::total_health, 0));
@@ -314,7 +315,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	if (has_shots(state, target)) {
 		score += _w(state, key::attack_target_has_shots);
 	}
-	const DictRef foundry_aura = _ability_by_id(state, target, key::foundry_aura);
+	const DictRef foundry_aura = battle_rules::_ability_or_blank(state, target, key::foundry_aura, blank);
 	if (!empty(state, foundry_aura)) {
 		score += gd::float_field(state, foundry_aura, key::ai_target_priority_bonus, 0.0);
 	}
@@ -355,7 +356,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	if (_battle_has_tag(state, battle, key::fog_bank) && is_ranged && attack_distance > 0 && !faction_brings_tag(state, attacker, key::fog_bank)) {
 		score -= 2.0;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })) && !is_ranged) {
+	if (battle_rules::_battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }) && !is_ranged) {
 		score += 1.5;
 	}
 	if (_battle_has_tag(state, battle, key::fortress_lane)) {
@@ -389,7 +390,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	}
 	AbilityUses ability_uses;
 	ability_uses.present = state.lookup(attacker, str(key::ability_uses), ability_uses.value);
-	const DictRef harry = _ability_by_id(state, attacker, key::harry);
+	const DictRef harry = battle_rules::_ability_or_blank(state, attacker, key::harry, blank);
 	const int64_t harry_limit = gd::int_field(state, harry, key::uses_per_battle, 0);
 	const Atom harry_target_role = gd::string_field(state, harry, key::target_role, key::empty);
 	const bool harry_target_ready = gd::int_field(state, target, key::tier, 1) >= gd::int_field(state, harry, key::target_min_tier, 1)
@@ -405,12 +406,12 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 		const double priority_bonus = gd::float_field(state, harry, key::ai_target_priority_bonus, 2.0);
 		score += priority_bonus + gd::float_field(state, harry, key::support_ai_target_priority_bonus, 0.0);
 	}
-	const DictRef authored_harry = _authored_ability_by_id(state, attacker, key::harry);
-	const DictRef target_shielding = _authored_ability_by_id(state, target, key::shielding);
+	const DictRef authored_harry = battle_rules::_authored_ability_or_blank(state, attacker, key::harry, blank);
+	const DictRef target_shielding = battle_rules::_authored_ability_or_blank(state, target, key::shielding, blank);
 	if (!empty(state, harry) && is_ranged && gd::bool_field(state, target_shielding, key::snare_vulnerable, false)) {
 		score += gd::float_field(state, authored_harry, key::shielding_ai_target_priority_bonus, 0.0);
 	}
-	const DictRef rot_cant = _ability_by_id(state, attacker, key::rot_cant);
+	const DictRef rot_cant = battle_rules::_ability_or_blank(state, attacker, key::rot_cant, blank);
 	const bool rot_available = ability_uses.is_dict()
 			&& battle_round(state, battle) >= gd::int_field(state, rot_cant, key::available_from_round, 1)
 			&& gd::int_field(state, target, key::tier, 1) >= gd::int_field(state, rot_cant, key::target_min_tier, 1)
@@ -418,7 +419,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	if (!empty(state, rot_cant) && rot_available && is_ranged && !spell_rules::has_effect_id(state, target, battle, key::status_harried)) {
 		score += gd::float_field(state, rot_cant, key::ai_target_priority_bonus, 0.25);
 	}
-	const DictRef obituary = _ability_by_id(state, attacker, key::obituary);
+	const DictRef obituary = battle_rules::_ability_or_blank(state, attacker, key::obituary, blank);
 	const bool obituary_available = ability_uses.is_dict() && ability_uses.count(state, key::obituary) < gd::int_field(state, obituary, key::uses_per_battle, 1);
 	if (!empty(state, obituary) && obituary_available && is_ranged && !spell_rules::has_effect_id(state, target, battle, key::status_obituary_marked)) {
 		score += 0.25;
@@ -431,11 +432,11 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 			&& spell_rules::has_any_effect_ids(state, target, battle, pressure_status_ids(state))) {
 		score += 2.5;
 	}
-	const DictRef bramble_ground = _bramble_ground_ability(state, attacker);
+	const DictRef bramble_ground = battle_rules::_authored_ability_or_blank(state, attacker, key::bramble_ground, blank);
 	if (!is_ranged && !empty(state, bramble_ground) && spell_rules::has_effect_id(state, target, battle, gd::string_field(state, bramble_ground, key::status_id, key::status_rooted))) {
 		score += gd::float_field(state, bramble_ground, key::ai_rooted_target_priority_bonus, 0.0);
 	}
-	const DictRef fogwake = _ability_by_id(state, attacker, key::fogwake);
+	const DictRef fogwake = battle_rules::_ability_or_blank(state, attacker, key::fogwake, blank);
 	if (!is_ranged && !empty(state, fogwake) && _stack_is_hex_isolated(state, battle, target) && empty(state, _counter_ambush_flare_context(state, battle, target, key::fogwake))) {
 		score += gd::float_field(state, fogwake, key::ai_target_priority_bonus, 0.0);
 	}
@@ -445,7 +446,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	if (_has_ability(state, attacker, key::formation_guard) && spell_rules::has_effect_id(state, target, battle, key::status_staggered)) {
 		score += 1.5;
 	}
-	const DictRef bloodrush = _ability_by_id(state, attacker, key::bloodrush);
+	const DictRef bloodrush = battle_rules::_ability_or_blank(state, attacker, key::bloodrush, blank);
 	if (!empty(state, bloodrush) && gd::bool_field(state, bloodrush, key::primary_melee_only, false)) {
 		if (!is_ranged && _health_ratio(state, target) <= gd::float_field(state, bloodrush, key::wounded_threshold_ratio, 0.0)) {
 			score += 2.0;
@@ -470,7 +471,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 			score += 0.75;
 		}
 	}
-	const DictRef overheat = _ability_by_id(state, attacker, key::overheat);
+	const DictRef overheat = battle_rules::_ability_or_blank(state, attacker, key::overheat, blank);
 	if (!empty(state, overheat) && !spell_rules::has_effect_id(state, attacker, battle, key::status_overheated)) {
 		score += 0.10;
 	}
@@ -480,7 +481,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 		score += gd::float_field(state, readiness_writ, key::ai_attack_score_bonus, 0.0);
 	}
 	if (is_ranged) {
-		const DictRef pressure_artillery = _ability_by_id(state, attacker, key::pressure_artillery);
+		const DictRef pressure_artillery = battle_rules::_ability_or_blank(state, attacker, key::pressure_artillery, blank);
 		if (!empty(state, pressure_artillery)) {
 			const DictRef secondary_target = _pressure_artillery_secondary_target(state, battle, attacker, target);
 			if (!empty(state, secondary_target)) {
@@ -498,7 +499,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 			}
 		}
 	}
-	if (_hero_has_trait(state, battle, side, key::artillerist) && is_ranged && _battle_has_any_tags(state, battle, string_array(state, { key::elevated_fire, key::open_lane }))) {
+	if (_hero_has_trait(state, battle, side, key::artillerist) && is_ranged && battle_rules::_battle_has_any_tag_in(state, battle, { key::elevated_fire, key::open_lane })) {
 		score += 1.5;
 	}
 	if (_hero_has_trait(state, battle, side, key::packhunter)
@@ -518,7 +519,7 @@ double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef 
 	}
 	score += _objective_action_score(state, battle, side, is_ranged ? key::shoot : key::strike, attacker, target);
 	if (is_ranged && damage < target_health) {
-		const DictRef shielding = _ability_by_id(state, target, key::shielding);
+		const DictRef shielding = battle_rules::_ability_or_blank(state, target, key::shielding, blank);
 		const double return_ratio = engine_clamp<double>(gd::float_field(state, shielding, key::ranged_damage_return_ratio, 0.0), 0.0, 0.25);
 		if (return_ratio > 0.0) {
 			const int64_t reflected_damage = engine_max<int64_t>(1, float_to_int(godot_round(static_cast<double>(applied_damage) * return_ratio)));
@@ -577,7 +578,7 @@ double _defend_score(State &state, DictRef battle, DictRef active_stack, ArrayRe
 	if (_has_ability(state, active_stack, key::overheat) && spell_rules::has_effect_id(state, active_stack, battle, key::status_overheated)) {
 		score += 0.25;
 	}
-	if (_battle_has_any_tags(state, battle, string_array(state, { key::chokepoint, key::fortified_line })) && !ranged(state, active_stack)) {
+	if (battle_rules::_battle_has_any_tag_in(state, battle, { key::chokepoint, key::fortified_line }) && !ranged(state, active_stack)) {
 		score += 1.5;
 	}
 	if (_battle_has_tag(state, battle, key::fortress_lane) && _stack_is_anchor_side(state, active_stack, battle) && !ranged(state, active_stack)) {

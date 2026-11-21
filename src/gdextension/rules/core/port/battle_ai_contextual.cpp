@@ -3,6 +3,7 @@
 // the obstruction breach, the advance delta and the readiness writ's target.
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
@@ -58,15 +59,6 @@ bool any_tag(State &state, DictRef battle, std::initializer_list<Atom> tags) {
 		}
 	}
 	return false;
-}
-
-// An Array literal of String constants: a new untyped Array.
-ArrayRef string_array(State &state, std::initializer_list<Atom> atoms) {
-	const ArrayRef array = state.new_array();
-	for (const Atom atom : atoms) {
-		state.append(array, str(atom));
-	}
-	return array;
 }
 
 // _has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")
@@ -305,11 +297,11 @@ int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle) 
 	if (_battle_has_tag(state, battle, key::wall_pressure) && _stack_is_assault_side(state, stack, battle) && !ranged(state, stack) && round_number >= 3) {
 		bonus += 1;
 	}
-	if (spell_rules::has_any_effect_ids(state, stack, battle, array_value(string_array(state, { key::status_harried, key::status_staggered })))) {
+	if (spell_rules::has_any_effect_id_in(state, stack, battle, { key::status_harried, key::status_staggered })) {
 		bonus -= 1;
 	}
-	const DictRef shielding = _ability_by_id(state, stack, key::shielding);
-	if (!gd::is_empty(state, shielding)) {
+	DictRef shielding = 0;
+	if (battle_rules::_find_ability(state, stack, key::shielding, shielding)) {
 		bonus = gd::add(bonus, engine_max<int64_t>(0, gd::int_field(state, shielding, key::cohesion_hold_bonus, 0)));
 	}
 	if (_hero_has_trait(state, battle, side, key::linekeeper)

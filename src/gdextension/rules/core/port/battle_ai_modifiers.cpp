@@ -117,16 +117,17 @@ double ambush_retention(State &state, DictRef flare) {
 
 double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance) {
 	double modifier = 1.0;
-	const DictRef reach = _ability_by_id(state, attacker, key::reach);
+	battle_rules::AbilityBlank blank;
+	const DictRef reach = battle_rules::_ability_or_blank(state, attacker, key::reach, blank);
 	if (!is_ranged && attack_distance == 1 && !empty(state, reach) && _reach_available(state, attacker, battle)) {
 		modifier *= gd::float_field(state, reach, key::distance_one_multiplier, 1.0);
 	}
-	const DictRef hookline = _ability_by_id(state, attacker, key::hookline);
+	const DictRef hookline = battle_rules::_ability_or_blank(state, attacker, key::hookline, blank);
 	if (!is_ranged && attack_distance == 1 && !empty(state, hookline) && _hookline_available(state, attacker, battle)) {
 		modifier *= gd::float_field(state, hookline, key::distance_one_multiplier, 0.5);
 	}
 
-	const DictRef brace = _ability_by_id(state, attacker, key::brace);
+	const DictRef brace = battle_rules::_ability_or_blank(state, attacker, key::brace, blank);
 	if (is_retaliation && gd::bool_field(state, attacker, key::defending, false) && !empty(state, brace) && _brace_available(state, attacker, battle)) {
 		modifier *= gd::float_field(state, brace, key::retaliation_multiplier, 1.0);
 		if (_brace_has_held_objective(state, attacker, battle, brace)) {
@@ -141,7 +142,7 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 			modifier *= gd::to_float(get_or_empty_dict_value(state, ability, key::ally_retaliation_multiplier, gd::float_value(1.0)));
 		}
 	}
-	const DictRef bramble_ground = _bramble_ground_ability(state, attacker);
+	const DictRef bramble_ground = battle_rules::_authored_ability_or_blank(state, attacker, key::bramble_ground, blank);
 	if (is_retaliation && gd::bool_field(state, attacker, key::defending, false) && !empty(state, bramble_ground) && _bramble_ground_available(state, attacker, battle, bramble_ground)) {
 		modifier *= gd::float_field(state, bramble_ground, key::retaliation_multiplier, 1.0);
 	}
@@ -152,7 +153,7 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 		}
 	}
 
-	const DictRef backstab = _ability_by_id(state, attacker, key::backstab);
+	const DictRef backstab = battle_rules::_ability_or_blank(state, attacker, key::backstab, blank);
 	const DictRef backstab_flare = _counter_ambush_flare_context(state, battle, defender, key::backstab);
 	const double backstab_retention = ambush_retention(state, backstab_flare);
 	const bool backstab_attack_eligible = !gd::bool_field(state, backstab, key::primary_melee_only, false) || (!is_ranged && !is_retaliation);
@@ -166,14 +167,14 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 			&& spell_rules::has_effect_id(state, defender, battle, gd::string_field(state, bramble_ground, key::status_id, key::status_rooted))) {
 		modifier *= gd::float_field(state, bramble_ground, key::rooted_damage_multiplier, 1.0);
 	}
-	const DictRef fogwake = _ability_by_id(state, attacker, key::fogwake);
+	const DictRef fogwake = battle_rules::_ability_or_blank(state, attacker, key::fogwake, blank);
 	if (!is_ranged && !is_retaliation && !empty(state, fogwake) && _stack_is_hex_isolated(state, battle, defender)) {
 		const DictRef fogwake_flare = _counter_ambush_flare_context(state, battle, defender, key::fogwake);
 		const double fogwake_retention = ambush_retention(state, fogwake_flare);
 		modifier *= 1.0 + ((gd::float_field(state, fogwake, key::isolated_damage_multiplier, 1.0) - 1.0) * fogwake_retention);
 	}
 
-	const DictRef volley = _ability_by_id(state, attacker, key::volley);
+	const DictRef volley = battle_rules::_ability_or_blank(state, attacker, key::volley, blank);
 	const bool volley_lane_ready = _volley_has_protected_lane(state, attacker, battle, volley);
 	if (is_ranged && !empty(state, volley) && volley_lane_ready && attack_distance >= gd::int_field(state, volley, key::min_distance, 1)) {
 		modifier *= gd::float_field(state, volley, key::damage_multiplier, 1.0);
@@ -185,22 +186,22 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 		modifier *= gd::float_field(state, volley, key::ally_defending_multiplier, 1.0);
 	}
 
-	const DictRef formation_guard = _ability_by_id(state, attacker, key::formation_guard);
+	const DictRef formation_guard = battle_rules::_ability_or_blank(state, attacker, key::formation_guard, blank);
 	if (!empty(state, formation_guard) && spell_rules::has_effect_id(state, defender, battle, key::status_staggered)) {
 		modifier *= gd::float_field(state, formation_guard, key::staggered_damage_multiplier, 1.0);
 	}
 
-	const DictRef harry = _ability_by_id(state, attacker, key::harry);
+	const DictRef harry = battle_rules::_ability_or_blank(state, attacker, key::harry, blank);
 	if (is_ranged && !empty(state, harry) && _health_ratio(state, defender) <= gd::float_field(state, harry, key::wounded_threshold_ratio, 0.0)) {
 		modifier *= gd::float_field(state, harry, key::wounded_damage_multiplier, 1.0);
 	}
-	const DictRef rot_cant = _ability_by_id(state, attacker, key::rot_cant);
+	const DictRef rot_cant = battle_rules::_ability_or_blank(state, attacker, key::rot_cant, blank);
 	if (is_ranged && !empty(state, rot_cant) && battle_round(state, battle) >= gd::int_field(state, rot_cant, key::available_from_round, 1)
 			&& _health_ratio(state, defender) <= gd::float_field(state, rot_cant, key::wounded_threshold_ratio, 0.0)) {
 		modifier *= gd::float_field(state, rot_cant, key::wounded_damage_multiplier, 1.0);
 	}
 
-	const DictRef bloodrush = _ability_by_id(state, attacker, key::bloodrush);
+	const DictRef bloodrush = battle_rules::_ability_or_blank(state, attacker, key::bloodrush, blank);
 	if (!empty(state, bloodrush) && gd::bool_field(state, bloodrush, key::primary_melee_only, false)) {
 		const bool bloodrush_attack_eligible = !is_ranged && !is_retaliation;
 		const bool bloodrush_isolated = bloodrush_attack_eligible
@@ -236,7 +237,7 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 		}
 	}
 
-	const DictRef overheat = _ability_by_id(state, attacker, key::overheat);
+	const DictRef overheat = battle_rules::_ability_or_blank(state, attacker, key::overheat, blank);
 	if (!empty(state, overheat)) {
 		if (spell_rules::has_effect_id(state, attacker, battle, key::status_overheated)) {
 			modifier *= gd::float_field(state, overheat, key::overheated_damage_multiplier, 1.0);
@@ -245,11 +246,11 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 		}
 	}
 
-	const DictRef shielding = _ability_by_id(state, defender, key::shielding);
+	const DictRef shielding = battle_rules::_ability_or_blank(state, defender, key::shielding, blank);
 	if (is_ranged && !empty(state, shielding)) {
 		modifier *= gd::float_field(state, shielding, key::ranged_damage_multiplier, 1.0);
 	}
-	const DictRef fog_screen = _fog_screen_ability(state, defender);
+	const DictRef fog_screen = battle_rules::_authored_ability_or_blank(state, defender, key::fog_screen, blank);
 	if (!empty(state, fog_screen) && _fog_screen_available(state, defender, battle, fog_screen)) {
 		modifier *= gd::float_field(state, fog_screen, key::incoming_damage_multiplier, 1.0);
 	}
@@ -267,7 +268,7 @@ double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender
 		screen_reduction_pct = engine_clamp<int64_t>(screen_reduction_pct, 0, 75);
 		modifier *= 1.0 - (static_cast<double>(screen_reduction_pct) / 100.0);
 	}
-	const DictRef attacking_shielding = _ability_by_id(state, attacker, key::shielding);
+	const DictRef attacking_shielding = battle_rules::_ability_or_blank(state, attacker, key::shielding, blank);
 	if (!is_ranged && !empty(state, attacking_shielding) && attack_distance <= 0) {
 		modifier *= gd::float_field(state, attacking_shielding, key::engaged_damage_multiplier, 1.0);
 	}
@@ -293,8 +294,8 @@ double _solar_array_lane_melee_multiplier(State &state, DictRef defender, DictRe
 	}
 	const Atom side = side_of(state, defender);
 	for (const Value &source : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(source), key::solar_array_lane);
-		if (empty(state, ability) || !_side_has_linked_unit(state, battle, side, field_or_array(state, ability, key::linked_unit_ids))) {
+		DictRef ability = 0;
+		if (!battle_rules::_find_ability(state, gd::as_dict(source), key::solar_array_lane, ability) || !_side_has_linked_unit(state, battle, side, field_or_array(state, ability, key::linked_unit_ids))) {
 			continue;
 		}
 		return gd::float_field(state, ability, key::incoming_melee_damage_multiplier, 1.0);
@@ -340,7 +341,7 @@ double _faction_damage_modifier(State &state, DictRef attacker, DictRef defender
 		if (wounded_count > 0) {
 			modifier *= 1.0 + (static_cast<double>(engine_min<int64_t>(wounded_count, 3)) * 0.04);
 		}
-		if (spell_rules::has_any_effect_ids(state, defender, battle, array_value(string_array(state, { key::status_harried, state.intern("status_mire_harried") })))) {
+		if (spell_rules::has_any_effect_id_in(state, defender, battle, { key::status_harried, state.intern("status_mire_harried") })) {
 			modifier *= 1.08;
 		}
 		if (!is_ranged && battle_round(state, battle) >= 3 && attack_distance <= 0) {
@@ -369,7 +370,7 @@ double _faction_damage_modifier(State &state, DictRef attacker, DictRef defender
 		if (spell_rules::has_effect_id(state, defender, battle, key::status_rooted)) {
 			modifier *= 1.10;
 		}
-		if (spell_rules::has_any_effect_ids(state, defender, battle, array_value(string_array(state, { key::status_harried, key::status_staggered })))) {
+		if (spell_rules::has_any_effect_id_in(state, defender, battle, { key::status_harried, key::status_staggered })) {
 			modifier *= 1.07;
 		}
 		if (any_tag(state, battle, { key::chokepoint, key::ambush_cover, key::fortified_line }) && !is_ranged) {
@@ -393,7 +394,7 @@ double _faction_damage_modifier(State &state, DictRef attacker, DictRef defender
 		if (_stack_is_isolated(state, battle, defender)) {
 			modifier *= 1.08;
 		}
-		if (spell_rules::has_any_effect_ids(state, defender, battle, array_value(string_array(state, { key::status_harried, key::status_staggered })))) {
+		if (spell_rules::has_any_effect_id_in(state, defender, battle, { key::status_harried, key::status_staggered })) {
 			modifier *= 1.06;
 		}
 		if (any_tag(state, battle, { key::fog_bank, key::ambush_cover }) && !is_ranged) {
@@ -446,7 +447,7 @@ double _linked_ranged_attack_screen_multiplier(State &state, DictRef defender, D
 	int64_t best_reduction_pct = 0;
 	for (const Value &source_value : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side_of(state, defender))))) {
 		const DictRef source = gd::as_dict(source_value);
-		if (empty(state, _ability_by_id(state, source, key::shielding))) {
+		if (!battle_rules::_has_ability(state, source, key::shielding)) {
 			continue;
 		}
 		const DictRef shielding = _authored_ability_by_id(state, source, key::shielding);
@@ -467,8 +468,9 @@ DictRef _charter_retaliation_aura_context(State &state, DictRef stack, DictRef b
 		if (gd::string_field(state, source, key::battle_id, key::empty) == gd::string_field(state, stack, key::battle_id, key::empty)) {
 			continue;
 		}
-		const DictRef brace = _ability_by_id(state, source, key::brace);
-		if (gd::float_field(state, brace, key::ally_retaliation_multiplier, 1.0) <= 1.0) {
+		// A stack without a brace reads the default 1.0.
+		DictRef brace = 0;
+		if (!battle_rules::_find_ability(state, source, key::brace, brace) || gd::float_field(state, brace, key::ally_retaliation_multiplier, 1.0) <= 1.0) {
 			continue;
 		}
 		if (gd::int_field(state, stack, key::tier, 1) < gd::int_field(state, brace, key::ally_retaliation_min_tier, 1)) {
@@ -489,8 +491,8 @@ DictRef _charter_retaliation_aura_context(State &state, DictRef stack, DictRef b
 double _side_max_ability_float(State &state, DictRef battle, Atom side, Atom ability_id, Atom field, double default_value) {
 	double best = default_value;
 	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(stack), ability_id);
-		if (empty(state, ability)) {
+		DictRef ability = 0;
+		if (!battle_rules::_find_ability(state, gd::as_dict(stack), ability_id, ability)) {
 			continue;
 		}
 		best = engine_max<double>(best, gd::float_field(state, ability, field, default_value));
@@ -501,7 +503,7 @@ double _side_max_ability_float(State &state, DictRef battle, Atom side, Atom abi
 double _side_max_authored_ability_float(State &state, DictRef battle, Atom side, Atom ability_id, Atom field, double default_value) {
 	double best = default_value;
 	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
-		if (empty(state, _ability_by_id(state, gd::as_dict(stack), ability_id))) {
+		if (!battle_rules::_has_ability(state, gd::as_dict(stack), ability_id)) {
 			continue;
 		}
 		const DictRef ability = _authored_ability_by_id(state, gd::as_dict(stack), ability_id);
@@ -512,8 +514,8 @@ double _side_max_authored_ability_float(State &state, DictRef battle, Atom side,
 
 bool _side_ability_bool(State &state, DictRef battle, Atom side, Atom ability_id, Atom field, bool default_value) {
 	for (const Value &stack : gd::items(state, array_value(_alive_stacks_for_side(state, battle, side)))) {
-		const DictRef ability = _ability_by_id(state, gd::as_dict(stack), ability_id);
-		if (!empty(state, ability)) {
+		DictRef ability = 0;
+		if (battle_rules::_find_ability(state, gd::as_dict(stack), ability_id, ability)) {
 			return gd::bool_field(state, ability, field, default_value);
 		}
 	}
@@ -726,16 +728,7 @@ Atom _side_faction_id(State &state, DictRef battle, Atom side) {
 }
 
 bool _stack_has_positive_effect(State &state, DictRef stack, DictRef battle) {
-	const int64_t current_round = battle_round(state, battle);
-	for (const Value &effect : gd::items(state, array_value(spell_rules::active_effects_for_round(state, stack, current_round)))) {
-		const DictRef modifiers = typed_dict(get_or_empty_dict(state, effect, key::modifiers));
-		for (const Atom modifier_key : { key::attack, key::defense, key::initiative, key::cohesion, key::momentum }) {
-			if (gd::int_field(state, modifiers, modifier_key, 0) > 0) {
-				return true;
-			}
-		}
-	}
-	return false;
+	return spell_rules::has_positive_effect(state, stack, battle_round(state, battle));
 }
 
 int64_t _side_positive_effect_count(State &state, DictRef battle, Atom side) {

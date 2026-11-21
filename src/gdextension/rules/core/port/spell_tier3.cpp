@@ -223,11 +223,11 @@ int64_t raise_stack_health(State &state, DictRef battle, Atom battle_id, int64_t
 }
 
 bool spell_shielded(State &state, DictRef battle, DictRef stack) {
-	return !gd::is_empty(state, stack) && !gd::is_empty(state, stack_mechanic_effect(state, stack, battle, key::spell_shield));
+	return !gd::is_empty(state, stack) && has_mechanic_effect(state, stack, battle, key::spell_shield);
 }
 
 bool cohesion_locked(State &state, DictRef battle, DictRef stack) {
-	return !gd::is_empty(state, stack) && !gd::is_empty(state, stack_mechanic_effect(state, stack, battle, key::cohesion_lock));
+	return !gd::is_empty(state, stack) && has_mechanic_effect(state, stack, battle, key::cohesion_lock);
 }
 
 // --- Heat, knockback and volleys --------------------------------------------------
@@ -357,7 +357,7 @@ DictRef most_wounded_stack(State &state, DictRef battle, Atom side) {
 	double best_ratio = 2.0;
 	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
 		if (!gd::is_dict(stack) || side_of(state, stack.ref) != side || !living(state, stack.ref)
-				|| heal_blocked(state, stack.ref, battle) || !gd::is_empty(state, stack_status_effect(state, stack.ref, battle, key::status_blighted))
+				|| heal_blocked(state, stack.ref, battle) || has_status_effect(state, stack.ref, battle, key::status_blighted)
 				|| censured(state, stack.ref)) {
 			continue;
 		}

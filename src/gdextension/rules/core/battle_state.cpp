@@ -361,6 +361,7 @@ void State::clear_nodes() {
 	packeds_.clear();
 	root = Value();
 	memo_.clear();
+	kept_.clear();
 	memo_epoch_ = watched_writes_;
 }
 
@@ -538,7 +539,40 @@ void State::watch_loaded(const Value &value) {
 void State::drop_memo() {
 	++watched_writes_;
 	memo_.clear();
+	kept_.clear();
 	memo_epoch_ = watched_writes_;
+}
+
+uint64_t State::kept_hash(const KeptKey &key) {
+	uint64_t hash = 0xcbf29ce484222325ull ^ key.count;
+	for (size_t index = 0; index < key.count; ++index) {
+		hash = (hash ^ key.items[index]) * 0x100000001b3ull;
+		hash ^= hash >> 29;
+	}
+	return hash;
+}
+
+bool State::kept_find(const KeptKey &key, Value &answer) const {
+	if (key.overflow) {
+		return false;
+	}
+	const auto found = kept_.find(kept_hash(key));
+	if (found == kept_.end() || found->second.inputs.size() != key.count
+			|| !std::equal(found->second.inputs.begin(), found->second.inputs.end(), key.items)) {
+		return false;
+	}
+	answer = found->second.answer;
+	return true;
+}
+
+void State::kept_keep(const KeptKey &key, const Value &answer) {
+	if (key.overflow) {
+		return;
+	}
+	freeze(answer);
+	Kept &kept = kept_[kept_hash(key)];
+	kept.inputs.assign(key.items, key.items + key.count);
+	kept.answer = answer;
 }
 
 void State::replace_items(uint32_t array_node, ValueList items) {

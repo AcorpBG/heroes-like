@@ -25,7 +25,11 @@ DictRef worn_specialty_bonuses(State &state, DictRef hero_state);
 // The special effects of what the hero wears (docs/artifact-system.md, Special effects): the special_id of each
 // worn artifact and of each set step its worn pieces reach. A row names one only once its rule is in the game.
 ArrayRef worn_special_ids(State &state, DictRef hero_state);
+// Whether worn_special_ids holds the special; the ids are kept by what the hero wears (State::kept_find).
 bool hero_has_special(State &state, DictRef hero_state, Atom special);
+// What the hero wears as worn_specialty_bonuses and worn_special_ids read it, for a kept answer's key
+// (State::kept_find): whether its artifacts hold an equipped Dictionary, then the id in each equipment slot.
+void add_worn_inputs(State &state, DictRef hero_state, State::KeptKey &inputs);
 // The spells worn artifacts let the hero cast as if it knew them (grants_spell_id).
 ArrayRef granted_spell_ids(State &state, DictRef hero_state);
 DictRef ensure_hero_artifacts(State &state, DictRef hero_state);

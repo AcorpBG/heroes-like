@@ -90,17 +90,61 @@ int64_t effect_bonus_for_kind(State &state, DictRef stack, DictRef battle, Atom 
 	// Crystal Pillar's and Elder Grove's defense.
 	int64_t total = kind == key::defense ? gd::add(pillar_defense(state, battle, stack), grove_defense(state, battle, stack)) : 0;
 	const int64_t current_round = gd::int_field(state, battle, key::round, 1);
-	const ArrayRef active = active_effects_for_round(state, stack, current_round);
-	for (const Value &effect : gd::items(state, array_value(active))) {
-		Value modifiers;
-		if (!state.lookup(gd::as_dict(effect), str(key::modifiers), modifiers)) {
-			continue; // the default {} adds int(0)
+	// The effects active_effects_for_round keeps, read where they are: a Dictionary not expired before the round.
+	Value effects;
+	if (!state.lookup(stack, str(key::effects), effects) || !gd::is_array(effects)) {
+		return total;
+	}
+	for (const Value &effect : gd::items(state, effects)) {
+		if (!gd::is_dict(effect) || gd::int_field(state, effect.ref, key::expires_after_round, 0) < current_round) {
+			continue;
 		}
-		if (gd::is_dict(modifiers)) {
-			total = gd::add(total, gd::int_field(state, modifiers.ref, kind, 0));
-		}
+		total = gd::add(total, effect_modifier(state, effect.ref, kind));
 	}
 	return total;
+}
+
+int64_t effect_modifier(State &state, DictRef effect, Atom kind) {
+	Value modifiers;
+	if (!state.lookup(effect, str(key::modifiers), modifiers)) {
+		return 0; // the default {}
+	}
+	if (!gd::is_dict(modifiers)) {
+		// The legacy form: the amount under the effect's own kind.
+		const Atom legacy_kind = gd::string_field(state, effect, key::kind, key::empty);
+		return legacy_kind != key::empty && legacy_kind == kind ? gd::int_field(state, effect, key::amount, 0) : 0;
+	}
+	int64_t value = 0;
+	for (const Value &modifier : state.dict(modifiers.ref).keys.list()) {
+		const Atom modifier_key = gd::to_string(modifier);
+		if (modifier_key == key::empty) {
+			continue;
+		}
+		const int64_t converted = gd::to_int(state, gd::index(state, modifiers.ref, modifier));
+		if (modifier_key == kind) {
+			value = converted;
+		}
+	}
+	return value;
+}
+
+bool has_positive_effect(State &state, DictRef stack, int64_t round_number) {
+	static constexpr Atom kModifierKeys[] = { key::attack, key::defense, key::initiative, key::cohesion, key::momentum };
+	Value effects;
+	if (!state.lookup(stack, str(key::effects), effects) || !gd::is_array(effects)) {
+		return false;
+	}
+	for (const Value &effect : gd::items(state, effects)) {
+		if (!gd::is_dict(effect) || gd::int_field(state, effect.ref, key::expires_after_round, 0) < round_number) {
+			continue;
+		}
+		for (const Atom modifier_key : kModifierKeys) {
+			if (effect_modifier(state, effect.ref, modifier_key) > 0) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool has_effect_id(State &state, DictRef stack, DictRef battle, Atom effect_id) {
@@ -139,6 +183,15 @@ bool has_any_effect_ids(State &state, DictRef stack, DictRef battle, const Value
 	}
 	for (const Value &effect_id_value : gd::items(state, effect_ids)) {
 		if (has_effect_id(state, stack, battle, gd::to_string(effect_id_value))) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool has_any_effect_id_in(State &state, DictRef stack, DictRef battle, std::initializer_list<Atom> effect_ids) {
+	for (const Atom effect_id : effect_ids) {
+		if (has_effect_id(state, stack, battle, effect_id)) {
 			return true;
 		}
 	}
@@ -294,24 +347,7 @@ using gd::array_value;
 using gd::str;
 
 bool _stack_has_positive_effect(State &state, DictRef stack, DictRef battle) {
-	static constexpr Atom kModifierKeys[] = { key::attack, key::defense, key::initiative, key::cohesion, key::momentum };
-	const int64_t current_round = gd::int_field(state, battle, key::round, 1);
-	const ArrayRef active = spell_rules::active_effects_for_round(state, stack, current_round);
-	for (const Value &effect : gd::items(state, array_value(active))) {
-		Value modifiers;
-		if (!state.lookup(gd::as_dict(effect), str(key::modifiers), modifiers)) {
-			continue; // the default {} has no modifier above 0
-		}
-		if (!gd::is_dict(modifiers)) {
-			continue;
-		}
-		for (const Atom modifier_key : kModifierKeys) {
-			if (gd::int_field(state, modifiers.ref, modifier_key, 0) > 0) {
-				return true;
-			}
-		}
-	}
-	return false;
+	return spell_rules::has_positive_effect(state, stack, gd::int_field(state, battle, key::round, 1));
 }
 
 int64_t _side_positive_effect_count(State &state, DictRef battle, Atom side) {

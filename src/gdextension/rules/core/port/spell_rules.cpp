@@ -24,6 +24,22 @@ Atom string_of_field(State &state, DictRef dict, Atom field, Atom fallback) {
 	return gd::stringify_or_fallback(state, state.get(dict, str(field), str(fallback)));
 }
 
+// adjusted_spell_mana_cost's answers (State::kept_find).
+constexpr uint64_t kKeptSpellManaCost = 0x6b65707400000003ull;
+
+// A text field of a kept answer's key: the empty text when it is missing, a String's own text, and anything else
+// keeps no answer (its text may read differently to each reader).
+void add_text_field(State &state, DictRef dict, Atom field, State::KeptKey &inputs) {
+	Value found;
+	if (!state.lookup(dict, str(field), found)) {
+		inputs.add(key::empty);
+	} else if (found.kind == state::Kind::String) {
+		inputs.add(found.ref);
+	} else {
+		inputs.overflow = true;
+	}
+}
+
 // x.get(key, fallback) on an untyped value: only a Dictionary has a two-argument get (Array.get and Object.get take
 // one), so anything else stops the script.
 DictRef two_argument_get_target(const Value &target) {
@@ -74,13 +90,34 @@ int64_t adjusted_spell_mana_cost(State &state, DictRef hero_state, const Value &
 	if (gd::bool_field(state, hero_state, key::first_spell_free, false) && string_of_field(state, spell_dict, key::context, key::empty) == key::battle) {
 		return 0;
 	}
-	// The cost reads the hero's specialties and artifacts, not its spellbook. The artifact bonuses normalize the
-	// hero's top-level artifacts key in place, so they get a shallow copy.
-	const DictRef hero = gd::duplicate_dict(state, hero_state);
+	// The cost reads the hero's specialties, what it wears and its faction, not its spellbook, and of the spell its
+	// base cost and school and what an artifact's spell modifier can ask of it (its context, primary role and
+	// effect type). It is kept by those (State::kept_find): a battle's spell reads ask it for each spell and target.
 	const int64_t base_cost = gd::int_field(state, spell_dict, key::mana_cost, 0);
+	State::KeptKey inputs;
+	inputs.add(kKeptSpellManaCost);
+	hero_progression_rules::add_bonus_inputs(state, hero_state, inputs);
+	inputs.add(static_cast<uint64_t>(base_cost));
+	add_text_field(state, spell_dict, key::school_id, inputs);
+	add_text_field(state, spell_dict, key::context, inputs);
+	add_text_field(state, spell_dict, key::primary_role, inputs);
+	Value effect;
+	if (state.lookup(spell_dict, str(key::effect), effect) && gd::is_dict(effect)) {
+		add_text_field(state, effect.ref, key::type, inputs);
+	} else {
+		inputs.add(key::empty);
+	}
+	Value kept;
+	if (state.kept_find(inputs, kept)) {
+		return gd::to_int(state, kept);
+	}
+	// The artifact bonuses normalize the hero's top-level artifacts key in place, so they get a shallow copy.
+	const DictRef hero = gd::duplicate_dict(state, hero_state);
 	const int64_t progression_cost = hero_progression_rules::adjusted_mana_cost(state, hero, base_cost, string_of_field(state, spell_dict, key::school_id, key::empty));
 	const int64_t artifact_delta = artifact_rules::spell_mana_cost_delta(state, hero, spell_dict);
-	return compat::engine_max<int64_t>(0, gd::add(progression_cost, artifact_delta));
+	const int64_t cost = compat::engine_max<int64_t>(0, gd::add(progression_cost, artifact_delta));
+	state.kept_keep(inputs, int_value(cost));
+	return cost;
 }
 
 Atom spell_school_id(State &state, DictRef spell) {

@@ -53,6 +53,9 @@ constexpr Atom kBaseResourceKeys[] = {key::gold, key::wood, key::ore};
 // The resistance cap of _merge_school_resistance.
 constexpr int64_t kMaxSchoolResistancePct = 75;
 
+// hero_has_special's kept ids (State::kept_find).
+constexpr uint64_t kKeptWornSpecialIds = 0x6b65707400000002ull;
+
 // String(d.get(key, fallback)).
 Atom string_of_field(State &state, DictRef dict, Atom field, Atom fallback) {
 	return gd::stringify(state, state.get(dict, str(field), str(fallback)));
@@ -253,7 +256,31 @@ ArrayRef worn_special_ids(State &state, DictRef hero_state) {
 }
 
 bool hero_has_special(State &state, DictRef hero_state, Atom special) {
-	return gd::array_has(state, worn_special_ids(state, hero_state), str(special));
+	// The ids depend on nothing but the worn ids and the content, and a battle's
+	// spell reads ask for them once per spell and target.
+	State::KeptKey inputs;
+	inputs.add(kKeptWornSpecialIds);
+	add_worn_inputs(state, hero_state, inputs);
+	Value kept;
+	if (!state.kept_find(inputs, kept)) {
+		kept = array_value(worn_special_ids(state, hero_state));
+		state.kept_keep(inputs, kept);
+	}
+	return gd::array_has(state, kept.ref, str(special));
+}
+
+void add_worn_inputs(State &state, DictRef hero_state, State::KeptKey &inputs) {
+	Value artifacts;
+	Value equipped;
+	if (!state.lookup(hero_state, str(key::artifacts), artifacts) || !gd::is_dict(artifacts)
+			|| !state.lookup(artifacts.ref, str(key::equipped), equipped) || !gd::is_dict(equipped)) {
+		inputs.add(0);
+		return;
+	}
+	inputs.add(1);
+	for (const Atom slot : artifact_slots::kEquipment) {
+		inputs.add(string_of_field(state, equipped.ref, slot, key::empty));
+	}
 }
 
 ArrayRef granted_spell_ids(State &state, DictRef hero_state) {

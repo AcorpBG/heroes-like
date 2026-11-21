@@ -187,7 +187,7 @@ int64_t move_stack_health(State &state, DictRef battle, Atom donor_id, Atom rece
 	const DictRef donor = battle_rules::_get_stack_by_id(state, battle, donor_id);
 	const DictRef receiver = battle_rules::_get_stack_by_id(state, battle, receiver_id);
 	if (!alive(state, donor) || !alive(state, receiver) || amount <= 0 || heal_blocked(state, receiver, battle)
-			|| !gd::is_empty(state, stack_status_effect(state, receiver, battle, key::status_blighted))) {
+			|| has_status_effect(state, receiver, battle, key::status_blighted)) {
 		return 0;
 	}
 	const int64_t receiver_health = total_health(state, receiver);

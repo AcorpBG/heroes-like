@@ -53,11 +53,11 @@ bool last_counted_turn(State &state, DictRef effect) {
 // --- Wards -------------------------------------------------------------------------
 
 bool in_sanctuary(State &state, DictRef battle, DictRef stack) {
-	return !gd::is_empty(state, stack) && !gd::is_empty(state, stack_mechanic_effect(state, stack, battle, key::invulnerable));
+	return !gd::is_empty(state, stack) && has_mechanic_effect(state, stack, battle, key::invulnerable);
 }
 
 bool halves_shots_and_spells(State &state, DictRef battle, DictRef stack) {
-	return !gd::is_empty(state, stack) && !gd::is_empty(state, stack_mechanic_effect(state, stack, battle, key::half_ranged));
+	return !gd::is_empty(state, stack) && has_mechanic_effect(state, stack, battle, key::half_ranged);
 }
 
 int64_t hit_after_wards(State &state, DictRef battle, DictRef stack, int64_t damage) {
@@ -134,7 +134,7 @@ void spend_pierce(State &state, DictRef battle, Atom attacker_id) {
 // --- Poison, Censure and Stun ------------------------------------------------------
 
 int64_t poisoned_healing(State &state, DictRef battle, DictRef stack, int64_t amount) {
-	if (amount <= 0 || gd::is_empty(state, stack) || gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_poisoned))) {
+	if (amount <= 0 || gd::is_empty(state, stack) || !has_status_effect(state, stack, battle, key::status_poisoned)) {
 		return amount;
 	}
 	return compat::int_div(amount, 2);
@@ -155,7 +155,7 @@ bool censured(State &state, DictRef stack) {
 
 bool stunned_turn(State &state, DictRef battle, Atom battle_id) {
 	const DictRef stack = battle_rules::_get_stack_by_id(state, battle, battle_id);
-	if (!living(state, stack) || gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_stunned))) {
+	if (!living(state, stack) || !has_status_effect(state, stack, battle, key::status_stunned)) {
 		return false;
 	}
 	battle_rules::_record_event(state, battle, gd::format(state, key::stunned_loses_turn_text, { str(battle_rules::_stack_label(state, stack)) }));
@@ -221,7 +221,7 @@ DictRef grasp_status(State &state, DictRef spell, DictRef battle, DictRef hero, 
 	const DictRef effect = gd::as_dict(state.get(spell, str(key::effect), dict_value(state.new_dict())));
 	Value stun;
 	if (gd::is_empty(state, payload) || !living(state, stack) || !state.lookup(effect, str(key::rooted_stun_status), stun) || !gd::is_dict(stun)
-			|| gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_rooted))) {
+			|| !has_status_effect(state, stack, battle, key::status_rooted)) {
 		return payload;
 	}
 	return _status_payload(state, spell, stun, battle, hero, power_against, 0);

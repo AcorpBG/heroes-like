@@ -592,7 +592,7 @@ int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &bas
 int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind, int64_t power) {
 	int64_t rounds = engine_max<int64_t>(1, gd::to_int(state, base_rounds));
 	rounds = gd::add(rounds, duration_bonus_at(power));
-	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
+	const DictRef bonuses = hero_progression_rules::kept_aggregate_bonuses(state, hero_state);
 	rounds = gd::add(rounds, gd::int_field(state, bonuses, kind == key::debuff ? key::debuff_duration_bonus : key::buff_duration_bonus, 0));
 	rounds = gd::add(rounds, _school_bonus(state, bonuses, key::school_duration_bonus, spell));
 	return rounds;
@@ -601,7 +601,7 @@ int64_t _spell_duration_rounds_at(State &state, DictRef hero_state, const Value 
 int64_t spell_power(State &state, DictRef hero_state, DictRef spell) {
 	const Value command = get_or_new_dict(state, hero_state, key::command);
 	const int64_t power = gd::is_dict(command) ? engine_max<int64_t>(0, gd::int_field(state, command.ref, key::power, 0)) : 0;
-	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
+	const DictRef bonuses = hero_progression_rules::kept_aggregate_bonuses(state, hero_state);
 	int64_t total = gd::add(gd::add(power, engine_max<int64_t>(0, gd::int_field(state, bonuses, key::battle_power, 0))), preferred_school_power(state, hero_state, spell));
 	// The Reader's Case: a worn scroll's spell is cast at +2 Power.
 	if (!gd::is_empty(state, spell) && artifact_rules::hero_has_special(state, hero_state, key::special_scroll_power)) {
@@ -931,7 +931,7 @@ int64_t _battle_spell_damage_at(State &state, DictRef hero_state, DictRef spell,
 	if (gd::bool_field(state, effect, key::heat_burst, false) && !gd::is_empty(state, target_stack)) {
 		damage = gd::mul(damage, engine_max<int64_t>(1, gd::int_field(state, target_stack, key::spell_heat, 0)));
 	}
-	const DictRef bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
+	const DictRef bonuses = hero_progression_rules::kept_aggregate_bonuses(state, hero_state);
 	const int64_t potency = gd::add(gd::int_field(state, bonuses, key::spell_damage_pct, 0), _school_bonus(state, bonuses, key::school_potency_pct, spell));
 	return engine_max<int64_t>(1, gd::add(damage, compat::int_div(gd::mul(damage, potency), 100)));
 }
@@ -954,7 +954,7 @@ int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef 
 	const int64_t power = spell_power(state, hero_state, spell);
 	const int64_t power_scale = gd::int_field(state, effect, key::power_scale, 0);
 	const int64_t amount = engine_max<int64_t>(1, gd::add(base_restore, gd::mul(power, power_scale)));
-	const int64_t potency = _school_bonus(state, hero_progression_rules::aggregate_bonuses(state, hero_state), key::school_potency_pct, spell);
+	const int64_t potency = _school_bonus(state, hero_progression_rules::kept_aggregate_bonuses(state, hero_state), key::school_potency_pct, spell);
 	return gd::add(amount, compat::int_div(gd::mul(amount, potency), 100));
 }
 

@@ -11,6 +11,7 @@
 #include "aurelion_rules/port/gd.hpp"
 
 #include <cstdint>
+#include <initializer_list>
 #include <vector>
 
 namespace aurelion::rules::port::spell_rules {
@@ -31,7 +32,16 @@ int64_t battle_spell_recoverable_health(State &state, DictRef stack);
 int64_t effect_bonus_for_kind(State &state, DictRef stack, DictRef battle, Atom kind);
 bool has_effect_id(State &state, DictRef stack, DictRef battle, Atom effect_id);
 bool has_any_effect_ids(State &state, DictRef stack, DictRef battle, const Value &effect_ids);
+// has_any_effect_ids of a literal list, without an Array for it.
+bool has_any_effect_id_in(State &state, DictRef stack, DictRef battle, std::initializer_list<Atom> effect_ids);
 ArrayRef active_effects_for_round(State &state, DictRef stack, int64_t round_number);
+// What an effect gives of a modifier kind as its normalized copy (_normalize_effects) holds it, read from the
+// effect itself: the last of its modifiers' keys whose text is the kind (every value converted as normalizing
+// converts it), or a legacy effect's amount under its kind; 0 when it gives none.
+int64_t effect_modifier(State &state, DictRef effect, Atom kind);
+// Whether one of the stack's effects still running at round_number gives attack, defense, initiative, cohesion
+// or momentum above 0 (both copies of _stack_has_positive_effect).
+bool has_positive_effect(State &state, DictRef stack, int64_t round_number);
 ArrayRef _normalize_effects(State &state, const Value &value);
 DictRef _normalize_effect_modifiers(State &state, const Value &value);
 ArrayRef normalize_blocked_status_ids(State &state, const Value &value);
@@ -175,6 +185,12 @@ DictRef resolve_mechanic(State &state, const Value &raw, int64_t power);
 DictRef stack_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field);
 int64_t stack_mechanic_int(State &state, DictRef stack, DictRef battle, Atom field);
 DictRef stack_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id);
+// stack_mechanic_effect and stack_status_effect without the empty Dictionary for none: true and the newest running
+// effect, or false.
+bool find_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field, DictRef &found);
+bool find_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id, DictRef &found);
+bool has_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field);
+bool has_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id);
 void remove_stack_effect(State &state, DictRef stack, DictRef effect);
 ArrayRef newest_status_ids(State &state, DictRef stack, DictRef battle, int64_t limit);
 int64_t opposing_side_knowledge(State &state, DictRef battle, Atom side);

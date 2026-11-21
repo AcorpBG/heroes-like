@@ -1026,6 +1026,30 @@ public:
 	// A node the host loads from its container, watched from the start, so that
 	// what the host fills into it later is watched as well.
 	void watch_loaded(const Value &value);
+	// The kept answers: a pure read's answer kept by the whole list of what it
+	// read (atoms and numbers, compared in full), not by the node it was asked
+	// about. A write elsewhere does not drop one, which the memo's watching
+	// would at every scoring note the battle AI writes, and two nodes that read
+	// the same share it. A reader that lists every input it reads needs no
+	// watching. The answer is frozen as the memo's is: a write into it is a
+	// ScriptError. They go with the memo at a host or port call and whenever
+	// nodes are renumbered (drop_memo, compact, clear). A key longer than its
+	// capacity is never kept.
+	struct KeptKey {
+		static constexpr size_t kCapacity = 48;
+		uint64_t items[kCapacity];
+		size_t count = 0;
+		bool overflow = false;
+		void add(uint64_t value) {
+			if (count < kCapacity) {
+				items[count++] = value;
+			} else {
+				overflow = true;
+			}
+		}
+	};
+	bool kept_find(const KeptKey &key, Value &answer) const;
+	void kept_keep(const KeptKey &key, const Value &answer);
 	// After a host call (Backing::call_static), which may have changed whatever
 	// an answer was read from: every answer goes, and one being read now is
 	// not kept (it counts as a watched write).
@@ -1077,6 +1101,13 @@ private:
 		}
 	};
 	std::unordered_map<MemoKey, Value, MemoKeyHash> memo_;
+	// The kept answers by the hash of their key, with the key itself to compare.
+	struct Kept {
+		std::vector<uint64_t> inputs;
+		Value answer;
+	};
+	std::unordered_map<uint64_t, Kept> kept_;
+	static uint64_t kept_hash(const KeptKey &key);
 	// watched_writes_ when memo_ was last current.
 	uint64_t memo_epoch_ = 0;
 	uint64_t watched_writes_ = 0;

@@ -61,7 +61,7 @@ ArrayRef legal_destinations_for_stack(State &state, DictRef battle, Atom battle_
 	} else {
 		destinations = _reachable_empty_hexes(state, battle, stack, _stack_movement_points(state, stack, battle));
 		// An Afraid stack (Dread) takes no hex nearer to the other side's stacks.
-		if (!gd::is_empty(state, spell_rules::stack_status_effect(state, stack, battle, key::status_afraid))) {
+		if (spell_rules::has_status_effect(state, stack, battle, key::status_afraid)) {
 			const ArrayRef brave = state.new_array();
 			for (const Value &cell : gd::items(state, array_value(destinations))) {
 				if (gd::is_dict(cell) && !spell_rules::move_refused_by_fear(state, battle, stack, cell.ref)) {

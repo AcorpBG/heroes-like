@@ -160,7 +160,7 @@ int64_t _apply_foundry_aura_round_repair(State &state, DictRef battle) {
 		DictRef aura_source = state.new_dict();
 		const ArrayRef candidates = _alive_stacks_for_side(state, battle, side);
 		for (const Value &candidate : gd::items(state, array_value(candidates))) {
-			if (!gd::is_empty(state, _ability_by_id(state, gd::as_dict(candidate), key::foundry_aura))) {
+			if (_has_ability(state, gd::as_dict(candidate), key::foundry_aura)) {
 				aura_source = gd::as_dict(candidate);
 				break;
 			}

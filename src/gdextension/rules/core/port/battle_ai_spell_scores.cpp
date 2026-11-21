@@ -763,8 +763,8 @@ int64_t neighbours_of_side(State &state, DictRef battle, DictRef stack, Atom sid
 // Graft: worth it when the first stack is under attack and the second can bear
 // half of it; a stack already grafted is left alone.
 double graft_value(State &state, DictRef battle, DictRef first, DictRef second, ArrayRef hostiles) {
-	if (!empty(state, spell_rules::stack_mechanic_effect(state, first, battle, key::graft_partner))
-			|| !empty(state, spell_rules::stack_mechanic_effect(state, second, battle, key::graft_partner))) {
+	if (spell_rules::has_mechanic_effect(state, first, battle, key::graft_partner)
+			|| spell_rules::has_mechanic_effect(state, second, battle, key::graft_partner)) {
 		return -9999.0;
 	}
 	int64_t hostile_shooters = 0;

@@ -24,6 +24,9 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
+// kept_aggregate_bonuses' answers (State::kept_find).
+constexpr uint64_t kKeptSpecialtyBonuses = 0x6b65707400000001ull;
+
 // The id keys of _commander_identity_tokens and _resolve_bonus_key.
 constexpr Atom kHeroIdKeys[] = {
 	key::id,
@@ -124,6 +127,33 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 		_merge_bonuses(state, bonuses, _rank_bonuses(state, row, rank), hero_state);
 	}
 	return with_worn();
+}
+
+void add_bonus_inputs(State &state, DictRef hero_state, State::KeptKey &inputs) {
+	Value specialties;
+	if (state.lookup(hero_state, str(key::specialties), specialties) && gd::is_array(specialties) && state.array_size(specialties.ref) != 0) {
+		inputs.add(1);
+		inputs.add(static_cast<uint64_t>(state.array_size(specialties.ref)));
+		for (const Value &specialty_id : gd::items(state, specialties)) {
+			inputs.add(gd::to_string(specialty_id));
+		}
+	} else {
+		inputs.add(0);
+	}
+	artifact_rules::add_worn_inputs(state, hero_state, inputs);
+	inputs.add(hero_faction_id(state, hero_state));
+}
+
+DictRef kept_aggregate_bonuses(State &state, DictRef hero_state) {
+	State::KeptKey inputs;
+	inputs.add(kKeptSpecialtyBonuses);
+	add_bonus_inputs(state, hero_state, inputs);
+	Value kept;
+	if (!state.kept_find(inputs, kept)) {
+		kept = dict_value(aggregate_bonuses(state, hero_state));
+		state.kept_keep(inputs, kept);
+	}
+	return kept.ref;
 }
 
 void _merge_bonuses(State &state, DictRef target, DictRef source, DictRef hero_state) {
@@ -252,7 +282,7 @@ Value _sum_bonus(State &state, const Value &current, const Value &added) {
 }
 
 int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, Atom school_id) {
-	const DictRef bonuses = aggregate_bonuses(state, hero_state);
+	const DictRef bonuses = kept_aggregate_bonuses(state, hero_state);
 	int64_t discount = gd::int_field(state, bonuses, key::mana_cost_discount, 0);
 	const Value school_discounts = get_or_new_dict(state, bonuses, key::school_mana_discount);
 	if (school_id != key::empty && gd::is_dict(school_discounts)) {
@@ -262,7 +292,7 @@ int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, 
 }
 
 int64_t mana_max_bonus(State &state, DictRef hero_state) {
-	const DictRef bonuses = aggregate_bonuses(state, hero_state);
+	const DictRef bonuses = kept_aggregate_bonuses(state, hero_state);
 	// A point of Knowledge from an artifact or a specialty is worth what a
 	// point of the hero's own is: 4 mana (SpellRules.mana_max_from_command).
 	// A price can take Knowledge away, never below none.

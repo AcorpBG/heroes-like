@@ -99,14 +99,23 @@ DictRef _build_occupancy_map(State &state, DictRef battle) {
 		if (!gd::is_dict(stack) || _alive_count(state, stack.ref) <= 0) {
 			continue;
 		}
-		const DictRef cell = _stack_hex(state, stack.ref);
-		if (gd::is_empty(state, cell)) {
+		// _stack_hex's test and battle_footprint::cells' cells, read without their Dictionaries: a Vector2i hex
+		// places the stack, a Dictionary one when its cell is on the board, and a negative q or r has no cells.
+		const Value hex = state.get(stack.ref, str(key::hex), Value());
+		if (!gd::is_vector2i(hex) && !gd::is_dict(hex)) {
 			continue;
 		}
-		const ArrayRef body = battle_footprint::cells(state, stack.ref, Value());
-		for (const Value &body_cell : gd::items(state, array_value(body))) {
-			const Atom cell_key = _hex_key(state, gd::as_dict(body_cell));
-			state.set(occupied, str(cell_key), str(string_field(state, stack.ref, key::battle_id, key::empty)));
+		int64_t q = -1;
+		int64_t r = -1;
+		int64_t tail = -1;
+		battle_footprint::placed_columns(state, stack.ref, q, r, tail);
+		if ((gd::is_dict(hex) && !_hex_in_bounds(q, r)) || q < 0 || r < 0) {
+			continue;
+		}
+		const Atom holder = string_field(state, stack.ref, key::battle_id, key::empty);
+		state.set(occupied, str(pair_key(state, q, r)), str(holder));
+		if (battle_footprint::width(state, stack.ref) == 2) {
+			state.set(occupied, str(pair_key(state, tail, r)), str(holder));
 		}
 	}
 	return occupied;

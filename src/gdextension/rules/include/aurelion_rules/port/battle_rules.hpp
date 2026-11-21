@@ -29,6 +29,7 @@
 #include "aurelion_rules/port/gd.hpp"
 
 #include <cstdint>
+#include <initializer_list>
 #include <string>
 
 namespace aurelion::rules::port::battle_rules {
@@ -139,7 +140,21 @@ double _side_max_ability_float(State &state, DictRef battle, Atom side, Atom abi
 bool _side_ability_bool(State &state, DictRef battle, Atom side, Atom ability_id, Atom key, bool default_value);
 DictRef _normalize_ability_modifiers(State &state, const Value &value);
 bool _battle_has_any_tags(State &state, DictRef battle, ArrayRef tags);
+// _battle_has_any_tags of a literal list, without an Array for it.
+bool _battle_has_any_tag_in(State &state, DictRef battle, std::initializer_list<Atom> tags);
 DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id);
+// _ability_by_id without the empty Dictionary for an ability the stack lacks (or a Censured
+// stack's): true and the stack's own ability, or false.
+bool _find_ability(State &state, DictRef stack, Atom ability_id, DictRef &found);
+// For a reader of several abilities that only reads them: every ability the stack lacks is the
+// same empty Dictionary, made at the reader's first miss, where _ability_by_id makes one for each.
+struct AbilityBlank {
+	DictRef node = 0;
+	bool made = false;
+};
+DictRef _ability_or_blank(State &state, DictRef stack, Atom ability_id, AbilityBlank &blank);
+// _authored_ability_by_id with the reader's blank for an ability the stack lacks.
+DictRef _authored_ability_or_blank(State &state, DictRef stack, Atom ability_id, AbilityBlank &blank);
 int64_t _side_max_ability_int(State &state, DictRef battle, Atom side, Atom ability_id, Atom key);
 int64_t _allied_melee_count(State &state, DictRef battle, Atom side);
 bool _battle_has_tag(State &state, DictRef battle, Atom tag);

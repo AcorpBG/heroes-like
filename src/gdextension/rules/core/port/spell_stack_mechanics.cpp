@@ -128,34 +128,65 @@ DictRef resolve_mechanic(State &state, const Value &raw, int64_t power) {
 	return resolved;
 }
 
-DictRef stack_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field) {
-	const ArrayRef effects = raw_effects(state, stack);
-	for (int64_t index = state.array_size(effects) - 1; index >= 0; --index) {
-		const Value effect = state.at(effects, index);
+bool find_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field, DictRef &found) {
+	// raw_effects' Array, read where it is.
+	Value effects;
+	if (gd::is_empty(state, stack) || !state.lookup(stack, str(key::effects), effects) || !gd::is_array(effects)) {
+		return false;
+	}
+	for (int64_t index = state.array_size(effects.ref) - 1; index >= 0; --index) {
+		const Value effect = state.at(effects.ref, index);
 		if (!gd::is_dict(effect) || !effect_active(state, effect.ref, battle)) {
 			continue;
 		}
-		if (state.has(effect_mechanic(state, effect.ref), str(field))) {
-			return effect.ref;
+		// effect_mechanic's Dictionary, when the effect has one.
+		Value mechanic;
+		if (state.lookup(effect.ref, str(key::mechanic), mechanic) && gd::is_dict(mechanic) && state.has(mechanic.ref, str(field))) {
+			found = effect.ref;
+			return true;
 		}
 	}
-	return state.new_dict();
+	return false;
+}
+
+bool has_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field) {
+	DictRef found = 0;
+	return find_mechanic_effect(state, stack, battle, field, found);
+}
+
+DictRef stack_mechanic_effect(State &state, DictRef stack, DictRef battle, Atom field) {
+	DictRef found = 0;
+	return find_mechanic_effect(state, stack, battle, field, found) ? found : state.new_dict();
 }
 
 int64_t stack_mechanic_int(State &state, DictRef stack, DictRef battle, Atom field) {
-	const DictRef effect = stack_mechanic_effect(state, stack, battle, field);
-	return gd::is_empty(state, effect) ? 0 : gd::int_field(state, effect_mechanic(state, effect), field, 0);
+	DictRef effect = 0;
+	return find_mechanic_effect(state, stack, battle, field, effect) ? gd::int_field(state, effect_mechanic(state, effect), field, 0) : 0;
+}
+
+bool find_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id, DictRef &found) {
+	Value effects;
+	if (gd::is_empty(state, stack) || !state.lookup(stack, str(key::effects), effects) || !gd::is_array(effects)) {
+		return false;
+	}
+	for (int64_t index = state.array_size(effects.ref) - 1; index >= 0; --index) {
+		const Value effect = state.at(effects.ref, index);
+		if (gd::is_dict(effect) && effect_active(state, effect.ref, battle) && gd::string_field(state, effect.ref, key::effect_id, key::empty) == effect_id) {
+			found = effect.ref;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool has_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id) {
+	DictRef found = 0;
+	return find_status_effect(state, stack, battle, effect_id, found);
 }
 
 DictRef stack_status_effect(State &state, DictRef stack, DictRef battle, Atom effect_id) {
-	const ArrayRef effects = raw_effects(state, stack);
-	for (int64_t index = state.array_size(effects) - 1; index >= 0; --index) {
-		const Value effect = state.at(effects, index);
-		if (gd::is_dict(effect) && effect_active(state, effect.ref, battle) && gd::string_field(state, effect.ref, key::effect_id, key::empty) == effect_id) {
-			return effect.ref;
-		}
-	}
-	return state.new_dict();
+	DictRef found = 0;
+	return find_status_effect(state, stack, battle, effect_id, found) ? found : state.new_dict();
 }
 
 void remove_stack_effect(State &state, DictRef stack, DictRef effect) {
@@ -262,13 +293,13 @@ void after_stack_damaged(State &state, DictRef battle, Atom battle_id, int64_t t
 }
 
 bool heal_blocked(State &state, DictRef stack, DictRef battle) {
-	return !gd::is_empty(state, stack_mechanic_effect(state, stack, battle, key::heal_block));
+	return has_mechanic_effect(state, stack, battle, key::heal_block);
 }
 
 // --- Spells cast on a stack -------------------------------------------------
 
 DictRef reflected_spell_target(State &state, DictRef battle, DictRef target, Atom spell_id) {
-	if (gd::is_empty(state, target) || gd::is_empty(state, stack_mechanic_effect(state, target, battle, key::reflect_spell))) {
+	if (gd::is_empty(state, target) || !has_mechanic_effect(state, target, battle, key::reflect_spell)) {
 		return state.new_dict();
 	}
 	const ArrayRef candidates = state.new_array();
@@ -356,7 +387,7 @@ bool start_of_turn_mechanics(State &state, DictRef battle, Atom battle_id) {
 	}
 	// Elder Grove heals its side's stacks in it.
 	grove_heal(state, battle, battle_id);
-	return !gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_asleep));
+	return has_status_effect(state, stack, battle, key::status_asleep);
 }
 
 void begin_active_turn(State &state, DictRef battle) {
@@ -391,12 +422,12 @@ int64_t stationary_attack_bonus(State &state, DictRef battle, DictRef attacker, 
 
 double blow_damage_multiplier(State &state, DictRef battle, DictRef attacker, DictRef defender, bool is_ranged) {
 	double multiplier = 1.0;
-	const DictRef mark = stack_status_effect(state, defender, battle, key::status_marked);
-	if (!gd::is_empty(state, mark) && side_of(state, attacker) != side_of(state, defender)) {
+	DictRef mark = 0;
+	if (find_status_effect(state, defender, battle, key::status_marked, mark) && side_of(state, attacker) != side_of(state, defender)) {
 		const int64_t pct = gd::int_field(state, effect_mechanic(state, mark), key::damage_taken_pct, MARKED_DAMAGE_PCT);
 		multiplier *= 1.0 + static_cast<double>(pct) / 100.0;
 	}
-	if (!is_ranged && !gd::is_empty(state, stack_status_effect(state, attacker, battle, key::status_blinded))) {
+	if (!is_ranged && has_status_effect(state, attacker, battle, key::status_blinded)) {
 		multiplier *= BLINDED_BLOW_SHARE;
 	}
 	// Living Wall: a shot across its trees does half damage.
@@ -463,7 +494,7 @@ ArrayRef after_blow_mechanics(State &state, DictRef battle, Atom attacker_id, At
 }
 
 DictRef confused_blow_target(State &state, DictRef battle, DictRef attacker, DictRef target, bool is_ranged) {
-	if (gd::is_empty(state, attacker) || gd::is_empty(state, target) || gd::is_empty(state, stack_status_effect(state, attacker, battle, key::status_confused))) {
+	if (gd::is_empty(state, attacker) || gd::is_empty(state, target) || !has_status_effect(state, attacker, battle, key::status_confused)) {
 		return target;
 	}
 	// A blow lands on a stack next to the confused one; a shot on the target or
@@ -493,18 +524,18 @@ DictRef confused_blow_target(State &state, DictRef battle, DictRef attacker, Dic
 }
 
 bool shot_refused_by_spells(State &state, DictRef battle, DictRef shooter, DictRef target) {
-	if (!gd::is_empty(state, stack_status_effect(state, shooter, battle, key::status_blinded))) {
+	if (has_status_effect(state, shooter, battle, key::status_blinded)) {
 		return true;
 	}
 	// Murk: no shot into the fog or out of it. Glass Dome: none from outside it at a stack under it.
 	if (in_murk(state, battle, shooter) || in_murk(state, battle, target) || dome_keeps_off(state, battle, shooter, target)) {
 		return true;
 	}
-	return !gd::is_empty(state, stack_mechanic_effect(state, target, battle, key::shot_shield));
+	return has_mechanic_effect(state, target, battle, key::shot_shield);
 }
 
 bool move_refused_by_fear(State &state, DictRef battle, DictRef stack, DictRef cell) {
-	if (gd::is_empty(state, stack_status_effect(state, stack, battle, key::status_afraid))) {
+	if (!has_status_effect(state, stack, battle, key::status_afraid)) {
 		return false;
 	}
 	// It will not move toward the other side's stacks: no hex nearer to the

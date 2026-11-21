@@ -416,7 +416,7 @@ ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_s
 				}
 				const DictRef ally = ally_value.ref;
 				// Healing would hurt a blighted stack.
-				if (effect_type == key::recover_ally && (_recovery_room(state, ally, spell) <= 0 || !empty(state, spell_rules::stack_status_effect(state, ally, battle, key::status_blighted)))) {
+				if (effect_type == key::recover_ally && (_recovery_room(state, ally, spell) <= 0 || spell_rules::has_status_effect(state, ally, battle, key::status_blighted))) {
 					continue;
 				}
 				if (_allied_spell_candidate_suppressed_by_active_buff(state, effect_type, ally, battle, spell)) {
