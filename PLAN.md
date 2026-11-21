@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-21 `ai-hold-no-continuity-bonus-20261121` (dfc1d27d9): Holding a town keeps no goal bonus (x1.25): staying is weighed afresh each day. With the doorway fix, m392 ends on day 214 and m743 on day 227 (both at the 320-day cap in the batch); all six check seeds change.
 - 2026-11-21 `ai-route-doorway-defender-20261121` (ebd1ba0ff): A hostile town's doorway defender walls no route to that town: its fight is in the town's value already. m392, capped at day 320 in the batch, now ends on day 267; six seeds identical to main.
 - 2026-11-21 `rmg-cut-off-one-way-monolith-20261121` (471c14c66): Cut-off check counts one-way monoliths one way: areas join only when each reaches the other, so a one-way link that lost its exit triggers the repair. m502's split map: 8 towns cut off to none; other capped maps unchanged.
 - 2026-11-21 `battle-sim-throwaway-20261121` (4b696e417): Battle simulations make about half the throwaway nodes: lookups without empty records, specialty, mana-cost and special-id answers kept by their inputs, effects read in place; XL peaks 3.53 to 2.26 GB and 2.89 to 1.62 GB, play identical.
