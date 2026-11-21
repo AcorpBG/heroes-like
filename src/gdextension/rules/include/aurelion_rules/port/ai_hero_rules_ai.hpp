@@ -146,6 +146,10 @@ int64_t _tile_stretch(State &state, DictRef session, DictRef context, int64_t le
 // or where another army's zone took its tile, the ground beside it. None at sea.
 std::vector<int64_t> _home_stretches(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, Atom hero_id, double power, double loss_limit, DictRef entry);
 Atom _stretch_key(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, double power, double loss_limit, DictRef entry);
+// The stretch keys from which a town's door on `tile` is reached: the door's
+// own, and where the hero `defender` stands in the doorway, the ground beside
+// its zone. None on a tile no patch takes.
+std::vector<Atom> _door_stretch_keys(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, Atom defender, double power, double loss_limit, DictRef entry);
 DictRef _avoided_today(State &state, DictRef session, DictRef entry);
 DictRef _beyond_gate(State &state, DictRef session, DictRef context, DictRef entry, DictRef gate, int64_t movement_max, int64_t radius);
 Atom _beyond_key(State &state, DictRef entry, DictRef gate, int64_t radius);

@@ -10,6 +10,7 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <string>
@@ -566,14 +567,19 @@ void _route_through(State &state, DictRef session, DictRef context, DictRef entr
 	}
 	const DictRef targets = state.new_dict();
 	for (const Value &town : gd::items(state, array_value(towns))) {
-		const Atom town_key = _stretch_key(state, session, context, gd::to_int(state, ai::vmember(state, town, key::level)), gd::to_int(state, ai::vmember(state, town, key::tile)), power, limit, entry);
-		if (town_key == key::empty || town_key == home_key) {
+		// A hostile town's doorway defender walls no way to that town: the town's
+		// value counts its fight already (`_town_candidate`).
+		const Atom defender = gd::stringify(state, ai::vget(state, town, key::defender, str(key::empty)));
+		const std::vector<Atom> town_keys = _door_stretch_keys(state, session, context, gd::to_int(state, ai::vmember(state, town, key::level)), gd::to_int(state, ai::vmember(state, town, key::tile)), defender, power, limit, entry);
+		if (town_keys.empty() || std::find(town_keys.begin(), town_keys.end(), home_key) != town_keys.end()) {
 			continue;
 		}
-		if (!state.has(targets, str(town_key))) {
-			state.set(targets, str(town_key), array_value(state.new_array()));
+		for (const Atom town_key : town_keys) {
+			if (!state.has(targets, str(town_key))) {
+				state.set(targets, str(town_key), array_value(state.new_array()));
+			}
+			state.append(gd::as_array(gd::index(state, targets, str(town_key))), town);
 		}
-		state.append(gd::as_array(gd::index(state, targets, str(town_key))), town);
 	}
 	if (explore) {
 		_route_unseen(state, session, context, entry, map, power, limit, home_key, targets);
@@ -887,6 +893,9 @@ ArrayRef _route_towns(State &state, DictRef session, DictRef context, DictRef en
 		state.set(town, str(key::tile), int_value(gd::to_int(state, ai::vmember(state, town_ref, key::door))));
 		state.set(town, str(key::index), gd::index(state, candidate, str(key::index)));
 		state.set(town, str(key::fight_power), float_value(gd::float_field(state, candidate, key::fight_power, 0.0)));
+		if (state.has(candidate, str(key::defender))) {
+			state.set(town, str(key::defender), gd::index(state, candidate, str(key::defender)));
+		}
 		state.append(towns, dict_value(town));
 	}
 	return towns;

@@ -645,6 +645,36 @@ Atom _stretch_key(State &state, DictRef session, DictRef context, int64_t level,
 	return gd::format(state, key::d_d, {int_value(level), int_value(gd::packed_int(state, stretches, gd::packed_int(state, patches, tile)))});
 }
 
+std::vector<Atom> _door_stretch_keys(State &state, DictRef session, DictRef context, int64_t level, int64_t tile, Atom defender, double power, double loss_limit, DictRef entry) {
+	const DictRef regions = _level_regions(state, session, context, level);
+	const PackedRef patches = gd::as_ints(gd::index(state, regions, str(key::patches)));
+	if (tile < 0 || tile >= gd::packed_size(state, patches) || gd::packed_int(state, patches, tile) < 0) {
+		return {};
+	}
+	const PackedRef stretches = _level_stretches(state, session, context, level, power, loss_limit, entry);
+	const int64_t door = gd::packed_int(state, patches, tile);
+	std::vector<Atom> keys = {gd::format(state, key::d_d, {int_value(level), int_value(gd::packed_int(state, stretches, door))})};
+	const ArrayRef guards = gd::as_array(gd::index(state, regions, str(key::guards)));
+	const int64_t guard_count = state.array_size(guards);
+	if (defender == key::empty || door >= guard_count || gd::stringify(state, gd::index(state, gd::as_dict(state.at(guards, door)), str(key::id))) != defender) {
+		return keys;
+	}
+	// The hero in the doorway fights with the town, and the town's value counts
+	// that fight (`_town_candidate`): the door lies on the ground beside its
+	// zone too. Another army's zone there is a fight of its own.
+	for (const Value &link : state.dict(gd::as_dict(gd::index(state, gd::as_dict(state.at(guards, door)), str(key::links)))).keys.list()) {
+		const int64_t patch = gd::to_int(state, link);
+		if (patch < guard_count) {
+			continue;
+		}
+		const Atom link_key = gd::format(state, key::d_d, {int_value(level), int_value(gd::packed_int(state, stretches, patch))});
+		if (std::find(keys.begin(), keys.end(), link_key) == keys.end()) {
+			keys.push_back(link_key);
+		}
+	}
+	return keys;
+}
+
 DictRef _avoided_today(State &state, DictRef session, DictRef entry) {
 	const DictRef result = state.new_dict();
 	Value block;

@@ -522,6 +522,15 @@ DictRef _town_candidate(State &state, DictRef session, DictRef context, DictRef 
 	state.set(result, str(key::index), int_value(index));
 	state.set(result, str(key::value), float_value(value - loss));
 	state.set(result, str(key::fight_power), float_value(defense));
+	// The hero in the doorway, whose fight that value counts: the ways there do
+	// not count it again (`_route_through`).
+	if (owner == key::player) {
+		if (gd::is_dict(player_defender) && !gd::is_empty(state, player_defender.ref)) {
+			state.set(result, str(key::defender), str(ai::string_or_empty(state, player_defender.ref, key::id)));
+		}
+	} else if (defender_index >= 0) {
+		state.set(result, str(key::defender), str(ai::string_or_empty(state, encounter_at(state, session, defender_index), key::placement_id)));
+	}
 	if (victory) {
 		state.set(result, str(key::victory), gd::bool_value(true));
 	}
