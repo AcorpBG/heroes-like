@@ -42115,8 +42115,10 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 
 // The game's walking surface on a finished map. Rock and object bodies block;
 // water blocks too unless sail is set and a boat can be had on it. Action tiles
-// stay enterable, and monoliths and subterranean gates join their peers. Mines
-// block the game's three-by-two shape, not their H3 body.
+// stay enterable, and two-way monoliths and subterranean gates join their peers.
+// A one-way monolith (type 43) leads to its exits (type 44) only: with one_way_apart
+// those links are kept apart in one_way_links, otherwise they join both ways like
+// the others. Mines block the game's three-by-two shape, not their H3 body.
 struct DepartureWalkSurface {
 	int32_t width = 0;
 	int32_t height = 0;
@@ -42125,6 +42127,8 @@ struct DepartureWalkSurface {
 	int64_t cell_count = 0;
 	std::vector<char> blocked;
 	std::map<int64_t, std::vector<int64_t>> links;
+	// Entrance cell, exit cell.
+	std::vector<std::pair<int64_t, int64_t>> one_way_links;
 
 	int64_t flat_of(const RuntimeMapTilePoint &tile) const {
 		if (tile.x < 0 || tile.y < 0 || tile.x >= width || tile.y >= height || tile.level < 0 || tile.level >= level_count) {
@@ -42134,7 +42138,8 @@ struct DepartureWalkSurface {
 	}
 };
 
-static bool departure_walk_surface(const RuntimeMapPayloadProjection &projection, bool sail, DepartureWalkSurface &surface) {
+static bool departure_walk_surface(
+		const RuntimeMapPayloadProjection &projection, bool sail, bool one_way_apart, DepartureWalkSurface &surface) {
 	surface.width = projection.width;
 	surface.height = projection.height;
 	surface.level_count = projection.level_count;
@@ -42274,21 +42279,27 @@ static bool departure_walk_surface(const RuntimeMapPayloadProjection &projection
 			entry_by_serialized_index[object.serialized_index] = flat_of(object.action_tiles.front());
 		}
 	}
-	auto link = [&](int32_t from_index, int32_t to_index) {
+	auto link = [&](int32_t from_index, int32_t to_index, bool one_way) {
 		const auto from = entry_by_serialized_index.find(from_index);
 		const auto to = entry_by_serialized_index.find(to_index);
 		if (from == entry_by_serialized_index.end() || to == entry_by_serialized_index.end() || from->second < 0 || to->second < 0) {
+			return;
+		}
+		if (one_way && one_way_apart) {
+			surface.one_way_links.emplace_back(from->second, to->second);
 			return;
 		}
 		surface.links[from->second].push_back(to->second);
 		surface.links[to->second].push_back(from->second);
 	};
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		// 0x4a7605 gives a one-way entrance its link's exits as destinations, and each
+		// two-way monolith its partner.
 		for (const int32_t peer : object.monolith_destination_serialized_indices_0x4a7605) {
-			link(object.serialized_index, peer);
+			link(object.serialized_index, peer, object.type_id == 43);
 		}
 		if (object.cross_level_peer_serialized_index_0x4a6cf2 >= 0) {
-			link(object.serialized_index, object.cross_level_peer_serialized_index_0x4a6cf2);
+			link(object.serialized_index, object.cross_level_peer_serialized_index_0x4a6cf2, false);
 		}
 	}
 	return true;
@@ -42339,14 +42350,53 @@ static int32_t departure_walk_components(const DepartureWalkSurface &surface, Op
 }
 
 // Towns outside the walkable area that holds the most towns, on the walking
-// surface with boats.
+// surface with boats. One-way monoliths join two areas only when each reaches the
+// other: m502 (seed 626471651, 8XM8) lost zone 42's exit of its one-way 41-42 pair,
+// and the half behind it reached the other half but could not be reached from it.
 static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
 	DepartureWalkSurface surface;
-	if (!departure_walk_surface(projection, true, surface)) {
+	if (!departure_walk_surface(projection, true, true, surface)) {
 		return 0;
 	}
 	std::vector<int32_t> area;
 	departure_walk_components(surface, [&](int64_t cell) { return !surface.blocked[size_t(cell)]; }, area);
+	std::map<int32_t, std::vector<int32_t>> leads_to;
+	for (const std::pair<int64_t, int64_t> &one_way : surface.one_way_links) {
+		const int32_t from = area[size_t(one_way.first)];
+		const int32_t to = area[size_t(one_way.second)];
+		if (from >= 0 && to >= 0 && from != to) {
+			leads_to[from].push_back(to);
+		}
+	}
+	std::map<int32_t, std::set<int32_t>> reaches;
+	for (const auto &entry : leads_to) {
+		std::set<int32_t> &seen = reaches[entry.first];
+		std::vector<int32_t> stack { entry.first };
+		while (!stack.empty()) {
+			const auto next = leads_to.find(stack.back());
+			stack.pop_back();
+			if (next == leads_to.end()) {
+				continue;
+			}
+			for (const int32_t to : next->second) {
+				if (seen.insert(to).second) {
+					stack.push_back(to);
+				}
+			}
+		}
+	}
+	// An area's group is the lowest area that it reaches and that reaches it back.
+	std::map<int32_t, int32_t> group;
+	for (const auto &entry : reaches) {
+		int32_t lowest = entry.first;
+		for (const int32_t to : entry.second) {
+			const auto back = reaches.find(to);
+			if (back != reaches.end() && back->second.count(entry.first) != 0) {
+				lowest = std::min(lowest, to);
+			}
+		}
+		group[entry.first] = lowest;
+	}
 	std::map<int32_t, int32_t> towns_per_area;
 	int32_t town_count = 0;
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
@@ -42356,7 +42406,8 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 		town_count += 1;
 		const int64_t flat = object.action_tiles.empty() ? -1 : surface.flat_of(object.action_tiles.front());
 		if (flat >= 0) {
-			towns_per_area[area[size_t(flat)]] += 1;
+			const auto grouped = group.find(area[size_t(flat)]);
+			towns_per_area[grouped == group.end() ? area[size_t(flat)] : grouped->second] += 1;
 		}
 	}
 	int32_t largest = 0;
@@ -45228,7 +45279,10 @@ static bool route_seal_prepare(
 		RouteSealState &s) {
 	s.projection = &projection;
 	s.seed = seed;
-	if (!departure_walk_surface(projection, false, s.surface)) {
+	// The seal's walks join one-way monoliths both ways. The cut-off check on the
+	// sealed map counts them one way, so a seal that leaves a town reachable only one
+	// way is undone there.
+	if (!departure_walk_surface(projection, false, false, s.surface)) {
 		return false;
 	}
 	const GeneratedCellRecordGrid0x30 &grid = state.generated_cell_buffer;

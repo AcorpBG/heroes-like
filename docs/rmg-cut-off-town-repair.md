@@ -4,7 +4,8 @@ Document role: design and validation of an owner-approved departure from H3MapEd
 (owner decision, 2026-10-17). This is not a parity fix.
 Slice: `native-rmg-cut-off-town-repair-20261017`; template re-pick:
 `native-rmg-split-template-repick-20261018` (owner decision, 2026-10-18); monolith partners:
-`native-rmg-repair-monolith-partner-20261018` (owner decision, 2026-10-18).
+`native-rmg-repair-monolith-partner-20261018` (owner decision, 2026-10-18); one-way monoliths
+in the town check: `rmg-cut-off-one-way-monolith-20261121` (owner decision, 2026-11-21).
 Evidence (outside the repo): the shared notes of session `local_a8c2da62`,
 `zero_guard_passage_prototype/` (`remaining_splits_trace.md`, `all_three_causes_measurement.md`).
 
@@ -182,8 +183,10 @@ differs from H3MapEd beyond the carved cells.
 The map then goes through the normal remaining phases and writeout.
 
 **Town check** (`cut_off_town_count_departure`), on the runtime projection: rock and
-object bodies block, action cells are open, and monoliths and two-level gates link
-their peers. Water is walkable only where a hero can get a boat on it: a body of water
+object bodies block, action cells are open, and two-way monoliths and two-level gates
+link their peers. A one-way monolith (type 43) leads to its link's exits (type 44) only,
+so two areas it joins count as one only when each reaches the other (m502, below).
+Water is walkable only where a hero can get a boat on it: a body of water
 (8-connected water tiles) with a boat (type 8) on it, or with a shipyard's (type 87)
 dock. The dock is the nearest water tile around the shipyard's visit tile and body, in
 the order the game picks it (`water_travel_rules_ai.cpp`, `dock_tile`). The game has no
@@ -400,6 +403,30 @@ guards) kept H3MapEd's map, yet players 2 and 4 could never be reached.
 - **Fix:** the check lets a hero onto water only where a boat or a shipyard dock is.
   m475 now counts 3 towns cut off; the repair pass places the missing monolith ends and
   ends with none.
+
+## m502: a one-way link that lost its exit
+
+AI match m502 of the 2026-11-21 batch ran 320 days. Its map: seed 1209537657-p4, native
+seed 626471651; large, two levels, land, strong guards, 4 players; 8XM8 with the corrected
+link zones. The map was split 8 towns to 8, and the side that grew strong could not reach
+the other.
+
+- **Cause:** zones 41 and 42 do not touch, so `0x4a7605` builds their link from one-way
+  monoliths: an entrance and an exit in each zone. `0x4a7312` found no cell for zone 42's
+  exit, and H3MapEd places nothing then. The link led from zone 42 to zone 41 only. Zone
+  42's half reached the other half but could not be reached from it.
+- **Missed:** the check joined each entrance and its exits both ways. It counted no town
+  cut off, so the repair never ran.
+- **H3MapEd:** its own Windows map for the seed equals the strict native map (tiles and
+  all 4054 objects). That map reads 8XM8 as H3MapEd does and is a different layout. It
+  cuts off one start town, the 8XM8 zone without a link (above).
+- **Fix:** the check keeps one-way links apart and joins two areas only when each reaches
+  the other. m502 now counts 8 towns cut off. The repair pass places zone 42's exit in
+  zone 14 (monolith partners, step 1) and ends with none cut off.
+- **Unchanged:** the batch's other six capped games keep their maps. Three of them (m129,
+  m181, m106) have halves joined by one-way pairs that lead both ways.
+- **Route seal:** its own walks still join one-way monoliths both ways. The check on the
+  sealed map undoes a seal that would leave a town reachable one way only.
 
 ## Known limits
 
