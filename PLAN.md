@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-22 `brasshollow-mint-veilmourn-prices-20261122` (abeb7ecfd): Fresh 1,200-game bank: Brasshollow 89%, Veilmourn 107%. Contract Mint also pays 250 gold a day; Veilmourn's tier I-V lines cost about 5% more. Arena: Veilmourn 56.9% -> 54.3% of army fights.
 - 2026-11-22 `sunvault-brasshollow-level-20261122` (502df42ba): Sunvault's tier I-V lines give about 8% fewer troops for the gold and Brasshollow's have 10% more health; army fights on the same dice Sunvault 46% -> 39%, Brasshollow 50% -> 56%. Whole games measured next.
 - 2026-11-22 `thornwake-start-trim-20261122` (c589d8f05): Thornwake starts with 5 Thornwhip Carriers, not 6. Arena vs week-one guards: wins 87% -> 78%, army lost 34% -> 42%, level with Mireclaw, Brasshollow, Veilmourn, Sunvault (77-80%, 38-48%). Games not measured.
 - 2026-11-22 `brasshollow-start-shooter-20261122` (b2884d60e): Brasshollow starts with 9 Scrip Haulers, 5 Tallyspring Throwers, 3 Furnace Pavis Teams (was the only muster with no shooter). Arena vs week-one guards: wins 59% -> 77%, army lost 60% -> 41% (others 77-88%, 34-47%). Games not measured.

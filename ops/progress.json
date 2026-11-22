@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "sunvault-brasshollow-level-20261122",
- "currentSliceTitle": "Sunvault's tier I-V lines give about 8% fewer troops for the gold and Brasshollow's have 10% more health; army fights on the same dice Sunvault 46% -> 39%, Brasshollow 50% -> 56%. Whole games measured next.",
+ "currentSliceId": "brasshollow-mint-veilmourn-prices-20261122",
+ "currentSliceTitle": "Fresh 1,200-game bank: Brasshollow 89%, Veilmourn 107%. Contract Mint also pays 250 gold a day; Veilmourn's tier I-V lines cost about 5% more. Arena: Veilmourn 56.9% -> 54.3% of army fights.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-22T17:00:09Z",
+ "updatedAt": "2026-11-22T20:54:23Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "brasshollow-mint-veilmourn-prices-20261122",
+   "status": "completed",
+   "completedAt": "2026-11-22",
+   "summary": "Fresh 1,200-game bank: Brasshollow 89%, Veilmourn 107%. Contract Mint also pays 250 gold a day; Veilmourn's tier I-V lines cost about 5% more. Arena: Veilmourn 56.9% -> 54.3% of army fights.",
+   "commit": "abeb7ecfd"
+  },
   {
    "id": "sunvault-brasshollow-level-20261122",
    "status": "completed",
