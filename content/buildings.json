@@ -7828,8 +7828,9 @@
       ],
       "development_version": 1,
       "faction_id": "faction_brasshollow",
-      "description": "Stamped contracts produce 1 brass scrip daily.",
+      "description": "Stamped contracts produce 250 gold and 1 brass scrip daily.",
       "income": {
+        "gold": 250,
         "brass_scrip": 1
       }
     },

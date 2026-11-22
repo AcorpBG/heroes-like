@@ -86,7 +86,7 @@ Each faction has three unique buildings in addition to the common lines. Their c
 | Thornwake Concord | Renewal Nursery | The living nursery produces 1 verdant graft daily. |
 | Thornwake Concord | Rootbound Ward | Living roots add 15 town battle readiness. Defending creatures also gain +2 defense during town battles. |
 | Thornwake Concord | Pollen Assembly | Seasonal pollen assemblies add 4 weekly tier-1 recruits. |
-| Brasshollow Combine | Contract Mint | Stamped contracts produce 1 brass scrip daily. |
+| Brasshollow Combine | Contract Mint | Stamped contracts produce 250 gold and 1 brass scrip daily. |
 | Brasshollow Combine | Assembly Discipline | Standardized assembly reduces faction recruitment costs by 10%. |
 | Brasshollow Combine | Pressure Bastion | Pressure defenses add 20 town battle readiness. Defending creatures also gain +2 defense during town battles. |
 | Veilmourn Armada | Saltwake Vault | Preserved memories produce 1 memory salt daily. |
