@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-22 `ai-build-discount-value-20261122` (2a7807eb5): The computer's build choice counts the gold a recruitment discount saves, so it builds Brasshollow's Assembly Discipline and Embercourt's Quartermasters Seal (never built before: 0 of 55 towns each). Not batch-measured.
 - 2026-11-21 `ai-main-walks-to-field-army-20261121` (c0dfb38ba): The main army short of what it has to beat may walk to a field army and take its troops. m181 (two equal heroes trading empty towns to the 320-day cap) ends on day 197, m743 on day 137; s2 ends on day 122 instead of 70.
 - 2026-11-21 `ai-field-armies-pool-20261121` (cad60cca7): A field army may pool into a more experienced one past a rival hero that keeps both and the main army away, or to take the winning town. m743 ends on day 233 (without the hold fix) or 256; mg-a loses its day-75 win.
 - 2026-11-21 `ai-hold-no-continuity-bonus-20261121` (dfc1d27d9): Holding a town keeps no goal bonus (x1.25): staying is weighed afresh each day. With the doorway fix, m392 ends on day 214 and m743 on day 227 (both at the 320-day cap in the batch); all six check seeds change.

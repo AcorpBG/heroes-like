@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-main-walks-to-field-army-20261121",
- "currentSliceTitle": "The main army short of what it has to beat may walk to a field army and take its troops. m181 (two equal heroes trading empty towns to the 320-day cap) ends on day 197, m743 on day 137; s2 ends on day 122 instead of 70.",
+ "currentSliceId": "ai-build-discount-value-20261122",
+ "currentSliceTitle": "The computer's build choice counts the gold a recruitment discount saves, so it builds Brasshollow's Assembly Discipline and Embercourt's Quartermasters Seal (never built before: 0 of 55 towns each). Not batch-measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-21T19:12:46Z",
+ "updatedAt": "2026-11-22T13:18:40Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-build-discount-value-20261122",
+   "status": "completed",
+   "completedAt": "2026-11-22",
+   "summary": "The computer's build choice counts the gold a recruitment discount saves, so it builds Brasshollow's Assembly Discipline and Embercourt's Quartermasters Seal (never built before: 0 of 55 towns each). Not batch-measured.",
+   "commit": "2a7807eb5"
+  },
   {
    "id": "ai-main-walks-to-field-army-20261121",
    "status": "completed",
