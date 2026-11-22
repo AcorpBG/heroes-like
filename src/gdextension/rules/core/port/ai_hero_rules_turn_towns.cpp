@@ -152,6 +152,26 @@ Atom generated_start_army(Atom faction_id) {
 	return key::empty;
 }
 
+// The gold a building's recruitment discount takes off one week of `growth`.
+double _discount_saving(State &state, DictRef building, DictRef growth) {
+	Value discounts;
+	if (!state.lookup(building, str(key::recruitment_discount_percent), discounts) || !gd::is_dict(discounts) || gd::is_empty(state, discounts.ref)) {
+		return 0.0;
+	}
+	double saved = 0.0;
+	for (const Value &unit_id : gd::items(state, array_value(gd::keys(state, growth)))) {
+		const int64_t percent = gd::int_field(state, discounts.ref, gd::stringify(state, unit_id), 0);
+		const int64_t count = gd::to_int(state, gd::index(state, growth, unit_id));
+		if (percent <= 0 || count <= 0) {
+			continue;
+		}
+		const DictRef unit = gd::content_row(state, ContentTable::Unit, gd::stringify(state, unit_id));
+		const DictRef cost = gd::as_dict(field_or_new_dict(state, unit, key::cost));
+		saved += static_cast<double>(count) * gd::float_field(state, cost, key::gold, 0.0) * static_cast<double>(percent) / 100.0;
+	}
+	return saved;
+}
+
 } // namespace
 
 namespace ai_hero_rules {
@@ -501,7 +521,8 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 		Atom reason = key::development;
 		// Troops and income are weighed over the same two weeks; a town that
 		// musters little wants dwellings first, as a human would.
-		const double weekly_troops = _recruit_set_value(state, _trial_growth(state, trial));
+		const DictRef trial_growth = _trial_growth(state, trial);
+		const double weekly_troops = _recruit_set_value(state, trial_growth);
 		double troops = (weekly_troops - weekly_troops_before) * ai::static_float(state, kScript, key::BUILD_HORIZON_WEEKS);
 		if (weekly_troops_before < ai::static_float(state, kScript, key::STARVED_TOWN_WEEKLY_TROOPS)) {
 			troops *= ai::static_float(state, kScript, key::STARVED_TOWN_TROOP_MULTIPLIER);
@@ -517,6 +538,15 @@ DictRef _build_choice(State &state, DictRef session, DictRef town, DictRef treas
 			reason = key::income;
 		}
 		value += income;
+		// A recruitment discount saves its share of what a week of this town's
+		// recruits costs: gold kept, weighed over the same weeks as income.
+		const double saved = _discount_saving(state, building, trial_growth) * ai::static_float(state, kScript, key::BUILD_HORIZON_WEEKS);
+		if (saved > 0.0) {
+			if (saved > value) {
+				reason = key::income;
+			}
+			value += saved;
+		}
 		// The troops above already hold what an upgrade adds on the current
 		// development rules.
 		if (ai::string_or_empty(state, building, key::upgrade_from) != key::empty && ai::string_or_empty(state, building, key::unlock_unit_id) != key::empty) {

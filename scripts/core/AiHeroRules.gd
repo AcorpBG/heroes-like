@@ -343,7 +343,9 @@ static var EXPLORER_RESERVE_DAYS: int
 ## Town building (`_build_choice`, `_upgrade_value`): new troops count this
 ## much more in a town mustering under STARVED_TOWN_WEEKLY_TROOPS a week; a
 ## mage guild level is worth a base plus a share per spell tier; each point of
-## readiness and each building a choice opens count a fixed value; a creature
+## readiness and each building a choice opens count a fixed value; a recruitment
+## discount counts the gold it saves on the town's weekly recruits over
+## BUILD_HORIZON_WEEKS (`_discount_saving`); a creature
 ## upgrade is worth its strength gain over UPGRADE_VALUE_WEEKS weeks plus a base.
 static var STARVED_TOWN_TROOP_MULTIPLIER: float
 static var MAGE_GUILD_BASE_VALUE: float
