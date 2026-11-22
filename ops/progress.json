@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "brasshollow-start-shooter-20261122",
- "currentSliceTitle": "Brasshollow starts with 9 Scrip Haulers, 5 Tallyspring Throwers, 3 Furnace Pavis Teams (was the only muster with no shooter). Arena vs week-one guards: wins 59% -> 77%, army lost 60% -> 41% (others 77-88%, 34-47%). Games not measured.",
+ "currentSliceId": "thornwake-start-trim-20261122",
+ "currentSliceTitle": "Thornwake starts with 5 Thornwhip Carriers, not 6. Arena vs week-one guards: wins 87% -> 78%, army lost 34% -> 42%, level with Mireclaw, Brasshollow, Veilmourn, Sunvault (77-80%, 38-48%). Games not measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-22T14:11:05Z",
+ "updatedAt": "2026-11-22T15:42:35Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "thornwake-start-trim-20261122",
+   "status": "completed",
+   "completedAt": "2026-11-22",
+   "summary": "Thornwake starts with 5 Thornwhip Carriers, not 6. Arena vs week-one guards: wins 87% -> 78%, army lost 34% -> 42%, level with Mireclaw, Brasshollow, Veilmourn, Sunvault (77-80%, 38-48%). Games not measured.",
+   "commit": "c589d8f05"
+  },
   {
    "id": "brasshollow-start-shooter-20261122",
    "status": "completed",
