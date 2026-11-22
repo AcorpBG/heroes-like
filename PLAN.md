@@ -57,7 +57,6 @@ None open.
 
 ## Open work
 
-- `brasshollow-start-shooter-20261122` (in progress): Brasshollow's starting muster (content/army_groups.json) gets a ranged stack so its opening matches the other factions'. Owner: give it a shooter, arena first.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
@@ -68,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-22 `brasshollow-start-shooter-20261122` (b2884d60e): Brasshollow starts with 9 Scrip Haulers, 5 Tallyspring Throwers, 3 Furnace Pavis Teams (was the only muster with no shooter). Arena vs week-one guards: wins 59% -> 77%, army lost 60% -> 41% (others 77-88%, 34-47%). Games not measured.
 - 2026-11-22 `ai-build-discount-value-20261122` (2a7807eb5): The computer's build choice counts the gold a recruitment discount saves, so it builds Brasshollow's Assembly Discipline and Embercourt's Quartermasters Seal (never built before: 0 of 55 towns each). Not batch-measured.
 - 2026-11-21 `ai-main-walks-to-field-army-20261121` (c0dfb38ba): The main army short of what it has to beat may walk to a field army and take its troops. m181 (two equal heroes trading empty towns to the 320-day cap) ends on day 197, m743 on day 137; s2 ends on day 122 instead of 70.
 - 2026-11-21 `ai-field-armies-pool-20261121` (cad60cca7): A field army may pool into a more experienced one past a rival hero that keeps both and the main army away, or to take the winning town. m743 ends on day 233 (without the hold fix) or 256; mg-a loses its day-75 win.

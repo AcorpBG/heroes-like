@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "brasshollow-start-shooter-20261122",
- "currentSliceTitle": "Brasshollow starting army gets a shooter",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-22T14:10:54Z",
+ "currentSliceTitle": "Brasshollow starts with 9 Scrip Haulers, 5 Tallyspring Throwers, 3 Furnace Pavis Teams (was the only muster with no shooter). Arena vs week-one guards: wins 59% -> 77%, army lost 60% -> 41% (others 77-88%, 34-47%). Games not measured.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-22T14:11:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,11 +19,10 @@
  "plannedSlices": [
   {
    "id": "brasshollow-start-shooter-20261122",
-   "title": "Brasshollow starting army gets a shooter",
-   "status": "in_progress",
-   "goal": "Brasshollow's starting muster (content/army_groups.json) gets a ranged stack so its opening matches the other factions'. Owner: give it a shooter, arena first.",
-   "docs": [],
-   "updatedAt": "2026-11-22"
+   "status": "completed",
+   "completedAt": "2026-11-22",
+   "summary": "Brasshollow starts with 9 Scrip Haulers, 5 Tallyspring Throwers, 3 Furnace Pavis Teams (was the only muster with no shooter). Arena vs week-one guards: wins 59% -> 77%, army lost 60% -> 41% (others 77-88%, 34-47%). Games not measured.",
+   "commit": "b2884d60e"
   },
   {
    "id": "ai-build-discount-value-20261122",
