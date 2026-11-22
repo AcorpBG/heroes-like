@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-build-discount-value-20261122",
- "currentSliceTitle": "The computer's build choice counts the gold a recruitment discount saves, so it builds Brasshollow's Assembly Discipline and Embercourt's Quartermasters Seal (never built before: 0 of 55 towns each). Not batch-measured.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-22T13:18:40Z",
+ "currentSliceId": "brasshollow-start-shooter-20261122",
+ "currentSliceTitle": "Brasshollow starting army gets a shooter",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-22T14:10:54Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,14 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "brasshollow-start-shooter-20261122",
+   "title": "Brasshollow starting army gets a shooter",
+   "status": "in_progress",
+   "goal": "Brasshollow's starting muster (content/army_groups.json) gets a ranged stack so its opening matches the other factions'. Owner: give it a shooter, arena first.",
+   "docs": [],
+   "updatedAt": "2026-11-22"
+  },
   {
    "id": "ai-build-discount-value-20261122",
    "status": "completed",
