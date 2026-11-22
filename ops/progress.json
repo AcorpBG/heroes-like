@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "thornwake-start-trim-20261122",
- "currentSliceTitle": "Thornwake starts with 5 Thornwhip Carriers, not 6. Arena vs week-one guards: wins 87% -> 78%, army lost 34% -> 42%, level with Mireclaw, Brasshollow, Veilmourn, Sunvault (77-80%, 38-48%). Games not measured.",
+ "currentSliceId": "sunvault-brasshollow-level-20261122",
+ "currentSliceTitle": "Sunvault's tier I-V lines give about 8% fewer troops for the gold and Brasshollow's have 10% more health; army fights on the same dice Sunvault 46% -> 39%, Brasshollow 50% -> 56%. Whole games measured next.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-22T15:42:35Z",
+ "updatedAt": "2026-11-22T17:00:09Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "sunvault-brasshollow-level-20261122",
+   "status": "completed",
+   "completedAt": "2026-11-22",
+   "summary": "Sunvault's tier I-V lines give about 8% fewer troops for the gold and Brasshollow's have 10% more health; army fights on the same dice Sunvault 46% -> 39%, Brasshollow 50% -> 56%. Whole games measured next.",
+   "commit": "502df42ba"
+  },
   {
    "id": "thornwake-start-trim-20261122",
    "status": "completed",
