@@ -68,6 +68,16 @@ Town-army fights before and after (1,440 each, the model of the sections above):
 - **Levelling drifts.** The faction factors above were found on the old health: the spread of the six towns' even-fight win rates went from 0.054 to 0.100 (Embercourt 65%, Thornwake 33%).
 - Whole games on the new health are not measured; the batch above (plan seed 202265212) is the comparison to rerun.
 
+## Sunvault dearer, Brasshollow sturdier (2026-11-22)
+
+Slice `sunvault-brasshollow-level-20261122`, decided under the owner's delegation of the faction balance work. In whole games on the doubled health Sunvault stayed first and Brasshollow last: 108–110% and 86–90% of a fair score in two 1,200-game banks, 113% and 92% in the 900 games on 9d1e3aa51 after Brasshollow's discount building and starting shooter.
+
+- **Where Sunvault's lead comes from** (900 game records). Its main armies cost what the others' cost (42,000 gold on days 50–56 against 37,000–46,000) but are 59% shooters by gold against 37–52%. Against guards at a quarter to an eighth of its strength, most of a game's fights, it loses 0.5% of the army where the others lose 0.6–1.3%; in fights between players it loses 0.16 per strength destroyed against 0.18–0.25. In days 29–56 it clears more guards (25 fights a side against 21–23), and from day 50 its main hero's level is at or above every other town's (9.3 against 8.2–9.1 on days 50–56). Army against army on the same gold it wins 46% (4,500 arena fights with heroes and spells), and against guards of equal strength it clears no cheaper than Embercourt, Veilmourn or Brasshollow (1,800 fights), so the lead is the shooters' low losses adding up over a game, not strength in one fight.
+- **Sunvault.** Its ten tier I–V lines give about 8% fewer troops for the gold. Tiers I and II: one recruit fewer a week at the same weekly gold (9 → 8 and 13 → 12, prices up 6–15%). Tiers III to V: the same recruits at 8–9% more gold. Tiers VI and VII are unchanged. This takes back the 1.03 it got in the levelling and fits the town as written: expensive, costly to replace.
+- **Brasshollow.** Its ten tier I–V lines have 10% more health at the same price and growth: slow and costly, hard to dislodge.
+- **Arena, same dice before and after.** Army against army: Sunvault 46.4% → 38.7%, Brasshollow 49.9% → 56.1% (±5). Against guards (army lost, a defeat counts as all): Sunvault 35.6% → 37.4%, 3.5% → 4.8% against guards at a fifth to a third of the armies' strength; Brasshollow 34.5% → 33.4%.
+- **Limits.** The arena models do not predict whole games (Thornwake wins 39% of the army fights and scores 102% in games), so the size of both changes is a judgment; the 900 games replayed after this slice are the measure. The number of shooter tiers, three in Sunvault and two elsewhere, is unchanged.
+
 ## Rule (2026-10-06)
 
 Every faction town offers two exclusive dwelling lines at tiers I–V, and each line has a base unit and an upgrade. The two lines of one tier must be a real trade-off, never one line that is a little better at everything:
