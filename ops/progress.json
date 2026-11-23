@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "brasshollow-top-tiers-20261123",
- "currentSliceTitle": "Brasshollow scores 91% in short and long games alike. Its tier VI-VII units get 20% more health and damage. Arena: 58.1% -> 61.7% of even army fights. Whole games not measured. Owner: its heroes keep their slower movement.",
+ "currentSliceId": "brasshollow-field-repair-20261123",
+ "currentSliceTitle": "Every Brasshollow unit has Field Repair: 30% of a stack's fallen return after a won battle, also when the enemy withdraws. Arena: 30% fewer creatures lost in its wins, outcomes unchanged. Whole games not measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-23T08:55:08Z",
+ "updatedAt": "2026-11-23T09:57:52Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "brasshollow-field-repair-20261123",
+   "status": "completed",
+   "completedAt": "2026-11-23",
+   "summary": "Every Brasshollow unit has Field Repair: 30% of a stack's fallen return after a won battle, also when the enemy withdraws. Arena: 30% fewer creatures lost in its wins, outcomes unchanged. Whole games not measured.",
+   "commit": "d143fffc5"
+  },
   {
    "id": "brasshollow-top-tiers-20261123",
    "status": "completed",
