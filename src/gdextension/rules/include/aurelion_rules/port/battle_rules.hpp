@@ -569,6 +569,9 @@ int64_t _army_strength_from_stacks(State &state, const Value &stacks);
 void _sync_player_force_from_battle(State &state, const Value &session);
 void _sync_enemy_force_from_battle(State &state, const Value &session, bool encounter_resolved);
 ArrayRef _battle_survivor_stacks(State &state, const Value &session, Atom side, DictRef filters);
+// True when a win could give the side back a creature it lost: the commander's recovery share, or a stack whose
+// Field Repair is half or more.
+bool _side_recovers_after_victory(State &state, DictRef battle, Atom side);
 int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side);
 int64_t _apply_victory_mana(State &state, DictRef commander_state, DictRef battle, Atom side);
 DictRef _apply_player_battle_salvage_reward(State &state, const Value &session);

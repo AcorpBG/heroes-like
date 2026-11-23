@@ -169,11 +169,37 @@ Value mirror_or_kept(State &state, DictRef hero_state, Atom field, DictRef overw
 
 } // namespace
 
-int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side) {
-	const int64_t pct = gd::int_field(state, _hero_payload_for_side(state, battle, side), key::victory_recovery_pct, 0);
-	if (pct <= 0) {
-		return 0;
+// Field Repair: the share of a stack's own fallen that its crews rebuild after a won battle. Read from the unit's
+// content row, so a status on the stack when the battle ends does not switch it off.
+int64_t _stack_field_repair_pct(State &state, DictRef stack) {
+	const DictRef unit = gd::content_row(state, ContentTable::Unit, gd::string_field(state, stack, key::unit_id, key::empty));
+	for (const Value &ability : gd::field_items(state, unit, str(key::abilities))) {
+		if (gd::is_dict(ability) && gd::string_field(state, ability.ref, key::id, key::empty) == key::field_repair) {
+			return compat::engine_max<int64_t>(0, gd::int_field(state, ability.ref, key::victory_recovery_pct, 0));
+		}
 	}
+	return 0;
+}
+
+// Whether a win could give the side back a creature it lost, so that the creatures standing during the battle are
+// not yet its final count: a commander with a recovery share, as before, or a stack whose Field Repair is half or
+// more. A smaller Field Repair share rounds a stack's only fallen creature to none returned and never returns all
+// of several, so a battle with a loss stays a battle with a loss.
+bool _side_recovers_after_victory(State &state, DictRef battle, Atom side) {
+	if (gd::int_field(state, _hero_payload_for_side(state, battle, side), key::victory_recovery_pct, 0) > 0) {
+		return true;
+	}
+	for (const Value &stack : gd::field_items(state, battle, str(key::stacks))) {
+		if (gd::is_dict(stack) && text_field(state, stack.ref, key::side) == side && _stack_field_repair_pct(state, stack.ref) >= 50) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side) {
+	// The commander's share (artifacts, specialties) and each stack's own Field Repair add up.
+	const int64_t hero_pct = compat::engine_max<int64_t>(0, gd::int_field(state, _hero_payload_for_side(state, battle, side), key::victory_recovery_pct, 0));
 	int64_t recovered_total = 0;
 	const ArrayRef stacks = gd::as_array(get_or_new_array(state, battle, key::stacks));
 	const int64_t size = state.array_size(stacks);
@@ -181,6 +207,10 @@ int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side) {
 		const Value stack = state.at(stacks, index);
 		// Conjured creatures do not come back.
 		if (!gd::is_dict(stack) || text_field(state, stack.ref, key::side) != side || spell_rules::is_conjured(state, stack.ref)) {
+			continue;
+		}
+		const int64_t pct = compat::engine_min<int64_t>(100, gd::add(hero_pct, _stack_field_repair_pct(state, stack.ref)));
+		if (pct <= 0) {
 			continue;
 		}
 		const int64_t fallen = compat::engine_max<int64_t>(0, gd::sub(gd::int_field(state, stack.ref, key::base_count, 0), _alive_count(state, stack.ref)));
@@ -193,7 +223,9 @@ int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side) {
 		state.set_at(stacks, index, stack);
 		recovered_total = gd::add(recovered_total, recovered);
 	}
-	state.set(battle, str(key::stacks), array_value(stacks));
+	if (hero_pct > 0 || recovered_total > 0) {
+		state.set(battle, str(key::stacks), array_value(stacks));
+	}
 	return recovered_total;
 }
 

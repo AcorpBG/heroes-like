@@ -1852,3 +1852,5 @@ AURELION_KEY(host_summary_text, "calls %s worth %d health in all onto any empty 
 AURELION_KEY(elder_summary_text, "wakes %s worth %d health beside one of your stacks for %s, and grows trees on up to %d empty hexes beside it for the rest of the battle")
 AURELION_KEY(risen_all_summary_text, "raises every stack destroyed in this battle, yours or the enemy's, as Risen with %d%% of its starting creatures, to fight for you for %s")
 AURELION_KEY(hollow_crown_summary_text, "for the rest of the battle, every enemy stack destroyed rises for you as Risen with %d%% of its starting creatures as the next round starts, and fights for %s")
+AURELION_KEY(field_repair, "field_repair")
+AURELION_KEY(repair_crews_return_d_fallen_creature, "Repair crews return %d fallen creature%s to the ranks.")

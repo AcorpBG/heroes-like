@@ -393,9 +393,12 @@ DictRef _finalize_victory(State &state, const Value &session) {
 		state.append(messages, str(gd::format(state, key::s_gains_d_experience, { str(hero_name), int_value(gained) })));
 	}
 	ai::append_array(state, messages, _award_commander_experience(state, session, experience_amount));
+	// The commander's surgeons when the hero recovers troops; else the units' own repair crews (Field Repair).
+	const bool surgeons = gd::int_field(state, _hero_payload_for_side(state, session_battle(state, session), key::player), key::victory_recovery_pct, 0) > 0;
 	const int64_t recovered = _apply_victory_recovery(state, session_battle(state, session), key::player);
 	if (recovered > 0) {
-		state.append(messages, str(gd::format(state, key::field_surgeons_return_d_fallen_creature, { int_value(recovered), str(recovered == 1 ? key::empty : key::s) })));
+		state.append(messages, str(gd::format(state, surgeons ? key::field_surgeons_return_d_fallen_creature : key::repair_crews_return_d_fallen_creature,
+				{ int_value(recovered), str(recovered == 1 ? key::empty : key::s) })));
 	}
 	const DictRef commander_after = gd::deep_duplicate_dict(state, _player_commander_state(state, session));
 	const int64_t mana_regained = _apply_victory_mana(state, commander_after, session_battle(state, session), key::player);
@@ -679,6 +682,14 @@ DictRef _finalize_enemy_withdrawal(State &state, const Value &session, Atom outc
 		const Atom hero_name = text_field(state, _player_commander_state(state, session), key::name, key::the_commander);
 		state.append(experience_messages, str(gd::format(state, key::s_gains_d_experience, { str(hero_name), int_value(experience_amount) })));
 		ai::append_array(state, experience_messages, _award_commander_experience(state, session, experience_amount));
+	}
+	// The field is the player's when the enemy leaves it, so the fallen come back as after any other win, before the
+	// force sync copies the army to the overworld.
+	const bool surgeons = gd::int_field(state, _hero_payload_for_side(state, session_battle(state, session), key::player), key::victory_recovery_pct, 0) > 0;
+	const int64_t recovered = _apply_victory_recovery(state, session_battle(state, session), key::player);
+	if (recovered > 0) {
+		state.append(experience_messages, str(gd::format(state, surgeons ? key::field_surgeons_return_d_fallen_creature : key::repair_crews_return_d_fallen_creature,
+				{ int_value(recovered), str(recovered == 1 ? key::empty : key::s) })));
 	}
 	_sync_player_force_from_battle(state, session);
 	const Atom enemy_faction_id = _battle_enemy_faction_id(state, session);

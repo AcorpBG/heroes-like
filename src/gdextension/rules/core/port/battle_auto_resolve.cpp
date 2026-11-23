@@ -149,8 +149,7 @@ DictRef resolve_active_battle(State &state, const Value &session, int64_t step_l
 	if (step_limit <= 0) {
 		return _resolve_result(state, session, false, key::invalid_step_limit, key::invalid, 0, 0, 0, 0, 0, state.new_dict(), state.new_dict(), state.new_dict());
 	}
-	if (stop_below_player_creatures > 0
-			&& gd::int_field(state, rules::_hero_payload_for_side(state, session_battle(state, session), key::player), key::victory_recovery_pct, 0) > 0) {
+	if (stop_below_player_creatures > 0 && rules::_side_recovers_after_victory(state, session_battle(state, session), key::player)) {
 		stop_below_player_creatures = 0;
 	}
 
