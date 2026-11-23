@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-23 `brasshollow-field-repair-share-20261123` (648b34235): Field Repair returns 20% of a stack's fallen, not 30%: at 30% the 900-game replay put Brasshollow at 109 of a fair share (86.6 before), level with the top. 20% not measured in whole games yet.
 - 2026-11-23 `brasshollow-field-repair-20261123` (d143fffc5): Every Brasshollow unit has Field Repair: 30% of a stack's fallen return after a won battle, also when the enemy withdraws. Arena: 30% fewer creatures lost in its wins, outcomes unchanged. Whole games not measured.
 - 2026-11-23 `brasshollow-top-tiers-20261123` (7bb4a0543): Brasshollow scores 91% in short and long games alike. Its tier VI-VII units get 20% more health and damage. Arena: 58.1% -> 61.7% of even army fights. Whole games not measured. Owner: its heroes keep their slower movement.
 - 2026-11-22 `brasshollow-mint-veilmourn-prices-20261122` (abeb7ecfd): Fresh 1,200-game bank: Brasshollow 89%, Veilmourn 107%. Contract Mint also pays 250 gold a day; Veilmourn's tier I-V lines cost about 5% more. Arena: Veilmourn 56.9% -> 54.3% of army fights.

@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "brasshollow-field-repair-20261123",
- "currentSliceTitle": "Every Brasshollow unit has Field Repair: 30% of a stack's fallen return after a won battle, also when the enemy withdraws. Arena: 30% fewer creatures lost in its wins, outcomes unchanged. Whole games not measured.",
+ "currentSliceId": "brasshollow-field-repair-share-20261123",
+ "currentSliceTitle": "Field Repair returns 20% of a stack's fallen, not 30%: at 30% the 900-game replay put Brasshollow at 109 of a fair share (86.6 before), level with the top. 20% not measured in whole games yet.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-23T09:57:52Z",
+ "updatedAt": "2026-11-23T10:38:49Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "brasshollow-field-repair-share-20261123",
+   "status": "completed",
+   "completedAt": "2026-11-23",
+   "summary": "Field Repair returns 20% of a stack's fallen, not 30%: at 30% the 900-game replay put Brasshollow at 109 of a fair share (86.6 before), level with the top. 20% not measured in whole games yet.",
+   "commit": "648b34235"
+  },
   {
    "id": "brasshollow-field-repair-20261123",
    "status": "completed",
