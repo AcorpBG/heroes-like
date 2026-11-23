@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "brasshollow-mint-veilmourn-prices-20261122",
- "currentSliceTitle": "Fresh 1,200-game bank: Brasshollow 89%, Veilmourn 107%. Contract Mint also pays 250 gold a day; Veilmourn's tier I-V lines cost about 5% more. Arena: Veilmourn 56.9% -> 54.3% of army fights.",
+ "currentSliceId": "brasshollow-top-tiers-20261123",
+ "currentSliceTitle": "Brasshollow scores 91% in short and long games alike. Its tier VI-VII units get 20% more health and damage. Arena: 58.1% -> 61.7% of even army fights. Whole games not measured. Owner: its heroes keep their slower movement.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-22T20:54:23Z",
+ "updatedAt": "2026-11-23T08:55:08Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "brasshollow-top-tiers-20261123",
+   "status": "completed",
+   "completedAt": "2026-11-23",
+   "summary": "Brasshollow scores 91% in short and long games alike. Its tier VI-VII units get 20% more health and damage. Arena: 58.1% -> 61.7% of even army fights. Whole games not measured. Owner: its heroes keep their slower movement.",
+   "commit": "7bb4a0543"
+  },
   {
    "id": "brasshollow-mint-veilmourn-prices-20261122",
    "status": "completed",
