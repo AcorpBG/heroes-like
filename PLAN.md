@@ -57,7 +57,6 @@ None open.
 
 ## Open work
 
-- `sunvault-shooter-prices-20261124` (in progress): Owner 2026-11-24: keep three shooter tiers, raise the price of Sunvault's tier III and V shooter lines (four lines, eight units, about 15%, same growth) in content/units.json; measure on the same 900 games; docs/dwelling-pair-balance.md. See `docs/dwelling-pair-balance.md`.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
@@ -68,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-24 `sunvault-shooter-prices-20261124` (15c72df8c): Sunvault's four tier III and V shooter lines cost about 15% more at the same growth and stats (content/units.json). Same 900 games: Sunvault 109.7% -> 99.5% of a fair share, all six towns inside 97-104%.
 - 2026-11-23 `brasshollow-field-repair-share-20261123` (648b34235): Field Repair returns 20% of a stack's fallen, not 30%: at 30% the 900-game replay put Brasshollow at 109 of a fair share (86.6 before), level with the top. 20% not measured in whole games yet.
 - 2026-11-23 `brasshollow-field-repair-20261123` (d143fffc5): Every Brasshollow unit has Field Repair: 30% of a stack's fallen return after a won battle, also when the enemy withdraws. Arena: 30% fewer creatures lost in its wins, outcomes unchanged. Whole games not measured.
 - 2026-11-23 `brasshollow-top-tiers-20261123` (7bb4a0543): Brasshollow scores 91% in short and long games alike. Its tier VI-VII units get 20% more health and damage. Arena: 58.1% -> 61.7% of even army fights. Whole games not measured. Owner: its heroes keep their slower movement.
