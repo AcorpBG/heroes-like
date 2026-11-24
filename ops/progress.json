@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "brasshollow-field-repair-share-20261123",
- "currentSliceTitle": "Field Repair returns 20% of a stack's fallen, not 30%: at 30% the 900-game replay put Brasshollow at 109 of a fair share (86.6 before), level with the top. 20% not measured in whole games yet.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-23T10:38:49Z",
+ "currentSliceId": "sunvault-shooter-prices-20261124",
+ "currentSliceTitle": "Sunvault's tier III and V shooters dearer",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-24T15:24:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "sunvault-shooter-prices-20261124",
+   "title": "Sunvault's tier III and V shooters dearer",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-24: keep three shooter tiers, raise the price of Sunvault's tier III and V shooter lines (four lines, eight units, about 15%, same growth) in content/units.json; measure on the same 900 games; docs/dwelling-pair-balance.md.",
+   "docs": [
+    "docs/dwelling-pair-balance.md"
+   ],
+   "updatedAt": "2026-11-24"
+  },
   {
    "id": "brasshollow-field-repair-share-20261123",
    "status": "completed",
