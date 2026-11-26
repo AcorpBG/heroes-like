@@ -781,13 +781,6 @@ DictRef _decide_plan(State &state, DictRef session, DictRef context, DictRef ent
 		set_path(state, step_aside, search);
 		return step_aside;
 	}
-	// A guard it beats without losing a creature costs the hero nothing but
-	// the walk: it fights it first.
-	const DictRef free_fight = _free_fight(state, session, context, entry, search);
-	if (!gd::is_empty(state, free_fight)) {
-		set_path(state, free_fight, search);
-		return free_fight;
-	}
 	started = gd::ticks_usec();
 	DictRef best = _vetted_candidate(state, session, context, entry, search, movement_max);
 	_profile_add(state, context, key::choose_ms, started);

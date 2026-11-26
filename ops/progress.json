@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "mireclaw-tier6-growth-20261126",
- "currentSliceTitle": "Mireclaw's tier VI Gorefen Rippers and Packlords grow three a week instead of two, same price and stats (content/units.json): its full town sold the least troops of the six. Not measured in whole games.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-26T17:05:48Z",
+ "currentSliceId": "ai-free-fight-shortcut-removed-20261126",
+ "currentSliceTitle": "Computer heroes weigh weak guards like every other option",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-26T18:44:05Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "ai-free-fight-shortcut-removed-20261126",
+   "title": "Computer heroes weigh weak guards like every other option",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-26: remove the free-fight shortcut (_free_fight, ai_hero_rules_turn_fights.cpp, called before options are weighed in ai_hero_rules_turn_day.cpp) and its two tunables; head-to-head on 450 maps played both ways: seats without it 111.6% of a fair share, with it 88.4%. docs/ai-plays-by-player-rules.md.",
+   "docs": [
+    "docs/ai-plays-by-player-rules.md"
+   ],
+   "updatedAt": "2026-11-26"
+  },
   {
    "id": "mireclaw-tier6-growth-20261126",
    "status": "completed",

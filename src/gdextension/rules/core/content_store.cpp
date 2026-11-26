@@ -53,7 +53,7 @@ const char *const kAiHeroWeightTables[] = {"army_power", "specialty_pick"};
 const char *const kAiHeroWholeWeights[] = {
 	"battle_rounds_estimate", "max_decisions_per_day", "search_days", "far_search_days", "strategic_days",
 	"min_search_radius", "max_gates_weighed", "route_unexplored_min", "route_revisit_days", "boat_saving_days",
-	"defense_horizon_days", "max_free_fight_previews", "max_fight_vetoes", "max_idle_previews",
+	"defense_horizon_days", "max_fight_vetoes", "max_idle_previews",
 	"home_wait_radius", "hunt_start_day", "hunt_full_day", "sighting_memory_days", "hidden_rival_tiles",
 	"passage_tile_cap", "tiles_per_explorer", "hire_reserve_days", "explorer_reserve_days", "extra_hero_day", "threat_reach_margin", "threat_min_reach",
 	"avoid_days", "gate_home_detour", "dwelling_hire_min_value",

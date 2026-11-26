@@ -106,8 +106,6 @@ constexpr Weight kWeights[] = {
 	{key::CLEAR_WIN_RATIO, key::clear_win_ratio, false},
 	{key::LOSS_ESTIMATE_FACTOR, key::loss_estimate_factor, false},
 	{key::LOSS_ESTIMATE_PER_RATIO, key::loss_estimate_per_ratio, false},
-	{key::FREE_FIGHT_MAX_RATIO, key::free_fight_max_ratio, false},
-	{key::MAX_FREE_FIGHT_PREVIEWS, key::max_free_fight_previews, true},
 	{key::MAX_FIGHT_VETOES, key::max_fight_vetoes, true},
 	{key::MAX_IDLE_PREVIEWS, key::max_idle_previews, true},
 	{key::IDLE_FIGHT_MIN_KEPT, key::idle_fight_min_kept, false},

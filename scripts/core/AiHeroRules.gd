@@ -234,12 +234,6 @@ static var LOSS_ESTIMATE_FACTOR: float
 ## its army against guards under 3% of its strength, 0.4% at 5-8%, 0.7% at
 ## 8-12%, 2.3% at 17-25% and 4.6% at 25-35%.
 static var LOSS_ESTIMATE_PER_RATIO: float
-## Guards up to this share of the hero's strength within its reach today are
-## previewed for a free fight (`_free_fight`): of the arena's fights against
-## them, 63% to 84% cost the winner no creature.
-static var FREE_FIGHT_MAX_RATIO: float
-## Free-fight previews a hero runs in one decision.
-static var MAX_FREE_FIGHT_PREVIEWS: int
 ## Fights a hero sizes up and turns down before settling on a decision.
 static var MAX_FIGHT_VETOES: int
 ## Dismissed fights an idle hero looks at again in one decision.

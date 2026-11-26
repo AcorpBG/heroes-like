@@ -83,7 +83,6 @@ bool _fight_looks_good(State &state, DictRef session, DictRef context, DictRef e
 DictRef _fight_neutral(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 DictRef _find_town(State &state, DictRef session, Atom placement_id);
 void _forget_sighting(State &state, DictRef context, Atom id);
-DictRef _free_fight(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 bool _gate_fight_looks_good(State &state, DictRef session, DictRef context, DictRef entry, DictRef plan);
 bool _home_reachable(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
 DictRef _idle_fight(State &state, DictRef session, DictRef context, DictRef entry, DictRef search);
