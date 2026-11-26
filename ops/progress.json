@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "mireclaw-tier6-growth-20261126",
- "currentSliceTitle": "Mireclaw's Gorefen Rippers grow three a week",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-26T17:04:51Z",
+ "currentSliceTitle": "Mireclaw's tier VI Gorefen Rippers and Packlords grow three a week instead of two, same price and stats (content/units.json): its full town sold the least troops of the six. Not measured in whole games.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-26T17:05:48Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "mireclaw-tier6-growth-20261126",
-   "title": "Mireclaw's Gorefen Rippers grow three a week",
-   "status": "in_progress",
-   "goal": "Owner 2026-11-26: Mireclaw's full town sells the least troops a week; Gorefen Rippers and Gorefen Packlords (tier VI) grow three a week instead of two at the same price and stats (content/units.json); docs/dwelling-pair-balance.md.",
-   "docs": [
-    "docs/dwelling-pair-balance.md"
-   ],
-   "updatedAt": "2026-11-26"
+   "status": "completed",
+   "completedAt": "2026-11-26",
+   "summary": "Mireclaw's tier VI Gorefen Rippers and Packlords grow three a week instead of two, same price and stats (content/units.json): its full town sold the least troops of the six. Not measured in whole games.",
+   "commit": "ae777d98b"
   },
   {
    "id": "sunvault-shooter-prices-20261124",
