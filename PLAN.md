@@ -57,6 +57,7 @@ None open.
 
 ## Open work
 
+- `mireclaw-tier6-growth-20261126` (in progress): Owner 2026-11-26: Mireclaw's full town sells the least troops a week; Gorefen Rippers and Gorefen Packlords (tier VI) grow three a week instead of two at the same price and stats (content/units.json); docs/dwelling-pair-balance.md. See `docs/dwelling-pair-balance.md`.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.

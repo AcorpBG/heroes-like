@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "sunvault-shooter-prices-20261124",
- "currentSliceTitle": "Sunvault's four tier III and V shooter lines cost about 15% more at the same growth and stats (content/units.json). Same 900 games: Sunvault 109.7% -> 99.5% of a fair share, all six towns inside 97-104%.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-24T16:04:10Z",
+ "currentSliceId": "mireclaw-tier6-growth-20261126",
+ "currentSliceTitle": "Mireclaw's Gorefen Rippers grow three a week",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-26T17:04:51Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "mireclaw-tier6-growth-20261126",
+   "title": "Mireclaw's Gorefen Rippers grow three a week",
+   "status": "in_progress",
+   "goal": "Owner 2026-11-26: Mireclaw's full town sells the least troops a week; Gorefen Rippers and Gorefen Packlords (tier VI) grow three a week instead of two at the same price and stats (content/units.json); docs/dwelling-pair-balance.md.",
+   "docs": [
+    "docs/dwelling-pair-balance.md"
+   ],
+   "updatedAt": "2026-11-26"
+  },
   {
    "id": "sunvault-shooter-prices-20261124",
    "status": "completed",
