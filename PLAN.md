@@ -57,7 +57,6 @@ None open.
 
 ## Open work
 
-- `sunvault-tier1-growth-20261127` (in progress): The growth shift raised Sunvault from 89% to 113% on small maps. Shard Wardens grow 14 a week instead of 16, Shard Pavise Guard 9 instead of 11; content/units.json growth only; measured on the same 900 games. Owner chose this, 2026-11-27. See `docs/dwelling-pair-balance.md`.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.
@@ -68,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-27 `sunvault-tier1-growth-20261127` (887a8d07d): Shard Wardens grow 14 a week and Shard Pavise Guard 9 (16 and 11 after the shift). Same 900 games: Sunvault 106.5% below XL (117.9% on the bank), small maps 103%, medium and large 3-4 player games 109.8%.
 - 2026-11-27 `sunvault-shooter-growth-20261127` (3a9753993): Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.
 - 2026-11-26 `ai-free-fight-shortcut-removed-20261126` (b784f8c64): The computer's free-fight shortcut is removed: weak guards are weighed like every other option. Head-to-head on 450 maps played both ways: seats without it 111.6% of a fair share, with it 88.4%.
 - 2026-11-26 `mireclaw-tier6-growth-20261126` (ae777d98b): Mireclaw's tier VI Gorefen Rippers and Packlords grow three a week instead of two, same price and stats (content/units.json): its full town sold the least troops of the six. Not measured in whole games.
