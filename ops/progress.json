@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "sunvault-shooter-growth-20261127",
- "currentSliceTitle": "Sunvault recruits fewer shooters and more melee a week",
- "currentSliceStatus": "in_progress",
- "updatedAt": "2026-11-27T18:32:28Z",
+ "currentSliceTitle": "Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.",
+ "currentSliceStatus": "completed",
+ "updatedAt": "2026-11-27T18:33:22Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -19,13 +19,10 @@
  "plannedSlices": [
   {
    "id": "sunvault-shooter-growth-20261127",
-   "title": "Sunvault recruits fewer shooters and more melee a week",
-   "status": "in_progress",
-   "goal": "Sunvault's week is 64% shooters by gold (other towns 28-52%) and its fights end clean most often. Tier III and V shooter lines grow one fewer a week, tier I and VI melee lines more; content/units.json growth only. Owner asked for a solution to the traced problem, 2026-11-27.",
-   "docs": [
-    "docs/dwelling-pair-balance.md"
-   ],
-   "updatedAt": "2026-11-27"
+   "status": "completed",
+   "completedAt": "2026-11-27",
+   "summary": "Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.",
+   "commit": "3a9753993"
   },
   {
    "id": "ai-free-fight-shortcut-removed-20261126",
