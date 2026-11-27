@@ -158,6 +158,16 @@ Slice `mireclaw-tier6-growth-20261126`. On the fresh 1,200-game bank (plan seed 
 - **Mireclaw** scores 97.2% (89.6% on the 24 Nov bank) but still wins 19.3% of the games with three or more players where 23.9% is fair; its main army is the smallest by gold (51,600 on days 57–84 against 55,500–60,800) and its main hero the lowest in level.
 - **Veilmourn** is at 99.3% after four banks near 107%: 101.7% on XL (109.8%), 121% on small maps (range 101–139).
 
+## Sunvault recruits fewer shooters and more melee a week (2026-11-27)
+
+Slice `sunvault-shooter-growth-20261127`; the owner asked for a solution to the problem traced above. The roster keeps its lines, prices and stats: three shooter tiers below VI and a shooting tier VII.
+
+- **Change** (weekly growth, base and upgraded rows of `content/units.json`): Zenith Lensbearers 4 → 3; Resonant Choristers 6 → 5 and Aurora Ballista 5 → 4 (the tier III pair); Shard Wardens 12 → 16 and Shard Pavise Guard 8 → 11 (the tier I pair); Aurora Bastions 2 → 3. Solar Array Striders already grew 3, so both tier V lines now do.
+- **The week.** A full upgraded town on its usual lines sells 13,764 gold of troops (13,631 before), 55.5% of it shooters (64.1%). Brasshollow and Thornwake, the other towns with three shooter lines, are at 52% and 50%.
+- **Why these lines.** Sunvault is below par on small maps (about 90% over two banks) and far above in medium and large games with three or four players, so the weight moves from the late shooters to tier I, which fights from the first week, and to the tier VI melee line. Tier II shooters, which take most of the hits, are unchanged.
+- **Arena** (Sunvault's 240 recorded fights with every stack scaled by its line's new growth, three replays): shooters 60.0% → 55.3% of the army's gold; gold lost 19.0% → 20.1% (change −0.0 to +2.2); replays losing at most a tenth 36.5% → 33.5% (−6.5 to +0.1). Other splits tried: with one more Mirror Duelist a week as well (18.5% lost, 34.0% clean), and with that and two fewer tier II shooters (19.8%, 31.2% clean).
+- **Limits.** The arena effect is small, as the traced cause explains only part of Sunvault's lead. Not measured in whole games. If Sunvault still leads on the next measure, the remaining levers are a melee line in place of a shooter tier, or the computer's exact advance look at a fight; both are the owner's to decide.
+
 ## Rule (2026-10-06)
 
 Every faction town offers two exclusive dwelling lines at tiers I–V, and each line has a base unit and an upgrade. The two lines of one tier must be a real trade-off, never one line that is a little better at everything:
