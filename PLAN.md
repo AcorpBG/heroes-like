@@ -57,6 +57,7 @@ None open.
 
 ## Open work
 
+- `sunvault-tier1-growth-20261127` (in progress): The growth shift raised Sunvault from 89% to 113% on small maps. Shard Wardens grow 14 a week instead of 16, Shard Pavise Guard 9 instead of 11; content/units.json growth only; measured on the same 900 games. Owner chose this, 2026-11-27. See `docs/dwelling-pair-balance.md`.
 - `native-rmg-header-object-table-drift-20261120` (pending): Follow-up named by the archived native-rmg-second-town-placement-20261017 and never picked up: the generated map's header main-town and player-slot fields and its object definition table drift from H3MapEd's writeout. Trace it against the recovered H3MapEd writeout, name the unrecovered function if blocked, and say whether it changes play. Files: src/gdextension/src/h3maped_rmg_core.cpp, src/gdextension/rules/core/map_generation.cpp. Owner kept it open when the 17-20 Oct entries were archived (2026-11-20). See `docs/lessons-learned.md`.
 - `native-rules-phase7-14-campaign-20261023` (pending): port the campaign runtime to C++, together with the campaign rework (D-f). See `docs/native-rules-engine-transition.md`.
 - `content-authored-scenarios-obsolete-20261005` (paused): hold on all authored maps, scenarios and campaigns until the owner selects their rework. See `docs/authored-scenarios-obsolete.md`.

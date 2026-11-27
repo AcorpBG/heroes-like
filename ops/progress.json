@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "sunvault-shooter-growth-20261127",
- "currentSliceTitle": "Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.",
- "currentSliceStatus": "completed",
- "updatedAt": "2026-11-27T18:33:22Z",
+ "currentSliceId": "sunvault-tier1-growth-20261127",
+ "currentSliceTitle": "Sunvault's tier I increase halved",
+ "currentSliceStatus": "in_progress",
+ "updatedAt": "2026-11-27T19:56:12Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "sunvault-tier1-growth-20261127",
+   "title": "Sunvault's tier I increase halved",
+   "status": "in_progress",
+   "goal": "The growth shift raised Sunvault from 89% to 113% on small maps. Shard Wardens grow 14 a week instead of 16, Shard Pavise Guard 9 instead of 11; content/units.json growth only; measured on the same 900 games. Owner chose this, 2026-11-27.",
+   "docs": [
+    "docs/dwelling-pair-balance.md"
+   ],
+   "updatedAt": "2026-11-27"
+  },
   {
    "id": "sunvault-shooter-growth-20261127",
    "status": "completed",
