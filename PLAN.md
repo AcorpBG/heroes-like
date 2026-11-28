@@ -67,6 +67,7 @@ None open.
 
 ## Recently completed
 
+- 2026-11-28 `mireclaw-troops-for-gold-20261128` (2b843bcb1): Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.
 - 2026-11-27 `sunvault-tier1-growth-20261127` (887a8d07d): Shard Wardens grow 14 a week and Shard Pavise Guard 9 (16 and 11 after the shift). Same 900 games: Sunvault 106.5% below XL (117.9% on the bank), small maps 103%, medium and large 3-4 player games 109.8%.
 - 2026-11-27 `sunvault-shooter-growth-20261127` (3a9753993): Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.
 - 2026-11-26 `ai-free-fight-shortcut-removed-20261126` (b784f8c64): The computer's free-fight shortcut is removed: weak guards are weighed like every other option. Head-to-head on 450 maps played both ways: seats without it 111.6% of a fair share, with it 88.4%.

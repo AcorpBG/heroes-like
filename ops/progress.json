@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "sunvault-tier1-growth-20261127",
- "currentSliceTitle": "Shard Wardens grow 14 a week and Shard Pavise Guard 9 (16 and 11 after the shift). Same 900 games: Sunvault 106.5% below XL (117.9% on the bank), small maps 103%, medium and large 3-4 player games 109.8%.",
+ "currentSliceId": "mireclaw-troops-for-gold-20261128",
+ "currentSliceTitle": "Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-27T20:29:28Z",
+ "updatedAt": "2026-11-28T11:27:59Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "mireclaw-troops-for-gold-20261128",
+   "status": "completed",
+   "completedAt": "2026-11-28",
+   "summary": "Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.",
+   "commit": "2b843bcb1"
+  },
   {
    "id": "sunvault-tier1-growth-20261127",
    "status": "completed",
