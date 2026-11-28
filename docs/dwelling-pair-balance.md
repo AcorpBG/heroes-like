@@ -206,6 +206,19 @@ Slice `mireclaw-troops-for-gold-20261128`. The owner asked for a trace of Mirecl
   - Capped: six XL games (m659, m149, m579, m898, m681, m159); Mireclaw is alive at the end of two, so they are not a hand-over stall.
 - **Limits.** The arena does not rank towns (Sunvault wins 34% there and scores 98.5% in games), so the size was a judgment: Sunvault's 8% the other way moved 7.7 arena points and about 11 points of score on its tuned bank. 900 paired games resolve about ±9 points; XL and untouched maps are not measured with the change.
 
+## Embercourt traced: it loses the even final duels (2026-11-28)
+
+Owner asked for the trace; records of the evening's fresh 1,200 (`efe0c033e`), no games. No change is made here.
+
+- **Where the wins go.** 164 wins where 200 is a fair share (178 on the morning's bank; 342 of 400 over both). With three or more players it is among the last two as often as the others (46.6%; 46.8–48.8%) and wins 40.6% of those duels (47.8–58.6%). It has the most second places (27.7%) and the fewest last places.
+- **Even duels.** In duels that start with 40–60% of the two sides' strength it wins 37% (45–59%; 42.5% on the morning's bank). It starts them level (0.504) and holds 0.443 two weeks in.
+- **Its strength is spread.** In those duels its main hero holds 41.6% of its strength (45.9–50.4%), with more towns (3.58; 3.11–3.22) and 18.9% in garrisons. It attacks heroes least (6.9 times a duel; 7.8–8.3) and is attacked most (16.6; 12.3–15.2). Mireclaw read the same before its raiders handed troops over (main hero 43.8%, 37% of even duels) and reads 45.9% and 44.9% now.
+- **From day 43.** Level to day 56 (army 1.04 of the living mean with 3–4 players, towns 1.08), then 0.91 and 0.93 by day 84. On days 43–84 its hero-less garrisons lose 98% of the side's strength per 100 side days (75–85%), its heroes on defence 178% (145–158%), its main hero falls 612 times (503–551), and it loses 13.2 towns per 100 side days (11.5–12.9). From day 57 it attacks heroes 13–20% less often than the others.
+- **Not the units.** At the same rating ratio its armies cost an attacker what the others' do and lose what the others lose attacking (30%, 22% and 12% at 1.0–1.5x, 1.5–2x and 2–3x; the six towns span 26–33%, 18–24% and 10–14%).
+- **Not the economy.** It handles the most gold (1.02 of the mean to day 70) and buys an average strength (13,226 by day 56; 12,516–13,780); it spends the most on buildings.
+- **The one thing only Embercourt does** is the ward (`town_ward_per_week` 60, `town_ward_army_share` 0.15): on days 15–42 its towns hold 568 strength each (424–496) and 19.8% of its strength (14.9–16.8%), and its main hero 57.0% (59.8–62.5%). The wards do not stop the armies that come (19 times a ward's strength on days 15–84) and pay them experience. When the ward went in (31 Oct) it cost Embercourt 14.5 points of score, from 116.9% to 102.4%.
+- **Limits.** The records show the spread and its cost, not that the ward causes all of it; a smaller ward has to be measured in games.
+
 ## Rule (2026-10-06)
 
 Every faction town offers two exclusive dwelling lines at tiers I–V, and each line has a base unit and an upgrade. The two lines of one tier must be a real trade-off, never one line that is a little better at everything:
