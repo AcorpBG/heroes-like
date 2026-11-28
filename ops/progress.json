@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "mireclaw-troops-for-gold-20261128",
- "currentSliceTitle": "Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.",
+ "currentSliceId": "mireclaw-raiders-hand-over-20261128",
+ "currentSliceTitle": "A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Six seeds: only the two with Mireclaw differ. Whole games not measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-28T11:27:59Z",
+ "updatedAt": "2026-11-28T12:23:04Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,13 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "mireclaw-raiders-hand-over-20261128",
+   "status": "completed",
+   "completedAt": "2026-11-28",
+   "summary": "A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Six seeds: only the two with Mireclaw differ. Whole games not measured.",
+   "commit": "fbc8d84d1"
+  },
   {
    "id": "mireclaw-troops-for-gold-20261128",
    "status": "completed",
