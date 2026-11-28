@@ -4,9 +4,9 @@
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
  "currentSliceId": "embercourt-low-tier-growth-20261128",
- "currentSliceTitle": "Embercourt's town week was thinnest (1,316 strength; others 1,410-1,478). More tier I-III recruits overshot in 685 paired games (96.6% -> 114.4%); only tier III's +1 kept: 97.3%, no change.",
+ "currentSliceTitle": "Embercourt's town week was thinnest. Replays: tier I +4, II +2, III +1 recruits 97% -> 114%; tier III +1 alone 97%; plus tier I +2 107% (410 games). Kept tier I +1, tier III +1, unmeasured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-28T20:26:19Z",
+ "updatedAt": "2026-11-28T22:29:48Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -20,9 +20,9 @@
   {
    "id": "embercourt-low-tier-growth-20261128",
    "status": "completed",
-   "completedAt": "2026-11-28",
-   "summary": "Embercourt's town week was thinnest (1,316 strength; others 1,410-1,478). More tier I-III recruits overshot in 685 paired games (96.6% -> 114.4%); only tier III's +1 kept: 97.3%, no change.",
-   "commit": "e49c43c0b"
+   "completedAt": "2026-11-29",
+   "summary": "Embercourt's town week was thinnest. Replays: tier I +4, II +2, III +1 recruits 97% -> 114%; tier III +1 alone 97%; plus tier I +2 107% (410 games). Kept tier I +1, tier III +1, unmeasured.",
+   "commit": "69817eb73"
   },
   {
    "id": "mireclaw-raiders-hand-over-20261128",
