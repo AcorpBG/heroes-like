@@ -768,8 +768,8 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 		// a field army as that army would walk to it: the faster of the two covers
 		// the way, and the troops change hands the same way (`_meet_hero`), the
 		// main hero keeping the strongest seven stacks. Reached today, it uses
-		// them with the movement it has left. Raiders keep their armies.
-		if (!gd::array_has(state, _decision_field_ids(state, session, context), str(other_id)) || _is_raider(state, session, context, other) || _main_shortfall(state, session, context, entry) <= 0.0) {
+		// them with the movement it has left. A raider is a field army here.
+		if (!gd::array_has(state, _decision_field_ids(state, session, context), str(other_id)) || _main_shortfall(state, session, context, entry) <= 0.0) {
 			return state.new_dict();
 		}
 		Value found;
@@ -802,17 +802,18 @@ DictRef _meet_candidate(State &state, DictRef session, DictRef context, DictRef 
 	const ArrayRef field_ids = _decision_field_ids(state, session, context);
 	const int64_t own_rank = gd::array_find(state, field_ids, str(ai::string_or_empty(state, entry, key::placement_id)));
 	if (own_rank >= 0) {
-		if (_is_raider(state, session, context, entry)) {
-			return state.new_dict();
-		}
 		// A field army joins the main army only when something it has to beat
 		// is beyond the main army alone: the main hero takes the stronger
 		// stacks. Otherwise it keeps its army and works on its own; seven stacks
 		// are what limit an army, not its share of the main army's strength.
 		// It joins a more experienced field army only where the two pooled are
 		// past a rival hero that keeps each of them away and the main army too,
-		// or take the town that wins the game.
+		// or take the town that wins the game. A raider joins the main army as
+		// the others do and no other field army: it raids on its own.
 		const bool to_main = main_id == other_id;
+		if (!to_main && _is_raider(state, session, context, entry)) {
+			return state.new_dict();
+		}
 		if (to_main) {
 			if (_main_shortfall(state, session, context, other) <= 0.0) {
 				return state.new_dict();
