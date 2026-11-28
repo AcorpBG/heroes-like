@@ -67,8 +67,9 @@ None open.
 
 ## Recently completed
 
-- 2026-11-28 `mireclaw-raiders-hand-over-20261128` (fbc8d84d1): A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Six seeds: only the two with Mireclaw differ. Whole games not measured.
-- 2026-11-28 `mireclaw-troops-for-gold-20261128` (2b843bcb1): Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.
+- 2026-11-28 `embercourt-low-tier-growth-20261128` (8b6f0aaee): Embercourt's town sold the thinnest week (1,316 strength; others 1,410-1,478). Tier I grows 4 more a week, tier II 2, tier III 1, same prices: 1,413. Games not measured.
+- 2026-11-28 `mireclaw-raiders-hand-over-20261128` (fbc8d84d1): A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Its 410 games: 89.1% -> 100.6%.
+- 2026-11-28 `mireclaw-troops-for-gold-20261128` (2b843bcb1): Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less. 900 paired games: 87.9% -> 89.1%.
 - 2026-11-27 `sunvault-tier1-growth-20261127` (887a8d07d): Shard Wardens grow 14 a week and Shard Pavise Guard 9 (16 and 11 after the shift). Same 900 games: Sunvault 106.5% below XL (117.9% on the bank), small maps 103%, medium and large 3-4 player games 109.8%.
 - 2026-11-27 `sunvault-shooter-growth-20261127` (3a9753993): Sunvault's tier III and V shooter lines grow one fewer a week, its tier I and VI melee lines more: the week goes from 64% to 55.5% shooters at the same gold. Arena only; not measured in whole games.
 - 2026-11-26 `ai-free-fight-shortcut-removed-20261126` (b784f8c64): The computer's free-fight shortcut is removed: weak guards are weighed like every other option. Head-to-head on 450 maps played both ways: seats without it 111.6% of a fair share, with it 88.4%.

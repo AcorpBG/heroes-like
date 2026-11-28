@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "mireclaw-raiders-hand-over-20261128",
- "currentSliceTitle": "A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Six seeds: only the two with Mireclaw differ. Whole games not measured.",
+ "currentSliceId": "embercourt-low-tier-growth-20261128",
+ "currentSliceTitle": "Embercourt's town sold the thinnest week (1,316 strength; others 1,410-1,478). Tier I grows 4 more a week, tier II 2, tier III 1, same prices: 1,413. Games not measured.",
  "currentSliceStatus": "completed",
- "updatedAt": "2026-11-28T12:23:04Z",
+ "updatedAt": "2026-11-28T18:41:17Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -18,17 +18,24 @@
  },
  "plannedSlices": [
   {
+   "id": "embercourt-low-tier-growth-20261128",
+   "status": "completed",
+   "completedAt": "2026-11-28",
+   "summary": "Embercourt's town sold the thinnest week (1,316 strength; others 1,410-1,478). Tier I grows 4 more a week, tier II 2, tier III 1, same prices: 1,413. Games not measured.",
+   "commit": "8b6f0aaee"
+  },
+  {
    "id": "mireclaw-raiders-hand-over-20261128",
    "status": "completed",
    "completedAt": "2026-11-28",
-   "summary": "A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Six seeds: only the two with Mireclaw differ. Whole games not measured.",
+   "summary": "A Mireclaw raider hands its troops to a main army short of its target, and that army walks to it, like any field army; it still raids. Its 410 games: 89.1% -> 100.6%.",
    "commit": "fbc8d84d1"
   },
   {
    "id": "mireclaw-troops-for-gold-20261128",
    "status": "completed",
    "completedAt": "2026-11-28",
-   "summary": "Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less; it won 35% of its final duels, arriving weaker. Arena 48.6 -> 57.9%; whole games not measured.",
+   "summary": "Mireclaw's tier I-II lines grow one more recruit a week at the same weekly gold and tiers III-V cost about 8% less. 900 paired games: 87.9% -> 89.1%.",
    "commit": "2b843bcb1"
   },
   {
