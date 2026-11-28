@@ -199,6 +199,11 @@ Slice `mireclaw-troops-for-gold-20261128`. The owner asked for a trace of Mirecl
   - In play: its main hero plans a meeting three times as often on days 15–42 (0.25–0.28 → 0.78–0.91 per 100 hero days); with two towns it holds 58.5% → 64.6% of the heroes' strength on days 29–42; it falls 5.4 → 4.5 times per 100 side days on days 43–84 (days 29–42 unchanged, 3.9 → 4.0).
   - All 900 games with both Mireclaw changes: Veilmourn 105.1%, Embercourt 100.8%, Mireclaw 100.6%, Sunvault 100.1%, Brasshollow 99.0%, Thornwake 94.4% (each about ±8). Sunvault's 107.4% after the troop change did not repeat.
   - This bank has now steered three choices and reads kindly; untouched maps and XL are not measured with either Mireclaw change. Capped: m1121 and m123, as before.
+- **On untouched maps** (28 Nov, fresh 1,200 on `efe0c033e`, plan seed 1153169047, with XL; 1,194 decided, median day 72).
+  - Thornwake 104.8% (99.1–110.5), Veilmourn 101.6% (95.4–107.8), Mireclaw 99.9% (93.9–106.3), Sunvault 98.9% (92.5–104.9), Brasshollow 98.3% (91.8–104.5), Embercourt 96.6% (91.0–102.2). Every range holds 100%.
+  - Mireclaw: 198 wins where 200 is a fair share; below XL 97.9%, XL 101.1%; with three or more players 121 wins of 130 fair (the morning's bank: 15% of such games, now 22%).
+  - Embercourt has the fewest wins: 164 of 200 fair, 100 of 130 with three or more players, 33 of 50 on XL. Its score was 96.4% on the morning's bank too.
+  - Capped: six XL games (m659, m149, m579, m898, m681, m159); Mireclaw is alive at the end of two, so they are not a hand-over stall.
 - **Limits.** The arena does not rank towns (Sunvault wins 34% there and scores 98.5% in games), so the size was a judgment: Sunvault's 8% the other way moved 7.7 arena points and about 11 points of score on its tuned bank. 900 paired games resolve about ±9 points; XL and untouched maps are not measured with the change.
 
 ## Rule (2026-10-06)
